@@ -18996,6 +18996,7 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
     '''Unit test for show bgp all nexthop-database - XML'''
 
     device = Device(name='aDevice')
+
     golden_parsed_output_1 = {
         "vrf": {
           "default": {
@@ -19268,8 +19269,7 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
          </nf:data>
         </nf:rpc-reply>
      ]]>]]>
-    '''}
-
+        '''}
 
     golden_parsed_output_2 = {
         "vrf": {
@@ -20567,6 +20567,1543 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
         ]]>]]>
     '''}
 
+    golden_parsed_output_3 = {
+        'vrf':
+            {'default':
+                {'address_family':
+                    {'ipv4 mvpn':
+                        {'af_nexthop_trigger_enable': True,
+                        'next_hop':
+                            {'0.0.0.0': {'attached': False,
+                                        'filtered': False,
+                                        'igp_cost': 0,
+                                        'igp_preference': 0,
+                                        'igp_route_type': 0,
+                                        'labeled': False,
+                                        'local': True,
+                                        'metric_next_advertise': 'never',
+                                        'multipath': 'No',
+                                        'pending_update': False,
+                                        'reachable': False,
+                                        'refcount': 0,
+                                        'resolve_time': 'never',
+                                        'rib_route': '0.0.0.0/0',
+                                        'rnh_epoch': 0},
+                            '55.0.0.1': {'attached': False,
+                                        'attached_nexthop': {'111.111.111.1': {'attached_nexthop_interface': 'Ethernet1/3'}},
+                                        'filtered': False,
+                                        'igp_cost': 80,
+                                        'igp_preference': 110,
+                                        'igp_route_type': 0,
+                                        'labeled': False,
+                                        'local': False,
+                                        'metric_next_advertise': 'never',
+                                        'multipath': 'No',
+                                        'pending_update': False,
+                                        'reachable': True,
+                                        'refcount': 0,
+                                        'resolve_time': '00:05:19',
+                                        'rib_route': '55.0.0.0/24',
+                                        'rnh_epoch': 2},
+                            '90.1.1.0': {'attached': False,
+                                        'attached_nexthop': {'111.111.111.1': {'attached_nexthop_interface': 'Ethernet1/3'}},
+                                        'filtered': False,
+                                        'igp_cost': 41,
+                                        'igp_preference': 110,
+                                        'igp_route_type': 0,
+                                        'labeled': False,
+                                        'local': False,
+                                        'metric_next_advertise': 'never',
+                                        'multipath': 'No',
+                                        'pending_update': False,
+                                        'reachable': True,
+                                        'refcount': 0,
+                                        'resolve_time': '00:05:19',
+                                        'rib_route': '90.1.1.0/32',
+                                        'rnh_epoch': 1},
+                            '91.1.2.1': {'attached': False,
+                                        'attached_nexthop': {'111.111.111.1': {'attached_nexthop_interface': 'Ethernet1/3'}},
+                                        'filtered': False,
+                                        'igp_cost': 80,
+                                        'igp_preference': 110,
+                                        'igp_route_type': 0,
+                                        'labeled': False,
+                                        'local': False,
+                                        'metric_next_advertise': '00:05:52',
+                                        'multipath': 'No',
+                                        'pending_update': False,
+                                        'reachable': True,
+                                        'refcount': 0,
+                                        'resolve_time': '00:05:36',
+                                        'rib_route': '0.0.0.0/0',
+                                        'rnh_epoch': 1},
+                            '95.1.1.0': {'attached': False,
+                                        'attached_nexthop': {'111.111.111.1': {'attached_nexthop_interface': 'Ethernet1/3'}},
+                                        'filtered': False,
+                                        'igp_cost': 81,
+                                        'igp_preference': 110,
+                                        'igp_route_type': 0,
+                                        'labeled': False,
+                                        'local': False,
+                                        'metric_next_advertise': 'never',
+                                        'multipath': 'No',
+                                        'pending_update': False,
+                                        'reachable': True,
+                                        'refcount': 0,
+                                        'resolve_time': '00:05:19',
+                                        'rib_route': '95.1.1.0/32',
+                                        'rnh_epoch': 1}},
+                        'nexthop_trigger_delay_critical': 3000,
+                        'nexthop_trigger_delay_non_critical': 10000},
+                    'ipv4 unicast':
+                        {'af_nexthop_trigger_enable': True,
+                        'next_hop':
+                            {'0.0.0.0': {'attached': False,
+                                        'filtered': False,
+                                        'igp_cost': 0,
+                                        'igp_preference': 0,
+                                        'igp_route_type': 0,
+                                        'labeled': False,
+                                        'local': True,
+                                        'metric_next_advertise': 'never',
+                                        'multipath': 'No',
+                                        'pending_update': False,
+                                        'reachable': False,
+                                        'refcount': 4,
+                                        'resolve_time': 'never',
+                                        'rib_route': '0.0.0.0/0',
+                                        'rnh_epoch': 0},
+                            '55.0.0.1': {'attached': False,
+                                       'attached_nexthop': {'111.111.111.1': {'attached_nexthop_interface': 'Ethernet1/3'}},
+                                       'filtered': False,
+                                       'igp_cost': 80,
+                                       'igp_preference': 110,
+                                       'igp_route_type': 0,
+                                       'labeled': False,
+                                       'local': False,
+                                       'metric_next_advertise': 'never',
+                                       'multipath': 'No',
+                                       'pending_update': False,
+                                       'reachable': True,
+                                       'refcount': 2,
+                                       'resolve_time': '00:05:19',
+                                       'rib_route': '55.0.0.0/24',
+                                       'rnh_epoch': 2},
+                            '90.1.1.0': {'attached': False,
+                                       'attached_nexthop': {'111.111.111.1': {'attached_nexthop_interface': 'Ethernet1/3'}},
+                                       'filtered': False,
+                                       'igp_cost': 41,
+                                       'igp_preference': 110,
+                                       'igp_route_type': 0,
+                                       'labeled': False,
+                                       'local': False,
+                                       'metric_next_advertise': 'never',
+                                       'multipath': 'No',
+                                       'pending_update': False,
+                                       'reachable': True,
+                                       'refcount': 6,
+                                       'resolve_time': '00:05:19',
+                                       'rib_route': '90.1.1.0/32',
+                                       'rnh_epoch': 1},
+                            '91.1.2.1': {'attached': False,
+                                       'attached_nexthop': {'111.111.111.1': {'attached_nexthop_interface': 'Ethernet1/3'}},
+                                       'filtered': False,
+                                       'igp_cost': 80,
+                                       'igp_preference': 110,
+                                       'igp_route_type': 0,
+                                       'labeled': False,
+                                       'local': False,
+                                       'metric_next_advertise': '00:05:52',
+                                       'multipath': 'No',
+                                       'pending_update': False,
+                                       'reachable': True,
+                                       'refcount': 0,
+                                       'resolve_time': '00:05:36',
+                                       'rib_route': '0.0.0.0/0',
+                                       'rnh_epoch': 1},
+                            '95.1.1.0': {'attached': False,
+                                       'attached_nexthop': {'111.111.111.1': {'attached_nexthop_interface': 'Ethernet1/3'}},
+                                       'filtered': False,
+                                       'igp_cost': 81,
+                                       'igp_preference': 110,
+                                       'igp_route_type': 0,
+                                       'labeled': False,
+                                       'local': False,
+                                       'metric_next_advertise': 'never',
+                                       'multipath': 'No',
+                                       'pending_update': False,
+                                       'reachable': True,
+                                       'refcount': 0,
+                                       'resolve_time': '00:05:19',
+                                       'rib_route': '95.1.1.0/32',
+                                       'rnh_epoch': 1}},
+                        'nexthop_trigger_delay_critical': 3333,
+                        'nexthop_trigger_delay_non_critical': 11111},
+                    'ipv6 mvpn':
+                        {'af_nexthop_trigger_enable': True,
+                        'next_hop':
+                            {'::ffff:0.0.0.0': {'attached': False,
+                                                'filtered': False,
+                                                'igp_cost': 0,
+                                                'igp_preference': 0,
+                                                'igp_route_type': 0,
+                                                'labeled': False,
+                                                'local': True,
+                                                'metric_next_advertise': 'never',
+                                                'multipath': 'No',
+                                                'pending_update': False,
+                                                'reachable': False,
+                                                'refcount': 0,
+                                                'resolve_time': 'never',
+                                                'rib_route': '0.0.0.0/0',
+                                                'rnh_epoch': 0},
+                            '::ffff:55.0.0.1': {'attached': False,
+                                               'attached_nexthop': {'111.111.111.1': {'attached_nexthop_interface': 'Ethernet1/3'}},
+                                               'filtered': False,
+                                               'igp_cost': 80,
+                                               'igp_preference': 110,
+                                               'igp_route_type': 0,
+                                               'labeled': False,
+                                               'local': False,
+                                               'metric_next_advertise': 'never',
+                                               'multipath': 'No',
+                                               'pending_update': False,
+                                               'reachable': True,
+                                               'refcount': 0,
+                                               'resolve_time': '00:05:19',
+                                               'rib_route': '55.0.0.0/24',
+                                               'rnh_epoch': 2},
+                            '::ffff:90.1.1.0': {'attached': False,
+                                               'attached_nexthop': {'111.111.111.1': {'attached_nexthop_interface': 'Ethernet1/3'}},
+                                               'filtered': False,
+                                               'igp_cost': 41,
+                                               'igp_preference': 110,
+                                               'igp_route_type': 0,
+                                               'labeled': False,
+                                               'local': False,
+                                               'metric_next_advertise': 'never',
+                                               'multipath': 'No',
+                                               'pending_update': False,
+                                               'reachable': True,
+                                               'refcount': 0,
+                                               'resolve_time': '00:05:19',
+                                               'rib_route': '90.1.1.0/32',
+                                               'rnh_epoch': 1},
+                            '::ffff:91.1.2.1': {'attached': False,
+                                               'attached_nexthop': {'111.111.111.1': {'attached_nexthop_interface': 'Ethernet1/3'}},
+                                               'filtered': False,
+                                               'igp_cost': 80,
+                                               'igp_preference': 110,
+                                               'igp_route_type': 0,
+                                               'labeled': False,
+                                               'local': False,
+                                               'metric_next_advertise': '00:05:52',
+                                               'multipath': 'No',
+                                               'pending_update': False,
+                                               'reachable': True,
+                                               'refcount': 0,
+                                               'resolve_time': '00:05:36',
+                                               'rib_route': '0.0.0.0/0',
+                                               'rnh_epoch': 1},
+                            '::ffff:95.1.1.0': {'attached': False,
+                                               'attached_nexthop': {'111.111.111.1': {'attached_nexthop_interface': 'Ethernet1/3'}},
+                                               'filtered': False,
+                                               'igp_cost': 81,
+                                               'igp_preference': 110,
+                                               'igp_route_type': 0,
+                                               'labeled': False,
+                                               'local': False,
+                                               'metric_next_advertise': 'never',
+                                               'multipath': 'No',
+                                               'pending_update': False,
+                                               'reachable': True,
+                                               'refcount': 0,
+                                               'resolve_time': '00:05:19',
+                                               'rib_route': '95.1.1.0/32',
+                                               'rnh_epoch': 1}},
+                        'nexthop_trigger_delay_critical': 3000,
+                        'nexthop_trigger_delay_non_critical': 10000},
+                    'ipv6 unicast':
+                        {'af_nexthop_trigger_enable': True,
+                        'next_hop':
+                            {'::ffff:0.0.0.0': {'attached': False,
+                                                'filtered': False,
+                                                'igp_cost': 0,
+                                                'igp_preference': 0,
+                                                'igp_route_type': 0,
+                                                'labeled': False,
+                                                'local': True,
+                                                'metric_next_advertise': 'never',
+                                                'multipath': 'No',
+                                                'pending_update': False,
+                                                'reachable': False,
+                                                'refcount': 0,
+                                                'resolve_time': 'never',
+                                                'rib_route': '0.0.0.0/0',
+                                                'rnh_epoch': 0},
+                            '::ffff:55.0.0.1': {'attached': False,
+                                              'attached_nexthop': {'111.111.111.1': {'attached_nexthop_interface': 'Ethernet1/3'}},
+                                              'filtered': False,
+                                              'igp_cost': 80,
+                                              'igp_preference': 110,
+                                              'igp_route_type': 0,
+                                              'labeled': False,
+                                              'local': False,
+                                              'metric_next_advertise': 'never',
+                                              'multipath': 'No',
+                                              'pending_update': False,
+                                              'reachable': True,
+                                              'refcount': 0,
+                                              'resolve_time': '00:05:19',
+                                              'rib_route': '55.0.0.0/24',
+                                              'rnh_epoch': 2},
+                            '::ffff:90.1.1.0': {'attached': False,
+                                              'attached_nexthop': {'111.111.111.1': {'attached_nexthop_interface': 'Ethernet1/3'}},
+                                              'filtered': False,
+                                              'igp_cost': 41,
+                                              'igp_preference': 110,
+                                              'igp_route_type': 0,
+                                              'labeled': False,
+                                              'local': False,
+                                              'metric_next_advertise': 'never',
+                                              'multipath': 'No',
+                                              'pending_update': False,
+                                              'reachable': True,
+                                              'refcount': 0,
+                                              'resolve_time': '00:05:19',
+                                              'rib_route': '90.1.1.0/32',
+                                              'rnh_epoch': 1},
+                            '::ffff:91.1.2.1': {'attached': False,
+                                              'attached_nexthop': {'111.111.111.1': {'attached_nexthop_interface': 'Ethernet1/3'}},
+                                              'filtered': False,
+                                              'igp_cost': 80,
+                                              'igp_preference': 110,
+                                              'igp_route_type': 0,
+                                              'labeled': False,
+                                              'local': False,
+                                              'metric_next_advertise': '00:05:52',
+                                              'multipath': 'No',
+                                              'pending_update': False,
+                                              'reachable': True,
+                                              'refcount': 0,
+                                              'resolve_time': '00:05:36',
+                                              'rib_route': '0.0.0.0/0',
+                                              'rnh_epoch': 1},
+                            '::ffff:95.1.1.0': {'attached': False,
+                                              'attached_nexthop': {'111.111.111.1': {'attached_nexthop_interface': 'Ethernet1/3'}},
+                                              'filtered': False,
+                                              'igp_cost': 81,
+                                              'igp_preference': 110,
+                                              'igp_route_type': 0,
+                                              'labeled': False,
+                                              'local': False,
+                                              'metric_next_advertise': 'never',
+                                              'multipath': 'No',
+                                              'pending_update': False,
+                                              'reachable': True,
+                                              'refcount': 0,
+                                              'resolve_time': '00:05:19',
+                                              'rib_route': '95.1.1.0/32',
+                                              'rnh_epoch': 1}},
+                        'nexthop_trigger_delay_critical': 3000,
+                        'nexthop_trigger_delay_non_critical': 10000},
+                    'l2vpn evpn':
+                        {'af_nexthop_trigger_enable': True,
+                        'next_hop':
+                            {'0.0.0.0': {'attached': False,
+                                        'filtered': False,
+                                        'igp_cost': 0,
+                                        'igp_preference': 0,
+                                        'igp_route_type': 0,
+                                        'labeled': False,
+                                        'local': True,
+                                        'metric_next_advertise': 'never',
+                                        'multipath': 'No',
+                                        'pending_update': False,
+                                        'reachable': False,
+                                        'refcount': 0,
+                                        'resolve_time': 'never',
+                                        'rib_route': '0.0.0.0/0',
+                                        'rnh_epoch': 0},
+                            '55.0.0.1': {'attached': False,
+                                         'attached_nexthop': {'111.111.111.1': {'attached_nexthop_interface': 'Ethernet1/3'}},
+                                         'filtered': False,
+                                         'igp_cost': 80,
+                                         'igp_preference': 110,
+                                         'igp_route_type': 0,
+                                         'labeled': False,
+                                         'local': False,
+                                         'metric_next_advertise': 'never',
+                                         'multipath': 'No',
+                                         'pending_update': False,
+                                         'reachable': True,
+                                         'refcount': 0,
+                                         'resolve_time': '00:05:19',
+                                         'rib_route': '55.0.0.0/24',
+                                         'rnh_epoch': 2},
+                            '90.1.1.0': {'attached': False,
+                                         'attached_nexthop': {'111.111.111.1': {'attached_nexthop_interface': 'Ethernet1/3'}},
+                                         'filtered': False,
+                                         'igp_cost': 41,
+                                         'igp_preference': 110,
+                                         'igp_route_type': 0,
+                                         'labeled': False,
+                                         'local': False,
+                                         'metric_next_advertise': 'never',
+                                         'multipath': 'No',
+                                         'pending_update': False,
+                                         'reachable': True,
+                                         'refcount': 1,
+                                         'resolve_time': '00:05:19',
+                                         'rib_route': '90.1.1.0/32',
+                                         'rnh_epoch': 1},
+                            '91.1.2.1': {'attached': False,
+                                         'attached_nexthop': {'111.111.111.1': {'attached_nexthop_interface': 'Ethernet1/3'}},
+                                         'filtered': False,
+                                         'igp_cost': 80,
+                                         'igp_preference': 110,
+                                         'igp_route_type': 0,
+                                         'labeled': False,
+                                         'local': False,
+                                         'metric_next_advertise': '00:05:52',
+                                         'multipath': 'No',
+                                         'pending_update': False,
+                                         'reachable': True,
+                                         'refcount': 2,
+                                         'resolve_time': '00:05:36',
+                                         'rib_route': '0.0.0.0/0',
+                                         'rnh_epoch': 1},
+                            '95.1.1.0': {'attached': False,
+                                         'attached_nexthop': {'111.111.111.1': {'attached_nexthop_interface': 'Ethernet1/3'}},
+                                         'filtered': False,
+                                         'igp_cost': 81,
+                                         'igp_preference': 110,
+                                         'igp_route_type': 0,
+                                         'labeled': False,
+                                         'local': False,
+                                         'metric_next_advertise': 'never',
+                                         'multipath': 'No',
+                                         'pending_update': False,
+                                         'reachable': True,
+                                         'refcount': 1,
+                                         'resolve_time': '00:05:19',
+                                         'rib_route': '95.1.1.0/32',
+                                         'rnh_epoch': 1}},
+                        'nexthop_trigger_delay_critical': 3000,
+                        'nexthop_trigger_delay_non_critical': 10000},
+                    'vpnv4 unicast':
+                        {'af_nexthop_trigger_enable': True,
+                        'next_hop':
+                            {'0.0.0.0': {'attached': False,
+                                        'filtered': False,
+                                        'igp_cost': 0,
+                                        'igp_preference': 0,
+                                        'igp_route_type': 0,
+                                        'labeled': False,
+                                        'local': True,
+                                        'metric_next_advertise': 'never',
+                                        'multipath': 'No',
+                                        'pending_update': False,
+                                        'reachable': False,
+                                        'refcount': 0,
+                                        'resolve_time': 'never',
+                                        'rib_route': '0.0.0.0/0',
+                                        'rnh_epoch': 0},
+                            '55.0.0.1': {'attached': False,
+                                        'attached_nexthop': {'111.111.111.1': {'attached_nexthop_interface': 'Ethernet1/3'}},
+                                        'filtered': False,
+                                        'igp_cost': 80,
+                                        'igp_preference': 110,
+                                        'igp_route_type': 0,
+                                        'labeled': False,
+                                        'local': False,
+                                        'metric_next_advertise': 'never',
+                                        'multipath': 'No',
+                                        'pending_update': False,
+                                        'reachable': True,
+                                        'refcount': 0,
+                                        'resolve_time': '00:05:19',
+                                        'rib_route': '55.0.0.0/24',
+                                        'rnh_epoch': 2},
+                            '90.1.1.0': {'attached': False,
+                                        'attached_nexthop': {'111.111.111.1': {'attached_nexthop_interface': 'Ethernet1/3'}},
+                                        'filtered': False,
+                                        'igp_cost': 41,
+                                        'igp_preference': 110,
+                                        'igp_route_type': 0,
+                                        'labeled': False,
+                                        'local': False,
+                                        'metric_next_advertise': 'never',
+                                        'multipath': 'No',
+                                        'pending_update': False,
+                                        'reachable': True,
+                                        'refcount': 0,
+                                        'resolve_time': '00:05:19',
+                                        'rib_route': '90.1.1.0/32',
+                                        'rnh_epoch': 1},
+                            '91.1.2.1': {'attached': False,
+                                        'attached_nexthop': {'111.111.111.1': {'attached_nexthop_interface': 'Ethernet1/3'}},
+                                        'filtered': False,
+                                        'igp_cost': 80,
+                                        'igp_preference': 110,
+                                        'igp_route_type': 0,
+                                        'labeled': False,
+                                        'local': False,
+                                        'metric_next_advertise': '00:05:52',
+                                        'multipath': 'No',
+                                        'pending_update': False,
+                                        'reachable': True,
+                                        'refcount': 0,
+                                        'resolve_time': '00:05:36',
+                                        'rib_route': '0.0.0.0/0',
+                                        'rnh_epoch': 1},
+                            '95.1.1.0': {'attached': False,
+                                        'attached_nexthop': {'111.111.111.1': {'attached_nexthop_interface': 'Ethernet1/3'}},
+                                        'filtered': False,
+                                        'igp_cost': 81,
+                                        'igp_preference': 110,
+                                        'igp_route_type': 0,
+                                        'labeled': False,
+                                        'local': False,
+                                        'metric_next_advertise': 'never',
+                                        'multipath': 'No',
+                                        'pending_update': False,
+                                        'reachable': True,
+                                        'refcount': 0,
+                                        'resolve_time': '00:05:19',
+                                        'rib_route': '95.1.1.0/32',
+                                        'rnh_epoch': 1}},
+                        'nexthop_trigger_delay_critical': 3000,
+                        'nexthop_trigger_delay_non_critical': 10000},
+                    'vpnv6 unicast':
+                        {'af_nexthop_trigger_enable': True,
+                        'next_hop':
+                            {'::ffff:0.0.0.0': {'attached': False,
+                                                'filtered': False,
+                                                'igp_cost': 0,
+                                                'igp_preference': 0,
+                                                'igp_route_type': 0,
+                                                'labeled': False,
+                                                'local': True,
+                                                'metric_next_advertise': 'never',
+                                                'multipath': 'No',
+                                                'pending_update': False,
+                                                'reachable': False,
+                                                'refcount': 0,
+                                                'resolve_time': 'never',
+                                                'rib_route': '0.0.0.0/0',
+                                                'rnh_epoch': 0},
+                            '::ffff:55.0.0.1': {'attached': False,
+                                               'attached_nexthop': {'111.111.111.1': {'attached_nexthop_interface': 'Ethernet1/3'}},
+                                               'filtered': False,
+                                               'igp_cost': 80,
+                                               'igp_preference': 110,
+                                               'igp_route_type': 0,
+                                               'labeled': False,
+                                               'local': False,
+                                               'metric_next_advertise': 'never',
+                                               'multipath': 'No',
+                                               'pending_update': False,
+                                               'reachable': True,
+                                               'refcount': 0,
+                                               'resolve_time': '00:05:19',
+                                               'rib_route': '55.0.0.0/24',
+                                               'rnh_epoch': 2},
+                            '::ffff:90.1.1.0': {'attached': False,
+                                               'attached_nexthop': {'111.111.111.1': {'attached_nexthop_interface': 'Ethernet1/3'}},
+                                               'filtered': False,
+                                               'igp_cost': 41,
+                                               'igp_preference': 110,
+                                               'igp_route_type': 0,
+                                               'labeled': False,
+                                               'local': False,
+                                               'metric_next_advertise': 'never',
+                                               'multipath': 'No',
+                                               'pending_update': False,
+                                               'reachable': True,
+                                               'refcount': 0,
+                                               'resolve_time': '00:05:19',
+                                               'rib_route': '90.1.1.0/32',
+                                               'rnh_epoch': 1},
+                            '::ffff:91.1.2.1': {'attached': False,
+                                               'attached_nexthop': {'111.111.111.1': {'attached_nexthop_interface': 'Ethernet1/3'}},
+                                               'filtered': False,
+                                               'igp_cost': 80,
+                                               'igp_preference': 110,
+                                               'igp_route_type': 0,
+                                               'labeled': False,
+                                               'local': False,
+                                               'metric_next_advertise': '00:05:52',
+                                               'multipath': 'No',
+                                               'pending_update': False,
+                                               'reachable': True,
+                                               'refcount': 0,
+                                               'resolve_time': '00:05:36',
+                                               'rib_route': '0.0.0.0/0',
+                                               'rnh_epoch': 1},
+                            '::ffff:95.1.1.0': {'attached': False,
+                                               'attached_nexthop': {'111.111.111.1': {'attached_nexthop_interface': 'Ethernet1/3'}},
+                                               'filtered': False,
+                                               'igp_cost': 81,
+                                               'igp_preference': 110,
+                                               'igp_route_type': 0,
+                                               'labeled': False,
+                                               'local': False,
+                                               'metric_next_advertise': 'never',
+                                               'multipath': 'No',
+                                               'pending_update': False,
+                                               'reachable': True,
+                                               'refcount': 0,
+                                               'resolve_time': '00:05:19',
+                                               'rib_route': '95.1.1.0/32',
+                                               'rnh_epoch': 1}},
+                        'nexthop_trigger_delay_critical': 3000,
+                        'nexthop_trigger_delay_non_critical': 10000}}}}}
+
+    golden_output_3 = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
+        <nf:rpc-reply xmlns="http://www.cisco.com/nxos:7.0.3.IHD8.1.:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
+         <nf:data>
+          <show>
+           <bgp>
+            <all>
+             <nexthop-database>
+              <__readonly__>
+               <TABLE_nhvrf>
+                <ROW_nhvrf>
+                 <nhvrf-name-out>default</nhvrf-name-out>
+                 <TABLE_nhafi>
+                  <ROW_nhafi>
+                   <nhafi>1</nhafi>
+                   <TABLE_nhsafi>
+                    <ROW_nhsafi>
+                     <nhsafi>1</nhsafi>
+                     <af-name>IPv4 Unicast</af-name>
+                     <nhcriticaldelay>3333</nhcriticaldelay>
+                     <nhnoncriticaldelay>11111</nhnoncriticaldelay>
+                     <TABLE_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>0.0.0.0</ipnexthop-out>
+                       <refcount>4</refcount>
+                       <igpmetric>0</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>0</igppref>
+                       <attached>false</attached>
+                       <local>true</local>
+                       <reachable>false</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>never</resolvetime>
+                       <ribroute>0.0.0.0/0</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>0</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>55.0.0.1</ipnexthop-out>
+                       <refcount>2</refcount>
+                       <igpmetric>80</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>111.111.111.1</attachedhop>
+                         <interface>Ethernet1/3</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:05:19</resolvetime>
+                       <ribroute>55.0.0.0/24</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>2</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>90.1.1.0</ipnexthop-out>
+                       <refcount>6</refcount>
+                       <igpmetric>41</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>111.111.111.1</attachedhop>
+                         <interface>Ethernet1/3</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:05:19</resolvetime>
+                       <ribroute>90.1.1.0/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>1</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>91.1.2.1</ipnexthop-out>
+                       <refcount>0</refcount>
+                       <igpmetric>80</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>111.111.111.1</attachedhop>
+                         <interface>Ethernet1/3</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:05:36</resolvetime>
+                       <ribroute>0.0.0.0/0</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>00:05:52</nextadvertise>
+                       <rnhepoch>1</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>95.1.1.0</ipnexthop-out>
+                       <refcount>0</refcount>
+                       <igpmetric>81</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>111.111.111.1</attachedhop>
+                         <interface>Ethernet1/3</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:05:19</resolvetime>
+                       <ribroute>95.1.1.0/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>1</rnhepoch>
+                      </ROW_nexthop>
+                     </TABLE_nexthop>
+                    </ROW_nhsafi>
+                   </TABLE_nhsafi>
+                  </ROW_nhafi>
+                 </TABLE_nhafi>
+                </ROW_nhvrf>
+                <ROW_nhvrf>
+                 <nhvrf-name-out>default</nhvrf-name-out>
+                 <TABLE_nhafi>
+                  <ROW_nhafi>
+                   <nhafi>2</nhafi>
+                   <TABLE_nhsafi>
+                    <ROW_nhsafi>
+                     <nhsafi>1</nhsafi>
+                     <af-name>IPv6 Unicast</af-name>
+                     <nhcriticaldelay>3000</nhcriticaldelay>
+                     <nhnoncriticaldelay>10000</nhnoncriticaldelay>
+                     <TABLE_nexthop>
+                      <ROW_nexthop>
+                       <ipv6nexthop-out>::ffff:0.0.0.0</ipv6nexthop-out>
+                       <refcount>0</refcount>
+                       <igpmetric>0</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>0</igppref>
+                       <attached>false</attached>
+                       <local>true</local>
+                       <reachable>false</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>never</resolvetime>
+                       <ribroute>0.0.0.0/0</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>0</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipv6nexthop-out>::ffff:55.0.0.1</ipv6nexthop-out>
+                       <refcount>0</refcount>
+                       <igpmetric>80</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>111.111.111.1</attachedhop>
+                         <interface>Ethernet1/3</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:05:19</resolvetime>
+                       <ribroute>55.0.0.0/24</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>2</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipv6nexthop-out>::ffff:90.1.1.0</ipv6nexthop-out>
+                       <refcount>0</refcount>
+                       <igpmetric>41</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>111.111.111.1</attachedhop>
+                         <interface>Ethernet1/3</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:05:19</resolvetime>
+                       <ribroute>90.1.1.0/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>1</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipv6nexthop-out>::ffff:91.1.2.1</ipv6nexthop-out>
+                       <refcount>0</refcount>
+                       <igpmetric>80</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>111.111.111.1</attachedhop>
+                         <interface>Ethernet1/3</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:05:36</resolvetime>
+                       <ribroute>0.0.0.0/0</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>00:05:52</nextadvertise>
+                       <rnhepoch>1</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipv6nexthop-out>::ffff:95.1.1.0</ipv6nexthop-out>
+                       <refcount>0</refcount>
+                       <igpmetric>81</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>111.111.111.1</attachedhop>
+                         <interface>Ethernet1/3</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:05:19</resolvetime>
+                       <ribroute>95.1.1.0/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>1</rnhepoch>
+                      </ROW_nexthop>
+                     </TABLE_nexthop>
+                    </ROW_nhsafi>
+                   </TABLE_nhsafi>
+                  </ROW_nhafi>
+                 </TABLE_nhafi>
+                </ROW_nhvrf>
+                <ROW_nhvrf>
+                 <nhvrf-name-out>default</nhvrf-name-out>
+                 <TABLE_nhafi>
+                  <ROW_nhafi>
+                   <nhafi>1</nhafi>
+                   <TABLE_nhsafi>
+                    <ROW_nhsafi>
+                     <nhsafi>128</nhsafi>
+                     <af-name>VPNv4 Unicast</af-name>
+                     <nhcriticaldelay>3000</nhcriticaldelay>
+                     <nhnoncriticaldelay>10000</nhnoncriticaldelay>
+                     <TABLE_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>0.0.0.0</ipnexthop-out>
+                       <refcount>0</refcount>
+                       <igpmetric>0</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>0</igppref>
+                       <attached>false</attached>
+                       <local>true</local>
+                       <reachable>false</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>never</resolvetime>
+                       <ribroute>0.0.0.0/0</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>0</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>55.0.0.1</ipnexthop-out>
+                       <refcount>0</refcount>
+                       <igpmetric>80</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>111.111.111.1</attachedhop>
+                         <interface>Ethernet1/3</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:05:19</resolvetime>
+                       <ribroute>55.0.0.0/24</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>2</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>90.1.1.0</ipnexthop-out>
+                       <refcount>0</refcount>
+                       <igpmetric>41</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>111.111.111.1</attachedhop>
+                         <interface>Ethernet1/3</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:05:19</resolvetime>
+                       <ribroute>90.1.1.0/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>1</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>91.1.2.1</ipnexthop-out>
+                       <refcount>0</refcount>
+                       <igpmetric>80</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>111.111.111.1</attachedhop>
+                         <interface>Ethernet1/3</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:05:36</resolvetime>
+                       <ribroute>0.0.0.0/0</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>00:05:52</nextadvertise>
+                       <rnhepoch>1</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>95.1.1.0</ipnexthop-out>
+                       <refcount>0</refcount>
+                       <igpmetric>81</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>111.111.111.1</attachedhop>
+                         <interface>Ethernet1/3</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:05:19</resolvetime>
+                       <ribroute>95.1.1.0/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>1</rnhepoch>
+                      </ROW_nexthop>
+                     </TABLE_nexthop>
+                    </ROW_nhsafi>
+                   </TABLE_nhsafi>
+                  </ROW_nhafi>
+                 </TABLE_nhafi>
+                </ROW_nhvrf>
+                <ROW_nhvrf>
+                 <nhvrf-name-out>default</nhvrf-name-out>
+                 <TABLE_nhafi>
+                  <ROW_nhafi>
+                   <nhafi>2</nhafi>
+                   <TABLE_nhsafi>
+                    <ROW_nhsafi>
+                     <nhsafi>128</nhsafi>
+                     <af-name>VPNv6 Unicast</af-name>
+                     <nhcriticaldelay>3000</nhcriticaldelay>
+                     <nhnoncriticaldelay>10000</nhnoncriticaldelay>
+                     <TABLE_nexthop>
+                      <ROW_nexthop>
+                       <ipv6nexthop-out>::ffff:0.0.0.0</ipv6nexthop-out>
+                       <refcount>0</refcount>
+                       <igpmetric>0</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>0</igppref>
+                       <attached>false</attached>
+                       <local>true</local>
+                       <reachable>false</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>never</resolvetime>
+                       <ribroute>0.0.0.0/0</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>0</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipv6nexthop-out>::ffff:55.0.0.1</ipv6nexthop-out>
+                       <refcount>0</refcount>
+                       <igpmetric>80</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>111.111.111.1</attachedhop>
+                         <interface>Ethernet1/3</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:05:19</resolvetime>
+                       <ribroute>55.0.0.0/24</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>2</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipv6nexthop-out>::ffff:90.1.1.0</ipv6nexthop-out>
+                       <refcount>0</refcount>
+                       <igpmetric>41</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>111.111.111.1</attachedhop>
+                         <interface>Ethernet1/3</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:05:19</resolvetime>
+                       <ribroute>90.1.1.0/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>1</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipv6nexthop-out>::ffff:91.1.2.1</ipv6nexthop-out>
+                       <refcount>0</refcount>
+                       <igpmetric>80</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>111.111.111.1</attachedhop>
+                         <interface>Ethernet1/3</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:05:36</resolvetime>
+                       <ribroute>0.0.0.0/0</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>00:05:52</nextadvertise>
+                       <rnhepoch>1</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipv6nexthop-out>::ffff:95.1.1.0</ipv6nexthop-out>
+                       <refcount>0</refcount>
+                       <igpmetric>81</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>111.111.111.1</attachedhop>
+                         <interface>Ethernet1/3</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:05:19</resolvetime>
+                       <ribroute>95.1.1.0/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>1</rnhepoch>
+                      </ROW_nexthop>
+                     </TABLE_nexthop>
+                    </ROW_nhsafi>
+                   </TABLE_nhsafi>
+                  </ROW_nhafi>
+                 </TABLE_nhafi>
+                </ROW_nhvrf>
+                <ROW_nhvrf>
+                 <nhvrf-name-out>default</nhvrf-name-out>
+                 <TABLE_nhafi>
+                  <ROW_nhafi>
+                   <nhafi>1</nhafi>
+                   <TABLE_nhsafi>
+                    <ROW_nhsafi>
+                     <nhsafi>5</nhsafi>
+                     <af-name>IPv4 MVPN</af-name>
+                     <nhcriticaldelay>3000</nhcriticaldelay>
+                     <nhnoncriticaldelay>10000</nhnoncriticaldelay>
+                     <TABLE_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>0.0.0.0</ipnexthop-out>
+                       <refcount>0</refcount>
+                       <igpmetric>0</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>0</igppref>
+                       <attached>false</attached>
+                       <local>true</local>
+                       <reachable>false</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>never</resolvetime>
+                       <ribroute>0.0.0.0/0</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>0</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>55.0.0.1</ipnexthop-out>
+                       <refcount>0</refcount>
+                       <igpmetric>80</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>111.111.111.1</attachedhop>
+                         <interface>Ethernet1/3</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:05:19</resolvetime>
+                       <ribroute>55.0.0.0/24</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>2</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>90.1.1.0</ipnexthop-out>
+                       <refcount>0</refcount>
+                       <igpmetric>41</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>111.111.111.1</attachedhop>
+                         <interface>Ethernet1/3</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:05:19</resolvetime>
+                       <ribroute>90.1.1.0/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>1</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>91.1.2.1</ipnexthop-out>
+                       <refcount>0</refcount>
+                       <igpmetric>80</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>111.111.111.1</attachedhop>
+                         <interface>Ethernet1/3</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:05:36</resolvetime>
+                       <ribroute>0.0.0.0/0</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>00:05:52</nextadvertise>
+                       <rnhepoch>1</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>95.1.1.0</ipnexthop-out>
+                       <refcount>0</refcount>
+                       <igpmetric>81</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>111.111.111.1</attachedhop>
+                         <interface>Ethernet1/3</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:05:19</resolvetime>
+                       <ribroute>95.1.1.0/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>1</rnhepoch>
+                      </ROW_nexthop>
+                     </TABLE_nexthop>
+                    </ROW_nhsafi>
+                   </TABLE_nhsafi>
+                  </ROW_nhafi>
+                 </TABLE_nhafi>
+                </ROW_nhvrf>
+                <ROW_nhvrf>
+                 <nhvrf-name-out>default</nhvrf-name-out>
+                 <TABLE_nhafi>
+                  <ROW_nhafi>
+                   <nhafi>2</nhafi>
+                   <TABLE_nhsafi>
+                    <ROW_nhsafi>
+                     <nhsafi>5</nhsafi>
+                     <af-name>IPv6 MVPN</af-name>
+                     <nhcriticaldelay>3000</nhcriticaldelay>
+                     <nhnoncriticaldelay>10000</nhnoncriticaldelay>
+                     <TABLE_nexthop>
+                      <ROW_nexthop>
+                       <ipv6nexthop-out>::ffff:0.0.0.0</ipv6nexthop-out>
+                       <refcount>0</refcount>
+                       <igpmetric>0</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>0</igppref>
+                       <attached>false</attached>
+                       <local>true</local>
+                       <reachable>false</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>never</resolvetime>
+                       <ribroute>0.0.0.0/0</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>0</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipv6nexthop-out>::ffff:55.0.0.1</ipv6nexthop-out>
+                       <refcount>0</refcount>
+                       <igpmetric>80</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>111.111.111.1</attachedhop>
+                         <interface>Ethernet1/3</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:05:19</resolvetime>
+                       <ribroute>55.0.0.0/24</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>2</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipv6nexthop-out>::ffff:90.1.1.0</ipv6nexthop-out>
+                       <refcount>0</refcount>
+                       <igpmetric>41</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>111.111.111.1</attachedhop>
+                         <interface>Ethernet1/3</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:05:19</resolvetime>
+                       <ribroute>90.1.1.0/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>1</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipv6nexthop-out>::ffff:91.1.2.1</ipv6nexthop-out>
+                       <refcount>0</refcount>
+                       <igpmetric>80</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>111.111.111.1</attachedhop>
+                         <interface>Ethernet1/3</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:05:36</resolvetime>
+                       <ribroute>0.0.0.0/0</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>00:05:52</nextadvertise>
+                       <rnhepoch>1</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipv6nexthop-out>::ffff:95.1.1.0</ipv6nexthop-out>
+                       <refcount>0</refcount>
+                       <igpmetric>81</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>111.111.111.1</attachedhop>
+                         <interface>Ethernet1/3</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:05:19</resolvetime>
+                       <ribroute>95.1.1.0/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>1</rnhepoch>
+                      </ROW_nexthop>
+                     </TABLE_nexthop>
+                    </ROW_nhsafi>
+                   </TABLE_nhsafi>
+                  </ROW_nhafi>
+                 </TABLE_nhafi>
+                </ROW_nhvrf>
+                <ROW_nhvrf>
+                 <nhvrf-name-out>default</nhvrf-name-out>
+                 <TABLE_nhafi>
+                  <ROW_nhafi>
+                   <nhafi>25</nhafi>
+                   <TABLE_nhsafi>
+                    <ROW_nhsafi>
+                     <nhsafi>70</nhsafi>
+                     <af-name>L2VPN EVPN</af-name>
+                     <nhcriticaldelay>3000</nhcriticaldelay>
+                     <nhnoncriticaldelay>10000</nhnoncriticaldelay>
+                     <TABLE_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>0.0.0.0</ipnexthop-out>
+                       <refcount>0</refcount>
+                       <igpmetric>0</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>0</igppref>
+                       <attached>false</attached>
+                       <local>true</local>
+                       <reachable>false</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>never</resolvetime>
+                       <ribroute>0.0.0.0/0</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>0</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>55.0.0.1</ipnexthop-out>
+                       <refcount>0</refcount>
+                       <igpmetric>80</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>111.111.111.1</attachedhop>
+                         <interface>Ethernet1/3</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:05:19</resolvetime>
+                       <ribroute>55.0.0.0/24</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>2</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>90.1.1.0</ipnexthop-out>
+                       <refcount>1</refcount>
+                       <igpmetric>41</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>111.111.111.1</attachedhop>
+                         <interface>Ethernet1/3</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:05:19</resolvetime>
+                       <ribroute>90.1.1.0/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>1</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>91.1.2.1</ipnexthop-out>
+                       <refcount>2</refcount>
+                       <igpmetric>80</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>111.111.111.1</attachedhop>
+                         <interface>Ethernet1/3</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:05:36</resolvetime>
+                       <ribroute>0.0.0.0/0</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>00:05:52</nextadvertise>
+                       <rnhepoch>1</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>95.1.1.0</ipnexthop-out>
+                       <refcount>1</refcount>
+                       <igpmetric>81</igpmetric>
+                       <multipath>false</multipath>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>111.111.111.1</attachedhop>
+                         <interface>Ethernet1/3</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:05:19</resolvetime>
+                       <ribroute>95.1.1.0/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>1</rnhepoch>
+                      </ROW_nexthop>
+                     </TABLE_nexthop>
+                    </ROW_nhsafi>
+                   </TABLE_nhsafi>
+                  </ROW_nhafi>
+                 </TABLE_nhafi>
+                </ROW_nhvrf>
+               </TABLE_nhvrf>
+              </__readonly__>
+             </nexthop-database>
+            </all>
+           </bgp>
+          </show>
+         </nf:data>
+        </nf:rpc-reply>
+        ]]>]]>
+        '''}
+
     def test_golden_xml_1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
@@ -20580,6 +22117,13 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
         obj = ShowBgpAllNexthopDatabase(device=self.device, context='xml')
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
+    def test_golden_xml_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowBgpAllNexthopDatabase(device=self.device, context='xml')
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_3)
 
 
 # =======================================================
