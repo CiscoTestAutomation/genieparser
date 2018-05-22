@@ -34,3 +34,5 @@
 * Added new parsers and unittests for the following ISSU commands:
     * ShowIssuStateDetail - 'show issu state detail'
     * ShowIssuRollbackTimer - 'show issu rollback timer'
+
+* Added package library to CesMonitor.
