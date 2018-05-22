@@ -838,9 +838,8 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
 
     def __init__ (self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.cmd = 'show ip interface brief'.format()
 
-    def cli(self):
+    def cli(self, interface=''):
         """parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
@@ -848,7 +847,10 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
         cuting, transforming, returning
         """
         parsed_dict = {}
-        output = self.device.execute(self.cmd)
+        if interface:
+            output = self.device.execute('show ip interface brief {}'.format(interface))
+        else:
+            output = self.device.execute('show ip interface brief')
 
         if output:
             res = parsergen.oper_fill_tabular(device_output=output,
@@ -2027,8 +2029,11 @@ class ShowIpv6InterfaceSchema(MetaParser):
 class ShowIpv6Interface(ShowIpv6InterfaceSchema):
     """Parser for show ipv6 interface"""
 
-    def cli(self):
-        out = self.device.execute('show ipv6 interface')
+    def cli(self, interface=''):
+        if not interface:
+            out = self.device.execute('show ipv6 interface')
+        else:
+            out = self.device.execute('show ipv6 interface {}'.format(interface))
         ret_dict = {}
         ipv6 = False
         joined_group = []
