@@ -2030,8 +2030,10 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
     """Parser for show ipv6 interface"""
 
     def cli(self, interface=''):
-        out = self.device.execute('show ipv6 interface') if not interface else \
-              self.device.execute('show ipv6 interface {}'.format(interface))
+        if not interface:
+            out = self.device.execute('show ipv6 interface')
+        else:
+            out = self.device.execute('show ipv6 interface {}'.format(interface))
         ret_dict = {}
         ipv6 = False
         joined_group = []
