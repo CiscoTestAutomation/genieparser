@@ -62,7 +62,7 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
 
         # Finished local lock acquisition on R0
         p0 = re.compile(r'^Finished +local +lock +acquisition'
-                         ' +on +(?P<slot>(\S+))$')
+                         ' +on +(switch *)?(?P<slot>(\S+))$')
 
         # No ISSU operation is in progress
         p1 = re.compile(r'^No +ISSU +operation +is +in +progress$')
