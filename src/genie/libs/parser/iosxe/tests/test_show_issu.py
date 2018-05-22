@@ -133,6 +133,19 @@ class test_show_issu_state_detail(unittest.TestCase):
             {'R0':
                 {'issu_in_progress': False}}}
 
+    golden_output_5 = {'execute.return_value': '''
+        R1#show issu state detail
+        --- Starting local lock acquisition on switch 1 ---
+        Finished local lock acquisition on switch 1
+
+        No ISSU operation is in progress
+        '''}
+
+    golden_parsed_output_5 = {
+        'slot':
+            {'1':
+                {'issu_in_progress': False}}}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIssuStateDetail(device=self.device)
@@ -166,6 +179,13 @@ class test_show_issu_state_detail(unittest.TestCase):
         obj = ShowIssuStateDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
+
+    def test_golden_5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_5)
+        obj = ShowIssuStateDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_5)
 
 
 # =========================================
