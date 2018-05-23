@@ -342,6 +342,8 @@ class test_show_nve_interface_detail(unittest.TestCase):
             'src_if_holddown_tm': 180,
             'src_if_holdup_tm': 30,
             'src_if_holddown_left': 0,
+            'multisite_convergence_time': 180,
+            'multisite_convergence_time_left': 0,
             'vip_rmac': "0200.c90c.0b16",
             'vip_rmac_ro': "0200.6565.6565",
             'sm_state': "nve-intf-init",

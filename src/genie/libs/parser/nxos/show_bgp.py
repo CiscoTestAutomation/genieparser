@@ -9687,7 +9687,7 @@ class ShowBgpL2vpnEvpnSummarySchema(MetaParser):
                                         'remoteas': int, 
                                         'time': str, 
                                         'state': str,
-                                        'prefixreceived': int, 
+                                        Optional('prefixreceived'): int,
                                     }
                                 }
                             }
@@ -9804,8 +9804,12 @@ class ShowBgpL2vpnEvpnSummary(ShowBgpL2vpnEvpnSummarySchema):
                 neighbor_dict.update({'inq': int(group.pop('inq'))})
                 neighbor_dict.update({'outq': int(group.pop('outq'))})
                 neighbor_dict.update({'time': group.pop('time')})
-                neighbor_dict.update({'prefixreceived': int(group.pop('prefixreceived'))})
-                neighbor_dict.update({'state': 'established'})
+                prefixreceived = group.pop('prefixreceived')
+                try:
+                    neighbor_dict.update({'prefixreceived': int(prefixreceived)})
+                    neighbor_dict.update({'state': 'established'})
+                except ValueError:
+                    neighbor_dict.update({'state': prefixreceived.lower()})
                 continue
 
         return result_dict
@@ -9915,7 +9919,7 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
 
         p1 = re.compile(r'^\s*BGP +routing +table +information +for +VRF +(?P<vrf_name_out>[\w]+),'
                         ' +address +family +(?P<af_name>[\w\s]+)$')
-        p2 = re.compile(r'^\s*Route Distinguisher: +(?P<rd>[\w\.\:]+)( +\(ES +(?P<es>[\w\s\[\]\.]+)\))?( +\(L2VNI +(?P<rd_vniid>[\d]+)\))?$')
+        p2 = re.compile(r'^\s*Route Distinguisher: +(?P<rd>[\w\.\:]+)( +\(ES +(?P<es>[\w\s\[\]\.]+)\))?( +\(L(2|3)VNI +(?P<rd_vniid>[\d]+)\))?$')
         p3 = re.compile(r'^\s*BGP routing table entry for +(?P<nonipprefix>[\w\[\]\:\.\/]+), +version +(?P<prefixversion>[\d]+)$')
         p4 = re.compile(r'^\s*Paths: +\((?P<totalpaths>[\d]+) +available, +best +#(?P<bestpathnr>[\d]+)\)$')
         p5 = re.compile(r'^\s*Flags: (?P<flag_xmit>[\S\s]+) +on +xmit-list(, +(?P<flags_attr>[\w\s\/\,]+))?$')
@@ -10084,13 +10088,13 @@ class ShowBgpL2vpnEvpnNeighborsSchema(MetaParser):
                                         'neighbor': str, 
                                         'remoteas': int, 
                                         Optional('localas'): int,
-                                        'link': str, 
-                                        'index': int, 
-                                        'version': int, 
-                                        'remote_id': str, 
-                                        'state': str, 
-                                        'up': bool, 
-                                        'elapsedtime': str, 
+                                        Optional('link'): str,
+                                        Optional('index'): int,
+                                        Optional('version'): int,
+                                        Optional('remote_id'): str,
+                                        Optional('state'): str,
+                                        Optional('up'): bool,
+                                        Optional('elapsedtime'): str,
                                         Optional('connectedif'): str,
                                         Optional('bfd'): bool,
                                         Optional('ttlsecurity'): bool, 
@@ -10117,29 +10121,29 @@ class ShowBgpL2vpnEvpnNeighborsSchema(MetaParser):
                                         Optional('peerresettime'): str, 
                                         Optional('peerresetreason'): str,
                                         Optional('capsnegotiated'): bool,
-                                        'capmpadvertised': bool, 
-                                        'caprefreshadvertised': bool, 
-                                        'capgrdynamicadvertised': bool,
-                                        'capmprecvd': bool,
-                                        'caprefreshrecvd': bool, 
-                                        'capgrdynamicrecvd': bool, 
-                                        'capolddynamicadvertised': bool, 
-                                        'capolddynamicrecvd': bool, 
-                                        'caprradvertised': bool, 
-                                        'caprrrecvd': bool, 
-                                        'capoldrradvertised': bool, 
-                                        'capoldrrrecvd': bool, 
-                                        'capas4advertised': bool, 
-                                        'capas4recvd': bool, 
-                                        'af': {
+                                        Optional('capmpadvertised'): bool,
+                                        Optional('caprefreshadvertised'): bool,
+                                        Optional('capgrdynamicadvertised'): bool,
+                                        Optional('capmprecvd'): bool,
+                                        Optional('caprefreshrecvd'): bool,
+                                        Optional('capgrdynamicrecvd'): bool,
+                                        Optional('capolddynamicadvertised'): bool,
+                                        Optional('capolddynamicrecvd'): bool,
+                                        Optional('caprradvertised'): bool,
+                                        Optional('caprrrecvd'): bool,
+                                        Optional('capoldrradvertised'): bool,
+                                        Optional('capoldrrrecvd'): bool,
+                                        Optional('capas4advertised'): bool,
+                                        Optional('capas4recvd'): bool,
+                                        Optional('af'): {
                                             Any(): { 
                                                 'af_advertised': bool, 
                                                 'af_recvd': bool, 
                                                 'af_name': str, 
                                             }
                                         },
-                                        'capgradvertised': bool, 
-                                        'capgrrecvd': bool, 
+                                        Optional('capgradvertised'): bool,
+                                        Optional('capgrrecvd'): bool,
                                         Optional('graf'): {
                                             Any(): { 
                                                 Optional('gr_af_name'): str,
@@ -10148,11 +10152,11 @@ class ShowBgpL2vpnEvpnNeighborsSchema(MetaParser):
                                                 Optional('gr_fwd'): bool,
                                             }
                                         },
-                                        'grrestarttime': int, 
-                                        'grstaletiem': int,
-                                        'grrecvdrestarttime': int,
-                                        'capextendednhadvertised': bool, 
-                                        'capextendednhrecvd': bool, 
+                                        Optional('grrestarttime'): int,
+                                        Optional('grstaletiem'): int,
+                                        Optional('grrecvdrestarttime'): int,
+                                        Optional('capextendednhadvertised'): bool,
+                                        Optional('capextendednhrecvd'): bool,
                                         Optional('capextendednhaf'): {
                                             Any(): { 
                                                 Optional('capextendednh_af_name'): str,
@@ -10172,11 +10176,11 @@ class ShowBgpL2vpnEvpnNeighborsSchema(MetaParser):
                                         'capabilitiesrecvd': int,
                                         'bytessent': int,
                                         'bytesrecvd': int,
-                                        'peraf': {
+                                        Optional('peraf'): {
                                             Any(): { 
-                                                'per_af_name': str, 
-                                                'tableversion': int,
-                                                'neighbortableversion': int,
+                                                Optional('per_af_name'): str,
+                                                Optional('tableversion'): int,
+                                                Optional('neighbortableversion'): int,
                                                 Optional('pfxrecvd'): int,
                                                 Optional('pfxbytes'): int,
                                                 Optional('insoftreconfigallowed'): bool, 
@@ -10189,11 +10193,11 @@ class ShowBgpL2vpnEvpnNeighborsSchema(MetaParser):
 
                                             }
                                         },
-                                        'localaddr': str, 
-                                        'localport': int, 
-                                        'remoteaddr': str, 
-                                        'remoteport': int, 
-                                        'fd': int, 
+                                        Optional('localaddr'): str,
+                                        Optional('localport'): int,
+                                        Optional('remoteaddr'): str,
+                                        Optional('remoteport'): int,
+                                        Optional('fd'): int,
                                     }
                                 }
                             }

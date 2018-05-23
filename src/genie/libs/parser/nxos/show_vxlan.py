@@ -200,7 +200,7 @@ class ShowNveVni(ShowNveVniSchema):
                 vni = int(group.pop('vni'))
                 nve_dict = result_dict.setdefault(nve_name,{}).setdefault('vni',{}).setdefault(vni,{})
                 nve_dict.update({'vni': vni})
-                nve_dict.update({'mcast': group.pop('mcast')})
+                nve_dict.update({'mcast': group.pop('mcast').lower()})
                 nve_dict.update({'vni_state': group.pop('vni_state').lower()})
                 nve_dict.update({'mode': group.pop('mode')})
                 nve_dict.update({'type': group.pop('type')})
@@ -279,6 +279,8 @@ class ShowNveInterfaceDetailSchema(MetaParser):
             Optional('src_if_holddown_tm'): int,
             Optional('src_if_holdup_tm'): int,
             Optional('src_if_holddown_left'): int,
+            Optional('multisite_convergence_time'): int,
+            Optional('multisite_convergence_time_left'): int,
             Optional('vip_rmac'): str,
             Optional('vip_rmac_ro'): str,
             Optional('sm_state'): str,
@@ -332,12 +334,16 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
         p18 = re.compile(r'^\s*down-stream +vni +config +mode: +(?P<vni_config_mode>[\w\/]+)$')
         p19 = re.compile(r'^\s*Nve +Src +node +last +notif +sent: +(?P<last_notif_sent>[\w\-]+)$')
         p20 = re.compile(r'^\s*Nve +Mcast +Src +node +last +notif +sent: +(?P<last_notif_sent>[\w\-]+)$')
-        p23 = re.compile(r'^\s*Nve +MultiSite +Src +node +last +notif +sent: +(?P<notif_sent>[\w\-]+)$')
+        p20_1 = re.compile(r'^\s*Nve +MultiSite +Src +node +last +notif +sent: +(?P<notif_sent>[\w\-]+)$')
         p21 = re.compile(
             r'^\s*Multisite +bgw\-if: +(?P<multisite_bgw_if>[\w\/\-]+) +\(ip: +(?P<multisite_bgw_if_ip>[\w\.]+),'
             ' +admin: +(?P<multisite_bgw_if_admin_state>[\w]+), +oper: +(?P<multisite_bgw_if_oper_state>[\w]+)\)$')
         p22 = re.compile(r'^\s*Multisite +bgw\-if +oper +down +reason: +(?P<reason>[\w\.\s]+)$')
-
+        # Multi-Site delay-restore time: 180 seconds
+        p23 = re.compile(r'^\s*Multi-Site delay\-restore time: +(?P<multisite_convergence_time>\d+) +seconds$')
+        # Multi-Site delay-restore time left: 0 seconds
+        p24 = re.compile(
+            r'^\s*Multisite +bgw\-if +oper +down +reason: +(?P<multisite_convergence_time_left>\d+) +seconds$')
 
         for line in out.splitlines():
             if line:
@@ -493,7 +499,7 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
                 continue
 
             # Nve MultiSite Src node last notif sent: None
-            m = p23.match(line)
+            m = p20_1.match(line)
             if m:
                 group = m.groupdict()
                 nve_dict.update({'multi_src_intf_last_reinit_notify_type': group.pop('notif_sent').lower()})
@@ -514,6 +520,18 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
             if m:
                 group = m.groupdict()
                 nve_dict.update({'multisite_bgw_if_oper_state_down_reason': group.pop('reason')})
+                continue
+
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                nve_dict.update({'multisite_convergence_time': int(group.pop('multisite_convergence_time'))})
+                continue
+
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                nve_dict.update({'multisite_convergence_time_left': int(group.pop('multisite_convergence_time_left'))})
                 continue
         return result_dict
 
