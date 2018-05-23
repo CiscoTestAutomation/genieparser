@@ -665,15 +665,15 @@ class ShowNveEthernetSegmentSchema(MetaParser):
                             'nve_state': str,
                             'host_reach_mode': str,
                             'active_vlans': str,
-                            'df_vlans': str,
+                            Optional('df_vlans'): str,
                             'active_vnis': str,
                             'cc_failed_vlans': str,
                             'cc_timer_left': str,
                             'num_es_mem': int,
-                            'local_ordinal': int,
+                            Optional('local_ordinal'): int,
                             'df_timer_st': str,
                             'config_status': str,
-                            'df_list': str,
+                            Optional('df_list'): str,
                             'es_rt_added': bool,
                             'ead_rt_added': bool,
                             'ead_evi_rt_timer_age': str,
@@ -717,7 +717,6 @@ class ShowNveEthernetSegment(ShowNveEthernetSegmentSchema):
         #  ES route added to L2RIB: True
         #  EAD/ES routes added to L2RIB: False
         #  EAD/EVI route timer age: not running
-
         p1 = re.compile(r'^\s*ESI: +(?P<esi>[\w\.]+)$')
         p2 = re.compile(r'^\s*Parent +interface: +(?P<parent_intf>[\w\.\/]+)$')
         p3 = re.compile(r'^\s*ES +State: +(?P<es_state>[\w\/]+)$')
@@ -884,7 +883,6 @@ class ShowNveEthernetSegment(ShowNveEthernetSegmentSchema):
                 group = m.groupdict()
                 esi_dict.update({'ead_evi_rt_timer_age': group.pop('ead_evi_rt_timer_age')})
                 continue
-
         return result_dict
 
 

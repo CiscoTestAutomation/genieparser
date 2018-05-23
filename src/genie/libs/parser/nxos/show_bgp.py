@@ -10094,6 +10094,7 @@ class ShowBgpL2vpnEvpnNeighborsSchema(MetaParser):
                                         Optional('remote_id'): str,
                                         Optional('state'): str,
                                         Optional('up'): bool,
+                                        Optional('retry'): str,
                                         Optional('elapsedtime'): str,
                                         Optional('connectedif'): str,
                                         Optional('bfd'): bool,
