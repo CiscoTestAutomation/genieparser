@@ -7580,6 +7580,15 @@ class ShowBgpAllNexthopDatabase(ShowBgpVrfAllAllNextHopDatabase):
                     sub_dict['igp_cost'] = \
                         int(nexthop_root.find('{}igpmetric'.format(namespace)).text)
 
+                    # <multipath>false</multipath>
+                    try:
+                        if nexthop_root.find('{}multipath'.format(namespace)).text == 'false':
+                            sub_dict['multipath'] = 'No'
+                        else:
+                            sub_dict['multipath'] = 'Yes'
+                    except Exception:
+                        pass
+
                     # <igptype>0</igptype>
                     sub_dict['igp_route_type'] = \
                         int(nexthop_root.find('{}igptype'.format(namespace)).text)

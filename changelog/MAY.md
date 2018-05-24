@@ -2,20 +2,14 @@
 
 * Normalized all the ats.tcl imports in the package.
 
-* New parsers added and their corresponding unittests.
+* New parsers added and their corresponding unittests:
 	* ShowLacpSysId
-	* ShowLacpCounters
-	* Show lacp <channel_group> counters
-	* ShowLacpInternal
-	* Show lacp <channel_group> internal
-	* ShowLacpNeighbor
-	* Show lacp <channel_group> neighbor
-	* ShowPagpCounters
-	* Show pagp <channel_group> counters
-	* ShowPagpNeighbor
-	* Show pagp <channel_group> neighbor
-	* ShowPagpInternal
-	* Show pagp <channel_group> internal
+	* ShowLacpCounters - 'show lacp <channel_group> counters'
+	* ShowLacpInternal - 'show lacp <channel_group> internal'
+	* ShowLacpNeighbor - 'show lacp <channel_group> neighbor'
+	* ShowPagpCounters - 'show pagp <channel_group> counters'
+	* ShowPagpNeighbor - 'show pagp <channel_group> neighbor'
+	* ShowPagpInternal - 'show pagp <channel_group> internal'
 	* ShowEtherchannelSummary
 	* show access-session
 	* show access-lists
@@ -35,27 +29,36 @@
 * Fixed the following parsers.
 	* ShowBgpVrfAllAllNextHopDatabase
 
+# May 22nd
+
+* Added new parsers and unittests for the following ISSU commands:
+    * ShowIssuStateDetail - 'show issu state detail'
+    * ShowIssuRollbackTimer - 'show issu rollback timer'
+
+* Added package library to CesMonitor.
+
 # May 24th
 
 * New Vxlan parsers and their related unittests
-   - ShowNvePeers
-   - ShowNveVniSummary
-   - ShowNveVni
-   - ShowNveInterfaceDetail
-   - ShowNveMultisiteFabricLinks
-   - ShowNveMultisiteDciLinks
-   - ShowNveEthernetSegment
-   - ShowL2routeEvpnEternetSegmentAll
-   - ShowL2routeTopologyDetail
-   - ShowL2routeMacAllDetail
-   - ShowL2routeMacIpAllDetail
-   - ShowL2routeSummary
-   - ShowL2routeFlAll
-   - ShowBgpL2vpnEvpnSummary
-   - ShowBgpL2vpnEvpnRouteType
-   - ShowBgpL2vpnEvpnNeighbors
+   * ShowNvePeers
+   * ShowNveVniSummary
+   * ShowNveVni
+   * ShowNveInterfaceDetail
+   * ShowNveMultisiteFabricLinks
+   * ShowNveMultisiteDciLinks
+   * ShowNveEthernetSegment
+   * ShowL2routeEvpnEternetSegmentAll
+   * ShowL2routeTopologyDetail
+   * ShowL2routeMacAllDetail
+   * ShowL2routeMacIpAllDetail
+   * ShowL2routeSummary
+   * ShowL2routeFlAll
+   * ShowBgpL2vpnEvpnSummary
+   * ShowBgpL2vpnEvpnRouteType
+   * ShowBgpL2vpnEvpnNeighbors
 
 * Fixed the following parsers.
-    - ShowIpRoute
-    - ShowIpOspf
-    - ShowRunningConfigBgp
+    * ShowIpRoute
+    * ShowIpOspf
+    * ShowRunningConfigBgp
+

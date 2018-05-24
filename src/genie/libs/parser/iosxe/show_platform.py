@@ -1680,7 +1680,7 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
                          '(?P<serial_number>\w+) +)?'
                          '(?P<status>(\w+|Not Present)) *'
                          '((?P<system_power>\w+) +'
-                         '(?P<poe_power>\w+) +'
+                         '(?P<poe_power>[\w\/]+) +'
                          '(?P<watts>\w+))?$')
 
         for line in out.splitlines():
