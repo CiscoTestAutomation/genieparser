@@ -34,3 +34,28 @@
 
 * Fixed the following parsers.
 	* ShowBgpVrfAllAllNextHopDatabase
+
+# May 24th
+
+* New Vxlan parsers and their related unittests
+   - ShowNvePeers
+   - ShowNveVniSummary
+   - ShowNveVni
+   - ShowNveInterfaceDetail
+   - ShowNveMultisiteFabricLinks
+   - ShowNveMultisiteDciLinks
+   - ShowNveEthernetSegment
+   - ShowL2routeEvpnEternetSegmentAll
+   - ShowL2routeTopologyDetail
+   - ShowL2routeMacAllDetail
+   - ShowL2routeMacIpAllDetail
+   - ShowL2routeSummary
+   - ShowL2routeFlAll
+   - ShowBgpL2vpnEvpnSummary
+   - ShowBgpL2vpnEvpnRouteType
+   - ShowBgpL2vpnEvpnNeighbors
+
+* Fixed the following parsers.
+    - ShowIpRoute
+    - ShowIpOspf
+    - ShowRunningConfigBgp
