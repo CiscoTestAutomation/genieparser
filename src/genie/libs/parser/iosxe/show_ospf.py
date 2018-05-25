@@ -100,10 +100,10 @@ class ShowIpOspfSchema(MetaParser):
                                             'hold': int,
                                             'maximum': int},
                                         'lsa': 
-                                            {'start': int,
-                                            'hold': int,
-                                            'maximum': int,
-                                            'arrival': int},
+                                            {Optional('start'): int,
+                                            Optional('hold'): int,
+                                            Optional('maximum'): int,
+                                            Optional('arrival'): int},
                                         },
                                     },
                                 Optional('auto_cost'): 
@@ -613,6 +613,8 @@ class ShowIpOspf(ShowIpOspfSchema):
                               ' +(?P<arrival>(\S+)) +msecs$')
             m = p21.match(line)
             if m:
+                if 'lsa' not in sub_dict['spf_control']['throttle']:
+                    sub_dict['spf_control']['throttle']['lsa'] = {}
                 sub_dict['spf_control']['throttle']['lsa']['arrival'] = \
                     int(float(m.groupdict()['arrival']))
                 continue
