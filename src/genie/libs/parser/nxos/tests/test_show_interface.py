@@ -12,7 +12,8 @@ from genie.libs.parser.nxos.show_interface import ShowInterface, ShowVrfAllInter
                                        ShowIpInterfaceVrfAll, \
                                        ShowIpInterfaceBrief, \
                                        ShowIpInterfaceBriefPipeVlan, \
-                                       ShowInterfaceBrief
+                                       ShowInterfaceBrief, \
+                                       ShowRunningConfigInterface
 
 #############################################################################
 # unitest For Show Interface
@@ -2707,6 +2708,101 @@ Lo0           up         --
         intf_obj = ShowInterfaceBrief(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse()
+
+class test_show_run_interface(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    device1 = Device(name='bDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {'interface':
+                                {'nve1':
+                                    {'host_reachability_protocol': 'bgp',
+                                     'member_vni':
+                                        {'8100': {'mcast-group': '225.0.1.11'},
+                                         '8101': {'mcast-group': '225.0.1.12'},
+                                         '8103': {'mcast-group': '225.0.1.13'},
+                                         '8105': {'mcast-group': '225.0.1.16'},
+                                         '8106': {'mcast-group': '225.0.1.17'},
+                                         '8107': {'mcast-group': '225.0.1.18'},
+                                         '8108': {'mcast-group': '225.0.1.19'},
+                                         '8109': {'mcast-group': '225.0.1.20'},
+                                         '8110': {'mcast-group': '225.0.1.21'},
+                                         '8111': {'mcast-group': '225.0.1.22'},
+                                         '8112': {'mcast-group': '225.0.1.23'},
+                                         '8113': {'mcast-group': '225.0.1.24'},
+                                         '8114': {'mcast-group': '225.0.1.25'},
+                                         '9100': {'associate-vrf': True},
+                                         '9105': {'associate-vrf': True},
+                                         '9106': {'associate-vrf': True},
+                                         '9107': {'associate-vrf': True},
+                                         '9108': {'associate-vrf': True},
+                                         '9109': {'associate-vrf': True}
+                                        },
+                                    'shutdown': False,
+                                    'source_interface': 'loopback1'}
+                                }
+                            }
+
+    golden_output = {'execute.return_value': '''
+        N95_1# show running-config  interface nve 1
+
+        !Command: show running-config interface nve1
+        !Time: Mon May 28 16:02:43 2018
+
+        version 7.0(3)I7(1)
+
+        interface nve1
+          no shutdown
+          host-reachability protocol bgp
+          source-interface loopback1
+          member vni 8100
+            mcast-group 225.0.1.11
+          member vni 8101
+            mcast-group 225.0.1.12
+          member vni 8103
+            mcast-group 225.0.1.13
+          member vni 8105
+            mcast-group 225.0.1.16
+          member vni 8106
+            mcast-group 225.0.1.17
+          member vni 8107
+            mcast-group 225.0.1.18
+          member vni 8108
+            mcast-group 225.0.1.19
+          member vni 8109
+            mcast-group 225.0.1.20
+          member vni 8110
+            mcast-group 225.0.1.21
+          member vni 8111
+            mcast-group 225.0.1.22
+          member vni 8112
+            mcast-group 225.0.1.23
+          member vni 8113
+            mcast-group 225.0.1.24
+          member vni 8114
+            mcast-group 225.0.1.25
+          member vni 9100 associate-vrf
+          member vni 9105 associate-vrf
+          member vni 9106 associate-vrf
+          member vni 9107 associate-vrf
+          member vni 9108 associate-vrf
+          member vni 9109 associate-vrf
+
+    '''}
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        intf_obj = ShowRunningConfigInterface(device=self.device)
+        parsed_output = intf_obj.parse(intf='nve1')
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        intf_obj = ShowRunningConfigInterface(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = intf_obj.parse(intf='nve1')
 
             
 if __name__ == '__main__':

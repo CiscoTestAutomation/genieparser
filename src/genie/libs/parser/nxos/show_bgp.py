@@ -10648,4 +10648,3 @@ class ShowBgpL2vpnEvpnNeighbors(ShowBgpL2vpnEvpnNeighborsSchema):
                 neighbor_dict.update({'fd':int(group.pop('fd'))})
                 continue
         return result_dict
-

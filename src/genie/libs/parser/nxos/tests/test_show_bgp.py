@@ -25842,6 +25842,117 @@ class test_show_bgp_labels_xml(unittest.TestCase):
         parsed_output = obj.parse(address_family='ipv4 unicast', vrf='all')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
+# ===========================================
+#  Unit test for 'show bgp l2vpn evpn <WORD>'
+# ===========================================
+
+class test_show_bgp_l2vpn_evpn(unittest.TestCase):
+
+    '''Unit test for 'show bgp l2vpn evpn <WORD>'''
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {}
+
+    golden_output = {'execute.return_value': '''
+        N95_1# show bgp l2vpn evpn fa16.3e59.d0b2 
+        BGP routing table information for VRF default, address family L2VPN EVPN
+        Route Distinguisher: 91.1.1.0:32867    (L2VNI 8100)
+        BGP routing table entry for [2]:[0]:[0]:[48]:[fa16.3e59.d0b2]:[0]:[0.0.0.0]/216, version 478
+        Paths: (1 available, best #1)
+        Flags: (0x000212) on xmit-list, is in l2rib/evpn, is not in HW
+
+          Advertised path-id 1
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 93.1.1.0:32867:[2]:[0]:[0]:[48]:[fa16.3e59.d0b2]:[0]:[0.0.0.0]/216 
+          AS-Path: NONE, path sourced internal to AS
+            93.1.1.1 (metric 80) from 90.1.1.0 (90.1.1.0)
+              Origin IGP, MED 4294967295, localpref 100, weight 0
+              Received label 8100
+              Extcommunity: RT:100:8100 ENCAP:8
+              Originator: 93.1.1.0 Cluster list: 90.1.1.0 
+
+          Path-id 1 not advertised to any peer
+        BGP routing table entry for [2]:[0]:[0]:[48]:[fa16.3e59.d0b2]:[32]:[100.100.11.101]/272, version 17
+        Paths: (1 available, best #1)
+        Flags: (0x000212) on xmit-list, is in l2rib/evpn, is not in HW
+
+          Advertised path-id 1
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 93.1.1.0:32867:[2]:[0]:[0]:[48]:[fa16.3e59.d0b2]:[32]:[100.100.11.101]/272 
+          AS-Path: NONE, path sourced internal to AS
+            93.1.1.1 (metric 80) from 90.1.1.0 (90.1.1.0)
+              Origin IGP, MED 4294967295, localpref 100, weight 0
+              Received label 8100 9100
+              Extcommunity: RT:100:8100 RT:100:9100 ENCAP:8 Router MAC:5e01.8002.0007
+              Originator: 93.1.1.0 Cluster list: 90.1.1.0 
+
+          Path-id 1 not advertised to any peer
+
+        Route Distinguisher: 93.1.1.0:32867
+        BGP routing table entry for [2]:[0]:[0]:[48]:[fa16.3e59.d0b2]:[0]:[0.0.0.0]/216, version 477
+        Paths: (1 available, best #1)
+        Flags: (0x000202) on xmit-list, is not in l2rib/evpn, is not in HW
+
+          Advertised path-id 1
+          Path type: internal, path is valid, is best path
+                     Imported to 1 destination(s)
+          AS-Path: NONE, path sourced internal to AS
+            93.1.1.1 (metric 80) from 90.1.1.0 (90.1.1.0)
+              Origin IGP, MED 4294967295, localpref 100, weight 0
+              Received label 8100
+              Extcommunity: RT:100:8100 ENCAP:8
+              Originator: 93.1.1.0 Cluster list: 90.1.1.0 
+
+          Path-id 1 not advertised to any peer
+        BGP routing table entry for [2]:[0]:[0]:[48]:[fa16.3e59.d0b2]:[32]:[100.100.11.101]/272, version 14
+        Paths: (1 available, best #1)
+        Flags: (0x000202) on xmit-list, is not in l2rib/evpn, is not in HW
+
+          Advertised path-id 1
+          Path type: internal, path is valid, is best path
+                     Imported to 3 destination(s)
+          AS-Path: NONE, path sourced internal to AS
+            93.1.1.1 (metric 80) from 90.1.1.0 (90.1.1.0)
+              Origin IGP, MED 4294967295, localpref 100, weight 0
+              Received label 8100 9100
+              Extcommunity: RT:100:8100 RT:100:9100 ENCAP:8 Router MAC:5e01.8002.0007
+              Originator: 93.1.1.0 Cluster list: 90.1.1.0 
+
+          Path-id 1 not advertised to any peer
+
+        Route Distinguisher: 91.1.1.0:3    (L3VNI 9100)
+        BGP routing table entry for [2]:[0]:[0]:[48]:[fa16.3e59.d0b2]:[32]:[100.100.11.101]/272, version 18
+        Paths: (1 available, best #1)
+        Flags: (0x000202) on xmit-list, is not in l2rib/evpn, is not in HW
+
+          Advertised path-id 1
+          Path type: internal, path is valid, is best path
+                     Imported from 93.1.1.0:32867:[2]:[0]:[0]:[48]:[fa16.3e59.d0b2]:[32]:[100.100.11.101]/272 
+          AS-Path: NONE, path sourced internal to AS
+            93.1.1.1 (metric 80) from 90.1.1.0 (90.1.1.0)
+              Origin IGP, MED 4294967295, localpref 100, weight 0
+              Received label 8100 9100
+              Extcommunity: RT:100:8100 RT:100:9100 ENCAP:8 Router MAC:5e01.8002.0007
+              Originator: 93.1.1.0 Cluster list: 90.1.1.0 
+
+          Path-id 1 not advertised to any peer
+        '''}
+
+    def test_golden_output(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpL2vpnEvpn(device=self.device)
+        parsed_output = obj.parse(ip='')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpL2vpnEvpn(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(ip='')
+
 
 # ==============================================================
 #  Unit test for 'show bgp l2vpn evpn summary'

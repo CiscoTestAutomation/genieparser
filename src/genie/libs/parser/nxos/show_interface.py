@@ -6,6 +6,7 @@ NXOS parsers for the following show commands:
     * show ip interface vrf all
     * show ipv6 interface detail vrf all
     * show interface switchport
+    * show running-config interface <word>
 """
 
 # python
@@ -2588,6 +2589,117 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
                     m.groupdict()['status']
                 interface_dict['interface']['loopback'][interface]['description'] = \
                     m.groupdict()['description']
+                continue
+
+        return interface_dict
+
+# =================================================
+# Schema for 'show running-config interface <WORD>'
+# =================================================
+class ShowRunningConfigInterfaceSchema(MetaParser):
+    """Schema for show running-config interface <WORD>"""
+
+    schema = {'interface':
+                {Any():
+                    {Optional('shutdown'): bool,
+                     Optional('host_reachability_protocol'): str,
+                     Optional('source_interface'): str,
+                     Optional('member_vni'):
+                        {Any():
+                            {Optional('associate-vrf'): bool,
+                             Optional('mcast-group'): str,
+                            },
+                        },
+                    }
+                },
+            }
+
+# =================================================
+# Parser for 'show running-config interface <WORD>'
+# =================================================
+class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
+    """Parser for show running-config interface <WORD>"""
+
+    def cli(self, intf):
+        cmd = 'show running-config interface {}'.format(intf)
+        out = self.device.execute(cmd)
+
+        # Init vars
+        interface_dict = {}
+
+        for line in out.splitlines():
+            line = line.rstrip()
+
+            # interface nve1
+            p1 = re.compile(r'^\s*interface +(?P<intf_name>[a-zA-Z0-9\-]+)$')
+            m = p1.match(line)
+            if m:
+
+                interface = str(m.groupdict()['intf_name'])
+
+                if 'interface' not in interface_dict:
+                    interface_dict['interface'] = {}
+
+                interface_dict['interface'][interface] = {}
+
+                continue
+
+            # no shutdown
+            p2 = re.compile(r'^\s*no shutdown$')
+            m = p2.match(line)
+            if m:
+
+                interface_dict['interface'][interface]['shutdown'] = False
+
+                continue
+
+            # host-reachability protocol bgp
+            p3 = re.compile(r'^\s*host-reachability protocol +(?P<protocol>[a-zA-Z]+)$')
+            m = p3.match(line)
+            if m:
+
+                interface_dict['interface'][interface]['host_reachability_protocol'] = \
+                    str(m.groupdict()['protocol'])
+
+                continue
+
+            # source-interface loopback1
+            p4 = re.compile(r'^\s*source-interface +(?P<src_intf>[a-zA-Z0-9\-]+)$')
+            m = p4.match(line)
+            if m:
+
+                interface_dict['interface'][interface]['source_interface'] = \
+                    str(m.groupdict()['src_intf'])
+
+                continue
+
+            # member vni 8100
+            # member vni 9100 associate-vrf
+            p5 = re.compile(r'^\s*member vni +(?P<vni>[0-9]+)( +(?P<associate_vrf>[a-zA-Z\-]+))?$')
+            m = p5.match(line)
+            if m:
+
+                vni = str(m.groupdict()['vni'])
+
+                if 'member_vni' not in interface_dict['interface'][interface]:
+                    interface_dict['interface'][interface]['member_vni'] = {}
+
+                interface_dict['interface'][interface]['member_vni'][vni] = {}
+
+                if m.groupdict()['associate_vrf']:
+                    interface_dict['interface'][interface]['member_vni'][vni]['associate-vrf'] = \
+                        True
+
+                continue
+
+            # mcast-group 225.0.1.25
+            p6 = re.compile(r'^\s*mcast-group +(?P<ip>[0-9\.]+)$')
+            m = p6.match(line)
+            if m:
+
+                interface_dict['interface'][interface]['member_vni'][vni]['mcast-group'] = \
+                    str(m.groupdict()['ip'])
+
                 continue
 
         return interface_dict
