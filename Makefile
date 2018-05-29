@@ -45,7 +45,7 @@ PYPIREPO      = pypitest
 # Development pkg requirements
 DEPENDENCIES  = restview psutil Sphinx wheel asynctest
 DEPENDENCIES += setproctitle sphinxcontrib-napoleon sphinx-rtd-theme httplib2 
-DEPENDENCIES += pip-tools Cython requests
+DEPENDENCIES += pip-tools Cython requests xmltodict
 
 # Internal variables.
 # (note - build examples & templates last because it will fail uploading to pypi
