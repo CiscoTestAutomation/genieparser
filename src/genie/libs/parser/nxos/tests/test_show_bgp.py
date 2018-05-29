@@ -31,8 +31,10 @@ from genie.libs.parser.nxos.show_bgp import ShowBgpProcessVrfAll,\
                                  ShowBgpPolicyStatisticsRedistribute, \
                                  ShowBgpPolicyStatisticsNeighbor, \
                                  ShowBgpPolicyStatisticsDampening,\
-                                 ShowBgpSessions,\
-                                 ShowBgpLabels
+                                 ShowBgpSessions, ShowBgpLabels, \
+                                 ShowBgpL2vpnEvpnSummary,\
+                                 ShowBgpL2vpnEvpnRouteType,\
+                                 ShowBgpL2vpnEvpnNeighbors
 
 
 # =========================================
@@ -42,7 +44,7 @@ from genie.libs.parser.nxos.show_bgp import ShowBgpProcessVrfAll,\
 class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
 
     '''Unit test for show bgp process vrf all - CLI'''
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -65,27 +67,27 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
         'hwm_entries_pending_delete': 0,
         'num_attr_entries': 4,
         'segment_routing_global_block': '10000-25000',
-        'vrf': 
+        'vrf':
             {'VRF1': {
-                'address_family': 
-                    {'ipv4 unicast': 
+                'address_family':
+                    {'ipv4 unicast':
                         {'aggregate_label': '492287',
                         'export_rt_list': '100:100',
                         'import_rt_list': '100:100',
                         'label_mode': 'per-prefix',
-                        'peers': 
-                            {1: 
+                        'peers':
+                            {1:
                                 {'active_peers': 0,
                                  'aggregates': 2,
                                  'networks': 1,
                                  'paths': 5,
                                  'routes': 5}},
-                        'redistribution': 
-                            {'direct': 
+                        'redistribution':
+                            {'direct':
                                 {'route_map': 'genie_redistribution'},
-                             'eigrp': 
+                             'eigrp':
                                 {'route_map': 'test-map'},
-                             'static': 
+                             'static':
                                 {'route_map': 'genie_redistribution'}},
                         'table_id': '0x10',
                         'table_state': 'up'},
@@ -98,17 +100,17 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                             {'critical': 3000,
                              'non_critical': 10000,
                             },
-                        'peers': 
-                            {0: 
+                        'peers':
+                            {0:
                                 {'active_peers': 0,
                                  'aggregates': 1,
                                  'networks': 1,
                                  'paths': 4,
                                  'routes': 4}},
-                        'redistribution': 
-                            {'direct': 
+                        'redistribution':
+                            {'direct':
                                 {'route_map': 'genie_redistribution'},
-                             'static': 
+                             'static':
                                 {'route_map': 'genie_redistribution'}},
                         'table_id': '0x80000010',
                         'table_state': 'up'}},
@@ -122,11 +124,11 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 'vrf_id': '3',
                 'vrf_rd': '100:100',
                 'vrf_state': 'up'},
-             'default': 
-                {'address_family': 
-                    {'ipv4 unicast': 
-                        {'peers': 
-                            {1: 
+             'default':
+                {'address_family':
+                    {'ipv4 unicast':
+                        {'peers':
+                            {1:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -134,9 +136,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                                 'routes': 0}},
                          'table_id': '0x1',
                          'table_state': 'up'},
-                    'ipv6 label unicast': 
-                        {'peers': 
-                            {0: 
+                    'ipv6 label unicast':
+                        {'peers':
+                            {0:
                                 {'active_peers': 0,
                                  'aggregates': 0,
                                  'networks': 0,
@@ -144,9 +146,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                                  'routes': 0}},
                          'table_id': '0x80000001',
                          'table_state': 'up'},
-                    'ipv6 unicast': 
-                        {'peers': 
-                            {0: 
+                    'ipv6 unicast':
+                        {'peers':
+                            {0:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -154,9 +156,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                                 'routes': 0}},
                          'table_id': '0x80000001',
                          'table_state': 'up'},
-                    'vpnv4 unicast': 
-                        {'peers': 
-                            {1: 
+                    'vpnv4 unicast':
+                        {'peers':
+                            {1:
                                 {'active_peers': 1,
                                  'aggregates': 0,
                                  'networks': 0,
@@ -164,9 +166,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                                  'routes': 5}},
                          'table_id': '0x1',
                          'table_state': 'up'},
-                    'vpnv6 unicast': 
-                        {'peers': 
-                            {1: 
+                    'vpnv6 unicast':
+                        {'peers':
+                            {1:
                                 {'active_peers': 1,
                                 'aggregates': 0,
                                  'networks': 0,
@@ -229,9 +231,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 10
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            1          0               5          5          1          2         
+            1          0               5          5          1          2
 
-            Redistribution                
+            Redistribution
                 direct, route-map genie_redistribution
                 static, route-map genie_redistribution
                 eigrp, route-map test-map
@@ -245,9 +247,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x80000010
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               4          4          1          1         
+            0          0               4          4          1          1
 
-            Redistribution                
+            Redistribution
                 direct, route-map genie_redistribution
                 static, route-map genie_redistribution
 
@@ -276,9 +278,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 1
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            1          0               0          0          0          0         
+            1          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
 
@@ -286,9 +288,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 80000001
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               0          0          0          0         
+            0          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
 
@@ -296,9 +298,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 1
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            1          1               5          5          0          0         
+            1          1               5          5          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Retain RT: enabled all
@@ -307,9 +309,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 80000001
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            1          1               4          4          0          0         
+            1          1               4          4          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
 
@@ -317,9 +319,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 80000001
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               0          0          0          0         
+            0          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 None
         '''}
 
@@ -342,8 +344,8 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
         'hwm_entries_pending_delete': 0,
         'num_attr_entries': 7,
         'segment_routing_global_block': '10000-25000',
-        'vrf': 
-            {'VRF1': 
+        'vrf':
+            {'VRF1':
                 {'cluster_id': '0.0.0.0',
                 'conf_router_id': '0.0.0.0',
                 'confed_id': 0,
@@ -354,14 +356,14 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 'vrf_id': '3',
                 'vrf_rd': 'not configured',
                 'vrf_state': 'up'},
-            'ac': 
-                {'address_family': 
-                    {'ipv4 unicast': 
-                        {'next_hop_trigger_delay': 
+            'ac':
+                {'address_family':
+                    {'ipv4 unicast':
+                        {'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {1: 
+                        'peers':
+                            {1:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -369,12 +371,12 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                                 'routes': 0}},
                         'table_id': '0x4',
                         'table_state': 'up'},
-                    'ipv6 unicast': 
-                        {'next_hop_trigger_delay': 
+                    'ipv6 unicast':
+                        {'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {0: 
+                        'peers':
+                            {0:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -392,14 +394,14 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 'vrf_id': '4',
                 'vrf_rd': 'not configured',
                 'vrf_state': 'up'},
-            'default': 
-                {'address_family': 
-                    {'ipv4 label unicast': 
-                        {'next_hop_trigger_delay': 
+            'default':
+                {'address_family':
+                    {'ipv4 label unicast':
+                        {'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {0: 
+                        'peers':
+                            {0:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -407,81 +409,81 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                                 'routes': 4}},
                         'table_id': '0x1',
                         'table_state': 'up'},
-                    'ipv4 multicast': 
-                        {'next_hop_trigger_delay': 
+                    'ipv4 multicast':
+                        {'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {3: 
+                        'peers':
+                            {3:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
                                 'paths': 3,
                                 'routes': 3}},
-                        'redistribution': 
-                            {'static': 
+                        'redistribution':
+                            {'static':
                                 {'route_map': 'PERMIT_ALL_RM'}},
                         'route_reflector': True,
                         'table_id': '0x1',
                         'table_state': 'up'},
-                    'ipv4 unicast': 
+                    'ipv4 unicast':
                         {'label_mode': 'per-prefix',
-                        'next_hop_trigger_delay': 
+                        'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {5: 
+                        'peers':
+                            {5:
                                 {'active_peers': 0,
                                 'aggregates': 1,
                                 'networks': 1,
                                 'paths': 7,
                                 'routes': 4}},
-                        'redistribution': 
-                            {'static': 
+                        'redistribution':
+                            {'static':
                                 {'route_map': 'ADD_RT_400_400'}},
                         'route_reflector': True,
                         'table_id': '0x1',
                         'table_state': 'up'},
-                    'ipv6 multicast': 
-                        {'next_hop_trigger_delay': 
+                    'ipv6 multicast':
+                        {'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {4: 
+                        'peers':
+                            {4:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
                                 'paths': 3,
                                 'routes': 3}},
-                        'redistribution': 
-                            {'static': 
+                        'redistribution':
+                            {'static':
                                 {'route_map': 'PERMIT_ALL_RM'}},
                         'route_reflector': True,
                         'table_id': '0x80000001',
                         'table_state': 'up'},
-                    'ipv6 unicast': 
-                        {'next_hop_trigger_delay': 
+                    'ipv6 unicast':
+                        {'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {4: 
+                        'peers':
+                            {4:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
                                 'paths': 5,
                                 'routes': 3}},
-                        'redistribution': 
-                            {'static': 
+                        'redistribution':
+                            {'static':
                                 {'route_map': 'PERMIT_ALL_RM'}},
                         'route_reflector': True,
                         'table_id': '0x80000001',
                         'table_state': 'up'},
-                    'link-state': 
-                        {'next_hop_trigger_delay': 
+                    'link-state':
+                        {'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {4: 
+                        'peers':
+                            {4:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -490,12 +492,12 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                         'route_reflector': True,
                         'table_id': '0x1',
                         'table_state': 'up'},
-                    'vpnv4 unicast': 
-                        {'next_hop_trigger_delay': 
+                    'vpnv4 unicast':
+                        {'next_hop_trigger_delay':
                             {'critical': 4,
                             'non_critical': 5},
-                        'peers': 
-                            {3: 
+                        'peers':
+                            {3:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -504,12 +506,12 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                         'route_reflector': True,
                         'table_id': '0x1',
                         'table_state': 'up'},
-                    'vpnv6 unicast': 
-                        {'next_hop_trigger_delay': 
+                    'vpnv6 unicast':
+                        {'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {3: 
+                        'peers':
+                            {3:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -528,7 +530,7 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 'vrf_id': '1',
                 'vrf_rd': 'not configured',
                 'vrf_state': 'up'},
-            'management': 
+            'management':
                 {'cluster_id': '0.0.0.0',
                 'conf_router_id': '0.0.0.0',
                 'confed_id': 0,
@@ -539,24 +541,24 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 'vrf_id': '2',
                 'vrf_rd': 'not configured',
                 'vrf_state': 'up'},
-            'vpn1': 
-                {'address_family': 
-                    {'ipv4 multicast': 
-                        {'next_hop_trigger_delay': 
+            'vpn1':
+                {'address_family':
+                    {'ipv4 multicast':
+                        {'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {0: 
+                        'peers':
+                            {0:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
                                 'paths': 2,
                                 'routes': 2}},
-                        'redistribution': 
+                        'redistribution':
                             {'static': {'route_map': 'PERMIT_ALL_RM'}},
                         'table_id': '0x5',
                         'table_state': 'up'},
-                    'ipv4 unicast': 
+                    'ipv4 unicast':
                         {'aggregate_label': '492287',
                         'export_default_map': 'PERMIT_ALL_RM',
                         'export_default_prefix_count': 2,
@@ -567,36 +569,36 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                         'import_default_prefix_limit': 1000,
                         'import_rt_list': '100:1',
                         'label_mode': 'per-vrf',
-                        'next_hop_trigger_delay': 
+                        'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {2: 
+                        'peers':
+                            {2:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
                                 'paths': 5,
                                 'routes': 3}},
-                        'redistribution': 
+                        'redistribution':
                             {'static': {'route_map': 'PERMIT_ALL_RM'}},
                         'table_id': '0x5',
                         'table_state': 'up'},
-                    'ipv6 multicast': 
-                        {'next_hop_trigger_delay': 
+                    'ipv6 multicast':
+                        {'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {0: 
+                        'peers':
+                            {0:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
                                 'paths': 2,
                                 'routes': 2}},
-                        'redistribution': 
+                        'redistribution':
                             {'static': {'route_map': 'PERMIT_ALL_RM'}},
                         'table_id': '0x80000005',
                         'table_state': 'up'},
-                    'ipv6 unicast': 
+                    'ipv6 unicast':
                         {'aggregate_label': '492288',
                         'export_default_map': 'PERMIT_ALL_RM',
                         'export_default_prefix_count': 2,
@@ -607,17 +609,17 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                         'import_default_prefix_limit': 1000,
                         'import_rt_list': '1:100',
                         'label_mode': 'per-vrf',
-                        'next_hop_trigger_delay': 
+                        'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {2: 
+                        'peers':
+                            {2:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
                                 'paths': 5,
                                 'routes': 3}},
-                        'redistribution': 
+                        'redistribution':
                             {'static': {'route_map': 'PERMIT_ALL_RM'}},
                         'table_id': '0x80000005',
                         'table_state': 'up'}},
@@ -632,16 +634,16 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 'vrf_rd': '1:100',
                 'vrf_evpn_rd': '1:100',
                 'vrf_state': 'up'},
-            'vpn2': 
-                {'address_family': 
-                    {'ipv4 unicast': 
+            'vpn2':
+                {'address_family':
+                    {'ipv4 unicast':
                         {'import_rt_list': '400:400',
                         'label_mode': 'per-vrf',
-                        'next_hop_trigger_delay': 
+                        'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {0: 
+                        'peers':
+                            {0:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -649,14 +651,14 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                                 'routes': 2}},
                         'table_id': '0x6',
                         'table_state': 'up'},
-                    'ipv6 unicast': 
+                    'ipv6 unicast':
                         {'import_rt_list': '600:600',
                         'label_mode': 'per-vrf',
-                        'next_hop_trigger_delay': 
+                        'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {0: 
+                        'peers':
+                            {0:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -732,9 +734,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x4
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            1          0               0          0          0          0         
+            1          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -748,9 +750,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x80000004
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               0          0          0          0         
+            0          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -776,9 +778,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x1
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            5          0               4          7          1          1         
+            5          0               4          7          1          1
 
-            Redistribution                
+            Redistribution
                 static, route-map ADD_RT_400_400
 
             Wait for IGP convergence is not configured
@@ -794,9 +796,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x1
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            3          0               3          3          0          0         
+            3          0               3          3          0          0
 
-            Redistribution                
+            Redistribution
                 static, route-map PERMIT_ALL_RM
 
             Wait for IGP convergence is not configured
@@ -811,9 +813,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x80000001
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            4          0               3          5          0          0         
+            4          0               3          5          0          0
 
-            Redistribution                
+            Redistribution
                 static, route-map PERMIT_ALL_RM
 
             Wait for IGP convergence is not configured
@@ -828,9 +830,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x80000001
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            4          0               3          3          0          0         
+            4          0               3          3          0          0
 
-            Redistribution                
+            Redistribution
                 static, route-map PERMIT_ALL_RM
 
             Wait for IGP convergence is not configured
@@ -845,9 +847,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x1
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            3          0               5          7          0          0         
+            3          0               5          7          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -862,9 +864,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x80000001
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            3          0               5          7          0          0         
+            3          0               5          7          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -879,9 +881,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x1
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               4          7          0          0         
+            0          0               4          7          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -895,9 +897,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x1
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            4          0               0          0          0          0         
+            4          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -937,9 +939,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x5
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            2          0               3          5          0          0         
+            2          0               3          5          0          0
 
-            Redistribution                
+            Redistribution
                 static, route-map PERMIT_ALL_RM
 
             Wait for IGP convergence is not configured
@@ -968,9 +970,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x5
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               2          2          0          0         
+            0          0               2          2          0          0
 
-            Redistribution                
+            Redistribution
                 static, route-map PERMIT_ALL_RM
 
             Wait for IGP convergence is not configured
@@ -984,9 +986,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x80000005
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            2          0               3          5          0          0         
+            2          0               3          5          0          0
 
-            Redistribution                
+            Redistribution
                 static, route-map PERMIT_ALL_RM
 
             Wait for IGP convergence is not configured
@@ -1015,9 +1017,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x80000005
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               2          2          0          0         
+            0          0               2          2          0          0
 
-            Redistribution                
+            Redistribution
                 static, route-map PERMIT_ALL_RM
 
             Wait for IGP convergence is not configured
@@ -1044,9 +1046,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x6
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               2          2          0          0         
+            0          0               2          2          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -1063,9 +1065,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x80000006
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               2          2          0          0         
+            0          0               2          2          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -1097,36 +1099,36 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
         'hwm_attr_entries': 11,
         'hwm_entries_pending_delete': 0,
         'num_attr_entries': 11,
-        'vrf': 
-            {'default': 
-                {'address_family': 
-                    {'ipv4 unicast': 
-                        {'next_hop_trigger_delay': 
+        'vrf':
+            {'default':
+                {'address_family':
+                    {'ipv4 unicast':
+                        {'next_hop_trigger_delay':
                             {'critical': 3333,
                             'non_critical': 11111},
-                        'peers': 
-                            {1: 
+                        'peers':
+                            {1:
                                 {'active_peers': 1,
                                 'aggregates': 1,
                                 'networks': 0,
                                 'paths': 12,
                                 'routes': 12}},
-                        'redistribution': 
-                            {'direct': 
+                        'redistribution':
+                            {'direct':
                                 {'route_map': 'RMAP_Lo0'},
-                            'ospf': 
+                            'ospf':
                                 {'route_map': 'RMAP_OSPF'},
-                            'static': 
+                            'static':
                                 {'route_map': 'ALL'}},
                         'route_reflector': True,
                         'table_id': '0x1',
                         'table_state': 'up'},
-                    'ipv6 unicast': 
-                        {'next_hop_trigger_delay': 
+                    'ipv6 unicast':
+                        {'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {0: 
+                        'peers':
+                            {0:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -1134,12 +1136,12 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                                 'routes': 0}},
                         'table_id': '0x80000001',
                         'table_state': 'up'},
-                    'l2vpn evpn': 
-                        {'next_hop_trigger_delay': 
+                    'l2vpn evpn':
+                        {'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {1: 
+                        'peers':
+                            {1:
                                 {'active_peers': 1,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -1147,12 +1149,12 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                                 'routes': 5}},
                         'table_id': '0x1',
                         'table_state': 'up'},
-                    'vpnv4 unicast': 
-                        {'next_hop_trigger_delay': 
+                    'vpnv4 unicast':
+                        {'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {0: 
+                        'peers':
+                            {0:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -1160,12 +1162,12 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                                 'routes': 3}},
                         'table_id': '0x1',
                         'table_state': 'up'},
-                    'vpnv6 unicast': 
-                        {'next_hop_trigger_delay': 
+                    'vpnv6 unicast':
+                        {'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {0: 
+                        'peers':
+                            {0:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -1184,42 +1186,42 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 'vrf_id': '1',
                 'vrf_rd': 'not configured',
                 'vrf_state': 'up'},
-            'vrf-9100': 
-                {'address_family': 
-                    {'ipv4 unicast': 
+            'vrf-9100':
+                {'address_family':
+                    {'ipv4 unicast':
                         {'export_rt_list': '100:9100',
                         'import_rt_list': '100:9100',
                         'evpn_export_rt_list': '100:9100',
                         'evpn_import_rt_list': '100:9100',
                         'label_mode': 'per-vrf',
-                        'next_hop_trigger_delay': 
+                        'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {0: 
+                        'peers':
+                            {0:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
                                 'paths': 4,
                                 'routes': 3}},
-                        'redistribution': 
-                            {'direct': 
+                        'redistribution':
+                            {'direct':
                                 {'route_map': 'permitall'},
-                            'hmm': 
+                            'hmm':
                                 {'route_map': 'permitall'}},
                         'table_id': '0x3',
                         'table_state': 'up'},
-                    'ipv6 unicast': 
+                    'ipv6 unicast':
                         {'export_rt_list': '100:9100',
                         'import_rt_list': '100:9100',
                         'evpn_export_rt_list': '100:9100',
                         'evpn_import_rt_list': '100:9100',
                         'label_mode': 'per-vrf',
-                        'next_hop_trigger_delay': 
+                        'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {0: 
+                        'peers':
+                            {0:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -1246,40 +1248,40 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 'vrf_rd': '91.1.1.0:3',
                 'vrf_evpn_rd': '91.1.1.0:3',
                 'vrf_state': 'up'},
-            'vrf-9105': 
-                {'address_family': 
-                    {'ipv4 unicast': 
+            'vrf-9105':
+                {'address_family':
+                    {'ipv4 unicast':
                         {'export_rt_list': '100:9105',
                         'import_rt_list': '100:9105',
                         'evpn_export_rt_list': '100:9105',
                         'evpn_import_rt_list': '100:9105',
                         'label_mode': 'per-vrf',
-                        'next_hop_trigger_delay': 
+                        'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {0: 
+                        'peers':
+                            {0:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
                                 'paths': 0,
                                 'routes': 0}},
-                        'redistribution': 
-                            {'hmm': 
+                        'redistribution':
+                            {'hmm':
                                 {'route_map': 'permitall'}},
                         'table_id': '0x4',
                         'table_state': 'up'},
-                    'ipv6 unicast': 
+                    'ipv6 unicast':
                         {'export_rt_list': '100:9105',
                         'import_rt_list': '100:9105',
                         'evpn_export_rt_list': '100:9105',
                         'evpn_import_rt_list': '100:9105',
                         'label_mode': 'per-vrf',
-                        'next_hop_trigger_delay': 
+                        'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {0: 
+                        'peers':
+                            {0:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -1306,40 +1308,40 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 'vrf_rd': '91.1.1.0:4',
                 'vrf_evpn_rd': '91.1.1.0:4',
                 'vrf_state': 'up'},
-            'vrf-9106': 
-                {'address_family': 
-                    {'ipv4 unicast': 
+            'vrf-9106':
+                {'address_family':
+                    {'ipv4 unicast':
                         {'export_rt_list': '100:9106',
                         'import_rt_list': '100:9106',
                         'evpn_export_rt_list': '100:9106',
                         'evpn_import_rt_list': '100:9106',
                         'label_mode': 'per-vrf',
-                        'next_hop_trigger_delay': 
+                        'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {0: 
+                        'peers':
+                            {0:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
                                 'paths': 0,
                                 'routes': 0}},
-                        'redistribution': 
-                            {'hmm': 
+                        'redistribution':
+                            {'hmm':
                                 {'route_map': 'permitall'}},
                         'table_id': '0x5',
                         'table_state': 'up'},
-                    'ipv6 unicast': 
+                    'ipv6 unicast':
                         {'export_rt_list': '100:9106',
                         'import_rt_list': '100:9106',
                         'evpn_export_rt_list': '100:9106',
                         'evpn_import_rt_list': '100:9106',
                         'label_mode': 'per-vrf',
-                        'next_hop_trigger_delay': 
+                        'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {0: 
+                        'peers':
+                            {0:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -1366,40 +1368,40 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 'vrf_rd': '91.1.1.0:5',
                 'vrf_evpn_rd': '91.1.1.0:5',
                 'vrf_state': 'up'},
-            'vrf-9107': 
-                {'address_family': 
-                    {'ipv4 unicast': 
+            'vrf-9107':
+                {'address_family':
+                    {'ipv4 unicast':
                         {'export_rt_list': '100:9107',
                         'import_rt_list': '100:9107',
                         'evpn_export_rt_list': '100:9107',
                         'evpn_import_rt_list': '100:9107',
                         'label_mode': 'per-vrf',
-                        'next_hop_trigger_delay': 
+                        'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {0: 
+                        'peers':
+                            {0:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
                                 'paths': 0,
                                 'routes': 0}},
-                        'redistribution': 
-                            {'hmm': 
+                        'redistribution':
+                            {'hmm':
                                 {'route_map': 'permitall'}},
                         'table_id': '0x6',
                         'table_state': 'up'},
-                    'ipv6 unicast': 
+                    'ipv6 unicast':
                         {'export_rt_list': '100:9107',
                         'import_rt_list': '100:9107',
                         'evpn_export_rt_list': '100:9107',
                         'evpn_import_rt_list': '100:9107',
                         'label_mode': 'per-vrf',
-                        'next_hop_trigger_delay': 
+                        'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {0: 
+                        'peers':
+                            {0:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -1426,40 +1428,40 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 'vrf_rd': '91.1.1.0:6',
                 'vrf_evpn_rd': '91.1.1.0:6',
                 'vrf_state': 'up'},
-            'vrf-9108': 
-                {'address_family': 
-                    {'ipv4 unicast': 
+            'vrf-9108':
+                {'address_family':
+                    {'ipv4 unicast':
                         {'export_rt_list': '100:9108',
                         'import_rt_list': '100:9108',
                         'evpn_export_rt_list': '100:9108',
                         'evpn_import_rt_list': '100:9108',
                         'label_mode': 'per-vrf',
-                        'next_hop_trigger_delay': 
+                        'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {0: 
+                        'peers':
+                            {0:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
                                 'paths': 0,
                                 'routes': 0}},
-                        'redistribution': 
-                            {'hmm': 
+                        'redistribution':
+                            {'hmm':
                                 {'route_map': 'permitall'}},
                         'table_id': '0x7',
                         'table_state': 'up'},
-                    'ipv6 unicast': 
+                    'ipv6 unicast':
                         {'export_rt_list': '100:9108',
                         'import_rt_list': '100:9108',
                         'evpn_export_rt_list': '100:9108',
                         'evpn_import_rt_list': '100:9108',
                         'label_mode': 'per-vrf',
-                        'next_hop_trigger_delay': 
+                        'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {0: 
+                        'peers':
+                            {0:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -1486,40 +1488,40 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 'vrf_rd': '91.1.1.0:7',
                 'vrf_evpn_rd': '91.1.1.0:7',
                 'vrf_state': 'up'},
-            'vrf-9109': 
-                {'address_family': 
-                    {'ipv4 unicast': 
+            'vrf-9109':
+                {'address_family':
+                    {'ipv4 unicast':
                         {'export_rt_list': '100:9109',
                         'import_rt_list': '100:9109',
                         'evpn_export_rt_list': '100:9109',
                         'evpn_import_rt_list': '100:9109',
                         'label_mode': 'per-vrf',
-                        'next_hop_trigger_delay': 
+                        'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {0: 
+                        'peers':
+                            {0:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
                                 'paths': 0,
                                 'routes': 0}},
-                        'redistribution': 
-                            {'hmm': 
+                        'redistribution':
+                            {'hmm':
                                 {'route_map': 'permitall'}},
                         'table_id': '0x8',
                         'table_state': 'up'},
-                    'ipv6 unicast': 
+                    'ipv6 unicast':
                         {'export_rt_list': '100:9109',
                         'import_rt_list': '100:9109',
                         'evpn_export_rt_list': '100:9109',
                         'evpn_import_rt_list': '100:9109',
                         'label_mode': 'per-vrf',
-                        'next_hop_trigger_delay': 
+                        'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {0: 
+                        'peers':
+                            {0:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -1590,9 +1592,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x1
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            1          1               12         12         0          1         
+            1          1               12         12         0          1
 
-            Redistribution                
+            Redistribution
                 direct, route-map RMAP_Lo0
                 static, route-map ALL
                 ospf, route-map RMAP_OSPF
@@ -1610,9 +1612,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x80000001
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               0          0          0          0         
+            0          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -1626,9 +1628,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x1
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               3          4          0          0         
+            0          0               3          4          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -1642,9 +1644,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x80000001
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               0          0          0          0         
+            0          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -1658,9 +1660,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x1
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            1          1               5          6          0          0         
+            1          1               5          6          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -1696,14 +1698,14 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x3
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               3          4          0          0         
+            0          0               3          4          0          0
 
-            Redistribution                
+            Redistribution
                 direct, route-map permitall
                 hmm, route-map permitall
 
             Wait for IGP convergence is not configured
-            Advertise to EVPN             
+            Advertise to EVPN
 
             Export RT list:
                 100:9100
@@ -1724,9 +1726,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x80000003
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               0          0          0          0         
+            0          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -1770,13 +1772,13 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x4
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               0          0          0          0         
+            0          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 hmm, route-map permitall
 
             Wait for IGP convergence is not configured
-            Advertise to EVPN             
+            Advertise to EVPN
 
             Export RT list:
                 100:9105
@@ -1797,9 +1799,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x80000004
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               0          0          0          0         
+            0          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -1843,13 +1845,13 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x5
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               0          0          0          0         
+            0          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 hmm, route-map permitall
 
             Wait for IGP convergence is not configured
-            Advertise to EVPN             
+            Advertise to EVPN
 
             Export RT list:
                 100:9106
@@ -1870,9 +1872,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x80000005
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               0          0          0          0         
+            0          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -1916,13 +1918,13 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x6
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               0          0          0          0         
+            0          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 hmm, route-map permitall
 
             Wait for IGP convergence is not configured
-            Advertise to EVPN             
+            Advertise to EVPN
 
             Export RT list:
                 100:9107
@@ -1943,9 +1945,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x80000006
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               0          0          0          0         
+            0          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -1989,13 +1991,13 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x7
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               0          0          0          0         
+            0          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 hmm, route-map permitall
 
             Wait for IGP convergence is not configured
-            Advertise to EVPN             
+            Advertise to EVPN
 
             Export RT list:
                 100:9108
@@ -2016,9 +2018,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x80000007
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               0          0          0          0         
+            0          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -2062,13 +2064,13 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x8
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               0          0          0          0         
+            0          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 hmm, route-map permitall
 
             Wait for IGP convergence is not configured
-            Advertise to EVPN             
+            Advertise to EVPN
 
             Export RT list:
                 100:9109
@@ -2089,9 +2091,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Table Id                   : 0x80000008
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               0          0          0          0         
+            0          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -2142,7 +2144,7 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
 class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
 
     '''Unit test for show bgp process vrf all - XML'''
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -2165,11 +2167,11 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
         'hwm_entries_pending_delete': 0,
         'num_attr_entries': 5,
         'segment_routing_global_block': '10000-25000',
-        'vrf': 
-            {'ac': 
-                {'address_family': 
-                    {'ipv4 unicast': 
-                        {'next_hop_trigger_delay': 
+        'vrf':
+            {'ac':
+                {'address_family':
+                    {'ipv4 unicast':
+                        {'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
                         'peers':
@@ -2978,7 +2980,7 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
 class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
 
     '''Unit test for show bgp process vrf all - YANG'''
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -3001,20 +3003,20 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
         'hwm_entries_pending_delete': 0,
         'num_attr_entries': 0,
         'segment_routing_global_block': '10000-25000',
-        'vrf': 
-            {'default': 
-                {'address_family': 
-                    {'ipv4 label unicast': 
+        'vrf':
+            {'default':
+                {'address_family':
+                    {'ipv4 label unicast':
                         {'advertise_inactive_routes': False,
                         'ebgp_max_paths': 1,
                         'enabled': True,
                         'graceful_restart': False,
                         'ibgp_max_paths': 1,
-                        'next_hop_trigger_delay': 
+                        'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {0: 
+                        'peers':
+                            {0:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -3022,12 +3024,12 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
                                 'routes': 0}},
                         'table_id': '0x1',
                         'table_state': 'up'},
-                    'ipv4 multicast': 
-                        {'next_hop_trigger_delay': 
+                    'ipv4 multicast':
+                        {'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {3: 
+                        'peers':
+                            {3:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -3036,17 +3038,17 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
                         'route_reflector': True,
                         'table_id': '0x1',
                         'table_state': 'up'},
-                    'ipv4 unicast': 
+                    'ipv4 unicast':
                         {'advertise_inactive_routes': False,
                         'ebgp_max_paths': 1,
                         'enabled': True,
                         'graceful_restart': False,
                         'ibgp_max_paths': 1,
-                        'next_hop_trigger_delay': 
+                        'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {5: 
+                        'peers':
+                            {5:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -3055,12 +3057,12 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
                         'route_reflector': True,
                         'table_id': '0x1',
                         'table_state': 'up'},
-                    'ipv6 multicast': 
-                        {'next_hop_trigger_delay': 
+                    'ipv6 multicast':
+                        {'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {4: 
+                        'peers':
+                            {4:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -3069,17 +3071,17 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
                         'route_reflector': True,
                         'table_id': '0x80000001',
                         'table_state': 'up'},
-                    'ipv6 unicast': 
+                    'ipv6 unicast':
                         {'advertise_inactive_routes': False,
                         'ebgp_max_paths': 1,
                         'enabled': True,
                         'graceful_restart': False,
                         'ibgp_max_paths': 1,
-                        'next_hop_trigger_delay': 
+                        'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {4: 
+                        'peers':
+                            {4:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -3088,24 +3090,24 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
                         'route_reflector': True,
                         'table_id': '0x80000001',
                         'table_state': 'up'},
-                    'l3vpn ipv4 unicast': 
+                    'l3vpn ipv4 unicast':
                         {'advertise_inactive_routes': False,
                         'ebgp_max_paths': 1,
                         'enabled': True,
                         'graceful_restart': False,
                         'ibgp_max_paths': 1},
-                    'l3vpn ipv6 unicast': 
+                    'l3vpn ipv6 unicast':
                         {'advertise_inactive_routes': False,
                         'ebgp_max_paths': 1,
                         'enabled': True,
                         'graceful_restart': False,
                         'ibgp_max_paths': 1},
-                    'link-state': 
-                        {'next_hop_trigger_delay': 
+                    'link-state':
+                        {'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {4: 
+                        'peers':
+                            {4:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -3114,12 +3116,12 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
                         'route_reflector': True,
                         'table_id': '0x1',
                         'table_state': 'up'},
-                    'vpnv4 unicast': 
-                        {'next_hop_trigger_delay': 
+                    'vpnv4 unicast':
+                        {'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {3: 
+                        'peers':
+                            {3:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -3128,12 +3130,12 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
                         'route_reflector': True,
                         'table_id': '0x1',
                         'table_state': 'up'},
-                    'vpnv6 unicast': 
-                        {'next_hop_trigger_delay': 
+                    'vpnv6 unicast':
+                        {'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {3: 
+                        'peers':
+                            {3:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -3152,9 +3154,9 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
                 'vrf_id': '1',
                 'vrf_rd': 'not configured',
                 'vrf_state': 'up'},
-            'vpn1': 
-                {'address_family': 
-                    {'ipv4 unicast': 
+            'vpn1':
+                {'address_family':
+                    {'ipv4 unicast':
                         {'export_default_map': 'PERMIT_ALL_RM',
                         'export_default_prefix_count': 0,
                         'export_default_prefix_limit': 1000,
@@ -3165,11 +3167,11 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
                         'import_default_prefix_limit': 1000,
                         'import_rt_list': '100:1',
                         'label_mode': 'per-prefix',
-                        'next_hop_trigger_delay': 
+                        'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {0: 
+                        'peers':
+                            {0:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -3177,7 +3179,7 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
                                 'routes': 0}},
                         'table_id': '0x5',
                         'table_state': 'up'},
-                    'ipv6 unicast': 
+                    'ipv6 unicast':
                         {'export_default_map': 'PERMIT_ALL_RM',
                         'export_default_prefix_count': 0,
                         'export_default_prefix_limit': 1000,
@@ -3188,11 +3190,11 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
                         'import_default_prefix_limit': 1000,
                         'import_rt_list': '1:100',
                         'label_mode': 'per-prefix',
-                        'next_hop_trigger_delay': 
+                        'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
-                            {0: 
+                        'peers':
+                            {0:
                                 {'active_peers': 0,
                                 'aggregates': 0,
                                 'networks': 0,
@@ -3211,9 +3213,9 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
                 'vrf_rd': '1:100',
                 'vrf_evpn_rd': '1:100',
                 'vrf_state': 'up'},
-            'vpn2': 
-                {'address_family': 
-                    {'ipv4 unicast': 
+            'vpn2':
+                {'address_family':
+                    {'ipv4 unicast':
                         {'import_rt_list': '400:400',
                         'label_mode': 'per-vrf',
                         'next_hop_trigger_delay': {'critical': 3000,
@@ -3225,13 +3227,13 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
                                     'routes': 0}},
                         'table_id': '0x6',
                         'table_state': 'up'},
-                    'ipv6 unicast': 
+                    'ipv6 unicast':
                         {'import_rt_list': '600:600',
                         'label_mode': 'per-vrf',
-                        'next_hop_trigger_delay': 
+                        'next_hop_trigger_delay':
                             {'critical': 3000,
                             'non_critical': 10000},
-                        'peers': 
+                        'peers':
                             {0: {'active_peers': 0,
                                     'aggregates': 0,
                                     'networks': 0,
@@ -3294,9 +3296,9 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
             Table Id                   : 0x1
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            5          0               0          0          0          0         
+            5          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -3311,9 +3313,9 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
             Table Id                   : 0x1
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            3          0               0          0          0          0         
+            3          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -3328,9 +3330,9 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
             Table Id                   : 0x80000001
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            4          0               0          0          0          0         
+            4          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -3345,9 +3347,9 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
             Table Id                   : 0x80000001
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            4          0               0          0          0          0         
+            4          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -3362,9 +3364,9 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
             Table Id                   : 0x1
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            3          0               0          0          0          0         
+            3          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -3379,9 +3381,9 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
             Table Id                   : 0x80000001
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            3          0               0          0          0          0         
+            3          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -3396,9 +3398,9 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
             Table Id                   : 0x1
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               0          0          0          0         
+            0          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -3412,9 +3414,9 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
             Table Id                   : 0x1
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            4          0               0          0          0          0         
+            4          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -3442,9 +3444,9 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
             Table Id                   : 0x5
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               0          0          0          0         
+            0          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -3472,9 +3474,9 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
             Table Id                   : 0x80000005
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               0          0          0          0         
+            0          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -3515,9 +3517,9 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
             Table Id                   : 0x6
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               0          0          0          0         
+            0          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -3534,9 +3536,9 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
             Table Id                   : 0x80000006
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               0          0          0          0         
+            0          0               0          0          0          0
 
-            Redistribution                
+            Redistribution
                 None
 
             Wait for IGP convergence is not configured
@@ -4903,15 +4905,15 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
 # =============================================
 
 class test_show_bgp_peer_session(unittest.TestCase):
-    
+
     '''Unit test for show bgp peer-session <WORD>'''
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-        'peer_session': 
-            {'PEER-SESSION': 
+        'peer_session':
+            {'PEER-SESSION':
                 {'bfd': True,
                  'description': 'PEER-SESSION',
                  'disable_connectivity_check': True,
@@ -4934,7 +4936,7 @@ class test_show_bgp_peer_session(unittest.TestCase):
             inherit peer-session PEER-SESSION
         template peer-session PEER-SESSION
             inherit peer-session PEER-SESSION
-        
+
         N7k# show bgp peer-session PEER-SESSION
         Commands configured in this template:
           Shutdown
@@ -4969,11 +4971,11 @@ class test_show_bgp_peer_session(unittest.TestCase):
 
 
 # ============================================
-#  Unit test for 'show bgp peer-policy <WORD>'       
+#  Unit test for 'show bgp peer-policy <WORD>'
 # ============================================
 
 class test_show_bgp_peer_policy(unittest.TestCase):
-    
+
     '''Unit test for show bgp peer-policy <WORD>'''
 
     device = Device(name='aDevice')
@@ -5001,7 +5003,7 @@ class test_show_bgp_peer_policy(unittest.TestCase):
           template peer-policy PEER-POLICY
               inherit peer-policy PEER-POLICY 10
               inherit peer-policy PEER-POLICY2 20
-        
+
         N7k# show bgp peer-policy PEER-POLICY
         Commands configured in this template:
           Send Community
@@ -5036,11 +5038,11 @@ class test_show_bgp_peer_policy(unittest.TestCase):
 
 
 # ==============================================
-#  Unit test for 'show bgp peer-template <WORD>'       
+#  Unit test for 'show bgp peer-template <WORD>'
 # ==============================================
 
 class test_show_bgp_peer_template(unittest.TestCase):
-    
+
     '''Unit test for show bgp peer-template <WORD>'''
 
     device = Device(name='aDevice')
@@ -5106,11 +5108,11 @@ class test_show_bgp_peer_template(unittest.TestCase):
 
 
 # =====================================
-#  Unit test for 'show bgp vrf all all'       
+#  Unit test for 'show bgp vrf all all'
 # =====================================
 
 class test_show_bgp_vrf_all_all(unittest.TestCase):
-    
+
     '''Unit test for show bgp vrf all all'''
 
     device = Device(name='aDevice')
@@ -5360,7 +5362,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
            Network            Next Hop            Metric     LocPrf     Weight Path
         *>a11.0.0.0/8         0.0.0.0                           100      32768 i
                               4.4.4.4                  0        100      32768 e
-                              6.6.6.6                  0        100      32768 e                              
+                              6.6.6.6                  0        100      32768 e
         *>r11.11.11.11/32     0.0.0.0                  0        100      32768 ?
         *>i33.33.33.33/32     3.3.3.3                  0        100          0 ?
           l34.34.34.0/24      0.0.0.0                           100      32768 i
@@ -5908,7 +5910,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         'path_type': 'r',
                                         'status_codes': '*>',
                                         'weight': 32768}}}},
-                        'route_distinguisher': '2:100'},                        
+                        'route_distinguisher': '2:100'},
                     'vpnv6 unicast':
                         {'bgp_table_version': 7,
                         'local_router_id': '21.0.101.1'},
@@ -6284,14 +6286,14 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
            Network            Next Hop            Metric     LocPrf     Weight Path
         *>r2001:11::1/128     0::                      0        100      32768 ?
 
-        pinxdt-n9kv-2# 
+        pinxdt-n9kv-2#
         '''}
 
     golden_parsed_output4 = {
-        'vrf': 
-            {'default': 
-                {'address_family': 
-                    {'ipv4 multicast': 
+        'vrf':
+            {'default':
+                {'address_family':
+                    {'ipv4 multicast':
                         {'bgp_table_version': 175,
                         'local_router_id': '20.0.0.6',
                         'prefixes': {'1.2.1.0/24': {'index': {1: {'localprf': 100,
@@ -6360,7 +6362,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                                                  'path_type': 'e',
                                                                  'status_codes': 'd ',
                                                                  'weight': 0}}}}},
-                    'ipv4 unicast': 
+                    'ipv4 unicast':
                         {'bgp_table_version': 174,
                         'local_router_id': '20.0.0.6',
                         'prefixes': {'1.1.1.0/24': {'index': {1: {'localprf': 100,
@@ -6616,7 +6618,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                                                                                                                                                 'path_type': 'i',
                                                                                                                                                                 'status_codes': '*>',
                                                                                                                                                                 'weight': 0}}}}},
-                    'vpnv4 unicast': 
+                    'vpnv4 unicast':
                         {'bgp_table_version': 183,
                         'local_router_id': '20.0.0.6'},
                     'vpnv4 unicast RD 0:0': {'bgp_table_version': 183,
@@ -6742,7 +6744,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                                                                                                  'status_codes': '*>',
                                                                                                                  'weight': 0}}}},
                                                                      'route_distinguisher': '102:100'},
-                    'vpnv6 unicast': 
+                    'vpnv6 unicast':
                         {'bgp_table_version': 13,
                         'local_router_id': '20.0.0.6'},
                     'vpnv6 unicast RD 0xbb00010000000000': {'bgp_table_version': 13,
@@ -6791,8 +6793,8 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                                                                                                      'status_codes': '*>',
                                                                                                                      'weight': 0}}}},
                                                                      'route_distinguisher': '100:200'}}},
-            'vpn1': 
-                {'address_family': 
+            'vpn1':
+                {'address_family':
                     {'ipv4 unicast': {'bgp_table_version': 9,
                                                       'local_router_id': '0.0.0.0',
                                                       'prefixes': {'1.1.1.0/24': {'index': {1: {'localprf': 100,
@@ -6842,8 +6844,8 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                                                                                 'path_type': 'i',
                                                                                                 'status_codes': '*>',
                                                                                                 'weight': 0}}}}}}},
-            'vpn2': 
-                {'address_family': 
+            'vpn2':
+                {'address_family':
                     {'ipv4 unicast': {'bgp_table_version': 7,
                                                       'local_router_id': '0.0.0.0',
                                                       'prefixes': {'1.1.1.0/24': {'index': {1: {'localprf': 100,
@@ -7116,11 +7118,11 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
             parsed_output = obj.parse()
 
 # ==================================================
-#  Unit test for 'show bgp vrf <WORD> all neighbors'       
+#  Unit test for 'show bgp vrf <WORD> all neighbors'
 # ==================================================
 
 class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
-    
+
     '''Unit test for show bgp vrf all all neighbors'''
 
     device = Device(name='aDevice')
@@ -7197,7 +7199,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'up_time': '02:19:37'}}}
 
     golden_output1 = {'execute.return_value': '''
-        N7k# show bgp vrf VRF1 all neighbors 
+        N7k# show bgp vrf VRF1 all neighbors
         BGP neighbor is 2.2.2.10,  remote AS 0, unknown link,  Peer index 1
           BGP version 4, remote router ID 0.0.0.0
           BGP state = Idle, down for 02:19:37, retry in 0.000000
@@ -7212,15 +7214,15 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
 
           Message statistics:
                                       Sent               Rcvd
-          Opens:                         0                  0  
-          Notifications:                 0                  0  
-          Updates:                       0                  0  
-          Keepalives:                    0                  0  
-          Route Refresh:                 0                  0  
-          Capability:                    0                  0  
-          Total:                         0                  0  
-          Total bytes:                   0                  0  
-          Bytes in queue:                0                  0  
+          Opens:                         0                  0
+          Notifications:                 0                  0
+          Updates:                       0                  0
+          Keepalives:                    0                  0
+          Route Refresh:                 0                  0
+          Capability:                    0                  0
+          Total:                         0                  0
+          Total bytes:                   0                  0
+          Bytes in queue:                0                  0
 
           For address family: IPv4 Unicast
           BGP table version 21, neighbor version 0
@@ -7497,7 +7499,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'update_source': 'loopback0'}}}
 
     golden_output2 = {'execute.return_value': '''
-        N7k# show bgp vrf default all neighbors 
+        N7k# show bgp vrf default all neighbors
         BGP neighbor is 2.2.2.2,  remote AS 100, ibgp link,  Peer index 1
           Description: nei_desc
           BGP version 4, remote router ID 2.2.2.2
@@ -7516,18 +7518,18 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
           Neighbor capabilities:
           Dynamic capability: advertised (mp, refresh, gr) received (mp, refresh, gr)
           Dynamic capability (old): advertised received
-          Route refresh capability (new): advertised received 
-          Route refresh capability (old): advertised received 
-          4-Byte AS capability: disabled 
-          Address family VPNv4 Unicast: advertised received 
-          Address family VPNv6 Unicast: advertised received 
+          Route refresh capability (new): advertised received
+          Route refresh capability (old): advertised received
+          4-Byte AS capability: disabled
+          Address family VPNv4 Unicast: advertised received
+          Address family VPNv6 Unicast: advertised received
           Graceful Restart capability: advertised received
 
           Graceful Restart Parameters:
           Address families advertised to peer:
-            VPNv4 Unicast  VPNv6 Unicast  
+            VPNv4 Unicast  VPNv6 Unicast
           Address families received from peer:
-            VPNv4 Unicast  VPNv6 Unicast  
+            VPNv4 Unicast  VPNv6 Unicast
           Forwarding state preserved by peer for:
           Restart time advertised to peer: 240 seconds
           Stale time for routes advertised by peer: 600 seconds
@@ -7535,15 +7537,15 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
 
           Message statistics:
                                       Sent               Rcvd
-          Opens:                         1                  1  
-          Notifications:                 0                  0  
-          Updates:                       6                  4  
-          Keepalives:                  256                256  
-          Route Refresh:                 0                  0  
-          Capability:                    0                  0  
-          Total:                       263                261  
-          Total bytes:                5311               5139  
-          Bytes in queue:                0                  0  
+          Opens:                         1                  1
+          Notifications:                 0                  0
+          Updates:                       6                  4
+          Keepalives:                  256                256
+          Route Refresh:                 0                  0
+          Capability:                    0                  0
+          Total:                       263                261
+          Total bytes:                5311               5139
+          Bytes in queue:                0                  0
 
           For address family: VPNv4 Unicast
           BGP table version 11, neighbor version 11
@@ -7590,15 +7592,15 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
 
           Message statistics:
                                       Sent               Rcvd
-          Opens:                         0                  0  
-          Notifications:                 0                  0  
-          Updates:                       0                  0  
-          Keepalives:                    0                  0  
-          Route Refresh:                 0                  0  
-          Capability:                    0                  0  
-          Total:                         0                  0  
-          Total bytes:                   0                  0  
-          Bytes in queue:                0                  0  
+          Opens:                         0                  0
+          Notifications:                 0                  0
+          Updates:                       0                  0
+          Keepalives:                    0                  0
+          Route Refresh:                 0                  0
+          Capability:                    0                  0
+          Total:                         0                  0
+          Total bytes:                   0                  0
+          Bytes in queue:                0                  0
 
           For address family: IPv4 Unicast
           BGP table version 2, neighbor version 0
@@ -7615,9 +7617,9 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
           Outbound route-map configured is test-map, handle obtained
           Default information originate, default not sent
           Inherited policy-templates:
-            Preference    Name                
-                    10    PEER-POLICY                                                 
-                    20    PEER-POLICY2                                                
+            Preference    Name
+                    10    PEER-POLICY
+                    20    PEER-POLICY2
 
           No established BGP session with peer
 
@@ -7636,15 +7638,15 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
 
           Message statistics:
                                       Sent               Rcvd
-          Opens:                         0                  0  
-          Notifications:                 0                  0  
-          Updates:                       0                  0  
-          Keepalives:                    0                  0  
-          Route Refresh:                 0                  0  
-          Capability:                    0                  0  
-          Total:                         0                  0  
-          Total bytes:                   0                  0  
-          Bytes in queue:                0                  0  
+          Opens:                         0                  0
+          Notifications:                 0                  0
+          Updates:                       0                  0
+          Keepalives:                    0                  0
+          Route Refresh:                 0                  0
+          Capability:                    0                  0
+          Total:                         0                  0
+          Total bytes:                   0                  0
+          Bytes in queue:                0                  0
 
           No established BGP session with peer
         '''}
@@ -8234,15 +8236,15 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
 
           Message statistics:
                                       Sent               Rcvd
-          Opens:                         0                  0  
-          Notifications:                 0                  0  
-          Updates:                       0                  0  
-          Keepalives:                    0                  0  
-          Route Refresh:                 0                  0  
-          Capability:                    0                  0  
-          Total:                         0                  0  
-          Total bytes:                   0                  0  
-          Bytes in queue:                0                  0  
+          Opens:                         0                  0
+          Notifications:                 0                  0
+          Updates:                       0                  0
+          Keepalives:                    0                  0
+          Route Refresh:                 0                  0
+          Capability:                    0                  0
+          Total:                         0                  0
+          Total bytes:                   0                  0
+          Bytes in queue:                0                  0
 
           No established BGP session with peer
 
@@ -8261,42 +8263,42 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
           Neighbor capabilities:
           Dynamic capability: advertised (mp, refresh, gr) received (mp, refresh, gr)
           Dynamic capability (old): advertised received
-          Route refresh capability (new): advertised received 
-          Route refresh capability (old): advertised received 
-          4-Byte AS capability: advertised received 
-          Address family IPv4 Unicast: advertised received 
-          Address family IPv4 Multicast: advertised received 
-          Address family IPv6 Unicast: advertised 
-          Address family IPv6 Multicast: advertised 
-          Address family VPNv4 Unicast: advertised 
-          Address family VPNv6 Unicast: advertised 
-          Address family Link-State: advertised 
+          Route refresh capability (new): advertised received
+          Route refresh capability (old): advertised received
+          4-Byte AS capability: advertised received
+          Address family IPv4 Unicast: advertised received
+          Address family IPv4 Multicast: advertised received
+          Address family IPv6 Unicast: advertised
+          Address family IPv6 Multicast: advertised
+          Address family VPNv4 Unicast: advertised
+          Address family VPNv6 Unicast: advertised
+          Address family Link-State: advertised
           Graceful Restart capability: advertised received
 
           Graceful Restart Parameters:
           Address families advertised to peer:
-            IPv4 Unicast  IPv4 Multicast  IPv6 Unicast  IPv6 Multicast  VPNv4 Unicast  VPNv6 Unicast  Link-State  
+            IPv4 Unicast  IPv4 Multicast  IPv6 Unicast  IPv6 Multicast  VPNv4 Unicast  VPNv6 Unicast  Link-State
           Address families received from peer:
-            IPv4 Unicast  IPv4 Multicast  
+            IPv4 Unicast  IPv4 Multicast
           Forwarding state preserved by peer for:
           Restart time advertised to peer: 120 seconds
           Stale time for routes advertised by peer: 300 seconds
           Restart time advertised by peer: 120 seconds
           Extended Next Hop Encoding Capability: advertised received
           Receive IPv6 next hop encoding Capability for AF:
-            IPv4 Unicast  
+            IPv4 Unicast
 
           Message statistics:
                                       Sent               Rcvd
-          Opens:                         5                  5  
-          Notifications:                 0                  0  
-          Updates:                      23                 28  
-          Keepalives:                   17                 17  
-          Route Refresh:                 0                  0  
-          Capability:                   17                 17  
-          Total:                        50                 67  
-          Total bytes:                1940               2261  
-          Bytes in queue:                0                  0  
+          Opens:                         5                  5
+          Notifications:                 0                  0
+          Updates:                      23                 28
+          Keepalives:                   17                 17
+          Route Refresh:                 0                  0
+          Capability:                   17                 17
+          Total:                        50                 67
+          Total bytes:                1940               2261
+          Bytes in queue:                0                  0
 
           For address family: IPv4 Unicast
           BGP table version 6765004, neighbor version 6765004
@@ -8381,15 +8383,15 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
 
           Message statistics:
                                       Sent               Rcvd
-          Opens:                         0                  0  
-          Notifications:                 0                  0  
-          Updates:                       0                  0  
-          Keepalives:                    0                  0  
-          Route Refresh:                 0                  0  
-          Capability:                    0                  0  
-          Total:                         0                  0  
-          Total bytes:                   0                  0  
-          Bytes in queue:                0                  0  
+          Opens:                         0                  0
+          Notifications:                 0                  0
+          Updates:                       0                  0
+          Keepalives:                    0                  0
+          Route Refresh:                 0                  0
+          Capability:                    0                  0
+          Total:                         0                  0
+          Total bytes:                   0                  0
+          Bytes in queue:                0                  0
 
           For address family: IPv4 Unicast
           BGP table version 6765004, neighbor version 0
@@ -8467,15 +8469,15 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
 
           Message statistics:
                                       Sent               Rcvd
-          Opens:                         0                  0  
-          Notifications:                 0                  0  
-          Updates:                       0                  0  
-          Keepalives:                    0                  0  
-          Route Refresh:                 0                  0  
-          Capability:                    0                  0  
-          Total:                         0                  0  
-          Total bytes:                   0                  0  
-          Bytes in queue:                0                  0  
+          Opens:                         0                  0
+          Notifications:                 0                  0
+          Updates:                       0                  0
+          Keepalives:                    0                  0
+          Route Refresh:                 0                  0
+          Capability:                    0                  0
+          Total:                         0                  0
+          Total bytes:                   0                  0
+          Bytes in queue:                0                  0
 
           For address family: IPv4 Unicast
           BGP table version 6765004, neighbor version 0
@@ -8540,36 +8542,36 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
           Neighbor capabilities:
           Dynamic capability: advertised (mp, refresh, gr) received (mp, refresh, gr)
           Dynamic capability (old): advertised received
-          Route refresh capability (new): advertised received 
-          Route refresh capability (old): advertised received 
-          4-Byte AS capability: advertised received 
-          Address family IPv4 Unicast: advertised received 
+          Route refresh capability (new): advertised received
+          Route refresh capability (old): advertised received
+          4-Byte AS capability: advertised received
+          Address family IPv4 Unicast: advertised received
           Graceful Restart capability: advertised received
 
           Graceful Restart Parameters:
           Address families advertised to peer:
-            IPv4 Unicast  
+            IPv4 Unicast
           Address families received from peer:
-            IPv4 Unicast  
+            IPv4 Unicast
           Forwarding state preserved by peer for:
           Restart time advertised to peer: 120 seconds
           Stale time for routes advertised by peer: 300 seconds
           Restart time advertised by peer: 120 seconds
           Extended Next Hop Encoding Capability: advertised received
           Receive IPv6 next hop encoding Capability for AF:
-            IPv4 Unicast  
+            IPv4 Unicast
 
           Message statistics:
                                       Sent               Rcvd
-          Opens:                         5                  5  
-          Notifications:                 0                  0  
-          Updates:                      20                 15  
-          Keepalives:                   17                 17  
-          Route Refresh:                 0                  0  
-          Capability:                    6                  6  
-          Total:                        33                 43  
-          Total bytes:                1739               1420  
-          Bytes in queue:                0                  0  
+          Opens:                         5                  5
+          Notifications:                 0                  0
+          Updates:                      20                 15
+          Keepalives:                   17                 17
+          Route Refresh:                 0                  0
+          Capability:                    6                  6
+          Total:                        33                 43
+          Total bytes:                1739               1420
+          Bytes in queue:                0                  0
 
           For address family: IPv4 Unicast
           BGP table version 6765004, neighbor version 6765004
@@ -8601,15 +8603,15 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
 
           Message statistics:
                                       Sent               Rcvd
-          Opens:                         0                  0  
-          Notifications:                 0                  0  
-          Updates:                       0                  0  
-          Keepalives:                    0                  0  
-          Route Refresh:                 0                  0  
-          Capability:                    0                  0  
-          Total:                         0                  0  
-          Total bytes:                   0                  0  
-          Bytes in queue:                0                  0  
+          Opens:                         0                  0
+          Notifications:                 0                  0
+          Updates:                       0                  0
+          Keepalives:                    0                  0
+          Route Refresh:                 0                  0
+          Capability:                    0                  0
+          Total:                         0                  0
+          Total bytes:                   0                  0
+          Bytes in queue:                0                  0
 
           For address family: IPv4 Unicast
           BGP table version 6765004, neighbor version 0
@@ -8672,20 +8674,20 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
 class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
 
     '''Unit test for show vrf all neighbors - YANG'''
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-        'neighbor': 
-            {'21.0.101.1': 
-                {'address_family': 
-                    {'ipv4 multicast': 
+        'neighbor':
+            {'21.0.101.1':
+                {'address_family':
+                    {'ipv4 multicast':
                         {'bgp_table_version': 53,
                          'session_state': 'idle',
                         'neighbor_version': 0,
                         'third_party_nexthop': True,
-                        'path': 
+                        'path':
                             {'accepted_paths': 0,
                             'memory_usage': 0},
                         'route_reflector_client': True,
@@ -8740,16 +8742,16 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                                       'route_reflector_client': True,
                                       'send_community': 'both'}},
                 'allow_own_as': 0,
-                'bgp_negotiated_keepalive_timers': 
+                'bgp_negotiated_keepalive_timers':
                     {'hold_time': 180,
                     'keepalive_interval': 60,
                     'keepalive_timer': 'not '
                                     'running',
                     'last_read': 'never',
                     'last_written': 'never'},
-                'bgp_neighbor_counters': 
-                    {'messages': 
-                        {'received': 
+                'bgp_neighbor_counters':
+                    {'messages':
+                        {'received':
                             {'bytes_in_queue': 0,
                             'capability': 0,
                             'keepalives': 0,
@@ -8759,7 +8761,7 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                             'total': 0,
                             'total_bytes': 0,
                             'updates': 0},
-                        'sent': 
+                        'sent':
                             {'bytes_in_queue': 0,
                             'capability': 0,
                             'keepalives': 0,
@@ -8769,15 +8771,15 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                             'total': 0,
                             'total_bytes': 0,
                             'updates': 0}}},
-                'bgp_session_transport': 
-                    {'connection': 
+                'bgp_session_transport':
+                    {'connection':
                         {'dropped': 0,
                         'established': 0,
                         'last_reset': 'never',
                         'reset_by': 'peer',
                         'reset_reason': 'no '
                                          'error'},
-                    'transport': 
+                    'transport':
                         {'foreign_host': 'unspecified',
                         'foreign_port': '21.0.101.1',
                         'local_host': '0.0.0.0',
@@ -8811,14 +8813,14 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                 'session_state': 'idle',
                 'shutdown': False,
                 'up_time': '1w4d'},
-            '21.0.102.1': 
-                {'address_family': 
-                    {'ipv4 multicast': 
+            '21.0.102.1':
+                {'address_family':
+                    {'ipv4 multicast':
                         {'bgp_table_version': 53,
                         'session_state': 'idle',
                         'neighbor_version': 0,
                         'third_party_nexthop': True,
-                        'path': 
+                        'path':
                             {'accepted_paths': 0,
                             'memory_usage': 0},
                         'route_reflector_client': True,
@@ -8871,16 +8873,16 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                                       'route_reflector_client': True,
                                       'send_community': 'both'}},
                 'allow_own_as': 0,
-                'bgp_negotiated_keepalive_timers': 
+                'bgp_negotiated_keepalive_timers':
                     {'hold_time': 180,
                     'keepalive_interval': 60,
                     'keepalive_timer': 'not '
                                 'running',
                     'last_read': 'never',
                     'last_written': 'never'},
-                'bgp_neighbor_counters': 
-                    {'messages': 
-                        {'received': 
+                'bgp_neighbor_counters':
+                    {'messages':
+                        {'received':
                             {'bytes_in_queue': 0,
                             'capability': 0,
                             'keepalives': 0,
@@ -8890,7 +8892,7 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                             'total': 0,
                             'total_bytes': 0,
                             'updates': 0},
-                        'sent': 
+                        'sent':
                             {'bytes_in_queue': 0,
                             'capability': 0,
                             'keepalives': 0,
@@ -8900,15 +8902,15 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                             'total': 0,
                             'total_bytes': 0,
                             'updates': 0}}},
-                'bgp_session_transport': 
-                    {'connection': 
+                'bgp_session_transport':
+                    {'connection':
                         {'dropped': 0,
                         'established': 0,
                         'last_reset': 'never',
                         'reset_by': 'peer',
                         'reset_reason': 'no '
                         'error'},
-                    'transport': 
+                    'transport':
                         {'foreign_host': 'unspecified',
                         'foreign_port': '21.0.102.1',
                         'local_host': '0.0.0.0',
@@ -8942,13 +8944,13 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                 'session_state': 'idle',
                 'shutdown': False,
                 'up_time': '1w4d'},
-            '21.0.201.1': 
-                {'address_family': 
-                    {'ipv4 multicast': 
+            '21.0.201.1':
+                {'address_family':
+                    {'ipv4 multicast':
                         {'bgp_table_version': 53,
                          'session_state': 'idle',
                         'neighbor_version': 0,
-                        'path': 
+                        'path':
                             {'accepted_paths': 0,
                             'memory_usage': 0},
                         'send_community': 'both'},
@@ -9056,8 +9058,8 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                 'session_state': 'idle',
                 'shutdown': False,
                 'up_time': '1w4d'},
-            '4.4.4.4': 
-                {'bgp_negotiated_keepalive_timers': 
+            '4.4.4.4':
+                {'bgp_negotiated_keepalive_timers':
                     {'hold_time': 180,
                     'keepalive_interval': 60,
                     'keepalive_timer': 'not '
@@ -9118,9 +9120,9 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                 'session_state': 'idle',
                 'shutdown': False,
                 'up_time': '1w4d'},
-            'fec1::1002': 
-                {'address_family': 
-                    {'ipv4 unicast': 
+            'fec1::1002':
+                {'address_family':
+                    {'ipv4 unicast':
                         {'bgp_table_version': 358,
                          'session_state': 'idle',
                         'enabled': True,
@@ -9128,7 +9130,7 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                         'ipv4_unicast_send_default_route': False,
                         'neighbor_version': 0,
                         'third_party_nexthop': True,
-                        'path': 
+                        'path':
                             {'accepted_paths': 0,
                             'memory_usage': 0},
                         'route_reflector_client': True,
@@ -9197,9 +9199,9 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                 'session_state': 'idle',
                 'shutdown': False,
                 'up_time': '1w4d'},
-            'fec1::2002': 
-                {'address_family': 
-                    {'ipv4 unicast': 
+            'fec1::2002':
+                {'address_family':
+                    {'ipv4 unicast':
                         {'bgp_table_version': 358,
                          'session_state': 'idle',
                         'enabled': True,
@@ -9290,7 +9292,7 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                 'up_time': '1w4d'}}}
 
     cli_output = '''\
-        pinxdt-n9kv-3# show bgp vrf default all neighbors 
+        pinxdt-n9kv-3# show bgp vrf default all neighbors
         BGP neighbor is 4.4.4.4, remote AS 0, unknown link, Peer index 3
           BGP version 4, remote router ID 0.0.0.0
           BGP state = Idle, down for 1w4d, retry in 0.000000
@@ -9306,15 +9308,15 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
 
           Message statistics:
                                       Sent               Rcvd
-          Opens:                         0                  0  
-          Notifications:                 0                  0  
-          Updates:                       0                  0  
-          Keepalives:                    0                  0  
-          Route Refresh:                 0                  0  
-          Capability:                    0                  0  
-          Total:                         0                  0  
-          Total bytes:                   0                  0  
-          Bytes in queue:                0                  0  
+          Opens:                         0                  0
+          Notifications:                 0                  0
+          Updates:                       0                  0
+          Keepalives:                    0                  0
+          Route Refresh:                 0                  0
+          Capability:                    0                  0
+          Total:                         0                  0
+          Total bytes:                   0                  0
+          Bytes in queue:                0                  0
 
           No established BGP session with peer
 
@@ -9332,15 +9334,15 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
 
           Message statistics:
                                       Sent               Rcvd
-          Opens:                         0                  0  
-          Notifications:                 0                  0  
-          Updates:                       0                  0  
-          Keepalives:                    0                  0  
-          Route Refresh:                 0                  0  
-          Capability:                    0                  0  
-          Total:                         0                  0  
-          Total bytes:                   0                  0  
-          Bytes in queue:                0                  0  
+          Opens:                         0                  0
+          Notifications:                 0                  0
+          Updates:                       0                  0
+          Keepalives:                    0                  0
+          Route Refresh:                 0                  0
+          Capability:                    0                  0
+          Total:                         0                  0
+          Total bytes:                   0                  0
+          Bytes in queue:                0                  0
 
           For address family: IPv4 Unicast
           BGP table version 358, neighbor version 0
@@ -9432,15 +9434,15 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
 
           Message statistics:
                                       Sent               Rcvd
-          Opens:                         0                  0  
-          Notifications:                 0                  0  
-          Updates:                       0                  0  
-          Keepalives:                    0                  0  
-          Route Refresh:                 0                  0  
-          Capability:                    0                  0  
-          Total:                         0                  0  
-          Total bytes:                   0                  0  
-          Bytes in queue:                0                  0  
+          Opens:                         0                  0
+          Notifications:                 0                  0
+          Updates:                       0                  0
+          Keepalives:                    0                  0
+          Route Refresh:                 0                  0
+          Capability:                    0                  0
+          Total:                         0                  0
+          Total bytes:                   0                  0
+          Bytes in queue:                0                  0
 
           For address family: IPv4 Unicast
           BGP table version 358, neighbor version 0
@@ -9531,15 +9533,15 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
 
           Message statistics:
                                       Sent               Rcvd
-          Opens:                         0                  0  
-          Notifications:                 0                  0  
-          Updates:                       0                  0  
-          Keepalives:                    0                  0  
-          Route Refresh:                 0                  0  
-          Capability:                    0                  0  
-          Total:                         0                  0  
-          Total bytes:                   0                  0  
-          Bytes in queue:                0                  0  
+          Opens:                         0                  0
+          Notifications:                 0                  0
+          Updates:                       0                  0
+          Keepalives:                    0                  0
+          Route Refresh:                 0                  0
+          Capability:                    0                  0
+          Total:                         0                  0
+          Total bytes:                   0                  0
+          Bytes in queue:                0                  0
 
           For address family: IPv4 Unicast
           BGP table version 358, neighbor version 0
@@ -9617,15 +9619,15 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
 
           Message statistics:
                                       Sent               Rcvd
-          Opens:                         0                  0  
-          Notifications:                 0                  0  
-          Updates:                       0                  0  
-          Keepalives:                    0                  0  
-          Route Refresh:                 0                  0  
-          Capability:                    0                  0  
-          Total:                         0                  0  
-          Total bytes:                   0                  0  
-          Bytes in queue:                0                  0  
+          Opens:                         0                  0
+          Notifications:                 0                  0
+          Updates:                       0                  0
+          Keepalives:                    0                  0
+          Route Refresh:                 0                  0
+          Capability:                    0                  0
+          Total:                         0                  0
+          Total bytes:                   0                  0
+          Bytes in queue:                0                  0
 
           For address family: IPv4 Unicast
           BGP table version 358, neighbor version 0
@@ -9654,15 +9656,15 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
 
           Message statistics:
                                       Sent               Rcvd
-          Opens:                         0                  0  
-          Notifications:                 0                  0  
-          Updates:                       0                  0  
-          Keepalives:                    0                  0  
-          Route Refresh:                 0                  0  
-          Capability:                    0                  0  
-          Total:                         0                  0  
-          Total bytes:                   0                  0  
-          Bytes in queue:                0                  0  
+          Opens:                         0                  0
+          Notifications:                 0                  0
+          Updates:                       0                  0
+          Keepalives:                    0                  0
+          Route Refresh:                 0                  0
+          Capability:                    0                  0
+          Total:                         0                  0
+          Total bytes:                   0                  0
+          Bytes in queue:                0                  0
 
           For address family: IPv4 Unicast
           BGP table version 358, neighbor version 0
@@ -11049,13 +11051,13 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
         obj = ShowBgpVrfAllNeighbors(device=self.device, context=['yang', 'cli'])
         parsed_output = obj.parse(vrf='default')
         self.assertEqual(parsed_output,self.golden_parsed_output)
-        
+
 # ======================================================
-#  Unit test for 'show bgp vrf all all nexthop-database'       
+#  Unit test for 'show bgp vrf all all nexthop-database'
 # ======================================================
 
 class test_show_bgp_vrf_all_all_nexthop_database(unittest.TestCase):
-    
+
     '''Unit test for show bgp vrf all all nexthop-database'''
 
     device = Device(name='aDevice')
@@ -11249,7 +11251,7 @@ class test_show_bgp_vrf_all_all_nexthop_database(unittest.TestCase):
 # =============================================
 
 class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
-    
+
     '''Unit test for 'show bgp vrf all all summary'''
 
     device = Device(name='aDevice')
@@ -11450,7 +11452,7 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
         Dampening configured, 0 history paths, 0 dampened paths
 
         Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-        2.2.2.10        4     0       0       0        0    0    0     5w6d Idle     
+        2.2.2.10        4     0       0       0        0    0    0     5w6d Idle
 
         BGP summary information for VRF VRF1, address family IPv6 Unicast
 
@@ -11477,7 +11479,7 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
         BGP community entries [0/0], BGP clusterlist entries [1/4]
 
         Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-        2.2.2.2         4   100  108554  108566       53    0    0     5w6d 1         
+        2.2.2.2         4   100  108554  108566       53    0    0     5w6d 1
 
         BGP summary information for VRF default, address family VPNv6 Unicast
         BGP router identifier 1.1.1.1, local AS number 100
@@ -11487,7 +11489,7 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
         BGP community entries [0/0], BGP clusterlist entries [1/4]
 
         Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-        2.2.2.2         4   100  108554  108566       45    0    0     5w6d 1         
+        2.2.2.2         4   100  108554  108566       45    0    0     5w6d 1
 
         BGP summary information for VRF default, address family IPv6 Label Unicast
         '''}
@@ -11615,7 +11617,7 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
     }
 
     golden_output2 = {'execute.return_value': '''
-        pinxdt-n9kv-2# show bgp vrf all all summary 
+        pinxdt-n9kv-2# show bgp vrf all all summary
         BGP summary information for VRF ac, address family IPv4 Unicast
 
         BGP summary information for VRF ac, address family IPv6 Unicast
@@ -11630,8 +11632,8 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
         3 identical, 0 modified, 0 filtered received paths using 0 bytes
 
         Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-        21.0.0.2        4   333      17      15       25    0    0 00:08:22 3         
-        fec1::112       4   333      16      13       25    0    0 00:08:17 3         
+        21.0.0.2        4   333      17      15       25    0    0 00:08:22 3
+        fec1::112       4   333      16      13       25    0    0 00:08:17 3
 
         BGP summary information for VRF default, address family IPv4 Multicast
         BGP router identifier 21.0.101.1, local AS number 333
@@ -11643,7 +11645,7 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
         3 identical, 0 modified, 0 filtered received paths using 0 bytes
 
         Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-        21.0.0.2        4   333      17      15       19    0    0 00:08:22 3         
+        21.0.0.2        4   333      17      15       19    0    0 00:08:22 3
 
         BGP summary information for VRF default, address family IPv6 Unicast
 
@@ -11672,7 +11674,7 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
         BGP summary information for VRF vpn2, address family IPv4 Unicast
 
         BGP summary information for VRF vpn2, address family IPv6 Unicast
-        pinxdt-n9kv-2# 
+        pinxdt-n9kv-2#
         '''}
 
     golden_parsed_output3 = {
@@ -12731,9 +12733,9 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
         Dampening configured, 0 history paths, 2 dampened paths
 
         Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-        19.0.101.1      4   333      29      31      174    0    0 00:20:33 3         
-        19.0.102.3      4   888     841      28      174    0    0 00:20:33 2         
-        19.0.102.4      4   333      27      31      174    0    0 00:20:33 2         
+        19.0.101.1      4   333      29      31      174    0    0 00:20:33 3
+        19.0.102.3      4   888     841      28      174    0    0 00:20:33 2
+        19.0.102.4      4   333      27      31      174    0    0 00:20:33 2
 
         BGP summary information for VRF default, address family IPv4 Multicast
         BGP router identifier 20.0.0.6, local AS number 333
@@ -12744,9 +12746,9 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
         Dampening configured, 0 history paths, 2 dampened paths
 
         Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-        19.0.101.1      4   333      29      31      175    0    0 00:20:33 2         
-        19.0.102.3      4   888     841      28      175    0    0 00:20:33 2         
-        19.0.102.4      4   333      27      31      175    0    0 00:20:33 2         
+        19.0.101.1      4   333      29      31      175    0    0 00:20:33 2
+        19.0.102.3      4   888     841      28      175    0    0 00:20:33 2
+        19.0.102.4      4   333      27      31      175    0    0 00:20:33 2
 
         BGP summary information for VRF default, address family IPv6 Unicast
         BGP router identifier 20.0.0.6, local AS number 333
@@ -12760,8 +12762,8 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
         19.0.101.1      4   333      29      31        0    0    0 00:20:33 0 (No Cap)
         19.0.102.3      4   888     841      28        0    0    0 00:20:33 0 (No Cap)
         19.0.102.4      4   333      27      31        0    0    0 00:20:33 0 (No Cap)
-        fec0::1002      4   333      26      26      173    0    0 00:20:33 3         
-        fec0::2002      4   888     187      25      173    0    0 00:20:33 2         
+        fec0::1002      4   333      26      26      173    0    0 00:20:33 3
+        fec0::2002      4   888     187      25      173    0    0 00:20:33 2
 
         BGP summary information for VRF default, address family IPv6 Multicast
         BGP router identifier 20.0.0.6, local AS number 333
@@ -12775,8 +12777,8 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
         19.0.101.1      4   333      29      31        0    0    0 00:20:33 0 (No Cap)
         19.0.102.3      4   888     841      28        0    0    0 00:20:33 0 (No Cap)
         19.0.102.4      4   333      27      31        0    0    0 00:20:33 0 (No Cap)
-        fec0::1002      4   333      26      26        6    0    0 00:20:33 2         
-        fec0::2002      4   888     187      25        6    0    0 00:20:33 0         
+        fec0::1002      4   333      26      26        6    0    0 00:20:33 2
+        fec0::2002      4   888     187      25        6    0    0 00:20:33 0
 
         BGP summary information for VRF default, address family VPNv4 Unicast
         BGP router identifier 20.0.0.6, local AS number 333
@@ -12787,9 +12789,9 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
         Dampening configured, 0 history paths, 2 dampened paths
 
         Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-        19.0.101.1      4   333      29      31      183    0    0 00:20:33 2         
-        19.0.102.3      4   888     841      28      183    0    0 00:20:33 2         
-        19.0.102.4      4   333      27      31      183    0    0 00:20:33 4         
+        19.0.101.1      4   333      29      31      183    0    0 00:20:33 2
+        19.0.102.3      4   888     841      28      183    0    0 00:20:33 2
+        19.0.102.4      4   333      27      31      183    0    0 00:20:33 4
 
         BGP summary information for VRF default, address family VPNv6 Unicast
         BGP router identifier 20.0.0.6, local AS number 333
@@ -12800,9 +12802,9 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
         Dampening configured, 0 history paths, 0 dampened paths
 
         Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-        19.0.101.1      4   333      29      31       13    0    0 00:20:33 2         
-        19.0.102.3      4   888     841      28       13    0    0 00:20:33 2         
-        19.0.102.4      4   333      27      31       13    0    0 00:20:33 0         
+        19.0.101.1      4   333      29      31       13    0    0 00:20:33 2
+        19.0.102.3      4   888     841      28       13    0    0 00:20:33 2
+        19.0.102.4      4   333      27      31       13    0    0 00:20:33 0
 
         BGP summary information for VRF default, address family Link-State
         BGP router identifier 20.0.0.6, local AS number 333
@@ -12813,9 +12815,9 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
         Dampening configured, 0 history paths, 2 dampened paths
 
         Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-        19.0.101.1      4   333      29      31      173    0    0 00:20:33 2         
-        19.0.102.3      4   888     841      28      173    0    0 00:20:33 2         
-        19.0.102.4      4   333      27      31      173    0    0 00:20:33 0         
+        19.0.101.1      4   333      29      31      173    0    0 00:20:33 2
+        19.0.102.3      4   888     841      28      173    0    0 00:20:33 2
+        19.0.102.4      4   333      27      31      173    0    0 00:20:33 0
         fec0::1002      4   333      26      26        0    0    0 00:20:33 0 (No Cap)
         fec0::2002      4   888     187      25        0    0    0 00:20:33 0 (No Cap)
 
@@ -12827,7 +12829,7 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
         BGP community entries [2/96], BGP clusterlist entries [7/28]
 
         Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-        19.0.103.1      4   333       0       0        0    0    0 00:20:35 Idle     
+        19.0.103.1      4   333       0       0        0    0    0 00:20:35 Idle
 
         BGP summary information for VRF vpn1, address family IPv4 Multicast
         BGP router identifier 0.0.0.0, local AS number 333
@@ -12837,7 +12839,7 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
         BGP community entries [2/96], BGP clusterlist entries [7/28]
 
         Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-        19.0.103.1      4   333       0       0        0    0    0 00:20:35 Idle     
+        19.0.103.1      4   333       0       0        0    0    0 00:20:35 Idle
 
         BGP summary information for VRF vpn1, address family IPv6 Unicast
         BGP router identifier 0.0.0.0, local AS number 333
@@ -12847,7 +12849,7 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
         BGP community entries [2/96], BGP clusterlist entries [7/28]
 
         Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-        19.0.103.1      4   333       0       0        0    0    0 00:20:35 Idle     
+        19.0.103.1      4   333       0       0        0    0    0 00:20:35 Idle
 
         BGP summary information for VRF vpn1, address family IPv6 Multicast
         BGP router identifier 0.0.0.0, local AS number 333
@@ -12857,7 +12859,7 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
         BGP community entries [2/96], BGP clusterlist entries [7/28]
 
         Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-        19.0.103.1      4   333       0       0        0    0    0 00:20:35 Idle     
+        19.0.103.1      4   333       0       0        0    0    0 00:20:35 Idle
 
         BGP summary information for VRF vpn2, address family IPv4 Unicast
 
@@ -12891,11 +12893,10 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
-
 class test_show_bgp_vrf_all_all_summary_xml(unittest.TestCase):
 
     '''Unit test for show bgp vrf <WORD> all summary - XML'''
-    
+
     device = Device(name='aDevice')
     golden_parsed_output = {
         "vrf": {
@@ -13196,7 +13197,7 @@ class test_show_bgp_vrf_all_all_summary_xml(unittest.TestCase):
 #  Unit test for 'show bgp process vrf all all dampening parameters'
 # ==================================================================
 
-class test_show_bgp_vrf_all_all_dampening_parameters_cli(unittest.TestCase):
+class TestShowBgpVrfAllAllDampeningParameters(unittest.TestCase):
     ''' unittest for "show bgp vrf all all dampening parameters"
     '''
     device = Device(name='aDevice')
@@ -13297,10 +13298,10 @@ class test_show_bgp_vrf_all_all_dampening_parameters_cli(unittest.TestCase):
             parsed_output = bgp_obj.parse()
 
 
-class test_show_bgp_vrf_all_all_dampening_parameters_xml(unittest.TestCase):
+class TestShowBgpVrfAllAllDampeningParameters_xml(unittest.TestCase):
 
     '''Unit test for show bgp vrf <WORD> all dampening parameters - XML'''
-    
+
     device = Device(name='aDevice')
     golden_parsed_output = {
         "vrf": {
@@ -13573,7 +13574,7 @@ class test_show_bgp_vrf_all_all_dampening_parameters_xml(unittest.TestCase):
 # ==========================================================================
 
 class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -13583,7 +13584,7 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                 {'neighbor':
                     {'2.2.2.10':
                         {'address_family':
-                            {'ipv4 label unicast': 
+                            {'ipv4 label unicast':
                                 {'bgp_table_version': 28,
                                 'local_router_id': '21.0.101.1',
                                 'advertised': {}},
@@ -13641,7 +13642,7 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                                 'weight': 32768}}}},
                                 'bgp_table_version': 19,
                                 'local_router_id': '21.0.101.1'},
-                            'ipv4 mvpn': 
+                            'ipv4 mvpn':
                                 {'bgp_table_version': 2,
                                 'local_router_id': '21.0.101.1',
                                 'advertised': {}},
@@ -13698,23 +13699,23 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                                 'weight': 32768}}}},
                                 'bgp_table_version': 25,
                                 'local_router_id': '21.0.101.1'},
-                            'ipv6 multicast': 
+                            'ipv6 multicast':
                                 {'bgp_table_version': 2,
                                 'local_router_id': '21.0.101.1',
                                 'advertised': {}},
-                            'ipv6 mvpn': 
+                            'ipv6 mvpn':
                                 {'bgp_table_version': 2,
                                 'local_router_id': '21.0.101.1',
                                 'advertised': {}},
-                            'ipv6 unicast': 
+                            'ipv6 unicast':
                                 {'bgp_table_version': 7,
                                 'local_router_id': '21.0.101.1',
                                 'advertised': {}},
-                            'link-state': 
+                            'link-state':
                                 {'bgp_table_version': 2,
                                 'local_router_id': '21.0.101.1',
                                 'advertised': {}},
-                            'vpnv4 unicast': 
+                            'vpnv4 unicast':
                                 {'bgp_table_version': 23,
                                 'local_router_id': '21.0.101.1',
                                 'advertised': {}},
@@ -13770,17 +13771,17 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                                 'path_type': 'r',
                                                 'status_codes': '*>',
                                                 'weight': 32768}}}}},
-                            'vpnv6 unicast': 
+                            'vpnv6 unicast':
                                 {'bgp_table_version': 7,
                                 'local_router_id': '21.0.101.1',
                                 'advertised': {}},
-                            'vpnv6 unicast RD 1:100': 
+                            'vpnv6 unicast RD 1:100':
                                 {'bgp_table_version': 7,
                                 'default_vrf': 'vpn1',
                                 'local_router_id': '21.0.101.1',
                                 'route_distinguisher': '1:100',
                                 'advertised': {}},
-                            'vpnv6 unicast RD 2:100': 
+                            'vpnv6 unicast RD 2:100':
                                 {'bgp_table_version': 7,
                                 'default_vrf': 'vpn2',
                                 'local_router_id': '21.0.101.1',
@@ -13788,7 +13789,7 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                 'advertised': {}}}}}}}}
 
     golden_output = {'execute.return_value': '''
-        pinxdt-n9kv-2# show bgp vrf default all neighbors 2.2.2.10 advertised-routes 
+        pinxdt-n9kv-2# show bgp vrf default all neighbors 2.2.2.10 advertised-routes
         Can't find neighbor 2.2.2.10
 
         Peer 2.2.2.10 routes for address family IPv4 Unicast:
@@ -13898,17 +13899,17 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
            Network            Next Hop            Metric     LocPrf     Weight Path
         Can't find neighbor 21.0.0.2
         Can't find neighbor 21.0.0.2
-        pinxdt-n9kv-2# 
+        pinxdt-n9kv-2#
         '''}
 
     golden_parsed_output2 = {
-        'vrf': 
-            {'default': 
-                {'neighbor': 
-                    {'19.0.102.3': 
-                        {'address_family': 
-                            {'ipv4 multicast': 
-                                {'advertised': 
+        'vrf':
+            {'default':
+                {'neighbor':
+                    {'19.0.102.3':
+                        {'address_family':
+                            {'ipv4 multicast':
+                                {'advertised':
                                     {'1.2.1.0/24': {'index': {1: {'locprf': 100,
                                                                'next_hop': '19.0.101.1',
                                                                'origin_codes': 'i',
@@ -13965,8 +13966,8 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                                                'weight': 32788}}}},
                                 'bgp_table_version': 175,
                                 'local_router_id': '20.0.0.6'},
-                            'ipv4 unicast': 
-                                {'advertised': 
+                            'ipv4 unicast':
+                                {'advertised':
                                     {'1.1.1.0/24': {'index': {1: {'locprf': 100,
                                                                  'next_hop': '19.0.102.4',
                                                                  'origin_codes': 'i',
@@ -14031,19 +14032,19 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                                                  'weight': 0}}}},
                                 'bgp_table_version': 174,
                                 'local_router_id': '20.0.0.6'},
-                            'ipv6 multicast': 
+                            'ipv6 multicast':
                                 {'bgp_table_version': 6,
                                 'local_router_id': '20.0.0.6',
                                 'advertised': {}},
-                            'ipv6 unicast': 
+                            'ipv6 unicast':
                                 {'bgp_table_version': 173,
                                 'local_router_id': '20.0.0.6',
                                 'advertised': {}},
-                            'link-state': 
-                                {'advertised': 
-                                    {'[2]:[77][7,0][9.9.9.9,1,151587081][29.1.1.1,22][19.0.101.1,29.0.1.30]/616': 
-                                        {'index': 
-                                            {1: 
+                            'link-state':
+                                {'advertised':
+                                    {'[2]:[77][7,0][9.9.9.9,1,151587081][29.1.1.1,22][19.0.101.1,29.0.1.30]/616':
+                                        {'index':
+                                            {1:
                                                 {'locprf': 100,
                                                 'metric': 4444,
                                                 'next_hop': '19.0.101.1',
@@ -14061,7 +14062,7 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0},
-                                            2: 
+                                            2:
                                                 {'locprf': 100,
                                                 'metric': 4444,
                                                 'next_hop': '19.0.102.3',
@@ -14079,9 +14080,9 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}},
-                                    '[2]:[77][7,0][9.9.9.9,2,151587081][29.1.1.1,22][19.0.101.1,29.0.1.31]/616': 
-                                        {'index': 
-                                            {1: 
+                                    '[2]:[77][7,0][9.9.9.9,2,151587081][29.1.1.1,22][19.0.101.1,29.0.1.31]/616':
+                                        {'index':
+                                            {1:
                                                 {'locprf': 200,
                                                 'metric': 555,
                                                 'next_hop': '19.0.103.2',
@@ -14101,35 +14102,35 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                                 'weight': 0}}}},
                                 'bgp_table_version': 173,
                                 'local_router_id': '20.0.0.6'},
-                            'vpnv4 unicast': 
+                            'vpnv4 unicast':
                                 {'bgp_table_version': 183,
                                 'local_router_id': '20.0.0.6',
                                 'advertised': {}},
-                            'vpnv4 unicast RD 0:0': 
+                            'vpnv4 unicast RD 0:0':
                                 {'bgp_table_version': 183,
                                 'local_router_id': '20.0.0.6',
                                 'route_distinguisher': '0:0',
                                 'advertised': {}},
-                            'vpnv4 unicast RD 101:100': 
+                            'vpnv4 unicast RD 101:100':
                                 {'bgp_table_version': 183,
                                 'local_router_id': '20.0.0.6',
                                 'route_distinguisher': '101:100',
                                 'advertised': {}},
-                            'vpnv4 unicast RD 102:100': 
+                            'vpnv4 unicast RD 102:100':
                                 {'bgp_table_version': 183,
                                 'local_router_id': '20.0.0.6',
                                 'route_distinguisher': '102:100',
                                 'advertised': {}},
-                            'vpnv6 unicast': 
+                            'vpnv6 unicast':
                                 {'bgp_table_version': 13,
                                 'local_router_id': '20.0.0.6',
                                 'advertised': {}},
-                            'vpnv6 unicast RD 0xbb00010000000000': 
+                            'vpnv6 unicast RD 0xbb00010000000000':
                                 {'bgp_table_version': 13,
                                 'local_router_id': '20.0.0.6',
                                 'route_distinguisher': '0xbb00010000000000',
                                 'advertised': {}},
-                            'vpnv6 unicast RD 100:200': 
+                            'vpnv6 unicast RD 100:200':
                                 {'bgp_table_version': 13,
                                 'local_router_id': '20.0.0.6',
                                 'route_distinguisher': '100:200',
@@ -14225,16 +14226,16 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
         '''}
 
     golden_parsed_output3 = {
-        'vrf': 
-            {'default': 
-                {'neighbor': 
-                    {'10.4.6.6': 
-                        {'address_family': 
-                            {'ipv4 unicast': 
-                                {'advertised': 
-                                    {'15.1.1.0/24': 
-                                        {'index': 
-                                            {1: 
+        'vrf':
+            {'default':
+                {'neighbor':
+                    {'10.4.6.6':
+                        {'address_family':
+                            {'ipv4 unicast':
+                                {'advertised':
+                                    {'15.1.1.0/24':
+                                        {'index':
+                                            {1:
                                                 {'locprf': 100,
                                                 'metric': 2219,
                                                 'next_hop': '1.1.1.1',
@@ -14247,9 +14248,9 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}},
-                                    '15.1.2.0/24': 
-                                        {'index': 
-                                            {1: 
+                                    '15.1.2.0/24':
+                                        {'index':
+                                            {1:
                                                 {'locprf': 100,
                                                 'metric': 2219,
                                                 'next_hop': '1.1.1.1',
@@ -14262,9 +14263,9 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}},
-                                    '15.1.3.0/24': 
-                                        {'index': 
-                                            {1: 
+                                    '15.1.3.0/24':
+                                        {'index':
+                                            {1:
                                                 {'locprf': 100,
                                                 'metric': 2219,
                                                 'next_hop': '1.1.1.1',
@@ -14277,9 +14278,9 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}},
-                                    '15.1.4.0/24': 
-                                        {'index': 
-                                            {1: 
+                                    '15.1.4.0/24':
+                                        {'index':
+                                            {1:
                                                 {'locprf': 100,
                                                 'metric': 2219,
                                                 'next_hop': '1.1.1.1',
@@ -14292,9 +14293,9 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}},
-                                    '15.1.5.0/24': 
-                                        {'index': 
-                                            {1: 
+                                    '15.1.5.0/24':
+                                        {'index':
+                                            {1:
                                                 {'locprf': 100,
                                                 'metric': 2219,
                                                 'next_hop': '1.1.1.1',
@@ -14307,9 +14308,9 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}},
-                                    '46.2.2.0/24': 
-                                        {'index': 
-                                            {1: 
+                                    '46.2.2.0/24':
+                                        {'index':
+                                            {1:
                                                 {'metric': 100,
                                                 'next_hop': '20.4.6.6',
                                                 'origin_codes': 'e',
@@ -14320,9 +14321,9 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                                 'path_type': 'e',
                                                 'status_codes': '*>',
                                                 'weight': 0}}},
-                                    '46.2.3.0/24': 
-                                        {'index': 
-                                            {1: 
+                                    '46.2.3.0/24':
+                                        {'index':
+                                            {1:
                                                 {'metric': 100,
                                                 'next_hop': '20.4.6.6',
                                                 'origin_codes': 'e',
@@ -14333,9 +14334,9 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                                 'path_type': 'e',
                                                 'status_codes': '*>',
                                                 'weight': 0}}},
-                                    '46.2.4.0/24': 
-                                        {'index': 
-                                            {1: 
+                                    '46.2.4.0/24':
+                                        {'index':
+                                            {1:
                                                 {'metric': 100,
                                                 'next_hop': '20.4.6.6',
                                                 'origin_codes': 'e',
@@ -14346,9 +14347,9 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                                 'path_type': 'e',
                                                 'status_codes': '*>',
                                                 'weight': 0}}},
-                                    '46.2.5.0/24': 
-                                        {'index': 
-                                            {1: 
+                                    '46.2.5.0/24':
+                                        {'index':
+                                            {1:
                                                 {'metric': 100,
                                                 'next_hop': '20.4.6.6',
                                                 'origin_codes': 'e',
@@ -14359,9 +14360,9 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                                 'path_type': 'e',
                                                 'status_codes': '*>',
                                                 'weight': 0}}},
-                                    '46.2.6.0/24': 
-                                        {'index': 
-                                            {1: 
+                                    '46.2.6.0/24':
+                                        {'index':
+                                            {1:
                                                 {'metric': 100,
                                                 'next_hop': '20.4.6.6',
                                                 'origin_codes': 'e',
@@ -14374,7 +14375,7 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                                 'weight': 0}}}},
                                 'bgp_table_version': 648438,
                                 'local_router_id': '44.44.44.44'},
-                            'ipv6 unicast': 
+                            'ipv6 unicast':
                                 {'advertised': {},
                                 'bgp_table_version': 256028,
                                 'local_router_id': '44.44.44.44'}}}}}}}
@@ -14456,13 +14457,12 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(vrf='all', neighbor='10.4.6.6')
 
-
 # ===============================================================
 # Unit test for 'show bgp vrf <WORD> all neighbors <WORD> routes'
 # ===============================================================
 
 class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -14540,7 +14540,7 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}}}},
-                            'ipv4 mvpn': 
+                            'ipv4 mvpn':
                                 {'bgp_table_version': 2,
                                 'local_router_id': '21.0.101.1',
                                 'routes': {}},
@@ -14578,23 +14578,23 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}}}},
-                            'ipv6 multicast': 
+                            'ipv6 multicast':
                                 {'bgp_table_version': 2,
                                 'local_router_id': '21.0.101.1',
                                 'routes': {}},
-                            'ipv6 mvpn': 
+                            'ipv6 mvpn':
                                 {'bgp_table_version': 2,
                                 'local_router_id': '21.0.101.1',
                                 'routes': {}},
-                            'ipv6 unicast': 
+                            'ipv6 unicast':
                                 {'bgp_table_version': 7,
                                 'local_router_id': '21.0.101.1',
                                 'routes': {}},
-                            'link-state': 
+                            'link-state':
                                 {'bgp_table_version': 2,
                                 'local_router_id': '21.0.101.1',
                                 'routes': {}},
-                            'vpnv4 unicast': 
+                            'vpnv4 unicast':
                                 {'bgp_table_version': 23,
                                 'local_router_id': '21.0.101.1',
                                 'routes': {}},
@@ -14630,17 +14630,17 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}}}},
-                            'vpnv6 unicast': 
+                            'vpnv6 unicast':
                                 {'bgp_table_version': 7,
                                 'local_router_id': '21.0.101.1',
                                 'routes': {}},
-                            'vpnv6 unicast RD 1:100': 
+                            'vpnv6 unicast RD 1:100':
                                 {'bgp_table_version': 7,
                                 'default_vrf': 'vpn1',
                                 'local_router_id': '21.0.101.1',
                                 'route_distinguisher': '1:100',
                                 'routes': {}},
-                            'vpnv6 unicast RD 2:100': 
+                            'vpnv6 unicast RD 2:100':
                                 {'bgp_table_version': 7,
                                 'default_vrf': 'vpn2',
                                 'local_router_id': '21.0.101.1',
@@ -14648,7 +14648,7 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                 'routes': {}}}}}}}}
 
     golden_output = {'execute.return_value': '''
-        pinxdt-n9kv-2# show bgp vrf default all neighbors 21.0.0.2 routes 
+        pinxdt-n9kv-2# show bgp vrf default all neighbors 21.0.0.2 routes
         Can't find neighbor 21.0.0.2
 
         Peer 21.0.0.2 routes for address family IPv4 Unicast:
@@ -14757,18 +14757,18 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
         '''}
 
     golden_parsed_output2 = {
-        'vrf': 
-            {'default': 
-                {'neighbor': 
-                    {'19.0.101.1': 
-                        {'address_family': 
-                            {'ipv4 multicast': 
+        'vrf':
+            {'default':
+                {'neighbor':
+                    {'19.0.101.1':
+                        {'address_family':
+                            {'ipv4 multicast':
                                 {'bgp_table_version': 175,
                                 'local_router_id': '20.0.0.6',
-                                'routes': 
-                                    {'1.2.1.0/24': 
-                                        {'index': 
-                                            {1: 
+                                'routes':
+                                    {'1.2.1.0/24':
+                                        {'index':
+                                            {1:
                                                 {'locprf': 100,
                                                 'next_hop': '19.0.101.1',
                                                 'origin_codes': 'i',
@@ -14778,9 +14778,9 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}},
-                                    '1.2.2.0/24': 
-                                        {'index': 
-                                            {1: 
+                                    '1.2.2.0/24':
+                                        {'index':
+                                            {1:
                                                 {'locprf': 100,
                                                 'next_hop': '19.0.101.1',
                                                 'origin_codes': 'i',
@@ -14790,13 +14790,13 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}}}},
-                            'ipv4 unicast': 
+                            'ipv4 unicast':
                                 {'bgp_table_version': 174,
                                 'local_router_id': '20.0.0.6',
-                                'routes': 
-                                    {'1.1.1.0/24': 
-                                        {'index': 
-                                            {1: 
+                                'routes':
+                                    {'1.1.1.0/24':
+                                        {'index':
+                                            {1:
                                                 {'locprf': 100,
                                                 'metric': 2222,
                                                 'next_hop': '19.0.101.1',
@@ -14809,9 +14809,9 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '* ',
                                                 'weight': 0}}},
-                                    '1.1.2.0/24': 
-                                        {'index': 
-                                            {1: 
+                                    '1.1.2.0/24':
+                                        {'index':
+                                            {1:
                                                 {'locprf': 100,
                                                 'metric': 2222,
                                                 'next_hop': '19.0.101.1',
@@ -14824,9 +14824,9 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '* ',
                                                 'weight': 0}}},
-                                    '1.6.0.0/16': 
-                                        {'index': 
-                                            {1: 
+                                    '1.6.0.0/16':
+                                        {'index':
+                                            {1:
                                                 {'locprf': 100,
                                                 'next_hop': '19.0.101.1',
                                                 'origin_codes': 'i',
@@ -14842,21 +14842,21 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}}}},
-                            'ipv6 multicast': 
+                            'ipv6 multicast':
                                 {'bgp_table_version': 6,
                                 'local_router_id': '20.0.0.6',
                                 'routes': {}},
-                            'ipv6 unicast': 
+                            'ipv6 unicast':
                                 {'bgp_table_version': 173,
                                 'local_router_id': '20.0.0.6',
                                 'routes': {}},
-                            'link-state': 
+                            'link-state':
                                 {'bgp_table_version': 173,
                                 'local_router_id': '20.0.0.6',
-                                'routes': 
-                                    {'[2]:[77][7,0][9.9.9.9,1,151587081][29.1.1.1,22][19.0.101.1,29.0.1.30]/616': 
-                                        {'index': 
-                                            {1: 
+                                'routes':
+                                    {'[2]:[77][7,0][9.9.9.9,1,151587081][29.1.1.1,22][19.0.101.1,29.0.1.30]/616':
+                                        {'index':
+                                            {1:
                                                 {'locprf': 100,
                                                 'metric': 4444,
                                                 'next_hop': '19.0.101.1',
@@ -14874,9 +14874,9 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}},
-                                    '[2]:[77][7,0][9.9.9.9,2,151587081][29.1.1.1,22][19.0.101.1,29.0.1.31]/616': 
-                                        {'index': 
-                                            {1: 
+                                    '[2]:[77][7,0][9.9.9.9,2,151587081][29.1.1.1,22][19.0.101.1,29.0.1.31]/616':
+                                        {'index':
+                                            {1:
                                                 {'locprf': 100,
                                                 'metric': 4444,
                                                 'next_hop': '19.0.101.1',
@@ -14894,23 +14894,23 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}}}},
-                            'vpnv4 unicast': 
+                            'vpnv4 unicast':
                                 {'bgp_table_version': 183,
                                 'local_router_id': '20.0.0.6',
                                 'routes': {}},
-                            'vpnv4 unicast RD 0:0': 
+                            'vpnv4 unicast RD 0:0':
                                 {'bgp_table_version': 183,
                                 'local_router_id': '20.0.0.6',
                                 'route_distinguisher': '0:0',
                                 'routes': {}},
-                            'vpnv4 unicast RD 101:100': 
+                            'vpnv4 unicast RD 101:100':
                                 {'bgp_table_version': 183,
                                 'local_router_id': '20.0.0.6',
                                 'route_distinguisher': '101:100',
-                                'routes': 
-                                    {'1.3.1.0/24': 
-                                        {'index': 
-                                            {1: 
+                                'routes':
+                                    {'1.3.1.0/24':
+                                        {'index':
+                                            {1:
                                                 {'locprf': 100,
                                                 'metric': 4444,
                                                 'next_hop': '19.0.101.1',
@@ -14930,9 +14930,9 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '* ',
                                                 'weight': 0}}},
-                                    '1.3.2.0/24': 
-                                        {'index': 
-                                            {1: 
+                                    '1.3.2.0/24':
+                                        {'index':
+                                            {1:
                                                 {'locprf': 100,
                                                 'metric': 4444,
                                                 'next_hop': '19.0.101.1',
@@ -14952,37 +14952,37 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '* ',
                                                 'weight': 0}}}}},
-                            'vpnv4 unicast RD 102:100': 
+                            'vpnv4 unicast RD 102:100':
                                 {'bgp_table_version': 183,
                                 'local_router_id': '20.0.0.6',
                                 'route_distinguisher': '102:100',
                                 'routes': {}},
-                            'vpnv6 unicast': 
+                            'vpnv6 unicast':
                                 {'bgp_table_version': 13,
                                 'local_router_id': '20.0.0.6',
                                 'routes': {}},
-                            'vpnv6 unicast RD 0xbb00010000000000': 
+                            'vpnv6 unicast RD 0xbb00010000000000':
                                 {'bgp_table_version': 13,
                                 'local_router_id': '20.0.0.6',
                                 'route_distinguisher': '0xbb00010000000000',
                                 'routes': {}},
-                            'vpnv6 unicast RD 100:200': 
+                            'vpnv6 unicast RD 100:200':
                                 {'bgp_table_version': 13,
                                 'local_router_id': '20.0.0.6',
                                 'route_distinguisher': '100:200',
-                                'routes': 
-                                    {'aaaa:1::/113': 
-                                        {'index': 
-                                            {1: 
+                                'routes':
+                                    {'aaaa:1::/113':
+                                        {'index':
+                                            {1:
                                                 {'locprf': 100,
                                                 'next_hop': '4444',
                                                 'origin_codes': 'i',
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}},
-                                    'aaaa:1::8000/113': 
-                                        {'index': 
-                                            {1: 
+                                    'aaaa:1::8000/113':
+                                        {'index':
+                                            {1:
                                                 {'locprf': 100,
                                                 'next_hop': '4444',
                                                 'origin_codes': 'i',
@@ -15079,18 +15079,18 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
         '''}
 
     golden_parsed_output3 = {
-        'vrf': 
-            {'default': 
-                {'neighbor': 
-                    {'10.4.6.6': 
-                        {'address_family': 
-                            {'ipv4 unicast': 
+        'vrf':
+            {'default':
+                {'neighbor':
+                    {'10.4.6.6':
+                        {'address_family':
+                            {'ipv4 unicast':
                                 {'bgp_table_version': 773961,
                                 'local_router_id': '44.44.44.44',
-                                'routes': 
-                                    {'46.1.1.0/24': 
-                                        {'index': 
-                                            {1: 
+                                'routes':
+                                    {'46.1.1.0/24':
+                                        {'index':
+                                            {1:
                                                 {'metric': 2219,
                                                 'next_hop': '10.4.6.6',
                                                 'origin_codes': 'e',
@@ -15102,9 +15102,9 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                                 'path_type': 'e',
                                                 'status_codes': '*>',
                                                 'weight': 0}}},
-                                    '46.1.2.0/24': 
-                                        {'index': 
-                                            {1: 
+                                    '46.1.2.0/24':
+                                        {'index':
+                                            {1:
                                                 {'metric': 2219,
                                                 'next_hop': '10.4.6.6',
                                                 'origin_codes': 'e',
@@ -15116,9 +15116,9 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                                 'path_type': 'e',
                                                 'status_codes': '*>',
                                                 'weight': 0}}},
-                                    '46.1.3.0/24': 
-                                        {'index': 
-                                            {1: 
+                                    '46.1.3.0/24':
+                                        {'index':
+                                            {1:
                                                 {'metric': 2219,
                                                 'next_hop': '10.4.6.6',
                                                 'origin_codes': 'e',
@@ -15130,9 +15130,9 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                                 'path_type': 'e',
                                                 'status_codes': '*>',
                                                 'weight': 0}}},
-                                    '46.1.4.0/24': 
-                                        {'index': 
-                                            {1: 
+                                    '46.1.4.0/24':
+                                        {'index':
+                                            {1:
                                                 {'metric': 2219,
                                                 'next_hop': '10.4.6.6',
                                                 'origin_codes': 'e',
@@ -15144,9 +15144,9 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                                 'path_type': 'e',
                                                 'status_codes': '*>',
                                                 'weight': 0}}},
-                                    '46.1.5.0/24': 
-                                        {'index': 
-                                            {1: 
+                                    '46.1.5.0/24':
+                                        {'index':
+                                            {1:
                                                 {'metric': 2219,
                                                 'next_hop': '10.4.6.6',
                                                 'origin_codes': 'e',
@@ -15158,13 +15158,13 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                                 'path_type': 'e',
                                                 'status_codes': '*>',
                                                 'weight': 0}}}}},
-                            'ipv6 unicast': 
+                            'ipv6 unicast':
                                 {'bgp_table_version': 256033,
                                 'local_router_id': '44.44.44.44',
                                 'routes': {}}}}}}}}
 
     golden_output3 = {'execute.return_value': '''
-        R4# show bgp vrf VRF1 all neighbors 10.4.6.6 routes 
+        R4# show bgp vrf VRF1 all neighbors 10.4.6.6 routes
 
         Peer 10.4.6.6 routes for address family IPv4 Unicast:
         BGP table version is 773961, local router ID is 44.44.44.44
@@ -15241,7 +15241,7 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
 # ========================================================================
 
 class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -15285,7 +15285,7 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}}}},
-                            'vpnv4 unicast': 
+                            'vpnv4 unicast':
                                 {'bgp_table_version': 23,
                                 'local_router_id': '21.0.101.1',
                                 'received_routes': {}},
@@ -15343,7 +15343,7 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
                                                 'weight': 32768}}}}}}}}}}}
 
     golden_output = {'execute.return_value': '''
-        pinxdt-n9kv-2# show bgp vrf default all neighbors 21.0.0.2 received-routes 
+        pinxdt-n9kv-2# show bgp vrf default all neighbors 21.0.0.2 received-routes
         Can't find neighbor 21.0.0.2
 
         Inbound soft reconfiguration for IPv4 Unicast not performed on 21.0.0.2
@@ -15379,7 +15379,7 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
 
         Route Distinguisher: 2:100    (VRF vpn2)
         *>r1.1.1.0/24         0.0.0.0               3333        100      32768 ?
-        *>r1.2.1.0/24         0.0.0.0               3333        100      32768 ?     
+        *>r1.2.1.0/24         0.0.0.0               3333        100      32768 ?
 
         Inbound soft reconfiguration for VPNv6 Unicast not performed on 21.0.0.2
 
@@ -15392,22 +15392,22 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
         Inbound soft reconfiguration for Link-State not performed on 21.0.0.2
         Can't find neighbor 21.0.0.2
         Can't find neighbor 21.0.0.2
-        pinxdt-n9kv-2# 
+        pinxdt-n9kv-2#
         '''}
 
     golden_parsed_output2 = {
-        'vrf': 
-            {'default': 
-                {'neighbor': 
-                    {'19.0.101.1': 
-                        {'address_family': 
-                            {'ipv4 multicast': 
+        'vrf':
+            {'default':
+                {'neighbor':
+                    {'19.0.101.1':
+                        {'address_family':
+                            {'ipv4 multicast':
                                 {'bgp_table_version': 175,
                                 'local_router_id': '20.0.0.6',
-                                'received_routes': 
-                                    {'1.2.1.0/24': 
-                                        {'index': 
-                                            {1: 
+                                'received_routes':
+                                    {'1.2.1.0/24':
+                                        {'index':
+                                            {1:
                                                 {'locprf': 100,
                                                 'next_hop': '19.0.101.1',
                                                 'origin_codes': 'i',
@@ -15417,9 +15417,9 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}},
-                                    '1.2.2.0/24': 
-                                        {'index': 
-                                            {1: 
+                                    '1.2.2.0/24':
+                                        {'index':
+                                            {1:
                                                 {'locprf': 100,
                                                 'next_hop': '19.0.101.1',
                                                 'origin_codes': 'i',
@@ -15429,13 +15429,13 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}}}},
-                            'ipv4 unicast': 
+                            'ipv4 unicast':
                                 {'bgp_table_version': 174,
                                 'local_router_id': '20.0.0.6',
-                                'received_routes': 
-                                    {'1.1.1.0/24': 
-                                        {'index': 
-                                            {1: 
+                                'received_routes':
+                                    {'1.1.1.0/24':
+                                        {'index':
+                                            {1:
                                                 {'locprf': 100,
                                                 'metric': 2222,
                                                 'next_hop': '19.0.101.1',
@@ -15448,9 +15448,9 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '* ',
                                                 'weight': 0}}},
-                                    '1.1.2.0/24': 
-                                        {'index': 
-                                            {1: 
+                                    '1.1.2.0/24':
+                                        {'index':
+                                            {1:
                                                 {'locprf': 100,
                                                 'metric': 2222,
                                                 'next_hop': '19.0.101.1',
@@ -15463,9 +15463,9 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '* ',
                                                 'weight': 0}}},
-                                    '1.6.0.0/16': 
-                                        {'index': 
-                                            {1: 
+                                    '1.6.0.0/16':
+                                        {'index':
+                                            {1:
                                                 {'locprf': 100,
                                                 'next_hop': '19.0.101.1',
                                                 'origin_codes': 'i',
@@ -15481,21 +15481,21 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}}}},
-                            'ipv6 multicast': 
+                            'ipv6 multicast':
                                 {'bgp_table_version': 6,
                                 'local_router_id': '20.0.0.6',
                                 'received_routes': {}},
-                            'ipv6 unicast': 
+                            'ipv6 unicast':
                                 {'bgp_table_version': 173,
                                 'local_router_id': '20.0.0.6',
                                 'received_routes': {}},
-                            'link-state': 
+                            'link-state':
                                 {'bgp_table_version': 173,
                                 'local_router_id': '20.0.0.6',
-                                'received_routes': 
-                                    {'[2]:[77][7,0][9.9.9.9,1,151587081][29.1.1.1,22][19.0.101.1,29.0.1.30]/616': 
-                                        {'index': 
-                                            {1: 
+                                'received_routes':
+                                    {'[2]:[77][7,0][9.9.9.9,1,151587081][29.1.1.1,22][19.0.101.1,29.0.1.30]/616':
+                                        {'index':
+                                            {1:
                                                 {'locprf': 100,
                                                 'metric': 4444,
                                                 'next_hop': '19.0.101.1',
@@ -15513,9 +15513,9 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}},
-                                    '[2]:[77][7,0][9.9.9.9,2,151587081][29.1.1.1,22][19.0.101.1,29.0.1.31]/616': 
-                                        {'index': 
-                                            {1: 
+                                    '[2]:[77][7,0][9.9.9.9,2,151587081][29.1.1.1,22][19.0.101.1,29.0.1.31]/616':
+                                        {'index':
+                                            {1:
                                                 {'locprf': 100,
                                                 'metric': 4444,
                                                 'next_hop': '19.0.101.1',
@@ -15533,23 +15533,23 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}}}},
-                            'vpnv4 unicast': 
+                            'vpnv4 unicast':
                                 {'bgp_table_version': 183,
                                 'local_router_id': '20.0.0.6',
                                 'received_routes': {}},
-                            'vpnv4 unicast RD 0:0': 
+                            'vpnv4 unicast RD 0:0':
                                 {'bgp_table_version': 183,
                                 'local_router_id': '20.0.0.6',
                                 'route_distinguisher': '0:0',
                                 'received_routes': {}},
-                            'vpnv4 unicast RD 101:100': 
+                            'vpnv4 unicast RD 101:100':
                                 {'bgp_table_version': 183,
                                 'local_router_id': '20.0.0.6',
                                 'route_distinguisher': '101:100',
-                                'received_routes': 
-                                    {'1.3.1.0/24': 
-                                        {'index': 
-                                            {1: 
+                                'received_routes':
+                                    {'1.3.1.0/24':
+                                        {'index':
+                                            {1:
                                                 {'locprf': 100,
                                                 'metric': 4444,
                                                 'next_hop': '19.0.101.1',
@@ -15569,9 +15569,9 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '* ',
                                                 'weight': 0}}},
-                                    '1.3.2.0/24': 
-                                        {'index': 
-                                            {1: 
+                                    '1.3.2.0/24':
+                                        {'index':
+                                            {1:
                                                 {'locprf': 100,
                                                 'metric': 4444,
                                                 'next_hop': '19.0.101.1',
@@ -15591,37 +15591,37 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '* ',
                                                 'weight': 0}}}}},
-                            'vpnv4 unicast RD 102:100': 
+                            'vpnv4 unicast RD 102:100':
                                 {'bgp_table_version': 183,
                                 'local_router_id': '20.0.0.6',
                                 'route_distinguisher': '102:100',
                                 'received_routes': {}},
-                            'vpnv6 unicast': 
+                            'vpnv6 unicast':
                                 {'bgp_table_version': 13,
                                 'local_router_id': '20.0.0.6',
                                 'received_routes': {}},
-                            'vpnv6 unicast RD 0xbb00010000000000': 
+                            'vpnv6 unicast RD 0xbb00010000000000':
                                 {'bgp_table_version': 13,
                                 'local_router_id': '20.0.0.6',
                                 'route_distinguisher': '0xbb00010000000000',
                                 'received_routes': {}},
-                            'vpnv6 unicast RD 100:200': 
+                            'vpnv6 unicast RD 100:200':
                                 {'bgp_table_version': 13,
                                 'local_router_id': '20.0.0.6',
                                 'route_distinguisher': '100:200',
-                                'received_routes': 
-                                    {'aaaa:1::/113': 
-                                        {'index': 
-                                            {1: 
+                                'received_routes':
+                                    {'aaaa:1::/113':
+                                        {'index':
+                                            {1:
                                                 {'locprf': 100,
                                                 'next_hop': '4444',
                                                 'origin_codes': 'i',
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}},
-                                    'aaaa:1::8000/113': 
-                                        {'index': 
-                                            {1: 
+                                    'aaaa:1::8000/113':
+                                        {'index':
+                                            {1:
                                                 {'locprf': 100,
                                                 'next_hop': '4444',
                                                 'origin_codes': 'i',
@@ -15863,6 +15863,10 @@ class test_show_running_config_bgp(unittest.TestCase):
                 "graceful_restart": False,
                 "log_neighbor_changes": False,
                 "af_name": {
+                   "l2vpn evpn": {
+                        "af_advertise_pip": True,
+                        "af_client_to_client_reflection": True
+                   },
                   "ipv4 unicast": {
                     "af_dampening_reuse_time": 10,
                     "af_aggregate_address_ipv4_address": "1.1.1.0",
@@ -15973,7 +15977,14 @@ class test_show_running_config_bgp(unittest.TestCase):
                   },
                   "21.0.102.1": {
                     "nbr_local_as_replace_as": False,
+                    "nbr_peer_type" : "fabric-external",
                     "nbr_af_name": {
+                       "l2vpn evpn": {
+                         "nbr_af_rewrite_evpn_rt_asn": True,
+                         "nbr_af_allowas_in": False,
+                         "nbr_af_send_community": "both",
+                         'nbr_af_route_reflector_client': False
+                      },
                       "ipv4 unicast": {
                         "nbr_af_soft_reconfiguration": True,
                         "nbr_af_route_reflector_client": True,
@@ -16175,7 +16186,43 @@ class test_show_running_config_bgp(unittest.TestCase):
             }
           }
         }
-      }
+      },
+        'vxlan':{
+            'evpn':{
+                "evpn_vni": {
+                    8100: {
+                        "evpn_vni_rd": "auto",
+                        "evpn_vni_rt":{
+                             "auto":{
+                                 "evpn_vni_rt": "auto",
+                                 "evpn_vni_rt_type": "export",
+                                 },
+                            },
+                        "evpn_vni": 8100,
+                        },
+                    8101: {
+                        "evpn_vni_rd": "auto",
+                        "evpn_vni_rt": {
+                            "auto": {
+                                "evpn_vni_rt": "auto",
+                                "evpn_vni_rt_type": "export",
+                                }
+                            },
+                        "evpn_vni": 8101
+                        },
+                    8103: {
+                        "evpn_vni_rd": "auto",
+                        "evpn_vni_rt": {
+                            "auto": {
+                                "evpn_vni_rt": "auto",
+                                "evpn_vni_rt_type": "export",
+                            }
+                        },
+                        "evpn_vni": 8103
+                    },
+                },
+            },
+        },
     }
 
 
@@ -16198,6 +16245,8 @@ class test_show_running_config_bgp(unittest.TestCase):
           disable-policy-batching ipv4 prefix-list s
           no enforce-first-as
           event-history objstore size large
+          address-family l2vpn evpn
+            advertise-pip
           address-family ipv4 multicast
             dampening 1 10 30 2
             redistribute static route-map PERMIT_ALL_RM
@@ -16287,6 +16336,11 @@ class test_show_running_config_bgp(unittest.TestCase):
               route-reflector-client
           neighbor 21.0.102.1
             remote-as 333
+            peer-type fabric-external
+            address-family l2vpn evpn
+              rewrite-evpn-rt-asn
+              send-community
+              send-community extended
             address-family ipv4 multicast
               send-community
               send-community extended
@@ -16375,6 +16429,20 @@ class test_show_running_config_bgp(unittest.TestCase):
             address-family ipv6 unicast
               dampening 1 10 30 2
               redistribute static route-map PERMIT_ALL_RM
+        evpn
+          vni 8100 l2
+            rd auto
+            route-target import auto
+            route-target import 200:8100
+            route-target export auto
+          vni 8101 l2
+            rd auto
+            route-target import auto
+            route-target export auto
+          vni 8103 l2
+            rd auto
+            route-target import auto
+            route-target export auto
         vrf context vpn1
           rd 1:100
           address-family ipv4 unicast
@@ -16422,7 +16490,7 @@ class test_show_running_config_bgp(unittest.TestCase):
 class test_show_bgp_all_dampening_flap_statistics_cli(unittest.TestCase):
 
     '''Unit test for show bgp all dampening flap statistics - CLI'''
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -16985,7 +17053,7 @@ class test_show_bgp_all_dampening_flap_statistics_cli(unittest.TestCase):
 class test_show_bgp_all_dampening_flap_statistics_xml(unittest.TestCase):
 
     '''Unit test for show bgp all dampening flap statistics - XML'''
-    
+
     device = Device(name='aDevice')
 
     golden_parsed_output_1 = {
@@ -17948,7 +18016,7 @@ class test_show_bgp_all_dampening_flap_statistics_xml(unittest.TestCase):
 class test_show_bgp_all_nexthop_database_cli(unittest.TestCase):
 
     '''Unit test for show bgp all nexthop-database - CLI'''
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -18020,7 +18088,7 @@ class test_show_bgp_all_nexthop_database_cli(unittest.TestCase):
                                  'pending_update': False,
                                  "flags": "0x41",
                             },
-                        },                         
+                        },
                     },
                     "ipv6 unicast": {
                          "af_nexthop_trigger_enable": True,
@@ -18132,7 +18200,7 @@ class test_show_bgp_all_nexthop_database_cli(unittest.TestCase):
         IPv6 Unicast Next-hops:
     '''}
 
-    
+
     golden_parsed_output_2 = {
         "vrf": {
               "default": {
@@ -19111,7 +19179,7 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
                                  'filtered': False,
                                  'pending_update': False,
                             },
-                        },                         
+                        },
                     },
                     "ipv6 unicast": {
                          "af_nexthop_trigger_enable": True,
@@ -22181,7 +22249,7 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
 class test_show_bgp_peer_template_cmd_cli(unittest.TestCase):
 
     '''Unit test for show bgp peer-template - CLI'''
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -22654,7 +22722,7 @@ class test_show_bgp_peer_template_cmd_cli(unittest.TestCase):
 class test_show_bgp_peer_template_xml(unittest.TestCase):
 
     '''Unit test for show bgp peer-template - XML'''
-    
+
     device = Device(name='aDevice')
 
     golden_parsed_output_1 = {
@@ -23420,15 +23488,15 @@ class test_show_bgp_peer_template_xml(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
-# ================================================================================
-#  Unit test for 'show bgp vrf <WORD> <AF> unicast policy statistics redistribute'
-# ================================================================================
+# =============================================================================
+#  Unit test for 'show bgp [vrf xxx] xxx unicast policy statistics redistribute'
+# =============================================================================
 
 class test_show_bgp_unicast_ps_redistrubute_cli(unittest.TestCase):
 
     '''Unit test for show bgp [vrf xxx] xxx unicast policy
        statistics redistribute - CLI'''
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -23461,9 +23529,9 @@ class test_show_bgp_unicast_ps_redistrubute_cli(unittest.TestCase):
         C: No. of comparisions, M: No. of matches
 
         route-map RMAP_DIRECT->BGP_IPV4 permit 10
-          match ip address prefix-list DIRECT->BGP_IPV4              C: 16     M: 0     
+          match ip address prefix-list DIRECT->BGP_IPV4              C: 16     M: 0
 
-        Total accept count for policy: 0     
+        Total accept count for policy: 0
         Total reject count for policy: 16
     '''}
 
@@ -23512,8 +23580,8 @@ class test_show_bgp_unicast_ps_redistrubute_cli(unittest.TestCase):
 
         route-map ADD_RT_400_400 permit 10
 
-        Total accept count for policy: 0     
-        Total reject count for policy: 0     
+        Total accept count for policy: 0
+        Total reject count for policy: 0
         Details for VRF ac
         BGP policy statistics not available
         Details for VRF vpn1
@@ -23523,8 +23591,8 @@ class test_show_bgp_unicast_ps_redistrubute_cli(unittest.TestCase):
 
         route-map PERMIT_ALL_RM permit 20
 
-        Total accept count for policy: 0     
-        Total reject count for policy: 0     
+        Total accept count for policy: 0
+        Total reject count for policy: 0
         Details for VRF vpn2
         BGP policy statistics not available
 
@@ -23555,7 +23623,7 @@ class test_show_bgp_unicast_ps_redistrubute_xml(unittest.TestCase):
 
     '''Unit test for show bgp [vrf xxx] xxx unicast policy
        statistics redistribute - XML'''
-    
+
     device = Device(name='aDevice')
     golden_parsed_output_1 = {
         "vrf": {
@@ -23710,7 +23778,7 @@ class test_show_bgp_unicast_ps_redistrubute_xml(unittest.TestCase):
                             "action": "permit",
                             "total_reject_count": 0,
                             "total_accept_count": 0
-                        }                         
+                        }
                     }
                },
                "rpm_handle_count": 1
@@ -23818,15 +23886,14 @@ class test_show_bgp_unicast_ps_redistrubute_xml(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 
-# ==================================================================================
-#  Unit test for 'show bgp vrf <WORD> <AF> unicast policy statistics neighbor <NBR>'
-# ==================================================================================
-
+# =============================================================================
+#  Unit test for 'show bgp [vrf xxx] xxx unicast policy statistics neighbor xxx'
+# =============================================================================
 class test_show_bgp_unicast_ps_neighbor_cli(unittest.TestCase):
 
     '''Unit test for show bgp [vrf xxx] xxx unicast policy
        statistics neighbor xxx - CLI'''
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -23859,10 +23926,10 @@ class test_show_bgp_unicast_ps_neighbor_cli(unittest.TestCase):
         C: No. of comparisions, M: No. of matches
 
         route-map Filter-pip deny 10
-          match ip address prefix-list pip-prefix                    C: 2      M: 0     
+          match ip address prefix-list pip-prefix                    C: 2      M: 0
 
-        Total accept count for policy: 0     
-        Total reject count for policy: 2  
+        Total accept count for policy: 0
+        Total reject count for policy: 2
     '''}
 
     golden_parsed_output_2 = {
@@ -23904,10 +23971,10 @@ class test_show_bgp_unicast_ps_neighbor_cli(unittest.TestCase):
         C: No. of comparisions, M: No. of matches
 
         route-map Filter-pip deny 10
-          match ip address prefix-list pip-prefix                    C: 2      M: 0     
+          match ip address prefix-list pip-prefix                    C: 2      M: 0
 
-        Total accept count for policy: 0     
-        Total reject count for policy: 2     
+        Total accept count for policy: 0
+        Total reject count for policy: 2
         Details for VRF ac
         No such neighbor
         BGP policy statistics not available
@@ -23948,7 +24015,7 @@ class test_show_bgp_unicast_ps_neighbor_xml(unittest.TestCase):
 
     '''Unit test for show bgp [vrf xxx] xxx unicast policy
        statistics neighbor xxx - XML'''
-    
+
     device = Device(name='aDevice')
     golden_parsed_output = {
         "vrf": {
@@ -23980,7 +24047,7 @@ class test_show_bgp_unicast_ps_neighbor_xml(unittest.TestCase):
                "rpm_handle_count": 1,
             }
         }
-        
+
     }
 
     golden_output = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
@@ -24059,14 +24126,14 @@ class test_show_bgp_unicast_ps_neighbor_xml(unittest.TestCase):
 
 
 # =============================================================================
-#  Unit test for 'show bgp vrf <WORD> <AF> unicast policy statistics dampening'
+#  Unit test for 'show bgp [vrf xxx] xxx unicast policy statistics dampening'
 # =============================================================================
 
 class test_show_bgp_unicast_ps_dampening_cli(unittest.TestCase):
 
     '''Unit test for show bgp [vrf xxx] xxx unicast policy
        statistics dampening - CLI'''
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -24099,10 +24166,10 @@ class test_show_bgp_unicast_ps_dampening_cli(unittest.TestCase):
         C: No. of comparisions, M: No. of matches
 
         route-map Filter-pip deny 10
-          match ip address prefix-list pip-prefix                    C: 0      M: 0     
+          match ip address prefix-list pip-prefix                    C: 0      M: 0
 
-        Total accept count for policy: 0     
-        Total reject count for policy: 0    
+        Total accept count for policy: 0
+        Total reject count for policy: 0
     '''}
 
     golden_parsed_output_2 = {
@@ -24144,10 +24211,10 @@ class test_show_bgp_unicast_ps_dampening_cli(unittest.TestCase):
         C: No. of comparisions, M: No. of matches
 
         route-map Filter-pip deny 10
-          match ip address prefix-list pip-prefix                    C: 0      M: 0     
+          match ip address prefix-list pip-prefix                    C: 0      M: 0
 
-        Total accept count for policy: 0     
-        Total reject count for policy: 0   
+        Total accept count for policy: 0
+        Total reject count for policy: 0
 
         Details for VRF ac
         BGP policy statistics not available
@@ -24185,7 +24252,7 @@ class test_show_bgp_unicast_ps_dampening_xml(unittest.TestCase):
 
     '''Unit test for show bgp [vrf xxx] xxx unicast policy
        statistics dampening - XML'''
-    
+
     device = Device(name='aDevice')
     golden_parsed_output = {
         "vrf": {
@@ -24290,14 +24357,14 @@ class test_show_bgp_unicast_ps_dampening_xml(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
-# =============================================
-#  Unit test for 'show bgp sessions vrf <WORD>'
-# =============================================
+# =============================================================================
+#  Unit test for 'show bgp sessions [vrf <WROD>]'
+# =============================================================================
 
 class test_show_bgp_sessions_cli(unittest.TestCase):
 
     '''Unit test for show bgp sessions [vrf <WROD>] - CLI'''
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -24479,7 +24546,7 @@ class test_show_bgp_sessions_cli(unittest.TestCase):
 class test_show_bgp_sessions_xml(unittest.TestCase):
 
     '''Unit test for show bgp sessions [vrf <WROD>] - XML'''
-    
+
     device = Device(name='aDevice')
     golden_parsed_output = {
         "total_established_peers": 4,
@@ -24638,13 +24705,13 @@ class test_show_bgp_sessions_xml(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
-# ============================================================
-#  Unit test for 'show bgp <address_family> labels vrf <WORD>'
-# ============================================================
+# =============================================================================
+#  Unit test for 'show bgp <address_family> labels [vrf <WROD>]'
+# =============================================================================
 
 class test_show_bgp_labels_cli(unittest.TestCase):
 
-    '''Unit test for show bgp <address_family> labels vrf <WORD> - CLI'''
+    '''Unit test for show bgp <address_family> labels [vrf <WROD>] - CLI'''
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -25298,7 +25365,6 @@ class test_show_bgp_labels_xml(unittest.TestCase):
     '''Unit test for show bgp <address_family> labels [vrf <WROD>] - XML'''
 
     device = Device(name='aDevice')
-
     golden_parsed_output = {
         "vrf": {
           "default": {
@@ -25776,6 +25842,918 @@ class test_show_bgp_labels_xml(unittest.TestCase):
         parsed_output = obj.parse(address_family='ipv4 unicast', vrf='all')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
+
+# ==============================================================
+#  Unit test for 'show bgp l2vpn evpn summary'
+# ==============================================================
+class test_show_bgp_l2vpn_evpn_summary(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'instance': {
+            'default': {
+                'vrf': {
+                    'default': {
+                        'vrf_name_out': 'default',
+                        'vrf_router_id': '201.11.11.11',
+                        'vrf_local_as': 100,
+                        'address_family': {
+                            'l2vpn evpn': {
+                                'tableversion': 155,
+                                'configuredpeers': 2,
+                                'capablepeers': 2,
+                                'totalnetworks': 32,
+                                'totalpaths': 32,
+                                'memoryused': 5708,
+                                'numberattrs': 20,
+                                'bytesattrs': 3200,
+                                'numberpaths': 0,
+                                'bytespaths': 0,
+                                'numbercommunities': 1,
+                                'bytescommunities': 32,
+                                'numberclusterlist': 3,
+                                'bytesclusterlist': 12,
+                                'dampening': 'disabled',
+                                'neighbor': {
+                                    '191.13.1.8': {
+                                        'neighbor': '191.13.1.8',
+                                        'version': 4,
+                                        'msgrecvd': 130,
+                                        'msgsent': 139,
+                                        'neighbortableversion': 155,
+                                        'inq': 0,
+                                        'outq': 0,
+                                        'remoteas': 200,
+                                        'time': '02:05:01',
+                                        'state': 'established',
+                                        'prefixreceived': 0,
+                                    },
+                                    '211.1.1.1':{
+                                        'neighbor': '211.1.1.1',
+                                        'version': 4,
+                                        'msgrecvd': 182,
+                                        'msgsent': 128,
+                                        'neighbortableversion': 155,
+                                        'inq': 0,
+                                        'outq': 0,
+                                        'remoteas': 100,
+                                        'time': '01:42:47',
+                                        'state': 'established',
+                                        'prefixreceived': 12,
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''
+    BL1# show bgp l2vpn evpn summary
+    BGP summary information for VRF default, address family L2VPN EVPN
+    BGP router identifier 201.11.11.11, local AS number 100
+    BGP table version is 155, L2VPN EVPN config peers 2, capable peers 2
+    32 network entries and 32 paths using 5708 bytes of memory
+    BGP attribute entries [20/3200], BGP AS path entries [0/0]
+    BGP community entries [1/32], BGP clusterlist entries [3/12]
+
+    Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+    191.13.1.8      4   200     130     139      155    0    0 02:05:01 0
+    211.1.1.1       4   100     182     128      155    0    0 01:42:47 12
+
+    '''}
+
+    def test_show_l2route_evpn_summary_detail(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpL2vpnEvpnSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_evpn_summary_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpL2vpnEvpnSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+# ==============================================================
+#  Unit test for 'show bgp l2vpn evpn route-type'
+# ==============================================================
+class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'instance': {
+            'default': {
+                'vrf': {
+                    'default': {  # Ops Str 'default'
+                        'address_family': {
+                            'l2vpn evpn': {  # Ops Str 'l2vpn evpn'
+                                'rd': {
+                                    '11.0.0.55:27001': {  # Ops Str '11.0.0.55:27001'
+                                        'rd': '11.0.0.55:27001',
+                                        'prefix': {
+                                            '[4]:[0300.0000.0001.2c00.0309]:[32]:[201.0.0.55]/136':{
+                                                 'nonipprefix': '[4]:[0300.0000.0001.2c00.0309]:[32]:[201.0.0.55]/136',
+                                                 'prefixversion': 13144,
+                                                 'on_xmitlist': True,
+                                                 'totalpaths': 1,
+                                                 'bestpathnr': 1,
+                                                 'path': {
+                                                     1: {
+                                                        'pathnr': 1,
+                                                        'pathvalid': True,
+                                                        'pathbest':True,
+                                                        'pathnolabeledrnh': True,
+                                                        'ipnexthop': '201.0.0.55',
+                                                        'nexthopmetric': 0,
+                                                        'neighbor': '0.0.0.0',
+                                                        'neighborid': '11.0.0.55',
+                                                        'origin': 'igp',
+                                                        'localpref': 100,
+                                                        'weight': 32768,
+                                                        'extcommunity': ['ENCAP:8','RT:0000.0000.012c'],
+                                                        'advertisedto':['11.0.0.11','11.0.0.22','11.0.0.33','11.0.0.44','14.0.0.11'],
+                                                     },
+                                                 }
+                                            },
+                                            '[4]:[0300.0000.0001.2c00.0309]:[32]:[201.0.0.66]/136': {
+                                                'nonipprefix': '[4]:[0300.0000.0001.2c00.0309]:[32]:[201.0.0.66]/136',
+                                                'prefixversion': 13146,
+                                                'on_xmitlist': True,
+                                                'totalpaths': 1,
+                                                'bestpathnr': 1,
+                                                'path': {
+                                                    1: {
+                                                        'pathnr': 1,
+                                                        'pathvalid': True,
+                                                        'pathbest': True,
+                                                        'pathnolabeledrnh': True,
+                                                        'ipnexthop': '201.0.0.66',
+                                                        'nexthopmetric': 3,
+                                                        'neighbor': '14.0.0.11',
+                                                        'neighborid': '14.0.0.11',
+                                                        'origin': 'igp',
+                                                        'localpref': 100,
+                                                        'weight': 0,
+                                                        'extcommunity': ['ENCAP:8', 'RT:0000.0000.012c'],
+                                                        'originatorid': '11.0.0.66',
+                                                        'clusterlist' : ['14.0.0.11'],
+                                                    },
+                                                }
+                                            }
+                                        }
+                                    },
+                                    '11.0.0.66:27001': {
+                                        'rd': '11.0.0.66:27001',
+                                        'prefix': {
+                                            '[4]:[0300.0000.0001.2c00.0309]:[32]:[201.0.0.66]/136': {
+                                                'nonipprefix': '[4]:[0300.0000.0001.2c00.0309]:[32]:[201.0.0.66]/136',
+                                                'prefixversion': 13145,
+                                                'on_xmitlist': True,
+                                                'totalpaths': 1,
+                                                'bestpathnr': 1,
+                                                'path': {
+                                                    1: {
+                                                        'pathnr': 1,
+                                                        'pathvalid': True,
+                                                        'pathbest': True,
+                                                        'pathnolabeledrnh': True,
+                                                        'ipnexthop': '201.0.0.66',
+                                                        'nexthopmetric': 3,
+                                                        'neighbor': '14.0.0.11',
+                                                        'neighborid': '14.0.0.11',
+                                                        'origin': 'igp',
+                                                        'localpref': 100,
+                                                        'weight': 0,
+                                                        'extcommunity': ['ENCAP:8', 'RT:0000.0000.012c'],
+                                                        'advertisedto': ['11.0.0.11', '11.0.0.22', '11.0.0.33',
+                                                                         '11.0.0.44'],
+                                                        'originatorid': '11.0.0.66',
+                                                        'clusterlist': ['14.0.0.11'],
+                                                    },
+                                                }
+                                            },
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+     }
+
+    golden_output = {'execute.return_value': '''
+    MS-BL5(config)# sh bgp l2vpn evpn route-type 4
+     BGP routing table information for VRF default, address family L2VPN EVPN
+    Route Distinguisher: 11.0.0.55:27001   (ES [0300.0000.0001.2c00.0309 0])
+    BGP routing table entry for [4]:[0300.0000.0001.2c00.0309]:[32]:[201.0.0.55]/136, version 13144
+    Paths: (1 available, best #1)
+    Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+      Advertised path-id 1
+      Path type: local (0xcf9bdc54), path is valid, is best path, no labeled nexthop
+      AS-Path: NONE, path locally originated
+        201.0.0.55 (metric 0) from 0.0.0.0 (11.0.0.55)
+          Origin IGP, MED not set, localpref 100, weight 32768
+          Extcommunity: ENCAP:8 RT:0000.0000.012c
+
+      Path-id 1 advertised to peers:
+        11.0.0.11          11.0.0.22          11.0.0.33          11.0.0.44
+        14.0.0.11
+    BGP routing table entry for [4]:[0300.0000.0001.2c00.0309]:[32]:[201.0.0.66]/136, version 13146
+    Paths: (1 available, best #1)
+    Flags: (0x000012) (high32 00000000) on xmit-list, is in l2rib/evpn, is not in HW
+
+      Advertised path-id 1
+      Path type: internal (0xcd3c5594), path is valid, is best path, no labeled nexthop
+                 Imported from 11.0.0.66:27001:[4]:[0300.0000.0001.2c00.0309]:[32]:[201.0.0.66]/136
+      AS-Path: NONE, path sourced internal to AS
+        201.0.0.66 (metric 3) from 14.0.0.11 (14.0.0.11)
+          Origin IGP, MED not set, localpref 100, weight 0
+          Extcommunity: ENCAP:8 RT:0000.0000.012c
+          Originator: 11.0.0.66 Cluster list: 14.0.0.11
+
+      Path-id 1 not advertised to any peer
+
+    Route Distinguisher: 11.0.0.66:27001
+    BGP routing table entry for [4]:[0300.0000.0001.2c00.0309]:[32]:[201.0.0.66]/136, version 13145
+    Paths: (1 available, best #1)
+    Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn, is not in HW
+
+      Advertised path-id 1
+      Path type: internal (0xcf9bdbb4), path is valid, is best path, no labeled nexthop
+                 Imported to 1 destination(s)
+      AS-Path: NONE, path sourced internal to AS
+        201.0.0.66 (metric 3) from 14.0.0.11 (14.0.0.11)
+          Origin IGP, MED not set, localpref 100, weight 0
+          Extcommunity: ENCAP:8 RT:0000.0000.012c
+          Originator: 11.0.0.66 Cluster list: 14.0.0.11
+
+      Path-id 1 advertised to peers:
+        11.0.0.11          11.0.0.22          11.0.0.33          11.0.0.44
+
+    '''}
+
+    golden_parsed_output_1 = {
+        'instance': {
+            'default': {
+                'vrf': {
+                    'default': {  # Ops Str 'default'
+                        'address_family': {
+                            'l2vpn evpn': {  # Ops Str 'l2vpn evpn'
+                                'rd': {
+                                    '205.1.1.1:33767': {  # Ops Str '11.0.0.55:27001'
+                                        'rd': '205.1.1.1:33767',
+                                        'rd_vrf': 'l2',
+                                        'rd_vniid': 25000,
+                                        'prefix': {
+                                            '[1]:[03bb.bbbb.bbbb.bb00.0016]:[0x0]/152': {
+                                                'nonipprefix': '[1]:[03bb.bbbb.bbbb.bb00.0016]:[0x0]/152',
+                                                'prefixversion': 4904,
+                                                'on_xmitlist': True,
+                                                'totalpaths': 1,
+                                                'bestpathnr': 1,
+                                                'path': {
+                                                    1: {
+                                                        'pathnr': 1,
+                                                        'pathvalid': True,
+                                                        'pathbest': True,
+                                                        'pathnolabeledrnh': True,
+                                                        'ipnexthop': '205.1.1.1',
+                                                        'nexthopmetric': 0,
+                                                        'neighbor': '0.0.0.0',
+                                                        'neighborid': '205.1.1.1',
+                                                        'origin': 'igp',
+                                                        'localpref': 100,
+                                                        'weight': 32768,
+                                                        'inlabel':25000,
+                                                        'extcommunity': ['RT:200:25000','ENCAP:8'],
+                                                    },
+                                                }
+                                            },
+                                            '[1]:[03cc.cc11.1122.2200.0021]:[0x0]/152': {
+                                                'nonipprefix': '[1]:[03cc.cc11.1122.2200.0021]:[0x0]/152',
+                                                'prefixversion': 4074,
+                                                'on_xmitlist': True,
+                                                'totalpaths': 1,
+                                                'bestpathnr': 1,
+                                                'path': {
+                                                    1: {
+                                                        'pathnr': 1,
+                                                        'pathvalid': True,
+                                                        'pathbest': True,
+                                                        'pathnolabeledrnh': True,
+                                                        'ipnexthop': '205.1.1.1',
+                                                        'nexthopmetric': 0,
+                                                        'neighbor': '0.0.0.0',
+                                                        'neighborid': '205.1.1.1',
+                                                        'origin': 'igp',
+                                                        'localpref': 100,
+                                                        'weight': 32768,
+                                                        'inlabel':25000,
+                                                        'extcommunity': ['RT:200:25000', 'ENCAP:8'],
+                                                    },
+                                                }
+                                            },
+                                            '[1]:[03dd.dd11.1122.2200.002c]:[0x0]/152': {
+                                                'nonipprefix': '[1]:[03dd.dd11.1122.2200.002c]:[0x0]/152',
+                                                'prefixversion': 4487,
+                                                'on_xmitlist': True,
+                                                'totalpaths': 1,
+                                                'bestpathnr': 1,
+                                                'path': {
+                                                    1: {
+                                                        'pathnr': 1,
+                                                        'pathvalid': True,
+                                                        'pathbest': True,
+                                                        'pathnolabeledrnh': True,
+                                                        'ipnexthop': '205.1.1.1',
+                                                        'nexthopmetric': 0,
+                                                        'neighbor': '0.0.0.0',
+                                                        'neighborid': '205.1.1.1',
+                                                        'origin': 'igp',
+                                                        'localpref': 100,
+                                                        'weight': 32768,
+                                                        'inlabel': 25000,
+                                                        'extcommunity': ['RT:200:25000', 'ENCAP:8'],
+                                                    },
+                                                }
+                                            }
+                                        }
+                                    },
+                                    '205.1.1.1:33768': {  # Ops Str '11.0.0.55:27001'
+                                        'rd': '205.1.1.1:33768',
+                                        'rd_vrf': 'l2',
+                                        'rd_vniid': 25001,
+                                        'prefix': {
+                                            '[1]:[03bb.bbbb.bbbb.bb00.0016]:[0x0]/152': {
+                                                'nonipprefix': '[1]:[03bb.bbbb.bbbb.bb00.0016]:[0x0]/152',
+                                                'prefixversion': 4905,
+                                                'on_xmitlist': True,
+                                                'totalpaths': 1,
+                                                'bestpathnr': 1,
+                                                'path': {
+                                                    1: {
+                                                        'pathnr': 1,
+                                                        'pathvalid': True,
+                                                        'pathbest': True,
+                                                        'pathnolabeledrnh': True,
+                                                        'ipnexthop': '205.1.1.1',
+                                                        'nexthopmetric': 0,
+                                                        'neighbor': '0.0.0.0',
+                                                        'neighborid': '205.1.1.1',
+                                                        'origin': 'igp',
+                                                        'localpref': 100,
+                                                        'weight': 32768,
+                                                        'inlabel': 25001,
+                                                        "extcommunity": [
+                                                            "RT:200:25001",
+                                                            "RT:1234:5678",
+                                                            "ENCAP:8"
+                                                        ],
+                                                    },
+                                                }
+                                            },
+                                            '[1]:[03cc.cc11.1122.2200.0021]:[0x0]/152': {
+                                                'nonipprefix': '[1]:[03cc.cc11.1122.2200.0021]:[0x0]/152',
+                                                'prefixversion': 4075,
+                                                'on_xmitlist': True,
+                                                'totalpaths': 1,
+                                                'bestpathnr': 1,
+                                                'path': {
+                                                    1: {
+                                                        'pathnr': 1,
+                                                        'pathvalid': True,
+                                                        'pathbest': True,
+                                                        'pathnolabeledrnh': True,
+                                                        'ipnexthop': '205.1.1.1',
+                                                        'nexthopmetric': 0,
+                                                        'neighbor': '0.0.0.0',
+                                                        'neighborid': '205.1.1.1',
+                                                        'origin': 'igp',
+                                                        'localpref': 100,
+                                                        'weight': 32768,
+                                                        'inlabel': 25001,
+                                                        "extcommunity": [
+                                                            "RT:200:25001",
+                                                            "RT:1234:5678",
+                                                            "ENCAP:8"
+                                                        ],
+                                                    },
+                                                }
+                                            },
+                                            '[1]:[03dd.dd11.1122.2200.002c]:[0x0]/152': {
+                                                'nonipprefix': '[1]:[03dd.dd11.1122.2200.002c]:[0x0]/152',
+                                                'prefixversion': 4488,
+                                                'on_xmitlist': True,
+                                                'totalpaths': 1,
+                                                'bestpathnr': 1,
+                                                'path': {
+                                                    1: {
+                                                        'pathnr': 1,
+                                                        'pathvalid': True,
+                                                        'pathbest': True,
+                                                        'pathnolabeledrnh': True,
+                                                        'ipnexthop': '205.1.1.1',
+                                                        'nexthopmetric': 0,
+                                                        'neighbor': '0.0.0.0',
+                                                        'neighborid': '205.1.1.1',
+                                                        'origin': 'igp',
+                                                        'localpref': 100,
+                                                        'weight': 32768,
+                                                        'inlabel': 25001,
+                                                        "extcommunity": [
+                                                            "RT:200:25001",
+                                                            "RT:1234:5678",
+                                                            "ENCAP:8"
+                                                        ],
+                                                    },
+                                                }
+                                            }
+                                        }
+                                    },
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_1 = {'execute.return_value': '''
+   PSW-1-TOR5# sh bgp l2vpn evpn route-type 1
+BGP routing table information for VRF default, address family L2VPN EVPN
+Route Distinguisher: 205.1.1.1:33767    (L2VNI 25000)
+BGP routing table entry for [1]:[03bb.bbbb.bbbb.bb00.0016]:[0x0]/152, version 4904
+Paths: (1 available, best #1)
+Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+  Advertised path-id 1
+  Path type: local (0xce105934), path is valid, is best path, no labeled nexthop
+  AS-Path: NONE, path locally originated
+    205.1.1.1 (metric 0) from 0.0.0.0 (205.1.1.1)
+      Origin IGP, MED not set, localpref 100, weight 32768
+      Received label 25000
+      Extcommunity: RT:200:25000 ENCAP:8
+
+  Path-id 1 not advertised to any peer
+BGP routing table entry for [1]:[03cc.cc11.1122.2200.0021]:[0x0]/152, version 4074
+Paths: (1 available, best #1)
+Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+  Advertised path-id 1
+  Path type: local (0xce10b154), path is valid, is best path, no labeled nexthop
+  AS-Path: NONE, path locally originated
+    205.1.1.1 (metric 0) from 0.0.0.0 (205.1.1.1)
+      Origin IGP, MED not set, localpref 100, weight 32768
+      Received label 25000
+      Extcommunity: RT:200:25000 ENCAP:8
+
+  Path-id 1 not advertised to any peer
+BGP routing table entry for [1]:[03dd.dd11.1122.2200.002c]:[0x0]/152, version 4487
+Paths: (1 available, best #1)
+Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+  Advertised path-id 1
+  Path type: local (0xce0ec614), path is valid, is best path, no labeled nexthop
+  AS-Path: NONE, path locally originated
+    205.1.1.1 (metric 0) from 0.0.0.0 (205.1.1.1)
+      Origin IGP, MED not set, localpref 100, weight 32768
+      Received label 25000
+      Extcommunity: RT:200:25000 ENCAP:8
+
+  Path-id 1 not advertised to any peer
+
+Route Distinguisher: 205.1.1.1:33768    (L2VNI 25001)
+BGP routing table entry for [1]:[03bb.bbbb.bbbb.bb00.0016]:[0x0]/152, version 4905
+Paths: (1 available, best #1)
+Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+  Advertised path-id 1
+  Path type: local (0xce115474), path is valid, is best path, no labeled nexthop
+  AS-Path: NONE, path locally originated
+    205.1.1.1 (metric 0) from 0.0.0.0 (205.1.1.1)
+      Origin IGP, MED not set, localpref 100, weight 32768
+      Received label 25001
+      Extcommunity: RT:200:25001 RT:1234:5678 ENCAP:8
+
+  Path-id 1 not advertised to any peer
+BGP routing table entry for [1]:[03cc.cc11.1122.2200.0021]:[0x0]/152, version 4075
+Paths: (1 available, best #1)
+Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+  Advertised path-id 1
+  Path type: local (0xce0fb574), path is valid, is best path, no labeled nexthop
+  AS-Path: NONE, path locally originated
+    205.1.1.1 (metric 0) from 0.0.0.0 (205.1.1.1)
+      Origin IGP, MED not set, localpref 100, weight 32768
+      Received label 25001
+      Extcommunity: RT:200:25001 RT:1234:5678 ENCAP:8
+
+  Path-id 1 not advertised to any peer
+BGP routing table entry for [1]:[03dd.dd11.1122.2200.002c]:[0x0]/152, version 4488
+Paths: (1 available, best #1)
+Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+  Advertised path-id 1
+  Path type: local (0xce0ec4d4), path is valid, is best path, no labeled nexthop
+  AS-Path: NONE, path locally originated
+    205.1.1.1 (metric 0) from 0.0.0.0 (205.1.1.1)
+      Origin IGP, MED not set, localpref 100, weight 32768
+      Received label 25001
+      Extcommunity: RT:200:25001 RT:1234:5678 ENCAP:8
+
+  Path-id 1 not advertised to any peer
+
+
+    '''}
+    golden_parsed_output_2 = {
+        'instance': {
+            'default': {
+                'vrf': {
+                    'default': {
+                        'address_family': {
+                            'l2vpn evpn': {
+                                'rd': {
+                                    '201.1.1.1:3': {
+                                        'rd': '201.1.1.1:3',
+                                        'prefix': {
+                                            '[2]:[0]:[0]:[48]:[5e00.0003.0007]:[0]:[0.0.0.0]/216': {
+                                                'nonipprefix': '[2]:[0]:[0]:[48]:[5e00.0003.0007]:[0]:[0.0.0.0]/216',
+                                                'prefixversion': 116,
+                                                'on_xmitlist': True,
+                                                'mpath': 'ibgp',
+                                                'totalpaths': 1,
+                                                'bestpathnr': 1,
+                                                'path': {
+                                                    1: {
+                                                        'pathnr': 1,
+                                                        'pathvalid': True,
+                                                        'pathbest': True,
+                                                        'pathnolabeledrnh': False,
+                                                        'ipnexthop': '201.202.1.1',
+                                                        'nexthopmetric': 81,
+                                                        'neighbor': '211.1.1.1',
+                                                        'neighborid': '211.1.1.1',
+                                                        'origin': 'igp',
+                                                        'localpref': 100,
+                                                        'weight': 0,
+                                                        "extcommunity": [
+                                                            "RT:100:10001",
+                                                            "ENCAP:8"
+                                                        ],
+                                                        'inlabel': 10001,
+                                                        'originatorid': '201.1.1.1',
+                                                        'clusterlist': ['211.1.1.1'],
+                                                        'advertisedto': ['191.13.1.8'],
+                                                    },
+                                                }
+                                            },
+                                        },
+                                    },
+                                    '201.1.1.1:4': {
+                                        'rd': '201.1.1.1:4',
+                                        'prefix': {
+                                            '[2]:[0]:[0]:[48]:[5e00.0003.0007]:[0]:[0.0.0.0]/216': {
+                                                'nonipprefix': '[2]:[0]:[0]:[48]:[5e00.0003.0007]:[0]:[0.0.0.0]/216',
+                                                'prefixversion': 117,
+                                                'on_xmitlist': True,
+                                                'totalpaths': 1,
+                                                'bestpathnr': 1,
+                                                'mpath': 'ibgp',
+                                                'path': {
+                                                    1: {
+                                                        'pathnr': 1,
+                                                        'pathvalid': True,
+                                                        'pathbest': True,
+                                                        'pathnolabeledrnh': False,
+                                                        'ipnexthop': '201.202.1.1',
+                                                        'nexthopmetric': 81,
+                                                        'neighbor': '211.1.1.1',
+                                                        'neighborid': '211.1.1.1',
+                                                        'origin': 'igp',
+                                                        'localpref': 100,
+                                                        'weight': 0,
+                                                        "extcommunity": [
+                                                            "RT:100:10002",
+                                                            "ENCAP:8"
+                                                        ],
+                                                        'inlabel': 10002,
+                                                        'advertisedto': ['191.13.1.8'],
+                                                        'originatorid': '201.1.1.1',
+                                                        'clusterlist': ['211.1.1.1'],
+                                                    },
+                                                }
+                                            },
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_2 = {'execute.return_value': '''
+        BL1# show bgp l2vpn evpn route-type 2
+        BGP routing table information for VRF default, address family L2VPN EVPN
+        Route Distinguisher: 201.1.1.1:3
+        BGP routing table entry for [2]:[0]:[0]:[48]:[5e00.0003.0007]:[0]:[0.0.0.0]/216, version 116
+        Paths: (1 available, best #1)
+        Flags: (0x000202) on xmit-list, is not in l2rib/evpn, is not in HW
+        Multipath: iBGP
+
+          Advertised path-id 1
+          Path type: internal, path is valid, is best path
+                     Imported to 1 destination(s)
+          AS-Path: NONE, path sourced internal to AS
+            201.202.1.1 (metric 81) from 211.1.1.1 (211.1.1.1)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 10001
+              Extcommunity: RT:100:10001 ENCAP:8
+              Originator: 201.1.1.1 Cluster list: 211.1.1.1
+
+          Path-id 1 advertised to peers:
+            191.13.1.8
+
+        Route Distinguisher: 201.1.1.1:4
+        BGP routing table entry for [2]:[0]:[0]:[48]:[5e00.0003.0007]:[0]:[0.0.0.0]/216, version 117
+        Paths: (1 available, best #1)
+        Flags: (0x000202) on xmit-list, is not in l2rib/evpn, is not in HW
+        Multipath: iBGP
+
+          Advertised path-id 1
+          Path type: internal, path is valid, is best path
+                     Imported to 1 destination(s)
+          AS-Path: NONE, path sourced internal to AS
+            201.202.1.1 (metric 81) from 211.1.1.1 (211.1.1.1)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 10002
+              Extcommunity: RT:100:10002 ENCAP:8
+              Originator: 201.1.1.1 Cluster list: 211.1.1.1
+
+          Path-id 1 advertised to peers:
+            191.13.1.8
+    '''}
+
+    golden_output_no_rd = {'execute.return_value': '''
+        TOR1# show bgp l2vpn evpn route-type 1
+        BGP routing table information for VRF default, address family L2VPN EVPN
+        TOR1# E
+    '''}
+
+    def test_show_l2route_route_type_4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpL2vpnEvpnRouteType(device=self.device)
+        parsed_output = obj.parse(route_type=4)
+
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_l2route_route_type_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowBgpL2vpnEvpnRouteType(device=self.device)
+        parsed_output = obj.parse(route_type=2)
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_show_l2route_route_type_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowBgpL2vpnEvpnRouteType(device=self.device)
+        parsed_output = obj.parse(route_type=1)
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_show_l2route_route_type_no_rd(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_no_rd)
+        obj = ShowBgpL2vpnEvpnRouteType(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(route_type=1)
+
+
+    def test_show_route_type_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpL2vpnEvpnRouteType(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(route_type=4)
+
+
+# ==============================================================
+#  Unit test for 'show bgp l2vpn evpn neighbors'
+# ==============================================================
+class test_show_bgp_l2vpn_evpn_neighbors(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'instance': {
+            'default': {
+                'vrf': {
+                    'default': {  # Ops Str 'default'
+                        'address_family': {
+                            'l2vpn evpn': {  # Ops Str 'l2vpn evpn'
+                                'neighbor': {
+                                    '191.13.1.8': {  # Ops Str '191.13.1.8'
+                                        'neighbor': '191.13.1.8',  # Ops Str '191.13.1.8'
+                                        'remoteas': 200,  # Ops Int 200
+                                        'link': 'ebgp',
+                                        'index': 3,
+                                        'version': 4,
+                                        'remote_id':'201.33.33.33',
+                                        'state': 'established',
+                                        'up': True,
+                                        'elapsedtime': '02:11:53',  # Ops Str '02:12:22'
+                                        'connectedif': 'ethernet1/6',  # Ops Str 'Ethernet1/6'
+                                        'bfd': True,  # Ops Bool True
+                                        'lastread': '00:00:51',  # Ops Str '00:00:20'
+                                        'holdtime': 180,  # Ops Int 180
+                                        'keepalivetime': 60,  # Ops Int 60
+                                        'lastwrite': '00:00:21',  # Ops Str '00:00:50'
+                                        'keepalive': '00:00:38',  # Ops Str '00:00:09'
+                                        'msgrecvd': 137,  # Ops Int 138
+                                        'notificationsrcvd': 0,  # Ops Int 0
+                                        'recvbufbytes': 0,  # Ops Int 0
+                                        'msgsent': 146,  # Ops Int 146
+                                        'notificationssent': 0,  # Ops Int 0
+                                        'sentbytesoutstanding': 0,  # Ops Int 0
+                                        'totalbytessent':0,
+                                        'connsestablished': 1,  # Ops Int 1
+                                        'connsdropped': 0,  # Ops Int 0
+                                        'resettime': 'never',  # Ops Str 'never'
+                                        'resetreason': 'no error',  # Ops Str 'no error'
+                                        'peerresettime': 'never',  # Ops Str 'never'
+                                        'peerresetreason': 'no error',  # Ops Str 'no error'
+                                        'capmpadvertised': True,  # Ops Bool True
+                                        'caprefreshadvertised': True,  # Ops Bool True
+                                        'capgrdynamicadvertised': True,  # Ops Bool True
+                                        'capmprecvd': True,  # Ops Bool True
+                                        'caprefreshrecvd': True,  # Ops Bool True
+                                        'capgrdynamicrecvd': True,  # Ops Bool True
+                                        'capolddynamicadvertised': True,  # Ops Bool True
+                                        'capolddynamicrecvd': True,  # Ops Bool True
+                                        'caprradvertised': True,  # Ops Bool True
+                                        'caprrrecvd': True,  # Ops Bool True
+                                        'capoldrradvertised': True,  # Ops Bool True
+                                        'capoldrrrecvd': True,
+                                        'capas4advertised': True,
+                                        'capas4recvd': True,
+                                        'af': {
+                                            'l2vpn evpn': {
+                                                'af_advertised': True,
+                                                'af_recvd': True,
+                                                'af_name': 'l2vpn evpn',
+                                            }
+                                        },
+                                        'capgradvertised': True,
+                                        'capgrrecvd': True,
+                                        'graf': {
+                                            'l2vpn evpn': {
+                                                'gr_af_name': 'l2vpn evpn',
+                                                'gr_adv': True,
+                                                'gr_recv': True,
+                                            },
+                                            'ipv4 unicast': {
+                                                'gr_af_name': 'ipv4 unicast',
+                                                'gr_adv': True,
+                                            }
+                                        },
+                                        'grrestarttime': 120,
+                                        'grstaletiem': 300,
+                                        'grrecvdrestarttime': 120,
+                                        'capextendednhadvertised': True,
+                                        'capextendednhrecvd': True,
+                                        'capextendednhaf': {
+                                            'ipv4 unicast': {
+                                                'capextendednh_af_name': 'ipv4 unicast',
+                                            },
+                                        },
+                                        'openssent': 1,
+                                        'opensrecvd':1,
+                                        'updatessent': 70,
+                                        'updatesrecvd': 1,
+                                        'keepalivesent': 129,
+                                        'keepaliverecvd': 133,
+                                        'rtrefreshsent': 0,
+                                        'rtrefreshrecvd': 0,
+                                        'capabilitiessent': 2,
+                                        'capabilitiesrecvd': 2,
+                                        'bytessent': 10398,
+                                        'bytesrecvd': 2595,
+                                        'peraf': {
+                                            'l2vpn evpn': {
+                                                'per_af_name': 'l2vpn evpn',
+                                                'tableversion': 191,
+                                                'neighbortableversion': 191,
+                                                'pfxrecvd': 0,
+                                                'pfxbytes': 0,
+                                                'sendcommunity': True,
+                                                'sendextcommunity': True,
+                                            }
+                                        },
+                                        'localaddr': '191.13.1.6',
+                                        'localport': 179,
+                                        'remoteaddr': '191.13.1.8',
+                                        'remoteport': 52715,
+                                        'fd': 84,
+                                    },
+                                },
+                            },
+                        }
+                    }
+                }
+            }
+        }
+     }
+
+    golden_output = {'execute.return_value': '''
+BL1# show bgp l2vpn evpn neighbors
+BGP neighbor is 191.13.1.8, remote AS 200, ebgp link, Peer index 3
+  BGP version 4, remote router ID 201.33.33.33
+  BGP state = Established, up for 02:11:53
+  Peer is directly attached, interface Ethernet1/6
+  Enable logging neighbor events
+  BFD live-detection is configured and enabled, state is Invalid
+  TCP MD5 authentication is set (enabled)
+  Last read 00:00:51, hold time = 180, keepalive interval is 60 seconds
+  Last written 00:00:21, keepalive timer expiry due 00:00:38
+  Received 137 messages, 0 notifications, 0 bytes in queue
+  Sent 146 messages, 0 notifications, 0(0) bytes in queue
+  Connections established 1, dropped 0
+  Last reset by us never, due to No error
+  Last reset by peer never, due to No error
+
+  Neighbor capabilities:
+  Dynamic capability: advertised (mp, refresh, gr) received (mp, refresh, gr)
+  Dynamic capability (old): advertised received
+  Route refresh capability (new): advertised received
+  Route refresh capability (old): advertised received
+  4-Byte AS capability: advertised received
+  Address family L2VPN EVPN: advertised received
+  Graceful Restart capability: advertised received
+
+  Graceful Restart Parameters:
+  Address families advertised to peer:
+    IPv4 Unicast  L2VPN EVPN
+  Address families received from peer:
+    L2VPN EVPN
+  Forwarding state preserved by peer for:
+  Restart time advertised to peer: 120 seconds
+  Stale time for routes advertised by peer: 300 seconds
+  Restart time advertised by peer: 120 seconds
+  Extended Next Hop Encoding Capability: advertised received
+  Receive IPv6 next hop encoding Capability for AF:
+    IPv4 Unicast
+
+  Message statistics:
+                              Sent               Rcvd
+  Opens:                         1                  1
+  Notifications:                 0                  0
+  Updates:                      70                  1
+  Keepalives:                  129                133
+  Route Refresh:                 0                  0
+  Capability:                    2                  2
+  Total:                       146                137
+  Total bytes:               10398               2595
+  Bytes in queue:                0                  0
+
+  For address family: L2VPN EVPN
+  BGP table version 191, neighbor version 191
+  0 accepted paths consume 0 bytes of memory
+  Community attribute sent to this neighbor
+  Extended community attribute sent to this neighbor
+  Last End-of-RIB received 00:00:01 after session start
+  Last End-of-RIB sent 00:00:01 after session start
+  First convergence 00:00:01 after session start with 5 routes sent
+
+  Local host: 191.13.1.6, Local port: 179
+  Foreign host: 191.13.1.8, Foreign port: 52715
+  fd = 84
+    '''}
+
+    def test_show_bgp_l2vpn_evpn_neighbors(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpL2vpnEvpnNeighbors(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_bgp_l2vpn_evpn_neighbors_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpL2vpnEvpnNeighbors(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
 
 if __name__ == '__main__':
     unittest.main()

@@ -42,6 +42,9 @@ NXOS parsers for the following show commands:
     * 'show bgp <address_family>  labels vrf <WORD> | xml'
     * 'show bgp <address_family>  labels'
     * 'show bgp <address_family>  labels | xml'
+    * 'show bgp l2vpn evpn summary'
+    * 'show bgp l2vpn evpn route-type <route-type>'
+
 """
 
 # Python
@@ -5600,7 +5603,8 @@ class ShowRunningConfigBgpSchema(MetaParser):
         'bgp':
             {'instance':
                 {'default':
-                    {'bgp_id': int,
+                    {
+                    'bgp_id': int,
                     'protocol_shutdown': bool,
                     Optional('ps_name'):
                         {Any():
@@ -5641,7 +5645,9 @@ class ShowRunningConfigBgpSchema(MetaParser):
                              Optional('pp_soo'): str}},
                     'vrf':
                         {Any():
-                            {Optional('always_compare_med'): bool,
+                            {
+                            Optional('rd'): str,
+                            Optional('always_compare_med'): bool,
                             Optional('bestpath_compare_routerid'): bool,
                             Optional('bestpath_cost_community_ignore'): bool,
                             Optional('bestpath_med_missing_at_worst'): bool,
@@ -5666,7 +5672,10 @@ class ShowRunningConfigBgpSchema(MetaParser):
                             Optional('disable_policy_batching_ipv6'): str,
                             Optional('af_name'):
                                 {Any():
-                                    {Optional('af_dampening'): bool,
+                                    {
+                                    Optional('af_evpn_vni_rt_type'): str,
+                                    Optional('af_evpn_vni_rt'): str,
+                                    Optional('af_dampening'): bool,
                                     Optional('af_dampening_route_map'): str,
                                     Optional('af_dampening_half_life_time'): int,
                                     Optional('af_dampening_reuse_time'): int,
@@ -5712,7 +5721,10 @@ class ShowRunningConfigBgpSchema(MetaParser):
                                     Optional('af_v6_network_route_map'): str,
                                     Optional('af_v6_allocate_label_all'): bool,
                                     Optional('af_retain_rt_all'): bool,
-                                    Optional('af_label_allocation_mode'): str}},
+                                    Optional('af_label_allocation_mode'): str,
+                                    Optional('af_advertise_pip'): bool
+                                     }
+                                 },
                             Optional('neighbor_id'):
                                 {Any():
                                     {Optional('nbr_fall_over_bfd'): bool,
@@ -5734,6 +5746,7 @@ class ShowRunningConfigBgpSchema(MetaParser):
                                      Optional('nbr_update_source'): str,
                                      Optional('nbr_password_text'): str,
                                      Optional('nbr_transport_connection_mode'): str,
+                                     Optional('nbr_peer_type'): str,
                                      Optional('nbr_af_name'):
                                         {Any():
                                             {Optional('nbr_af_allowas_in'): bool,
@@ -5748,6 +5761,7 @@ class ShowRunningConfigBgpSchema(MetaParser):
                                             Optional('nbr_af_route_map_name_out'): str,
                                             Optional('nbr_af_route_reflector_client'): bool,
                                             Optional('nbr_af_send_community'): str,
+                                            Optional('nbr_af_rewrite_evpn_rt_asn'): bool,
                                             Optional('nbr_af_soft_reconfiguration'): bool,
                                             Optional('nbr_af_next_hop_self'): bool,
                                             Optional('nbr_af_as_override'): bool,
@@ -5762,7 +5776,23 @@ class ShowRunningConfigBgpSchema(MetaParser):
                         },
                     },
                 },
-            }
+        Optional('vxlan'): {
+            'evpn': {
+                'evpn_vni': {
+                    Any(): {
+                        Optional("evpn_vni"): int,
+                        Optional("evpn_vni_rd"): str,
+                        Optional("evpn_vni_rt"):{
+                            Any():{
+                                Optional("evpn_vni_rt"): str,
+                                Optional("evpn_vni_rt_type"): str,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
 
 # ====================================
 # Parser for 'show running-config bgp'
@@ -5785,6 +5815,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
         nbr_af_name = ''
         ps_name = ''
         pp_name = ''
+        vni_flag = False
 
         for line in out.splitlines():
             line = line.rstrip()
@@ -5817,8 +5848,56 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     bgp_dict['bgp']['instance']['default']['protocol_shutdown'] = True
                     continue
 
-                #   vrf vpn1
-                p3 = re.compile(r'^\s*vrf +(?P<vrf>[a-z0-9]+)$')
+                # evpn
+                p2_1 = re.compile(r'^\s*evpn$')
+                m = p2_1.match(line)
+                if m:
+                    if 'vxlan' not in bgp_dict:
+                        bgp_dict['vxlan'] = {}
+                    if 'evpn' not in bgp_dict['vxlan']:
+                        bgp_dict['vxlan']['evpn'] = {}
+                    continue
+
+                # vni 5001 l2
+                p2_2 = re.compile(r'^\s*vni +(?P<evpn_vni>\d+) +l2$')
+                m = p2_2.match(line)
+                if m:
+                    vni_flag = True
+                    if 'evpn_vni' not in bgp_dict['vxlan']['evpn']:
+                        bgp_dict['vxlan']['evpn']['evpn_vni'] = {}
+                    evpn_vni = int(m.groupdict()['evpn_vni'])
+                    if evpn_vni not in  bgp_dict['vxlan']['evpn']['evpn_vni']:
+                        bgp_dict['vxlan']['evpn']['evpn_vni'][evpn_vni] = {}
+                    bgp_dict['vxlan']['evpn']['evpn_vni'][evpn_vni]['evpn_vni'] = evpn_vni
+                    continue
+
+                if vni_flag:
+                    # rd auto
+                    p2_3 = re.compile(r'^\s*rd +(?P<rd>[\w]+)$')
+                    m = p2_3.match(line)
+                    if m:
+                        bgp_dict['vxlan']['evpn']['evpn_vni'][evpn_vni]['evpn_vni_rd'] = m.groupdict()['rd']
+                        continue
+
+                    # route-target import auto
+                    # route-target export auto
+                    p2_4 = re.compile(
+                        r'^\s*route-target +(?P<evpn_vni_rt_type>[\w]+) +(?P<evpn_vni_rt>[\w\s]+)$')
+                    m = p2_4.match(line)
+                    if m:
+                        evpn_vni_rt = m.groupdict()['evpn_vni_rt']
+                        if 'evpn_vni_rt' not in bgp_dict['vxlan']['evpn']['evpn_vni'][evpn_vni]:
+                            bgp_dict['vxlan']['evpn']['evpn_vni'][evpn_vni]['evpn_vni_rt'] = {}
+                        if evpn_vni_rt not in bgp_dict['vxlan']['evpn']['evpn_vni'][evpn_vni]['evpn_vni_rt']:
+                            bgp_dict['vxlan']['evpn']['evpn_vni'][evpn_vni]['evpn_vni_rt'][evpn_vni_rt] = {}
+
+                        bgp_dict['vxlan']['evpn']['evpn_vni'][evpn_vni]['evpn_vni_rt'][evpn_vni_rt]\
+                            ['evpn_vni_rt_type'] = m.groupdict()['evpn_vni_rt_type']
+                        bgp_dict['vxlan']['evpn']['evpn_vni'][evpn_vni]['evpn_vni_rt'][evpn_vni_rt]\
+                            ['evpn_vni_rt'] = evpn_vni_rt
+                        continue
+
+                p3 = re.compile(r'^\s*vrf +(?P<vrf>[\w\-]+)$')
                 m = p3.match(line)
                 if m:
                     # Get keys
@@ -5826,6 +5905,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     af_name = ''
                     neighbor_id = ''
                     nbr_af_name = ''
+                    vni_flag = False
                     if 'vrf' not in bgp_dict['bgp']['instance']['default']:
                         bgp_dict['bgp']['instance']['default']['vrf'] = {}
                     if vrf not in bgp_dict['bgp']['instance']['default']['vrf']:
@@ -5833,6 +5913,13 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     continue
 
                 if vrf:
+                    # rd auto
+                    p3_1 = re.compile(r'^\s*rd +(?P<rd>[\w]+)$')
+                    m = p3_1.match(line)
+                    if m:
+                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['rd'] =  m.groupdict()['rd']
+                        continue
+
                     #   bestpath cost-community ignore
                     #   bestpath compare-routerid
                     #   bestpath med missing-as-worst
@@ -6015,6 +6102,17 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                             continue
 
                     if af_name:
+                        # route-target both auto
+                        # route-target both auto evpn
+                        p21_1 = re.compile(r'^\s*route-target +(?P<af_evpn_vni_rt_type>[\w]+) +(?P<af_evpn_vni_rt>[\w\s]+)$')
+                        m = p21_1.match(line)
+                        if m:
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_evpn_vni_rt_type'] =\
+                                m.groupdict()['af_evpn_vni_rt_type']
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name][
+                                'af_evpn_vni_rt'] = \
+                                m.groupdict()['af_evpn_vni_rt']
+
                         #    dampening [ { <af_dampening_half_life_time>
                         #    <af_dampening_resuse_time> <af_dampening_suppress_time>
                         #    <af_dampening_max_suppress_time> } |
@@ -6278,6 +6376,13 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                                 str(m.groupdict()['per_vrf'])
                             continue
 
+                        #    advertise-pip
+                        p103 = re.compile(r'^\s*advertise-pip$')
+                        m = p103.match(line)
+                        if m:
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]\
+                                ['af_advertise_pip'] = True
+                            continue
                     #   neighbor <neighbor_id>
                     p42 = re.compile(r'^\s*neighbor +(?P<neighbor_id>[a-z0-9\.\:]+)$')
                     m = p42.match(line)
@@ -6440,6 +6545,14 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                                 str(m.groupdict()['nbr_transport_connection_mode'])
                             continue
 
+                        # peer-type fabric-external
+                        p101 = re.compile(r'^\s*peer-type +(?P<nbr_peer_type>[\w\-]+)$')
+                        m = p101.match(line)
+                        if m:
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]\
+                                ['nbr_peer_type'] = m.groupdict()['nbr_peer_type']
+                            continue
+
                         #   address-family <nbr_af_name>
                         p57 = re.compile(r'^\s*address-family +(?P<nbr_af_name>[A-Za-z0-9\s\-]+)$')
                         m = p57.match(line)
@@ -6552,6 +6665,14 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                                 else:
                                     bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_send_community'] = \
                                         'extended'
+                                continue
+
+                            # rewrite-evpn-rt-asn
+                            p100 = re.compile(r'^\s*rewrite-evpn-rt-asn$')
+                            m = p100.match(line)
+                            if m:
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id][
+                                    'nbr_af_name'][nbr_af_name]['nbr_af_rewrite_evpn_rt_asn'] = True
                                 continue
 
                             #   route-reflector-client
@@ -9531,3 +9652,1000 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
                                     sub_dict['prefix'][prefix]['index'][index]['hold_down'] = hold_down
 
         return etree_dict
+
+# ====================================================
+#  schema for show bgp l2vpn evpn summary
+# ====================================================
+class ShowBgpL2vpnEvpnSummarySchema(MetaParser):
+    """Schema for:
+        show bgp l2vpn evpn summary"""
+
+    schema = {
+        'instance': {
+            Any(): {
+                'vrf': {
+                    Any(): { 
+                        'vrf_name_out': str, 
+                        'vrf_router_id': str,
+                        'vrf_local_as': int, 
+                        'address_family': {
+                            Any(): { 
+                                'tableversion': int, 
+                                'configuredpeers': int, 
+                                'capablepeers': int, 
+                                'totalnetworks': int, 
+                                'totalpaths': int, 
+                                'memoryused': int, 
+                                'numberattrs': int,
+                                'bytesattrs': int, 
+                                'numberpaths': int,
+                                'bytespaths': int, 
+                                'numbercommunities': int, 
+                                'bytescommunities': int,
+                                'numberclusterlist': int, 
+                                'bytesclusterlist': int, 
+                                'dampening': str, 
+                                'neighbor': {
+                                    Any(): {
+                                        'neighbor': str, 
+                                        'version': int, 
+                                        'msgrecvd': int, 
+                                        'msgsent': int, 
+                                        'neighbortableversion': int, 
+                                        'inq': int, 
+                                        'outq': int, 
+                                        'remoteas': int, 
+                                        'time': str, 
+                                        'state': str,
+                                        Optional('prefixreceived'): int,
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# ====================================================
+#  Parser for show bgp l2vpn evpn summary
+# ====================================================
+class ShowBgpL2vpnEvpnSummary(ShowBgpL2vpnEvpnSummarySchema):
+    """parser for:
+        show bgp l2vpn evpn summary"""
+
+    def cli(self):
+        out = self.device.execute('show bgp l2vpn evpn summary')
+
+        result_dict = {}
+        # BGP summary information for VRF default, address family L2VPN EVPN
+        # BGP router identifier 201.11.11.11, local AS number 100
+        # BGP table version is 155, L2VPN EVPN config peers 2, capable peers 2
+        # 32 network entries and 32 paths using 5708 bytes of memory
+        # BGP attribute entries [20/3200], BGP AS path entries [0/0]
+        # BGP community entries [1/32], BGP clusterlist entries [3/12]
+        #
+        # Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+        # 191.13.1.8      4   200     130     139      155    0    0 02:05:01 0L2ROUTE Summary
+
+        p1 = re.compile(r'^\s*BGP +summary +information +for +VRF +(?P<vrf_name_out>[\w]+),'
+                        ' +address +family +(?P<af_name>[\w\s]+)$')
+        p2 = re.compile(
+            r'^\s*BGP +router +identifier +(?P<vrf_router_id>[\d\.]+), +local +AS +number +(?P<vrf_local_as>[\d]+)$')
+        p3 = re.compile(r'^\s*BGP +table +version +is +(?P<tableversion>[\d]+), +(?P<af_name>[\w\s]+)'
+                        ' +config +peers +(?P<configuredpeers>[\d]+),'
+                        ' +capable +peers +(?P<capablepeers>[\d]+)$')
+        p4 = re.compile(
+            r'^\s*(?P<totalnetworks>[\d]+) +network +entries +and +(?P<totalpaths>[\d]+) +paths +using'
+            ' +(?P<memoryused>[\d]+) +bytes +of +memory$')
+        p5 = re.compile(r'^\s*BGP +attribute +entries +\[(?P<numberattrs>[\d]+)\/(?P<bytesattrs>[\d]+)\],'
+                        ' +BGP +AS +path +entries +\[(?P<numberpaths>[\d]+)\/(?P<bytespaths>[\d]+)\]$')
+
+        p6 = re.compile(r'^\s*BGP +community +entries +\[(?P<numbercommunities>[\d]+)\/(?P<bytescommunities>[\d]+)\],'
+                        ' +BGP +clusterlist +entries +\[(?P<numberclusterlist>[\d]+)\/(?P<bytesclusterlist>[\d]+)\]$')
+
+        p7 = re.compile(
+            r'^\s*(?P<neighborid>[\d\.]+) +(?P<neighborversion>[\d]+) +(?P<neighboras>[\d]+) +(?P<msgrecvd>[\d]+)'
+            ' +(?P<msgsent>[\d]+) +(?P<neighbortableversion>[\d]+) +(?P<inq>[\d]+) +(?P<outq>[\d]+)'
+            ' +(?P<time>[\w\:]+) +(?P<prefixreceived>[\w\s]+)$')
+
+        for line in out.splitlines():
+            if line:
+                line = line.rstrip()
+            else:
+                continue
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                instance = 'default'
+                vrf_name_out = group.pop('vrf_name_out')
+                bgp_dict = result_dict.setdefault('instance', {}).setdefault(instance, {}).\
+                                       setdefault('vrf', {}).setdefault(vrf_name_out,{})
+                bgp_dict.update({'vrf_name_out': vrf_name_out})
+                af_name = group.pop('af_name').lower()
+                af_dict = bgp_dict.setdefault('address_family',{}).setdefault(af_name,{})
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                bgp_dict.update({'vrf_router_id': group.pop('vrf_router_id')})
+                bgp_dict.update({'vrf_local_as': int(group.pop('vrf_local_as'))})
+                continue
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                af_dict.update({'tableversion':int(group.pop('tableversion'))})
+                af_dict.update({'configuredpeers':int(group.pop('configuredpeers'))})
+                af_dict.update({'capablepeers':int(group.pop('capablepeers'))})
+                continue
+
+            m1 = ""
+            if p4.match(line):
+                m1 = p4.match(line)
+            if p5.match(line):
+                m1 = p5.match(line)
+            if p6.match(line):
+                m1 = p6.match(line)
+            if m1:
+                group = m1.groupdict()
+                try:
+                    af_dict.update({k: int(v) for k, v in group.items()})
+                except:
+                    af_dict.update({k:v.lower() for k, v in group.items()})
+                af_dict.update({'dampening':'disabled'})
+                continue
+
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                neighborid = group.pop('neighborid')
+                neighbor_dict = af_dict.setdefault('neighbor',{}).setdefault(neighborid, {})
+
+                neighbor_dict.update({'neighbor':neighborid})
+                neighbor_dict.update({'remoteas': int(group.pop('neighboras'))})
+                neighbor_dict.update({'version': int(group.pop('neighborversion'))})
+                neighbor_dict.update({'msgrecvd': int(group.pop('msgrecvd'))})
+                neighbor_dict.update({'msgsent': int(group.pop('msgsent'))})
+                neighbor_dict.update({'neighbortableversion': int(group.pop('neighbortableversion'))})
+                neighbor_dict.update({'inq': int(group.pop('inq'))})
+                neighbor_dict.update({'outq': int(group.pop('outq'))})
+                neighbor_dict.update({'time': group.pop('time')})
+                prefixreceived = group.pop('prefixreceived')
+                try:
+                    neighbor_dict.update({'prefixreceived': int(prefixreceived)})
+                    neighbor_dict.update({'state': 'established'})
+                except ValueError:
+                    neighbor_dict.update({'state': prefixreceived.lower()})
+                continue
+
+        return result_dict
+
+# ==========================================================
+#  schema for show bgp l2vpn evpn route-type <route_type>
+# ===========================================================
+class ShowBgpL2vpnEvpnRouteTypeSchema(MetaParser):
+    """Schema for:
+        show bgp l2vpn evpn route-type <route-type>"""
+
+    schema = {
+        'instance': {
+            Any():{
+                'vrf': {
+                    Any(): {
+                        'address_family': {
+                            Any(): {
+                                'rd': {
+                                    Any(): {
+                                        Optional('rd'): str,
+                                        Optional('rd_vrf'): str,
+                                        Optional('rd_vniid'): int,
+                                        'prefix': {
+                                            Any(): {
+                                                'nonipprefix': str,
+                                                'prefixversion': int,
+                                                Optional('totalpaths'): int,
+                                                'bestpathnr': int,
+                                                Optional('mpath'): str,
+                                                Optional('on_newlist'): bool,
+                                                Optional('on_xmitlist'): bool,
+                                                Optional('suppressed'): bool,
+                                                Optional('needsresync'): bool,
+                                                Optional('locked'): bool,
+                                                'path': {
+                                                    Any(): {
+                                                        'pathnr': int,
+                                                        Optional('policyincomplete'): bool,
+                                                        'pathvalid': bool,
+                                                        'pathbest': bool,
+                                                        Optional('pathdeleted'): bool,
+                                                        Optional('pathstaled'): bool,
+                                                        Optional('pathhistory'): bool,
+                                                        Optional('pathovermaxaslimit'): bool,
+                                                        Optional('pathmultipath'): bool,
+                                                        Optional('pathnolabeledrnh'): bool,
+                                                        'ipnexthop': str,
+                                                        'nexthopmetric': int,
+                                                        'neighbor': str,
+                                                        'neighborid': str,
+                                                        'origin': str,
+                                                        'localpref': int,
+                                                        'weight': int,
+                                                        Optional('inlabel'): int,
+                                                        Optional('extcommunity'): list,
+                                                        Optional('advertisedto'): list,
+                                                        Optional('originatorid'): str,
+                                                        Optional('clusterlist'): list,
+                                                    }
+                                                }
+                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+# ====================================================
+#  Parser for show bgp l2vpn evpn route-type
+# ====================================================
+class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
+    """parser for:
+        show bgp l2vpn evpn route-type <1>
+        show bgp l2vpn evpn route-type <2>
+        show bgp l2vpn evpn route-type <4>"""
+
+    def cli(self,route_type):
+        out = self.device.execute('show bgp l2vpn evpn route-type {}'.format(route_type))
+
+        result_dict = {}
+
+        # BGP routing table information for VRF default, address family L2VPN EVPN
+        # Route Distinguisher: 11.0.0.55:27001   (ES [0300.0000.0001.2c00.0309 0])
+        # BGP routing table entry for [4]:[0300.0000.0001.2c00.0309]:[32]:[201.0.0.55]/136, version 13144
+        # Paths: (1 available, best #1)
+        # Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
+        # Multipath: iBGP
+        #
+        #   Advertised path-id 1
+        #   Path type: local (0xcf9bdc54), path is valid, is best path, no labeled nexthop
+        #   AS-Path: NONE, path locally originated
+        #     201.0.0.55 (metric 0) from 0.0.0.0 (11.0.0.55)
+        #       Origin IGP, MED not set, localpref 100, weight 32768
+        #       Received label 25000
+        #       Extcommunity: ENCAP:8 RT:0000.0000.012c
+        #
+        #   Path-id 1 advertised to peers:
+        #     11.0.0.11          11.0.0.22          11.0.0.33          11.0.0.44
+        #     14.0.0.11
+
+        p1 = re.compile(r'^\s*BGP +routing +table +information +for +VRF +(?P<vrf_name_out>[\w]+),'
+                        ' +address +family +(?P<af_name>[\w\s]+)$')
+        p2 = re.compile(r'^\s*Route Distinguisher: +(?P<rd>[\w\.\:]+)( +\(ES +(?P<es>[\w\s\[\]\.]+)\))?( +\(L(2|3)VNI +(?P<rd_vniid>[\d]+)\))?$')
+        p3 = re.compile(r'^\s*BGP routing table entry for +(?P<nonipprefix>[\w\[\]\:\.\/]+), +version +(?P<prefixversion>[\d]+)$')
+        p4 = re.compile(r'^\s*Paths: +\((?P<totalpaths>[\d]+) +available, +best +#(?P<bestpathnr>[\d]+)\)$')
+        p5 = re.compile(r'^\s*Flags: (?P<flag_xmit>[\S\s]+) +on +xmit-list(, +(?P<flags_attr>[\w\s\/\,]+))?$')
+        p6 = re.compile(r'^\s*Multipath: +(?P<multipath>[\w]+)$')
+        p7 = re.compile(r'^\s*Advertised path-id +(?P<path_id>[\d]+)$')
+        p8 = re.compile(r'^\s*Path type: +(?P<path_type>[\w\s\(\)]+), +(?P<pathtypes>[\w\s\,]+)?$')
+        p9 = re.compile(r'^\s*AS-Path: +(?P<as_path>[\w]+)(, +path locally originated)?(, +path sourced internal to AS)?$')
+        p10 = re.compile(r'^\s*(?P<ipnexthop>[\d\.]+) +\(metric +(?P<nexthopmetric>[\d]+)\) +from +(?P<neighbor>[\d\.]+)'
+                         ' +\((?P<neighborid>[\d\.]+)\)$')
+        p11 = re.compile(r'^\s*Origin +(?P<origin>[\w]+), +(MED not set,)? +localpref +(?P<localpref>[\d]+),'
+                         ' +weight +(?P<weight>[\d]+)$')
+        p12 = re.compile(r'^\s*Extcommunity: +(?P<extcommunity>[\w\s\:\.]+)$')
+        p13 = re.compile(r'^\s*Originator: +(?P<originatorid>[\d\.]+) +Cluster list: +(?P<clusterlist>[\d\.]+)$')
+        p14 = re.compile(r'^\s*Path-id +(?P<path_id>[\d]+) +advertised to peers:$')
+        p15 = re.compile(r'^\s*(?P<advertisedto>[\d\s\.]+)$')
+        p16 = re.compile(r'^\s*Received +label +(?P<inlabel>[\d]+)$')
+
+        for line in out.splitlines():
+            if line:
+                line = line.rstrip()
+            else:
+                continue
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                instance = 'default'
+                vrf_name_out = group.pop('vrf_name_out')
+                af_name = group.get('af_name').lower()
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                bgp_dict = result_dict.setdefault('instance', {}).setdefault(instance, {}).\
+                                                setdefault('vrf', {}).setdefault(vrf_name_out, {})
+                af_dict = bgp_dict.setdefault('address_family', {}).setdefault(af_name, {})
+                rd = group.pop('rd')
+                rd_dict = af_dict.setdefault('rd',{}).setdefault(rd,{})
+                rd_dict.update({'rd':rd})
+                if group.get('rd_vniid'):
+                    rd_dict.update({'rd_vrf': 'l2'})
+                    rd_dict.update({'rd_vniid': int(group.pop('rd_vniid'))})
+                continue
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                nonipprefix = group.pop('nonipprefix').strip()
+                prefix_dict = rd_dict.setdefault('prefix',{}).setdefault(nonipprefix,{})
+                prefix_dict.update({'nonipprefix': nonipprefix})
+                prefix_dict.update({'prefixversion': int(group.pop('prefixversion'))})
+                continue
+
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                prefix_dict.update({k:int(v) for k,v in group.items()})
+                continue
+
+            m = p5.match(line)
+            if m:
+                prefix_dict.update({'on_xmitlist':True})
+                continue
+
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                mpath  = group.pop('multipath').lower()
+                prefix_dict.update({'mpath': mpath})
+                continue
+
+
+            m = p7.match(line)
+            if m:
+                index = 1
+                group = m.groupdict()
+                path_dict = prefix_dict.setdefault('path',{}).setdefault(index,{})
+                path_dict.update({'pathnr':int(group.pop('path_id'))})
+                continue
+
+            m = p8.match(line)
+            if m:
+                index = 1
+                group = m.groupdict()
+                pathtypes = group.get('pathtypes')
+                if 'path is valid' in pathtypes:
+                    path_dict.update({'pathvalid': True})
+                else:
+                    path_dict.update({'pathvalid': False})
+
+                if 'is best path' in pathtypes:
+                    path_dict.update({'pathbest': True})
+                else:
+                    path_dict.update({'pathbest': False})
+                if 'no labeled nexthop' in pathtypes:
+                    path_dict.update({'pathnolabeledrnh': True})
+                else:
+                    path_dict.update({'pathnolabeledrnh': False})
+                continue
+
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                path_dict.update({k:v for k,v in group.items()})
+                path_dict.update({'nexthopmetric': int(group.pop('nexthopmetric'))})
+
+                continue
+
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                path_dict.update({'origin': group.pop('origin').lower()})
+                path_dict.update({'localpref': int(group.pop('localpref'))})
+                path_dict.update({'weight': int(group.pop('weight'))})
+                continue
+
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                path_dict.update({k: v.split( ) for k, v in group.items()})
+                continue
+
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                path_dict.update({'originatorid': group.pop('originatorid')})
+                path_dict.update({'clusterlist': group.pop('clusterlist').split()})
+                continue
+
+
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                for k, v in group.items():
+                    if k in path_dict:
+                        path_dict[k].append(v)
+                    else:
+                        path_dict.update({k:v.split()})
+                continue
+
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                path_dict.update({'inlabel': int(group.pop('inlabel'))})
+                continue
+
+        return result_dict
+
+# ==========================================================
+#  schema for show bgp l2vpn evpn neighbors
+# ===========================================================
+class ShowBgpL2vpnEvpnNeighborsSchema(MetaParser):
+    """Schema for:
+        show bgp l2vpn evpn neighbors"""
+
+    schema = {
+        'instance': {
+            Any(): {
+                'vrf': {
+                    Any(): { 
+                        'address_family': {
+                            Any(): { 
+                                'neighbor': {
+                                    Any(): {
+                                        'neighbor': str, 
+                                        'remoteas': int, 
+                                        Optional('localas'): int,
+                                        Optional('link'): str,
+                                        Optional('index'): int,
+                                        Optional('version'): int,
+                                        Optional('remote_id'): str,
+                                        Optional('state'): str,
+                                        Optional('up'): bool,
+                                        Optional('retry'): str,
+                                        Optional('elapsedtime'): str,
+                                        Optional('connectedif'): str,
+                                        Optional('bfd'): bool,
+                                        Optional('ttlsecurity'): bool, 
+                                        Optional('password'): bool,
+                                        Optional('passiveonly'): bool,
+                                        Optional('localas_inactive'): bool,
+                                        Optional('remote_privateas'): bool,
+                                        'lastread': str, 
+                                        'holdtime': int, 
+                                        'keepalivetime': int, 
+                                        Optional('lastwrite'): str,
+                                        Optional('keepalive'): str,
+                                        'msgrecvd': int, 
+                                        'notificationsrcvd': int,
+                                        'recvbufbytes': int, 
+                                        'msgsent': int, 
+                                        'notificationssent': int, 
+                                        'sentbytesoutstanding': int,
+                                        Optional('totalbytessent'): int, 
+                                        'connsestablished': int,
+                                        'connsdropped': int, 
+                                        Optional('resettime'): str,
+                                        Optional('resetreason'): str, 
+                                        Optional('peerresettime'): str, 
+                                        Optional('peerresetreason'): str,
+                                        Optional('capsnegotiated'): bool,
+                                        Optional('capmpadvertised'): bool,
+                                        Optional('caprefreshadvertised'): bool,
+                                        Optional('capgrdynamicadvertised'): bool,
+                                        Optional('capmprecvd'): bool,
+                                        Optional('caprefreshrecvd'): bool,
+                                        Optional('capgrdynamicrecvd'): bool,
+                                        Optional('capolddynamicadvertised'): bool,
+                                        Optional('capolddynamicrecvd'): bool,
+                                        Optional('caprradvertised'): bool,
+                                        Optional('caprrrecvd'): bool,
+                                        Optional('capoldrradvertised'): bool,
+                                        Optional('capoldrrrecvd'): bool,
+                                        Optional('capas4advertised'): bool,
+                                        Optional('capas4recvd'): bool,
+                                        Optional('af'): {
+                                            Any(): { 
+                                                'af_advertised': bool, 
+                                                'af_recvd': bool, 
+                                                'af_name': str, 
+                                            }
+                                        },
+                                        Optional('capgradvertised'): bool,
+                                        Optional('capgrrecvd'): bool,
+                                        Optional('graf'): {
+                                            Any(): { 
+                                                Optional('gr_af_name'): str,
+                                                Optional('gr_adv'): bool,
+                                                Optional('gr_recv'): bool,
+                                                Optional('gr_fwd'): bool,
+                                            }
+                                        },
+                                        Optional('grrestarttime'): int,
+                                        Optional('grstaletiem'): int,
+                                        Optional('grrecvdrestarttime'): int,
+                                        Optional('capextendednhadvertised'): bool,
+                                        Optional('capextendednhrecvd'): bool,
+                                        Optional('capextendednhaf'): {
+                                            Any(): { 
+                                                Optional('capextendednh_af_name'): str,
+                                            }
+                                        },
+                                        Optional('epe'): bool, 
+                                        Optional('firstkeepalive'): bool, 
+                                        'openssent': int, 
+                                        'opensrecvd': int, 
+                                        'updatessent': int,
+                                        'updatesrecvd': int, 
+                                        'keepalivesent': int, 
+                                        'keepaliverecvd': int,
+                                        'rtrefreshsent': int, 
+                                        'rtrefreshrecvd': int,
+                                        'capabilitiessent': int, 
+                                        'capabilitiesrecvd': int,
+                                        'bytessent': int,
+                                        'bytesrecvd': int,
+                                        Optional('peraf'): {
+                                            Any(): { 
+                                                Optional('per_af_name'): str,
+                                                Optional('tableversion'): int,
+                                                Optional('neighbortableversion'): int,
+                                                Optional('pfxrecvd'): int,
+                                                Optional('pfxbytes'): int,
+                                                Optional('insoftreconfigallowed'): bool, 
+                                                Optional('sendcommunity'): bool, 
+                                                Optional('sendextcommunity'): bool, 
+                                                Optional('asoverride'): bool, 
+                                                Optional('peerascheckdisabled'): bool, 
+                                                Optional('rrconfigured'): bool, 
+                                                Optional('pfxbytes'): int, 
+
+                                            }
+                                        },
+                                        Optional('localaddr'): str,
+                                        Optional('localport'): int,
+                                        Optional('remoteaddr'): str,
+                                        Optional('remoteport'): int,
+                                        Optional('fd'): int,
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# ====================================================
+#  Parser for show bgp l2vpn evpn neighbors
+# ====================================================
+class ShowBgpL2vpnEvpnNeighbors(ShowBgpL2vpnEvpnNeighborsSchema):
+    """parser for:
+        show bgp l2vpn evpn neighbors"""
+
+    def cli(self):
+        out = self.device.execute('show bgp l2vpn evpn neighbors')
+
+        result_dict = {}
+        recieve_flag = gr_adv_flag = gr_recv_flag = gr_fwd_flag = gr_flag = False
+        # BGP neighbor is 191.13.1.8, remote AS 200, ebgp link, Peer index 3
+        # BGP version 4, remote router ID 201.33.33.33
+        # BGP state = Idle, down for 4w6d, retry in 0.000000
+        # BGP state = Shut (Admin), down for 5w0d
+        # BGP state = Established, up for 02:11:53
+        # Peer is directly attached, interface Ethernet1/6
+        # Enable logging neighbor events
+        # BFD live-detection is configured and enabled, state is Invalid
+        # TCP MD5 authentication is set (enabled)
+        # Last read 00:00:51, hold time = 180, keepalive interval is 60 seconds
+        # Last written 00:00:21, keepalive timer expiry due 00:00:38
+        # Received 137 messages, 0 notifications, 0 bytes in queue
+        # Sent 146 messages, 0 notifications, 0(0) bytes in queue
+        # Connections established 1, dropped 0
+        # Last reset by us never, due to No error
+        # Last reset by peer never, due to No error
+        #
+        # Neighbor capabilities:
+        # Dynamic capability: advertised (mp, refresh, gr) received (mp, refresh, gr)
+        # Dynamic capability (old): advertised received
+        # Route refresh capability (new): advertised received
+        # Route refresh capability (old): advertised received
+        # 4-Byte AS capability: advertised received
+        # Address family L2VPN EVPN: advertised received
+        # Graceful Restart capability: advertised received
+        #
+        # Graceful Restart Parameters:
+        # Address families advertised to peer:
+        #   L2VPN EVPN
+        # Address families received from peer:
+        #   L2VPN EVPN
+        # Forwarding state preserved by peer for:
+        # Restart time advertised to peer: 120 seconds
+        # Stale time for routes advertised by peer: 300 seconds
+        # Restart time advertised by peer: 120 seconds
+        # Extended Next Hop Encoding Capability: advertised received
+        # Receive IPv6 next hop encoding Capability for AF:
+        #   IPv4 Unicast
+        #
+        # Message statistics:
+        #                             Sent               Rcvd
+        # Opens:                         1                  1
+        # Notifications:                 0                  0
+        # Updates:                      70                  1
+        # Keepalives:                  129                133
+        # Route Refresh:                 0                  0
+        # Capability:                    2                  2
+        # Total:                       146                137
+        # Total bytes:               10398               2595
+        # Bytes in queue:                0                  0
+        #
+        # For address family: L2VPN EVPN
+        # BGP table version 191, neighbor version 191
+        # 0 accepted paths consume 0 bytes of memory
+        # Community attribute sent to this neighbor
+        # Extended community attribute sent to this neighbor
+        # Last End-of-RIB received 00:00:01 after session start
+        # Last End-of-RIB sent 00:00:01 after session start
+        # First convergence 00:00:01 after session start with 5 routes sent
+        #
+        # Local host: 191.13.1.6, Local port: 179
+        # Foreign host: 191.13.1.8, Foreign port: 52715
+        # fd = 84
+
+        p1 = re.compile(r'^\s*BGP +neighbor +is +(?P<neighbor>[\d\.]+), remote AS +(?P<remoteas>[\d]+), +(?P<link>[\w]+) +link,'
+                        ' +Peer index +(?P<index>[\d]+)$')
+        p2 = re.compile(r'^\s*BGP version +(?P<version>[\d]+), remote router ID +(?P<remote_id>[\d\.]+)$')
+        p3 = re.compile(r'^\s*BGP +state += +(?P<state>[\w\s\(\)]+), +(?P<up>[\w]+) +for'
+                        ' +(?P<elapsedtime>[\w\:]+)(, +retry in +(?P<retry>[\w\:]+))?$')
+        p4 = re.compile(r'^\s*Peer is directly attached, interface +(?P<connectedif>[\w\/]+)$')
+        p5 = re.compile(r'^\s*BFD live-detection is configured and enabled, state is +(?P<bfd_state>[\w]+)?$')
+        p6 = re.compile(r'^\s*TCP MD5 authentication is set \(enabled\)$')
+        p7 = re.compile(r'^\s*Last read +(?P<lastread>[\w\:\.]+), hold time = +(?P<holdtime>[\d]+),'
+                            ' +keepalive interval is +(?P<keepalivetime>[\d]+) +seconds$')
+        p8 = re.compile(r'^\s*Last written +(?P<lastwrite>[\w\:\.]+), keepalive timer expiry due +(?P<keepalive>[\w\:]+)$')
+        p9 = re.compile(r'^\s*Received +(?P<msgrecvd>[\d]+) +messages, +(?P<notificationsrcvd>[\d]+) +notifications,'
+                        ' +(?P<recvbufbytes>[\d]+)+ bytes in queue$')
+        p10 = re.compile(r'^\s*Sent +(?P<msgsent>[\d]+) messages, +(?P<notificationssent>[\d]+)'
+                         ' +notifications, +(?P<sentbytesoutstanding>[\d]+)\((?P<totalbytessent>[\d]+)\) +bytes in queue$')
+        p11 = re.compile(r'^\s*Connections established +(?P<connsestablished>[\d]+), +dropped +(?P<connsdropped>[\d]+)$')
+        p12 = re.compile(r'^\s*Last reset by us +(?P<resettime>[\w]+), +due to +(?P<resetreason>[\w\s]+)$')
+        p13 = re.compile(r'^\s*Last reset by peer +(?P<peerresettime>[\w]+), due to +(?P<peerresetreason>[\w\s]+)$')
+        p14 = re.compile(r'^\s*Dynamic capability: advertised +\(+(?P<cap_advertised>[\w\,\s]+)\) +received +\(+(?P<cap_received>[\w\,\s]+)\)$')
+        p15 = re.compile(r'^\s*Dynamic capability \(old\): +(?P<capolddynamicadvertised>[\w]+)( +(?P<capolddynamicrecvd>[\w\s]+))?$')
+        p16 = re.compile(r'^\s*Route refresh capability \(new\): +(?P<caprradvertised>[\w]+)( +(?P<caprrrecvd>[\w]+))?$')
+        p17 = re.compile(r'^\s*Route refresh capability \(old\): +(?P<capoldrradvertised>[\w]+)( +(?P<capoldrrrecvd>[\w]+))?$')
+        p18 = re.compile(r'^\s*4-Byte AS capability: +(?P<capas4advertised>[\w]+)( +(?P<capas4recvd>[\w]+))?$')
+        p19 = re.compile(r'^\s*Address family +(?P<af_name>[\w\s]+): +(?P<af_advertised>[a][\w]+)( +(?P<af_recvd>[r][\w]+))?$')
+        p20 = re.compile(r'^\s*Graceful Restart capability: +(?P<capgradvertised>[\w]+)( +(?P<capgrrecvd>[\w]+))?$')
+        p20_1 = re.compile(r'^\s*Graceful Restart Parameters:$')
+        p21 = re.compile(r'^\s*Address families advertised to peer:$')
+        p22 = re.compile(r'^(?P<space>\s{4})((?P<gr_af_name>(?!Sent)[\w].*)+)$')
+        p23 = re.compile(r'^\s*Address families received from peer:$')
+        p24_1 = re.compile(r'^\s*Forwarding state preserved by peer for:$')
+        p25 = re.compile(r'^\s*Restart time advertised to peer: +(?P<grrestarttime>[\d]+) +seconds$')
+        p26 = re.compile(r'^\s*Stale time for routes advertised by peer: +(?P<grstaletiem>[\d]+) +seconds$')
+        p27 = re.compile(r'^\s*Restart time advertised by peer: +(?P<grrecvdrestarttime>[\d]+) +seconds$')
+        p28 = re.compile(r'^\s*Extended Next Hop Encoding Capability: +(?P<capextendednhadvertised>[\w]+)( +(?P<capextendednhrecvd>[\w]+))?$')
+        p29 = re.compile(r'^\s*Receive IPv6 next hop encoding Capability for AF:$')
+        p30 = re.compile(r'^\s*(?P<space>\s{4})(?P<capextendednh_af_name>[\w\s]+)$')
+        p31 = re.compile(r'^\s*Opens: +(?P<openssent>[\d]+) +(?P<opensrecvd>[\d]+)$')
+        p32 = re.compile(r'^\s*Notifications: +(?P<notificationssent>[\d]+) +(?P<notificationsrcvd>[\d]+)$')
+        p33 = re.compile(r'^\s*Updates: +(?P<updatessent>[\d]+) +(?P<updatesrecvd>[\d]+)$')
+        p34 = re.compile(r'^\s*Keepalives: +(?P<keepalivesent>[\d]+) +(?P<keepaliverecvd>[\d]+)$')
+        p35 = re.compile(r'^\s*Route Refresh: +(?P<rtrefreshsent>[\d]+) +(?P<rtrefreshrecvd>[\d]+)$')
+        p36 = re.compile(r'^\s*Capability: +(?P<capabilitiessent>[\d]+) +(?P<capabilitiesrecvd>[\d]+)$')
+        p38 = re.compile(r'^\s*Total bytes: +(?P<bytessent>[\d]+) +(?P<bytesrecvd>[\d]+)$')
+        p39 = re.compile(r'^\s*Bytes in queue: +(?P<bytesinqueuesent>[\d]+) +(?P<bytesinqueuerecvd>[\d]+)$')
+        p40 = re.compile(r'^\s*For address family: +(?P<per_af_name>[\w\ ]+)$')
+        p41 = re.compile(r'^\s*BGP table version +(?P<tableversion>[\d]+), neighbor version +(?P<neighbortableversion>[\d]+)$')
+        p42 = re.compile(r'^\s*(?P<pfxrecvd>[\d]+) +accepted paths consume +(?P<pfxbytes>[\d]+) +bytes of memory$')
+        p43 = re.compile(r'^\s*Community attribute sent to this neighbor$')
+        p44 = re.compile(r'^\s*Extended community attribute sent to this neighbor$')
+        p46 = re.compile(r'^\s*Last End-of-RIB received +(?P<lastendribreceived>[\w\:]+) +after session start$')
+        p47 = re.compile(r'^\s*Last End-of-RIB sent +(?P<lastendribsent>[\w\:]+) +after session start$')
+        p48 = re.compile(r'^\s*First convergence +(?P<rrconfigured>[\w\:]+)'
+                         ' +after session start with +(?P<pfxbytes>[\d]+) +routes sent$')
+        p49 = re.compile(r'^\s*Local host: +(?P<localaddr>[\d\.]+), Local port: +(?P<localport>[\d\.]+)$')
+        p50 = re.compile(r'^\s*Foreign host: +(?P<remoteaddr>[\d\.]+), Foreign port: +(?P<remoteport>[\d]+)$')
+        p51 = re.compile(r'^\s*fd = +(?P<fd>[\d]+)$')
+
+
+        for line in out.splitlines():
+            if line:
+                line = line.rstrip()
+            else:
+                continue
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                instance = 'default'
+                vrf_name = 'default'
+                bgp_dict = result_dict.setdefault('instance', {}).setdefault(instance, {}).\
+                                       setdefault('vrf', {}).setdefault(vrf_name,{})
+                af_name = 'l2vpn evpn'
+                af_dict = bgp_dict.setdefault('address_family',{}).setdefault(af_name,{})
+                neighbor = group.get('neighbor')
+                neighbor_dict = af_dict.setdefault('neighbor',{}).setdefault(neighbor,{})
+                for k, v in group.items():
+                    if v.isdigit():
+                        neighbor_dict.update({k:int(v)})
+                    else:
+                        neighbor_dict.update({k:v})
+                continue
+
+            m2 = ""
+
+            if p2.match(line):
+                m2 = p2.match(line)
+            if p4.match(line):
+                m2 = p4.match(line)
+
+            if p6.match(line):
+                m2 = p6.match(line)
+            if p7.match(line):
+                m2 = p7.match(line)
+            if p8.match(line):
+                m2 = p8.match(line)
+            if p9.match(line):
+                m2 = p9.match(line)
+            if p10.match(line):
+                m2 = p10.match(line)
+            if p11.match(line):
+                m2 = p11.match(line)
+            if p12.match(line):
+                m2 = p12.match(line)
+            if p13.match(line):
+                m2 = p13.match(line)
+            if m2:
+                group = m2.groupdict()
+                for k, v in group.items():
+                    if v:
+                        if v.isdigit():
+                            neighbor_dict.update({k:int(v)})
+                        else:
+                            neighbor_dict.update({k:v.lower()})
+                continue
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                if group.pop('up') == 'up':
+                    neighbor_dict.update({'up':True})
+                else:
+                    neighbor_dict.update({'up': False})
+
+                for k, v in group.items():
+                    if v:
+                        if v.isdigit():
+                            neighbor_dict.update({k:int(v)})
+                        else:
+                            neighbor_dict.update({k:v.lower()})
+                continue
+
+            m= p5.match(line)
+            if m:
+                neighbor_dict.update({'bfd':True})
+                continue
+
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                mp_ref_gr = group.pop('cap_advertised')
+                if 'mp' in mp_ref_gr:
+                    neighbor_dict.update({'capmpadvertised':True})
+                if 'refresh' in  mp_ref_gr:
+                    neighbor_dict.update({'caprefreshadvertised': True})
+                if 'gr' in  mp_ref_gr:
+                    neighbor_dict.update({'capgrdynamicadvertised': True})
+
+                mp_ref_gr_recvd = group.pop('cap_received')
+                if 'mp' in mp_ref_gr_recvd:
+                    neighbor_dict.update({'capmprecvd': True})
+                if 'refresh' in mp_ref_gr_recvd:
+                    neighbor_dict.update({'caprefreshrecvd': True})
+                if 'gr' in mp_ref_gr_recvd:
+                    neighbor_dict.update({'capgrdynamicrecvd': True})
+                continue
+
+            m = p15.match(line)
+            if m:
+                neighbor_dict.update({'capolddynamicadvertised': True})
+                neighbor_dict.update({'capolddynamicrecvd':True})
+                continue
+
+            m = p16.match(line)
+            if m:
+
+                neighbor_dict.update({'caprradvertised': True})
+                neighbor_dict.update({'caprrrecvd': True})
+                continue
+
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_dict.update({'capoldrradvertised': True})
+                neighbor_dict.update({'capoldrrrecvd': True})
+                continue
+
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_dict.update({'capas4advertised': True})
+                neighbor_dict.update({'capas4recvd': True})
+                continue
+
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                af = group.pop('af_name').lower()
+                af_dict = neighbor_dict.setdefault('af',{}).setdefault(af,{})
+                if group.get('af_advertised') and group.get('af_advertised').strip() == 'advertised':
+                    af_dict.update({'af_advertised':True})
+                else:
+                    af_dict.update({'af_advertised': False})
+                if group.get('af_recvd') and  group.get('af_recvd').strip() == 'received':
+                    af_dict.update({'af_recvd':True})
+                else:
+                    af_dict.update({'af_recvd': False})
+
+                af_dict.update({'af_name':af})
+                continue
+
+
+            m = p20.match(line)
+            if m:
+                neighbor_dict.update({'capgradvertised':True})
+                neighbor_dict.update({'capgrrecvd':True})
+                continue
+
+            m = p20_1.match(line)
+            if m:
+                gr_flag = True
+                continue
+
+            m = p21.match(line)
+            if m:
+                gr_adv_flag = True
+                continue
+
+            m = p22.match(line)
+            if m:
+                if gr_flag:
+                    group = m.groupdict()
+                    gr_dict = neighbor_dict.setdefault('graf', {})
+                    gr_af_name_list = group.pop('gr_af_name').split("  ")
+                    for gr_af in gr_af_name_list:
+                        gr_af_name  = gr_af.lower()
+                        graf_dict = gr_dict.setdefault(gr_af_name,{})
+                        graf_dict.update({'gr_af_name':gr_af_name})
+                        if gr_adv_flag:
+                            graf_dict.update({'gr_adv': True})
+                        if gr_recv_flag:
+                            graf_dict.update({'gr_recv': True})
+                        if gr_fwd_flag:
+                            graf_dict.update({'gr_fwd': True})
+                if recieve_flag:
+                    group = m.groupdict()
+                    capextendednh_af_name = group.pop('gr_af_name').lower()
+                    cap_dict = neighbor_dict.setdefault('capextendednhaf',{}).setdefault(capextendednh_af_name,{})
+                    cap_dict.update({'capextendednh_af_name': capextendednh_af_name})
+
+                recieve_flag = gr_recv_flag = gr_adv_flag = gr_fwd_flag = False
+                continue
+
+            m = p23.match(line)
+            if m:
+
+                gr_recv_flag = True
+                continue
+
+            m = p24_1.match(line)
+            if m:
+                gr_fwd_flag = True
+                continue
+
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_dict.update({'grrestarttime': int(group.pop('grrestarttime'))})
+                continue
+
+            m = p26.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_dict.update({'grstaletiem': int(group.pop('grstaletiem'))})
+                continue
+
+            m = p27.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_dict.update({'grrecvdrestarttime': int(group.pop('grrecvdrestarttime'))})
+                continue
+
+            m = p28.match(line)
+            if m:
+                group = m.groupdict()
+                capextendednhadvertised = group.pop('capextendednhadvertised')
+                capextendednhrecvd = group.pop('capextendednhrecvd')
+                if capextendednhadvertised == 'advertised':
+                    neighbor_dict.update({'capextendednhadvertised': True})
+                if capextendednhrecvd == 'received':
+                    neighbor_dict.update({'capextendednhrecvd': True})
+                continue
+
+            m = p29.match(line)
+            if m:
+                gr_recv_flag = gr_adv_flag = gr_fwd_flag = False
+                recieve_flag = True
+                continue
+
+            m3 = ""
+            if p31.match(line):  m3 =  p31.match(line)
+            if p32.match(line):  m3 =  p32.match(line)
+            if p33.match(line):  m3 =  p33.match(line)
+            if p34.match(line):  m3 =  p34.match(line)
+            if p35.match(line) : m3 =  p35.match(line)
+            if p36.match(line) : m3 =  p36.match(line)
+
+            if p38.match(line) : m3 =  p38.match(line)
+
+
+            if m3:
+                group = m3.groupdict()
+                neighbor_dict.update({k:int(v) for k,v in group.items()})
+                continue
+
+            m = p40.match(line)
+            if m:
+                group = m.groupdict()
+                per_af_name = group.pop('per_af_name').lower()
+                peraf_dict = neighbor_dict.setdefault('peraf',{}).setdefault(per_af_name,{})
+                peraf_dict.update({'per_af_name': per_af_name})
+                continue
+
+            m = p41.match(line)
+            if m:
+                group = m.groupdict()
+                peraf_dict.update({k:int(v) for k,v in group.items()})
+                continue
+
+            m = p42.match(line)
+            if m:
+                group = m.groupdict()
+                peraf_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            m = p43.match(line)
+            if m:
+                peraf_dict.update({'sendcommunity': True})
+                continue
+
+            m = p44.match(line)
+            if m:
+                peraf_dict.update({'sendextcommunity': True})
+                continue
+
+
+            m = p49.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_dict.update({'localaddr': group.pop('localaddr')})
+                neighbor_dict.update({'localport': int(group.pop('localport'))})
+                continue
+            m = p50.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_dict.update({'remoteaddr':group.pop('remoteaddr')})
+                neighbor_dict.update({'remoteport':int(group.pop('remoteport'))})
+                continue
+
+            m = p51.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_dict.update({'fd':int(group.pop('fd'))})
+                continue
+        return result_dict
+
