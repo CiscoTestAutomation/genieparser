@@ -509,10 +509,10 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
             m = p21.match(line)
             if m:
                 group = m.groupdict()
-                nve_dict.update({'multisite_bgw_if': group.pop('intf')})
-                nve_dict.update({'multisite_bgw_if_ip': group.pop('ip')})
-                nve_dict.update({'multisite_bgw_if_admin_state': group.pop('admin').lower()})
-                nve_dict.update({'multisite_bgw_if_oper_state': group.pop('oper').lower()})
+                nve_dict.update({'multisite_bgw_if': group.pop('multisite_bgw_if')})
+                nve_dict.update({'multisite_bgw_if_ip': group.pop('multisite_bgw_if_ip')})
+                nve_dict.update({'multisite_bgw_if_admin_state': group.pop('multisite_bgw_if_admin_state').lower()})
+                nve_dict.update({'multisite_bgw_if_oper_state': group.pop('multisite_bgw_if_oper_state').lower()})
                 continue
 
             # Multisite bgw-if oper down reason: NVE not up.
