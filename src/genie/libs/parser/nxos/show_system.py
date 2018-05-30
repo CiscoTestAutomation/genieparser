@@ -2,6 +2,7 @@
 
 NXOS parsers for the following show commands:
     * 'show system internal sysmgr service name <WORD>'
+    * 'show system internal l2fwder Mac'
 """
 
 # Python

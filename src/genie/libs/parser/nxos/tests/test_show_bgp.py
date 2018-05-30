@@ -34,7 +34,8 @@ from genie.libs.parser.nxos.show_bgp import ShowBgpProcessVrfAll,\
                                  ShowBgpSessions, ShowBgpLabels, \
                                  ShowBgpL2vpnEvpnSummary,\
                                  ShowBgpL2vpnEvpnRouteType,\
-                                 ShowBgpL2vpnEvpnNeighbors
+                                 ShowBgpL2vpnEvpnNeighbors,\
+                                 ShowBgpL2vpnEvpnWord
 
 
 # =========================================
@@ -25842,118 +25843,6 @@ class test_show_bgp_labels_xml(unittest.TestCase):
         parsed_output = obj.parse(address_family='ipv4 unicast', vrf='all')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
-# ===========================================
-#  Unit test for 'show bgp l2vpn evpn <WORD>'
-# ===========================================
-
-class test_show_bgp_l2vpn_evpn(unittest.TestCase):
-
-    '''Unit test for 'show bgp l2vpn evpn <WORD>'''
-
-    device = Device(name='aDevice')
-    empty_output = {'execute.return_value': ''}
-
-    golden_parsed_output = {}
-
-    golden_output = {'execute.return_value': '''
-        N95_1# show bgp l2vpn evpn fa16.3e59.d0b2 
-        BGP routing table information for VRF default, address family L2VPN EVPN
-        Route Distinguisher: 91.1.1.0:32867    (L2VNI 8100)
-        BGP routing table entry for [2]:[0]:[0]:[48]:[fa16.3e59.d0b2]:[0]:[0.0.0.0]/216, version 478
-        Paths: (1 available, best #1)
-        Flags: (0x000212) on xmit-list, is in l2rib/evpn, is not in HW
-
-          Advertised path-id 1
-          Path type: internal, path is valid, is best path, in rib
-                     Imported from 93.1.1.0:32867:[2]:[0]:[0]:[48]:[fa16.3e59.d0b2]:[0]:[0.0.0.0]/216 
-          AS-Path: NONE, path sourced internal to AS
-            93.1.1.1 (metric 80) from 90.1.1.0 (90.1.1.0)
-              Origin IGP, MED 4294967295, localpref 100, weight 0
-              Received label 8100
-              Extcommunity: RT:100:8100 ENCAP:8
-              Originator: 93.1.1.0 Cluster list: 90.1.1.0 
-
-          Path-id 1 not advertised to any peer
-        BGP routing table entry for [2]:[0]:[0]:[48]:[fa16.3e59.d0b2]:[32]:[100.100.11.101]/272, version 17
-        Paths: (1 available, best #1)
-        Flags: (0x000212) on xmit-list, is in l2rib/evpn, is not in HW
-
-          Advertised path-id 1
-          Path type: internal, path is valid, is best path, in rib
-                     Imported from 93.1.1.0:32867:[2]:[0]:[0]:[48]:[fa16.3e59.d0b2]:[32]:[100.100.11.101]/272 
-          AS-Path: NONE, path sourced internal to AS
-            93.1.1.1 (metric 80) from 90.1.1.0 (90.1.1.0)
-              Origin IGP, MED 4294967295, localpref 100, weight 0
-              Received label 8100 9100
-              Extcommunity: RT:100:8100 RT:100:9100 ENCAP:8 Router MAC:5e01.8002.0007
-              Originator: 93.1.1.0 Cluster list: 90.1.1.0 
-
-          Path-id 1 not advertised to any peer
-
-        Route Distinguisher: 93.1.1.0:32867
-        BGP routing table entry for [2]:[0]:[0]:[48]:[fa16.3e59.d0b2]:[0]:[0.0.0.0]/216, version 477
-        Paths: (1 available, best #1)
-        Flags: (0x000202) on xmit-list, is not in l2rib/evpn, is not in HW
-
-          Advertised path-id 1
-          Path type: internal, path is valid, is best path
-                     Imported to 1 destination(s)
-          AS-Path: NONE, path sourced internal to AS
-            93.1.1.1 (metric 80) from 90.1.1.0 (90.1.1.0)
-              Origin IGP, MED 4294967295, localpref 100, weight 0
-              Received label 8100
-              Extcommunity: RT:100:8100 ENCAP:8
-              Originator: 93.1.1.0 Cluster list: 90.1.1.0 
-
-          Path-id 1 not advertised to any peer
-        BGP routing table entry for [2]:[0]:[0]:[48]:[fa16.3e59.d0b2]:[32]:[100.100.11.101]/272, version 14
-        Paths: (1 available, best #1)
-        Flags: (0x000202) on xmit-list, is not in l2rib/evpn, is not in HW
-
-          Advertised path-id 1
-          Path type: internal, path is valid, is best path
-                     Imported to 3 destination(s)
-          AS-Path: NONE, path sourced internal to AS
-            93.1.1.1 (metric 80) from 90.1.1.0 (90.1.1.0)
-              Origin IGP, MED 4294967295, localpref 100, weight 0
-              Received label 8100 9100
-              Extcommunity: RT:100:8100 RT:100:9100 ENCAP:8 Router MAC:5e01.8002.0007
-              Originator: 93.1.1.0 Cluster list: 90.1.1.0 
-
-          Path-id 1 not advertised to any peer
-
-        Route Distinguisher: 91.1.1.0:3    (L3VNI 9100)
-        BGP routing table entry for [2]:[0]:[0]:[48]:[fa16.3e59.d0b2]:[32]:[100.100.11.101]/272, version 18
-        Paths: (1 available, best #1)
-        Flags: (0x000202) on xmit-list, is not in l2rib/evpn, is not in HW
-
-          Advertised path-id 1
-          Path type: internal, path is valid, is best path
-                     Imported from 93.1.1.0:32867:[2]:[0]:[0]:[48]:[fa16.3e59.d0b2]:[32]:[100.100.11.101]/272 
-          AS-Path: NONE, path sourced internal to AS
-            93.1.1.1 (metric 80) from 90.1.1.0 (90.1.1.0)
-              Origin IGP, MED 4294967295, localpref 100, weight 0
-              Received label 8100 9100
-              Extcommunity: RT:100:8100 RT:100:9100 ENCAP:8 Router MAC:5e01.8002.0007
-              Originator: 93.1.1.0 Cluster list: 90.1.1.0 
-
-          Path-id 1 not advertised to any peer
-        '''}
-
-    def test_golden_output(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output)
-        obj = ShowBgpL2vpnEvpn(device=self.device)
-        parsed_output = obj.parse(ip='')
-        self.assertEqual(parsed_output, self.golden_parsed_output)
-
-    def test_empty(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowBgpL2vpnEvpn(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(ip='')
-
-
 # ==============================================================
 #  Unit test for 'show bgp l2vpn evpn summary'
 # ==============================================================
@@ -26865,6 +26754,2779 @@ BGP neighbor is 191.13.1.8, remote AS 200, ebgp link, Peer index 3
         obj = ShowBgpL2vpnEvpnNeighbors(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+
+# =============================================================
+#  show bgp l2vpn evpn <WORD> | be "best path, in rib" n <WORD>
+# =============================================================
+class test_show_bgp_l2vpn_evpn_word(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    golden_output = {'execute.return_value': '''
+        CH-P2-TOR-1# sh bgp l2vpn evpn 0000.04b1.0000 | be "best path, in rib"   n 10
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[0]:[0.0.0.0]/216 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001
+              Extcommunity: RT:2:2001001 ENCAP:8 MAC Mobility Sequence:00:19
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.2]/272, version 6768199
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.2]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.3]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.4]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.5]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.6]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.7]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.8]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.9]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.10]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.11]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.12]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.13]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.14]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.15]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.16]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.17]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.18]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.19]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.20]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.21]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.22]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.23]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.24]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.25]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.26]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.27]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.28]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.29]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.30]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.31]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.32]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.33]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.34]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.35]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.36]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.37]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.38]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.39]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.40]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.41]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.42]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.43]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.44]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.45]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.46]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.47]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.48]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.49]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.50]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.51]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.52]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.53]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.54]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.55]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.56]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.57]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.58]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.59]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.60]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.61]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.62]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.63]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.64]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.65]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.66]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.67]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.68]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.69]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.70]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.71]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.72]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.73]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.74]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.75]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.76]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.77]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.78]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.79]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.80]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.81]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.82]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.83]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.84]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.85]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.86]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.87]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.88]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.89]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.90]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.91]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.92]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.93]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.94]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.95]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.96]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.97]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.98]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.99]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.100]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer
+        --
+          Path type: internal, path is valid, is best path, in rib
+                     Imported from 2.0.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[4.32.102.101]/272 
+          AS-Path: NONE, path sourced internal to AS
+            3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
+                  Router MAC:00de.fbdc.5f87
+              Originator: 2.0.0.101 Cluster list: 2.0.0.66 
+
+          Path-id 1 not advertised to any peer     
+    '''}
+
+    golden_parsed_output = {'mac_address':
+                                {'0000.04b1.0000':
+                                    {'next_hop': '3.0.0.101',
+                                     'received_label': '2001001'}
+                                }
+                            }
+
+    golden_output_1 = {'execute.return_value': '''
+        CH-P2-TOR-1# sh bgp l2vpn evpn 0000.0191.0000 | grep -b 8  -a 10  "best path" 
+        BGP routing table information for VRF default, address family L2VPN EVPN
+        Route Distinguisher: 2.0.0.1:33768    (L2VNI 2001001)
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[0]:[0.0.0.0]/216, version 6956047
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001
+              Extcommunity: RT:2:2001001 ENCAP:8 MAC Mobility Sequence:00:1
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.2]/272, version 6956019
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.3]/272, version 6958257
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.4]/272, version 6958259
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.5]/272, version 6958261
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.6]/272, version 6958263
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.7]/272, version 6958265
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.8]/272, version 6958267
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.9]/272, version 6958269
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.10]/272, version 6958271
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.11]/272, version 6958273
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.12]/272, version 6958275
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.13]/272, version 6958277
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.14]/272, version 6958279
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.15]/272, version 6958281
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.16]/272, version 6958283
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.17]/272, version 6958285
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.18]/272, version 6958287
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.19]/272, version 6958289
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.20]/272, version 6958291
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.21]/272, version 6958293
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.22]/272, version 6958295
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.23]/272, version 6958297
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.24]/272, version 6958299
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.25]/272, version 6958301
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.26]/272, version 6958866
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.27]/272, version 6958303
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.28]/272, version 6958305
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.29]/272, version 6958307
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.30]/272, version 6958309
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.31]/272, version 6958311
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.32]/272, version 6958313
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.33]/272, version 6958315
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.34]/272, version 6958317
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.35]/272, version 6958319
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.36]/272, version 6958321
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.37]/272, version 6958323
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.38]/272, version 6958325
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.39]/272, version 6958327
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.40]/272, version 6958329
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.41]/272, version 6958331
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.42]/272, version 6958333
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.43]/272, version 6958335
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.44]/272, version 6958337
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.45]/272, version 6958339
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.46]/272, version 6958341
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.47]/272, version 6958343
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.48]/272, version 6958345
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.49]/272, version 6958868
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.50]/272, version 6958347
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.51]/272, version 6958349
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.52]/272, version 6958351
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.53]/272, version 6958353
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.54]/272, version 6958355
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.55]/272, version 6958357
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.56]/272, version 6958359
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.57]/272, version 6958690
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.58]/272, version 6958692
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.59]/272, version 6958694
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.60]/272, version 6958696
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.61]/272, version 6958698
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.62]/272, version 6958700
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.63]/272, version 6958702
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.64]/272, version 6958704
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.65]/272, version 6958706
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.66]/272, version 6958708
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.67]/272, version 6958710
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.68]/272, version 6958712
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.69]/272, version 6958714
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.70]/272, version 6958716
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.71]/272, version 6958718
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.72]/272, version 6958870
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.73]/272, version 6958720
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.74]/272, version 6958722
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.75]/272, version 6958724
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.76]/272, version 6958726
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.77]/272, version 6958728
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.78]/272, version 6958730
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.79]/272, version 6958732
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.80]/272, version 6958734
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.81]/272, version 6958736
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.82]/272, version 6958738
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.83]/272, version 6958740
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.84]/272, version 6958742
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.85]/272, version 6958744
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.86]/272, version 6958746
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.87]/272, version 6958748
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.88]/272, version 6958750
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.89]/272, version 6958752
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.90]/272, version 6958754
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.91]/272, version 6958756
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.92]/272, version 6958758
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.93]/272, version 6958872
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.94]/272, version 6958760
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.95]/272, version 6958762
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.96]/272, version 6958764
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.97]/272, version 6958766
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.98]/272, version 6958768
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.99]/272, version 6958770
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.100]/272, version 6958772
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[4.32.101.101]/272, version 6958864
+        Paths: (1 available, best #1)
+        Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
+
+          Advertised path-id 1
+          Path type: local, path is valid, is best path
+          AS-Path: NONE, path locally originated
+            2.0.0.1 (metric 0) from 0.0.0.0 (2.0.0.1)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Received label 2001001 3003802
+              Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
+                  Router MAC:00f2.8b7a.f8ff
+
+          Path-id 1 advertised to peers:
+            2.0.0.66       
+    '''}
+
+    golden_parsed_output_1 = {'mac_address':
+                                {'0000.0191.0000':
+                                    {'received_label': '2001001',
+                                     'next_hop': '2.0.0.1'}}}
+
+    def test_show_l2route_evpn_word(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpL2vpnEvpnWord(device=self.device)
+        parsed_output = obj.parse(mac='0000.04b1.0000', count1='10')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_l2route_evpn_word_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowBgpL2vpnEvpnWord(device=self.device)
+        parsed_output = obj.parse(mac='0000.0191.0000', count1='8', count2='10')
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_empty_output(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpL2vpnEvpnWord(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(mac='0000.04b1.0000', count1='10')
 
 if __name__ == '__main__':
     unittest.main()

@@ -44,6 +44,7 @@ NXOS parsers for the following show commands:
     * 'show bgp <address_family>  labels | xml'
     * 'show bgp l2vpn evpn summary'
     * 'show bgp l2vpn evpn route-type <route-type>'
+    * 'show bgp l2vpn evpn <WORD> | be "best path, in rib" n <WORD>'
 
 """
 
@@ -10648,3 +10649,68 @@ class ShowBgpL2vpnEvpnNeighbors(ShowBgpL2vpnEvpnNeighborsSchema):
                 neighbor_dict.update({'fd':int(group.pop('fd'))})
                 continue
         return result_dict
+
+# ==========================================================================
+#  schema for 'show bgp l2vpn evpn <WORD> | be "best path, in rib" n <WORD>'
+# ==========================================================================
+class ShowBgpL2vpnEvpnWordSchema(MetaParser):
+    """Schema for show bgp l2vpn evpn <WORD> | be "best path, in rib" n <WORD>"""
+
+    schema = {'mac_address':
+                {Any():
+                    {'next_hop': str,
+                     'received_label': str}
+                },
+            }
+
+# =============================================================
+#  show bgp l2vpn evpn <WORD> | be "best path, in rib" n <WORD>
+# =============================================================
+class ShowBgpL2vpnEvpnWord(ShowBgpL2vpnEvpnWordSchema):
+    """Parser for show bgp l2vpn evpn <WORD> | be "best path, in rib" n <WORD>"""
+    """Parser for show bgp l2vpn evpn <WORD> | grep -b <WORD> -a <WORD> "best path"""
+
+    def cli(self, mac, count1, count2=None):
+
+        if count2:
+            cmd = 'show bgp l2vpn evpn {k} | grep -b {n} -a {l} "best path"'.format(
+                k=mac, n=count1, l=count2)
+        else:
+            cmd = 'show bgp l2vpn evpn {k} | be "best path, in rib" n {l}'.format(
+                k=mac, l=count1)
+
+        out = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # 3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+            p1 = re.compile(r'^(?P<next_hop>[0-9\.]+) +\(metric +(?P<metric>[0-9]+)\).*$')
+            m = p1.match(line)
+            if m:
+                if 'mac_address' not in ret_dict:
+                    ret_dict['mac_address'] = {}
+                if mac not in ret_dict['mac_address']:
+                    ret_dict['mac_address'][mac] = {}
+
+                ret_dict['mac_address'][mac]['next_hop'] = \
+                    str(m.groupdict()['next_hop'])
+                continue
+
+            # Received label 2001001
+            p2 = re.compile(r'^Received label +(?P<received_label>[0-9]+).*$')
+            m = p2.match(line)
+            if m:
+
+                if 'mac_address' not in ret_dict:
+                    ret_dict['mac_address'] = {}
+                if mac not in ret_dict['mac_address']:
+                    ret_dict['mac_address'][mac] = {}
+
+                ret_dict['mac_address'][mac]['received_label'] = \
+                    str(m.groupdict()['received_label'])
+                continue
+
+        return ret_dict

@@ -1,7 +1,12 @@
 """show_vlan.py
 
-Example parser class
-
+NXOS parsers for the following show commands:
+    * show vlan
+    * show vlan id 1-3967 vn-segment
+    * show vlan internal info
+    * show vlan filter
+    * show vlan access-map
+    * show vxlan
 """
 import re
 
