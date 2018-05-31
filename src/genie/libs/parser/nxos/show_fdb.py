@@ -30,6 +30,7 @@ class ShowMacAddressTableVniSchema(MetaParser):
                      'secure': str,
                      'ntfy': str,
                      'next_hop': str,
+                     'ports': str,
                     }
                 },
             }
@@ -54,6 +55,7 @@ class ShowMacAddressTableVni(ShowMacAddressTableVniSchema):
             line = line.strip()
 
             # C 1001     0000.04b1.0000   dynamic  0         F      F    nve1(3.0.0.101)
+            # * 1001     0000.0191.0000   dynamic  0         F      F    Eth1/11
             p1 = re.compile(r'^\s*(?P<entry>[A-Z\*\(\+\)]+) +(?P<evi>[0-9]+) '
                 '+(?P<mac_address>[0-9a-z\.]+) +(?P<mac_type>[a-z]+) '
                 '+(?P<age>[0-9\-\:]+) +(?P<secure>[A-Z]+) +(?P<ntfy>[A-Z]+) '
@@ -82,6 +84,8 @@ class ShowMacAddressTableVni(ShowMacAddressTableVniSchema):
                     str(m.groupdict()['ntfy'])
                 ret_dict['mac_address'][mac_address]['next_hop'] = \
                     str(m.groupdict()['next_hop'])
+                ret_dict['mac_address'][mac_address]['ports'] = \
+                    str(m.groupdict()['ports'])
 
                 continue
 

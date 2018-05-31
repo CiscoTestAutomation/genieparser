@@ -20,6 +20,7 @@ class test_show_mac_address_table_vni(unittest.TestCase):
                                  'mac_type': 'dynamic',
                                  'next_hop': '3.0.0.101',
                                  'ntfy': 'F',
+                                 'ports': 'None',
                                  'secure': 'F'}
                               }
                             }
@@ -38,6 +39,7 @@ class test_show_mac_address_table_vni(unittest.TestCase):
                                      'mac_type': 'dynamic',
                                      'next_hop': 'None',
                                      'ntfy': 'F',
+                                     'ports': 'Eth1/11',
                                      'secure': 'F'},
                                 '00f1.0000.0000':
                                     {'entry': '*',
@@ -46,6 +48,7 @@ class test_show_mac_address_table_vni(unittest.TestCase):
                                      'mac_type': 'dynamic',
                                      'next_hop': 'None',
                                      'ntfy': 'F',
+                                     'ports': 'Eth1/11',
                                      'secure': 'F'},
                                 '00f5.0000.0000':
                                     {'entry': '*',
@@ -54,6 +57,7 @@ class test_show_mac_address_table_vni(unittest.TestCase):
                                      'mac_type': 'dynamic',
                                      'next_hop': 'None',
                                      'ntfy': 'F',
+                                     'ports': 'Eth1/11',
                                      'secure': 'F'}
                                 }
                             }
@@ -93,4 +97,3 @@ class test_show_mac_address_table_vni(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
