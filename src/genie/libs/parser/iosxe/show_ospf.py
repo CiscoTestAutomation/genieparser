@@ -41,8 +41,8 @@ class ShowIpOspfSchema(MetaParser):
                         {'instance': 
                             {Any(): 
                                 {'router_id': str,
-                                 Optional('enable'): bool,
-                                'nsr': 
+                                Optional('enable'): bool,
+                                'nsr':
                                     {'enable': bool},
                                 'bfd': 
                                     {'enable': bool,
@@ -100,10 +100,10 @@ class ShowIpOspfSchema(MetaParser):
                                             'hold': int,
                                             'maximum': int},
                                         'lsa': 
-                                            {'start': int,
-                                            'hold': int,
-                                            'maximum': int,
-                                            'arrival': int},
+                                            {Optional('start'): int,
+                                            Optional('hold'): int,
+                                            Optional('maximum'): int,
+                                            Optional('arrival'): int},
                                         },
                                     },
                                 Optional('auto_cost'): 
@@ -239,7 +239,7 @@ class ShowIpOspf(ShowIpOspfSchema):
                 sub_dict = ret_dict['vrf'][vrf]['address_family'][af]\
                             ['instance'][instance]
                 sub_dict['router_id'] = router_id
-
+                sub_dict['enable'] = True
                 # Set some default values
                 if 'nsr' not in sub_dict:
                     sub_dict['nsr'] = {}
@@ -613,6 +613,8 @@ class ShowIpOspf(ShowIpOspfSchema):
                               ' +(?P<arrival>(\S+)) +msecs$')
             m = p21.match(line)
             if m:
+                if 'lsa' not in sub_dict['spf_control']['throttle']:
+                    sub_dict['spf_control']['throttle']['lsa'] = {}
                 sub_dict['spf_control']['throttle']['lsa']['arrival'] = \
                     int(float(m.groupdict()['arrival']))
                 continue

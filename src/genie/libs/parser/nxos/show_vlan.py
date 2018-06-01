@@ -1,7 +1,12 @@
 """show_vlan.py
 
-Example parser class
-
+NXOS parsers for the following show commands:
+    * show vlan
+    * show vlan id 1-3967 vn-segment
+    * show vlan internal info
+    * show vlan filter
+    * show vlan access-map
+    * show vxlan
 """
 import re
 
@@ -607,3 +612,47 @@ class ShowVlanAccessMap(ShowVlanAccessMapSchema):
                 continue
 
         return access_map_dict
+
+# ====================================================================
+# Schema for 'show vxlan'
+# ====================================================================
+class ShowVxlanSchema(MetaParser):    
+    """Schema for show vxlan"""
+
+    schema = {'vlan':
+                {Any():
+                    {'vni': str}
+                },
+            }
+
+# ====================================================================
+# Parser for 'show vxlan'
+# ====================================================================
+class ShowVxlan(ShowVxlanSchema):
+    """Parser for show vxlan"""
+
+    def cli(self):
+        cmd = 'show vxlan'
+        out = self.device.execute(cmd)
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # 100             8100
+            p1 = re.compile(r'^\s*(?P<vlan>[0-9]+) +(?P<vn_segment>[0-9]+)$')
+            m = p1.match(line)
+            if m:
+
+                vlan = str(m.groupdict()['vlan'])
+                vn_segment = str(m.groupdict()['vn_segment'])
+
+                if 'vlan' not in ret_dict:
+                    ret_dict['vlan'] = {}
+
+                ret_dict['vlan'][vlan] = {}
+                ret_dict['vlan'][vlan]['vni'] = vn_segment
+
+                continue
+
+        return ret_dict
