@@ -6,6 +6,7 @@ NXOS parsers for the following show commands:
     * show ip interface vrf all
     * show ipv6 interface detail vrf all
     * show interface switchport
+    * show running-config interface <word>
 """
 
 # python
@@ -2588,6 +2589,199 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
                     m.groupdict()['status']
                 interface_dict['interface']['loopback'][interface]['description'] = \
                     m.groupdict()['description']
+                continue
+
+        return interface_dict
+
+# =================================================
+# Schema for 'show running-config interface <WORD>'
+# =================================================
+class ShowRunningConfigInterfaceSchema(MetaParser):
+    """Schema for show running-config interface <WORD>"""
+
+    schema = {'interface':
+                {Any():
+                    {Optional('shutdown'): bool,
+                     Optional('host_reachability_protocol'): str,
+                     Optional('source_interface'): str,
+                     Optional('member_vni'):
+                        {Any():
+                            {Optional('associate_vrf'): bool,
+                             Optional('mcast_group'): str,
+                             Optional('suppress_arp'): bool,
+                            }
+                        },
+                    }
+                },
+            }
+
+# =================================================
+# Parser for 'show running-config interface <WORD>'
+# =================================================
+class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
+    """Parser for show running-config interface <WORD>"""
+
+    def cli(self, intf):
+        cmd = 'show running-config interface {}'.format(intf)
+        out = self.device.execute(cmd)
+
+        # Init vars
+        interface_dict = {}
+
+        for line in out.splitlines():
+            line = line.rstrip()
+
+            # interface nve1
+            p1 = re.compile(r'^\s*interface +(?P<intf_name>[a-zA-Z0-9\-]+)$')
+            m = p1.match(line)
+            if m:
+
+                interface = str(m.groupdict()['intf_name'])
+
+                if 'interface' not in interface_dict:
+                    interface_dict['interface'] = {}
+
+                interface_dict['interface'][interface] = {}
+
+                continue
+
+            # no shutdown
+            p2 = re.compile(r'^\s*no shutdown$')
+            m = p2.match(line)
+            if m:
+
+                interface_dict['interface'][interface]['shutdown'] = False
+
+                continue
+
+            # host-reachability protocol bgp
+            p3 = re.compile(r'^\s*host-reachability protocol +(?P<protocol>[a-zA-Z]+)$')
+            m = p3.match(line)
+            if m:
+
+                interface_dict['interface'][interface]['host_reachability_protocol'] = \
+                    str(m.groupdict()['protocol'])
+
+                continue
+
+            # source-interface loopback1
+            p4 = re.compile(r'^\s*source-interface +(?P<src_intf>[a-zA-Z0-9\-]+)$')
+            m = p4.match(line)
+            if m:
+
+                interface_dict['interface'][interface]['source_interface'] = \
+                    str(m.groupdict()['src_intf'])
+
+                continue
+
+            # member vni 8100
+            # member vni 9100 associate-vrf
+            # member vni 2001201-2001300
+            p5 = re.compile(r'^\s*member vni +(?P<vni>[0-9\-]+)( +(?P<associate_vrf>[a-zA-Z\-]+))?$')
+            m = p5.match(line)
+            if m:
+
+                if 'member_vni' not in interface_dict['interface'][interface]:
+                    interface_dict['interface'][interface]['member_vni'] = {}
+
+                vni = str(m.groupdict()['vni'])
+
+                if '-' in vni:
+                    vni_range = re.findall(r'(?P<first_vni>[0-9]+)\-(?P<last_vni>[0-9]+)?$', vni)
+                    members = range(int(vni_range[0][0]), int(vni_range[0][1])+1)
+                else:
+                    members = [vni]
+
+                for memb in members:
+                    interface_dict['interface'][interface]['member_vni'][str(memb)] = {}
+
+                    if m.groupdict()['associate_vrf']:
+                        interface_dict['interface'][interface]['member_vni'][str(memb)]['associate_vrf'] = \
+                            True
+
+                continue
+
+            # mcast-group 225.0.1.25
+            p6 = re.compile(r'^\s*mcast-group +(?P<ip>[0-9\.]+)$')
+            m = p6.match(line)
+            if m:
+
+                for memb in members:
+                    interface_dict['interface'][interface]['member_vni'][str(memb)]['mcast_group'] = \
+                        str(m.groupdict()['ip'])
+
+                continue
+
+            # suppress-arp
+            p7 = re.compile(r'^\s*suppress-arp$')
+            m = p7.match(line)
+            if m:
+
+                for memb in members:
+                    interface_dict['interface'][interface]['member_vni'][str(memb)]['suppress_arp'] = \
+                        True
+
+                continue
+
+        return interface_dict
+
+# =====================================================================
+# Schema for 'show nve interface <WORD> detail | grep Source-Interface'
+# =====================================================================
+class ShowNveInterfaceSchema(MetaParser):
+    """Schema for show nve interface <WORD> detail | grep Source-Interface"""
+
+    schema = {'interface':
+                {Any():
+                    {Optional('source_interface'):
+                        {Any():
+                            {Optional('primary'): str,
+                             Optional('secondary'): str,
+                            }
+                        },
+                    }
+                },
+            }
+
+# =====================================================================
+# Parser for 'show nve interface <WORD> detail | grep Source-Interface'
+# =====================================================================
+class ShowNveInterface(ShowNveInterfaceSchema):
+    """Parser for show nve interface <WORD> detail | grep Source-Interface"""
+
+    def cli(self, intf):
+        cmd = 'show nve interface {} detail | grep Source-Interface'.format(intf)
+        out = self.device.execute(cmd)
+
+        # Init vars
+        interface_dict = {}
+
+        for line in out.splitlines():
+            line = line.rstrip()
+
+            # Source-Interface: loopback0 (primary: 2.0.0.1, secondary: 0.0.0.0)
+            p1 = re.compile(r'^\s*Source-Interface: +(?P<src_intf>[a-zA-Z0-9\-]+)'
+                ' +\(primary: +(?P<primary>[a-zA-Z0-9\.]+)\, +secondary:'
+                ' +(?P<secondary>[a-zA-Z0-9\.]+)\)$')
+            m = p1.match(line)
+            if m:
+
+                src_intf = str(m.groupdict()['src_intf'])
+
+                if 'interface' not in interface_dict:
+                    interface_dict['interface'] = {}
+                if intf not in interface_dict['interface']:
+                    interface_dict['interface'][intf] = {}
+                if 'source_interface' not in interface_dict['interface'][intf]:
+                    interface_dict['interface'][intf]['source_interface'] = {}
+                if src_intf not in interface_dict['interface'][intf]['source_interface']:
+                    interface_dict['interface'][intf]['source_interface'][src_intf] = {}
+
+                interface_dict['interface'][intf]['source_interface'][src_intf]['primary'] = \
+                    str(m.groupdict()['primary'])
+                interface_dict['interface'][intf]['source_interface'][src_intf]['secondary'] = \
+                    str(m.groupdict()['secondary'])
+
                 continue
 
         return interface_dict

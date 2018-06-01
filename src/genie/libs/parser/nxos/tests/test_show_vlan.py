@@ -9,7 +9,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 from genie.libs.parser.nxos.show_vlan import ShowVlan, ShowVlanOld, ShowVlanIdVnSegment, \
                                              ShowVlanInternalInfo, \
                                              ShowVlanFilter, \
-                                             ShowVlanAccessMap\
+                                             ShowVlanAccessMap, \
+                                             ShowVxlan
 
 # =========================================
 #  show vlan
@@ -465,6 +466,72 @@ Vlan access-map ed 10
         vlan_obj = ShowVlanAccessMap(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = vlan_obj.parse()
+
+class test_show_vxlan(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+      'vlan':
+        {'100': {'vni': '8100'},
+         '1000': {'vni': '9100'},
+         '1005': {'vni': '9105'},
+         '1006': {'vni': '9106'},
+         '1007': {'vni': '9107'},
+         '1008': {'vni': '9108'},
+         '1009': {'vni': '9109'},
+         '101': {'vni': '8101'},
+         '103': {'vni': '8103'},
+         '105': {'vni': '8105'},
+         '106': {'vni': '8106'},
+         '107': {'vni': '8107'},
+         '108': {'vni': '8108'},
+         '109': {'vni': '8109'},
+         '110': {'vni': '8110'},
+         '111': {'vni': '8111'},
+         '112': {'vni': '8112'},
+         '113': {'vni': '8113'},
+         '114': {'vni': '8114'}
+        }
+      }
+
+    golden_output = {'execute.return_value': '''
+        N95_1# show vxlan 
+        Vlan            VN-Segment
+        ====            ==========
+        100             8100
+        101             8101
+        103             8103
+        105             8105
+        106             8106
+        107             8107
+        108             8108
+        109             8109
+        110             8110
+        111             8111
+        112             8112
+        113             8113
+        114             8114
+        1000            9100
+        1005            9105
+        1006            9106
+        1007            9107
+        1008            9108
+        1009            9109
+    '''}
+
+    def test_show_vxlan_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowVxlan(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_show_vxlan_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowVxlan(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
 
 if __name__ == '__main__':
     unittest.main()
