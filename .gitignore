@@ -1,0 +1,56 @@
+# Python compiled files
+*.pyc
+*.pyo
+__pycache__/
+*.log
+
+# Cython files
+*.c
+*.so
+
+# Developer files
+.project
+.pydevproject
+
+# Pycharm files
+.idea
+
+# Rope files
+.ropeproject
+
+# Swap files (VI)
+*.sw*
+
+# backup files
+*.bak
+
+# rope project files
+*.ropeproject
+
+# temp files
+*~
+
+# build folder
+__build__/
+build/
+
+# Artifacts caused by "make develop"
+*.egg-info
+
+# coverage.py artifacts
+htmlcov/
+.coverage*
+
+# filesystem stuff on Mac
+.DS_Store
+
+# unicon log file
+uni.log
+
+# Extra files placed by cisco_shared into examples
+*dyntopo/src/dyntopo/laas/examples/dyntopo_laas
+*dyntopo/src/dyntopo/xrut/examples/dyntopo_xrut
+
+# Files resulting from a git meld merge
+*.orig
+
