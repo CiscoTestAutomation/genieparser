@@ -13,7 +13,7 @@ from genie.libs.parser.iosxr.show_interface import ShowInterfacesDetail, \
                                         ShowIpv4VrfAllInterface, \
                                         ShowIpv6VrfAllInterface, \
                                         ShowEthernetTags, \
-                                        ShowInterfaceAccounting
+                                        ShowInterfacesAccounting
 
 #############################################################################
 # unitest For Show Interfaces Detail
@@ -1182,10 +1182,10 @@ class test_show_ethernet_tags(unittest.TestCase):
 
 
 #############################################################################
-# unitest For show interface <interface> accounting
+# unitest For show interfaces <interface> accounting
 #############################################################################
 
-class test_show_interface_accounting(unittest.TestCase):
+class test_show_interfaces_accounting(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -1266,13 +1266,13 @@ No accounting statistics available for MgmtEth0/RP0/CPU0/0
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowInterfaceAccounting(device=self.device)
+        obj = ShowInterfacesAccounting(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
-        obj = ShowInterfaceAccounting(device=self.device)
+        obj = ShowInterfacesAccounting(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
         

@@ -2221,7 +2221,7 @@ class ShowEthernetTags(ShowEthernetTagsSchema):
         return ret_dict
 
 
-class ShowInterfaceAccountingSchema(MetaParser):
+class ShowInterfacesAccountingSchema(MetaParser):
     """Schema for show interface accounting"""
     schema = {
                 Any(): {
@@ -2237,23 +2237,17 @@ class ShowInterfaceAccountingSchema(MetaParser):
             }
 
 
-class ShowInterfaceAccounting(ShowInterfaceAccountingSchema):
+class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
     """Parser for:
-        show interface accounting
-        show interface <interface> accounting
+        show interfaces accounting
+        show interfaces <interface> accounting
     """
 
     def cli(self, interface=None):
-        """parsing mechanism: cli
-
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: exe
-        cuting, transforming, returning
-        """
         if interface:
-            cmd = 'show interface {interface} accounting'.format(interface=interface)
+            cmd = 'show interfaces {interface} accounting'.format(interface=interface)
         else:
-            cmd = 'show interface accounting'
+            cmd = 'show interfaces accounting'
 
         # get output from device
         out = self.device.execute(cmd)
