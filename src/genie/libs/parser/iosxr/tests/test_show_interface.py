@@ -11,7 +11,9 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
 from genie.libs.parser.iosxr.show_interface import ShowInterfacesDetail, \
                                         ShowVlanInterface, \
                                         ShowIpv4VrfAllInterface, \
-                                        ShowIpv6VrfAllInterface, ShowEthernetTags
+                                        ShowIpv6VrfAllInterface, \
+                                        ShowEthernetTags, \
+                                        ShowInterfaceAccounting
 
 #############################################################################
 # unitest For Show Interfaces Detail
@@ -1175,6 +1177,102 @@ class test_show_ethernet_tags(unittest.TestCase):
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         obj = ShowEthernetTags(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+#############################################################################
+# unitest For show interface <interface> accounting
+#############################################################################
+
+class test_show_interface_accounting(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = \
+        {
+          "GigabitEthernet0/0/0/0": {
+            "accounting": {
+              "arp": {
+                "chars_in": 378,
+                "chars_out": 378,
+                "pkts_in": 9,
+                "pkts_out": 9
+              },
+              "ipv4_multicast": {
+                "chars_in": 0,
+                "chars_out": 843700,
+                "pkts_in": 0,
+                "pkts_out": 10514
+              },
+              "ipv4_unicast": {
+                "chars_in": 1226852,
+                "chars_out": 887519,
+                "pkts_in": 19254,
+                "pkts_out": 13117
+              }
+            }
+          },
+          "GigabitEthernet0/0/0/1": {
+            "accounting": {
+              "arp": {
+                "chars_in": 378,
+                "chars_out": 378,
+                "pkts_in": 9,
+                "pkts_out": 9
+              },
+              "ipv4_multicast": {
+                "chars_in": 0,
+                "chars_out": 844816,
+                "pkts_in": 0,
+                "pkts_out": 10530
+              },
+              "ipv4_unicast": {
+                "chars_in": 843784,
+                "chars_out": 1764,
+                "pkts_in": 10539,
+                "pkts_out": 26
+              }
+            }
+          }
+        }
+
+
+
+    golden_output = {'execute.return_value': '''
+Tue Jun  5 20:45:11.544 UTC
+No accounting statistics available for Loopback0
+No accounting statistics available for Loopback1
+No accounting statistics available for Null0
+GigabitEthernet0/0/0/0
+  Protocol              Pkts In         Chars In     Pkts Out        Chars Out
+  IPV4_UNICAST            19254          1226852        13117           887519
+  IPV4_MULTICAST              0                0        10514           843700
+  ARP                         9              378            9              378
+
+GigabitEthernet0/0/0/1
+  Protocol              Pkts In         Chars In     Pkts Out        Chars Out
+  IPV4_UNICAST            10539           843784           26             1764
+  IPV4_MULTICAST              0                0        10530           844816
+  ARP                         9              378            9              378
+
+
+
+No accounting statistics available for MgmtEth0/RP0/CPU0/0
+
+
+
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowInterfaceAccounting(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowInterfaceAccounting(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
         

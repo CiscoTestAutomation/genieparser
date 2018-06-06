@@ -2219,3 +2219,82 @@ class ShowEthernetTags(ShowEthernetTagsSchema):
                     ret_dict[interface]['rewrite_num_of_tags_push'] = int(rewrite_num_of_tags_push)
 
         return ret_dict
+
+
+class ShowInterfaceAccountingSchema(MetaParser):
+    """Schema for show interface accounting"""
+    schema = {
+                Any(): {
+                    'accounting': {
+                        Any(): {
+                            'pkts_in': int,
+                            'pkts_out': int,
+                            'chars_in': int,
+                            'chars_out': int,
+                        }
+                    }
+                }
+            }
+
+
+class ShowInterfaceAccounting(ShowInterfaceAccountingSchema):
+    """Parser for:
+        show interface accounting
+        show interface <interface> accounting
+    """
+
+    def cli(self, interface=None):
+        """parsing mechanism: cli
+
+        Function cli() defines the cli type output parsing mechanism which
+        typically contains 3 steps: exe
+        cuting, transforming, returning
+        """
+        if interface:
+            cmd = 'show interface {interface} accounting'.format(interface=interface)
+        else:
+            cmd = 'show interface accounting'
+
+        # get output from device
+        out = self.device.execute(cmd)
+        # initial return disctionary
+        ret_dict = {}
+
+        # initial variable
+        intf = ''
+
+        # initial regexp pattern
+        p1 = re.compile(r'^\s*(?P<interface>[a-zA-Z]+(\d+\/)+\d+)')
+        p2 = re.compile(r'^\s*(?P<protocol>\S+)\s+(?P<pkts_in>\d+)\s+'
+                         '(?P<chars_in>\d+)\s+(?P<pkts_out>\d+)\s+'
+                         '(?P<chars_out>\d+)')
+        for line in out.splitlines():
+            if line:
+                line = line.rstrip()
+            else:
+                continue
+
+            # GigabitEthernet0/0/0/0
+            m = p1.match(line)
+            if m:
+                intf = m.groupdict()['interface']
+                ret_dict.setdefault(intf, {})
+                continue
+
+            #   IPV4_UNICAST             9943           797492           50             3568
+            m = p2.match(line)
+            if m:
+                protocol = m.groupdict()['protocol'].lower()
+                ret_dict.setdefault(intf, {}).\
+                    setdefault('accounting', {}).setdefault(protocol, {})
+                ret_dict[intf]['accounting'][protocol]['pkts_in'] = \
+                    int(m.groupdict()['pkts_in'])
+                ret_dict[intf]['accounting'][protocol]['chars_in'] = \
+                    int(m.groupdict()['chars_in'])
+                ret_dict[intf]['accounting'][protocol]['pkts_out'] = \
+                    int(m.groupdict()['pkts_out'])
+                ret_dict[intf]['accounting'][protocol]['chars_out'] = \
+                    int(m.groupdict()['chars_out'])
+                continue
+
+        return ret_dict
