@@ -16,7 +16,6 @@ import logging
 import pprint
 import re
 import unittest
-import copy
 from genie import parsergen
 from collections import defaultdict
 
@@ -2675,9 +2674,9 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
         show interfaces <interface> accounting
     """
 
-    def cli(self, interface=None):
-        if interface:
-            cmd = 'show interface {interface} accounting'.format(interface=interface)
+    def cli(self, intf=None):
+        if intf:
+            cmd = 'show interface {intf} accounting'.format(intf=intf)
         else:
             cmd = 'show interface accounting'
 
@@ -2704,7 +2703,6 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
             m = p1.match(line)
             if m:
                 intf = m.groupdict()['interface']
-                ret_dict.setdefault(intf, {})
                 continue
 
             #   IPV4_UNICAST             9943           797492           50             3568
@@ -2723,10 +2721,4 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
                     int(m.groupdict()['chars_out'])
                 continue
 
-        # delete empty keys
-        ret_dict2 = copy.deepcopy(ret_dict)
-        for key in ret_dict.keys():
-            if not ret_dict[key]:
-                del ret_dict2[key]
-
-        return ret_dict2
+        return ret_dict

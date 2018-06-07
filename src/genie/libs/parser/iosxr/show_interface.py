@@ -2272,7 +2272,6 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
             m = p1.match(line)
             if m:
                 intf = m.groupdict()['interface']
-                ret_dict.setdefault(intf, {})
                 continue
 
             #   IPV4_UNICAST             9943           797492           50             3568
