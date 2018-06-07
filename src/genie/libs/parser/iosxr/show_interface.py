@@ -2243,9 +2243,9 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
         show interfaces <interface> accounting
     """
 
-    def cli(self, interface=None):
-        if interface:
-            cmd = 'show interfaces {interface} accounting'.format(interface=interface)
+    def cli(self, intf=None):
+        if intf:
+            cmd = 'show interfaces {intf} accounting'.format(intf=intf)
         else:
             cmd = 'show interfaces accounting'
 
