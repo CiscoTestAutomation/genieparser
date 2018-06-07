@@ -2277,17 +2277,12 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
             #   IPV4_UNICAST             9943           797492           50             3568
             m = p2.match(line)
             if m:
-                protocol = m.groupdict()['protocol'].lower()
+                protocol_dict = m.groupdict()
+                protocol = protocol_dict.pop('protocol').lower()
                 ret_dict.setdefault(intf, {}).\
                     setdefault('accounting', {}).setdefault(protocol, {})
-                ret_dict[intf]['accounting'][protocol]['pkts_in'] = \
-                    int(m.groupdict()['pkts_in'])
-                ret_dict[intf]['accounting'][protocol]['chars_in'] = \
-                    int(m.groupdict()['chars_in'])
-                ret_dict[intf]['accounting'][protocol]['pkts_out'] = \
-                    int(m.groupdict()['pkts_out'])
-                ret_dict[intf]['accounting'][protocol]['chars_out'] = \
-                    int(m.groupdict()['chars_out'])
+                ret_dict[intf]['accounting'][protocol].update({k: int(v) \
+                    for k, v in protocol_dict.items()})
                 continue
 
         return ret_dict
