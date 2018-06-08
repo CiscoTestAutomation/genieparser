@@ -1,7 +1,17 @@
-"""show_interface.py
+"""
+    show_interface.py
+    IOSXR parsers for the following show commands:
 
-Example parser class
-
+    * show ip interface brief
+    * show ip interface brief | include Vlan
+    * show interface switchport
+    * show interface brief
+    * show interface detail
+    * show vlan interface
+    * show vrf all detail
+    * show ipv4 vrf all interface
+    * show ipv6 vrf all interface
+    * show interfaces accounting
 """
 
 # python
@@ -480,16 +490,6 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
         return interface_dict
         
 ################################################################################
-
-# show_interface.py
-
-#IOSXR parsers for the following show commands:
-# show interface detail
-# show vlan interface
-# show vrf all detail
-# show ipv4 vrf all interface
-# show ipv6 vrf all interface
-
 
 #############################################################################
 # Parser For Show Interfaces detail
@@ -2220,6 +2220,10 @@ class ShowEthernetTags(ShowEthernetTagsSchema):
 
         return ret_dict
 
+
+#############################################################################
+# Parser For show interfaces accounting
+#############################################################################
 
 class ShowInterfacesAccountingSchema(MetaParser):
     """Schema for show interface accounting"""

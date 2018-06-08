@@ -9,6 +9,7 @@
     * show ip interface
     * show ipv6 interface
     * show etherchannel summary
+    * show interfaces accounting
 """
 
 import os
