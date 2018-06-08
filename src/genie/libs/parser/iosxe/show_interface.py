@@ -2677,9 +2677,9 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
 
     def cli(self, intf=None):
         if intf:
-            cmd = 'show interface {intf} accounting'.format(intf=intf)
+            cmd = 'show interfaces {intf} accounting'.format(intf=intf)
         else:
-            cmd = 'show interface accounting'
+            cmd = 'show interfaces accounting'
 
         # get output from device
         out = self.device.execute(cmd)
