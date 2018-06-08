@@ -2258,9 +2258,6 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
         # initial return disctionary
         ret_dict = {}
 
-        # initial variable
-        intf = ''
-
         # initial regexp pattern
         p1 = re.compile(r'^\s*(?P<interface>[a-zA-Z]+(\d+\/)+\d+)')
         p2 = re.compile(r'^\s*(?P<protocol>\S+)\s+(?P<pkts_in>\d+)\s+'
