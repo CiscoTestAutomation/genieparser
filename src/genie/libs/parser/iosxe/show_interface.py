@@ -2708,9 +2708,9 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
             if m:
                 protocol_dict = m.groupdict()
                 protocol = protocol_dict.pop('protocol').lower()
-                ret_dict.setdefault(intf, {}).\
+                acc_dict = ret_dict.setdefault(intf, {}).\
                     setdefault('accounting', {}).setdefault(protocol, {})
-                ret_dict[intf]['accounting'][protocol].update({k: int(v) \
+                acc_dict.update({k: int(v) \
                     for k, v in protocol_dict.items()})
                 continue
 
