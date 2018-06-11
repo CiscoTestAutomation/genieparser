@@ -9,6 +9,7 @@
     * show ip interface
     * show ipv6 interface
     * show etherchannel summary
+    * show interfaces accounting
 """
 
 import os
@@ -2651,3 +2652,66 @@ class ShowInterfacesCounters(ShowInterfacesCountersSchema):
                 continue
         return ret_dict
 
+
+class ShowInterfacesAccountingSchema(MetaParser):
+    """Schema for show interfaces accounting"""
+    schema = {
+                Any(): {
+                    'accounting': {
+                        Any(): {
+                            'pkts_in': int,
+                            'pkts_out': int,
+                            'chars_in': int,
+                            'chars_out': int,
+                        }
+                    }
+                }
+            }
+
+
+class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
+    """Parser for:
+        show interfaces accounting
+        show interfaces <interface> accounting
+    """
+
+    def cli(self, intf=None):
+        if intf:
+            cmd = 'show interfaces {intf} accounting'.format(intf=intf)
+        else:
+            cmd = 'show interfaces accounting'
+
+        # get output from device
+        out = self.device.execute(cmd)
+        # initial return disctionary
+        ret_dict = {}
+
+        # initial regexp pattern
+        p1 = re.compile(r'^\s*(?P<interface>[a-zA-Z\-\d\/]+)\s?$')
+        p2 = re.compile(r'^\s*(?P<protocol>\S+)\s+(?P<pkts_in>\d+)\s+'
+                         '(?P<chars_in>\d+)\s+(?P<pkts_out>\d+)\s+'
+                         '(?P<chars_out>\d+)')
+        for line in out.splitlines():
+            if line:
+                line = line.rstrip()
+            else:
+                continue
+
+            # GigabitEthernet0/0/0/0
+            m = p1.match(line)
+            if m:
+                intf = m.groupdict()['interface']
+                continue
+
+            #   IPV4_UNICAST             9943           797492           50             3568
+            m = p2.match(line)
+            if m:
+                protocol_dict = m.groupdict()
+                protocol = protocol_dict.pop('protocol').lower()
+                acc_dict = ret_dict.setdefault(intf, {}).\
+                    setdefault('accounting', {}).setdefault(protocol, {})
+                acc_dict.update({k: int(v) \
+                    for k, v in protocol_dict.items()})
+                continue
+
+        return ret_dict

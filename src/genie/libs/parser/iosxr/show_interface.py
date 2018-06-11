@@ -1,7 +1,17 @@
-"""show_interface.py
+"""
+    show_interface.py
+    IOSXR parsers for the following show commands:
 
-Example parser class
-
+    * show ip interface brief
+    * show ip interface brief | include Vlan
+    * show interface switchport
+    * show interface brief
+    * show interface detail
+    * show vlan interface
+    * show vrf all detail
+    * show ipv4 vrf all interface
+    * show ipv6 vrf all interface
+    * show interfaces accounting
 """
 
 # python
@@ -480,16 +490,6 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
         return interface_dict
         
 ################################################################################
-
-# show_interface.py
-
-#IOSXR parsers for the following show commands:
-# show interface detail
-# show vlan interface
-# show vrf all detail
-# show ipv4 vrf all interface
-# show ipv6 vrf all interface
-
 
 #############################################################################
 # Parser For Show Interfaces detail
@@ -2217,5 +2217,73 @@ class ShowEthernetTags(ShowEthernetTagsSchema):
 
                 if rewrite_num_of_tags_push and rewrite_num_of_tags_push is not '-':
                     ret_dict[interface]['rewrite_num_of_tags_push'] = int(rewrite_num_of_tags_push)
+
+        return ret_dict
+
+
+#############################################################################
+# Parser For show interfaces accounting
+#############################################################################
+
+class ShowInterfacesAccountingSchema(MetaParser):
+    """Schema for show interface accounting"""
+    schema = {
+                Any(): {
+                    'accounting': {
+                        Any(): {
+                            'pkts_in': int,
+                            'pkts_out': int,
+                            'chars_in': int,
+                            'chars_out': int,
+                        }
+                    }
+                }
+            }
+
+
+class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
+    """Parser for:
+        show interfaces accounting
+        show interfaces <interface> accounting
+    """
+
+    def cli(self, intf=None):
+        if intf:
+            cmd = 'show interfaces {intf} accounting'.format(intf=intf)
+        else:
+            cmd = 'show interfaces accounting'
+
+        # get output from device
+        out = self.device.execute(cmd)
+        # initial return disctionary
+        ret_dict = {}
+
+        # initial regexp pattern
+        p1 = re.compile(r'^\s*(?P<interface>[a-zA-Z]+(\d+\/)+\d+)')
+        p2 = re.compile(r'^\s*(?P<protocol>\S+)\s+(?P<pkts_in>\d+)\s+'
+                         '(?P<chars_in>\d+)\s+(?P<pkts_out>\d+)\s+'
+                         '(?P<chars_out>\d+)')
+        for line in out.splitlines():
+            if line:
+                line = line.rstrip()
+            else:
+                continue
+
+            # GigabitEthernet0/0/0/0
+            m = p1.match(line)
+            if m:
+                intf = m.groupdict()['interface']
+                continue
+
+            #   IPV4_UNICAST             9943           797492           50             3568
+            m = p2.match(line)
+            if m:
+                protocol_dict = m.groupdict()
+                protocol = protocol_dict.pop('protocol').lower()
+                ret_dict.setdefault(intf, {}).\
+                    setdefault('accounting', {}).setdefault(protocol, {})
+                ret_dict[intf]['accounting'][protocol].update({k: int(v) \
+                    for k, v in protocol_dict.items()})
+                continue
 
         return ret_dict
