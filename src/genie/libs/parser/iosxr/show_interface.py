@@ -37,15 +37,10 @@ class ShowIpInterfaceBriefSchema(MetaParser):
     """Schema for show ip interface brief"""
     schema = {'interface':
                 {Any():
-                    {Optional('vlan_id'):
-                        {Optional(Any()):
-                                {'ip_address': str,
-                                 'interface_status': str,
-                                 Optional('ipaddress_extension'): str}
-                        },
-                    Optional('ip_address'): str,
+                    {Optional('ip_address'): str,
                     Optional('interface_status'): str,
-                    Optional('ipaddress_extension'): str}
+                    Optional('protocol_status'): str,
+                    Optional('vrf_name'): str}
                 },
             }
 
@@ -59,65 +54,45 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
 
-    def __init__ (self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.cmd = 'show ip interface brief'.format()
-
-    def cli(self):
-        """parsing mechanism: cli
+    def cli(self, ip=''):
+        ''' parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: exe
         cuting, transforming, returning
-        """
+        '''
 
-        out = self.device.execute(self.cmd)
+        cmd = 'show ip interface brief' if not ip else \
+              'show ip interface brief | include {}'.format(ip)
+
+        out = self.device.execute(cmd)
+
+        # Loopback500                    200.0.0.1       Up              Up       default
+        p = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.\-]+) '
+            '+(?P<ip_address>[a-z0-9\.]+) +(?P<interface_status>[a-zA-Z]+) '
+            '+(?P<protocol_status>[a-zA-Z]+) +(?P<vrf_name>[A-Za-z0-9]+)$')
+
         interface_dict = {}
         for line in out.splitlines():
             line = line.rstrip()
-            p1 = re.compile(r'^\s*Interface +IP Address +Interface Status$')
-            m = p1.match(line)
-            if m:
-                continue
 
-            p2 = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.\-]+) +(?P<ip_address>[a-z0-9\.]+) +(?P<interface_status>[a-z\-\/]+)$')
-            m = p2.match(line)
+            m = p.match(line)
             if m:
                 interface = m.groupdict()['interface']
                 if 'interface' not in interface_dict:
                     interface_dict['interface'] = {}
                 if interface not in interface_dict['interface']:
                     interface_dict['interface'][interface] = {}
-                if 'Vlan' in interface:
-                    vlan_id = str(int(re.search(r'\d+', interface).group()))
-                    if 'vlan_id' not in interface_dict['interface'][interface]:
-                        interface_dict['interface'][interface]['vlan_id'] = {}
-                    if vlan_id not in interface_dict['interface'][interface]['vlan_id']:
-                        interface_dict['interface'][interface]['vlan_id'][vlan_id] = {}
-                    interface_dict['interface'][interface]['vlan_id'][vlan_id]['ip_address'] = \
-                        m.groupdict()['ip_address']
-                    interface_dict['interface'][interface]['vlan_id'][vlan_id]['interface_status'] = \
-                        m.groupdict()['interface_status']
-                else:
-                    interface_dict['interface'][interface]['ip_address'] = \
-                        m.groupdict()['ip_address']
-                    interface_dict['interface'][interface]['interface_status'] = \
-                        m.groupdict()['interface_status']
-                continue
 
-            p3 = re.compile(r'^\s*(?P<ipaddress_extension>\([a-z0-9]+\))$')
-            m = p3.match(line)
-            if m:
-                ipaddress_extension = m.groupdict()['ipaddress_extension']
-                if 'Vlan' in interface:
-                    new_ip_address = interface_dict['interface']\
-                        [interface]['vlan_id'][vlan_id]['ip_address'] + ipaddress_extension
-                    interface_dict['interface'][interface]['vlan_id'][vlan_id]['ip_address'] = \
-                        new_ip_address
-                else:
-                    new_ip_address = interface_dict['interface']\
-                        [interface]['ip_address'] + ipaddress_extension
-                    interface_dict['interface'][interface]['ip_address'] = new_ip_address
+                interface_dict['interface'][interface]['ip_address'] = \
+                    m.groupdict()['ip_address']
+                interface_dict['interface'][interface]['interface_status'] = \
+                    m.groupdict()['interface_status']
+                interface_dict['interface'][interface]['protocol_status'] = \
+                    m.groupdict()['protocol_status']
+                interface_dict['interface'][interface]['vrf_name'] = \
+                    m.groupdict()['vrf_name']
+
                 continue
 
         return interface_dict
@@ -170,7 +145,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
     # parsing mechanisms (cli(), yang(), xml()).
 
     def cli(self):
-        ''' parser for show ip interface brief
+        ''' parser for show interface switchport
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: exe

@@ -28,7 +28,8 @@ from genie.libs.parser.iosxe.show_interface import ShowInterfacesSwitchport,\
                                         ShowEtherchannelSummary, \
                                         ShowInterfacesTrunk, \
                                         ShowInterfacesCounters, \
-                                        ShowInterfacesAccounting
+                                        ShowInterfacesAccounting, \
+                                        ShowIpInterfaceBriefPipeIp
 
 
 class test_show_interface_parsergen(unittest.TestCase):
@@ -90,6 +91,36 @@ class test_show_interface_parsergen(unittest.TestCase):
         args, kwargs = device1.execute.call_args
         self.assertTrue('show ip interface brief' in args,
             msg='The expected command was not sent to the router')
+
+#############################################################################
+# unitest For Show Interfaces switchport
+#############################################################################
+class test_show_ip_interfaces_brief_pipe_ip(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    golden_parsed_output = {'interface':
+        {'GigabitEthernet0/0': {'interface_ok': 'YES',
+                                      'interface_status': 'up',
+                                      'ip_address': '10.1.18.80',
+                                      'method': 'manual',
+                                      'protocol_status': 'up'}}}
+
+    golden_output = {'execute.return_value': '''
+        R1#sh ip int brief | i 10.1.18.80 
+        GigabitEthernet0/0     10.1.18.80      YES manual up                    up   
+    '''}
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpInterfaceBriefPipeIp(device=self.device)
+        parsed_output = obj.parse(ip='10.1.18.80')
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowIpInterfaceBriefPipeIp(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(ip='10.1.18.80')
 
 # Comment out due to old version of yang, will enhance it
 # class test_show_interface_brief_pipe_vlan_yang(unittest.TestCase):

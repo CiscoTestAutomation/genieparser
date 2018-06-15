@@ -984,6 +984,67 @@ class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBrief):
         super(ShowIpInterfaceBriefPipeVlan, self).yang_cli()
 
 
+class ShowIpInterfaceBriefPipeIpSchema(MetaParser):
+    """Schema for show ip interface brief | include <WORD>"""
+    schema = {'interface':
+                {Any():
+                    {Optional('ip_address'): str,
+                    Optional('interface_ok'): str,
+                    Optional('method'): str,
+                    Optional('interface_status'): str,
+                    Optional('protocol_status'): str}
+                },
+            }
+
+
+class ShowIpInterfaceBriefPipeIp(ShowIpInterfaceBriefPipeIpSchema):
+    """Parser for:
+     show ip interface brief | include <WORD>
+     parser class implements detail parsing mechanisms for cli and yang output.
+    """
+    #*************************
+    # schema - class variable
+    #
+    # Purpose is to make sure the parser always return the output
+    # (nested dict) that has the same data structure across all supported
+    # parsing mechanisms (cli(), yang(), xml()).
+
+    def cli(self, ip):
+        out = self.device.execute('show ip interface brief | include {}'.format(ip))
+        interface_dict = {}
+
+        # GigabitEthernet0/0     10.1.18.80      YES manual up                    up
+        p = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.\-]+) '
+            '+(?P<ip_address>[a-z0-9\.]+) +(?P<interface_ok>[A-Z]+) '
+            '+(?P<method>[a-zA-Z]+) +(?P<interface_status>[a-z\s]+) '
+            '+(?P<protocol_status>[a-z]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p.match(line)
+            if m:
+                interface = m.groupdict()['interface']
+                if 'interface' not in interface_dict:
+                    interface_dict['interface'] = {}
+                if interface not in interface_dict['interface']:
+                    interface_dict['interface'][interface] = {}
+
+                interface_dict['interface'][interface]['ip_address'] = \
+                    m.groupdict()['ip_address']
+                interface_dict['interface'][interface]['interface_ok'] = \
+                    m.groupdict()['interface_ok']
+                interface_dict['interface'][interface]['method'] = \
+                    m.groupdict()['method']
+                interface_dict['interface'][interface]['interface_status'] = \
+                    m.groupdict()['interface_status'].strip()
+                interface_dict['interface'][interface]['protocol_status'] = \
+                    m.groupdict()['protocol_status']
+
+                continue
+
+        return interface_dict
+
 class ShowInterfacesSwitchportSchema(MetaParser):
     """Schema for show interfaces switchport"""
     schema = {
@@ -2708,9 +2769,9 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
             if m:
                 protocol_dict = m.groupdict()
                 protocol = protocol_dict.pop('protocol').lower()
-                acc_dict = ret_dict.setdefault(intf, {}).\
+                ret_dict.setdefault(intf, {}).\
                     setdefault('accounting', {}).setdefault(protocol, {})
-                acc_dict.update({k: int(v) \
+                ret_dict[intf]['accounting'][protocol].update({k: int(v) \
                     for k, v in protocol_dict.items()})
                 continue
 

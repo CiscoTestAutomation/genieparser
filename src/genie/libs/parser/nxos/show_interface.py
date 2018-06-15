@@ -2785,3 +2785,67 @@ class ShowNveInterface(ShowNveInterfaceSchema):
                 continue
 
         return interface_dict
+
+# ============================================
+# Schema for 'show ip interface brief vrf all'
+# ============================================
+class ShowIpInterfaceBriefVrfAllSchema(MetaParser):
+    """Schema for show ip interface brief vrf all"""
+    schema = {'interface':
+                {Any():
+                    {Optional('ip_address'): str,
+                     Optional('interface_status'): str}
+                },
+            }
+
+# ====================================
+# Parser for 'show ip interface brief'
+# ====================================
+class ShowIpInterfaceBriefVrfAll(ShowIpInterfaceBriefVrfAllSchema):
+    """Parser for show ip interface brief vrf all"""
+
+    #*************************
+    # schema - class variable
+    #
+    # Purpose is to make sure the parser always return the output
+    # (nested dict) that has the same data structure across all supported
+    # parsing mechanisms (cli(), yang(), xml()).
+
+    def cli(self, ip=''):
+        ''' parsing mechanism: cli
+
+        Function cli() defines the cli type output parsing mechanism which
+        typically contains 3 steps: exe
+        cuting, transforming, returning
+        '''
+
+        cmd = 'show ip interface brief vrf all' if not ip else \
+              'show ip interface brief vrf all | include {}'.format(ip)
+
+        out = self.device.execute(cmd)
+        interface_dict = {}
+
+        # mgmt0                10.255.5.169    protocol-up/link-up/admin-up
+        p = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.\-]+) '
+            '+(?P<ip_address>[a-z0-9\.]+) +(?P<interface_status>[a-z\-\/]+)$')
+
+        for line in out.splitlines():
+            line = line.rstrip()
+
+            m = p.match(line)
+            if m:
+                interface = m.groupdict()['interface']
+
+                if 'interface' not in interface_dict:
+                    interface_dict['interface'] = {}
+                if interface not in interface_dict['interface']:
+                    interface_dict['interface'][interface] = {}
+
+                interface_dict['interface'][interface]['ip_address'] = \
+                    str(m.groupdict()['ip_address'])
+                interface_dict['interface'][interface]['interface_status'] = \
+                    str(m.groupdict()['interface_status'])
+
+                continue
+
+        return interface_dict
