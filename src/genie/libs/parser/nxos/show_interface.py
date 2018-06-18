@@ -2798,9 +2798,9 @@ class ShowIpInterfaceBriefVrfAllSchema(MetaParser):
                 },
             }
 
-# ====================================
-# Parser for 'show ip interface brief'
-# ====================================
+# ============================================
+# Schema for 'show ip interface brief vrf all'
+# ============================================
 class ShowIpInterfaceBriefVrfAll(ShowIpInterfaceBriefVrfAllSchema):
     """Parser for show ip interface brief vrf all"""
 

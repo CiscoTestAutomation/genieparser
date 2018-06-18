@@ -79,19 +79,16 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
             m = p.match(line)
             if m:
                 interface = m.groupdict()['interface']
+                group = m.groupdict()
+                del group['interface']
+
                 if 'interface' not in interface_dict:
                     interface_dict['interface'] = {}
                 if interface not in interface_dict['interface']:
                     interface_dict['interface'][interface] = {}
 
-                interface_dict['interface'][interface]['ip_address'] = \
-                    m.groupdict()['ip_address']
-                interface_dict['interface'][interface]['interface_status'] = \
-                    m.groupdict()['interface_status']
-                interface_dict['interface'][interface]['protocol_status'] = \
-                    m.groupdict()['protocol_status']
-                interface_dict['interface'][interface]['vrf_name'] = \
-                    m.groupdict()['vrf_name']
+                interface_dict['interface'][interface].update(
+                    {k:v for k,v in group.items()})
 
                 continue
 
