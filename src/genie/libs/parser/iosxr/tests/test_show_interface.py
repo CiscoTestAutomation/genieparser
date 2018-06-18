@@ -13,7 +13,8 @@ from genie.libs.parser.iosxr.show_interface import ShowInterfacesDetail, \
                                         ShowIpv4VrfAllInterface, \
                                         ShowIpv6VrfAllInterface, \
                                         ShowEthernetTags, \
-                                        ShowInterfacesAccounting
+                                        ShowInterfacesAccounting, \
+                                        ShowIpInterfaceBrief
 
 #############################################################################
 # unitest For Show Interfaces Detail
@@ -1275,6 +1276,164 @@ No accounting statistics available for MgmtEth0/RP0/CPU0/0
         obj = ShowInterfacesAccounting(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
-        
+
+#############################################################################
+# unitest For ip interface brief
+#############################################################################
+
+class test_show_ip_interface_brief(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {'interface':
+        {'GigabitEthernet0/0/0/0': {'interface_status': 'Up',
+                                          'ip_address': 'unassigned',
+                                          'protocol_status': 'Up',
+                                          'vrf_name': 'default'},
+               'GigabitEthernet0/0/0/0.501': {'interface_status': 'Up',
+                                              'ip_address': '201.1.0.1',
+                                              'protocol_status': 'Up',
+                                              'vrf_name': 'VRF501'},
+               'GigabitEthernet0/0/0/0.502': {'interface_status': 'Up',
+                                              'ip_address': '201.2.0.1',
+                                              'protocol_status': 'Up',
+                                              'vrf_name': 'VRF502'},
+               'GigabitEthernet0/0/0/0.503': {'interface_status': 'Up',
+                                              'ip_address': '201.3.0.1',
+                                              'protocol_status': 'Up',
+                                              'vrf_name': 'VRF503'},
+               'GigabitEthernet0/0/0/0.504': {'interface_status': 'Up',
+                                              'ip_address': '201.4.0.1',
+                                              'protocol_status': 'Up',
+                                              'vrf_name': 'default'},
+               'GigabitEthernet0/0/0/0.505': {'interface_status': 'Up',
+                                              'ip_address': '201.5.0.1',
+                                              'protocol_status': 'Up',
+                                              'vrf_name': 'default'},
+               'GigabitEthernet0/0/0/0.510': {'interface_status': 'Up',
+                                              'ip_address': '201.10.0.1',
+                                              'protocol_status': 'Up',
+                                              'vrf_name': 'default'},
+               'GigabitEthernet0/0/0/0.511': {'interface_status': 'Up',
+                                              'ip_address': '201.11.0.1',
+                                              'protocol_status': 'Up',
+                                              'vrf_name': 'default'},
+               'GigabitEthernet0/0/0/1': {'interface_status': 'Up',
+                                          'ip_address': 'unassigned',
+                                          'protocol_status': 'Up',
+                                          'vrf_name': 'default'},
+               'GigabitEthernet0/0/0/1.501': {'interface_status': 'Up',
+                                              'ip_address': '203.1.0.1',
+                                              'protocol_status': 'Up',
+                                              'vrf_name': 'default'},
+               'GigabitEthernet0/0/0/2': {'interface_status': 'Up',
+                                          'ip_address': 'unassigned',
+                                          'protocol_status': 'Up',
+                                          'vrf_name': 'default'},
+               'Loopback500': {'interface_status': 'Up',
+                               'ip_address': '200.0.0.1',
+                               'protocol_status': 'Up',
+                               'vrf_name': 'default'},
+               'Loopback501': {'interface_status': 'Up',
+                               'ip_address': '200.1.0.1',
+                               'protocol_status': 'Up',
+                               'vrf_name': 'VRF501'},
+               'Loopback502': {'interface_status': 'Up',
+                               'ip_address': '200.2.0.1',
+                               'protocol_status': 'Up',
+                               'vrf_name': 'VRF502'},
+               'Loopback503': {'interface_status': 'Up',
+                               'ip_address': '200.3.0.1',
+                               'protocol_status': 'Up',
+                               'vrf_name': 'VRF503'},
+               'Loopback505': {'interface_status': 'Up',
+                               'ip_address': '200.5.0.1',
+                               'protocol_status': 'Up',
+                               'vrf_name': 'default'},
+               'Loopback506': {'interface_status': 'Up',
+                               'ip_address': '200.6.0.1',
+                               'protocol_status': 'Up',
+                               'vrf_name': 'default'},
+               'Loopback510': {'interface_status': 'Up',
+                               'ip_address': '200.10.0.1',
+                               'protocol_status': 'Up',
+                               'vrf_name': 'default'},
+               'Loopback511': {'interface_status': 'Up',
+                               'ip_address': '200.11.0.1',
+                               'protocol_status': 'Up',
+                               'vrf_name': 'default'},
+               'Loopback512': {'interface_status': 'Up',
+                               'ip_address': '200.12.0.1',
+                               'protocol_status': 'Up',
+                               'vrf_name': 'default'},
+               'Loopback513': {'interface_status': 'Up',
+                               'ip_address': '200.13.0.1',
+                               'protocol_status': 'Up',
+                               'vrf_name': 'default'},
+               'MgmtEth0/RP0/CPU0/0': {'interface_status': 'Up',
+                                       'ip_address': '10.1.17.179',
+                                       'protocol_status': 'Up',
+                                       'vrf_name': 'default'}}}
+
+    golden_output = {'execute.return_value': '''
+      RP/0/RP0/CPU0:PE1#show ip interface brief
+
+      Interface                      IP-Address      Status          Protocol Vrf-Name
+      Loopback500                    200.0.0.1       Up              Up       default 
+      Loopback501                    200.1.0.1       Up              Up       VRF501  
+      Loopback502                    200.2.0.1       Up              Up       VRF502  
+      Loopback503                    200.3.0.1       Up              Up       VRF503  
+      Loopback505                    200.5.0.1       Up              Up       default 
+      Loopback506                    200.6.0.1       Up              Up       default 
+      Loopback510                    200.10.0.1      Up              Up       default 
+      Loopback511                    200.11.0.1      Up              Up       default 
+      Loopback512                    200.12.0.1      Up              Up       default 
+      Loopback513                    200.13.0.1      Up              Up       default 
+      MgmtEth0/RP0/CPU0/0            10.1.17.179     Up              Up       default 
+      GigabitEthernet0/0/0/0         unassigned      Up              Up       default 
+      GigabitEthernet0/0/0/0.501     201.1.0.1       Up              Up       VRF501  
+      GigabitEthernet0/0/0/0.502     201.2.0.1       Up              Up       VRF502  
+      GigabitEthernet0/0/0/0.503     201.3.0.1       Up              Up       VRF503  
+      GigabitEthernet0/0/0/0.504     201.4.0.1       Up              Up       default 
+      GigabitEthernet0/0/0/0.505     201.5.0.1       Up              Up       default 
+      GigabitEthernet0/0/0/0.510     201.10.0.1      Up              Up       default 
+      GigabitEthernet0/0/0/0.511     201.11.0.1      Up              Up       default 
+      GigabitEthernet0/0/0/1         unassigned      Up              Up       default 
+      GigabitEthernet0/0/0/1.501     203.1.0.1       Up              Up       default 
+      GigabitEthernet0/0/0/2         unassigned      Up              Up       default 
+      RP/0/RP0/CPU0:PE1#show ip interface brief | i 10.1.17.179
+      MgmtEth0/RP0/CPU0/0            10.1.17.179     Up              Up       default 
+    '''}
+
+    golden_parsed_output_pipe_ip = {'interface': 
+               {'MgmtEth0/RP0/CPU0/0': {'interface_status': 'Up',
+                                       'ip_address': '10.1.17.179',
+                                       'protocol_status': 'Up',
+                                       'vrf_name': 'default'}}}
+
+    golden_output_pipe_ip = {'execute.return_value': '''
+      RP/0/RP0/CPU0:PE1#show ip interface brief | i 10.1.17.179
+      MgmtEth0/RP0/CPU0/0            10.1.17.179     Up              Up       default 
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpInterfaceBrief(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpInterfaceBrief(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output_pipe_ip)
+        obj = ShowIpInterfaceBrief(device=self.device)
+        parsed_output = obj.parse(ip='10.1.17.179')
+        self.assertEqual(parsed_output,self.golden_parsed_output_pipe_ip)
+
+
 if __name__ == '__main__':
     unittest.main()

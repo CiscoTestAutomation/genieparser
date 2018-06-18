@@ -14,7 +14,8 @@ from genie.libs.parser.nxos.show_interface import ShowInterface, ShowVrfAllInter
                                        ShowIpInterfaceBriefPipeVlan, \
                                        ShowInterfaceBrief, \
                                        ShowRunningConfigInterface, \
-                                       ShowNveInterface
+                                       ShowNveInterface, \
+                                       ShowIpInterfaceBriefVrfAll
 
 #############################################################################
 # unitest For Show Interface
@@ -2896,6 +2897,110 @@ class test_show_nve_interface(unittest.TestCase):
         obj = ShowNveInterface(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(intf='nve1')
+
+class test_show_ip_interface_brief_vrf_all(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'interface':
+            {'Eth1/1.1':
+                {'interface_status': 'protocol-up/link-up/admin-up',
+                 'ip_address': '201.0.1.1'},
+             'Eth1/1.2':
+                {'interface_status': 'protocol-up/link-up/admin-up',
+                 'ip_address': '201.1.1.1'},
+             'Eth1/1.4':
+                {'interface_status': 'protocol-up/link-up/admin-up',
+                 'ip_address': '201.4.1.1'},
+             'Eth1/2.1':
+                {'interface_status': 'protocol-up/link-up/admin-up',
+                 'ip_address': '201.0.2.1'},
+             'Eth1/2.2':
+                {'interface_status': 'protocol-up/link-up/admin-up',
+                 'ip_address': '201.1.2.1'},
+             'Eth1/2.4':
+                {'interface_status': 'protocol-up/link-up/admin-up',
+                 'ip_address': '201.4.2.1'},
+             'Lo0':
+                {'interface_status': 'protocol-up/link-up/admin-up',
+                 'ip_address': '100.1.1.1'},
+             'Lo1':
+                {'interface_status': 'protocol-up/link-up/admin-up',
+                 'ip_address': '110.1.1.1'},
+             'Vlan100':
+                {'interface_status': 'protocol-up/link-up/admin-up',
+                 'ip_address': '50.1.1.1'},
+             'Vlan101':
+                {'interface_status': 'protocol-up/link-up/admin-up',
+                 'ip_address': '50.2.1.1'},
+             'Vlan200':
+                {'interface_status': 'protocol-up/link-up/admin-up',
+                 'ip_address': '55.1.1.1'},
+             'mgmt0':
+                {'interface_status': 'protocol-up/link-up/admin-up',
+                 'ip_address': '10.255.5.169'}
+            }
+        }
+
+    golden_output = {'execute.return_value': '''\
+        N95_1# show ip interface brief vrf all 
+
+        IP Interface Status for VRF "default"(1)
+        Interface            IP Address      Interface Status
+        Vlan100              50.1.1.1        protocol-up/link-up/admin-up       
+        Vlan101              50.2.1.1        protocol-up/link-up/admin-up       
+        Lo0                  100.1.1.1       protocol-up/link-up/admin-up       
+        Eth1/1.1             201.0.1.1       protocol-up/link-up/admin-up       
+        Eth1/1.2             201.1.1.1       protocol-up/link-up/admin-up       
+        Eth1/1.4             201.4.1.1       protocol-up/link-up/admin-up       
+        Eth1/2.1             201.0.2.1       protocol-up/link-up/admin-up       
+        Eth1/2.2             201.1.2.1       protocol-up/link-up/admin-up       
+        Eth1/2.4             201.4.2.1       protocol-up/link-up/admin-up       
+
+        IP Interface Status for VRF "management"(2)
+        Interface            IP Address      Interface Status
+        mgmt0                10.255.5.169    protocol-up/link-up/admin-up       
+
+        IP Interface Status for VRF "VRF1"(3)
+        Interface            IP Address      Interface Status
+        Vlan200              55.1.1.1        protocol-up/link-up/admin-up       
+        Lo1                  110.1.1.1       protocol-up/link-up/admin-up    
+    '''
+    }
+
+    golden_parsed_output_pipe = {
+        'interface':
+            {'mgmt0':
+                {'interface_status': 'protocol-up/link-up/admin-up',
+                 'ip_address': '10.255.5.169'}
+            }
+        }
+
+    golden_output_pipe = {'execute.return_value': '''\
+        N95_1# show ip interface brief vrf all | i 10.255.5.169
+        mgmt0                10.255.5.169    protocol-up/link-up/admin-up    
+    '''
+    }
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpInterfaceBriefVrfAll(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpInterfaceBriefVrfAll(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_pipe(self):
+        self.device = Mock(**self.golden_output_pipe)
+        obj = ShowIpInterfaceBriefVrfAll(device=self.device)
+        parsed_output = obj.parse(ip='10.255.5.169')
+        self.assertEqual(parsed_output,self.golden_parsed_output_pipe)
 
 
 if __name__ == '__main__':
