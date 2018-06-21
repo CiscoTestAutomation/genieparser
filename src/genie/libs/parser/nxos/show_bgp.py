@@ -9748,7 +9748,7 @@ class ShowBgpL2vpnEvpnSummary(ShowBgpL2vpnEvpnSummarySchema):
         p7 = re.compile(
             r'^\s*(?P<neighborid>[\d\.]+) +(?P<neighborversion>[\d]+) +(?P<neighboras>[\d]+) +(?P<msgrecvd>[\d]+)'
             ' +(?P<msgsent>[\d]+) +(?P<neighbortableversion>[\d]+) +(?P<inq>[\d]+) +(?P<outq>[\d]+)'
-            ' +(?P<time>[\w\:]+) +(?P<prefixreceived>[\w\s]+)$')
+            ' +(?P<time>[\w\:]+) +(?P<prefixreceived>[\w\s\)\(]+)$')
 
         for line in out.splitlines():
             if line:
