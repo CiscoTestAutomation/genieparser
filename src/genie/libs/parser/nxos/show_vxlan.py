@@ -263,11 +263,11 @@ class ShowNveInterfaceDetailSchema(MetaParser):
     schema ={
         Any(): {
             'nve_name': str,
-            'if_state': str,
-            'encap_type': str,
-            'vpc_capability': str,
-            'local_rmac': str,
-            'host_reach_mode': str,
+            Optional('if_state'): str,
+            Optional('encap_type'): str,
+            Optional('vpc_capability'): str,
+            Optional('local_rmac'): str,
+            Optional('host_reach_mode'): str,
             Optional('source_if'): str,
             Optional('primary_ip'): str,
             Optional('secondary_ip'): str,
@@ -343,7 +343,7 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
         p23 = re.compile(r'^\s*Multisite delay\-restore time: +(?P<multisite_convergence_time>\d+) +seconds$')
         # Multi-Site delay-restore time left: 0 seconds
         p24 = re.compile(
-            r'^\s*Multisite +bgw\-if +oper +down +reason: +(?P<multisite_convergence_time_left>\d+) +seconds$')
+            r'^\s*Multi(-S|s)ite +bgw\-if +oper +down +reason: +(?P<multisite_convergence_time_left>\d+) +seconds$')
 
         for line in out.splitlines():
             if line:
