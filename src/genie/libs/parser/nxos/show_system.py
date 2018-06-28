@@ -2,6 +2,7 @@
 
 NXOS parsers for the following show commands:
     * 'show system internal sysmgr service name <WORD>'
+    * 'show system internal l2fwder Mac'
 """
 
 # Python
@@ -207,4 +208,77 @@ class ShowSystemInternalSysmgrServiceName(
                     ret_dict['instance'][inst]['tag'][tag]\
                         ['last_terminate_reason'] = last_terminate_reason
                 continue
+        return ret_dict
+
+# ====================================================================
+# Schema for 'show system internal l2fwder Mac'
+# ====================================================================
+class ShowSystemInternalL2fwderMacSchema(MetaParser):    
+    """Schema for show system internal l2fwder Mac"""
+
+    schema = {'vlans':
+                {Any():
+                    {'mac_addresses':
+                        {Any():
+                            {'mac_type': str,
+                             'mac_aging_time': str,
+                             'entry': str,
+                             'secure': str,
+                             'ntfy': str,
+                             'ports': str,
+                            }
+                        },
+                    }
+                },
+            }
+
+# ====================================================================
+# Parser for 'show system internal l2fwder Mac'
+# ====================================================================
+class ShowSystemInternalL2fwderMac(ShowSystemInternalL2fwderMacSchema):
+    """Parser for show system internal l2fwder Mac"""
+
+    def cli(self):
+        cmd = 'show system internal l2fwder Mac'
+        out = self.device.execute(cmd)
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # G  1008    5e01.8000.0007    static   -          F     F   sup-eth1(R)
+            p1 = re.compile(r'^\s*(?P<entry>[A-Z\*\(\+\)]+) +(?P<vlan>[0-9]+) '
+                '+(?P<mac_address>[0-9a-z\.]+) +(?P<mac_type>[a-z]+) '
+                '+(?P<age>[0-9\-\:]+) +(?P<secure>[A-Z]+) +(?P<ntfy>[A-Z]+) '
+                '+(?P<ports>[a-zA-Z0-9\-\(\)\s\.\/]+)$')
+            m = p1.match(line)
+            if m:
+
+                vlan = str(m.groupdict()['vlan'])
+                mac_address = str(m.groupdict()['mac_address'])
+
+                if 'vlans' not in ret_dict:
+                    ret_dict['vlans'] = {}
+                if vlan not in ret_dict['vlans']:
+                    ret_dict['vlans'][vlan] = {}
+                if 'mac_addresses' not in ret_dict['vlans'][vlan]:
+                    ret_dict['vlans'][vlan]['mac_addresses'] = {}
+
+                ret_dict['vlans'][vlan]['mac_addresses'][mac_address] = {}
+
+                ret_dict['vlans'][vlan]['mac_addresses'][mac_address]['mac_type'] = \
+                    str(m.groupdict()['mac_type'])
+                ret_dict['vlans'][vlan]['mac_addresses'][mac_address]['mac_aging_time'] = \
+                    str(m.groupdict()['age'])
+                ret_dict['vlans'][vlan]['mac_addresses'][mac_address]['entry'] = \
+                    str(m.groupdict()['entry'])
+                ret_dict['vlans'][vlan]['mac_addresses'][mac_address]['secure'] = \
+                    str(m.groupdict()['secure'])
+                ret_dict['vlans'][vlan]['mac_addresses'][mac_address]['ntfy'] = \
+                    str(m.groupdict()['ntfy'])
+                ret_dict['vlans'][vlan]['mac_addresses'][mac_address]['ports'] = \
+                    str(m.groupdict()['ports'])
+
+                continue
+
         return ret_dict

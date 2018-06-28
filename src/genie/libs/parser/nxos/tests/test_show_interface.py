@@ -12,7 +12,9 @@ from genie.libs.parser.nxos.show_interface import ShowInterface, ShowVrfAllInter
                                        ShowIpInterfaceVrfAll, \
                                        ShowIpInterfaceBrief, \
                                        ShowIpInterfaceBriefPipeVlan, \
-                                       ShowInterfaceBrief
+                                       ShowInterfaceBrief, \
+                                       ShowRunningConfigInterface, \
+                                       ShowNveInterface
 
 #############################################################################
 # unitest For Show Interface
@@ -2708,6 +2710,193 @@ Lo0           up         --
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse()
 
-            
+class test_show_run_interface(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    device1 = Device(name='bDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {'interface':
+                                {'nve1':
+                                    {'host_reachability_protocol': 'bgp',
+                                     'member_vni':
+                                        {'8100': {'mcast_group': '225.0.1.11'},
+                                         '8101': {'mcast_group': '225.0.1.12'},
+                                         '8103': {'mcast_group': '225.0.1.13'},
+                                         '8105': {'mcast_group': '225.0.1.16'},
+                                         '8106': {'mcast_group': '225.0.1.17'},
+                                         '8107': {'mcast_group': '225.0.1.18'},
+                                         '8108': {'mcast_group': '225.0.1.19'},
+                                         '8109': {'mcast_group': '225.0.1.20'},
+                                         '8110': {'mcast_group': '225.0.1.21'},
+                                         '8111': {'mcast_group': '225.0.1.22'},
+                                         '8112': {'mcast_group': '225.0.1.23'},
+                                         '8113': {'mcast_group': '225.0.1.24'},
+                                         '8114': {'mcast_group': '225.0.1.25'},
+                                         '9100': {'associate_vrf': True},
+                                         '9105': {'associate_vrf': True},
+                                         '9106': {'associate_vrf': True},
+                                         '9107': {'associate_vrf': True},
+                                         '9108': {'associate_vrf': True},
+                                         '9109': {'associate_vrf': True}
+                                        },
+                                    'shutdown': False,
+                                    'source_interface': 'loopback1'}
+                                }
+                            }
+
+    golden_output = {'execute.return_value': '''
+        N95_1# show running-config  interface nve 1
+
+        !Command: show running-config interface nve1
+        !Time: Mon May 28 16:02:43 2018
+
+        version 7.0(3)I7(1)
+
+        interface nve1
+          no shutdown
+          host-reachability protocol bgp
+          source-interface loopback1
+          member vni 8100
+            mcast-group 225.0.1.11
+          member vni 8101
+            mcast-group 225.0.1.12
+          member vni 8103
+            mcast-group 225.0.1.13
+          member vni 8105
+            mcast-group 225.0.1.16
+          member vni 8106
+            mcast-group 225.0.1.17
+          member vni 8107
+            mcast-group 225.0.1.18
+          member vni 8108
+            mcast-group 225.0.1.19
+          member vni 8109
+            mcast-group 225.0.1.20
+          member vni 8110
+            mcast-group 225.0.1.21
+          member vni 8111
+            mcast-group 225.0.1.22
+          member vni 8112
+            mcast-group 225.0.1.23
+          member vni 8113
+            mcast-group 225.0.1.24
+          member vni 8114
+            mcast-group 225.0.1.25
+          member vni 9100 associate-vrf
+          member vni 9105 associate-vrf
+          member vni 9106 associate-vrf
+          member vni 9107 associate-vrf
+          member vni 9108 associate-vrf
+          member vni 9109 associate-vrf
+
+    '''}
+
+    golden_parsed_output_1 = {
+        'interface': {
+            'nve1': {
+                'host_reachability_protocol': 'bgp',
+                'member_vni': {'2000002': {'mcast_group': '227.1.1.1',
+                                           'suppress_arp': True},
+                               '2000003': {'mcast_group': '227.1.1.1',
+                                           'suppress_arp': True},
+                               '2000004': {'mcast_group': '227.1.1.1',
+                                           'suppress_arp': True},
+                               '2000005': {'mcast_group': '227.1.1.1',
+                                           'suppress_arp': True},
+                               '2000006': {'mcast_group': '227.1.1.1',
+                                           'suppress_arp': True},
+                               '2000007': {'mcast_group': '227.1.1.1',
+                                           'suppress_arp': True},
+                               '2000008': {'mcast_group': '227.1.1.1',
+                                           'suppress_arp': True},
+                               '2000009': {'mcast_group': '227.1.1.1',
+                                           'suppress_arp': True},
+                               '2000010': {'mcast_group': '227.1.1.1',
+                                           'suppress_arp': True},
+                               '3003002': {'associate_vrf': True},
+                               '3003003': {'associate_vrf': True},
+                               '3003004': {'associate_vrf': True},
+                               '3003005': {'associate_vrf': True},
+                               '3003006': {'associate_vrf': True},
+                               '3003007': {'associate_vrf': True},
+                               '3003008': {'associate_vrf': True},
+                               '3003009': {'associate_vrf': True},
+                               '3003010': {'associate_vrf': True}},
+                'shutdown': False,
+                'source_interface': 'loopback0'}}}
+
+    golden_output_1 = {'execute.return_value': '''
+        CH-P2-TOR-1# sh run int nve 1
+
+        !Command: show running-config interface nve1
+        !Time: Wed May 30 07:34:20 2018
+
+        version 7.0(3)I7(4)
+
+        interface nve1
+          no shutdown
+          host-reachability protocol bgp
+          source-interface loopback0
+          member vni 2000002-2000010
+            suppress-arp
+            mcast-group 227.1.1.1
+          member vni 3003002-3003010 associate-vrf
+    '''}
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        intf_obj = ShowRunningConfigInterface(device=self.device)
+        parsed_output = intf_obj.parse(intf='nve1')
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_1(self):
+        self.device = Mock(**self.golden_output_1)
+        intf_obj = ShowRunningConfigInterface(device=self.device)
+        parsed_output = intf_obj.parse(intf='nve1')
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        intf_obj = ShowRunningConfigInterface(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = intf_obj.parse(intf='nve1')
+
+class test_show_nve_interface(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {'interface':
+                                {'nve1':
+                                    {'source_interface':
+                                        {'loopback0':
+                                            {'secondary': '0.0.0.0',
+                                             'primary': '2.0.0.1'}
+                                        }
+                                    }
+                                }
+                            }
+
+    golden_output = {'execute.return_value': '''\
+        CH-P2-TOR-1# sh nve interface nve 1 detail | grep Source-Interface
+         Source-Interface: loopback0 (primary: 2.0.0.1, secondary: 0.0.0.0)
+    '''
+    }
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowNveInterface(device=self.device)
+        parsed_output = obj.parse(intf='nve1')
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowNveInterface(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(intf='nve1')
+
+
 if __name__ == '__main__':
     unittest.main()

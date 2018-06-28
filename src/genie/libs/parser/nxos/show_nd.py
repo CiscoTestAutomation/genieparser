@@ -102,7 +102,7 @@ class ShowIpv6NeighborDetail(ShowIpv6NeighborDetailSchema):
                 if 'all' in vrfs:
                     vrf = 'all'
                 else:
-                    vrf = vrf.split(" ")[1]
+                    vrf = vrfs.split(" ")[1]
                 continue
 
             m = p2.match(line)

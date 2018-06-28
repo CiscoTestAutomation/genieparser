@@ -41,8 +41,8 @@ class ShowIpOspfSchema(MetaParser):
                         {'instance': 
                             {Any(): 
                                 {'router_id': str,
-                                 Optional('enable'): bool,
-                                'nsr': 
+                                Optional('enable'): bool,
+                                'nsr':
                                     {'enable': bool},
                                 'bfd': 
                                     {'enable': bool,
@@ -239,7 +239,7 @@ class ShowIpOspf(ShowIpOspfSchema):
                 sub_dict = ret_dict['vrf'][vrf]['address_family'][af]\
                             ['instance'][instance]
                 sub_dict['router_id'] = router_id
-
+                sub_dict['enable'] = True
                 # Set some default values
                 if 'nsr' not in sub_dict:
                     sub_dict['nsr'] = {}
