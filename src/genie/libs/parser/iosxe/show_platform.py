@@ -271,7 +271,7 @@ class ShowVersion(ShowVersionSchema):
             # chassis, processor_type, main_mem and rtr_type
             # cisco WS-C3650-24PD (MIPS) processor (revision H0) with 829481K/6147K bytes of memory.
             p8 = re.compile(
-                r'^\s*cisco +(?P<chassis>[a-zA-Z0-9\-]+) +\((?P<processor_type>.+)\) +processor.+ +with +(?P<main_mem>[0-9]+)[kK]\/[0-9]+[kK]')
+                r'^\s*cisco +(?P<chassis>[a-zA-Z0-9\-]+) +\((?P<processor_type>.+)\) +processor.* +with +(?P<main_mem>[0-9]+)[kK]\/[0-9]+[kK]')
             m = p8.match(line)
             if m:
                 version_dict['version']['chassis'] \
@@ -287,6 +287,8 @@ class ShowVersion(ShowVersionSchema):
                     version_dict['version']['rtr_type'] = rtr_type = 'ASR1K'
                 elif 'CSR1000V' in version_dict['version']['chassis']:
                     version_dict['version']['rtr_type'] = rtr_type = 'CSR1000V'
+                elif 'C11' in version_dict['version']['chassis']:
+                    version_dict['version']['rtr_type'] = rtr_type = 'ISR'
                 continue
 
             # chassis_sn
