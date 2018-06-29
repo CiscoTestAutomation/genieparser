@@ -270,9 +270,9 @@ class ShowVersion(ShowVersionSchema):
 
             # chassis, processor_type, main_mem and rtr_type
             # cisco WS-C3650-24PD (MIPS) processor (revision H0) with 829481K/6147K bytes of memory.
-	    # cisco CSR1000V (VXE) processor (revision VXE) with 1987991K/3075K bytes of memory.
-	    # cisco C1111-4P (1RU) processor with 1453955K/6147K bytes of memory. 
-	    p8 = re.compile(
+            # cisco CSR1000V (VXE) processor (revision VXE) with 1987991K/3075K bytes of memory.
+            # cisco C1111-4P (1RU) processor with 1453955K/6147K bytes of memory. 
+            p8 = re.compile(
                 r'^\s*cisco +(?P<chassis>[a-zA-Z0-9\-]+) +\((?P<processor_type>.+)\) +processor.* +with +(?P<main_mem>[0-9]+)[kK]\/[0-9]+[kK]')
             m = p8.match(line)
             if m:
