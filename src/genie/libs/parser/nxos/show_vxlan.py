@@ -1450,15 +1450,15 @@ class ShowRunningConfigNvOverlaySchema(MetaParser):
             Optional('multisite_convergence_time') : int,
             Optional('enabled_nv_overlay'): bool,
             Any():{
-                'nve_name':str,
-                'if_state': str,
+                Optional('nve_name'):str,
+                Optional('if_state'): str,
                 Optional('host_reachability_protocol'): str,
                 Optional('adv_vmac'): bool,
                 Optional('source_if'): str,
                 Optional('multisite_bgw_if'): str,
                 Optional('vni'):{
                     Any():{
-                        'vni': int,
+                        Optional('vni'): int,
                         Optional('associated_vrf'): bool,
                         Optional('multisite_ingress_replication'): bool,
                         Optional('mcast_group'): str
