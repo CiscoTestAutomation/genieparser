@@ -9857,7 +9857,7 @@ class ShowBgpL2vpnEvpnRouteTypeSchema(MetaParser):
                                                 Optional('locked'): bool,
                                                 'path': {
                                                     Any(): {
-                                                        'pathnr': int,
+                                                        Optional('pathnr'): int,
                                                         Optional('policyincomplete'): bool,
                                                         'pathvalid': bool,
                                                         'pathbest': bool,
@@ -9929,17 +9929,17 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
 
         p1 = re.compile(r'^\s*BGP +routing +table +information +for +VRF +(?P<vrf_name_out>[\w]+),'
                         ' +address +family +(?P<af_name>[\w\s]+)$')
-        p2 = re.compile(r'^\s*Route Distinguisher: +(?P<rd>[\w\.\:]+)( +\(ES +(?P<es>[\w\s\[\]\.]+)\))?( +\(L(2|3)VNI +(?P<rd_vniid>[\d]+)\))?$')
+        p2 = re.compile(r'^\s*Route Distinguisher: +(?P<rd>[\w\.\:]+)( +\(ES +(?P<es>[\w\s\[\]\.]+)\))?( +\((?P<rd_vrf>[\w]+)VNI +(?P<rd_vniid>[\d]+)\))?$')
         p3 = re.compile(r'^\s*BGP routing table entry for +(?P<nonipprefix>[\w\[\]\:\.\/]+), +version +(?P<prefixversion>[\d]+)$')
         p4 = re.compile(r'^\s*Paths: +\((?P<totalpaths>[\d]+) +available, +best +#(?P<bestpathnr>[\d]+)\)$')
         p5 = re.compile(r'^\s*Flags: (?P<flag_xmit>[\S\s]+) +on +xmit-list(, +(?P<flags_attr>[\w\s\/\,]+))?$')
         p6 = re.compile(r'^\s*Multipath: +(?P<multipath>[\w]+)$')
         p7 = re.compile(r'^\s*Advertised path-id +(?P<path_id>[\d]+)$')
-        p8 = re.compile(r'^\s*Path type: +(?P<path_type>[\w\s\(\)]+), +(?P<pathtypes>[\w\s\,]+)?$')
-        p9 = re.compile(r'^\s*AS-Path: +(?P<as_path>[\w]+)(, +path locally originated)?(, +path sourced internal to AS)?$')
+        p8 = re.compile(r'^\s*Path type: +(?P<path_type>[\w\s\(\)]+), +(?P<pathtypes>[\S\s\,\:\/]+)?$')
+        p9 = re.compile(r'^\s*AS-Path: +(?P<as_path>[\w]+)(, +path locally originated)?(, +path sourced +(?P<internal_external>[\w]+) to AS)?$')
         p10 = re.compile(r'^\s*(?P<ipnexthop>[\d\.]+) +\(metric +(?P<nexthopmetric>[\d]+)\) +from +(?P<neighbor>[\d\.]+)'
                          ' +\((?P<neighborid>[\d\.]+)\)$')
-        p11 = re.compile(r'^\s*Origin +(?P<origin>[\w]+), +(MED not set,)? +localpref +(?P<localpref>[\d]+),'
+        p11 = re.compile(r'^\s*Origin +(?P<origin>[\w]+), +(MED +(?P<med>[\w\s]+),)? +localpref +(?P<localpref>[\d]+),'
                          ' +weight +(?P<weight>[\d]+)$')
         p12 = re.compile(r'^\s*Extcommunity: +(?P<extcommunity>[\w\s\:\.]+)$')
         p13 = re.compile(r'^\s*Originator: +(?P<originatorid>[\d\.]+) +Cluster list: +(?P<clusterlist>[\d\.]+)$')
@@ -9971,7 +9971,7 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
                 rd_dict = af_dict.setdefault('rd',{}).setdefault(rd,{})
                 rd_dict.update({'rd':rd})
                 if group.get('rd_vniid'):
-                    rd_dict.update({'rd_vrf': 'l2'})
+                    rd_dict.update({'rd_vrf': group.pop('rd_vrf').lower()})
                     rd_dict.update({'rd_vniid': int(group.pop('rd_vniid'))})
                 continue
 
@@ -9982,6 +9982,7 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
                 prefix_dict = rd_dict.setdefault('prefix',{}).setdefault(nonipprefix,{})
                 prefix_dict.update({'nonipprefix': nonipprefix})
                 prefix_dict.update({'prefixversion': int(group.pop('prefixversion'))})
+                index = 0
                 continue
 
             m = p4.match(line)
@@ -10005,15 +10006,16 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
 
             m = p7.match(line)
             if m:
-                index = 1
                 group = m.groupdict()
-                path_dict = prefix_dict.setdefault('path',{}).setdefault(index,{})
-                path_dict.update({'pathnr':int(group.pop('path_id'))})
+                path_temp_dict = prefix_dict.setdefault('path',{})
                 continue
 
             m = p8.match(line)
             if m:
-                index = 1
+                index += 1
+                path_temp_dict = prefix_dict.setdefault('path', {})
+                path_dict = path_temp_dict.setdefault(index, {})
+                path_dict.update({'pathnr': index-1})
                 group = m.groupdict()
                 pathtypes = group.get('pathtypes')
                 if 'path is valid' in pathtypes:

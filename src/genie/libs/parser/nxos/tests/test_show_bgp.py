@@ -26057,6 +26057,7 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
+
     golden_parsed_output = {
         'instance': {
             'default': {
@@ -26076,7 +26077,7 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                                  'bestpathnr': 1,
                                                  'path': {
                                                      1: {
-                                                        'pathnr': 1,
+                                                        'pathnr': 0,
                                                         'pathvalid': True,
                                                         'pathbest':True,
                                                         'pathnolabeledrnh': True,
@@ -26100,7 +26101,7 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                                 'bestpathnr': 1,
                                                 'path': {
                                                     1: {
-                                                        'pathnr': 1,
+                                                        'pathnr': 0,
                                                         'pathvalid': True,
                                                         'pathbest': True,
                                                         'pathnolabeledrnh': True,
@@ -26130,7 +26131,7 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                                 'bestpathnr': 1,
                                                 'path': {
                                                     1: {
-                                                        'pathnr': 1,
+                                                        'pathnr': 0,
                                                         'pathvalid': True,
                                                         'pathbest': True,
                                                         'pathnolabeledrnh': True,
@@ -26233,7 +26234,7 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                                 'bestpathnr': 1,
                                                 'path': {
                                                     1: {
-                                                        'pathnr': 1,
+                                                        'pathnr': 0,
                                                         'pathvalid': True,
                                                         'pathbest': True,
                                                         'pathnolabeledrnh': True,
@@ -26257,7 +26258,7 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                                 'bestpathnr': 1,
                                                 'path': {
                                                     1: {
-                                                        'pathnr': 1,
+                                                        'pathnr': 0,
                                                         'pathvalid': True,
                                                         'pathbest': True,
                                                         'pathnolabeledrnh': True,
@@ -26281,7 +26282,7 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                                 'bestpathnr': 1,
                                                 'path': {
                                                     1: {
-                                                        'pathnr': 1,
+                                                        'pathnr': 0,
                                                         'pathvalid': True,
                                                         'pathbest': True,
                                                         'pathnolabeledrnh': True,
@@ -26301,7 +26302,7 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                     },
                                     '205.1.1.1:33768': {  # Ops Str '11.0.0.55:27001'
                                         'rd': '205.1.1.1:33768',
-                                        'rd_vrf': 'l2',
+                                        'rd_vrf': 'l3',
                                         'rd_vniid': 25001,
                                         'prefix': {
                                             '[1]:[03bb.bbbb.bbbb.bb00.0016]:[0x0]/152': {
@@ -26312,7 +26313,7 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                                 'bestpathnr': 1,
                                                 'path': {
                                                     1: {
-                                                        'pathnr': 1,
+                                                        'pathnr': 0,
                                                         'pathvalid': True,
                                                         'pathbest': True,
                                                         'pathnolabeledrnh': True,
@@ -26340,7 +26341,7 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                                 'bestpathnr': 1,
                                                 'path': {
                                                     1: {
-                                                        'pathnr': 1,
+                                                        'pathnr': 0,
                                                         'pathvalid': True,
                                                         'pathbest': True,
                                                         'pathnolabeledrnh': True,
@@ -26368,7 +26369,7 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                                 'bestpathnr': 1,
                                                 'path': {
                                                     1: {
-                                                        'pathnr': 1,
+                                                        'pathnr': 0,
                                                         'pathvalid': True,
                                                         'pathbest': True,
                                                         'pathnolabeledrnh': True,
@@ -26444,7 +26445,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
 
   Path-id 1 not advertised to any peer
 
-Route Distinguisher: 205.1.1.1:33768    (L2VNI 25001)
+Route Distinguisher: 205.1.1.1:33768    (L3VNI 25001)
 BGP routing table entry for [1]:[03bb.bbbb.bbbb.bb00.0016]:[0x0]/152, version 4905
 Paths: (1 available, best #1)
 Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
@@ -26507,7 +26508,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
                                                 'bestpathnr': 1,
                                                 'path': {
                                                     1: {
-                                                        'pathnr': 1,
+                                                        'pathnr': 0,
                                                         'pathvalid': True,
                                                         'pathbest': True,
                                                         'pathnolabeledrnh': False,
@@ -26543,7 +26544,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
                                                 'mpath': 'ibgp',
                                                 'path': {
                                                     1: {
-                                                        'pathnr': 1,
+                                                        'pathnr': 0,
                                                         'pathvalid': True,
                                                         'pathbest': True,
                                                         'pathnolabeledrnh': False,
@@ -26659,7 +26660,6 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
         obj = ShowBgpL2vpnEvpnRouteType(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(route_type=4)
-
 
 # ==============================================================
 #  Unit test for 'show bgp l2vpn evpn neighbors'
