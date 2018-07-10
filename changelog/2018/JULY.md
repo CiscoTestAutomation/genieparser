@@ -2,7 +2,8 @@ Current version: genie.libs.parser - 3.0.5
 
 
 # July 10th
-    * Fix for ShowBgpInstanceNeighborsAdvertisedRoutes
+
+* Fix for ShowBgpInstanceNeighborsAdvertisedRoutes
 
 
 # July 9th
