@@ -3702,8 +3702,9 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
             # Network            Next Hop        From            AS Path
             # 46.1.1.0/24        20.1.5.1        2.2.2.2         100 300 33299 51178 47751 {27016}e
             # 615:11:11::/64     1.1.1.1         2001:db8:20:1:5::5
+            # 1.1.1.1/32         1.1.1.1         Local           ?
             p4 = re.compile(r'^(?P<prefix>(?P<ip>[\w\.\:]+)/(?P<mask>\d+)) *(?P<next_hop>[\w\.\:]+) *(?P<froms>[\w\.\:]+) *'
-                             '(?P<path>[\d\{\}\s]+)?(?P<origin_code>e|i)?$')
+                             '(?P<path>[\d\{\}\s]+)?(?P<origin_code>[e|i\?])?$')
             m = p4.match(line)
             if m:
                 try:
