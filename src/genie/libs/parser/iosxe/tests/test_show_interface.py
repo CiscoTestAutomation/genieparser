@@ -27,7 +27,9 @@ from genie.libs.parser.iosxe.show_interface import ShowInterfacesSwitchport,\
                                         ShowIpv6Interface, \
                                         ShowEtherchannelSummary, \
                                         ShowInterfacesTrunk, \
-                                        ShowInterfacesCounters
+                                        ShowInterfacesCounters, \
+                                        ShowInterfacesAccounting, \
+                                        ShowIpInterfaceBriefPipeIp
 
 
 class test_show_interface_parsergen(unittest.TestCase):
@@ -89,6 +91,36 @@ class test_show_interface_parsergen(unittest.TestCase):
         args, kwargs = device1.execute.call_args
         self.assertTrue('show ip interface brief' in args,
             msg='The expected command was not sent to the router')
+
+#############################################################################
+# unitest For Show Interfaces switchport
+#############################################################################
+class test_show_ip_interfaces_brief_pipe_ip(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    golden_parsed_output = {'interface':
+        {'GigabitEthernet0/0': {'interface_ok': 'YES',
+                                      'interface_status': 'up',
+                                      'ip_address': '10.1.18.80',
+                                      'method': 'manual',
+                                      'protocol_status': 'up'}}}
+
+    golden_output = {'execute.return_value': '''
+        R1#sh ip int brief | i 10.1.18.80 
+        GigabitEthernet0/0     10.1.18.80      YES manual up                    up   
+    '''}
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpInterfaceBriefPipeIp(device=self.device)
+        parsed_output = obj.parse(ip='10.1.18.80')
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowIpInterfaceBriefPipeIp(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(ip='10.1.18.80')
 
 # Comment out due to old version of yang, will enhance it
 # class test_show_interface_brief_pipe_vlan_yang(unittest.TestCase):
@@ -1878,7 +1910,142 @@ class test_show_interfaces_counters(unittest.TestCase):
         parsed_output = interface_obj.parse(interface='GigabitEthernet1/0/1')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
+#############################################################################
+# unitest For show interfaces <interface> accounting
+#############################################################################
 
+class test_show_interfaces_accounting(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = \
+    {
+      "GigabitEthernet1": {
+        "accounting": {
+          "arp": {
+            "chars_in": 4590030,
+            "chars_out": 120,
+            "pkts_in": 109280,
+            "pkts_out": 2
+          },
+          "ip": {
+            "chars_in": 2173570,
+            "chars_out": 2167858,
+            "pkts_in": 22150,
+            "pkts_out": 22121
+          },
+          "ipv6": {
+            "chars_in": 1944,
+            "chars_out": 0,
+            "pkts_in": 24,
+            "pkts_out": 0
+          },
+          "other": {
+            "chars_in": 5306164,
+            "chars_out": 120,
+            "pkts_in": 112674,
+            "pkts_out": 2
+          }
+        }
+      },
+      "GigabitEthernet2": {
+        "accounting": {
+          "arp": {
+            "chars_in": 5460,
+            "chars_out": 5520,
+            "pkts_in": 91,
+            "pkts_out": 92
+          },
+          "ip": {
+            "chars_in": 968690,
+            "chars_out": 1148402,
+            "pkts_in": 11745,
+            "pkts_out": 10821
+          },
+          "ipv6": {
+            "chars_in": 70,
+            "chars_out": 0,
+            "pkts_in": 1,
+            "pkts_out": 0
+          },
+          "other": {
+            "chars_in": 741524,
+            "chars_out": 5520,
+            "pkts_in": 3483,
+            "pkts_out": 92
+          }
+        }
+      },
+      "GigabitEthernet3": {
+        "accounting": {
+          "arp": {
+            "chars_in": 5460,
+            "chars_out": 5520,
+            "pkts_in": 91,
+            "pkts_out": 92
+          },
+          "ip": {
+            "chars_in": 1190691,
+            "chars_out": 1376253,
+            "pkts_in": 15271,
+            "pkts_out": 14382
+          },
+          "ipv6": {
+            "chars_in": 70,
+            "chars_out": 0,
+            "pkts_in": 1,
+            "pkts_out": 0
+          },
+          "other": {
+            "chars_in": 741524,
+            "chars_out": 5520,
+            "pkts_in": 3483,
+            "pkts_out": 92
+          }
+        }
+      }
+    }
+
+    golden_output = {'execute.return_value': '''
+show interface accounting
+GigabitEthernet1 
+                Protocol    Pkts In   Chars In   Pkts Out  Chars Out
+                   Other     112674    5306164          2        120
+                      IP      22150    2173570      22121    2167858
+                     ARP     109280    4590030          2        120
+                    IPv6         24       1944          0          0
+GigabitEthernet2 
+                Protocol    Pkts In   Chars In   Pkts Out  Chars Out
+                   Other       3483     741524         92       5520
+                      IP      11745     968690      10821    1148402
+                     ARP         91       5460         92       5520
+                    IPv6          1         70          0          0
+GigabitEthernet3 
+                Protocol    Pkts In   Chars In   Pkts Out  Chars Out
+                   Other       3483     741524         92       5520
+                      IP      15271    1190691      14382    1376253
+                     ARP         91       5460         92       5520
+                    IPv6          1         70          0          0
+Loopback0 
+                Protocol    Pkts In   Chars In   Pkts Out  Chars Out
+No traffic sent or received on this interface.
+Loopback1 
+                Protocol    Pkts In   Chars In   Pkts Out  Chars Out
+No traffic sent or received on this interface.
+
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowInterfacesAccounting(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowInterfacesAccounting(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()
