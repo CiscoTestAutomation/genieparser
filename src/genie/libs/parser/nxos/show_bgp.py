@@ -10080,6 +10080,39 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
                 path_dict.update({'inlabel': int(group.pop('inlabel'))})
                 continue
 
+        if 'instance' not in result_dict:
+            return result_dict
+
+        for instance in result_dict['instance']:
+            if 'vrf' not in result_dict['instance'][instance]:
+                continue
+            for vrf in result_dict['instance'][instance]['vrf']:
+                vrf_dict = result_dict['instance'][instance]['vrf'][vrf]
+                if 'address_family' not in vrf_dict:
+                    continue
+                for af in vrf_dict['address_family']:
+                    af_dict = vrf_dict['address_family'][af]
+                    if 'rd' not in af_dict:
+                        continue
+                    for rd in af_dict['rd']:
+                        if 'prefix' not in af_dict['rd'][rd]:
+                            continue
+                        for prefix in af_dict['rd'][rd]['prefix']:
+                            if 'path' not in af_dict['rd'][rd]['prefix'][prefix]:
+                                continue
+                            for index in af_dict['rd'][rd]['prefix'][prefix]['path']:
+                                if len(af_dict['rd'][rd]['prefix'][prefix]['path'][index].keys()) > 1:
+                                    ind = 1
+                                    next_dict = {}
+                                    sorted_list = sorted(af_dict['rd'][rd]['prefix'][prefix]['path'].items(),
+                                                         key=lambda x: x[1]['neighbor'])
+                                    for i, j in enumerate(sorted_list):
+                                        next_dict[ind] = af_dict['rd'][rd]['prefix'][prefix]['path'][j[0]]
+                                        ind += 1
+                                    del (af_dict['rd'][rd]['prefix'][prefix]['path'])
+                                    af_dict['rd'][rd]['prefix'][prefix]['path'] = next_dict
+
+
         return result_dict
 
 # ==========================================================
