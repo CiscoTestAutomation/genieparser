@@ -15,7 +15,8 @@ from genie.libs.parser.iosxe.show_lisp import ShowLispSession,\
                                               ShowLispPlatform,\
                                               ShowLispExtranet,\
                                               ShowLispDynamicEidDetail,\
-                                              ShowLispService
+                                              ShowLispService,\
+                                              ShowLispServiceMapCache
 
 
 
@@ -379,10 +380,9 @@ class test_show_lisp_instance_id_service(unittest.TestCase):
     golden_output1 = {'execute.return_value': '''
         202-XTR#show lisp all instance-id 101 ipv4
 
-        =====================================================
+        =================================================
         Output for router lisp 0
-
-        -----------------------------------------------------
+        =================================================
           Instance ID:                         101
           Router-lisp ID:                      0
           Locator table:                       default
@@ -509,10 +509,9 @@ class test_show_lisp_instance_id_service(unittest.TestCase):
     golden_output2 = {'execute.return_value': '''
         202-XTR#show lisp all instance-id 101 ipv4
 
-        =====================================================
+        =================================================
         Output for router lisp 0
-
-        -----------------------------------------------------
+        =================================================
           Instance ID:                         101
           Router-lisp ID:                      0
           Locator table:                       default

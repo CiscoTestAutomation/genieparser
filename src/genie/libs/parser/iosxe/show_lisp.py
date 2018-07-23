@@ -5,7 +5,6 @@ IOSXE parsers for the following show commands:
     * show lisp platform
     * show lisp all extranet <extranet> instance-id <instance_id>
     * show lisp all instance-id <instance_id> dynamic-eid detail
-
     * show lisp all service ipv4
     * show lisp all service ipv6
     * show lisp all service ethernet
@@ -37,9 +36,9 @@ IOSXE parsers for the following show commands:
     * show lisp all instance-id <instance_id> ipv6 smr
     * show lisp all instance-id <instance_id> ethernet smr
 
-    * show lisp all instance-id <instance_id> ipv4 statistics
-    * show lisp all instance-id <instance_id> ipv6 statistics
-    * show lisp all instance-id <instance_id> ethernet statistics
+* show lisp all instance-id <instance_id> ipv4 statistics
+* show lisp all instance-id <instance_id> ipv6 statistics
+* show lisp all instance-id <instance_id> ethernet statistics
 
     * show lisp all service ipv4 summary
     * show lisp all service ipv6 summary
@@ -1340,6 +1339,91 @@ class ShowLispService(ShowLispServiceSchema):
             m = p51.match(line)
             if m:
                 etr_dict['encapsulation'] = m.groupdict()['encap_type']
+                continue
+
+        return parsed_dict
+
+
+# ========================================================================
+# Schema for 'show lisp all instance-id <instance_id> <service> map-cache'
+# ========================================================================
+# class ShowLispServiceMapCacheSchema(MetaParser):
+
+#      '''Schema for "show lisp all instance-id <instance_id> <service> map-cache" '''
+
+#     schema = {}
+
+
+# ========================================================================
+# Parser for 'show lisp all instance-id <instance_id> <service> map-cache'
+# ========================================================================
+class ShowLispServiceMapCache(MetaParser):
+
+    '''Parser for "show lisp all instance-id <instance_id> <service> map-cache"'''
+
+    def cli(self, service, instance_id):
+
+        assert service in ['ipv4', 'ipv6', 'ethernet']
+
+        # Build the command
+        cmd = 'show lisp all instance-id {instance_id} service {service}'.\
+                format(instance_id=instance_id, service=service)
+        
+        # Execute command on device
+        out = self.device.execute(cmd)
+
+        # Init vars
+        parsed_dict = {}
+
+        # State dict
+        state_dict = {
+            'disabled': False,
+            'enabled': True}
+
+        # Output for router lisp 0
+        # Output for router lisp 0 instance-id 193
+        p1 = re.compile(r'Output +for +router +lisp +(?P<router_id>(\S+))'
+                         '(?: +instance-id +(?P<instance_id>(\d+)))?$')
+
+        # LISP IPv4 Mapping Cache for EID-table vrf red (IID 101), 2 entries
+        # LISP IPv6 Mapping Cache for EID-table vrf red (IID 101), 2 entries
+        # LISP MAC Mapping Cache for EID-table Vlan 101 (IID 1), 4 entries
+        p2 = re.compile(r'LISP +(?P<type>(IPv4|IPv6|MAC) +Mapping +Cache +for'
+                         ' +EID\-table +(?P<eid_table>([a-zA-Z0-9\s]+))'
+                         ' +\(IID +(?P<iid>(\d+))\), +(?P<entries>(\d+))'
+                         ' +entries$')
+
+        # 0.0.0.0/0, uptime: 15:23:50, expires: never, via static-send-map-request
+        # ::/0, uptime: 00:11:28, expires: never, via static-send-map-request
+        # b827.eb51.f5ce/48, uptime: 22:49:42, expires: 01:10:17, via WLC Map-Notify, complete
+        # 192.168.9.0/24, uptime: 00:04:02, expires: 23:55:57, via map-reply, complete
+
+        #   Negative cache entry, action: send-map-request
+
+        #   Locator  Uptime    State      Pri/Wgt     Encap-IID
+        #   8.8.8.8  00:04:02  up          50/50        -
+
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Output for router lisp 0
+            # Output for router lisp 0 instance-id 193
+            m = p1.match(line)
+            if m:
+                lisp_router_id = int(m.groupdict()['router_id'])
+                lisp_dict = parsed_dict.setdefault('lisp_router_instances', {}).\
+                            setdefault(lisp_router_id, {})
+                lisp_dict['lisp_router_instance_id'] = lisp_router_id
+                service_dict = lisp_dict.setdefault('service', {}).\
+                                   setdefault(service, {})
+                service_dict['service'] = service
+                map_server_dict = service_dict.setdefault('map_server', {})
+                if m.groupdict()['instance_id']:
+                    instance_id = m.groupdict()['instance_id']
+                    vni_dict = map_server_dict.setdefault(
+                        'virtual_network_ids', {}).setdefault(instance_id, {})
+                    vni_dict['vni'] = instance_id
                 continue
 
         return parsed_dict
