@@ -851,14 +851,15 @@ class test_show_l2route_mac_all_detail(unittest.TestCase):
             'topo_id': {
                 101: {
                     'mac': {
-                        '5e00.0002.0007': {  # Ops Str '5e00.0002.0007'
+                        '5e00.0002.0007': {
                             'mac_addr': '5e00.0002.0007',
-                            'prod_type': 'vxlan',  # Ops Str 'vxlan'
-                            'flags': 'rmac',  # Ops Str 'rmac'
-                            'seq_num': 0,  # Ops Int 0
-                            'next_hop1': '204.1.1.1',  # Ops Str '204.1.1.1'
-                            'rte_res': 'regular',  # Ops Str 'regular'
-                            'fwd_state': 'Resolved (PeerID: 2)',  # Ops Str 'Resolved (PeerID: 2)'
+                            'prod_type': 'vxlan',
+                            'flags': 'rmac',
+                            'seq_num': 0,
+                            'next_hop1': '204.1.1.1',
+                            'rte_res': 'regular',
+                            'fwd_state': 'Resolved',
+                            'peer_id': 2,
                         },
                     },
                 },
@@ -882,7 +883,8 @@ class test_show_l2route_mac_all_detail(unittest.TestCase):
                             'seq_num': 0,
                             'next_hop1': '204.1.1.1',
                             'rte_res': 'regular',
-                            'fwd_state': 'Resolved (PeerID: 2)',
+                            'fwd_state': 'Resolved',
+                            'peer_id': 2,
                             'sent_to': 'l2fwder',
                         },
                     },
@@ -1231,6 +1233,7 @@ class test_show_l2route_fl_all(unittest.TestCase):
         'topology': {
             'topo_id': {
                 1001: {
+                    'num_of_peer_id': 3,
                     'peer_id': {
                         8: {
                             'topo_id': 1001,
@@ -1253,6 +1256,7 @@ class test_show_l2route_fl_all(unittest.TestCase):
                     },
                 },
                 1002: {
+                    'num_of_peer_id': 3,
                     'peer_id': {
                         8: {
                             'topo_id': 1002,
@@ -1315,7 +1319,7 @@ class test_show_running_config_nv_overlay(unittest.TestCase):
     golden_parsed_output ={
         'enabled_nv_overlay': True,
         'evpn_multisite_border_gateway': 111111,
-        'multisite_covergence_time': 185,
+        'multisite_convergence_time': 185,
         'nve1': {
             'nve_name': 'nve1',
             'if_state': "up",

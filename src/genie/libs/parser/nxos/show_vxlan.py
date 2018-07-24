@@ -1091,6 +1091,7 @@ class ShowL2routeMacAllDetailSchema(MetaParser):
                             'next_hop1': str,
                             'rte_res': str,
                             'fwd_state': str,
+                            Optional('peer_id'): int,
                             Optional('sent_to'): str,
                             Optional('soo'): int,
                         }
@@ -1121,7 +1122,7 @@ class ShowL2routeMacAllDetail(ShowL2routeMacAllDetailSchema):
                         ' +(?P<flags>[\w\,\-]+) +(?P<seq_num>[\d]+) +(?P<next_hop1>[\w\/\.]+)$')
 
         p2 = re.compile(r'^\s*Route +Resolution +Type: +(?P<rte_res>[\w]+)$')
-        p3 = re.compile(r'^\s*Forwarding +State: +(?P<fwd_state>[\w\s\:\(\)]+)$')
+        p3 = re.compile(r'^\s*Forwarding +State: +(?P<fwd_state>[\w]+)( +\(PeerID: +(?P<peer_id>[\d]+)\))?$')
         p4 = re.compile(r'^\s*Sent +To: +(?P<sent_to>[\w]+)$')
         p5 = re.compile(r'^\s*SOO: +(?P<soo>[\d]+)$')
 
@@ -1169,7 +1170,9 @@ class ShowL2routeMacAllDetail(ShowL2routeMacAllDetailSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                topo_dict.update({k:v for k, v in group.items()})
+                topo_dict.update({'fwd_state': group.get('fwd_state')})
+                if group.get('peer_id'):
+                    topo_dict.update({'peer_id': int(group.get('peer_id'))})
                 continue
 
             m = p5.match(line)
@@ -1388,6 +1391,7 @@ class ShowL2routeFlAllSchema(MetaParser):
         'topology': {
             'topo_id': {
                 Any():{
+                    Optional('num_of_peer_id'): int,
                     'peer_id':{
                         Any():{
                             'topo_id': int,
@@ -1412,6 +1416,7 @@ class ShowL2routeFlAll(ShowL2routeFlAllSchema):
         out = self.device.execute('show l2route fl all')
 
         result_dict = {}
+        index = 0
         # Topology ID Peer-id     Flood List      Service Node
         # ----------- ----------- --------------- ------------
 
@@ -1429,12 +1434,17 @@ class ShowL2routeFlAll(ShowL2routeFlAllSchema):
                 topo_id = int(group.pop('topo_id'))
                 peer_id = int(group.pop('peer_id'))
                 peer_dict = result_dict.setdefault('topology', {}).setdefault('topo_id', {}).setdefault(topo_id, {}). \
-                                                setdefault('peer_id', {}).setdefault(peer_id, {})
+                                setdefault('peer_id', {}).setdefault(peer_id, {})
                 peer_dict.update({'topo_id': topo_id})
                 peer_dict.update({'peer_id': peer_id})
                 peer_dict.update({'flood_list': group.pop('flood_list')})
                 peer_dict.update({'is_service_node': group.pop('is_service_node').lower()})
                 continue
+
+        if result_dict:
+            for topo_id in result_dict['topology']['topo_id']:
+                num_of_peer_id = len(result_dict['topology']['topo_id'][topo_id]['peer_id'])
+                result_dict['topology']['topo_id'][topo_id]['num_of_peer_id'] = num_of_peer_id
 
         return result_dict
 
