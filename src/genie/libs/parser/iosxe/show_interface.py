@@ -228,10 +228,10 @@ class ShowInterfaces(ShowInterfacesSchema):
                             '(, *address +is +(?P<mac_address>[a-z0-9\.]+)'
                             ' *\(bia *(?P<phys_address>[a-z0-9\.]+)\))?$')
             # Hardware is LTE Adv CAT6 - Multimode LTE/DC-HSPA+/HSPA+/HSPA/UMTS/EDGE/GPRS 
-	        p2_2 = re.compile(r'Hardware +is +(?P<type>[a-zA-Z0-9\-\/\+ ]+)(?P<mac_address>.*)(?P<phys_address>.*)')
+            p2_2 = re.compile(r'Hardware +is +(?P<type>[a-zA-Z0-9\-\/\+ ]+)(?P<mac_address>.*)(?P<phys_address>.*)')
             m = p2.match(line)
             m1 = p2_2.match(line)
-	        m = m if m else m1
+            m = m if m else m1
             if m:
                 types = m.groupdict()['type']
                 mac_address = m.groupdict()['mac_address']
