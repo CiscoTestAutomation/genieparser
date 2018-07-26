@@ -350,6 +350,56 @@ class test_show_lisp_dynamic_eid_detail(unittest.TestCase):
              last activity: 00:00:07, discovered by: Packet Reception
         '''}
 
+    golden_parsed_output3 = {
+        'lisp_router_instances': 
+            {0: 
+                {'service': 
+                    {'ipv4': 
+                        {'etr': 
+                            {'local_eids': 
+                                {101: 
+                                    {'dynamic_eids': 
+                                        {'192.168.0.0/24': 
+                                            {'dynamic_eid_name': '192',
+                                            'eid_address': {'virtual_network_id': 'green'},
+                                            'id': '192.168.0.0/24',
+                                            'last_dynamic_eid': 
+                                                {'192.168.0.1': 
+                                                    {'eids': 
+                                                        {'192.168.0.1': 
+                                                            {'discovered_by': 'packet reception',
+                                                            'interface': 'GigabitEthernet5',
+                                                            'last_activity': '00:00:15',
+                                                            'uptime': '11:56:56'}},
+                                                    'last_dynamic_eid_discovery_elaps_time': '11:56:56'}},
+                                            'mapping_servers': 
+                                                {'4.4.4.4': 
+                                                    {'proxy_reply': True},
+                                                '6.6.6.6': 
+                                                    {}},
+                                            'num_of_roaming_dynamic_eid': 1,
+                                            'registering_more_specific': True,
+                                            'rlocs': 'RLOC'}}}}}}}}}}
+
+    golden_output3 = {'execute.return_value': '''
+        202-XTR#show lisp all instance-id 101 dynamic-eid detail
+        Output for router lisp 0
+
+        -----------------------------------------------------
+        LISP Dynamic EID Information for VRF "green"
+
+        Dynamic-EID name: 192
+          Database-mapping EID-prefix: 192.168.0.0/24, locator-set RLOC
+          Registering more-specific dynamic-EIDs
+          Map-Server(s): 4.4.4.4  (proxy-replying)
+          Map-Server(s): 6.6.6.6
+          Site-based multicast Map-Notify group: 225.1.1.2
+          Number of roaming dynamic-EIDs discovered: 1
+          Last dynamic-EID discovered: 192.168.0.1, 11:56:56 ago
+            192.168.0.1, GigabitEthernet5, uptime: 11:56:56
+              last activity: 00:00:15, discovered by: Packet Reception
+        '''}
+
     def test_show_lisp_dynamic_eid_detail_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
@@ -363,6 +413,13 @@ class test_show_lisp_dynamic_eid_detail(unittest.TestCase):
         obj = ShowLispDynamicEidDetail(device=self.device)
         parsed_output = obj.parse(instance_id=101)
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_show_lisp_dynamic_eid_detail_full3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowLispDynamicEidDetail(device=self.device)
+        parsed_output = obj.parse(instance_id=101)
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
     def test_show_lisp_dynamic_eid_detail_empty(self):
         self.maxDiff = None

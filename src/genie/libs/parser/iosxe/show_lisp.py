@@ -425,6 +425,11 @@ class ShowLispDynamicEidDetailSchema(MetaParser):
                                             Optional('registration_interval'): int,
                                             Optional('global_map_server'): bool,
                                             Optional('num_of_roaming_dynamic_eid'): int,
+                                            Optional('mapping_servers'):
+                                                {Any():
+                                                    {Optional('proxy_reply'): bool,
+                                                    },
+                                                },
                                             Optional('last_dynamic_eid'):
                                                 {Any():
                                                     {'last_dynamic_eid_discovery_elaps_time': str,
@@ -490,6 +495,11 @@ class ShowLispDynamicEidDetail(ShowLispDynamicEidDetailSchema):
 
         # Map-Server(s): none configured, use global Map-Server
         p6 = re.compile(r'Map-Server\(s\)\: none configured, use global Map-Server$')
+
+        # Map-Server(s): 4.4.4.4  (proxy-replying)
+        # Map-Server(s): 6.6.6.6
+        p6_1 = re.compile(r'Map-Server\(s\)\: +(?P<ms>([0-9\.\:]+))'
+                           '(?: +\((?P<pr>(proxy-replying))\))?$')
 
         # Site-based multicast Map-Notify group: none configured
         # Site-based multicast Map-Notify group: 225.1.1.2
@@ -570,6 +580,18 @@ class ShowLispDynamicEidDetail(ShowLispDynamicEidDetailSchema):
             m = p6.match(line)
             if m:
                 dynamic_eids_dict['global_map_server'] = True
+                continue
+
+            # Map-Server(s): 4.4.4.4  (proxy-replying)
+            # Map-Server(s): 6.6.6.6
+            m = p6_1.match(line)
+            if m:
+                group = m.groupdict()
+                mapserver = group['ms']
+                ms_dict = dynamic_eids_dict.setdefault('mapping_servers', {}).\
+                          setdefault(mapserver, {})
+                if group['pr']:
+                    ms_dict['proxy_reply'] = True
                 continue
 
             # Site-based multicast Map-Notify group: none configured
@@ -1425,4 +1447,3 @@ class ShowLispServiceMapCache(MetaParser):
                 continue
 
         return parsed_dict
- 
