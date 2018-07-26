@@ -336,14 +336,10 @@ class ShowLispExtranet(ShowLispExtranetSchema):
             m = p1.match(line)
             if m:
                 lisp_router_id = int(m.groupdict()['lisp_router_id'])
-                lisp_dict = parsed_dict.setdefault(
-                    'lisp_router_instances', {}).setdefault(lisp_router_id, {})
-                if 'service' not in lisp_dict:
-                    lisp_dict['service'] = {}
-                if 'ipv4' not in lisp_dict['service']:
-                    lisp_dict['service']['ipv4'] = {}
-                if 'map_server' not in lisp_dict['service']['ipv4']:
-                    lisp_dict['service']['ipv4']['map_server'] = {}
+                lisp_dict = parsed_dict.setdefault('lisp_router_instances', {}).\
+                            setdefault(lisp_router_id, {}).\
+                            setdefault('service', {}).\
+                            setdefault('ipv4', {}).setdefault('map_server', {})
                 continue
 
             # Home Instance ID: 103
@@ -363,44 +359,29 @@ class ShowLispExtranet(ShowLispExtranetSchema):
             # Subscriber           101        192.168.9.0/24
             m = p4.match(line)
             if m:
-                extranet_type = m.groupdict()['ext_type'].lower()
-                type_eid = m.groupdict()['eid']
-                inst = m.groupdict()['inst']
+                group = m.groupdict()
+                extranet_type = group['ext_type'].lower()
+                type_eid = group['eid']
+                inst = group['inst']
                 # Create dict
-                if 'virtual_network_ids' not in lisp_dict['service']['ipv4']\
-                        ['map_server']:
-                    lisp_dict['service']['ipv4']['map_server']\
-                        ['virtual_network_ids'] = {}
+                vni_dict = lisp_dict.setdefault('virtual_network_ids', {})
                 # Set total count
                 try:
-                    lisp_dict['service']['ipv4']['map_server']\
-                        ['virtual_network_ids']['total_extranet_entries'] = \
-                        total_entries
+                    vni_dict['total_extranet_entries'] = total_entries
                 except:
                     pass
-                if inst not in lisp_dict['service']['ipv4']['map_server']\
-                        ['virtual_network_ids']:
-                    lisp_dict['service']['ipv4']['map_server']\
-                        ['virtual_network_ids'][inst] = {}
-                # Set vni
-                lisp_dict['service']['ipv4']['map_server']\
-                        ['virtual_network_ids'][inst]['vni'] = inst
-                if 'extranets' not in lisp_dict['service']['ipv4']['map_server']\
-                        ['virtual_network_ids'][inst]:
-                    lisp_dict['service']['ipv4']['map_server']\
-                        ['virtual_network_ids'][inst]['extranets'] = {}
-                if extranet not in lisp_dict['service']['ipv4']['map_server']\
-                        ['virtual_network_ids'][inst]['extranets']:
-                    lisp_dict['service']['ipv4']['map_server']\
-                        ['virtual_network_ids'][inst]['extranets']\
-                        [extranet] = {}
-                # Set ext_dict
-                ext_dict = lisp_dict['service']['ipv4']['map_server']\
-                            ['virtual_network_ids'][inst]['extranets']\
-                            [extranet]
-                # Set values
+                # Instance
+                vni_val_dict = vni_dict.setdefault(inst, {})
+                vni_val_dict['vni'] = inst
+
+                # Extranet dict
+                ext_dict = vni_val_dict.setdefault('extranets', {}).\
+                                setdefault(extranet, {})
                 ext_dict['extranet'] = extranet
-                ext_dict['home_instance_id'] = home_instance_id
+                try:
+                    ext_dict['home_instance_id'] = home_instance_id
+                except:
+                    pass
                 # Set extranet types
                 if extranet_type not in ext_dict:
                     ext_dict[extranet_type] = {}
