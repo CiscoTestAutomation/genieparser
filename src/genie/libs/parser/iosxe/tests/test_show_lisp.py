@@ -261,9 +261,8 @@ class test_show_lisp_dynamic_eid_detail(unittest.TestCase):
                                             'last_dynamic_eid': '192.168.0.1',
                                             'last_dynamic_eid_discovery_time': '01:17:25',
                                             'registering_more_specific': True,
-                                            'map_server': False,
                                             'rlocs': 'RLOC',
-                                            'roaming_dynamic_eid': 1,
+                                            'num_of_roaming_dynamic_eid': 1,
                                             'uptime': '01:17:25',
                                             'site_based_multicast_map_nofity_group': 'none configured'}}}}}}}}}}
 

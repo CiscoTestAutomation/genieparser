@@ -442,9 +442,8 @@ class ShowLispDynamicEidDetailSchema(MetaParser):
                                             Optional('site_based_multicast_map_nofity_group'): str,
                                             Optional('proxy_reply'): bool,
                                             Optional('registration_interval'): int,
-                                            Optional('map_server'): bool,
                                             Optional('global_map_server'): bool,
-                                            Optional('roaming_dynamic_eid'): int,
+                                            Optional('num_of_roaming_dynamic_eid'): int,
                                             Optional('last_dynamic_eid'): str,
                                             Optional('last_dynamic_eid_discovery_time'): str,
                                             Optional('interface'): str,
@@ -582,7 +581,6 @@ class ShowLispDynamicEidDetail(ShowLispDynamicEidDetailSchema):
             # Map-Server(s): none configured, use global Map-Server
             m = p6.match(line)
             if m:
-                dynamic_eids_dict['map_server'] = False
                 dynamic_eids_dict['global_map_server'] = True
                 continue
 
@@ -597,7 +595,7 @@ class ShowLispDynamicEidDetail(ShowLispDynamicEidDetailSchema):
             # Number of roaming dynamic-EIDs discovered: 1
             m = p8.match(line)
             if m:
-                dynamic_eids_dict['roaming_dynamic_eid'] = int(m.groupdict()['roam'])
+                dynamic_eids_dict['num_of_roaming_dynamic_eid'] = int(m.groupdict()['roam'])
 
             # Last dynamic-EID discovered: 192.168.0.1, 01:17:25 ago
             m = p9.match(line)
