@@ -1724,7 +1724,100 @@ class test_show_lisp_instance_id_service_map_cache(unittest.TestCase):
           8.8.8.8  00:04:02  up          50/50        -
         '''}
 
-    golden_parsed_output2 = {}
+    golden_parsed_output2 = {
+        'lisp_router_instances': 
+            {0: 
+                {'lisp_router_instance_id': 0,
+                'service': 
+                    {'ipv6': 
+                        {'service': 'ipv6',
+                        'itr': 
+                            {'map_cache': 
+                                {101: 
+                                    {'vni': '101',
+                                    'entries': 2,
+                                    'iid': 101,
+                                    'mappings': 
+                                        {'172.16.10.0/24': 
+                                            {'eid': 
+                                                {'address_type': 'ipv6-afi',
+                                                'ipv4': 
+                                                    {'ipv4': '172.16.10.0/24'},
+                                                'virtual_network_id': 'vrf red'},
+                                            'expires': '23:59:59',
+                                            'id': '172.16.10.0/24',
+                                            'positive_mapping': 
+                                                {'rlocs': 
+                                                    {1: 
+                                                        {'id': '1',
+                                                        'locator_address': 
+                                                            {'address_type': 'ipv6-afi',
+                                                            'ipv4': {'ipv4': '172.16.156.134'},
+                                                            'priority': 1,
+                                                            'state': 'up',
+                                                            'uptime': '00:00:00',
+                                                            'virtual_network_id': '101',
+                                                            'weight': 50}},
+                                                    2: 
+                                                        {'id': '2',
+                                                        'locator_address': 
+                                                            {'address_type': 'ipv6-afi',
+                                                            'ipv4': 
+                                                                {'ipv4': '192.168.65.94'},
+                                                            'priority': 1,
+                                                            'state': 'up',
+                                                            'uptime': '00:00:00',
+                                                            'virtual_network_id': '101',
+                                                            'weight': 50}},
+                                                    3: 
+                                                        {'id': '3',
+                                                        'locator_address': 
+                                                            {'address_type': 'ipv6-afi',
+                                                            'ipv6': 
+                                                                {'ipv6': '2001:468:D01:9C::80DF:9C86'},
+                                                            'priority': 2,
+                                                            'state': 'up',
+                                                            'uptime': '00:00:00',
+                                                            'virtual_network_id': '101',
+                                                            'weight': 100}}}},
+                                            'uptime': '00:00:00',
+                                            'via': 'map-reply, complete'},
+                                        '2001:192:168:9::/64': 
+                                            {'eid': 
+                                                {'address_type': 'ipv6-afi',
+                                                'ipv6': 
+                                                    {'ipv6': '2001:192:168:9::/64'},
+                                                'virtual_network_id': 'vrf red'},
+                                            'expires': '23:53:08',
+                                            'id': '2001:192:168:9::/64',
+                                            'positive_mapping': 
+                                                {'rlocs': 
+                                                    {1: 
+                                                        {'id': '1',
+                                                        'locator_address': 
+                                                            {'address_type': 'ipv6-afi',
+                                                            'encap_iid': '-',
+                                                            'ipv4': 
+                                                                {'ipv4': '8.8.8.8'},
+                                                            'priority': 50,
+                                                            'state': 'up',
+                                                            'uptime': '00:06:51',
+                                                            'virtual_network_id': '101',
+                                                            'weight': 50}}}},
+                                            'uptime': '00:06:51',
+                                            'via': 'map-reply, complete'},
+                                        '::/0': 
+                                            {'eid': 
+                                                {'address_type': 'ipv6-afi',
+                                                'ipv6': 
+                                                    {'ipv6': '::/0'},
+                                                'virtual_network_id': 'vrf red'},
+                                            'expires': 'never',
+                                            'id': '::/0',
+                                            'negative_mapping': 
+                                                {'map_reply_action': 'send-map-request'},
+                                            'uptime': '00:11:28',
+                                            'via': 'static-send-map-request'}}}}}}}}}}
 
     golden_output2 = {'execute.return_value': '''
         202-XTR#show lisp all instance-id 101 ipv6 map-cache 
@@ -1746,7 +1839,115 @@ class test_show_lisp_instance_id_service_map_cache(unittest.TestCase):
           2001:468:D01:9C::80DF:9C86  00:00:00  up           2/100
         '''}
 
-    golden_parsed_output3 = {}
+    golden_parsed_output3 = {
+        'lisp_router_instances': 
+            {0: 
+                {'lisp_router_instance_id': 0,
+                'service': 
+                    {'ethernet': 
+                        {'service': 'ethernet',
+                        'itr': 
+                            {'map_cache': 
+                                {'193': 
+                                    {'vni': '193',
+                                    'entries': 4,
+                                    'iid': 1,
+                                    'mappings': 
+                                        {'b827.eb51.f5ce/48': 
+                                            {'eid': 
+                                                {'address_type': 'mac-afi',
+                                                'ipv4': 
+                                                    {'ipv4': 'b827.eb51.f5ce/48'},
+                                                'virtual_network_id': 'Vlan 101'},
+                                            'expires': '01:10:17',
+                                            'id': 'b827.eb51.f5ce/48',
+                                            'positive_mapping': 
+                                                {'rlocs': 
+                                                    {1: 
+                                                        {'id': '1',
+                                                        'locator_address': 
+                                                            {'address_type': 'mac-afi',
+                                                            'encap_iid': '-',
+                                                            'ipv4': 
+                                                                {'ipv4': '22.22.22.1'},
+                                                            'priority': 0,
+                                                            'state': 'up',
+                                                            'uptime': '22:49:42',
+                                                            'virtual_network_id': '193',
+                                                            'weight': 0}}}},
+                                            'uptime': '22:49:42',
+                                            'via': 'WLC Map-Notify, complete'},
+                                        'b827.eb73.159c/48': 
+                                            {'eid': 
+                                                {'address_type': 'mac-afi',
+                                                'ipv4': 
+                                                    {'ipv4': 'b827.eb73.159c/48'},
+                                                'virtual_network_id': 'Vlan 101'},
+                                            'expires': '08:57:24',
+                                            'id': 'b827.eb73.159c/48',
+                                            'positive_mapping': 
+                                                {'rlocs': 
+                                                    {1: 
+                                                        {'id': '1',
+                                                        'locator_address': 
+                                                            {'address_type': 'mac-afi',
+                                                            'encap_iid': '-',
+                                                            'ipv4': 
+                                                                {'ipv4': '22.22.22.1'},
+                                                            'priority': 0,
+                                                            'state': 'up',
+                                                            'uptime': '15:02:35',
+                                                            'virtual_network_id': '193',
+                                                            'weight': 0}}}},
+                                            'uptime': '15:02:35',
+                                            'via': 'WLC Map-Notify, complete'},
+                                        'b827.ebd0.acc6/48': 
+                                            {'eid': 
+                                                {'address_type': 'mac-afi',
+                                                'ipv4': 
+                                                    {'ipv4': 'b827.ebd0.acc6/48'},
+                                                'virtual_network_id': 'Vlan 101'},
+                                            'expires': '08:57:25',
+                                            'id': 'b827.ebd0.acc6/48',
+                                            'positive_mapping': 
+                                                {'rlocs': 
+                                                    {1: 
+                                                        {'id': '1',
+                                                        'locator_address': 
+                                                            {'address_type': 'mac-afi',
+                                                            'encap_iid': '-',
+                                                            'ipv4': 
+                                                                {'ipv4': '22.22.22.1'},
+                                                            'priority': 0,
+                                                            'state': 'up',
+                                                            'uptime': '15:02:34',
+                                                            'virtual_network_id': '193',
+                                                            'weight': 0}}}},
+                                            'uptime': '15:02:34',
+                                            'via': 'WLC Map-Notify, complete'},
+                                        'b827.ebd6.0c63/48': 
+                                            {'eid': 
+                                                {'address_type': 'mac-afi',
+                                                'ipv4': 
+                                                    {'ipv4': 'b827.ebd6.0c63/48'},
+                                                'virtual_network_id': 'Vlan 101'},
+                                            'expires': '09:02:44',
+                                            'id': 'b827.ebd6.0c63/48',
+                                            'positive_mapping': 
+                                                {'rlocs': 
+                                                    {1: 
+                                                        {'id': '1',
+                                                        'locator_address': 
+                                                            {'address_type': 'mac-afi',
+                                                        'encap_iid': '-',
+                                                        'ipv4': {'ipv4': '22.22.22.1'},
+                                                        'priority': 0,
+                                                        'state': 'up',
+                                                        'uptime': '14:57:15',
+                                                        'virtual_network_id': '193',
+                                                        'weight': 0}}}},
+                                            'uptime': '14:57:15',
+                                            'via': 'WLC Map-Notify, complete'}}}}}}}}}}
 
     golden_output3 = {'execute.return_value': '''
         OTT-LISP-C3K-3-xTR1#show lisp all instance-id * ethernet map-cache
@@ -1756,7 +1957,7 @@ class test_show_lisp_instance_id_service_map_cache(unittest.TestCase):
         % EID table not enabled for MAC.
 
         =================================================
-        Output for router lisp 0 instance-id 1
+        Output for router lisp 0 instance-id 193
         =================================================
         LISP MAC Mapping Cache for EID-table Vlan 101 (IID 1), 4 entries
 
@@ -2093,11 +2294,6 @@ class test_show_lisp_instance_id_service_map_cache(unittest.TestCase):
         % EID table not enabled for MAC.
 
         =================================================
-        Output for router lisp 0 instance-id 193
-        =================================================
-        % EID table not enabled for MAC.
-
-        =================================================
         Output for router lisp 0 instance-id 194
         =================================================
         % EID table not enabled for MAC.
@@ -2115,21 +2311,19 @@ class test_show_lisp_instance_id_service_map_cache(unittest.TestCase):
         parsed_output = obj.parse(instance_id=101, service='ipv4')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
-    # def test_show_lisp_instance_id_service_map_cache_full2(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.golden_output2)
-    #     obj = ShowLispServiceMapCache(device=self.device)
-    #     parsed_output = obj.parse(instance_id=101, service='ipv6')
-    #     import pdb ; pdb.set_trace()
-    #     self.assertEqual(parsed_output, self.golden_parsed_output2)
+    def test_show_lisp_instance_id_service_map_cache_full2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowLispServiceMapCache(device=self.device)
+        parsed_output = obj.parse(instance_id=101, service='ipv6')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
-    # def test_show_lisp_instance_id_service_map_cache_full3(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.golden_output3)
-    #     obj = ShowLispServiceMapCache(device=self.device)
-    #     parsed_output = obj.parse(instance_id='*', service='ethernet')
-    #     import pdb ; pdb.set_trace()
-    #     self.assertEqual(parsed_output, self.golden_parsed_output3)
+    def test_show_lisp_instance_id_service_map_cache_full3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowLispServiceMapCache(device=self.device)
+        parsed_output = obj.parse(instance_id='*', service='ethernet')
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 
     def test_show_lisp_instance_id_service_map_cache_empty(self):

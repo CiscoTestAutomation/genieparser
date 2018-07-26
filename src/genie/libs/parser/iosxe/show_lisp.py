@@ -1517,6 +1517,8 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
                 lisp_dict = parsed_dict.setdefault('lisp_router_instances', {}).\
                             setdefault(lisp_router_id, {})
                 lisp_dict['lisp_router_instance_id'] = lisp_router_id
+                if group['instance_id']:
+                    instance_id = group['instance_id']
                 continue
 
             # LISP IPv4 Mapping Cache for EID-table vrf red (IID 101), 2 entries
