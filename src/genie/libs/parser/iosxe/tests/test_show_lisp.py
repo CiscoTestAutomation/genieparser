@@ -34,27 +34,31 @@ class test_show_lisp_session(unittest.TestCase):
     golden_parsed_output1 = {
         'vrf':
             {'default': 
-                {'established_sessions': 3,
-                'peers':
-                    {'2.2.2.2':
-                        {'state': 'up',
-                        'time': '00:51:38',
-                        'total_in': 8,
-                        'total_out': 13,
-                        'users': 3},
-                    '6.6.6.6':
-                        {'state': 'up',
-                        'time': '00:51:53',
-                        'total_in': 3,
-                        'total_out': 10,
-                        'users': 1},
-                    '8.8.8.8':
-                        {'state': 'up',
-                        'time': '00:52:15',
-                        'total_in': 8,
-                        'total_out': 13,
-                        'users': 3}},
-                'total_sessions': 3}}}
+                {'sessions':
+                    {'established': 3,
+                    'peers':
+                        {'2.2.2.2':
+                            {'state': 'up',
+                            'time': '00:51:38',
+                            'total_in': 8,
+                            'total_out': 13,
+                            'users': 3},
+                        '6.6.6.6':
+                            {'state': 'up',
+                            'time': '00:51:53',
+                            'total_in': 3,
+                            'total_out': 10,
+                            'users': 1},
+                        '8.8.8.8':
+                            {'state': 'up',
+                            'time': '00:52:15',
+                            'total_in': 8,
+                            'total_out': 13,
+                            'users': 3}},
+                    'total': 3},
+                },
+            },
+        }
 
     golden_output1 = {'execute.return_value': '''
         204-MSMR#show lisp session
@@ -95,7 +99,7 @@ class test_show_lisp_platform(unittest.TestCase):
         'current_config_style': 'service and instance',
         'latest_supported_config_style': 'service and instance',
         'parallel_lisp_instance_limit': 2000,
-        'rloc':
+        'rloc_forwarding_support':
             {'local':
                 {'ipv4': 'ok',
                 'ipv6': 'ok',
@@ -156,6 +160,7 @@ class test_show_lisp_extranet(unittest.TestCase):
                                     {'extranets':
                                         {'ext1':
                                             {'extranet': 'ext1',
+                                            'home_instance_id': 103,
                                             'subscriber':
                                                 {'192.168.0.0/24':
                                                     {'bidirectional': True,
@@ -168,6 +173,7 @@ class test_show_lisp_extranet(unittest.TestCase):
                                     {'extranets':
                                         {'ext1':
                                             {'extranet': 'ext1',
+                                            'home_instance_id': 103,
                                             'subscriber':
                                                 {'172.168.1.0/24':
                                                     {'bidirectional': True,
@@ -177,6 +183,7 @@ class test_show_lisp_extranet(unittest.TestCase):
                                     {'extranets':
                                         {'ext1':
                                             {'extranet': 'ext1',
+                                            'home_instance_id': 103,
                                             'provider':
                                                 {'100.100.100.0/24':
                                                     {'bidirectional': True,
@@ -236,15 +243,15 @@ class test_show_lisp_dynamic_eid_detail(unittest.TestCase):
     golden_parsed_output1 = {
         'lisp_router_instances':
             {0:
-                {'dynamic_eid_name': '192',
-                'service':
+                {'service':
                     {'ipv4':
                         {'etr':
                             {'local_eids':
                                 {101:
                                     {'dynamic_eids':
                                         {'192.168.0.0/24':
-                                            {'discovered_by': 'Packet Reception',
+                                            {'dynamic_eid_name': '192',
+                                            'discovered_by': 'Packet Reception',
                                             'eid_address':
                                                 {'virtual_network_id': 'red'},
                                             'global_map_server': True,
@@ -253,11 +260,12 @@ class test_show_lisp_dynamic_eid_detail(unittest.TestCase):
                                             'last_activity': '00:00:23',
                                             'last_dynamic_eid': '192.168.0.1',
                                             'last_dynamic_eid_discovery_time': '01:17:25',
+                                            'registering_more_specific': True,
                                             'map_server': False,
                                             'rlocs': 'RLOC',
                                             'roaming_dynamic_eid': 1,
                                             'uptime': '01:17:25',
-                                            'want_map_notify': False}}}}}}}}}}
+                                            'site_based_multicast_map_nofity_group': 'none configured'}}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         202-XTR#show lisp all instance-id 101 dynamic-eid detail

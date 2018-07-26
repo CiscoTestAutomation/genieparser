@@ -24,9 +24,9 @@ IOSXE parsers for the following show commands:
     * show lisp all instance-id <instance_id> ipv6 server summary
     * show lisp all instance-id <instance_id> ethernet server summary
 
-* show lisp all instance-id <instance_id> ipv4 server detail internal
-* show lisp all instance-id <instance_id> ipv6 server detail internal
-* show lisp all instance-id <instance_id> ethernet server detail internal
+    * show lisp all instance-id <instance_id> ipv4 server detail internal
+    * show lisp all instance-id <instance_id> ipv6 server detail internal
+    * show lisp all instance-id <instance_id> ethernet server detail internal
 
     * show lisp all instance-id <instance_id> ipv4 server rloc members
     * show lisp all instance-id <instance_id> ipv6 server rloc members
@@ -36,9 +36,9 @@ IOSXE parsers for the following show commands:
     * show lisp all instance-id <instance_id> ipv6 smr
     * show lisp all instance-id <instance_id> ethernet smr
 
-* show lisp all instance-id <instance_id> ipv4 statistics
-* show lisp all instance-id <instance_id> ipv6 statistics
-* show lisp all instance-id <instance_id> ethernet statistics
+    * show lisp all instance-id <instance_id> ipv4 statistics
+    * show lisp all instance-id <instance_id> ipv6 statistics
+    * show lisp all instance-id <instance_id> ethernet statistics
 
     * show lisp all service ipv4 summary
     * show lisp all service ipv6 summary
@@ -64,15 +64,17 @@ class ShowLispSessionSchema(MetaParser):
     schema = {
         'vrf':
             {Any():
-                {'total_sessions': int,
-                'established_sessions': int,
-                'peers': 
-                    {Any():
-                        {'state': str,
-                        'time': str,
-                        'total_in': int,
-                        'total_out': int,
-                        'users': int,
+                {'sessions':
+                    {'total': int,
+                    'established': int,
+                    'peers': 
+                        {Any():
+                            {'state': str,
+                            'time': str,
+                            'total_in': int,
+                            'total_out': int,
+                            'users': int,
+                            },
                         },
                     },
                 },
@@ -111,22 +113,25 @@ class ShowLispSession(ShowLispSessionSchema):
             # Sessions for VRF default, total: 3, established: 3
             m = p1.match(line)
             if m:
-                vrf = m.groupdict()['vrf']
-                vrf_dict = parsed_dict.setdefault('vrf', {}).setdefault(vrf, {})
-                vrf_dict['total_sessions'] = int(m.groupdict()['total'])
-                vrf_dict['established_sessions'] = int(m.groupdict()['established'])
+                group = m.groupdict()
+                vrf = group['vrf']
+                vrf_dict = parsed_dict.setdefault('vrf', {}).\
+                            setdefault(vrf, {}).setdefault('sessions', {})
+                vrf_dict['total'] = int(group['total'])
+                vrf_dict['established'] = int(group['established'])
                 continue
 
             # 8.8.8.8                        Up         00:52:15        8/13     3
             m = p2.match(line)
             if m:
-                peer = m.groupdict()['peer']
+                group = m.groupdict()
+                peer = group['peer']
                 peer_dict = vrf_dict.setdefault('peers', {}).setdefault(peer, {})
-                peer_dict['state'] = m.groupdict()['state'].lower()
-                peer_dict['time'] = m.groupdict()['time']
-                peer_dict['total_in'] = int(m.groupdict()['in'])
-                peer_dict['total_out'] = int(m.groupdict()['out'])
-                peer_dict['users'] = int(m.groupdict()['users'])
+                peer_dict['state'] = group['state'].lower()
+                peer_dict['time'] = group['time']
+                peer_dict['total_in'] = int(group['in'])
+                peer_dict['total_out'] = int(group['out'])
+                peer_dict['users'] = int(group['users'])
                 continue
 
         return parsed_dict
@@ -141,7 +146,7 @@ class ShowLispPlatformSchema(MetaParser):
 
     schema = {
         'parallel_lisp_instance_limit': int,
-        'rloc':
+        'rloc_forwarding_support':
             {'local':
                 {'ipv4': str,
                 'ipv6': str,
@@ -212,12 +217,10 @@ class ShowLispPlatform(ShowLispPlatformSchema):
             m = p2.match(line)
             if m:
                 local_type = m.groupdict()['type'].lower()
-                if 'rloc' not in parsed_dict:
-                    parsed_dict['rloc'] = {}
-                if 'local' not in parsed_dict['rloc']:
-                    parsed_dict['rloc']['local'] = {}
-                parsed_dict['rloc']['local'][local_type] = \
-                    m.groupdict()['local'].lower()
+                rloc_dict = parsed_dict.\
+                            setdefault('rloc_forwarding_support', {}).\
+                            setdefault('local', {})
+                rloc_dict[local_type] = m.groupdict()['local'].lower()
                 continue
 
             # IPv4 RLOC, remote:                 OK
@@ -226,12 +229,10 @@ class ShowLispPlatform(ShowLispPlatformSchema):
             m = p3.match(line)
             if m:
                 remote_type = m.groupdict()['type'].lower()
-                if 'rloc' not in parsed_dict:
-                    parsed_dict['rloc'] = {}
-                if 'remote' not in parsed_dict['rloc']:
-                    parsed_dict['rloc']['remote'] = {}
-                parsed_dict['rloc']['remote'][remote_type] = \
-                    m.groupdict()['remote'].lower()
+                rloc_dict = parsed_dict.\
+                            setdefault('rloc_forwarding_support', {}).\
+                            setdefault('remote', {})
+                rloc_dict[remote_type] = m.groupdict()['remote'].lower()
                 continue
 
             # Latest supported config style:     Service and instance
@@ -271,6 +272,7 @@ class ShowLispExtranetSchema(MetaParser):
                                     'extranets':
                                         {Any():
                                             {'extranet': str,
+                                            'home_instance_id': int,
                                             Optional('provider'):
                                                 {Any():
                                                     {'eid_record': str,
@@ -347,7 +349,7 @@ class ShowLispExtranet(ShowLispExtranetSchema):
             # Home Instance ID: 103
             m = p2.match(line)
             if m:
-                home_instance_id = m.groupdict()['home_inst_id']
+                home_instance_id = int(m.groupdict()['home_inst_id'])
                 continue
 
             # Total entries: 6
@@ -398,6 +400,7 @@ class ShowLispExtranet(ShowLispExtranetSchema):
                             [extranet]
                 # Set values
                 ext_dict['extranet'] = extranet
+                ext_dict['home_instance_id'] = home_instance_id
                 # Set extranet types
                 if extranet_type not in ext_dict:
                     ext_dict[extranet_type] = {}
@@ -421,21 +424,22 @@ class ShowLispDynamicEidDetailSchema(MetaParser):
     schema = {
         'lisp_router_instances':
             {Any():
-                {'dynamic_eid_name': str,
-                'service':
+                {'service':
                     {Any():
                         {'etr':
                             {'local_eids':
                                 {Any():
                                     {'dynamic_eids':
                                         {Any():
-                                            {'id': str,
+                                            {'dynamic_eid_name': str,
+                                            'id': str,
                                             'rlocs': str,
+                                            Optional('registering_more_specific'): bool,
                                             Optional('loopback_address'): str,
                                             Optional('priority'): int,
                                             Optional('weight'): int,
                                             Optional('record_ttl'): int,
-                                            Optional('want_map_notify'): bool,
+                                            Optional('site_based_multicast_map_nofity_group'): str,
                                             Optional('proxy_reply'): bool,
                                             Optional('registration_interval'): int,
                                             Optional('map_server'): bool,
@@ -495,13 +499,15 @@ class ShowLispDynamicEidDetail(ShowLispDynamicEidDetailSchema):
                          ' +locator-set +(?P<locator_set_name>(\S+))$')
 
         # Registering more-specific dynamic-EIDs
+        p5 = re.compile(r'Registering +more-specific +dynamic-EIDs$')
 
         # Map-Server(s): none configured, use global Map-Server
         p6 = re.compile(r'Map-Server\(s\)\: none configured, use global Map-Server$')
 
         # Site-based multicast Map-Notify group: none configured
+        # Site-based multicast Map-Notify group: 225.1.1.2
         p7 = re.compile(r'Site-based +multicast +Map-Notify +group\:'
-                         ' +none +configured$')
+                         ' +(?P<map_notify>([a-zA-Z0-9\s]+))$')
 
         # Number of roaming dynamic-EIDs discovered: 1
         p8 = re.compile(r'Number +of +roaming +dynamic-EIDs +discovered:'
@@ -539,88 +545,80 @@ class ShowLispDynamicEidDetail(ShowLispDynamicEidDetailSchema):
             # Dynamic-EID name: 192
             m = p3.match(line)
             if m:
-                lisp_dict['dynamic_eid_name'] = m.groupdict()['eid_id']
+                dynamic_eid_name = m.groupdict()['eid_id']
                 continue
 
             # Database-mapping EID-prefix: 192.168.0.0/24, locator-set RLOC
             m = p4.match(line)
             if m:
-                dyn_eid = m.groupdict()['dyn_eid']
-                if 'service' not in lisp_dict:
-                    lisp_dict['service'] = {}
-                if 'ipv4' not in lisp_dict:
-                    lisp_dict['service']['ipv4'] = {}
-                if 'etr' not in lisp_dict['service']['ipv4']:
-                    lisp_dict['service']['ipv4']['etr'] = {}
-                if 'local_eids' not in lisp_dict['service']['ipv4']['etr']:
-                    lisp_dict['service']['ipv4']['etr']['local_eids'] = {}
-                if instance_id not in lisp_dict['service']['ipv4']['etr']\
-                        ['local_eids']:
-                    lisp_dict['service']['ipv4']['etr']['local_eids']\
-                        [instance_id] = {}
-                if 'dynamic_eids' not in lisp_dict['service']['ipv4']['etr']\
-                        ['local_eids'][instance_id]:
-                    lisp_dict['service']['ipv4']['etr']['local_eids']\
-                        [instance_id]['dynamic_eids'] = {}
-                if dyn_eid not in lisp_dict['service']['ipv4']['etr']\
-                        ['local_eids'][instance_id]['dynamic_eids']:
-                    lisp_dict['service']['ipv4']['etr']['local_eids']\
-                        [instance_id]['dynamic_eids'][dyn_eid] = {}
-                # Set dynamic eid dict
-                dyneid_dict = lisp_dict['service']['ipv4']['etr']['local_eids']\
-                                [instance_id]['dynamic_eids'][dyn_eid]
+                group = m.groupdict()
+                dyn_eid = group['dyn_eid']
+                dynamic_eids_dict = lisp_dict.setdefault('service', {}).\
+                                    setdefault('ipv4', {}).\
+                                    setdefault('etr', {}).\
+                                    setdefault('local_eids', {}).\
+                                    setdefault(instance_id, {}).\
+                                    setdefault('dynamic_eids', {}).\
+                                    setdefault(dyn_eid, {})
+                
                 # Set values
-                dyneid_dict['id'] =  dyn_eid
-                dyneid_dict['rlocs'] = m.groupdict()['locator_set_name']
-                if 'eid_address' not in dyneid_dict:
-                    dyneid_dict['eid_address'] = {}
-                #dyneid_dict['eid_address']['address_type'] = ADDRESS_TYPE.ipv4
+                dynamic_eids_dict['dynamic_eid_name'] =  dynamic_eid_name
+                dynamic_eids_dict['id'] =  dyn_eid
+                dynamic_eids_dict['rlocs'] = group['locator_set_name']
+                if 'eid_address' not in dynamic_eids_dict:
+                    dynamic_eids_dict['eid_address'] = {}
                 try:
-                    dyneid_dict['eid_address']['virtual_network_id'] = eid_vrf
+                    dynamic_eids_dict['eid_address']['virtual_network_id'] = eid_vrf
                 except:
                     pass
                 continue
 
             # Registering more-specific dynamic-EIDs
+            m = p5.match(line)
+            if m:
+                dynamic_eids_dict['registering_more_specific'] = True
+                continue
 
             # Map-Server(s): none configured, use global Map-Server
             m = p6.match(line)
             if m:
-                dyneid_dict['map_server'] = False
-                dyneid_dict['global_map_server'] = True
+                dynamic_eids_dict['map_server'] = False
+                dynamic_eids_dict['global_map_server'] = True
                 continue
 
             # Site-based multicast Map-Notify group: none configured
+            # Site-based multicast Map-Notify group: 225.1.1.2
             m = p7.match(line)
             if m:
-                dyneid_dict['want_map_notify'] = False
+                dynamic_eids_dict['site_based_multicast_map_nofity_group'] = \
+                    m.groupdict()['map_notify']
                 continue
 
             # Number of roaming dynamic-EIDs discovered: 1
             m = p8.match(line)
             if m:
-                dyneid_dict['roaming_dynamic_eid'] = int(m.groupdict()['roam'])
+                dynamic_eids_dict['roaming_dynamic_eid'] = int(m.groupdict()['roam'])
 
             # Last dynamic-EID discovered: 192.168.0.1, 01:17:25 ago
             m = p9.match(line)
             if m:
-                dyneid_dict['last_dynamic_eid'] = m.groupdict()['last']
-                dyneid_dict['last_dynamic_eid_discovery_time'] = \
+                dynamic_eids_dict['last_dynamic_eid'] = m.groupdict()['last']
+                dynamic_eids_dict['last_dynamic_eid_discovery_time'] = \
                     m.groupdict()['time']
                 continue
 
             # 192.168.0.1, GigabitEthernet5, uptime: 01:17:25
             m = p10.match(line)
             if m:
-                dyneid_dict['interface'] = m.groupdict()['interface']
-                dyneid_dict['uptime'] = m.groupdict()['uptime']
+                dynamic_eids_dict['interface'] = m.groupdict()['interface']
+                dynamic_eids_dict['uptime'] = m.groupdict()['uptime']
                 continue
 
             # last activity: 00:00:23, discovered by: Packet Reception
             m = p11.match(line)
             if m:
-                dyneid_dict['last_activity'] = m.groupdict()['last']
-                dyneid_dict['discovered_by'] = m.groupdict()['discovered_by']
+                dynamic_eids_dict['last_activity'] = m.groupdict()['last']
+                dynamic_eids_dict['discovered_by'] = m.groupdict()['discovered_by']
                 continue
 
         return parsed_dict
