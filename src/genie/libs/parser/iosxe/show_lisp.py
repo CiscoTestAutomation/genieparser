@@ -425,12 +425,19 @@ class ShowLispDynamicEidDetailSchema(MetaParser):
                                             Optional('registration_interval'): int,
                                             Optional('global_map_server'): bool,
                                             Optional('num_of_roaming_dynamic_eid'): int,
-                                            Optional('last_dynamic_eid'): str,
-                                            Optional('last_dynamic_eid_discovery_time'): str,
-                                            Optional('interface'): str,
-                                            Optional('uptime'): str,
-                                            Optional('last_activity'): str,
-                                            Optional('discovered_by'): str,
+                                            Optional('last_dynamic_eid'):
+                                                {Any():
+                                                    {'last_dynamic_eid_discovery_elaps_time': str,
+                                                    'eids':
+                                                        {Any():
+                                                            {'interface': str,
+                                                            'uptime': str,
+                                                            'last_activity': str,
+                                                            'discovered_by': str,
+                                                            },
+                                                        },
+                                                    },
+                                                },
                                             Optional('eid_address'):
                                                 {Optional('address_type'): str,
                                                 Optional('virtual_network_id'): str,
@@ -498,7 +505,7 @@ class ShowLispDynamicEidDetail(ShowLispDynamicEidDetailSchema):
                          ' +(?P<time>(\S+)) +ago$')
 
         # 192.168.0.1, GigabitEthernet5, uptime: 01:17:25
-        p10 = re.compile(r'(?P<prefix>([0-9\.\:]+)), +(?P<interface>(\S+)),'
+        p10 = re.compile(r'(?P<eid>([0-9\.\:]+)), +(?P<interface>(\S+)),'
                           ' +uptime: +(?P<uptime>(\S+))$')
 
         #   last activity: 00:00:23, discovered by: Packet Reception
@@ -581,23 +588,37 @@ class ShowLispDynamicEidDetail(ShowLispDynamicEidDetailSchema):
             # Last dynamic-EID discovered: 192.168.0.1, 01:17:25 ago
             m = p9.match(line)
             if m:
-                dynamic_eids_dict['last_dynamic_eid'] = m.groupdict()['last']
-                dynamic_eids_dict['last_dynamic_eid_discovery_time'] = \
-                    m.groupdict()['time']
+                group = m.groupdict()
+                last_eid = group['last']
+                time = group['time']
+                # Create dict
+                last_dyn_dict = dynamic_eids_dict.\
+                                    setdefault('last_dynamic_eid', {}).\
+                                    setdefault(last_eid, {})
+                last_dyn_dict['last_dynamic_eid_discovery_elaps_time'] = time
                 continue
 
             # 192.168.0.1, GigabitEthernet5, uptime: 01:17:25
             m = p10.match(line)
             if m:
-                dynamic_eids_dict['interface'] = m.groupdict()['interface']
-                dynamic_eids_dict['uptime'] = m.groupdict()['uptime']
+                group = m.groupdict()
+                eid = group['eid']
+                interface = group['interface']
+                uptime = group['uptime']
+                last_eids_dict = last_dyn_dict.setdefault('eids', {}).\
+                                    setdefault(eid, {})
+                last_eids_dict['interface'] = interface
+                last_eids_dict['uptime'] = uptime
                 continue
 
             # last activity: 00:00:23, discovered by: Packet Reception
             m = p11.match(line)
             if m:
-                dynamic_eids_dict['last_activity'] = m.groupdict()['last']
-                dynamic_eids_dict['discovered_by'] = m.groupdict()['discovered_by']
+                group = m.groupdict()
+                last_activity = group['last']
+                discovered_by = group['discovered_by'].lower()
+                last_eids_dict['last_activity'] = last_activity
+                last_eids_dict['discovered_by'] = discovered_by
                 continue
 
         return parsed_dict
@@ -1404,3 +1425,4 @@ class ShowLispServiceMapCache(MetaParser):
                 continue
 
         return parsed_dict
+ 
