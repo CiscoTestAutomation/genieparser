@@ -11,10 +11,21 @@ IOSXE parsers for the following show commands:
     * show lisp all instance-id <instance_id> ipv4
     * show lisp all instance-id <instance_id> ipv6
     * show lisp all instance-id <instance_id> ethernet
-
     * show lisp all instance-id <instance_id> ipv4 map-cache
     * show lisp all instance-id <instance_id> ipv6 map-cache
     * show lisp all instance-id <instance_id> ethernet map-cache
+
+    * show lisp all instance-id <instance_id> ipv4 server rloc members
+    * show lisp all instance-id <instance_id> ipv6 server rloc members
+    * show lisp all instance-id <instance_id> ethernet server rloc members
+
+    * show lisp all instance-id <instance_id> ipv4 smr
+    * show lisp all instance-id <instance_id> ipv6 smr
+    * show lisp all instance-id <instance_id> ethernet smr
+
+    * show lisp all service ipv4 summary
+    * show lisp all service ipv6 summary
+    * show lisp all service ethernet summary
 
     * show lisp all instance-id <instance_id> ipv4 database
     * show lisp all instance-id <instance_id> ipv6 database
@@ -28,21 +39,9 @@ IOSXE parsers for the following show commands:
     * show lisp all instance-id <instance_id> ipv6 server detail internal
     * show lisp all instance-id <instance_id> ethernet server detail internal
 
-    * show lisp all instance-id <instance_id> ipv4 server rloc members
-    * show lisp all instance-id <instance_id> ipv6 server rloc members
-    * show lisp all instance-id <instance_id> ethernet server rloc members
-
-    * show lisp all instance-id <instance_id> ipv4 smr
-    * show lisp all instance-id <instance_id> ipv6 smr
-    * show lisp all instance-id <instance_id> ethernet smr
-
     * show lisp all instance-id <instance_id> ipv4 statistics
     * show lisp all instance-id <instance_id> ipv6 statistics
-    * show lisp all instance-id <instance_id> ethernet statistics
-
-    * show lisp all service ipv4 summary
-    * show lisp all service ipv6 summary
-    * show lisp all service ethernet summary
+    * show lisp all instance-id <instance_id> ethernet statistic
 '''
 
 # Python
@@ -1367,17 +1366,92 @@ class ShowLispService(ShowLispServiceSchema):
 # ========================================================================
 # Schema for 'show lisp all instance-id <instance_id> <service> map-cache'
 # ========================================================================
-# class ShowLispServiceMapCacheSchema(MetaParser):
+class ShowLispServiceMapCacheSchema(MetaParser):
 
-#      '''Schema for "show lisp all instance-id <instance_id> <service> map-cache" '''
+    '''Schema for "show lisp all instance-id <instance_id> <service> map-cache" '''
 
-#     schema = {}
+    schema = {
+        'lisp_router_instances':
+            {Any():
+                {'lisp_router_instance_id': int,
+                'service':
+                    {Any():
+                        {'service': str,
+                        'itr':
+                            {'map_cache':
+                                {Any():
+                                    {'vni': str,
+                                    'entries': int,
+                                    'iid': int,
+                                    'mappings':
+                                        {Any():
+                                            {'id': str,
+                                            'uptime': str,
+                                            'expires': str,
+                                            'via': str,
+                                            'eid':
+                                                {'address_type': str,
+                                                'virtual_network_id': str,
+                                                Optional('ipv4'):
+                                                    {'ipv4': str,
+                                                    },
+                                                Optional('ipv4_prefix'):
+                                                    {'ipv4_prefix': str,
+                                                    },
+                                                Optional('ipv6'):
+                                                    {'ipv6': str,
+                                                    },
+                                                Optional('ipv6_prefix'):
+                                                    {'ipv6_prefix': str,
+                                                    },
+                                                },
+                                            Optional('negative_mapping'):
+                                                {'map_reply_action': str,
+                                                },
+                                            Optional('positive_mapping'):
+                                                {'rlocs':
+                                                    {Any():
+                                                        {'id': str,
+                                                        'locator_address':
+                                                            {'address_type': str,
+                                                            'virtual_network_id': str,
+                                                            'uptime': str,
+                                                            'state': str,
+                                                            'priority': int,
+                                                            'weight': int,
+                                                            Optional('encap_iid'): str,
+                                                            Optional('ipv4'):
+                                                                {'ipv4': str,
+                                                                },
+                                                            Optional('ipv4_prefix'):
+                                                                {'ipv4_prefix': str,
+                                                                },
+                                                            Optional('ipv6'):
+                                                                {'ipv6': str,
+                                                                },
+                                                            Optional('ipv6_prefix'):
+                                                                {'ipv6_prefix': str,
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
 
 
 # ========================================================================
 # Parser for 'show lisp all instance-id <instance_id> <service> map-cache'
 # ========================================================================
-class ShowLispServiceMapCache(MetaParser):
+class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
 
     '''Parser for "show lisp all instance-id <instance_id> <service> map-cache"'''
 
@@ -1408,8 +1482,8 @@ class ShowLispServiceMapCache(MetaParser):
         # LISP IPv4 Mapping Cache for EID-table vrf red (IID 101), 2 entries
         # LISP IPv6 Mapping Cache for EID-table vrf red (IID 101), 2 entries
         # LISP MAC Mapping Cache for EID-table Vlan 101 (IID 1), 4 entries
-        p2 = re.compile(r'LISP +(?P<type>(IPv4|IPv6|MAC) +Mapping +Cache +for'
-                         ' +EID\-table +(?P<eid_table>([a-zA-Z0-9\s]+))'
+        p2 = re.compile(r'LISP +(?P<type>(IPv4|IPv6|MAC)) +Mapping +Cache +for'
+                         ' +EID\-table +(?P<vrf>([a-zA-Z0-9\s]+))'
                          ' +\(IID +(?P<iid>(\d+))\), +(?P<entries>(\d+))'
                          ' +entries$')
 
@@ -1417,11 +1491,18 @@ class ShowLispServiceMapCache(MetaParser):
         # ::/0, uptime: 00:11:28, expires: never, via static-send-map-request
         # b827.eb51.f5ce/48, uptime: 22:49:42, expires: 01:10:17, via WLC Map-Notify, complete
         # 192.168.9.0/24, uptime: 00:04:02, expires: 23:55:57, via map-reply, complete
+        p3 = re.compile(r'(?P<map_id>(\S+)), +uptime: +(?P<uptime>(\S+)),'
+                         ' +expires: +(?P<expires>(\S+)), +via +(?P<via>(.*))$')
 
         #   Negative cache entry, action: send-map-request
+        p4 = re.compile(r'Negative +cache +entry, +action: +(?P<action>(.*))$')
 
         #   Locator  Uptime    State      Pri/Wgt     Encap-IID
         #   8.8.8.8  00:04:02  up          50/50        -
+        p5 = re.compile(r'(?P<locator>(\S+)) +(?P<uptime>(\S+))'
+                         ' +(?P<state>(up|down))'
+                         ' +(?P<priority>(\d+))\/(?P<weight>(\d+))'
+                         '(?: +(?P<encap_iid>(\S+)))?$')
 
 
         for line in out.splitlines():
@@ -1431,19 +1512,97 @@ class ShowLispServiceMapCache(MetaParser):
             # Output for router lisp 0 instance-id 193
             m = p1.match(line)
             if m:
-                lisp_router_id = int(m.groupdict()['router_id'])
+                group = m.groupdict()
+                lisp_router_id = int(group['router_id'])
                 lisp_dict = parsed_dict.setdefault('lisp_router_instances', {}).\
                             setdefault(lisp_router_id, {})
                 lisp_dict['lisp_router_instance_id'] = lisp_router_id
+                continue
+
+            # LISP IPv4 Mapping Cache for EID-table vrf red (IID 101), 2 entries
+            # LISP IPv6 Mapping Cache for EID-table vrf red (IID 101), 2 entries
+            # LISP MAC Mapping Cache for EID-table Vlan 101 (IID 1), 4 entries
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                address_type = group['type']
+                itr_map_eid_vrf = group['vrf']
+                # Create dict
                 service_dict = lisp_dict.setdefault('service', {}).\
-                                   setdefault(service, {})
+                                setdefault(service, {})
                 service_dict['service'] = service
-                map_server_dict = service_dict.setdefault('map_server', {})
-                if m.groupdict()['instance_id']:
-                    instance_id = m.groupdict()['instance_id']
-                    vni_dict = map_server_dict.setdefault(
-                        'virtual_network_ids', {}).setdefault(instance_id, {})
-                    vni_dict['vni'] = instance_id
+                itr_dict = service_dict.setdefault('itr', {})
+                map_cache_dict = itr_dict.setdefault('map_cache', {}).\
+                                    setdefault(instance_id, {})
+                map_cache_dict['vni'] = str(instance_id)
+                map_cache_dict['iid'] = int(group['iid'])
+                map_cache_dict['entries'] = int(group['entries'])
+                continue
+
+            # # 0.0.0.0/0, uptime: 15:23:50, expires: never, via static-send-map-request
+            # ::/0, uptime: 00:11:28, expires: never, via static-send-map-request
+            # b827.eb51.f5ce/48, uptime: 22:49:42, expires: 01:10:17, via WLC Map-Notify, complete
+            # 192.168.9.0/24, uptime: 00:04:02, expires: 23:55:57, via map-reply, complete
+            m = p3.match(line)
+            if m:
+                # reset rloc counter
+                rloc_id = 1
+                group = m.groupdict()
+                mapping_dict = map_cache_dict.setdefault('mappings', {}).\
+                                setdefault(group['map_id'], {})
+                mapping_dict['id'] = group['map_id']
+                mapping_dict['uptime'] = group['uptime']
+                mapping_dict['expires'] = group['expires']
+                mapping_dict['via'] = group['via']
+                eid_dict = mapping_dict.setdefault('eid', {})
+                if ':' in group['map_id']:
+                    ipv6_dict = eid_dict.setdefault('ipv6', {})
+                    ipv6_dict['ipv6'] = group['map_id']
+                else:
+                    ipv4_dict = eid_dict.setdefault('ipv4', {})
+                    ipv4_dict['ipv4'] = group['map_id']
+                try:
+                    eid_dict['address_type'] = address_type.lower() + '-afi'
+                except:
+                    pass
+                try:
+                    eid_dict['virtual_network_id'] = itr_map_eid_vrf
+                except:
+                    pass
+
+            #   Negative cache entry, action: send-map-request
+            m = p4.match(line)
+            if m:
+                neg_dict = mapping_dict.setdefault('negative_mapping', {})
+                neg_dict['map_reply_action'] = m.groupdict()['action']
+                continue
+
+            #  Locator  Uptime    State      Pri/Wgt     Encap-IID
+            #  8.8.8.8  00:04:02  up          50/50        -
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                postive_dict = mapping_dict.setdefault('positive_mapping', {}).\
+                                setdefault('rlocs', {})
+                rloc_dict = postive_dict.setdefault(rloc_id, {})
+                rloc_dict['id'] = str(rloc_id)
+                locator_dict = rloc_dict.setdefault('locator_address', {})
+                locator_dict['address_type'] = address_type.lower() + '-afi'
+                locator_dict['virtual_network_id'] = str(instance_id)
+                locator_dict['uptime'] = group['uptime']
+                locator_dict['state'] = group['state']
+                locator_dict['priority'] = int(group['priority'])
+                locator_dict['weight'] = int(group['weight'])
+                if group['encap_iid']:
+                    locator_dict['encap_iid'] = group['encap_iid']
+                if ':' in group['locator']:
+                    ipv6_dict = locator_dict.setdefault('ipv6', {})
+                    ipv6_dict['ipv6'] = group['locator']
+                else:
+                    ipv4_dict = locator_dict.setdefault('ipv4', {})
+                    ipv4_dict['ipv4'] = group['locator']
+                # Increment entry
+                rloc_id += 1
                 continue
 
         return parsed_dict
