@@ -1618,6 +1618,21 @@ class ShowLispServiceRlocMembersSchema(MetaParser):
         'lisp_router_instances':
             {Any():
                 {'lisp_router_instance_id': int,
+                Optional('service'):
+                    {Optional(Any()):
+                        {Optional('rloc'):
+                            {Optional('total_entries'): int,
+                            Optional('valid_entries'): int,
+                            Optional('distribution'): bool,
+                            Optional('members'):
+                                {Optional(Any()):
+                                    {Optional('origin'): str,
+                                    Optional('valid'): str,
+                                    },
+                                },
+                            },
+                        },
+                    },
                 },
             },
         }
@@ -1642,8 +1657,14 @@ class ShowLispServiceRlocMembers(ShowLispServiceRlocMembersSchema):
         # Init vars
         parsed_dict = {}
 
+        # State dict
+        state_dict = {
+            'disabled': False,
+            'enabled': True}
+
         # Output for router lisp 0
         # Output for router lisp 0 instance-id 193
+        # Output for router lisp 2 instance-id 101
         p1 = re.compile(r'Output +for +router +lisp +(?P<router_id>(\S+))'
                          '(?: +instance-id +(?P<instance_id>(\d+)))?$')
 
@@ -1654,11 +1675,12 @@ class ShowLispServiceRlocMembers(ShowLispServiceRlocMembersSchema):
         # Entries: 2 valid / 2 total, Distribution disabled
         p3 = re.compile(r'Entries: +(?P<valid>(\d+)) +valid +\/'
                          ' +(?P<total>(\d+)) +total, +Distribution'
-                         ' +(?P<dist>(enabled|disabled))$')
+                         ' +(?P<distribution>(enabled|disabled))$')
 
         # RLOC                    Origin                       Valid
         # 2.2.2.2                 Registration                 Yes
-        p4 = re.compile(r'+(?P<rloc>(\S+)) +(?P<origin>(\S+)) +(?P<valid>(\S+))$')
+        p4 = re.compile(r'(?P<member>([0-9\.\:]+)) +(?P<origin>(\S+))'
+                         ' +(?P<valid>(\S+))$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1674,6 +1696,29 @@ class ShowLispServiceRlocMembers(ShowLispServiceRlocMembersSchema):
                 lisp_dict['lisp_router_instance_id'] = lisp_router_id
                 if group['instance_id']:
                     instance_id = group['instance_id']
+                service_dict = lisp_dict.setdefault('service', {}).\
+                                setdefault(service, {})
+                continue
+
+            # Entries: 2 valid / 2 total, Distribution disabled
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                rloc_dict = service_dict.setdefault('rloc', {})
+                rloc_dict['valid_entries'] = int(group['valid'])
+                rloc_dict['total_entries'] = int(group['total'])
+                rloc_dict['distribution'] = state_dict[group['distribution']]
+                continue
+
+            # RLOC                    Origin                       Valid
+            # 2.2.2.2                 Registration                 Yes
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                members_dict = rloc_dict.setdefault('members', {}).\
+                                setdefault(group['member'], {})
+                members_dict['origin'] = group['origin'].lower()
+                members_dict['valid'] = group['valid'].lower()
                 continue
 
         return parsed_dict
