@@ -16,7 +16,8 @@ from genie.libs.parser.iosxe.show_lisp import ShowLispSession,\
                                               ShowLispExtranet,\
                                               ShowLispDynamicEidDetail,\
                                               ShowLispService,\
-                                              ShowLispServiceMapCache
+                                              ShowLispServiceMapCache,\
+                                              ShowLispServiceRlocMembers
 
 
 
@@ -1648,7 +1649,6 @@ class test_show_lisp_instance_id_service(unittest.TestCase):
             parsed_output = obj.parse(instance_id='*', service='ipv4')
 
 
-
 # ===========================================================================
 # Unit test for 'show lisp all instance-id <instance_id> <service> map-cache'
 # ===========================================================================
@@ -2325,11 +2325,125 @@ class test_show_lisp_instance_id_service_map_cache(unittest.TestCase):
         parsed_output = obj.parse(instance_id='*', service='ethernet')
         self.assertEqual(parsed_output, self.golden_parsed_output3)
 
-
     def test_show_lisp_instance_id_service_map_cache_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
         obj = ShowLispServiceMapCache(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(instance_id='*', service='ipv4')
+
+
+
+# ==============================================================================
+# Unit test for 'show lisp all instance-id <instance_id> <service> rloc members'
+# ==============================================================================
+class test_show_lisp_instance_id_service_rloc_members(unittest.TestCase):
+
+    '''Unit test for "show lisp all instance-id <instance_id> <service> rloc members"'''
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {}
+
+    golden_output1 = {'execute.return_value': '''
+        204-MSMR#show lisp all instance-id 101 ipv4 server rloc members 
+
+        =====================================================
+        Output for router lisp 0
+        =====================================================
+        LISP RLOC Membership for router lisp 0 IID 101
+        Entries: 2 valid / 2 total, Distribution disabled
+
+        RLOC                                    Origin                       Valid
+        2.2.2.2                                 Registration                 Yes
+        8.8.8.8                                 Registration                 Yes
+        '''}
+
+    golden_parsed_output2 = {}
+
+    golden_output2 = {'execute.return_value': '''
+        04-MSMR#show lisp all instance-id 101 ipv6 server rloc members 
+
+        =====================================================
+        Output for router lisp 0
+        =====================================================
+        LISP RLOC Membership for router lisp 0 IID 101
+        Entries: 2 valid / 2 total, Distribution disabled
+
+        RLOC                                    Origin                       Valid
+        2.2.2.2                                 Registration                 Yes
+        8.8.8.8                                 Registration                 Yes
+        '''}
+
+    golden_parsed_output3 = {}
+
+    golden_output3 = {'execute.return_value': '''
+        OTT-LISP-C9K-20-MSMR#show lisp all instance-id * ethernet server rloc members
+
+        =================================================
+        Output for router lisp 2 instance-id 101
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 2 instance-id 102
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 2 instance-id 103
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 2 instance-id 104
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 2 instance-id 107
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 2 instance-id 108
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 2 instance-id 109
+        =================================================
+        % EID table not enabled for MAC.
+
+        '''}
+
+    def test_show_lisp_instance_id_service_rloc_members_full1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowLispServiceRlocMembers(device=self.device)
+        parsed_output = obj.parse(instance_id=101, service='ipv4')
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_lisp_instance_id_service_rloc_members_full2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowLispServiceRlocMembers(device=self.device)
+        parsed_output = obj.parse(instance_id=101, service='ipv6')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_show_lisp_instance_id_service_rloc_members_full3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowLispServiceRlocMembers(device=self.device)
+        parsed_output = obj.parse(instance_id='*', service='ethernet')
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
+
+    def test_show_lisp_instance_id_service_rloc_members_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowLispServiceRlocMembers(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(instance_id='*', service='ipv4')
 

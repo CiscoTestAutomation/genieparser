@@ -1459,12 +1459,10 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
 
         assert service in ['ipv4', 'ipv6', 'ethernet']
 
-        # Build the command
-        cmd = 'show lisp all instance-id {instance_id} service {service}'.\
-                format(instance_id=instance_id, service=service)
-        
         # Execute command on device
-        out = self.device.execute(cmd)
+        out = self.device.execute('show lisp all instance-id {instance_id}'
+                                    ' service {service} map-cache'.\
+                            format(instance_id=instance_id, service=service))
 
         # Init vars
         parsed_dict = {}
@@ -1503,7 +1501,6 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
                          ' +(?P<state>(up|down))'
                          ' +(?P<priority>(\d+))\/(?P<weight>(\d+))'
                          '(?: +(?P<encap_iid>(\S+)))?$')
-
 
         for line in out.splitlines():
             line = line.strip()
@@ -1605,6 +1602,78 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
                     ipv4_dict['ipv4'] = group['locator']
                 # Increment entry
                 rloc_id += 1
+                continue
+
+        return parsed_dict
+
+
+# ===========================================================================
+# Schema for 'show lisp all instance-id <instance_id> <service> rloc members'
+# ===========================================================================
+class ShowLispServiceRlocMembersSchema(MetaParser):
+
+    '''Schema for "show lisp all instance-id <instance_id> <service> rloc members" '''
+
+    schema = {
+        'lisp_router_instances':
+            {Any():
+                {'lisp_router_instance_id': int,
+                },
+            },
+        }
+
+
+# ===========================================================================
+# Parser for 'show lisp all instance-id <instance_id> <service> rloc members'
+# ===========================================================================
+class ShowLispServiceRlocMembers(ShowLispServiceRlocMembersSchema):
+
+    '''Parser for "show lisp all instance-id <instance_id> <service> rloc members"'''
+
+    def cli(self, service, instance_id):
+
+        assert service in ['ipv4', 'ipv6', 'ethernet']
+        
+        # Execute command on device
+        out = self.device.execute('show lisp all instance-id {instance_id}'
+                                  ' service {service} rloc members'.\
+                            format(instance_id=instance_id, service=service))
+
+        # Init vars
+        parsed_dict = {}
+
+        # Output for router lisp 0
+        # Output for router lisp 0 instance-id 193
+        p1 = re.compile(r'Output +for +router +lisp +(?P<router_id>(\S+))'
+                         '(?: +instance-id +(?P<instance_id>(\d+)))?$')
+
+        # LISP RLOC Membership for router lisp 0 IID 101
+        p2 = re.compile(r'LISP +RLOC +Membership +for +router +lisp'
+                         ' +(?P<router_id>(\S+)) +IID +(?P<instance_id>(\d+))$')
+
+        # Entries: 2 valid / 2 total, Distribution disabled
+        p3 = re.compile(r'Entries: +(?P<valid>(\d+)) +valid +\/'
+                         ' +(?P<total>(\d+)) +total, +Distribution'
+                         ' +(?P<dist>(enabled|disabled))$')
+
+        # RLOC                    Origin                       Valid
+        # 2.2.2.2                 Registration                 Yes
+        p4 = re.compile(r'+(?P<rloc>(\S+)) +(?P<origin>(\S+)) +(?P<valid>(\S+))$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Output for router lisp 0
+            # Output for router lisp 0 instance-id 193
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                lisp_router_id = int(group['router_id'])
+                lisp_dict = parsed_dict.setdefault('lisp_router_instances', {}).\
+                            setdefault(lisp_router_id, {})
+                lisp_dict['lisp_router_instance_id'] = lisp_router_id
+                if group['instance_id']:
+                    instance_id = group['instance_id']
                 continue
 
         return parsed_dict
