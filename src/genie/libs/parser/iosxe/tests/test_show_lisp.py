@@ -268,7 +268,7 @@ class test_show_lisp_dynamic_eid_detail(unittest.TestCase):
                                                     'num_of_roaming_dynamic_eid': 1,
                                                     'registering_more_specific': True,
                                                     'rlocs': 'RLOC',
-                                                    'site_based_multicast_map_nofity_group': 'none configured'}}}}}}}}}}
+                                                    'site_based_multicast_map_notify_group': 'none configured'}}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         202-XTR#show lisp all instance-id 101 dynamic-eid detail
@@ -327,7 +327,7 @@ class test_show_lisp_dynamic_eid_detail(unittest.TestCase):
                                             'num_of_roaming_dynamic_eid': 3,
                                             'registering_more_specific': True,
                                             'rlocs': 'CC-CA04-C',
-                                            'site_based_multicast_map_nofity_group': 'none configured'}}}}}}}}}}
+                                            'site_based_multicast_map_notify_group': 'none configured'}}}}}}}}}}
 
     golden_output2 = {'execute.return_value': '''
         202-XTR#show lisp all instance-id 101 dynamic-eid detail

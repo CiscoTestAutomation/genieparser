@@ -41,7 +41,7 @@ IOSXE parsers for the following show commands:
 
     * show lisp all instance-id <instance_id> ipv4 statistics
     * show lisp all instance-id <instance_id> ipv6 statistics
-    * show lisp all instance-id <instance_id> ethernet statistic
+    * show lisp all instance-id <instance_id> ethernet statistics
 '''
 
 # Python
@@ -419,7 +419,7 @@ class ShowLispDynamicEidDetailSchema(MetaParser):
                                             Optional('priority'): int,
                                             Optional('weight'): int,
                                             Optional('record_ttl'): int,
-                                            Optional('site_based_multicast_map_nofity_group'): str,
+                                            Optional('site_based_multicast_map_notify_group'): str,
                                             Optional('proxy_reply'): bool,
                                             Optional('registration_interval'): int,
                                             Optional('global_map_server'): bool,
@@ -597,7 +597,7 @@ class ShowLispDynamicEidDetail(ShowLispDynamicEidDetailSchema):
             # Site-based multicast Map-Notify group: 225.1.1.2
             m = p7.match(line)
             if m:
-                dynamic_eids_dict['site_based_multicast_map_nofity_group'] = \
+                dynamic_eids_dict['site_based_multicast_map_notify_group'] = \
                     m.groupdict()['map_notify']
                 continue
 
