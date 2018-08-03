@@ -14,7 +14,6 @@ IOSXE parsers for the following show commands:
     * show lisp all instance-id <instance_id> ipv4 map-cache
     * show lisp all instance-id <instance_id> ipv6 map-cache
     * show lisp all instance-id <instance_id> ethernet map-cache
-
     * show lisp all instance-id <instance_id> ipv4 server rloc members
     * show lisp all instance-id <instance_id> ipv6 server rloc members
     * show lisp all instance-id <instance_id> ethernet server rloc members

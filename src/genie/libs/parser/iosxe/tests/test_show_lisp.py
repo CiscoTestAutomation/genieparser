@@ -433,7 +433,7 @@ class test_show_lisp_dynamic_eid_detail(unittest.TestCase):
 # =================================================================
 # Unit test for 'show lisp all instance-id <instance_id> <service>'
 # =================================================================
-class test_show_lisp_instance_id_service(unittest.TestCase):
+class test_show_lisp_service(unittest.TestCase):
 
     '''Unit test for "show lisp all instance-id <instance_id> <service>"'''
 
@@ -1599,49 +1599,49 @@ class test_show_lisp_instance_id_service(unittest.TestCase):
             Dynamic database mapping limit:    5120
         '''}
 
-    def test_show_lisp_instance_id_service_full1(self):
+    def test_show_lisp_service_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowLispService(device=self.device)
         parsed_output = obj.parse(instance_id=101, service='ipv4')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
-    def test_show_lisp_instance_id_service_full2(self):
+    def test_show_lisp_service_full2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowLispService(device=self.device)
         parsed_output = obj.parse(instance_id=101, service='ipv6')
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
-    def test_show_lisp_instance_id_service_full3(self):
+    def test_show_lisp_service_full3(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output3)
         obj = ShowLispService(device=self.device)
         parsed_output = obj.parse(instance_id='*', service='ethernet')
         self.assertEqual(parsed_output, self.golden_parsed_output3)
 
-    def test_show_lisp_instance_id_service_full4(self):
+    def test_show_lisp_service_full4(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output4)
         obj = ShowLispService(device=self.device)
         parsed_output = obj.parse(instance_id='*', service='ethernet')
         self.assertEqual(parsed_output, self.golden_parsed_output4)
 
-    def test_show_lisp_instance_id_service_full5(self):
+    def test_show_lisp_service_full5(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output5)
         obj = ShowLispService(device=self.device)
         parsed_output = obj.parse(instance_id='*', service='ethernet')
         self.assertEqual(parsed_output, self.golden_parsed_output5)
 
-    def test_show_lisp_instance_id_service_full6(self):
+    def test_show_lisp_service_full6(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output6)
         obj = ShowLispService(device=self.device)
         parsed_output = obj.parse(instance_id='*', service='ethernet')
         self.assertEqual(parsed_output, self.golden_parsed_output6)
 
-    def test_show_lisp_instance_id_service_empty(self):
+    def test_show_lisp_service_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
         obj = ShowLispService(device=self.device)
@@ -1652,7 +1652,7 @@ class test_show_lisp_instance_id_service(unittest.TestCase):
 # ===========================================================================
 # Unit test for 'show lisp all instance-id <instance_id> <service> map-cache'
 # ===========================================================================
-class test_show_lisp_instance_id_service_map_cache(unittest.TestCase):
+class test_show_lisp_service_map_cache(unittest.TestCase):
 
     '''Unit test for "show lisp all instance-id <instance_id> <service> map-cache"'''
 
@@ -2304,28 +2304,28 @@ class test_show_lisp_instance_id_service_map_cache(unittest.TestCase):
         % EID table not enabled for MAC.
         '''}
 
-    def test_show_lisp_instance_id_service_map_cache_full1(self):
+    def test_show_lisp_service_map_cache_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowLispServiceMapCache(device=self.device)
         parsed_output = obj.parse(instance_id=101, service='ipv4')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
-    def test_show_lisp_instance_id_service_map_cache_full2(self):
+    def test_show_lisp_service_map_cache_full2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowLispServiceMapCache(device=self.device)
         parsed_output = obj.parse(instance_id=101, service='ipv6')
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
-    def test_show_lisp_instance_id_service_map_cache_full3(self):
+    def test_show_lisp_service_map_cache_full3(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output3)
         obj = ShowLispServiceMapCache(device=self.device)
         parsed_output = obj.parse(instance_id='*', service='ethernet')
         self.assertEqual(parsed_output, self.golden_parsed_output3)
 
-    def test_show_lisp_instance_id_service_map_cache_empty(self):
+    def test_show_lisp_service_map_cache_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
         obj = ShowLispServiceMapCache(device=self.device)
@@ -2337,7 +2337,7 @@ class test_show_lisp_instance_id_service_map_cache(unittest.TestCase):
 # ==============================================================================
 # Unit test for 'show lisp all instance-id <instance_id> <service> rloc members'
 # ==============================================================================
-class test_show_lisp_instance_id_service_rloc_members(unittest.TestCase):
+class test_show_lisp_service_rloc_members(unittest.TestCase):
 
     '''Unit test for "show lisp all instance-id <instance_id> <service> rloc members"'''
 
@@ -2394,7 +2394,6 @@ class test_show_lisp_instance_id_service_rloc_members(unittest.TestCase):
                                 '8.8.8.8': 
                                     {'origin': 'registration',
                                     'valid': 'yes'}}}}}}}}
-
 
     golden_output2 = {'execute.return_value': '''
         04-MSMR#show lisp all instance-id 101 ipv6 server rloc members 
@@ -2457,28 +2456,28 @@ class test_show_lisp_instance_id_service_rloc_members(unittest.TestCase):
 
         '''}
 
-    def test_show_lisp_instance_id_service_rloc_members_full1(self):
+    def test_show_lisp_service_rloc_members_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowLispServiceRlocMembers(device=self.device)
         parsed_output = obj.parse(instance_id=101, service='ipv4')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
-    def test_show_lisp_instance_id_service_rloc_members_full2(self):
+    def test_show_lisp_service_rloc_members_full2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowLispServiceRlocMembers(device=self.device)
         parsed_output = obj.parse(instance_id=101, service='ipv6')
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
-    def test_show_lisp_instance_id_service_rloc_members_full3(self):
+    def test_show_lisp_service_rloc_members_full3(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output3)
         obj = ShowLispServiceRlocMembers(device=self.device)
         parsed_output = obj.parse(instance_id='*', service='ethernet')
         self.assertEqual(parsed_output, self.golden_parsed_output3)
 
-    def test_show_lisp_instance_id_service_rloc_members_empty(self):
+    def test_show_lisp_service_rloc_members_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
         obj = ShowLispServiceRlocMembers(device=self.device)
