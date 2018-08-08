@@ -2393,7 +2393,7 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                 {'address_family': 
                     {'ipv4': 
                         {'instance': 
-                            {'1': 
+                            {'mpls1': 
                                 {'areas': 
                                     {'0.0.0.1': 
                                         {'database': 
@@ -2685,7 +2685,7 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                 {'address_family': 
                     {'ipv4': 
                         {'instance': 
-                            {'1': 
+                            {'mpls1': 
                                 {'areas': 
                                     {'0.0.0.0': 
                                         {'database': 
@@ -2923,7 +2923,7 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
         RP/0/0/CPU0:R3_ospf_xr#show ospf vrf all-inclusive database router 
         Thu Nov  2 21:25:10.231 UTC
 
-                    OSPF Router with ID (3.3.3.3) (Process ID 1)
+                    OSPF Router with ID (3.3.3.3) (Process ID mpls1)
 
                         Router Link States (Area 0)
 
@@ -3059,7 +3059,7 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                TOS 0 Metrics: 1
 
 
-                    OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
+                    OSPF Router with ID (3.3.3.3) (Process ID mpls1, VRF VRF1)
 
                         Router Link States (Area 1)
 

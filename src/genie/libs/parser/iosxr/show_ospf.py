@@ -2562,7 +2562,7 @@ class ShowOspfMplsTrafficEngLink(ShowOspfMplsTrafficEngLinkSchema):
             # Area 0 has 2 MPLS TE links. Area instance is 2.
             p2_1 = re.compile(r'^Area +(?P<area>(\S+)) +has'
                                ' +(?P<total_links>(\d+)) +MPLS +TE links\.'
-                               ' +Area +instance +is +(?P<instance>(\S+))\.$')
+                               ' +Area +instance +is +(?P<instance>(\d+))\.$')
             m = p2_1.match(line)
             if m:
                 area = str(IPAddress(str(m.groupdict()['area'])))
@@ -2807,6 +2807,7 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
 
             # OSPF Router with ID (3.3.3.3) (Process ID 1)
             # OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
+            # OSPF Router with ID (1.1.1.1) (Process ID mpls1)
             p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
                              ' +\(Process +ID +(?P<instance>(\S+))'
                              '(?:, +VRF +(?P<vrf>(\S+)))?\)$')
