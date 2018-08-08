@@ -1695,7 +1695,6 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                             {'map_cache': 
                                 {101: 
                                     {'vni': '101',
-                                    'iid': 101,
                                     'entries': 2,
                                     'mappings': 
                                         {'0.0.0.0/0': 
@@ -1705,7 +1704,7 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                             'via': 'static-send-map-request',
                                             'eid': 
                                                 {'address_type': 'ipv4-afi',
-                                                'virtual_network_id': 'vrf red',
+                                                'vrf': 'red',
                                                 'ipv4': 
                                                     {'ipv4': '0.0.0.0/0'}},
                                             'negative_mapping': {'map_reply_action': 'send-map-request'}},
@@ -1716,7 +1715,7 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                             'via': 'map-reply, complete',
                                             'eid': 
                                                 {'address_type': 'ipv4-afi',
-                                                'virtual_network_id': 'vrf red',
+                                                'vrf': 'red',
                                                 'ipv4': 
                                                     {'ipv4': '192.168.9.0/24'}},
                                             'positive_mapping': 
@@ -1760,14 +1759,13 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                 {101: 
                                     {'vni': '101',
                                     'entries': 2,
-                                    'iid': 101,
                                     'mappings': 
                                         {'172.16.10.0/24': 
                                             {'eid': 
                                                 {'address_type': 'ipv6-afi',
                                                 'ipv4': 
                                                     {'ipv4': '172.16.10.0/24'},
-                                                'virtual_network_id': 'vrf red'},
+                                                'vrf': 'red'},
                                             'expires': '23:59:59',
                                             'id': '172.16.10.0/24',
                                             'positive_mapping': 
@@ -1811,7 +1809,7 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                                 {'address_type': 'ipv6-afi',
                                                 'ipv6': 
                                                     {'ipv6': '2001:192:168:9::/64'},
-                                                'virtual_network_id': 'vrf red'},
+                                                'vrf': 'red'},
                                             'expires': '23:53:08',
                                             'id': '2001:192:168:9::/64',
                                             'positive_mapping': 
@@ -1835,7 +1833,7 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                                 {'address_type': 'ipv6-afi',
                                                 'ipv6': 
                                                     {'ipv6': '::/0'},
-                                                'virtual_network_id': 'vrf red'},
+                                                'vrf': 'red'},
                                             'expires': 'never',
                                             'id': '::/0',
                                             'negative_mapping': 
@@ -1875,14 +1873,13 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                 {'193': 
                                     {'vni': '193',
                                     'entries': 4,
-                                    'iid': 1,
                                     'mappings': 
                                         {'b827.eb51.f5ce/48': 
                                             {'eid': 
                                                 {'address_type': 'mac-afi',
                                                 'ipv4': 
                                                     {'ipv4': 'b827.eb51.f5ce/48'},
-                                                'virtual_network_id': 'Vlan 101'},
+                                                'vrf': '101'},
                                             'expires': '01:10:17',
                                             'id': 'b827.eb51.f5ce/48',
                                             'positive_mapping': 
@@ -1906,7 +1903,7 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                                 {'address_type': 'mac-afi',
                                                 'ipv4': 
                                                     {'ipv4': 'b827.eb73.159c/48'},
-                                                'virtual_network_id': 'Vlan 101'},
+                                                'vrf': '101'},
                                             'expires': '08:57:24',
                                             'id': 'b827.eb73.159c/48',
                                             'positive_mapping': 
@@ -1930,7 +1927,7 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                                 {'address_type': 'mac-afi',
                                                 'ipv4': 
                                                     {'ipv4': 'b827.ebd0.acc6/48'},
-                                                'virtual_network_id': 'Vlan 101'},
+                                                'vrf': '101'},
                                             'expires': '08:57:25',
                                             'id': 'b827.ebd0.acc6/48',
                                             'positive_mapping': 
@@ -1954,7 +1951,7 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                                 {'address_type': 'mac-afi',
                                                 'ipv4': 
                                                     {'ipv4': 'b827.ebd6.0c63/48'},
-                                                'virtual_network_id': 'Vlan 101'},
+                                                'vrf': '101'},
                                             'expires': '09:02:44',
                                             'id': 'b827.ebd6.0c63/48',
                                             'positive_mapping': 

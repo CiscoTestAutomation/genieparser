@@ -1432,7 +1432,6 @@ class ShowLispServiceMapCacheSchema(MetaParser):
                                 {Any():
                                     {'vni': str,
                                     'entries': int,
-                                    'iid': int,
                                     'mappings':
                                         {Any():
                                             {'id': str,
@@ -1441,7 +1440,7 @@ class ShowLispServiceMapCacheSchema(MetaParser):
                                             'via': str,
                                             'eid':
                                                 {'address_type': str,
-                                                'virtual_network_id': str,
+                                                'vrf': str,
                                                 Optional('ipv4'):
                                                     {'ipv4': str,
                                                     },
@@ -1531,7 +1530,7 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
         # LISP IPv6 Mapping Cache for EID-table vrf red (IID 101), 2 entries
         # LISP MAC Mapping Cache for EID-table Vlan 101 (IID 1), 4 entries
         p2 = re.compile(r'LISP +(?P<type>(IPv4|IPv6|MAC)) +Mapping +Cache +for'
-                         ' +EID\-table +(?P<vrf>([a-zA-Z0-9\s]+))'
+                         ' +EID\-table +(vrf|Vlan) +(?P<vrf>([a-zA-Z0-9\s]+))'
                          ' +\(IID +(?P<iid>(\d+))\), +(?P<entries>(\d+))'
                          ' +entries$')
 
@@ -1575,7 +1574,7 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
             if m:
                 group = m.groupdict()
                 address_type = group['type']
-                itr_map_eid_vrf = group['vrf']
+                vrf_name = group['vrf']
                 # Create dict
                 service_dict = lisp_dict.setdefault('service', {}).\
                                 setdefault(service, {})
@@ -1584,7 +1583,6 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
                 map_cache_dict = itr_dict.setdefault('map_cache', {}).\
                                     setdefault(instance_id, {})
                 map_cache_dict['vni'] = str(instance_id)
-                map_cache_dict['iid'] = int(group['iid'])
                 map_cache_dict['entries'] = int(group['entries'])
                 continue
 
@@ -1615,7 +1613,7 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
                 except:
                     pass
                 try:
-                    eid_dict['virtual_network_id'] = itr_map_eid_vrf
+                    eid_dict['vrf'] = vrf_name
                 except:
                     pass
 
