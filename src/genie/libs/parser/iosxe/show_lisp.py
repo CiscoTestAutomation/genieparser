@@ -1668,14 +1668,18 @@ class ShowLispServiceRlocMembersSchema(MetaParser):
                 {'lisp_router_instance_id': int,
                 Optional('service'):
                     {Optional(Any()):
-                        {Optional('rloc'):
-                            {Optional('total_entries'): int,
-                            Optional('valid_entries'): int,
-                            Optional('distribution'): bool,
-                            Optional('members'):
-                                {Optional(Any()):
-                                    {Optional('origin'): str,
-                                    Optional('valid'): str,
+                        {'instance_id':
+                            {Any():
+                                {Optional('rloc'):
+                                    {'total_entries': int,
+                                    'valid_entries': int,
+                                    'distribution': bool,
+                                    'members':
+                                        {Any():
+                                            {'origin': str,
+                                            'valid': str,
+                                            },
+                                        },
                                     },
                                 },
                             },
@@ -1739,20 +1743,25 @@ class ShowLispServiceRlocMembers(ShowLispServiceRlocMembersSchema):
             if m:
                 group = m.groupdict()
                 lisp_router_id = int(group['router_id'])
+                if group['instance_id']:
+                    instance_id = group['instance_id']
+                # Create lisp_dict
                 lisp_dict = parsed_dict.setdefault('lisp_router_instances', {}).\
                             setdefault(lisp_router_id, {})
                 lisp_dict['lisp_router_instance_id'] = lisp_router_id
-                if group['instance_id']:
-                    instance_id = group['instance_id']
-                service_dict = lisp_dict.setdefault('service', {}).\
-                                setdefault(service, {})
+                # Create service_dict
+                iid_dict = lisp_dict.setdefault('service', {}).\
+                            setdefault(service, {}).\
+                            setdefault('instance_id', {}).\
+                            setdefault(str(instance_id), {})
                 continue
 
             # Entries: 2 valid / 2 total, Distribution disabled
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                rloc_dict = service_dict.setdefault('rloc', {})
+                # Create rloc_dict
+                rloc_dict = iid_dict.setdefault('rloc', {})
                 rloc_dict['valid_entries'] = int(group['valid'])
                 rloc_dict['total_entries'] = int(group['total'])
                 rloc_dict['distribution'] = state_dict[group['distribution']]

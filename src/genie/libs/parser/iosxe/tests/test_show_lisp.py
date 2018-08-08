@@ -2372,17 +2372,19 @@ class test_show_lisp_service_rloc_members(unittest.TestCase):
                 {'lisp_router_instance_id': 0,
                 'service': 
                     {'ipv4': 
-                        {'rloc': 
-                            {'distribution': False,
-                            'total_entries': 2,
-                            'valid_entries': 2,
-                            'members': 
-                                {'2.2.2.2': 
-                                    {'origin': 'registration',
-                                    'valid': 'yes'},
-                                '8.8.8.8': 
-                                    {'origin': 'registration',
-                                    'valid': 'yes'}}}}}}}}
+                        {'instance_id':
+                            {'101':
+                                {'rloc': 
+                                    {'distribution': False,
+                                    'total_entries': 2,
+                                    'valid_entries': 2,
+                                    'members': 
+                                        {'2.2.2.2': 
+                                            {'origin': 'registration',
+                                            'valid': 'yes'},
+                                        '8.8.8.8': 
+                                            {'origin': 'registration',
+                                            'valid': 'yes'}}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         204-MSMR#show lisp all instance-id 101 ipv4 server rloc members 
@@ -2404,17 +2406,19 @@ class test_show_lisp_service_rloc_members(unittest.TestCase):
                 {'lisp_router_instance_id': 0,
                 'service': 
                     {'ipv6': 
-                        {'rloc': 
-                            {'distribution': False,
-                            'total_entries': 2,
-                            'valid_entries': 2,
-                            'members': 
-                                {'2.2.2.2': 
-                                    {'origin': 'registration',
-                                    'valid': 'yes'},
-                                '8.8.8.8': 
-                                    {'origin': 'registration',
-                                    'valid': 'yes'}}}}}}}}
+                        {'instance_id':
+                            {'101':
+                                {'rloc': 
+                                    {'distribution': False,
+                                    'total_entries': 2,
+                                    'valid_entries': 2,
+                                    'members': 
+                                        {'2.2.2.2': 
+                                            {'origin': 'registration',
+                                            'valid': 'yes'},
+                                        '8.8.8.8': 
+                                            {'origin': 'registration',
+                                            'valid': 'yes'}}}}}}}}}}
 
     golden_output2 = {'execute.return_value': '''
         04-MSMR#show lisp all instance-id 101 ipv6 server rloc members 
@@ -2435,7 +2439,15 @@ class test_show_lisp_service_rloc_members(unittest.TestCase):
             {2: 
                 {'lisp_router_instance_id': 2,
                 'service': 
-                    {'ethernet': {}}}}}
+                    {'ethernet': 
+                        {'instance_id': 
+                            {'101': {},
+                            '102': {},
+                            '103': {},
+                            '104': {},
+                            '107': {},
+                            '108': {},
+                            '109': {}}}}}}}
 
     golden_output3 = {'execute.return_value': '''
         OTT-LISP-C9K-20-MSMR#show lisp all instance-id * ethernet server rloc members
