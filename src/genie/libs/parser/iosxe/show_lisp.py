@@ -17,7 +17,6 @@ IOSXE parsers for the following show commands:
     * show lisp all instance-id <instance_id> ipv4 server rloc members
     * show lisp all instance-id <instance_id> ipv6 server rloc members
     * show lisp all instance-id <instance_id> ethernet server rloc members
-
     * show lisp all instance-id <instance_id> ipv4 smr
     * show lisp all instance-id <instance_id> ipv6 smr
     * show lisp all instance-id <instance_id> ethernet smr
@@ -1700,7 +1699,7 @@ class ShowLispServiceRlocMembers(ShowLispServiceRlocMembersSchema):
     def cli(self, service, instance_id):
 
         assert service in ['ipv4', 'ipv6', 'ethernet']
-        
+
         # Execute command on device
         out = self.device.execute('show lisp all instance-id {instance_id}'
                                   ' service {service} rloc members'.\
@@ -1776,6 +1775,127 @@ class ShowLispServiceRlocMembers(ShowLispServiceRlocMembersSchema):
                                 setdefault(group['member'], {})
                 members_dict['origin'] = group['origin'].lower()
                 members_dict['valid'] = group['valid'].lower()
+                continue
+
+        return parsed_dict
+
+
+# ==================================================================
+# Schema for 'show lisp all instance-id <instance_id> <service> smr'
+# ==================================================================
+class ShowLispServiceSmrSchema(MetaParser):
+
+    '''Schema for "show lisp all instance-id <instance_id> <service> smr" '''
+
+    schema = {
+        'lisp_router_instances':
+            {Any():
+                {'lisp_router_instance_id': int,
+                Optional('service'):
+                    {Optional(Any()):
+                        {'instance_id':
+                            {Any():
+                                {Optional('smr'):
+                                    {'vrf': str,
+                                    'entries': int,
+                                    'prefixes':
+                                        {Any():
+                                            {'producer': str,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+
+# ==================================================================
+# Parser for 'show lisp all instance-id <instance_id> <service> smr'
+# ==================================================================
+class ShowLispServiceSmr(ShowLispServiceSmrSchema):
+
+    '''Parser for "show lisp all instance-id <instance_id> <service> smr"'''
+
+    def cli(self, service, instance_id):
+
+        assert service in ['ipv4', 'ipv6', 'ethernet']
+
+        # Execute command on device
+        out = self.device.execute('show lisp all instance-id {instance_id}'
+                                  ' service {service} smr'.\
+                            format(instance_id=instance_id, service=service))
+
+        # Init vars
+        parsed_dict = {}
+
+        # State dict
+        state_dict = {
+            'disabled': False,
+            'enabled': True}
+
+        # Output for router lisp 0
+        # Output for router lisp 0 instance-id 193
+        # Output for router lisp 2 instance-id 101
+        p1 = re.compile(r'Output +for +router +lisp +(?P<router_id>(\S+))'
+                         '(?: +instance-id +(?P<instance_id>(\d+)))?$')
+
+        # LISP SMR Table for router lisp 0 (red) IID 101
+        p2 = re.compile(r'LISP +SMR +Table +for +router +lisp +(\d+)'
+                         ' +\((?P<vrf>(\S+))\) +IID +(?P<instance_id>(\S+))$')
+
+        # Entries: 1
+        p3 = re.compile(r'Entries: +(?P<entries>(\d+))$')
+
+        # Prefix                                  Producer
+        # 192.168.0.0/24                          local EID
+        p4 = re.compile(r'(?P<prefix>([0-9\.\/\:]+)) +(?P<producer>(.*))$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Output for router lisp 0
+            # Output for router lisp 0 instance-id 193
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                lisp_router_id = int(group['router_id'])
+                if group['instance_id']:
+                    instance_id = group['instance_id']
+                # Create lisp_dict
+                lisp_dict = parsed_dict.setdefault('lisp_router_instances', {}).\
+                            setdefault(lisp_router_id, {})
+                lisp_dict['lisp_router_instance_id'] = lisp_router_id
+                # Create service_dict
+                smr_dict = lisp_dict.setdefault('service', {}).\
+                            setdefault(service, {}).\
+                            setdefault('instance_id', {}).\
+                            setdefault(str(instance_id), {}).\
+                            setdefault('smr', {})
+                continue
+
+            # LISP SMR Table for router lisp 0 (red) IID 101
+            m = p2.match(line)
+            if m:
+                smr_dict['vrf'] = m.groupdict()['vrf']
+                continue
+
+            # Entries: 1
+            m = p3.match(line)
+            if m:
+                smr_dict['entries'] = int(m.groupdict()['entries'])
+                continue
+
+            # Prefix                                  Producer
+            # 192.168.0.0/24                          local EID
+            m = p4.match(line)
+            if m:
+                prefix_dict = smr_dict.setdefault('prefixes', {}).\
+                                        setdefault(m.groupdict()['prefix'], {})
+                prefix_dict['producer'] = m.groupdict()['producer']
                 continue
 
         return parsed_dict

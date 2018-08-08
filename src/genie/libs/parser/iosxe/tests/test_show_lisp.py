@@ -17,7 +17,8 @@ from genie.libs.parser.iosxe.show_lisp import ShowLispSession,\
                                               ShowLispDynamicEidDetail,\
                                               ShowLispService,\
                                               ShowLispServiceMapCache,\
-                                              ShowLispServiceRlocMembers
+                                              ShowLispServiceRlocMembers,\
+                                              ShowLispServiceSmr
 
 
 
@@ -2354,7 +2355,6 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
             parsed_output = obj.parse(instance_id='*', service='ipv4')
 
 
-
 # ==============================================================================
 # Unit test for 'show lisp all instance-id <instance_id> <service> rloc members'
 # ==============================================================================
@@ -2514,6 +2514,93 @@ class test_show_lisp_service_rloc_members(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
         obj = ShowLispServiceRlocMembers(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(instance_id='*', service='ipv4')
+
+
+# =====================================================================
+# Unit test for 'show lisp all instance-id <instance_id> <service> smr'
+# =====================================================================
+class test_show_lisp_service_smr(unittest.TestCase):
+
+    '''Unit test for "show lisp all instance-id <instance_id> <service> smr"'''
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'lisp_router_instances': 
+            {0: 
+                {'lisp_router_instance_id': 0,
+                'service': 
+                    {'ipv4': 
+                        {'instance_id': 
+                            {'101': 
+                                {'smr': 
+                                    {'entries': 1,
+                                    'prefixes': 
+                                        {'192.168.0.0/24': 
+                                            {'producer': 'local EID'}},
+                                    'vrf': 'red'}}}}}}}}
+
+    golden_output1 = {'execute.return_value': '''
+        202-XTR#show lisp all instance-id 101 ipv4 smr
+        =====================================================
+        Output for router lisp 0
+        =====================================================
+        LISP SMR Table for router lisp 0 (red) IID 101
+        Entries: 1
+
+        Prefix                                  Producer
+        192.168.0.0/24                          local EID
+        '''}
+
+    golden_parsed_output2 = {
+        'lisp_router_instances': 
+            {0: 
+                {'lisp_router_instance_id': 0,
+                'service': 
+                    {'ipv6': 
+                        {'instance_id': 
+                            {'101': 
+                                {'smr': 
+                                    {'entries': 1,
+                                    'prefixes': 
+                                        {'2001:192:168::/64': 
+                                            {'producer': 'local EID'}},
+                                    'vrf': 'red'}}}}}}}}
+
+    golden_output2 = {'execute.return_value': '''
+        202-XTR#show lisp all instance-id 101 ipv6 smr
+        =====================================================
+        Output for router lisp 0
+        =====================================================
+        LISP SMR Table for router lisp 0 (red) IID 101
+        Entries: 1
+
+        Prefix                                  Producer
+        2001:192:168::/64                       local EID
+        '''}
+
+    def test_show_lisp_service_smr_full1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowLispServiceSmr(device=self.device)
+        parsed_output = obj.parse(instance_id=101, service='ipv4')
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_lisp_service_smr_full1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowLispServiceSmr(device=self.device)
+        parsed_output = obj.parse(instance_id=101, service='ipv6')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_show_lisp_service_smr_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowLispServiceSmr(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(instance_id='*', service='ipv4')
 
