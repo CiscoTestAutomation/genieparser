@@ -1300,7 +1300,68 @@ class test_show_lisp_service(unittest.TestCase):
         % EID table not enabled for MAC.
         '''}
 
-    golden_parsed_output4 = {}
+    golden_parsed_output4 = {
+        'lisp_router_instances': 
+            {0: 
+                {'lisp_router_id': 
+                    {'site_id': 'unspecified',
+                    'xtr_id': '0x730E0861-0x12996F6D-0xEFEA2114-0xE1C951F7'},
+                'lisp_router_instance_id': 0,
+                'service': 
+                    {'ethernet': 
+                        {'delegated_database_tree': False,
+                        'etr': 
+                            {'accept_mapping_data': 'disabled, verify disabled',
+                            'enabled': True,
+                            'map_cache_ttl': '1d00h',
+                            'mapping_servers': 
+                                {'13.13.13.13': 
+                                    {'ms_address': '13.13.13.13'},
+                                '4.4.4.4': 
+                                    {'ms_address': '4.4.4.4'}},
+                            'proxy_etr_router': False},
+                        'instance_id': 
+                            {'*': 
+                                {'database': 
+                                    {'dynamic_database_mapping_limit': 1000},
+                                'itr': 
+                                    {'local_rloc_last_resort': '*** NOT FOUND ***'},
+                                'map_cache': 
+                                    {'persistent_map_cache': False},
+                                'mapping_servers': 
+                                    {'13.13.13.13': 
+                                        {'ms_address': '13.13.13.13'},
+                                    '4.4.4.4': 
+                                        {'ms_address': '4.4.4.4'}}}},
+                        'itr': 
+                            {'enabled': True,
+                            'map_resolvers': 
+                                {'13.13.13.13': 
+                                    {'map_resolver': '13.13.13.13'},
+                                '4.4.4.4': 
+                                    {'map_resolver': '4.4.4.4'}},
+                            'max_smr_per_map_cache_entry': '8 more specifics',
+                            'multiple_smr_suppression_time': 20,
+                            'proxy_itr_router': False,
+                            'solicit_map_request': 'accept and process'},
+                        'locator_status_algorithms': 
+                            {'ipv4_rloc_min_mask_len': 0,
+                            'ipv6_rloc_min_mask_len': 0,
+                            'lsb_reports': 'process',
+                            'rloc_probe_algorithm': False,
+                            'rloc_probe_on_member_change': False,
+                            'rloc_probe_on_route_change': 'N/A (periodic probing disabled)'},
+                        'locator_table': 'default',
+                        'map_cache': 
+                            {'map_cache_activity_check_period': 60,
+                            'map_cache_limit': 1000},
+                        'map_resolver': 
+                            {'enabled': False},
+                        'map_server': 
+                            {'enabled': False},
+                        'mobility_first_hop_router': False,
+                        'nat_traversal_router': False,
+                        'service': 'ethernet'}}}}}
 
     golden_output4 =  {'execute.return_value': '''
         202-XTR#show lisp all service ipv4
@@ -1343,7 +1404,68 @@ class test_show_lisp_service(unittest.TestCase):
             Dynamic database mapping limit:    1000
         '''}
 
-    golden_parsed_output5 = {}
+    golden_parsed_output5 = {
+        'lisp_router_instances': 
+            {0: 
+                {'lisp_router_id': 
+                    {'site_id': 'unspecified',
+                    'xtr_id': '0x5B6A0468-0x55E69768-0xD1AE2E61-0x4A082FD5'},
+                'lisp_router_instance_id': 0,
+                'service': 
+                    {'ethernet': 
+                        {'delegated_database_tree': False,
+                        'etr': 
+                            {'accept_mapping_data': 'disabled, verify disabled',
+                            'enabled': True,
+                            'map_cache_ttl': '1d00h',
+                            'mapping_servers': 
+                                {'13.13.13.13': 
+                                    {'ms_address': '13.13.13.13'},
+                                '4.4.4.4': 
+                                    {'ms_address': '4.4.4.4'}},
+                            'proxy_etr_router': False},
+                        'instance_id': 
+                            {'*': 
+                                {'database': 
+                                    {'dynamic_database_mapping_limit': 1000},
+                                'itr': 
+                                    {'local_rloc_last_resort': '*** NOT FOUND ***'},
+                                'map_cache': 
+                                    {'persistent_map_cache': False},
+                                'mapping_servers': 
+                                    {'13.13.13.13': 
+                                        {'ms_address': '13.13.13.13'},
+                                    '4.4.4.4': 
+                                        {'ms_address': '4.4.4.4'}}}},
+                        'itr': 
+                            {'enabled': True,
+                            'map_resolvers': 
+                                {'13.13.13.13': 
+                                    {'map_resolver': '13.13.13.13'},
+                                '4.4.4.4': 
+                                    {'map_resolver': '4.4.4.4'}},
+                            'max_smr_per_map_cache_entry': '8 more specifics',
+                            'multiple_smr_suppression_time': 20,
+                            'proxy_itr_router': False,
+                            'solicit_map_request': 'accept and process'},
+                        'locator_status_algorithms': 
+                            {'ipv4_rloc_min_mask_len': 0,
+                            'ipv6_rloc_min_mask_len': 0,
+                            'lsb_reports': 'process',
+                            'rloc_probe_algorithm': False,
+                            'rloc_probe_on_member_change': False,
+                            'rloc_probe_on_route_change': 'N/A (periodic probing disabled)'},
+                        'locator_table': 'default',
+                        'map_cache': 
+                            {'map_cache_activity_check_period': 60,
+                            'map_cache_limit': 1000},
+                        'map_resolver': 
+                            {'enabled': False},
+                        'map_server': 
+                            {'enabled': False},
+                        'mobility_first_hop_router': False,
+                        'nat_traversal_router': False,
+                        'service': 'ethernet'}}}}}
 
     golden_output5 = {'execute.return_value': '''
         202-XTR#show lisp all service ipv6
@@ -1386,7 +1508,72 @@ class test_show_lisp_service(unittest.TestCase):
             Dynamic database mapping limit:    1000
         '''}
 
-    golden_parsed_output6 = {}
+    golden_parsed_output6 = {
+        'lisp_router_instances': 
+            {0: 
+                {'lisp_router_id': 
+                    {'site_id': 'unspecified',
+                    'xtr_id': '0xA5EABB49-0x6C6CE939-0x530E699E-0x09187DFC'},
+                'lisp_router_instance_id': 0,
+                'service': 
+                    {'ethernet': 
+                        {'delegated_database_tree': False,
+                        'etr': 
+                            {'accept_mapping_data': 'disabled, verify disabled',
+                            'enabled': True,
+                            'map_cache_ttl': '1d00h',
+                            'mapping_servers': 
+                                {'44.44.44.44': 
+                                    {'ms_address': '44.44.44.44'}},
+                            'proxy_etr_router': False},
+                        'instance_id': 
+                            {'*': 
+                                {'database': 
+                                    {'dynamic_database_mapping_limit': 5120},
+                                'itr': 
+                                    {'local_rloc_last_resort': '*** NOT FOUND ***'},
+                                'map_cache': 
+                                    {'persistent_map_cache': False},
+                                'mapping_servers': 
+                                    {'44.44.44.44': 
+                                        {'ms_address': '44.44.44.44'}}}},
+                        'itr': 
+                            {'enabled': True,
+                            'map_resolvers': 
+                                {'44.44.44.44': 
+                                    {'map_resolver': '44.44.44.44'},
+                                '66.66.66.66': 
+                                    {'map_resolver': '66.66.66.66'}},
+                            'max_smr_per_map_cache_entry': '8 more specifics',
+                            'multiple_smr_suppression_time': 20,
+                            'proxy_itr_router': False,
+                            'solicit_map_request': 'accept and process'},
+                        'locator_status_algorithms': 
+                            {'ipv4_rloc_min_mask_len': 0,
+                            'ipv6_rloc_min_mask_len': 0,
+                            'lsb_reports': 'process',
+                            'rloc_probe_algorithm': False,
+                            'rloc_probe_on_member_change': False,
+                            'rloc_probe_on_route_change': 'N/A (periodic probing disabled)'},
+                        'locator_table': 'default',
+                        'map_cache': 
+                            {'map_cache_activity_check_period': 60,
+                            'map_cache_limit': 5120},
+                        'map_resolver': 
+                            {'enabled': False},
+                        'map_server': 
+                            {'enabled': False},
+                        'mobility_first_hop_router': False,
+                        'nat_traversal_router': False,
+                        'service': 'ethernet',
+                        'source_locator_configuration': 
+                            {'vlans': 
+                                {'vlan100': 
+                                    {'address': '11.11.11.1',
+                                    'interface': 'Loopback0'},
+                                'vlan101': 
+                                    {'address': '11.11.11.1',
+                                    'interface': 'Loopback0'}}}}}}}}
 
     golden_output6 = {'execute.return_value': '''
         OTT-LISP-C3K-3-xTR1#show lisp all service ethernet
@@ -1457,29 +1644,26 @@ class test_show_lisp_service(unittest.TestCase):
         parsed_output = obj.parse(instance_id='*', service='ethernet')
         self.assertEqual(parsed_output, self.golden_parsed_output3)
 
-    # def test_show_lisp_service_full4(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.golden_output4)
-    #     obj = ShowLispService(device=self.device)
-    #     parsed_output = obj.parse(instance_id='*', service='ethernet')
-    #     import pdb ; pdb.set_trace()
-    #     self.assertEqual(parsed_output, self.golden_parsed_output4)
+    def test_show_lisp_service_full4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output4)
+        obj = ShowLispService(device=self.device)
+        parsed_output = obj.parse(instance_id='*', service='ethernet')
+        self.assertEqual(parsed_output, self.golden_parsed_output4)
 
-    # def test_show_lisp_service_full5(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.golden_output5)
-    #     obj = ShowLispService(device=self.device)
-    #     parsed_output = obj.parse(instance_id='*', service='ethernet')
-    #     import pdb ; pdb.set_trace()
-    #     self.assertEqual(parsed_output, self.golden_parsed_output5)
+    def test_show_lisp_service_full5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output5)
+        obj = ShowLispService(device=self.device)
+        parsed_output = obj.parse(instance_id='*', service='ethernet')
+        self.assertEqual(parsed_output, self.golden_parsed_output5)
 
-    # def test_show_lisp_service_full6(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.golden_output6)
-    #     obj = ShowLispService(device=self.device)
-    #     parsed_output = obj.parse(instance_id='*', service='ethernet')
-    #     import pdb ; pdb.set_trace()
-    #     self.assertEqual(parsed_output, self.golden_parsed_output6)
+    def test_show_lisp_service_full6(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output6)
+        obj = ShowLispService(device=self.device)
+        parsed_output = obj.parse(instance_id='*', service='ethernet')
+        self.assertEqual(parsed_output, self.golden_parsed_output6)
 
     def test_show_lisp_service_empty(self):
         self.maxDiff = None

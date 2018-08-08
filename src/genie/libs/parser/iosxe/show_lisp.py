@@ -713,7 +713,7 @@ class ShowLispServiceSchema(MetaParser):
                             'mapping_servers':
                                 {Any():
                                     {'ms_address': str,
-                                    'uptime': str,
+                                    Optional('uptime'): str,
                                     },
                                 },
                             },
@@ -739,7 +739,7 @@ class ShowLispServiceSchema(MetaParser):
                             },
                         'map_cache':
                             {'map_cache_activity_check_period': int,
-                            'map_cache_fib_updates': str,
+                            Optional('map_cache_fib_updates'): str,
                             'map_cache_limit': int,
                             },
                         'map_server':
@@ -1128,19 +1128,23 @@ class ShowLispService(ShowLispServiceSchema):
                 for ms in map_servers:
                     try:
                         map_server, uptime = ms.split()
+                        map_server = map_server.replace(' ', '')
                         uptime = uptime.replace('(', '').replace(')', '')
                     except:
-                        map_server = ms
+                        map_server = ms.replace(' ', '')
+                        uptime = None
                     # Set etr_dict under service
                     etr_ms_dict = etr_dict.setdefault('mapping_servers', {}).\
                                     setdefault(map_server, {})
                     etr_ms_dict['ms_address'] = map_server
-                    etr_ms_dict['uptime'] = uptime
+                    if uptime:
+                        etr_ms_dict['uptime'] = uptime
                     # Set etr_dict under instance_id
                     iid_ms_dict = iid_dict.setdefault('mapping_servers', {}).\
                                         setdefault(map_server, {})
                     iid_ms_dict['ms_address'] = map_server
-                    iid_ms_dict['uptime'] = uptime
+                    if uptime:
+                        iid_ms_dict['uptime'] = uptime
                 continue
 
             #                                  66.66.66.66 (never)
