@@ -662,35 +662,45 @@ class ShowLispServiceSchema(MetaParser):
                 'service':
                     {Any():
                         {'service': str,
-                        'locator_table': str,
-                        Optional('eid_table'): str,
-                        'nat_traversal_router': bool,
-                        'mobility_first_hop_router': bool,
                         'delegated_database_tree': bool,
-                        Optional('site_registration_limit'): int,
-                        Optional('map_request_source'): str,
-                        'map_server':
-                            {'enabled': bool,
-                            Optional('virtual_network_ids'):
-                                {Any():
-                                    {'vni': str,
+                        'locator_table': str,
+                        'mobility_first_hop_router': bool,
+                        'nat_traversal_router': bool,
+                        'instance_id':
+                            {Any():
+                                {Optional('eid_table'): str,
+                                Optional('site_registration_limit'): int,
+                                Optional('map_request_source'): str,
+                                'database':
+                                    {Optional('dynamic_database_limit'): int,
+                                    Optional('dynamic_database_size'): int,
+                                    Optional('inactive_deconfig_away_size'): int,
+                                    Optional('route_import_database_limit'): int,
+                                    Optional('route_import_database_size'): int,
+                                    Optional('static_database_size'): int,
+                                    Optional('static_database_limit'): int,
+                                    Optional('total_database_mapping_size'): int,
+                                    Optional('dynamic_database_mapping_limit'): int,
+                                    Optional('import_site_db_size'): int,
+                                    Optional('import_site_db_limit'): int,
+                                    Optional('proxy_db_size'): int,
                                     },
-                                },
-                            },
-                        'map_resolver':
-                            {'enabled': bool,
-                            },
-                        'itr':
-                            {'enabled': bool,
-                            'proxy_itr_router': bool,
-                            'local_rloc_last_resort': str,
-                            Optional('use_proxy_etr_rloc'): str,
-                            'solicit_map_request': str,
-                            'max_smr_per_map_cache_entry': str,
-                            'multiple_smr_suppression_time': str,
-                            'map_resolvers':
-                                {Any():
-                                    {'map_resolver': str,
+                                'mapping_servers':
+                                    {Any():
+                                        {'ms_address': str,
+                                        Optional('uptime'): str,
+                                        },
+                                    },
+                                'itr':
+                                    {'local_rloc_last_resort': str,
+                                    Optional('use_proxy_etr_rloc'): str,
+                                    },
+                                'map_cache':
+                                    {Optional('imported_route_count'): int,
+                                    Optional('imported_route_limit'): int,
+                                    Optional('map_cache_size'): int,
+                                    Optional('persistent_map_cache'): bool,
+                                    Optional('static_mappings_configured'): int,
                                     },
                                 },
                             },
@@ -703,6 +713,19 @@ class ShowLispServiceSchema(MetaParser):
                             'mapping_servers':
                                 {Any():
                                     {'ms_address': str,
+                                    'uptime': str,
+                                    },
+                                },
+                            },
+                        'itr':
+                            {'enabled': bool,
+                            'proxy_itr_router': bool,
+                            'solicit_map_request': str,
+                            'max_smr_per_map_cache_entry': str,
+                            'multiple_smr_suppression_time': int,
+                            'map_resolvers':
+                                {Any():
+                                    {'map_resolver': str,
                                     },
                                 },
                             },
@@ -715,14 +738,15 @@ class ShowLispServiceSchema(MetaParser):
                             'ipv6_rloc_min_mask_len': int,
                             },
                         'map_cache':
-                            {Optional('static_mappings_configured'): int,
-                            Optional('map_cache_size'): int,
+                            {'map_cache_activity_check_period': int,
+                            'map_cache_fib_updates': str,
                             'map_cache_limit': int,
-                            Optional('imported_route_count'): int,
-                            Optional('imported_route_limit'): int,
-                            'map_cache_activity_check_period': str,
-                            Optional('map_cache_fib_updates'): str,
-                            'persistent_map_cache': bool,
+                            },
+                        'map_server':
+                            {'enabled': bool,
+                            },
+                        'map_resolver':
+                            {'enabled': bool,
                             },
                         Optional('source_locator_configuration'):
                             {'vlans':
@@ -731,20 +755,6 @@ class ShowLispServiceSchema(MetaParser):
                                     'interface': str,
                                     },
                                 },
-                            },
-                        'database':
-                            {Optional('total_database_mapping_size'): int,
-                            Optional('dynamic_database_mapping_limit'): int,
-                            Optional('static_database_size'): int,
-                            Optional('static_database_limit'): int,
-                            Optional('dynamic_database_size'): int,
-                            Optional('dynamic_database_limit'): int,
-                            Optional('route_import_database_size'): int,
-                            Optional('route_import_database_limit'): int,
-                            Optional('inactive_deconfig_away_size'): int,
-                            Optional('import_site_db_size'): int,
-                            Optional('import_site_db_limit'): int,
-                            Optional('proxy_db_size'): int,
                             },
                         },
                     },
@@ -839,9 +849,15 @@ class ShowLispService(ShowLispServiceSchema):
         # ITR Map-Resolver(s):                 4.4.4.4, 13.13.13.13
         p15 = re.compile(r'ITR +Map\-Resolver\(s\) *: +(?P<resolvers>(.*))$')
 
+        #                                      66.66.66.66 *** not reachable ***
+        p15_1 = re.compile(r'(?P<resolver>([0-9\.\:]+))(?: +\*.*)?$')
+
         # ETR Map-Server(s):                   4.4.4.4 (17:49:58), 13.13.13.13 (00:00:35)
         p16 = re.compile(r'ETR +Map\-Server\(s\) *: +(?P<servers>(.*))$')
  
+        #                                      66.66.66.66 (never)
+        p16_1 = re.compile(r'(?P<server>([0-9\.\:]+))(?: +\((?P<uptime>(\S+))\))?$')
+
         # xTR-ID:                              0x730E0861-0x12996F6D-0xEFEA2114-0xE1C951F7
         p17 = re.compile(r'xTR-ID *: +(?P<xtr_id>(\S+))$')
 
@@ -862,7 +878,8 @@ class ShowLispService(ShowLispServiceSchema):
         p22 = re.compile(r'Max +SMRs +per +map-cache +entry *: +(?P<val>(.*))$')
 
         # Multiple SMR suppression time:     20 secs
-        p23 = re.compile(r'Multiple +SMR +suppression +time *: +(?P<val>(.*))$')
+        p23 = re.compile(r'Multiple +SMR +suppression +time *: +(?P<time>(\d+))'
+                          ' +secs$')
 
         # ETR accept mapping data:             disabled, verify disabled
         p24 = re.compile(r'ETR +accept +mapping +data *: +(?P<val>(.*))$')
@@ -914,7 +931,7 @@ class ShowLispService(ShowLispServiceSchema):
 
         # Map-cache activity check period:   60 secs
         p37 = re.compile(r'Map-cache +activity +check +period *:'
-                          ' +(?P<period>(.*))$')
+                          ' +(?P<period>(\d+)) +secs$')
 
         # Map-cache FIB updates:             established
         p38 = re.compile(r'Map\-cache +FIB +updates *: +(?P<fib_updates>(.*))$')
@@ -976,36 +993,30 @@ class ShowLispService(ShowLispServiceSchema):
             m = p1.match(line)
             if m:
                 lisp_router_id = int(m.groupdict()['router_id'])
-                lisp_dict = parsed_dict.setdefault('lisp_router_instances', {}).\
-                            setdefault(lisp_router_id, {})
-                lisp_dict['lisp_router_instance_id'] = lisp_router_id
-                service_dict = lisp_dict.setdefault('service', {}).\
-                                   setdefault(service, {})
-                service_dict['service'] = service
-                map_server_dict = service_dict.setdefault('map_server', {})
+                # Set value of instance_id if parsed, else take user input
                 if m.groupdict()['instance_id']:
                     instance_id = m.groupdict()['instance_id']
-                    vni_dict = map_server_dict.setdefault(
-                        'virtual_network_ids', {}).setdefault(instance_id, {})
-                    vni_dict['vni'] = instance_id
                 continue
 
             # Instance ID: 101
             m = p2.match(line)
             if m:
-                service_dict = lisp_dict.setdefault('service', {}).\
-                               setdefault(service, {})
-                service_dict['service'] = service
-                map_server_dict = service_dict.setdefault('map_server', {})
                 instance_id = m.groupdict()['instance_id']
-                vni_dict = map_server_dict.setdefault(
-                    'virtual_network_ids', {}).setdefault(instance_id, {})
-                vni_dict['vni'] = instance_id
                 continue
 
             # Router-lisp ID:                      0
             m = p3.match(line)
             if m:
+                lisp_dict = parsed_dict.setdefault('lisp_router_instances', {}).\
+                            setdefault(lisp_router_id, {})
+                lisp_dict['lisp_router_instance_id'] = lisp_router_id
+                # Create service dict
+                service_dict = lisp_dict.setdefault('service', {}).\
+                                   setdefault(service, {})
+                service_dict['service'] = service
+                # Create instance_id dict
+                iid_dict = service_dict.setdefault('instance_id', {}).\
+                            setdefault(instance_id, {})
                 continue
 
             # Locator table:                       default
@@ -1017,7 +1028,7 @@ class ShowLispService(ShowLispServiceSchema):
             # EID table:                           vrf red
             m = p5.match(line)
             if m:
-                service_dict['eid_table'] = m.groupdict()['eid_table']
+                iid_dict['eid_table'] = m.groupdict()['eid_table']
                 continue
 
             # Ingress Tunnel Router (ITR):         enabled
@@ -1084,13 +1095,13 @@ class ShowLispService(ShowLispServiceSchema):
             # Site Registration Limit:             0
             m = p13.match(line)
             if m:
-                service_dict['site_registration_limit'] = int(m.groupdict()['limit'])
+                iid_dict['site_registration_limit'] = int(m.groupdict()['limit'])
                 continue
 
             # Map-Request source:                  derived from EID destination
             m = p14.match(line)
             if m:
-                service_dict['map_request_source'] = m.groupdict()['source']
+                iid_dict['map_request_source'] = m.groupdict()['source']
                 continue
 
             # ITR Map-Resolver(s):                 4.4.4.4, 13.13.13.13
@@ -1103,14 +1114,47 @@ class ShowLispService(ShowLispServiceSchema):
                     itr_mr_dict['map_resolver'] = mr.strip()
                 continue
 
+            m = p15_1.match(line)
+            if m:
+                itr_dict['map_resolvers'].setdefault(
+                    m.groupdict()['resolver'], {})['map_resolver'] = \
+                    m.groupdict()['resolver']
+                continue
+
             # ETR Map-Server(s):                   4.4.4.4 (17:49:58), 13.13.13.13 (00:00:35)
             m = p16.match(line)
             if m:
                 map_servers = m.groupdict()['servers'].split(',')
                 for ms in map_servers:
+                    try:
+                        map_server, uptime = ms.split()
+                        uptime = uptime.replace('(', '').replace(')', '')
+                    except:
+                        map_server = ms
+                    # Set etr_dict under service
                     etr_ms_dict = etr_dict.setdefault('mapping_servers', {}).\
-                                    setdefault(ms.strip(), {})
-                    etr_ms_dict['ms_address'] = ms.strip()
+                                    setdefault(map_server, {})
+                    etr_ms_dict['ms_address'] = map_server
+                    etr_ms_dict['uptime'] = uptime
+                    # Set etr_dict under instance_id
+                    iid_ms_dict = iid_dict.setdefault('mapping_servers', {}).\
+                                        setdefault(map_server, {})
+                    iid_ms_dict['ms_address'] = map_server
+                    iid_ms_dict['uptime'] = uptime
+                continue
+
+            #                                  66.66.66.66 (never)
+            m = p16_1.match(line)
+            if m:
+                temp1 = etr_dict['mapping_servers'].setdefault(
+                            m.groupdict()['server'], {})
+                temp2 = iid_dict['mapping_servers'].setdefault(
+                            m.groupdict()['server'], {})
+                temp1['ms_address'] =  m.groupdict()['server']
+                temp2['ms_address'] =  m.groupdict()['server']
+                if m.groupdict()['uptime']:
+                    temp1['uptime'] = m.groupdict()['uptime']
+                    temp2['uptime'] = m.groupdict()['uptime']
                 continue
 
             # xTR-ID:                              0x730E0861-0x12996F6D-0xEFEA2114-0xE1C951F7
@@ -1129,13 +1173,14 @@ class ShowLispService(ShowLispServiceSchema):
             # ITR local RLOC (last resort):        2.2.2.2
             m = p19.match(line)
             if m:
-                itr_dict['local_rloc_last_resort'] = m.groupdict()['val']
+                iid_itr_dict = iid_dict.setdefault('itr', {})
+                iid_itr_dict['local_rloc_last_resort'] = m.groupdict()['val']
                 continue
 
             # ITR use proxy ETR RLOC(s):           10.10.10.10
             m = p20.match(line)
             if m:
-                itr_dict['use_proxy_etr_rloc'] = m.groupdict()['val']
+                iid_itr_dict['use_proxy_etr_rloc'] = m.groupdict()['val']
                 continue
 
             # ITR Solicit Map Request (SMR):       accept and process
@@ -1153,7 +1198,8 @@ class ShowLispService(ShowLispServiceSchema):
             #   Multiple SMR suppression time:     20 secs
             m = p23.match(line)
             if m:
-                itr_dict['multiple_smr_suppression_time'] = m.groupdict()['val']
+                itr_dict['multiple_smr_suppression_time'] = \
+                    int(m.groupdict()['time'])
                 continue
 
             # ETR accept mapping data:             disabled, verify disabled
@@ -1220,19 +1266,20 @@ class ShowLispService(ShowLispServiceSchema):
             m = p33.match(line)
             if m:
                 map_cache_dict = service_dict.setdefault('map_cache', {})
+                iid_map_cache_dict = iid_dict.setdefault('map_cache', {})
                 continue
 
             #   Static mappings configured:        0
             m = p34.match(line)
             if m:
-                map_cache_dict['static_mappings_configured'] = \
+                iid_map_cache_dict['static_mappings_configured'] = \
                     int(m.groupdict()['static'])
                 continue
 
             #   Map-cache size/limit:              2/1000
             m = p35.match(line)
             if m:
-                map_cache_dict['map_cache_size'] = int(m.groupdict()['size'])
+                iid_map_cache_dict['map_cache_size'] = int(m.groupdict()['size'])
                 map_cache_dict['map_cache_limit'] = int(m.groupdict()['limit'])
                 continue
 
@@ -1245,9 +1292,9 @@ class ShowLispService(ShowLispServiceSchema):
             #   Imported route count/limit:        0/1000
             m = p36.match(line)
             if m:
-                map_cache_dict['imported_route_count'] = \
+                iid_map_cache_dict['imported_route_count'] = \
                     int(m.groupdict()['count'])
-                map_cache_dict['imported_route_limit'] = \
+                iid_map_cache_dict['imported_route_limit'] = \
                     int(m.groupdict()['limit'])
                 continue
 
@@ -1255,7 +1302,7 @@ class ShowLispService(ShowLispServiceSchema):
             m = p37.match(line)
             if m:
                 map_cache_dict['map_cache_activity_check_period'] = \
-                    m.groupdict()['period']
+                    int(m.groupdict()['period'])
                 continue
 
             #   Map-cache FIB updates:             established
@@ -1268,7 +1315,7 @@ class ShowLispService(ShowLispServiceSchema):
             #   Persistent map-cache:              disabled
             m = p39.match(line)
             if m:
-                map_cache_dict['persistent_map_cache'] = \
+                iid_map_cache_dict['persistent_map_cache'] = \
                     state_dict[m.groupdict()['state']]
                 continue
 
@@ -1293,7 +1340,7 @@ class ShowLispService(ShowLispServiceSchema):
             # Database:   
             m = p42.match(line)
             if m:
-                db_dict = service_dict.setdefault('database', {})
+                db_dict = iid_dict.setdefault('database', {})
                 continue
 
             #   Total database mapping size:       1
