@@ -576,7 +576,7 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                 {'address_family': 
                     {'ipv4': 
                         {'instance': 
-                            {'1': 
+                            {'UNDERLAY': 
                                 {'areas': 
                                     {'0.0.0.0': 
                                         {'mpls':
@@ -647,27 +647,27 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                 'state': 'loopback'}}}}}}}}}}}
 
     golden_output2 = {'execute.return_value': '''
-        Ethernet4/1 - Process ID 1 VRF default, area 0.0.0.0
+        Ethernet4/1 - Process ID UNDERLAY VRF default, area 0.0.0.0
             LDP Autoconfig not enabled
             LDP Sync not enabled, not required
             State DOWN, Network type BROADCAST
-        Ethernet4/10 - Process ID 1 VRF default, area 0.0.0.0
+        Ethernet4/10 - Process ID UNDERLAY VRF default, area 0.0.0.0
             LDP Autoconfig not enabled
             LDP Sync not enabled, not required
             State DOWN, Network type BROADCAST
-        loopback1 - Process ID 1 VRF default, area 0.0.0.0
+        loopback1 - Process ID UNDERLAY VRF default, area 0.0.0.0
             LDP Autoconfig not enabled
             LDP Sync not enabled, not required
             State LOOPBACK, Network type LOOPBACK
-        loopback2 - Process ID 1 VRF default, area 0.0.0.0
+        loopback2 - Process ID UNDERLAY VRF default, area 0.0.0.0
             LDP Autoconfig not enabled
             LDP Sync not enabled, not required
             State LOOPBACK, Network type LOOPBACK
-        loopback3 - Process ID 1 VRF default, area 0.0.0.0
+        loopback3 - Process ID UNDERLAY VRF default, area 0.0.0.0
             LDP Autoconfig not enabled
             LDP Sync not enabled, not required
             State LOOPBACK, Network type LOOPBACK
-        loopback4 - Process ID 1 VRF default, area 0.0.0.0
+        loopback4 - Process ID UNDERLAY VRF default, area 0.0.0.0
             LDP Autoconfig not enabled
             LDP Sync not enabled, not required
             State LOOPBACK, Network type LOOPBACK
@@ -1557,7 +1557,7 @@ class test_show_ip_ospf_database_external_detail_vrf_all(unittest.TestCase):
                 {'address_family': 
                     {'ipv4': 
                         {'instance': 
-                            {'1': 
+                            {'UNDERLAY': 
                                 {'areas': 
                                     {'0.0.0.0':
                                         {'database': 
@@ -1593,7 +1593,7 @@ class test_show_ip_ospf_database_external_detail_vrf_all(unittest.TestCase):
 
     golden_output1 = {'execute.return_value': '''
         R2_ospf_nx# show ip ospf database external detail vrf all
-        OSPF Router with ID (2.2.2.2) (Process ID 1 VRF default)
+        OSPF Router with ID (2.2.2.2) (Process ID UNDERLAY VRF default)
 
                 Type-5 AS External Link States 
 
