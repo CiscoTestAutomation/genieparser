@@ -946,7 +946,7 @@ class test_show_ip_ospf_interface_vrf_all(unittest.TestCase):
                 {'address_family': 
                     {'ipv4': 
                         {'instance': 
-                            {'1': 
+                            {'UNDERLAY': 
                                 {'areas': 
                                     {'0.0.0.1': 
                                         {'interfaces': 
@@ -1067,7 +1067,7 @@ class test_show_ip_ospf_interface_vrf_all(unittest.TestCase):
                 {'address_family': 
                     {'ipv4': 
                         {'instance': 
-                            {'1': 
+                            {'UNDERLAY': 
                                 {'areas': 
                                     {'0.0.0.0': 
                                         {'interfaces': 
@@ -1178,7 +1178,7 @@ class test_show_ip_ospf_interface_vrf_all(unittest.TestCase):
         R2_ospf_nx# show ip ospf interface vrf all
          Ethernet2/2 is up, line protocol is up
             IP address 10.2.3.2/24
-            Process ID 1 VRF default, area 0.0.0.0
+            Process ID UNDERLAY VRF default, area 0.0.0.0
             Enabled by interface configuration
             State BDR, Network type BROADCAST, cost 1
             Index 3, Transmit delay 1 sec, Router Priority 1
@@ -1191,7 +1191,7 @@ class test_show_ip_ospf_interface_vrf_all(unittest.TestCase):
             Number of opaque link LSAs: 0, checksum sum 0
          Ethernet2/3 is up, line protocol is up
             IP address 10.2.4.2/24
-            Process ID 1 VRF default, area 0.0.0.0
+            Process ID UNDERLAY VRF default, area 0.0.0.0
             Enabled by interface configuration
             State BDR, Network type BROADCAST, cost 1
             Index 4, Transmit delay 1 sec, Router Priority 1
@@ -1204,7 +1204,7 @@ class test_show_ip_ospf_interface_vrf_all(unittest.TestCase):
             Number of opaque link LSAs: 0, checksum sum 0
          Ethernet2/4 is up, line protocol is up
             IP address 10.1.2.2/24
-            Process ID 1 VRF default, area 0.0.0.0
+            Process ID UNDERLAY VRF default, area 0.0.0.0
             Enabled by interface configuration
             State BDR, Network type BROADCAST, cost 1
             Index 5, Transmit delay 1 sec, Router Priority 1
@@ -1217,13 +1217,13 @@ class test_show_ip_ospf_interface_vrf_all(unittest.TestCase):
             Number of opaque link LSAs: 0, checksum sum 0
          loopback0 is up, line protocol is up
             IP address 2.2.2.2/32
-            Process ID 1 VRF default, area 0.0.0.0
+            Process ID UNDERLAY VRF default, area 0.0.0.0
             Enabled by interface configuration
             State LOOPBACK, Network type LOOPBACK, cost 1
             Index 1
          SL1-0.0.0.0-22.22.22.22-11.11.11.11 is up, line protocol is up
             Unnumbered interface using IP address of loopback1 (22.22.22.22)
-            Process ID 1 VRF VRF1, area 0.0.0.1
+            Process ID UNDERLAY VRF VRF1, area 0.0.0.1
             State P2P, Network type P2P, cost 1
             Index 6, Transmit delay 1 sec
             1 Neighbors, flooding to 1, adjacent with 1
@@ -1233,7 +1233,7 @@ class test_show_ip_ospf_interface_vrf_all(unittest.TestCase):
             Number of opaque link LSAs: 0, checksum sum 0
          SL2-0.0.0.0-22.22.22.22-33.33.33.33 is up, line protocol is up
             Unnumbered interface using IP address of loopback1 (22.22.22.22)
-            Process ID 1 VRF VRF1, area 0.0.0.1
+            Process ID UNDERLAY VRF VRF1, area 0.0.0.1
             State P2P, Network type P2P, cost 111
             Index 7, Transmit delay 7 sec
             0 Neighbors, flooding to 0, adjacent with 0
@@ -1243,7 +1243,7 @@ class test_show_ip_ospf_interface_vrf_all(unittest.TestCase):
             Number of opaque link LSAs: 0, checksum sum 0
          VL1-0.0.0.0-8.8.8.8-12.12.12.12 is up, line protocol is up
             Unnumbered interface using IP address of loopback1 (22.22.22.22)
-            Process ID 1 VRF VRF1, area 0.0.0.1
+            Process ID UNDERLAY VRF VRF1, area 0.0.0.1
             State P2P, Network type P2P, cost 1
             Index 6, Transmit delay 1 sec
             1 Neighbors, flooding to 1, adjacent with 1
@@ -1253,7 +1253,7 @@ class test_show_ip_ospf_interface_vrf_all(unittest.TestCase):
             Number of opaque link LSAs: 0, checksum sum 0
          Ethernet2/1 is up, line protocol is up
             IP address 20.2.6.2/24
-            Process ID 1 VRF VRF1, area 0.0.0.1
+            Process ID UNDERLAY VRF VRF1, area 0.0.0.1
             Enabled by interface configuration
             State BDR, Network type BROADCAST, cost 40
             Index 2, Transmit delay 1 sec, Router Priority 1

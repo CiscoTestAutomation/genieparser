@@ -1821,7 +1821,8 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 continue
 
             # Process ID 1 VRF default, area 0.0.0.0
-            p3 = re.compile(r'^Process +ID +(?P<pid>(\d+)) +VRF'
+            # Process ID UNDERLAY VRF default, area 0.0.0.0
+            p3 = re.compile(r'^Process +ID +(?P<pid>(\S+)) +VRF'
                              ' +(?P<vrf>(\S+)), +area +(?P<area>(\S+))$')
             m = p3.match(line)
             if m:
