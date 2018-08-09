@@ -382,7 +382,7 @@ class ShowIpMsdpSaCacheDetailVrf(ShowIpMsdpSaCacheDetailVrfSchema):
 
         result_dict = {}
         # MSDP SA Route Cache for VRF "default" - 1 entries
-        p1 = re.compile(r'^\s* MSDP SA Route Cache for VRF +\"(?P<vrf>[\w]+)\" +\- +(?P<number_of_entries>[\d]+) +entries$')
+        p1 = re.compile(r'^\s*MSDP SA Route Cache for VRF +\"(?P<vrf>[\w]+)\" +\- +(?P<number_of_entries>[\d]+) +entries$')
 
         # Source          Group            RP               ASN         Uptime
         # 173.1.1.2       228.1.1.1        10.106.106.106   100         00:02:43
@@ -396,12 +396,14 @@ class ShowIpMsdpSaCacheDetailVrf(ShowIpMsdpSaCacheDetailVrfSchema):
                 line = line.rstrip()
             else:
                 continue
-
+            
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 vrf = group.get("vrf")
-                sa_cache_dict = result_dict.setdefault('vrfs',{}).setdefault(vrf,{}).setdefault('sa_cache',{})
+                entries = int(group.get("number_of_entries"))
+                if entries:
+                    sa_cache_dict = result_dict.setdefault('vrfs',{}).setdefault(vrf,{}).setdefault('sa_cache',{})
                 continue
 
             m = p2.match(line)
