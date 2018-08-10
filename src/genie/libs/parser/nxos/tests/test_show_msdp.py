@@ -79,13 +79,18 @@ class test_show_ip_msdp_peer_vrf(unittest.TestCase):
                 "VRF1": {
                     "peer": {
                         "44.44.44.44": {
-                            "sa_limit": 44,
+                            "sa_limit": "44",
                             "description": "R4",
                             "elapsed_time": "01:03:22",
                             "local_address": "33.33.33.34",
                             "sa_filter": {
                                 "in": "none",
                                 "out": "none"
+                            },
+                            "authentication": {
+                                "password": {
+                                    "key": "not set"
+                                },
                             },
                             "connect_source": "loopback3",
                             "peer_as": "200",
@@ -135,13 +140,18 @@ class test_show_ip_msdp_peer_vrf(unittest.TestCase):
                 "default": {
                     "peer": {
                         "1.1.1.1": {
-                            "sa_limit": 111,
+                            "sa_limit": "111",
                             "description": "R1",
                             "elapsed_time": "01:27:25",
                             "local_address": "3.3.3.3",
                             "sa_filter": {
                                 "in": "none",
                                 "out": "none"
+                            },
+                            "authentication": {
+                                "password": {
+                                    "key": "not set"
+                                },
                             },
                             "connect_source": "loopback0",
                             "peer_as": "100",

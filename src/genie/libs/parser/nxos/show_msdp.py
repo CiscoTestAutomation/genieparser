@@ -36,7 +36,7 @@ class ShowIpMsdpPeerVrfSchema(MetaParser):
                         Optional('description'): str,
                         Optional('reset_reason'): str,
                         'mesh_group': str,
-                        'sa_limit': int,
+                        'sa_limit': str,
                         'session_state': str,
                         'elapsed_time': str,
                         Optional('sa_filter'): {
@@ -208,9 +208,8 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
             m = p7.match(line)
             if m:
                 group = m.groupdict()
-                if 'not set' not in group.get("password").lower():
-                    passsword_dict = address_dict.setdefault('authentication',{}).setdefault('password',{})
-                    passsword_dict.update({'key': group.get("paasword")})
+                passsword_dict = address_dict.setdefault('authentication',{}).setdefault('password',{})
+                passsword_dict.update({'key': group.get("password")})
                 continue
 
             m = p8.match(line)
@@ -247,7 +246,7 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
             m = p13.match(line)
             if m:
                 group = m.groupdict()
-                address_dict.update({'sa_limit': int(group.get("sa_limit"))})
+                address_dict.update({'sa_limit': group.get("sa_limit")})
                 continue
 
             m = p14.match(line)
