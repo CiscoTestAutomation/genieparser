@@ -305,10 +305,27 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
         show nve interface <nve> detail"""
 
     def cli(self, intf=""):
+        nve_list = []
+
         if intf:
-            out = self.device.execute('show nve interface {} detail'.format(intf))
-        else:
-            out = self.device.execute('show nve interface')
+            nve_list.append(intf)
+        if not intf:
+            cmd1 = 'show interface | i nve'
+            out1 = self.device.execute(cmd1)
+            # Init vars
+
+            # nve1 is down (other)
+            p1 = re.compile(r'^\s*nve(?P<nve>(\d+)) +is +(?P<nve_state>[\w]+)( +(?P<other>[\w\(\)]+))?$')
+
+            for line in out1.splitlines():
+                line = line.rstrip()
+
+                m = p1.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_name = group.get('nve')
+                    nve_list.append(nve_name)
+                    continue
 
         result_dict = {}
         # Interface: nve1, State: Up, encapsulation: VXLAN
@@ -345,194 +362,197 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
         p24 = re.compile(
             r'^\s*Multi(-S|s)ite +bgw\-if +oper +down +reason: +(?P<multisite_convergence_time_left>\d+) +seconds$')
 
-        for line in out.splitlines():
-            if line:
-                line = line.rstrip()
-            else:
-                continue
+        for nve in nve_list:
+            out = self.device.execute('show nve interface {} detail'.format(nve))
 
-            m = p1.match(line)
-            if m:
-                group = m.groupdict()
-                nve_name = group.pop('nve_name')
-                nve_dict = result_dict.setdefault(nve_name , {})
-                nve_name = m.groupdict()['nve_name']
-                nve_dict.update({'nve_name': nve_name})
-                nve_dict.update({'if_state': group.pop('state').lower()})
-                nve_dict.update({'encap_type': group.pop('encapsulation').lower()})
-                continue
-
-            # VPC Capability: VPC-VIP-Only [notified]
-            m = p2.match(line)
-            if m:
-                group = m.groupdict()
-                nve_dict.update({'vpc_capability': group.pop('vpc_capability').lower()})
-                continue
-
-            #  Local Router MAC: 5e00.0005.0007
-            m = p3.match(line)
-            if m:
-                group = m.groupdict()
-                nve_dict.update({'local_rmac': group.pop('local_router_mac')})
-                continue
-
-            #  Host Learning Mode: Control-Plane
-            m = p4.match(line)
-            if m:
-                group = m.groupdict()
-                nve_dict.update({'host_reach_mode': group.pop('host_learning_mode').lower()})
-                continue
-
-            #  Source-Interface: loopback1 (primary: 201.11.11.11, secondary: 201.12.11.22)
-            m = p5.match(line)
-            if m:
-                group = m.groupdict()
-                nve_dict.update({k:v for k,v in group.items()})
-                continue
-
-            #  Source Interface State: Up
-            m = p6.match(line)
-            if m:
-                group = m.groupdict()
-                nve_dict.update({'src_if_state': group.pop('source_state').lower()})
-                continue
-
-            #  IR Capability Mode: No
-            m = p7.match(line)
-            if m:
-                group = m.groupdict()
-                nve_dict.update({'ir_cap_mode': group.pop('mode').lower()})
-                continue
-
-            #  Virtual RMAC Advertisement: Yes
-            m = p8.match(line)
-            if m:
-                group = m.groupdict()
-                nve_dict.update({'adv_vmac': True if group.pop('adv_vmac').lower() == 'yes' else False})
-                continue
-
-            #  NVE Flags:
-            m = p9.match(line)
-            if m:
-                group = m.groupdict()
-                if group.get("flags"):
-                    nve_dict.update({'nve_flags': group.pop('flags')})
+            for line in out.splitlines():
+                if line:
+                    line = line.rstrip()
                 else:
-                    nve_dict.update({'nve_flags': ""})
-                continue
+                    continue
 
-            #  Interface Handle: 0x49000001
-            m = p10.match(line)
-            if m:
-                group = m.groupdict()
-                nve_dict.update({'nve_if_handle': int(group.pop('intf_handle'),0)})
-                continue
+                m = p1.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_name = group.pop('nve_name')
+                    nve_dict = result_dict.setdefault(nve_name , {})
+                    nve_name = m.groupdict()['nve_name']
+                    nve_dict.update({'nve_name': nve_name})
+                    nve_dict.update({'if_state': group.pop('state').lower()})
+                    nve_dict.update({'encap_type': group.pop('encapsulation').lower()})
+                    continue
 
-            #  Source Interface hold-down-time: 180
-            m = p11.match(line)
-            if m:
-                group = m.groupdict()
-                nve_dict.update({'src_if_holddown_tm': int(group.pop('hold_down_time'))})
-                continue
+                # VPC Capability: VPC-VIP-Only [notified]
+                m = p2.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_dict.update({'vpc_capability': group.pop('vpc_capability').lower()})
+                    continue
 
-            #  Source Interface hold-up-time: 30
-            m = p12.match(line)
-            if m:
-                group = m.groupdict()
-                nve_dict.update({'src_if_holdup_tm': int(group.pop('hold_up_time'))})
-                continue
+                #  Local Router MAC: 5e00.0005.0007
+                m = p3.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_dict.update({'local_rmac': group.pop('local_router_mac')})
+                    continue
 
-            #  Remaining hold-down time: 0 seconds
-            m = p13.match(line)
-            if m:
-                group = m.groupdict()
-                nve_dict.update({'src_if_holddown_left': int(group.pop('hold_time_left'))})
-                continue
+                #  Host Learning Mode: Control-Plane
+                m = p4.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_dict.update({'host_reach_mode': group.pop('host_learning_mode').lower()})
+                    continue
 
-            #  Virtual Router MAC: 0200.c90c.0b16
-            m = p14.match(line)
-            if m:
-                group = m.groupdict()
-                nve_dict.update({'vip_rmac': group.pop('v_router_mac')})
-                continue
+                #  Source-Interface: loopback1 (primary: 201.11.11.11, secondary: 201.12.11.22)
+                m = p5.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_dict.update({k:v for k,v in group.items()})
+                    continue
 
-            #  Virtual Router MAC Re-origination: 0200.6565.6565
-            m = p15.match(line)
-            if m:
-                group = m.groupdict()
-                nve_dict.update({'vip_rmac_ro': group.pop('v_router_mac_re')})
-                continue
+                #  Source Interface State: Up
+                m = p6.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_dict.update({'src_if_state': group.pop('source_state').lower()})
+                    continue
 
-            #  Interface state: nve-intf-add-complete
-            m = p16.match(line)
-            if m:
-                group = m.groupdict()
-                nve_dict.update({'sm_state': group.pop('intf_state')})
-                continue
+                #  IR Capability Mode: No
+                m = p7.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_dict.update({'ir_cap_mode': group.pop('mode').lower()})
+                    continue
 
-            #  unknown-peer-forwarding: disable
-            m = p17.match(line)
-            if m:
-                group = m.groupdict()
-                nve_dict.update({'peer_forwarding_mode': False if group.pop('peer_forwarding') == 'disable' else True})
-                continue
+                #  Virtual RMAC Advertisement: Yes
+                m = p8.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_dict.update({'adv_vmac': True if group.pop('adv_vmac').lower() == 'yes' else False})
+                    continue
 
-            #  down-stream vni config mode: n/a
-            m = p18.match(line)
-            if m:
-                group = m.groupdict()
-                nve_dict.update({'dwn_strm_vni_cfg_mode': group.pop('vni_config_mode')})
-                continue
+                #  NVE Flags:
+                m = p9.match(line)
+                if m:
+                    group = m.groupdict()
+                    if group.get("flags"):
+                        nve_dict.update({'nve_flags': group.pop('flags')})
+                    else:
+                        nve_dict.update({'nve_flags': ""})
+                    continue
 
-            # Nve Src node last notif sent: Port-up
-            m = p19.match(line)
-            if m:
-                group = m.groupdict()
-                nve_dict.update({'src_intf_last_reinit_notify_type': group.pop('last_notif_sent').lower()})
-                continue
+                #  Interface Handle: 0x49000001
+                m = p10.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_dict.update({'nve_if_handle': int(group.pop('intf_handle'),0)})
+                    continue
 
-            # Nve Mcast Src node last notif sent: None
-            m = p20.match(line)
-            if m:
-                group = m.groupdict()
-                nve_dict.update({'mcast_src_intf_last_reinit_notify_type': group.pop('last_notif_sent').lower()})
-                continue
+                #  Source Interface hold-down-time: 180
+                m = p11.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_dict.update({'src_if_holddown_tm': int(group.pop('hold_down_time'))})
+                    continue
 
-            # Nve MultiSite Src node last notif sent: None
-            m = p20_1.match(line)
-            if m:
-                group = m.groupdict()
-                nve_dict.update({'multi_src_intf_last_reinit_notify_type': group.pop('notif_sent').lower()})
-                continue
+                #  Source Interface hold-up-time: 30
+                m = p12.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_dict.update({'src_if_holdup_tm': int(group.pop('hold_up_time'))})
+                    continue
 
-            # Multisite bgw-if: loopback2 (ip: 101.101.101.101, admin: Down, oper: Down)
-            m = p21.match(line)
-            if m:
-                group = m.groupdict()
-                nve_dict.update({'multisite_bgw_if': group.pop('multisite_bgw_if')})
-                nve_dict.update({'multisite_bgw_if_ip': group.pop('multisite_bgw_if_ip')})
-                nve_dict.update({'multisite_bgw_if_admin_state': group.pop('multisite_bgw_if_admin_state').lower()})
-                nve_dict.update({'multisite_bgw_if_oper_state': group.pop('multisite_bgw_if_oper_state').lower()})
-                continue
+                #  Remaining hold-down time: 0 seconds
+                m = p13.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_dict.update({'src_if_holddown_left': int(group.pop('hold_time_left'))})
+                    continue
 
-            # Multisite bgw-if oper down reason: NVE not up.
-            m = p22.match(line)
-            if m:
-                group = m.groupdict()
-                nve_dict.update({'multisite_bgw_if_oper_state_down_reason': group.pop('reason')})
-                continue
+                #  Virtual Router MAC: 0200.c90c.0b16
+                m = p14.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_dict.update({'vip_rmac': group.pop('v_router_mac')})
+                    continue
 
-            m = p23.match(line)
-            if m:
-                group = m.groupdict()
-                nve_dict.update({'multisite_convergence_time': int(group.pop('multisite_convergence_time'))})
-                continue
+                #  Virtual Router MAC Re-origination: 0200.6565.6565
+                m = p15.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_dict.update({'vip_rmac_ro': group.pop('v_router_mac_re')})
+                    continue
 
-            m = p24.match(line)
-            if m:
-                group = m.groupdict()
-                nve_dict.update({'multisite_convergence_time_left': int(group.pop('multisite_convergence_time_left'))})
-                continue
+                #  Interface state: nve-intf-add-complete
+                m = p16.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_dict.update({'sm_state': group.pop('intf_state')})
+                    continue
+
+                #  unknown-peer-forwarding: disable
+                m = p17.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_dict.update({'peer_forwarding_mode': False if group.pop('peer_forwarding') == 'disable' else True})
+                    continue
+
+                #  down-stream vni config mode: n/a
+                m = p18.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_dict.update({'dwn_strm_vni_cfg_mode': group.pop('vni_config_mode')})
+                    continue
+
+                # Nve Src node last notif sent: Port-up
+                m = p19.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_dict.update({'src_intf_last_reinit_notify_type': group.pop('last_notif_sent').lower()})
+                    continue
+
+                # Nve Mcast Src node last notif sent: None
+                m = p20.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_dict.update({'mcast_src_intf_last_reinit_notify_type': group.pop('last_notif_sent').lower()})
+                    continue
+
+                # Nve MultiSite Src node last notif sent: None
+                m = p20_1.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_dict.update({'multi_src_intf_last_reinit_notify_type': group.pop('notif_sent').lower()})
+                    continue
+
+                # Multisite bgw-if: loopback2 (ip: 101.101.101.101, admin: Down, oper: Down)
+                m = p21.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_dict.update({'multisite_bgw_if': group.pop('multisite_bgw_if')})
+                    nve_dict.update({'multisite_bgw_if_ip': group.pop('multisite_bgw_if_ip')})
+                    nve_dict.update({'multisite_bgw_if_admin_state': group.pop('multisite_bgw_if_admin_state').lower()})
+                    nve_dict.update({'multisite_bgw_if_oper_state': group.pop('multisite_bgw_if_oper_state').lower()})
+                    continue
+
+                # Multisite bgw-if oper down reason: NVE not up.
+                m = p22.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_dict.update({'multisite_bgw_if_oper_state_down_reason': group.pop('reason')})
+                    continue
+
+                m = p23.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_dict.update({'multisite_convergence_time': int(group.pop('multisite_convergence_time'))})
+                    continue
+
+                m = p24.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_dict.update({'multisite_convergence_time_left': int(group.pop('multisite_convergence_time_left'))})
+                    continue
         return result_dict
 
 
