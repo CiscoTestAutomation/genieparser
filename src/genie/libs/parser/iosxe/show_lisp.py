@@ -20,7 +20,6 @@ IOSXE parsers for the following show commands:
     * show lisp all instance-id <instance_id> ipv4 smr
     * show lisp all instance-id <instance_id> ipv6 smr
     * show lisp all instance-id <instance_id> ethernet smr
-
     * show lisp all service ipv4 summary
     * show lisp all service ipv6 summary
     * show lisp all service ethernet summary
@@ -28,7 +27,6 @@ IOSXE parsers for the following show commands:
     * show lisp all instance-id <instance_id> ipv4 database
     * show lisp all instance-id <instance_id> ipv6 database
     * show lisp all instance-id <instance_id> ethernet database
-
     * show lisp all instance-id <instance_id> ipv4 server summary
     * show lisp all instance-id <instance_id> ipv6 server summary
     * show lisp all instance-id <instance_id> ethernet server summary
@@ -36,7 +34,6 @@ IOSXE parsers for the following show commands:
     * show lisp all instance-id <instance_id> ipv4 server detail internal
     * show lisp all instance-id <instance_id> ipv6 server detail internal
     * show lisp all instance-id <instance_id> ethernet server detail internal
-
     * show lisp all instance-id <instance_id> ipv4 statistics
     * show lisp all instance-id <instance_id> ipv6 statistics
     * show lisp all instance-id <instance_id> ethernet statistics
@@ -1896,6 +1893,223 @@ class ShowLispServiceSmr(ShowLispServiceSmrSchema):
                 prefix_dict = smr_dict.setdefault('prefixes', {}).\
                                         setdefault(m.groupdict()['prefix'], {})
                 prefix_dict['producer'] = m.groupdict()['producer']
+                continue
+
+        return parsed_dict
+
+
+# ====================================================
+# Schema for 'show lisp all service <service> summary'
+# ====================================================
+class ShowLispServiceSummarySchema(MetaParser):
+
+    '''Schema for "show lisp all <service> summary" '''
+
+    schema = {
+        'lisp_router_instances':
+            {Any():
+                {'lisp_router_instance_id': int,
+                Optional('service'):
+                    {Optional(Any()):
+                        {'map_server':
+                            {'summary':
+                                {'instance_count': int,
+                                'total_eid_tables': int,
+                                'total_db_entries': int,
+                                'total_map_cache_entries': int,
+                                'total_db_entries_inactive': int,
+                                'eid_tables_inconsistent_locators': int,
+                                'eid_tables_incomplete_map_cache_entries': int,
+                                'eid_tables_pending_map_cache_update_to_fib': int,
+                                'instance_id':
+                                    {Any():
+                                        {Optional('vrf'): str,
+                                        'interface': str,
+                                        'db_size': int,
+                                        'db_no_route': int,
+                                        'cache_size': int,
+                                        'incomplete': str,
+                                        'cache_idle': str,
+                                        'role': str,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+
+# ====================================================
+# Parser for 'show lisp all service <service> summary'
+# ====================================================
+class ShowLispServiceSummary(ShowLispServiceSummarySchema):
+
+    '''Parser for "show lisp all service <service> summary"'''
+
+    def cli(self, service):
+
+        assert service in ['ipv4', 'ipv6', 'ethernet']
+
+        # Execute command on device
+        out = self.device.execute('show lisp all service {service} summary'.\
+                                    format(service=service))
+
+        # Init vars
+        parsed_dict = {}
+
+        # State dict
+        state_dict = {
+            'disabled': False,
+            'enabled': True}
+
+        # Output for router lisp 0
+        p1 = re.compile(r'Output +for +router +lisp +(?P<router_id>(\S+))$')
+
+        # Router-lisp ID:   0
+        p2 = re.compile(r'Router-lisp +ID: +(?P<router_id>(\S+))$')
+
+        # Instance count:   2
+        p3 = re.compile(r'Instance +count: +(?P<val>(\d+))$')
+
+        # Key: DB - Local EID Database entry count (@ - RLOC check pending
+        #                                   * - RLOC consistency problem),
+        # DB no route - Local EID DB entries with no matching RIB route,
+        # Cache - Remote EID mapping cache size, IID - Instance ID,
+        # Role - Configured Role
+
+        #                       Interface    DB  DB no  Cache  Incom  Cache 
+        # EID VRF name             (.IID)  size  route   size  plete  Idle  Role
+        # red                   LISP0.101     1      0      2   0.0%  0.0%  ITR-ETR
+        # blue                  LISP0.102     1      0      1   0.0%    0%  ITR-ETR
+        p4_1 = re.compile(r'(?P<vrf>(\S+)) +(?P<interface>(\S+))\.(?P<iid>(\d+))'
+                         ' +(?P<db_size>(\d+)) +(?P<db_no_route>(\d+))'
+                         ' +(?P<cache_size>(\d+)) +(?P<incomplete>(\S+))'
+                         ' +(?P<cache_idle>(\S+)) +(?P<role>(\S+))$')
+
+        p4_2 = re.compile(r'(?P<interface>(\S+))\.(?P<iid>(\d+))'
+                         ' +(?P<db_size>(\d+)) +(?P<db_no_route>(\d+))'
+                         ' +(?P<cache_size>(\d+)) +(?P<incomplete>(\S+))'
+                         ' +(?P<cache_idle>(\S+)) +(?P<role>(\S+))$')
+
+        # Number of eid-tables:                                 2
+        p5 = re.compile(r'Number +of +eid-tables: +(?P<val>(\d+))$')
+
+        # Total number of database entries:                     2 (inactive 0)
+        p6 = re.compile(r'Total +number +of +database +entries:'
+                         ' +(?P<val>(\d+))(?: +\(inactive'
+                         ' +(?P<inactive>(\d+))\))?$')
+
+        # EID-tables with inconsistent locators:                0
+        p7 = re.compile(r'EID-tables +with +inconsistent +locators:'
+                         ' +(?P<val>(\d+))$')
+
+        # Total number of map-cache entries:                    3
+        p8 = re.compile(r'Total +number +of +map-cache +entries:'
+                         ' +(?P<val>(\d+))$')
+
+        # EID-tables with incomplete map-cache entries:         0
+        p9 = re.compile(r'EID-tables +with +incomplete +map-cache +entries:'
+                         ' +(?P<val>(\d+))$')
+
+        # EID-tables pending map-cache update to FIB:           0
+        p10 = re.compile(r'EID-tables +pending +map-cache +update +to +FIB:'
+                          ' +(?P<val>(\d+))$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Output for router lisp 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                lisp_router_id = int(group['router_id'])
+                continue
+
+            # Router-lisp ID:   0
+            m = p2.match(line)
+            if m:
+                if int(m.groupdict()['router_id']) == lisp_router_id:
+                    # Create lisp_dict
+                    lisp_dict = parsed_dict.\
+                                setdefault('lisp_router_instances', {}).\
+                                setdefault(lisp_router_id, {})
+                    lisp_dict['lisp_router_instance_id'] = lisp_router_id
+                    # Create summary dict
+                    sum_dict = lisp_dict.setdefault('service', {}).\
+                                    setdefault(service, {}).\
+                                    setdefault('map_server', {}).\
+                                    setdefault('summary', {})
+                continue
+
+            # Instance count:   2
+            m = p3.match(line)
+            if m:
+                sum_dict['instance_count'] = int(m.groupdict()['val'])
+                continue
+
+            # blue              LISP0.102  1      0      1  0.0%    0%  ITR-ETR
+            #                   LISP0.2    2      0      0    0%    0%  NONE
+            m1 = p4_1.match(line)
+            m2 = p4_2.match(line)
+            m = m1 if m1 else m2
+            if m:
+                group = m.groupdict()
+                iid_dict = sum_dict.setdefault('instance_id', {}).\
+                                setdefault(group['iid'], {})
+                iid_dict['interface'] = group['interface']
+                iid_dict['db_size'] = int(group['db_size'])
+                iid_dict['db_no_route'] = int(group['db_no_route'])
+                iid_dict['cache_size'] = int(group['cache_size'])
+                iid_dict['incomplete'] = group['incomplete']
+                iid_dict['cache_idle'] = group['cache_idle']
+                iid_dict['role'] = group['role']
+                if 'vrf' in group:
+                    iid_dict['vrf'] = group['vrf']
+                continue
+
+            # Number of eid-tables:                                 2
+            m = p5.match(line)
+            if m:
+                sum_dict['total_eid_tables'] = int(m.groupdict()['val'])
+                continue
+
+            # Total number of database entries:                     2 (inactive 0)
+            m = p6.match(line)
+            if m:
+                sum_dict['total_db_entries'] = int(m.groupdict()['val'])
+                if m.groupdict()['inactive']:
+                    sum_dict['total_db_entries_inactive'] = \
+                        int(m.groupdict()['inactive'])
+                continue
+
+            # EID-tables with inconsistent locators:                0
+            m = p7.match(line)
+            if m:
+                sum_dict['eid_tables_inconsistent_locators'] = \
+                    int(m.groupdict()['val'])
+                continue
+
+            # Total number of map-cache entries:                    3
+            m = p8.match(line)
+            if m:
+                sum_dict['total_map_cache_entries'] = int(m.groupdict()['val'])
+                continue
+
+            # EID-tables with incomplete map-cache entries:         0
+            m = p9.match(line)
+            if m:
+                sum_dict['eid_tables_incomplete_map_cache_entries'] = \
+                    int(m.groupdict()['val'])
+                continue
+
+            # EID-tables pending map-cache update to FIB:           0
+            m = p10.match(line)
+            if m:
+                sum_dict['eid_tables_pending_map_cache_update_to_fib'] = \
+                    int(m.groupdict()['val'])
                 continue
 
         return parsed_dict

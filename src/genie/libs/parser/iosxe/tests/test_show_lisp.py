@@ -18,7 +18,8 @@ from genie.libs.parser.iosxe.show_lisp import ShowLispSession,\
                                               ShowLispService,\
                                               ShowLispServiceMapCache,\
                                               ShowLispServiceRlocMembers,\
-                                              ShowLispServiceSmr
+                                              ShowLispServiceSmr,\
+                                              ShowLispServiceSummary
 
 
 
@@ -2590,7 +2591,7 @@ class test_show_lisp_service_smr(unittest.TestCase):
         parsed_output = obj.parse(instance_id=101, service='ipv4')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
-    def test_show_lisp_service_smr_full1(self):
+    def test_show_lisp_service_smr_full2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowLispServiceSmr(device=self.device)
@@ -2603,6 +2604,223 @@ class test_show_lisp_service_smr(unittest.TestCase):
         obj = ShowLispServiceSmr(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(instance_id='*', service='ipv4')
+
+
+# =======================================================
+# Unit test for 'show lisp all service <service> summary'
+# =======================================================
+class test_show_lisp_service_summary(unittest.TestCase):
+
+    '''Unit test for "show lisp all service <service> summary"'''
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'lisp_router_instances': 
+            {0: 
+                {'lisp_router_instance_id': 0,
+                'service': 
+                    {'ipv4': 
+                        {'map_server': 
+                            {'summary': 
+                                {'eid_tables_incomplete_map_cache_entries': 0,
+                                'eid_tables_inconsistent_locators': 0,
+                                'eid_tables_pending_map_cache_update_to_fib': 0,
+                                'instance_count': 2,
+                                'instance_id': 
+                                    {'102':
+                                        {'cache_idle': '0%',
+                                        'cache_size': 1,
+                                        'db_no_route': 0,
+                                        'db_size': 1,
+                                        'incomplete': '0.0%',
+                                        'vrf': 'blue',
+                                        'interface': 'LISP0',
+                                        'role': 'ITR-ETR'},
+                                    '101': 
+                                        {'cache_idle': '0.0%',
+                                        'cache_size': 2,
+                                        'db_no_route': 0,
+                                        'db_size': 1,
+                                        'incomplete': '0.0%',
+                                        'vrf': 'red',
+                                        'interface': 'LISP0',
+                                        'role': 'ITR-ETR'}},
+                                'total_db_entries': 2,
+                                'total_db_entries_inactive': 0,
+                                'total_eid_tables': 2,
+                                'total_map_cache_entries': 3}}}}}}}
+
+    golden_output1 = {'execute.return_value': '''
+        202-XTR#show lisp all service ipv4 summary 
+
+        =====================================================
+        Output for router lisp 0
+        =====================================================
+        Router-lisp ID:   0
+        Instance count:   2
+        Key: DB - Local EID Database entry count (@ - RLOC check pending
+                                                  * - RLOC consistency problem),
+             DB no route - Local EID DB entries with no matching RIB route,
+             Cache - Remote EID mapping cache size, IID - Instance ID,
+             Role - Configured Role
+
+                              Interface    DB  DB no  Cache Incom Cache 
+        EID VRF name             (.IID)  size  route   size plete  Idle Role
+        red                   LISP0.101     1      0      2  0.0%  0.0% ITR-ETR
+        blue                  LISP0.102     1      0      1  0.0%    0% ITR-ETR
+
+        Number of eid-tables:                                 2
+        Total number of database entries:                     2 (inactive 0)
+        EID-tables with inconsistent locators:                0
+        Total number of map-cache entries:                    3
+        EID-tables with incomplete map-cache entries:         0
+        EID-tables pending map-cache update to FIB:           0
+        '''}
+
+    golden_parsed_output2 = {
+        'lisp_router_instances': 
+            {0:
+                {'lisp_router_instance_id': 0,
+                'service': 
+                    {'ipv6': 
+                        {'map_server': 
+                            {'summary': 
+                                {'eid_tables_incomplete_map_cache_entries': 0,
+                                'eid_tables_inconsistent_locators': 0,
+                                'eid_tables_pending_map_cache_update_to_fib': 0,
+                                'instance_count': 2,
+                                'instance_id': 
+                                    {'101': 
+                                        {'cache_idle': '0.0%',
+                                        'cache_size': 2,
+                                        'db_no_route': 0,
+                                        'db_size': 1,
+                                        'incomplete': '0.0%',
+                                        'vrf': 'red',
+                                        'interface': 'LISP0',
+                                        'role': 'ITR-ETR'}},
+                                'total_db_entries': 1,
+                                'total_db_entries_inactive': 0,
+                                'total_eid_tables': 1,
+                                'total_map_cache_entries': 2}}}}}}}
+
+    golden_output2 = {'execute.return_value': '''
+        202-XTR#show lisp all service ipv6 summary 
+        =====================================================
+        Output for router lisp 0
+        =====================================================
+        Router-lisp ID:   0
+        Instance count:   2
+        Key: DB - Local EID Database entry count (@ - RLOC check pending
+                                                  * - RLOC consistency problem),
+             DB no route - Local EID DB entries with no matching RIB route,
+             Cache - Remote EID mapping cache size, IID - Instance ID,
+             Role - Configured Role
+
+                              Interface    DB  DB no  Cache Incom Cache 
+        EID VRF name             (.IID)  size  route   size plete  Idle Role
+        red                   LISP0.101     1      0      2  0.0%  0.0% ITR-ETR
+
+        Number of eid-tables:                                 1
+        Total number of database entries:                     1 (inactive 0)
+        EID-tables with inconsistent locators:                0
+        Total number of map-cache entries:                    2
+        EID-tables with incomplete map-cache entries:         0
+        EID-tables pending map-cache update to FIB:           0
+        '''}
+
+    golden_parsed_output3 = {
+        'lisp_router_instances': 
+            {0: 
+                {'lisp_router_instance_id': 0,
+                'service': 
+                    {'ethernet': 
+                        {'map_server': 
+                            {'summary': 
+                                {'eid_tables_incomplete_map_cache_entries': 0,
+                                'eid_tables_inconsistent_locators': 0,
+                                'eid_tables_pending_map_cache_update_to_fib': 0,
+                                'instance_count': 69,
+                                'instance_id': 
+                                    {'1': 
+                                        {'cache_idle': '100%',
+                                        'cache_size': 4,
+                                        'db_no_route': 0,
+                                        'db_size': 2,
+                                        'incomplete': '0.0%',
+                                        'interface': 'LISP0',
+                                        'role': 'NONE'},
+                                    '2': 
+                                        {'cache_idle': '0%',
+                                        'cache_size': 0,
+                                        'db_no_route': 0,
+                                        'db_size': 2,
+                                        'incomplete': '0%',
+                                        'interface': 'LISP0',
+                                        'role': 'NONE'}},
+                                'total_db_entries': 4,
+                                'total_db_entries_inactive': 0,
+                                'total_eid_tables': 2,
+                                'total_map_cache_entries': 4}}}}}}}
+
+    golden_output3 = {'execute.return_value': '''
+        OTT-LISP-C3K-3-xTR1#show lisp all service ethernet summary
+        =================================================
+        Output for router lisp 0
+        =================================================
+        Router-lisp ID:   0
+        Instance count:   69
+        Key: DB - Local EID Database entry count (@ - RLOC check pending
+                                                  * - RLOC consistency problem),
+             DB no route - Local EID DB entries with no matching RIB route,
+             Cache - Remote EID mapping cache size, IID - Instance ID,
+             Role - Configured Role
+
+                              Interface    DB  DB no  Cache Incom Cache
+        EID VRF name             (.IID)  size  route   size plete  Idle Role
+                                LISP0.1     2      0      4  0.0%  100% NONE
+                                LISP0.2     2      0      0    0%    0% NONE
+
+        Number of eid-tables:                                 2
+        Total number of database entries:                     4 (inactive 0)
+        Maximum database entries:                          5120
+        EID-tables with inconsistent locators:                0
+        Total number of map-cache entries:                    4
+        Maximum map-cache entries:                         5120
+        EID-tables with incomplete map-cache entries:         0
+        EID-tables pending map-cache update to FIB:           0
+        '''}
+
+    def test_show_lisp_service_summary_full1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowLispServiceSummary(device=self.device)
+        parsed_output = obj.parse(service='ipv4')
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_lisp_service_summary_full2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowLispServiceSummary(device=self.device)
+        parsed_output = obj.parse(service='ipv6')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_show_lisp_service_summary_full3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowLispServiceSummary(device=self.device)
+        parsed_output = obj.parse(service='ethernet')
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
+
+    def test_show_lisp_service_summary_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowLispServiceSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(service='ipv4')
 
 
 
