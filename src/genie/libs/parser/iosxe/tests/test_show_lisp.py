@@ -21,7 +21,8 @@ from genie.libs.parser.iosxe.show_lisp import ShowLispSession,\
                                               ShowLispServiceSmr,\
                                               ShowLispServiceSummary,\
                                               ShowLispServiceDatabase,\
-                                              ShowLispServiceServerSummary
+                                              ShowLispServiceServerSummary,\
+                                              ShowLispServiceServerDetailInternal
 
 
 
@@ -3709,6 +3710,472 @@ class test_show_lisp_service_server_summary(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(service='ipv4', instance_id='*')
 
+
+# ========================================================================================
+# Unit test for 'show lisp all instance-id <instance_id> <service> server detail internal'
+# ========================================================================================
+class test_show_lisp_service_server_detail_internal(unittest.TestCase):
+
+    '''Unit test for "show lisp all instance-id <instance_id> <service> server detail internal"'''
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {}
+
+    golden_output1 = {'execute.return_value': '''
+        204-MSMR#show lisp all instance-id 101 ipv4 server detail internal
+        =====================================================
+        Output for router lisp 0
+        =====================================================
+        LISP Site Registration Information
+
+        Site name: provider
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+
+        Site name: xtr1_1
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+
+          EID-prefix: 192.168.0.0/24 instance-id 101
+            First registered:     1w4d
+            Last registered:      02:41:22
+            Routing table tag:    0
+            Origin:               Configuration, accepting more specifics
+            Merge active:         No
+            Proxy reply:          No
+            TTL:                  00:00:00
+            State:                unknown
+            Registration errors:
+              Authentication failures:   0
+              Allowed locators mismatch: 0
+            No registrations.
+
+          EID-prefix: 192.168.0.1/32 instance-id 101
+            First registered:     01:12:41
+            Last registered:      01:12:41
+            Routing table tag:    0
+            Origin:               Dynamic, more specific of 192.168.0.0/24
+            Merge active:         No
+            Proxy reply:          Yes
+            TTL:                  1d00h
+            State:                complete
+            Registration errors:
+              Authentication failures:   0
+              Allowed locators mismatch: 0
+            ETR 2.2.2.2, last registered 01:12:41, proxy-reply, map-notify
+                         TTL 1d00h, no merge, hash-function sha1, nonce 0x70D18EF4-0x3A605D67
+                         state complete, no security-capability
+                         xTR-ID 0x21EDD25F-0x7598784C-0x769C8E4E-0xC04926EC
+                         site-ID unspecified
+                         sourced by reliable transport
+              Locator  Local  State      Pri/Wgt  Scope
+              2.2.2.2  yes    up          50/50   IPv4 none
+
+        Site name: xtr1_2
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+
+        Site name: xtr2
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+
+          EID-prefix: 192.168.9.0/24 instance-id 101
+            First registered:     01:55:47
+            Last registered:      01:55:47
+            Routing table tag:    0
+            Origin:               Configuration
+            Merge active:         No
+            Proxy reply:          Yes
+            TTL:                  1d00h
+            State:                complete
+            Registration errors:
+              Authentication failures:   0
+              Allowed locators mismatch: 0
+            ETR 8.8.8.8, last registered 01:55:47, proxy-reply, map-notify
+                         TTL 1d00h, no merge, hash-function sha1, nonce 0xB06AE31D-0x6ADB0BA5
+                         state complete, no security-capability
+                         xTR-ID 0x77200484-0xD134DC48-0x0FBAD9DC-0x4A46CA5D
+                         site-ID unspecified
+                         sourced by reliable transport
+              Locator  Local  State      Pri/Wgt  Scope
+              8.8.8.8  yes    up          50/50   IPv4 none
+        '''}
+
+    golden_parsed_output2 = {}
+
+    golden_output2 = {'execute.return_value': '''
+        204-MSMR#show lisp all instance-id 101 ipv6 server detail internal 
+        =====================================================
+        Output for router lisp 0
+        =====================================================
+        LISP Site Registration Information
+
+        Site name: provider
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: xtr1_1
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+
+          EID-prefix: 2001:192:168::/64 instance-id 101 
+            First registered:     00:13:19
+            Last registered:      00:13:19
+            Routing table tag:    0
+            Origin:               Configuration
+            Merge active:         No
+            Proxy reply:          Yes
+            TTL:                  1d00h
+            State:                complete
+            Registration errors:  
+              Authentication failures:   0
+              Allowed locators mismatch: 0
+            ETR 2.2.2.2, last registered 00:13:19, proxy-reply, map-notify
+                         TTL 1d00h, no merge, hash-function sha1, nonce 0xF8845AAB-0x44B8B869
+                         state complete, no security-capability
+                         xTR-ID 0x5B6A0468-0x55E69768-0xD1AE2E61-0x4A082FD5
+                         site-ID unspecified
+                         sourced by reliable transport
+              Locator  Local  State      Pri/Wgt  Scope
+              2.2.2.2  yes    up          50/50   IPv4 none
+        Site name: xtr1_2
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: xtr2
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+
+          EID-prefix: 2001:192:168:9::/64 instance-id 101 
+            First registered:     00:13:19
+            Last registered:      00:13:19
+            Routing table tag:    0
+            Origin:               Configuration
+            Merge active:         No
+            Proxy reply:          Yes
+            TTL:                  1d00h
+            State:                complete
+            Registration errors:  
+              Authentication failures:   0
+              Allowed locators mismatch: 0
+            ETR 8.8.8.8, last registered 00:13:19, proxy-reply, map-notify
+                         TTL 1d00h, no merge, hash-function sha1, nonce 0x90004FBE-0x03D2420E
+                         state complete, no security-capability
+                         xTR-ID 0x6BE732BF-0xD9530F52-0xF9162AA3-0x6283920A
+                         site-ID unspecified
+                         sourced by reliable transport
+              Locator  Local  State      Pri/Wgt  Scope
+              8.8.8.8  yes    up          50/50   IPv4 none
+        '''}
+
+    golden_parsed_output3 = {
+        'lisp_router_instances': 
+            {2: 
+                {'lisp_router_instance_id': 2,
+                'service': 
+                    {'ethernet': 
+                        {'instance_id': 
+                            {'101': 
+                                {'sites':  {'prov1': {'allowed_configured_locators': 'any'},
+                                            'prov2': {'allowed_configured_locators': 'any'},
+                                            'prov3': {'allowed_configured_locators': 'any'},
+                                            'provider': {'allowed_configured_locators': 'any'},
+                                            'xtr1_1': {'allowed_configured_locators': 'any'},
+                                            'xtr1_2': {'allowed_configured_locators': 'any'},
+                                            'xtr1_3': {'allowed_configured_locators': 'any'}}},
+                            '102': {'sites': {'prov1': {'allowed_configured_locators': 'any'},
+                                              'prov2': {'allowed_configured_locators': 'any'},
+                                              'prov3': {'allowed_configured_locators': 'any'},
+                                              'provider': {'allowed_configured_locators': 'any'},
+                                              'xtr1_1': {'allowed_configured_locators': 'any'},
+                                              'xtr1_2': {'allowed_configured_locators': 'any'},
+                                              'xtr1_3': {'allowed_configured_locators': 'any'}}},
+                            '103': {'sites': {'prov1': {'allowed_configured_locators': 'any'},
+                                              'prov2': {'allowed_configured_locators': 'any'},
+                                              'prov3': {'allowed_configured_locators': 'any'},
+                                              'provider': {'allowed_configured_locators': 'any'},
+                                              'xtr1_1': {'allowed_configured_locators': 'any'},
+                                              'xtr1_2': {'allowed_configured_locators': 'any'},
+                                              'xtr1_3': {'allowed_configured_locators': 'any'}}},
+                            '104': {'sites': {'prov1': {'allowed_configured_locators': 'any'},
+                                              'prov2': {'allowed_configured_locators': 'any'},
+                                              'prov3': {'allowed_configured_locators': 'any'},
+                                              'provider': {'allowed_configured_locators': 'any'},
+                                              'xtr1_1': {'allowed_configured_locators': 'any'},
+                                              'xtr1_2': {'allowed_configured_locators': 'any'},
+                                              'xtr1_3': {'allowed_configured_locators': 'any'}}},
+                            '107': {'sites': {'prov1': {'allowed_configured_locators': 'any'},
+                                              'prov2': {'allowed_configured_locators': 'any'},
+                                              'prov3': {'allowed_configured_locators': 'any'},
+                                              'provider': {'allowed_configured_locators': 'any'},
+                                              'xtr1_1': {'allowed_configured_locators': 'any'},
+                                              'xtr1_2': {'allowed_configured_locators': 'any'},
+                                              'xtr1_3': {'allowed_configured_locators': 'any'}}},
+                            '108': {'sites': {'prov1': {'allowed_configured_locators': 'any'},
+                                              'prov2': {'allowed_configured_locators': 'any'},
+                                              'prov3': {'allowed_configured_locators': 'any'},
+                                              'provider': {'allowed_configured_locators': 'any'},
+                                              'xtr1_1': {'allowed_configured_locators': 'any'},
+                                              'xtr1_2': {'allowed_configured_locators': 'any'},
+                                              'xtr1_3': {'allowed_configured_locators': 'any'}}},
+                            '109': {'sites': {'prov1': {'allowed_configured_locators': 'any'},
+                                              'prov2': {'allowed_configured_locators': 'any'},
+                                              'prov3': {'allowed_configured_locators': 'any'},
+                                              'provider': {'allowed_configured_locators': 'any'},
+                                              'xtr1_1': {'allowed_configured_locators': 'any'},
+                                              'xtr1_2': {'allowed_configured_locators': 'any'},
+                                              'xtr1_3': {'allowed_configured_locators': 'any'}}}}}}}}}
+
+    golden_output3 = {'execute.return_value': '''
+        OTT-LISP-C9K-20-MSMR#show lisp all instance-id * ethernet server detail internal
+        =================================================
+        Output for router lisp 2 instance-id 101
+        =================================================
+        *********************************
+        ** NO LOCATOR-TABLE CONFIGURED **
+        *********************************
+
+        LISP Site Registration Information
+
+        Site name: prov1
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: prov2
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: prov3
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: provider
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: xtr1_1
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: xtr1_2
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: xtr1_3
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+
+        =================================================
+        Output for router lisp 2 instance-id 102
+        =================================================
+        *********************************
+        ** NO LOCATOR-TABLE CONFIGURED **
+        *********************************
+
+        LISP Site Registration Information
+
+        Site name: prov1
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: prov2
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: prov3
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: provider
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: xtr1_1
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: xtr1_2
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: xtr1_3
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+
+        =================================================
+        Output for router lisp 2 instance-id 103
+        =================================================
+        *********************************
+        ** NO LOCATOR-TABLE CONFIGURED **
+        *********************************
+
+        LISP Site Registration Information
+
+        Site name: prov1
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: prov2
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: prov3
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: provider
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: xtr1_1
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: xtr1_2
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: xtr1_3
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+
+        =================================================
+        Output for router lisp 2 instance-id 104
+        =================================================
+        *********************************
+        ** NO LOCATOR-TABLE CONFIGURED **
+        *********************************
+
+        LISP Site Registration Information
+
+        Site name: prov1
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: prov2
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: prov3
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: provider
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: xtr1_1
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: xtr1_2
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: xtr1_3
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+
+        =================================================
+        Output for router lisp 2 instance-id 107
+        =================================================
+        *********************************
+        ** NO LOCATOR-TABLE CONFIGURED **
+        *********************************
+
+        LISP Site Registration Information
+
+        Site name: prov1
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: prov2
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: prov3
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: provider
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: xtr1_1
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: xtr1_2
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: xtr1_3
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+
+        =================================================
+        Output for router lisp 2 instance-id 108
+        =================================================
+        *********************************
+        ** NO LOCATOR-TABLE CONFIGURED **
+        *********************************
+
+        LISP Site Registration Information
+
+        Site name: prov1
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: prov2
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: prov3
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: provider
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: xtr1_1
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: xtr1_2
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: xtr1_3
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+
+        =================================================
+        Output for router lisp 2 instance-id 109
+        =================================================
+        *********************************
+        ** NO LOCATOR-TABLE CONFIGURED **
+        *********************************
+
+        LISP Site Registration Information
+
+        Site name: prov1
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: prov2
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: prov3
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: provider
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: xtr1_1
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: xtr1_2
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+        Site name: xtr1_3
+        Allowed configured locators: any
+        Allowed EID-prefixes:
+
+        '''}
+
+    # def test_show_lisp_service_server_detail_internal_full1(self):
+    #     self.maxDiff = None
+    #     self.device = Mock(**self.golden_output1)
+    #     obj = ShowLispServiceServerDetailInternal(device=self.device)
+    #     parsed_output = obj.parse(service='ipv4', instance_id='101')
+    #     import pdb ; pdb.set_trace()
+    #     self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    # def test_show_lisp_service_server_detail_internal_full2(self):
+    #     self.maxDiff = None
+    #     self.device = Mock(**self.golden_output2)
+    #     obj = ShowLispServiceServerDetailInternal(device=self.device)
+    #     parsed_output = obj.parse(service='ipv6', instance_id='101')
+    #     self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_show_lisp_service_server_detail_internal_full3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowLispServiceServerDetailInternal(device=self.device)
+        parsed_output = obj.parse(service='ethernet', instance_id='*')
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
+
+    def test_show_lisp_service_server_detail_internal_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowLispServiceServerDetailInternal(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(service='ipv4', instance_id='*')
 
 
 if __name__ == '__main__':

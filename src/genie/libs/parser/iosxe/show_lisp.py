@@ -29,10 +29,10 @@ IOSXE parsers for the following show commands:
     * show lisp all instance-id <instance_id> ipv4 server summary
     * show lisp all instance-id <instance_id> ipv6 server summary
     * show lisp all instance-id <instance_id> ethernet server summary
-
     * show lisp all instance-id <instance_id> ipv4 server detail internal
     * show lisp all instance-id <instance_id> ipv6 server detail internal
     * show lisp all instance-id <instance_id> ethernet server detail internal
+
     * show lisp all instance-id <instance_id> ipv4 statistics
     * show lisp all instance-id <instance_id> ipv6 statistics
     * show lisp all instance-id <instance_id> ethernet statistics
@@ -2361,7 +2361,7 @@ class ShowLispServiceServerSummarySchema(MetaParser):
 
 
 # =============================================================================
-# Schema for 'show lisp all instance-id <instance_id> <service> server summary'
+# Parser for 'show lisp all instance-id <instance_id> <service> server summary'
 # =============================================================================
 class ShowLispServiceServerSummary(ShowLispServiceServerSummarySchema):
 
@@ -2504,6 +2504,126 @@ class ShowLispServiceServerSummary(ShowLispServiceServerSummarySchema):
             if m:
                 counters_dict['sites_with_inconsistent_registrations'] = \
                     int(m.groupdict()['val'])
+                continue
+
+        return parsed_dict
+
+
+# =====================================================================================
+# Schema for 'show lisp all instance-id <instance_id> <service> server detail internal'
+# =====================================================================================
+class ShowLispServiceServerDetailInternalSchema(MetaParser):
+
+    '''Schema for "show lisp all instance-id <instance_id> <service> server detail internal" '''
+
+    schema = {
+        'lisp_router_instances':
+            {Any():
+                {'lisp_router_instance_id': int,
+                Optional('service'):
+                    {Optional(Any()):
+                        {'instance_id':
+                            {Any():
+                                {'sites':
+                                    {Any():
+                                        {'allowed_configured_locators': str,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+
+# =====================================================================================
+# Parser for 'show lisp all instance-id <instance_id> <service> server detail internal'
+# =====================================================================================
+class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSchema):
+
+    '''Parser for "show lisp all instance-id <instance_id> <service> server detail internal"'''
+
+    def cli(self, service, instance_id):
+
+        assert service in ['ipv4', 'ipv6', 'ethernet']
+
+        # Execute command on device
+        out = self.device.execute('show lisp all service instance_id '
+                                  '{instance_id} {service} detail internal'.\
+                            format(service=service, instance_id=instance_id))
+
+        # Init vars
+        parsed_dict = {}
+
+        # Output for router lisp 0
+        # Output for router lisp 0 instance-id 193
+        # Output for router lisp 2 instance-id 101
+        p1 = re.compile(r'Output +for +router +lisp +(?P<router_id>(\S+))'
+                         '(?: +instance-id +(?P<instance_id>(\d+)))?$')
+
+        # Site name: prov1
+        # Site name: provider
+        p2 = re.compile(r'Site +name: +(?P<site_name>(\S+))$')
+
+        # Allowed configured locators: any
+        p3 = re.compile(r'Allowed +configured +locators: +(?P<val>(\S+))$')
+
+        # EID-prefix: 192.168.0.1/32 instance-id 101
+        #     First registered:     01:12:41
+        #     Last registered:      01:12:41
+        #     Routing table tag:    0
+        #     Origin:               Dynamic, more specific of 192.168.0.0/24
+        #     Merge active:         No
+        #     Proxy reply:          Yes
+        #     TTL:                  1d00h
+        #     State:                complete
+        #     Registration errors:
+        #       Authentication failures:   0
+        #       Allowed locators mismatch: 0
+        #     ETR 2.2.2.2, last registered 01:12:41, proxy-reply, map-notify
+        #                  TTL 1d00h, no merge, hash-function sha1, nonce 0x70D18EF4-0x3A605D67
+        #                  state complete, no security-capability
+        #                  xTR-ID 0x21EDD25F-0x7598784C-0x769C8E4E-0xC04926EC
+        #                  site-ID unspecified
+        #                  sourced by reliable transport
+        #       Locator  Local  State      Pri/Wgt  Scope
+        #       2.2.2.2  yes    up          50/50   IPv4 none
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Output for router lisp 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                lisp_router_id = int(group['router_id'])
+                if group['instance_id']:
+                    instance_id = group['instance_id']
+                continue
+
+            # Site name: prov1
+            m = p2.match(line)
+            if m:
+                # Create lisp_dict
+                lisp_dict = parsed_dict.\
+                            setdefault('lisp_router_instances', {}).\
+                            setdefault(lisp_router_id, {})
+                lisp_dict['lisp_router_instance_id'] = lisp_router_id
+                # Create ms dict
+                sites_dict = lisp_dict.setdefault('service', {}).\
+                                setdefault(service, {}).\
+                                setdefault('instance_id', {}).\
+                                setdefault(instance_id, {}).\
+                                setdefault('sites', {}).\
+                                setdefault(m.groupdict()['site_name'], {})
+                continue
+
+            # Allowed configured locators: any
+            m = p3.match(line)
+            if m:
+                sites_dict['allowed_configured_locators'] = m.groupdict()['val']
                 continue
 
         return parsed_dict
