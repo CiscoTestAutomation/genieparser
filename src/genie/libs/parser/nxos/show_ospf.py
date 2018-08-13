@@ -819,9 +819,10 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
             line = line.strip()
 
             # Ethernet2/2 - Process ID 1 VRF default, area 0.0.0.0
+            # Ethernet8/11/3 - Process ID UNDERLAY VRF default, area 0.0.0.0
             # SL1-0.0.0.0-22.22.22.22-11.11.11.11 - Process ID 1 VRF VRF1, area 0.0.0.1
             p1 = re.compile(r'^(?P<interface>[\w\.\-\/]+) +\- +'
-                             'Process +ID +(?P<instance>\d+) +'
+                             'Process +ID +(?P<instance>\S+) +'
                              'VRF +(?P<vrf>\S+), +'
                              'area +(?P<area>[\w\.]+)$')
             m = p1.match(line)
@@ -1820,7 +1821,8 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 continue
 
             # Process ID 1 VRF default, area 0.0.0.0
-            p3 = re.compile(r'^Process +ID +(?P<pid>(\d+)) +VRF'
+            # Process ID UNDERLAY VRF default, area 0.0.0.0
+            p3 = re.compile(r'^Process +ID +(?P<pid>(\S+)) +VRF'
                              ' +(?P<vrf>(\S+)), +area +(?P<area>(\S+))$')
             m = p3.match(line)
             if m:
@@ -2381,8 +2383,9 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
 
             # OSPF Router with ID (2.2.2.2) (Process ID 1 VRF default)
             # OSPF Router with ID (22.22.22.22) (Process ID 1 VRF VRF1)
-            p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
-                             ' +\(Process +ID +(?P<instance>(\d+))'
+            # OSPF Router with ID (81.0.0.1) (Process ID UNDERLAY VRF default)
+            p1 = re.compile(r'^ *OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
+                             ' +\(Process +ID +(?P<instance>(\S+))'
                              ' +VRF +(?P<vrf>(\S+))\)$')
             m = p1.match(line)
             if m:

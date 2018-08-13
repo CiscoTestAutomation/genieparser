@@ -48,6 +48,40 @@ class test_show_routing_vrf_all(unittest.TestCase):
                                                         'protocol_id': '100',
                                                         'attribute': 'discard',
                                                         'tag': '100'}}}}}}},
+                            '30.5.0.1/32':
+                                {'ubest_num': '1',
+                                'mbest_num': '0',
+                                'attach': 'attached',
+                                'best_route':
+                                    {'unicast':
+                                        {'nexthop':
+                                            {'30.5.0.1':
+                                                {'protocol':
+                                                    {'local':
+                                                        {'uptime': '2w6d',
+                                                        'interface': 'Bdi1255',
+                                                        'preference': '0',
+                                                        'metric': '0'}}}}}}},
+                            '57.0.1.0/24':
+                                {'ubest_num': '1',
+                                'mbest_num': '0',
+                                'best_route':
+                                    {'unicast':
+                                        {'nexthop':
+                                            {'100.0.130.3':
+                                                {'protocol':
+                                                    {'bgp':
+                                                        {'uptime': '3d10h',
+                                                        'preference': '33',
+                                                        'metric': '0',
+                                                        'protocol_id': '1',
+                                                        'attribute': 'internal',
+                                                        'tag': '1',
+                                                        'evpn': True,
+                                                        'segid': 50051,
+                                                        'route_table': 'default',
+                                                        'tunnelid': '0x64008203',
+                                                        'encap': 'vxlan'}}}}}}},
                             '33.33.33.33/32':
                                 {'ubest_num': '1',
                                 'mbest_num': '1',
@@ -217,9 +251,13 @@ class test_show_routing_vrf_all(unittest.TestCase):
 
         11.0.0.0/8, ubest/mbest: 1/0
             *via Null0, [55/0], 5w0d, bgp-100, discard, tag 100
+        30.5.0.1/32, ubest/mbest: 1/0 time, attached
+            *via 30.5.0.1, Bdi1255, [0/0], 2w6d, local
         33.33.33.33/32, ubest/mbest: 1/1
             *via 3.3.3.3%default, [33/0], 5w0d, bgp-100, internal, tag 100 (mpls-vpn)
             **via 3.3.3.3%default, [33/0], 5w0d, bgp-100, internal, tag 100 (mpls-vpn)
+        57.0.1.0/24, ubest/mbest: 1/0 time
+            *via 100.0.130.3%default, [33/0], 3d10h, bgp-1, internal, tag 1 (evpn), segid: 50051 tunnelid: 0x64008203 encap: VXLAN
         11.11.11.11/32, ubest/mbest: 2/0, attached
             *via 11.11.11.11, Lo1, [0/0], 5w4d, local
             *via 11.11.11.11, Lo1, [0/0], 5w4d, direct
