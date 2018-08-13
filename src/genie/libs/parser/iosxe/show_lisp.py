@@ -23,10 +23,10 @@ IOSXE parsers for the following show commands:
     * show lisp all service ipv4 summary
     * show lisp all service ipv6 summary
     * show lisp all service ethernet summary
-
     * show lisp all instance-id <instance_id> ipv4 database
     * show lisp all instance-id <instance_id> ipv6 database
     * show lisp all instance-id <instance_id> ethernet database
+
     * show lisp all instance-id <instance_id> ipv4 server summary
     * show lisp all instance-id <instance_id> ipv6 server summary
     * show lisp all instance-id <instance_id> ethernet server summary
@@ -2110,6 +2110,197 @@ class ShowLispServiceSummary(ShowLispServiceSummarySchema):
             if m:
                 sum_dict['eid_tables_pending_map_cache_update_to_fib'] = \
                     int(m.groupdict()['val'])
+                continue
+
+        return parsed_dict
+
+
+# =======================================================================
+# Schema for 'show lisp all instance-id <instance_id> <service> dabatase'
+# =======================================================================
+class ShowLispServiceDatabaseSchema(MetaParser):
+
+    '''Schema for "show lisp all instance-id <instance_id> <service> dabatase" '''
+
+    schema = {
+        'lisp_router_instances':
+            {Any():
+                {'lisp_router_instance_id': int,
+                'locator_sets':
+                    {Any():
+                        {'locator_set_name': str,
+                        },
+                    },
+                Optional('service'):
+                    {Optional(Any()):
+                        {'etr':
+                            {'local_eids':
+                                {Any(): 
+                                    {Optional('dynamic_eids'):
+                                        {Any():
+                                            {'id': str,
+                                            Optional('dynamic_eid'): str,
+                                            'eid_address':
+                                                {'address_type': str,
+                                                'vrf': str,
+                                                },
+                                            'rlocs': str,
+                                            'loopback_address': str,
+                                            'priority': int,
+                                            'weight': int,
+                                            'source': str,
+                                            'state': str,
+                                            },
+                                        },
+                                    Optional('eids'):
+                                        {Any():
+                                            {'id': str,
+                                            'eid_address':
+                                                {'address_type': str,
+                                                'vrf': str,
+                                                },
+                                            'rlocs': str,
+                                            'loopback_address': str,
+                                            'priority': int,
+                                            'weight': int,
+                                            'source': str,
+                                            'state': str,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+
+# =======================================================================
+# Parser for 'show lisp all instance-id <instance_id> <service> dabatase'
+# =======================================================================
+class ShowLispServiceDatabase(ShowLispServiceDatabaseSchema):
+
+    '''Parser for "show lisp all instance-id <instance_id> <service> dabatase"'''
+
+    def cli(self, service, instance_id):
+
+        assert service in ['ipv4', 'ipv6', 'ethernet']
+
+        # Execute command on device
+        out = self.device.execute('show lisp all service instance_id '
+                                  '{instance_id} {service} summary'.\
+                            format(service=service, instance_id=instance_id))
+
+        # Init vars
+        parsed_dict = {}
+
+        # Output for router lisp 0
+        # Output for router lisp 0 instance-id 193
+        # Output for router lisp 2 instance-id 101
+        p1 = re.compile(r'Output +for +router +lisp +(?P<router_id>(\S+))'
+                         '(?: +instance-id +(?P<instance_id>(\d+)))?$')
+
+        # LISP ETR IPv4 Mapping Database for EID-table vrf red (IID 101), LSBs: 0x1
+        # LISP ETR IPv6 Mapping Database for EID-table vrf red (IID 101), LSBs: 0x1
+        # LISP ETR MAC Mapping Database for EID-table Vlan 101 (IID 1), LSBs: 0x1
+        p2 = re.compile(r'LISP +ETR +(IPv4|IPv6|MAC) +Mapping +Database +for'
+                         ' +EID-table +(vrf|Vlan) +(?P<vrf>(\S+))'
+                         ' +\(IID +(?P<instance_id>(\d+))\),'
+                         ' +LSBs: +(?P<lsb>(\S+))$')
+
+        # Entries total 1, no-route 0, inactive 0
+        # Entries total 2, no-route 0, inactive 0
+        p3 = re.compile(r'Entries +total +(?P<entries>(\d+)), +no-route'
+                         ' +(?P<no_route>(\d+)),'
+                         ' +inactive +(?P<inactive>(\d+))$')
+
+        # 192.168.0.0/24, locator-set RLOC
+        # 2001:192:168::/64, locator-set RLOC
+        # 0050.56b0.6a0e/48, dynamic-eid Auto-L2-group-1, inherited from default locator-set RLOC
+        # cafe.cafe.cafe/48, dynamic-eid Auto-L2-group-1, inherited from default locator-set RLOC
+        p4 = re.compile(r'(?P<etr_eid>(\S+)),'
+                         '(?: +dynamic-eid +(?P<dyn_eid>(\S+)),'
+                         ' +inherited +from +default)?'
+                         ' +locator-set +(?P<locator_set>(\S+))$')
+
+        # Locator       Pri/Wgt  Source     State
+        # 2.2.2.2       50/50    cfg-intf   site-self, reachable
+        # 11.11.11.1    1/100    cfg-intf   site-self, reachable
+        p5 = re.compile(r'(?P<locator>(\S+))'
+                         ' +(?P<priority>(\d+))\/(?P<weight>(\d+))'
+                         ' +(?P<source>(\S+)) +(?P<state>(.*))$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Output for router lisp 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                lisp_router_id = int(group['router_id'])
+                if group['instance_id']:
+                    instance_id = group['instance_id']
+                continue
+
+            # LISP ETR IPv6 Mapping Database for EID-table vrf red (IID 101), LSBs: 0x1
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                etr_eid_vrf = group['vrf']
+                lsb = group['lsb']
+                # Create lisp_dict
+                lisp_dict = parsed_dict.\
+                            setdefault('lisp_router_instances', {}).\
+                            setdefault(lisp_router_id, {})
+                lisp_dict['lisp_router_instance_id'] = lisp_router_id
+                continue
+
+            # 192.168.0.0/24, locator-set RLOC
+            # cafe.cafe.cafe/48, dynamic-eid Auto-L2-group-1, inherited from default locator-set RLOC
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                # Create locator_set_dict
+                ls_dict = lisp_dict.setdefault('locator_sets', {}).\
+                            setdefault(group['locator_set'], {})
+                ls_dict['locator_set_name'] = group['locator_set']
+
+                # Create eid dict
+                if group['dyn_eid']:
+                    eid_dict_name = 'dynamic_eids'
+                else:
+                    eid_dict_name = 'eids'
+                eid_dict = lisp_dict.setdefault('service', {}).\
+                                setdefault(service, {}).\
+                                setdefault('etr', {}).\
+                                setdefault('local_eids', {}).\
+                                setdefault(instance_id, {}).\
+                                setdefault(eid_dict_name, {}).\
+                                setdefault(group['etr_eid'], {})
+
+                eid_dict['id'] = group['etr_eid']
+                eid_dict['rlocs'] = group['locator_set']
+                if group['dyn_eid']:
+                    eid_dict['dynamic_eid'] = group['dyn_eid']
+
+                # Create eid_addr_dict
+                eid_addr_dict = eid_dict.setdefault('eid_address', {})
+                eid_addr_dict['address_type'] = service
+                eid_addr_dict['vrf'] = etr_eid_vrf
+                continue
+
+            # Locator       Pri/Wgt  Source     State
+            # 2.2.2.2       50/50    cfg-intf   site-self, reachable
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                eid_dict['loopback_address'] = group['locator']
+                eid_dict['priority'] = int(group['priority'])
+                eid_dict['weight'] = int(group['weight'])
+                eid_dict['source'] = group['source']
+                eid_dict['state'] = group['state']
                 continue
 
         return parsed_dict

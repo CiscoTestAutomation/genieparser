@@ -19,7 +19,8 @@ from genie.libs.parser.iosxe.show_lisp import ShowLispSession,\
                                               ShowLispServiceMapCache,\
                                               ShowLispServiceRlocMembers,\
                                               ShowLispServiceSmr,\
-                                              ShowLispServiceSummary
+                                              ShowLispServiceSummary,\
+                                              ShowLispServiceDatabase
 
 
 
@@ -2822,6 +2823,456 @@ class test_show_lisp_service_summary(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(service='ipv4')
 
+
+# ==========================================================================
+# Unit test for 'show lisp all instance-id <instance_id> <service> dabatase'
+# ==========================================================================
+class test_show_lisp_service_database(unittest.TestCase):
+
+    '''Unit test for "show lisp all instance-id <instance_id> <service> dabatase"'''
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'lisp_router_instances': 
+            {0: 
+                {'lisp_router_instance_id': 0,
+                'locator_sets': {'RLOC': {'locator_set_name': 'RLOC'}},
+                               'service': {'ipv4': {'etr': {'local_eids': {'101': {'eids': {'192.168.0.0/24': {'eid_address': {'address_type': 'ipv4',
+                                                                                                                               'vrf': 'red'},
+                                                                                                               'id': '192.168.0.0/24',
+                                                                                                               'loopback_address': '2.2.2.2',
+                                                                                                               'priority': 50,
+                                                                                                               'rlocs': 'RLOC',
+                                                                                                               'source': 'cfg-intf',
+                                                                                                               'state': 'site-self, '
+                                                                                                                        'reachable',
+                                                                                                               'weight': 50}}}}}}}}}}
+
+    golden_output1 = {'execute.return_value': '''
+        202-XTR#show lisp all instance-id 101 ipv4 database  
+        =====================================================
+        Output for router lisp 0
+        =====================================================
+        LISP ETR IPv4 Mapping Database for EID-table vrf red (IID 101), LSBs: 0x1
+        Entries total 1, no-route 0, inactive 0
+
+        192.168.0.0/24, locator-set RLOC
+          Locator  Pri/Wgt  Source     State
+          2.2.2.2   50/50   cfg-intf   site-self, reachable
+        '''}
+
+    golden_parsed_output2 = {}
+
+    golden_output2 = {'execute.return_value': '''
+        202-XTR#show lisp all instance-id 101 ipv6 database 
+        =====================================================
+        Output for router lisp 0
+        =====================================================
+        LISP ETR IPv6 Mapping Database for EID-table vrf red (IID 101), LSBs: 0x1
+        Entries total 1, no-route 0, inactive 0
+
+        2001:192:168::/64, locator-set RLOC
+          Locator  Pri/Wgt  Source     State
+          2.2.2.2   50/50   cfg-intf   site-self, reachable
+        '''}
+
+    golden_parsed_output3 = {}
+
+    golden_output3 = {'execute.return_value': '''
+        OTT-LISP-C3K-3-xTR1#show lisp all instance-id * ethernet database
+        =================================================
+        Output for router lisp 0 instance-id 0
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 1
+        =================================================
+        LISP ETR MAC Mapping Database for EID-table Vlan 101 (IID 1), LSBs: 0x1
+        Entries total 2, no-route 0, inactive 0
+
+        0050.56b0.6a0e/48, dynamic-eid Auto-L2-group-1, inherited from default locator-set RLOC
+          Locator     Pri/Wgt  Source     State
+          11.11.11.1    1/100  cfg-intf   site-self, reachable
+        cafe.cafe.cafe/48, dynamic-eid Auto-L2-group-1, inherited from default locator-set RLOC
+          Locator     Pri/Wgt  Source     State
+          11.11.11.1    1/100  cfg-intf   site-self, reachable
+
+        =================================================
+        Output for router lisp 0 instance-id 2
+        =================================================
+        LISP ETR MAC Mapping Database for EID-table Vlan 102 (IID 2), LSBs: 0x1
+        Entries total 2, no-route 0, inactive 0
+
+        0050.56b0.60de/48, dynamic-eid Auto-L2-group-2, inherited from default locator-set RLOC
+          Locator     Pri/Wgt  Source     State
+          11.11.11.1    1/100  cfg-intf   site-self, reachable
+        face.0171.0001/48, dynamic-eid Auto-L2-group-2, inherited from default locator-set RLOC
+          Locator     Pri/Wgt  Source     State
+          11.11.11.1    1/100  cfg-intf   site-self, reachable
+
+        =================================================
+        Output for router lisp 0 instance-id 102
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 131
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 132
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 133
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 134
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 135
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 136
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 137
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 138
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 139
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 140
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 141
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 142
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 143
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 144
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 145
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 146
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 147
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 148
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 149
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 150
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 151
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 152
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 153
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 154
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 155
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 156
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 157
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 158
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 159
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 160
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 161
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 162
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 163
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 164
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 165
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 166
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 167
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 168
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 169
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 170
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 171
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 172
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 173
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 174
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 175
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 176
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 177
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 178
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 179
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 180
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 181
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 182
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 183
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 184
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 185
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 186
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 187
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 188
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 189
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 190
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 191
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 192
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 193
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 194
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 195
+        =================================================
+        % EID table not enabled for MAC.
+        '''}
+
+    def test_show_lisp_service_database_full1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowLispServiceDatabase(device=self.device)
+        parsed_output = obj.parse(service='ipv4', instance_id='101')
+        import pdb ; pdb.set_trace()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    # def test_show_lisp_service_database_full2(self):
+    #     self.maxDiff = None
+    #     self.device = Mock(**self.golden_output2)
+    #     obj = ShowLispServiceDatabase(device=self.device)
+    #     parsed_output = obj.parse(service='ipv6', instance_id='101')
+    #     self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    # def test_show_lisp_service_database_full3(self):
+    #     self.maxDiff = None
+    #     self.device = Mock(**self.golden_output3)
+    #     obj = ShowLispServiceDatabase(device=self.device)
+    #     parsed_output = obj.parse(service='ethernet', instance_id='*')
+    #     self.assertEqual(parsed_output, self.golden_parsed_output3)
+
+    def test_show_lisp_service_database_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowLispServiceDatabase(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(service='ipv4', instance_id='*')
 
 
 if __name__ == '__main__':
