@@ -20,7 +20,8 @@ from genie.libs.parser.iosxe.show_lisp import ShowLispSession,\
                                               ShowLispServiceRlocMembers,\
                                               ShowLispServiceSmr,\
                                               ShowLispServiceSummary,\
-                                              ShowLispServiceDatabase
+                                              ShowLispServiceDatabase,\
+                                              ShowLispServiceServerSummary
 
 
 
@@ -2847,7 +2848,10 @@ class test_show_lisp_service_database(unittest.TestCase):
                         {'etr': 
                             {'local_eids': 
                                 {'101': 
-                                    {'eids': 
+                                    {'total_eid_entries': 1,
+                                    'no_route_eid_entries': 0,
+                                    'inactive_eid_entries': 0,
+                                    'eids': 
                                         {'192.168.0.0/24': 
                                             {'eid_address': 
                                                 {'address_type': 'ipv4',
@@ -2885,7 +2889,10 @@ class test_show_lisp_service_database(unittest.TestCase):
                         {'etr': 
                             {'local_eids': 
                                 {'101': 
-                                    {'eids': 
+                                    {'total_eid_entries': 1,
+                                    'no_route_eid_entries': 0,
+                                    'inactive_eid_entries': 0,
+                                    'eids': 
                                         {'2001:192:168::/64': 
                                             {'eid_address': 
                                                 {'address_type': 'ipv6',
@@ -2923,7 +2930,10 @@ class test_show_lisp_service_database(unittest.TestCase):
                         {'etr': 
                             {'local_eids': 
                                 {'1': 
-                                    {'dynamic_eids': 
+                                    {'total_eid_entries': 2,
+                                    'no_route_eid_entries': 0,
+                                    'inactive_eid_entries': 0,
+                                    'dynamic_eids': 
                                         {'0050.56b0.6a0e/48': 
                                             {'dynamic_eid': 'Auto-L2-group-1',
                                             'eid_address': 
@@ -2949,7 +2959,10 @@ class test_show_lisp_service_database(unittest.TestCase):
                                         'state': 'site-self, reachable',
                                         'weight': 100}}},
                                 '2': 
-                                    {'dynamic_eids': 
+                                    {'total_eid_entries': 2,
+                                    'no_route_eid_entries': 0,
+                                    'inactive_eid_entries': 0,
+                                    'dynamic_eids': 
                                         {'0050.56b0.60de/48': 
                                             {'dynamic_eid': 'Auto-L2-group-2',
                                             'eid_address': 
@@ -3366,6 +3379,336 @@ class test_show_lisp_service_database(unittest.TestCase):
         obj = ShowLispServiceDatabase(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(service='ipv4', instance_id='*')
+
+
+# ================================================================================
+# Unit test for 'show lisp all instance-id <instance_id> <service> server summary'
+# ================================================================================
+class test_show_lisp_service_server_summary(unittest.TestCase):
+
+    '''Unit test for "show lisp all instance-id <instance_id> <service> server summary"'''
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'lisp_router_instances': 
+            {0: 
+                {'lisp_router_instance_id': 0,
+                'service': 
+                    {'ipv4': 
+                        {'instance_id':
+                            {'101':
+                                {'map_server': 
+                                    {'counters': 
+                                        {'num_configured_eid_prefixes': 2,
+                                        'num_configured_sites': 2,
+                                        'num_registered_eid_prefixes': 2,
+                                        'num_registered_sites': 2,
+                                        'sites_with_inconsistent_registrations': 0},
+                                    'sites': 
+                                        {'xtr1_1': 
+                                            {'configured': 1,
+                                            'inconsistent': 0,
+                                            'registered': 1,
+                                            'site_id': 'xtr1_1'},
+                                        'xtr2': 
+                                            {'configured': 1,
+                                            'inconsistent': 0,
+                                            'registered': 1,
+                                            'site_id': 'xtr2'}}}}}}}}}}
+
+    golden_output1 = {'execute.return_value': '''
+        204-MSMR#show lisp all instance-id 101 ipv4 server summary 
+        =====================================================
+        Output for router lisp 0
+        =====================================================
+                             -----------  IPv4 ----------- 
+         Site name            Configured Registered Incons
+        xtr1_1                        1          1      0
+        xtr2                          1          1      0
+
+        Number of configured sites:                     2
+        Number of registered sites:                     2
+        Sites with inconsistent registrations:          0
+        IPv4
+          Number of configured EID prefixes:            2
+          Number of registered EID prefixes:            2
+        '''}
+
+    golden_parsed_output2 = {
+        'lisp_router_instances': 
+            {0: 
+                {'lisp_router_instance_id': 0,
+                'service': 
+                    {'ipv6': 
+                        {'instance_id':
+                            {'101':
+                                {'map_server': 
+                                    {'counters': 
+                                        {'num_configured_eid_prefixes': 2,
+                                        'num_configured_sites': 2,
+                                        'num_registered_eid_prefixes': 2,
+                                        'num_registered_sites': 2,
+                                        'sites_with_inconsistent_registrations': 0},
+                                    'sites': 
+                                        {'xtr1_1': 
+                                            {'configured': 1,
+                                            'inconsistent': 0,
+                                            'registered': 1,
+                                            'site_id': 'xtr1_1'},
+                                        'xtr2': 
+                                            {'configured': 1,
+                                            'inconsistent': 0,
+                                            'registered': 1,
+                                            'site_id': 'xtr2'}}}}}}}}}}
+
+    golden_output2 = {'execute.return_value': '''
+        204-MSMR#show lisp all instance-id 101 ipv6 server summary 
+        =====================================================
+        Output for router lisp 0
+        =====================================================
+                             -----------  IPv6 ----------- 
+         Site name            Configured Registered Incons
+        xtr1_1                        1          1      0
+        xtr2                          1          1      0
+
+        Number of configured sites:                     2
+        Number of registered sites:                     2
+        Sites with inconsistent registrations:          0
+        IPv6
+          Number of configured EID prefixes:            2
+          Number of registered EID prefixes:            2
+        '''}
+
+    golden_parsed_output3 = {
+        'lisp_router_instances': 
+            {2: 
+                {'lisp_router_instance_id': 2,
+                'service': 
+                    {'ethernet': 
+                        {'instance_id': 
+                            {'101': 
+                                {'map_server': 
+                                    {'counters': 
+                                        {'num_configured_sites': 1,
+                                        'num_registered_sites': 0,
+                                        'site_registration_count': 0,
+                                        'site_registration_limit': 0,
+                                        'sites_with_inconsistent_registrations': 0},
+                                    'sites': 
+                                        {'xtr1_1': 
+                                            {'configured': 0,
+                                            'inconsistent': 0,
+                                            'registered': 0,
+                                            'site_id': 'xtr1_1'}}}},
+                            '102': {'map_server': {'counters': {'num_configured_sites': 1,
+                                                                'num_registered_sites': 0,
+                                                                'site_registration_count': 0,
+                                                                'site_registration_limit': 0,
+                                                                'sites_with_inconsistent_registrations': 0},
+                                                   'sites': {'xtr1_2': {'configured': 0,
+                                                                        'inconsistent': 0,
+                                                                        'registered': 0,
+                                                                        'site_id': 'xtr1_2'}}}},
+                            '103': {'map_server': {'counters': {'num_configured_sites': 1,
+                                                                'num_registered_sites': 0,
+                                                                'site_registration_count': 0,
+                                                                'site_registration_limit': 0,
+                                                                'sites_with_inconsistent_registrations': 0},
+                                                   'sites': {'provider': {'configured': 0,
+                                                                          'inconsistent': 0,
+                                                                          'registered': 0,
+                                                                          'site_id': 'provider'}}}},
+                            '104': {'map_server': {'counters': {'num_configured_sites': 1,
+                                                                'num_registered_sites': 0,
+                                                                'site_registration_count': 0,
+                                                                'site_registration_limit': 0,
+                                                                'sites_with_inconsistent_registrations': 0},
+                                                   'sites': {'xtr1_3': {'configured': 0,
+                                                                        'inconsistent': 0,
+                                                                        'registered': 0,
+                                                                        'site_id': 'xtr1_3'}}}},
+                            '107': {'map_server': {'counters': {'num_configured_sites': 1,
+                                                                'num_registered_sites': 0,
+                                                                'site_registration_count': 0,
+                                                                'site_registration_limit': 0,
+                                                                'sites_with_inconsistent_registrations': 0},
+                                                   'sites': {'prov1': {'configured': 0,
+                                                                       'inconsistent': 0,
+                                                                       'registered': 0,
+                                                                       'site_id': 'prov1'}}}},
+                            '108': {'map_server': {'counters': {'num_configured_sites': 1,
+                                                                'num_registered_sites': 0,
+                                                                'site_registration_count': 0,
+                                                                'site_registration_limit': 0,
+                                                                'sites_with_inconsistent_registrations': 0},
+                                                   'sites': {'prov2': {'configured': 0,
+                                                                       'inconsistent': 0,
+                                                                       'registered': 0,
+                                                                       'site_id': 'prov2'}}}},
+                            '109': {'map_server': {'counters': {'num_configured_sites': 1,
+                                                                'num_registered_sites': 0,
+                                                                'site_registration_count': 0,
+                                                                'site_registration_limit': 0,
+                                                                'sites_with_inconsistent_registrations': 0},
+                                                   'sites': {'prov3': {'configured': 0,
+                                                                       'inconsistent': 0,
+                                                                       'registered': 0,
+                                                                       'site_id': 'prov3'}}}}}}}}}}
+
+    golden_output3 = {'execute.return_value': '''
+        OTT-LISP-C9K-20-MSMR#show lisp all instance-id * ethernet server summary
+        =================================================
+        Output for router lisp 2 instance-id 101
+        =================================================
+        *********************************
+        ** NO LOCATOR-TABLE CONFIGURED **
+        *********************************
+
+                             -----------  MAC  -----------
+         Site name            Configured Registered Incons
+        xtr1_1                        0          0      0
+
+        Site-registration limit for router lisp 2:            0
+        Site-registration count for router lisp 2:            0
+        Number of configured sites:                           1
+        Number of registered sites:                           0
+        Sites with inconsistent registrations:                0
+
+        =================================================
+        Output for router lisp 2 instance-id 102
+        =================================================
+        *********************************
+        ** NO LOCATOR-TABLE CONFIGURED **
+        *********************************
+
+                             -----------  MAC  -----------
+         Site name            Configured Registered Incons
+        xtr1_2                        0          0      0
+
+        Site-registration limit for router lisp 2:            0
+        Site-registration count for router lisp 2:            0
+        Number of configured sites:                           1
+        Number of registered sites:                           0
+        Sites with inconsistent registrations:                0
+
+        =================================================
+        Output for router lisp 2 instance-id 103
+        =================================================
+        *********************************
+        ** NO LOCATOR-TABLE CONFIGURED **
+        *********************************
+
+                             -----------  MAC  -----------
+         Site name            Configured Registered Incons
+        provider                      0          0      0
+
+        Site-registration limit for router lisp 2:            0
+        Site-registration count for router lisp 2:            0
+        Number of configured sites:                           1
+        Number of registered sites:                           0
+        Sites with inconsistent registrations:                0
+
+        =================================================
+        Output for router lisp 2 instance-id 104
+        =================================================
+        *********************************
+        ** NO LOCATOR-TABLE CONFIGURED **
+        *********************************
+
+                             -----------  MAC  -----------
+         Site name            Configured Registered Incons
+        xtr1_3                        0          0      0
+
+        Site-registration limit for router lisp 2:            0
+        Site-registration count for router lisp 2:            0
+        Number of configured sites:                           1
+        Number of registered sites:                           0
+        Sites with inconsistent registrations:                0
+
+        =================================================
+        Output for router lisp 2 instance-id 107
+        =================================================
+        *********************************
+        ** NO LOCATOR-TABLE CONFIGURED **
+        *********************************
+
+                             -----------  MAC  -----------
+         Site name            Configured Registered Incons
+        prov1                         0          0      0
+
+        Site-registration limit for router lisp 2:            0
+        Site-registration count for router lisp 2:            0
+        Number of configured sites:                           1
+        Number of registered sites:                           0
+        Sites with inconsistent registrations:                0
+
+        =================================================
+        Output for router lisp 2 instance-id 108
+        =================================================
+        *********************************
+        ** NO LOCATOR-TABLE CONFIGURED **
+        *********************************
+
+                             -----------  MAC  -----------
+         Site name            Configured Registered Incons
+        prov2                         0          0      0
+
+        Site-registration limit for router lisp 2:            0
+        Site-registration count for router lisp 2:            0
+        Number of configured sites:                           1
+        Number of registered sites:                           0
+        Sites with inconsistent registrations:                0
+
+        =================================================
+        Output for router lisp 2 instance-id 109
+        =================================================
+        *********************************
+        ** NO LOCATOR-TABLE CONFIGURED **
+        *********************************
+
+                             -----------  MAC  -----------
+         Site name            Configured Registered Incons
+        prov3                         0          0      0
+
+        Site-registration limit for router lisp 2:            0
+        Site-registration count for router lisp 2:            0
+        Number of configured sites:                           1
+        Number of registered sites:                           0
+        Sites with inconsistent registrations:                0
+
+        '''}
+
+    def test_show_lisp_service_server_summary_full1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowLispServiceServerSummary(device=self.device)
+        parsed_output = obj.parse(service='ipv4', instance_id='101')
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_lisp_service_server_summary_full2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowLispServiceServerSummary(device=self.device)
+        parsed_output = obj.parse(service='ipv6', instance_id='101')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_show_lisp_service_server_summary_full3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowLispServiceServerSummary(device=self.device)
+        parsed_output = obj.parse(service='ethernet', instance_id='*')
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
+
+    def test_show_lisp_service_server_summary_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowLispServiceServerSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(service='ipv4', instance_id='*')
+
 
 
 if __name__ == '__main__':

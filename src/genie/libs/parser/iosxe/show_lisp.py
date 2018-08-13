@@ -26,7 +26,6 @@ IOSXE parsers for the following show commands:
     * show lisp all instance-id <instance_id> ipv4 database
     * show lisp all instance-id <instance_id> ipv6 database
     * show lisp all instance-id <instance_id> ethernet database
-
     * show lisp all instance-id <instance_id> ipv4 server summary
     * show lisp all instance-id <instance_id> ipv6 server summary
     * show lisp all instance-id <instance_id> ethernet server summary
@@ -2136,7 +2135,10 @@ class ShowLispServiceDatabaseSchema(MetaParser):
                         {'etr':
                             {'local_eids':
                                 {Any(): 
-                                    {Optional('dynamic_eids'):
+                                    {'total_eid_entries': int,
+                                    'no_route_eid_entries': int,
+                                    'inactive_eid_entries': int,
+                                    Optional('dynamic_eids'):
                                         {Any():
                                             {'id': str,
                                             Optional('dynamic_eid'): str,
@@ -2212,7 +2214,7 @@ class ShowLispServiceDatabase(ShowLispServiceDatabaseSchema):
 
         # Entries total 1, no-route 0, inactive 0
         # Entries total 2, no-route 0, inactive 0
-        p3 = re.compile(r'Entries +total +(?P<entries>(\d+)), +no-route'
+        p3 = re.compile(r'Entries +total +(?P<total>(\d+)), +no-route'
                          ' +(?P<no_route>(\d+)),'
                          ' +inactive +(?P<inactive>(\d+))$')
 
@@ -2257,6 +2259,15 @@ class ShowLispServiceDatabase(ShowLispServiceDatabaseSchema):
                 lisp_dict['lisp_router_instance_id'] = lisp_router_id
                 continue
 
+            # Entries total 2, no-route 0, inactive 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                total_entries = int(group['total'])
+                no_route_entries = int(group['no_route'])
+                inactive_entries = int(group['inactive'])
+                continue
+
             # 192.168.0.0/24, locator-set RLOC
             # cafe.cafe.cafe/48, dynamic-eid Auto-L2-group-1, inherited from default locator-set RLOC
             m = p4.match(line)
@@ -2266,25 +2277,25 @@ class ShowLispServiceDatabase(ShowLispServiceDatabaseSchema):
                 ls_dict = lisp_dict.setdefault('locator_sets', {}).\
                             setdefault(group['locator_set'], {})
                 ls_dict['locator_set_name'] = group['locator_set']
-
+                etr_dict = lisp_dict.setdefault('service', {}).\
+                                setdefault(service, {}).\
+                                setdefault('etr', {}).\
+                                setdefault('local_eids', {}).\
+                                setdefault(instance_id, {})
+                etr_dict['total_eid_entries'] = total_entries
+                etr_dict['no_route_eid_entries'] = no_route_entries
+                etr_dict['inactive_eid_entries'] = inactive_entries
                 # Create eid dict
                 if group['dyn_eid']:
                     eid_dict_name = 'dynamic_eids'
                 else:
                     eid_dict_name = 'eids'
-                eid_dict = lisp_dict.setdefault('service', {}).\
-                                setdefault(service, {}).\
-                                setdefault('etr', {}).\
-                                setdefault('local_eids', {}).\
-                                setdefault(instance_id, {}).\
-                                setdefault(eid_dict_name, {}).\
-                                setdefault(group['etr_eid'], {})
-
+                eid_dict = etr_dict.setdefault(eid_dict_name, {}).\
+                            setdefault(group['etr_eid'], {})
                 eid_dict['id'] = group['etr_eid']
                 eid_dict['rlocs'] = group['locator_set']
                 if group['dyn_eid']:
                     eid_dict['dynamic_eid'] = group['dyn_eid']
-
                 # Create eid_addr_dict
                 eid_addr_dict = eid_dict.setdefault('eid_address', {})
                 eid_addr_dict['address_type'] = service
@@ -2301,6 +2312,198 @@ class ShowLispServiceDatabase(ShowLispServiceDatabaseSchema):
                 eid_dict['weight'] = int(group['weight'])
                 eid_dict['source'] = group['source']
                 eid_dict['state'] = group['state']
+                continue
+
+        return parsed_dict
+
+
+# =============================================================================
+# Schema for 'show lisp all instance-id <instance_id> <service> server summary'
+# =============================================================================
+class ShowLispServiceServerSummarySchema(MetaParser):
+
+    '''Schema for "show lisp all instance-id <instance_id> <service> server summary" '''
+
+    schema = {
+        'lisp_router_instances':
+            {Any():
+                {'lisp_router_instance_id': int,
+                Optional('service'):
+                    {Optional(Any()):
+                        {'instance_id':
+                            {Any():
+                                {'map_server':
+                                    {'sites':
+                                        {Any():
+                                            {'site_id': str,
+                                            'configured': int,
+                                            'registered': int,
+                                            'inconsistent': int,
+                                            },
+                                        },
+                                    'counters':
+                                        {'num_configured_sites': int,
+                                        'num_registered_sites':int,
+                                        Optional('num_configured_eid_prefixes'): int,
+                                        Optional('num_registered_eid_prefixes'): int,
+                                        'sites_with_inconsistent_registrations': int,
+                                        Optional('site_registration_limit'): int,
+                                        Optional('site_registration_count'): int,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+
+# =============================================================================
+# Schema for 'show lisp all instance-id <instance_id> <service> server summary'
+# =============================================================================
+class ShowLispServiceServerSummary(ShowLispServiceServerSummarySchema):
+
+    '''Parser for "show lisp all instance-id <instance_id> <service> server summary"'''
+
+    def cli(self, service, instance_id):
+
+        assert service in ['ipv4', 'ipv6', 'ethernet']
+
+        # Execute command on device
+        out = self.device.execute('show lisp all service instance_id '
+                                  '{instance_id} {service} summary'.\
+                            format(service=service, instance_id=instance_id))
+
+        # Init vars
+        parsed_dict = {}
+
+        # Output for router lisp 0
+        # Output for router lisp 0 instance-id 193
+        # Output for router lisp 2 instance-id 101
+        p1 = re.compile(r'Output +for +router +lisp +(?P<router_id>(\S+))'
+                         '(?: +instance-id +(?P<instance_id>(\d+)))?$')
+
+        #                      -----------  IPv4 ----------- 
+        #  Site name            Configured Registered Incons
+        # xtr1_1                        1          1      0
+        # xtr2                          1          1      0
+        p2 = re.compile(r'(?P<site_name>(\S+)) +(?P<cfgd>(\d+))'
+                         ' +(?P<registered>(\d+)) +(?P<incons>(\d+))$')
+
+        # Number of configured sites:                     2
+        p3 = re.compile(r'Number +of +configured +sites: +(?P<val>(\d+))$')
+
+        # Number of registered sites:                     2
+        p4 = re.compile(r'Number +of +registered +sites: +(?P<val>(\d+))$')
+
+        # Number of configured EID prefixes:            2
+        p5 = re.compile(r'Number +of +configured +EID +prefixes:'
+                         ' +(?P<val>(\d+))$')
+
+        # Number of registered EID prefixes:            2
+        p6 = re.compile(r'Number +of +registered +EID +prefixes:'
+                         ' +(?P<val>(\d+))$')
+
+        # Site-registration limit for router lisp 2:            0
+        p7 = re.compile(r'Site-registration +limit +for +router +lisp'
+                         ' +(?P<router_id>(\d+)): +(?P<val>(\d+))$')
+
+        # Site-registration count for router lisp 2:            0
+        p8 = re.compile(r'Site-registration +count +for +router +lisp'
+                         ' +(?P<router_id>(\d+)): +(?P<val>(\d+))$')
+
+        # Sites with inconsistent registrations:          0
+        p9 = re.compile(r'Sites +with +inconsistent +registrations:'
+                         ' +(?P<val>(\d+))$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Output for router lisp 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                lisp_router_id = int(group['router_id'])
+                if group['instance_id']:
+                    instance_id = group['instance_id']
+                continue
+
+            #  Site name            Configured Registered Incons
+            # xtr2                           1          1      0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                # Create lisp_dict
+                lisp_dict = parsed_dict.\
+                            setdefault('lisp_router_instances', {}).\
+                            setdefault(lisp_router_id, {})
+                lisp_dict['lisp_router_instance_id'] = lisp_router_id
+                # Create ms dict
+                ms_dict = lisp_dict.setdefault('service', {}).\
+                                setdefault(service, {}).\
+                                setdefault('instance_id', {}).\
+                                setdefault(instance_id, {}).\
+                                setdefault('map_server', {})
+                # Create sites dict
+                sites_dict = ms_dict.setdefault('sites', {}).\
+                                setdefault(group['site_name'], {})
+                sites_dict['site_id'] = group['site_name']
+                sites_dict['configured'] = int(group['cfgd'])
+                sites_dict['registered'] = int(group['registered'])
+                sites_dict['inconsistent'] = int(group['incons'])
+                # Create counters dict
+                counters_dict = ms_dict.setdefault('counters', {})
+                continue
+
+            # Number of configured sites:                     2
+            m = p3.match(line)
+            if m:
+                counters_dict['num_configured_sites'] = \
+                    int(m.groupdict()['val'])
+                continue
+
+            # Number of registered sites:                     2
+            m = p4.match(line)
+            if m:
+                counters_dict['num_registered_sites'] = \
+                    int(m.groupdict()['val'])
+                continue
+
+            # Number of configured EID prefixes:            2
+            m = p5.match(line)
+            if m:
+                counters_dict['num_configured_eid_prefixes'] = \
+                    int(m.groupdict()['val'])
+                continue
+
+            # Number of registered EID prefixes:            2
+            m = p6.match(line)
+            if m:
+                counters_dict['num_registered_eid_prefixes'] = \
+                    int(m.groupdict()['val'])
+                continue
+
+            # Site-registration limit for router lisp 2:            0
+            m = p7.match(line)
+            if m:
+                counters_dict['site_registration_limit'] = \
+                    int(m.groupdict()['val'])
+                continue
+
+            # Site-registration count for router lisp 2:            0
+            m = p8.match(line)
+            if m:
+                counters_dict['site_registration_count'] = \
+                    int(m.groupdict()['val'])
+                continue
+
+            # Sites with inconsistent registrations:          0
+            m = p9.match(line)
+            if m:
+                counters_dict['sites_with_inconsistent_registrations'] = \
+                    int(m.groupdict()['val'])
                 continue
 
         return parsed_dict
