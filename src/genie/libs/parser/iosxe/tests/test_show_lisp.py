@@ -2839,17 +2839,26 @@ class test_show_lisp_service_database(unittest.TestCase):
         'lisp_router_instances': 
             {0: 
                 {'lisp_router_instance_id': 0,
-                'locator_sets': {'RLOC': {'locator_set_name': 'RLOC'}},
-                               'service': {'ipv4': {'etr': {'local_eids': {'101': {'eids': {'192.168.0.0/24': {'eid_address': {'address_type': 'ipv4',
-                                                                                                                               'vrf': 'red'},
-                                                                                                               'id': '192.168.0.0/24',
-                                                                                                               'loopback_address': '2.2.2.2',
-                                                                                                               'priority': 50,
-                                                                                                               'rlocs': 'RLOC',
-                                                                                                               'source': 'cfg-intf',
-                                                                                                               'state': 'site-self, '
-                                                                                                                        'reachable',
-                                                                                                               'weight': 50}}}}}}}}}}
+                'locator_sets': 
+                    {'RLOC': 
+                        {'locator_set_name': 'RLOC'}},
+                'service': 
+                    {'ipv4': 
+                        {'etr': 
+                            {'local_eids': 
+                                {'101': 
+                                    {'eids': 
+                                        {'192.168.0.0/24': 
+                                            {'eid_address': 
+                                                {'address_type': 'ipv4',
+                                                'vrf': 'red'},
+                                            'id': '192.168.0.0/24',
+                                            'loopback_address': '2.2.2.2',
+                                            'priority': 50,
+                                            'rlocs': 'RLOC',
+                                            'source': 'cfg-intf',
+                                            'state': 'site-self, reachable',
+                                            'weight': 50}}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         202-XTR#show lisp all instance-id 101 ipv4 database  
@@ -2864,7 +2873,30 @@ class test_show_lisp_service_database(unittest.TestCase):
           2.2.2.2   50/50   cfg-intf   site-self, reachable
         '''}
 
-    golden_parsed_output2 = {}
+    golden_parsed_output2 = {
+        'lisp_router_instances': 
+            {0: 
+                {'lisp_router_instance_id': 0,
+                'locator_sets': 
+                    {'RLOC': 
+                        {'locator_set_name': 'RLOC'}},
+                'service': 
+                    {'ipv6': 
+                        {'etr': 
+                            {'local_eids': 
+                                {'101': 
+                                    {'eids': 
+                                        {'2001:192:168::/64': 
+                                            {'eid_address': 
+                                                {'address_type': 'ipv6',
+                                                'vrf': 'red'},
+                                            'id': '2001:192:168::/64',
+                                            'loopback_address': '2.2.2.2',
+                                            'priority': 50,
+                                            'rlocs': 'RLOC',
+                                            'source': 'cfg-intf',
+                                            'state': 'site-self, reachable',
+                                            'weight': 50}}}}}}}}}}
 
     golden_output2 = {'execute.return_value': '''
         202-XTR#show lisp all instance-id 101 ipv6 database 
@@ -2879,7 +2911,69 @@ class test_show_lisp_service_database(unittest.TestCase):
           2.2.2.2   50/50   cfg-intf   site-self, reachable
         '''}
 
-    golden_parsed_output3 = {}
+    golden_parsed_output3 = {
+        'lisp_router_instances': 
+            {0: 
+                {'lisp_router_instance_id': 0,
+                'locator_sets': 
+                    {'RLOC': 
+                        {'locator_set_name': 'RLOC'}},
+                'service': 
+                    {'ethernet': 
+                        {'etr': 
+                            {'local_eids': 
+                                {'1': 
+                                    {'dynamic_eids': 
+                                        {'0050.56b0.6a0e/48': 
+                                            {'dynamic_eid': 'Auto-L2-group-1',
+                                            'eid_address': 
+                                                {'address_type': 'ethernet',
+                                                'vrf': '101'},
+                                            'id': '0050.56b0.6a0e/48',
+                                            'loopback_address': '11.11.11.1',
+                                            'priority': 1,
+                                            'rlocs': 'RLOC',
+                                            'source': 'cfg-intf',
+                                            'state': 'site-self, reachable',
+                                            'weight': 100},
+                                      'cafe.cafe.cafe/48': 
+                                        {'dynamic_eid': 'Auto-L2-group-1',
+                                        'eid_address': 
+                                            {'address_type': 'ethernet',
+                                            'vrf': '101'},
+                                        'id': 'cafe.cafe.cafe/48',
+                                        'loopback_address': '11.11.11.1',
+                                        'priority': 1,
+                                        'rlocs': 'RLOC',
+                                        'source': 'cfg-intf',
+                                        'state': 'site-self, reachable',
+                                        'weight': 100}}},
+                                '2': 
+                                    {'dynamic_eids': 
+                                        {'0050.56b0.60de/48': 
+                                            {'dynamic_eid': 'Auto-L2-group-2',
+                                            'eid_address': 
+                                                {'address_type': 'ethernet',
+                                                'vrf': '102'},
+                                            'id': '0050.56b0.60de/48',
+                                            'loopback_address': '11.11.11.1',
+                                            'priority': 1,
+                                            'rlocs': 'RLOC',
+                                            'source': 'cfg-intf',
+                                            'state': 'site-self, reachable',
+                                            'weight': 100},
+                                        'face.0171.0001/48': 
+                                            {'dynamic_eid': 'Auto-L2-group-2',
+                                            'eid_address': 
+                                                {'address_type': 'ethernet',
+                                                'vrf': '102'},
+                                            'id': 'face.0171.0001/48',
+                                            'loopback_address': '11.11.11.1',
+                                            'priority': 1,
+                                            'rlocs': 'RLOC',
+                                            'source': 'cfg-intf',
+                                            'state': 'site-self, reachable',
+                                            'weight': 100}}}}}}}}}}
 
     golden_output3 = {'execute.return_value': '''
         OTT-LISP-C3K-3-xTR1#show lisp all instance-id * ethernet database
@@ -3250,22 +3344,21 @@ class test_show_lisp_service_database(unittest.TestCase):
         self.device = Mock(**self.golden_output1)
         obj = ShowLispServiceDatabase(device=self.device)
         parsed_output = obj.parse(service='ipv4', instance_id='101')
-        import pdb ; pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
-    # def test_show_lisp_service_database_full2(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.golden_output2)
-    #     obj = ShowLispServiceDatabase(device=self.device)
-    #     parsed_output = obj.parse(service='ipv6', instance_id='101')
-    #     self.assertEqual(parsed_output, self.golden_parsed_output2)
+    def test_show_lisp_service_database_full2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowLispServiceDatabase(device=self.device)
+        parsed_output = obj.parse(service='ipv6', instance_id='101')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
-    # def test_show_lisp_service_database_full3(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.golden_output3)
-    #     obj = ShowLispServiceDatabase(device=self.device)
-    #     parsed_output = obj.parse(service='ethernet', instance_id='*')
-    #     self.assertEqual(parsed_output, self.golden_parsed_output3)
+    def test_show_lisp_service_database_full3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowLispServiceDatabase(device=self.device)
+        parsed_output = obj.parse(service='ethernet', instance_id='*')
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
     def test_show_lisp_service_database_empty(self):
         self.maxDiff = None
