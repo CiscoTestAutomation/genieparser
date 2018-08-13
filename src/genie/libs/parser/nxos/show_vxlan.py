@@ -1143,7 +1143,7 @@ class ShowL2routeMacAllDetail(ShowL2routeMacAllDetailSchema):
 
         p2 = re.compile(r'^\s*Route +Resolution +Type: +(?P<rte_res>[\w]+)$')
         p3 = re.compile(r'^\s*Forwarding +State: +(?P<fwd_state>[\w]+)( +\(PeerID: +(?P<peer_id>[\d]+)\))?$')
-        p4 = re.compile(r'^\s*Sent +To: +(?P<sent_to>[\w]+)$')
+        p4 = re.compile(r'^\s*Sent +To: +(?P<sent_to>[\w\,]+)$')
         p5 = re.compile(r'^\s*SOO: +(?P<soo>[\d]+)$')
 
         for line in out.splitlines():
