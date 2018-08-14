@@ -22,7 +22,8 @@ from genie.libs.parser.iosxe.show_lisp import ShowLispSession,\
                                               ShowLispServiceSummary,\
                                               ShowLispServiceDatabase,\
                                               ShowLispServiceServerSummary,\
-                                              ShowLispServiceServerDetailInternal
+                                              ShowLispServiceServerDetailInternal,\
+                                              ShowLispServiceStatistics
 
 
 
@@ -3983,7 +3984,6 @@ class test_show_lisp_service_server_detail_internal(unittest.TestCase):
                                                 'state': 'complete',
                                                 'ttl': '1d00h'}}}}}}}}}}}
 
-
     golden_output2 = {'execute.return_value': '''
         204-MSMR#show lisp all instance-id 101 ipv6 server detail internal 
         =====================================================
@@ -4351,6 +4351,1013 @@ class test_show_lisp_service_server_detail_internal(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
         obj = ShowLispServiceServerDetailInternal(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(service='ipv4', instance_id='*')
+
+
+# ============================================================================
+# Unit test for 'show lisp all instance-id <instance_id> <service> statistics'
+# ============================================================================
+class test_show_lisp_service_statistics(unittest.TestCase):
+
+    '''Unit test for "show lisp all instance-id <instance_id> <service> statistics"'''
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'lisp_router_instances': 
+            {0: 
+                {'service': 
+                    {'ipv4': 
+                        {'statistics': 
+                            {'EID': 
+                                {'authentication_failures': '0',
+                                'authoritative_records_in_out': '1/1',
+                                'average_rlocs_per_eid_prefix': '1',
+                                'cache_entries_created_deleted': '3/1',
+                                'ddt_itr_map_requests_dropped': '0 '
+                                                               '(nonce-collision: '
+                                                               '0, '
+                                                               'bad-xTR-nonce: '
+                                                               '0)',
+                                'ddt_referral_deferred_dropped': '0/0',
+                                'ddt_request_deferred_dropped': '0/0',
+                                'deferred_packet_transmission': '0/0',
+                                'dropped_control_packets_in_input_queue': '0',
+                                'encapsulated_map_requests_in_out': '0/3',
+                                'etr_info_request_deferred_dropped': '0/0',
+                                'last_cleared': 'never',
+                                'map_notify_records_in_out': '4/0',
+                                'map_register_invalid_source_rloc_drops': '0',
+                                'map_register_records_in_out': '0/2857',
+                                'map_reply_deferred_dropped': '0/0',
+                                'map_reply_records_in_out': '2/1',
+                                'map_request_invalid_source_rloc_drops': '0',
+                                'map_requests_in_out': '0/4',
+                                'map_resolver_map_requests_forwarded': '0',
+                                'map_rseolvers': {'13.13.13.13': {'last_reply': '03:13:58',
+                                                                 'metric': '26',
+                                                                 'negative': 0,
+                                                                 'no_reply': 1,
+                                                                 'positive': 0,
+                                                                 'reqs_sent': 2},
+                                                 '4.4.4.4': {'last_reply': '03:13:58',
+                                                             'metric': '4',
+                                                             'negative': 0,
+                                                             'no_reply': 0,
+                                                             'positive': 1,
+                                                             'reqs_sent': 1}},
+                                'map_server_af_disabled': '0',
+                                'map_server_map_requests_forwarded': '0',
+                                'map_server_proxy_reply_records_out': '0',
+                                'map_subscribe_failures_in_out': '0/0',
+                                'map_unsubscribe_failures_in_out': '0/0',
+                                'mr_map_request_fwd_deferred_dropped': '0/0',
+                                'mr_negative_map_reply_deferred_dropped': '0/0',
+                                'ms_info_reply_deferred_dropped': '0/0',
+                                'ms_map_request_fwd_deferred_dropped': '0/0',
+                                'ms_proxy_map_reply_deferred_dropped': '0/0',
+                                'negative_records_in_out': '0/0',
+                                'non_authoritative_records_in_out': '1/0',
+                                'number_of_data_signals_processed': '1 '
+                                                                   '(+ '
+                                                                   'dropped '
+                                                                   '0)',
+                                'number_of_eid_prefixes_in_map_cache': '2',
+                                'number_of_negative_entries_in_map_cache': '1',
+                                'number_of_reachability_reports': '0 '
+                                                                 '(+ '
+                                                                 'dropped '
+                                                                 '0)',
+                                'rloc_probe_map_requests_in_out': '0/1',
+                                'rloc_probe_records_in_out': '1/1',
+                                'rtr_map_notify_fwd_deferred_dropped': '0/0',
+                                'rtr_map_register_fwd_deferred_dropped': '0/0',
+                                'smr_based_map_requests_in_out': '0/0',
+                                'total_number_of_rlocs_in_map_cache': '1',
+                                'wlc_ap_map_notify_in_out': '0/0',
+                                'wlc_ap_map_register_in_out': '0/0',
+                                'wlc_client_map_notify_in_out': '0/0',
+                                'wlc_client_map_register_in_out': '0/0',
+                                'wlc_map_notify_failures_in_out': '0/0',
+                                'wlc_map_notify_records_in_out': '0/0',
+                                'wlc_map_register_failures_in_out': '0/0',
+                                'wlc_map_register_records_in_out': '0/0',
+                                'wlc_map_subscribe_records_in_out': '0/1',
+                                'wlc_map_unsubscribe_records_in_out': '0/0',
+                                'xtr_mcast_map_notify_deferred_dropped': '0/0'},
+                            'Miscellaneous': {'invalid_ip_header_drops': '0',
+                                             'invalid_ip_proto_field_drops': '0',
+                                             'invalid_ip_version_drops': '0',
+                                             'invalid_lisp_checksum_drops': '0',
+                                             'invalid_lisp_control_port_drops': '0',
+                                             'invalid_packet_size_dropss': '0',
+                                             'last_cleared': 'never',
+                                             'unknown_packet_drops': '0',
+                                             'unsupported_lisp_packet_type_drops': '0'},
+                            'RLOC': {'ddt_map_referrals_in_out': '0/0',
+                                    'ddt_map_requests_in_out': '0/0',
+                                    'ddt_requests_failed': '0',
+                                    'last_cleared': 'never',
+                                    'map_referral_format_errors': '0',
+                                    'map_reply_format_errors': '0',
+                                    'map_request_format_errors': '0',
+                                    'mapping_record_ttl_alerts': '0',
+                                    'rtr_map_notifies_forwarded': '0',
+                                    'rtr_map_requests_forwarded': '0'}}}}}}}
+
+    golden_output1 = {'execute.return_value': '''
+        202-XTR#show lisp all instance-id 101 ipv4 statistics 
+        =====================================================
+        Output for router lisp 0
+        =====================================================
+        LISP EID Statistics for instance ID 101 - last cleared: never
+        Control Packets:
+          Map-Requests in/out:                      0/4
+            Encapsulated Map-Requests in/out:       0/3
+            RLOC-probe Map-Requests in/out:         0/1
+            SMR-based Map-Requests in/out:          0/0
+            Map-Requests expired on-queue/no-reply  0/0
+            Map-Resolver Map-Requests forwarded:    0
+            Map-Server Map-Requests forwarded:      0
+          Map-Reply records in/out:                 2/1
+            Authoritative records in/out:           1/1
+            Non-authoritative records in/out:       1/0
+            Negative records in/out:                0/0
+            RLOC-probe records in/out:              1/1
+            Map-Server Proxy-Reply records out:     0
+          WLC Map-Subscribe records in/out:         0/1
+            Map-Subscribe failures in/out:          0/0
+          WLC Map-Unsubscribe records in/out:       0/0
+            Map-Unsubscribe failures in/out:        0/0
+          Map-Register records in/out:              0/2857
+            Map-Server AF disabled:                 0
+            Authentication failures:                0
+          WLC Map-Register records in/out:          0/0
+            WLC AP Map-Register in/out:             0/0
+            WLC Client Map-Register in/out:         0/0
+            WLC Map-Register failures in/out:       0/0
+          Map-Notify records in/out:                4/0
+            Authentication failures:                0
+          WLC Map-Notify records in/out:            0/0
+            WLC AP Map-Notify in/out:               0/0
+            WLC Client Map-Notify in/out:           0/0
+            WLC Map-Notify failures in/out:         0/0
+          Dropped control packets in input queue:   0
+          Deferred packet transmission:             0/0
+            DDT referral deferred/dropped:          0/0
+            DDT request deferred/dropped:           0/0
+            Map-Reply deferred/dropped:             0/0
+            MR negative Map-Reply deferred/dropped: 0/0
+            MR Map-Request fwd deferred/dropped:    0/0
+            MS Map-Request fwd deferred/dropped:    0/0
+            MS proxy Map-Reply deferred/dropped:    0/0
+            xTR mcast Map-Notify deferred/dropped:  0/0
+            MS Info-Reply deferred/dropped:         0/0
+            RTR Map-Register fwd deferred/dropped:  0/0
+            RTR Map-Notify fwd deferred/dropped:    0/0
+            ETR Info-Request deferred/dropped:      0/0
+        Errors:
+          Map-Request invalid source rloc drops:    0
+          Map-Register invalid source rloc drops:   0
+          DDT ITR Map-Requests dropped:             0 (nonce-collision: 0, bad-xTR-nonce: 0)
+        Cache Related:
+          Cache entries created/deleted:            3/1
+          NSF CEF replay entry count                0
+          Number of EID-prefixes in map-cache:      2
+          Number of negative entries in map-cache:  1
+          Total number of RLOCs in map-cache:       1
+          Average RLOCs per EID-prefix:             1
+        Forwarding:
+          Number of data signals processed:         1 (+ dropped 0)
+          Number of reachability reports:           0 (+ dropped 0)
+        ITR Map-Resolvers:
+          Map-Resolver         LastReply  Metric ReqsSent Positive Negative No-Reply
+          4.4.4.4              03:13:58        4        1        1        0        0
+          13.13.13.13          03:13:58       26        2        0        0        1
+        LISP RLOC Statistics - last cleared: never
+        Control Packets:
+            RTR Map-Requests forwarded:             0
+            RTR Map-Notifies forwarded:             0
+          DDT-Map-Requests in/out:                  0/0
+          DDT-Map-Referrals in/out:                 0/0
+        Errors:
+          Map-Request format errors:                0
+          Map-Reply format errors:                  0
+          Map-Referral format errors:               0
+          Mapping record TTL alerts:                0
+          DDT Requests failed:                      0
+        LISP Miscellaneous Statistics - last cleared: never
+        Errors:
+          Invalid IP version drops:                 0
+          Invalid IP header drops:                  0
+          Invalid IP proto field drops:             0
+          Invalid packet size dropss:               0
+          Invalid LISP control port drops:          0
+          Invalid LISP checksum drops:              0
+          Unsupported LISP packet type drops:       0
+          Unknown packet drops:                     0
+        '''}
+
+    golden_parsed_output2 = {
+        'lisp_router_instances': {0: {'service': {'ipv6': {'statistics': {'EID': {'authentication_failures': '0',
+                                                                           'authoritative_records_in_out': '1/1',
+                                                                           'average_rlocs_per_eid_prefix': '1',
+                                                                           'cache_entries_created_deleted': '4/2',
+                                                                           'ddt_itr_map_requests_dropped': '0 '
+                                                                                                           '(nonce-collision: '
+                                                                                                           '0, '
+                                                                                                           'bad-xTR-nonce: '
+                                                                                                           '0)',
+                                                                           'ddt_referral_deferred_dropped': '0/0',
+                                                                           'ddt_request_deferred_dropped': '0/0',
+                                                                           'deferred_packet_transmission': '0/0',
+                                                                           'dropped_control_packets_in_input_queue': '0',
+                                                                           'encapsulated_map_requests_in_out': '0/5',
+                                                                           'etr_info_request_deferred_dropped': '0/0',
+                                                                           'last_cleared': 'never',
+                                                                           'map_notify_records_in_out': '2/0',
+                                                                           'map_register_invalid_source_rloc_drops': '0',
+                                                                           'map_register_records_in_out': '0/52',
+                                                                           'map_reply_deferred_dropped': '0/0',
+                                                                           'map_reply_records_in_out': '2/1',
+                                                                           'map_request_invalid_source_rloc_drops': '0',
+                                                                           'map_requests_in_out': '0/6',
+                                                                           'map_resolver_map_requests_forwarded': '0',
+                                                                           'map_rseolvers': {'13.13.13.13': {'last_reply': '00:17:11',
+                                                                                                             'metric': '31',
+                                                                                                             'negative': 0,
+                                                                                                             'no_reply': 2,
+                                                                                                             'positive': 0,
+                                                                                                             'reqs_sent': 3},
+                                                                                             '4.4.4.4': {'last_reply': '00:15:36',
+                                                                                                         'metric': '19',
+                                                                                                         'negative': 0,
+                                                                                                         'no_reply': 1,
+                                                                                                         'positive': 1,
+                                                                                                         'reqs_sent': 2}},
+                                                                           'map_server_af_disabled': '0',
+                                                                           'map_server_map_requests_forwarded': '0',
+                                                                           'map_server_proxy_reply_records_out': '0',
+                                                                           'map_subscribe_failures_in_out': '0/0',
+                                                                           'map_unsubscribe_failures_in_out': '0/0',
+                                                                           'mr_map_request_fwd_deferred_dropped': '0/0',
+                                                                           'mr_negative_map_reply_deferred_dropped': '0/0',
+                                                                           'ms_info_reply_deferred_dropped': '0/0',
+                                                                           'ms_map_request_fwd_deferred_dropped': '0/0',
+                                                                           'ms_proxy_map_reply_deferred_dropped': '0/0',
+                                                                           'negative_records_in_out': '0/0',
+                                                                           'non_authoritative_records_in_out': '1/0',
+                                                                           'number_of_data_signals_processed': '2 '
+                                                                                                               '(+ '
+                                                                                                               'dropped '
+                                                                                                               '0)',
+                                                                           'number_of_eid_prefixes_in_map_cache': '2',
+                                                                           'number_of_negative_entries_in_map_cache': '1',
+                                                                           'number_of_reachability_reports': '0 '
+                                                                                                             '(+ '
+                                                                                                             'dropped '
+                                                                                                             '0)',
+                                                                           'rloc_probe_map_requests_in_out': '0/1',
+                                                                           'rloc_probe_records_in_out': '1/1',
+                                                                           'rtr_map_notify_fwd_deferred_dropped': '0/0',
+                                                                           'rtr_map_register_fwd_deferred_dropped': '0/0',
+                                                                           'smr_based_map_requests_in_out': '0/0',
+                                                                           'total_number_of_rlocs_in_map_cache': '1',
+                                                                           'wlc_ap_map_notify_in_out': '0/0',
+                                                                           'wlc_ap_map_register_in_out': '0/0',
+                                                                           'wlc_client_map_notify_in_out': '0/0',
+                                                                           'wlc_client_map_register_in_out': '0/0',
+                                                                           'wlc_map_notify_failures_in_out': '0/0',
+                                                                           'wlc_map_notify_records_in_out': '0/0',
+                                                                           'wlc_map_register_failures_in_out': '0/0',
+                                                                           'wlc_map_register_records_in_out': '0/0',
+                                                                           'wlc_map_subscribe_records_in_out': '0/2',
+                                                                           'wlc_map_unsubscribe_records_in_out': '0/0',
+                                                                           'xtr_mcast_map_notify_deferred_dropped': '0/0'},
+                                                                   'Miscellaneous': {'invalid_ip_header_drops': '0',
+                                                                                     'invalid_ip_proto_field_drops': '0',
+                                                                                     'invalid_ip_version_drops': '0',
+                                                                                     'invalid_lisp_checksum_drops': '0',
+                                                                                     'invalid_lisp_control_port_drops': '0',
+                                                                                     'invalid_packet_size_dropss': '0',
+                                                                                     'last_cleared': 'never',
+                                                                                     'unknown_packet_drops': '0',
+                                                                                     'unsupported_lisp_packet_type_drops': '0'},
+                                                                   'RLOC': {'ddt_map_referrals_in_out': '0/0',
+                                                                            'ddt_map_requests_in_out': '0/0',
+                                                                            'ddt_requests_failed': '0',
+                                                                            'last_cleared': 'never',
+                                                                            'map_referral_format_errors': '0',
+                                                                            'map_reply_format_errors': '0',
+                                                                            'map_request_format_errors': '0',
+                                                                            'mapping_record_ttl_alerts': '0',
+                                                                            'rtr_map_notifies_forwarded': '0',
+                                                                            'rtr_map_requests_forwarded': '0'}}}}}}}
+
+    golden_output2 = {'execute.return_value': '''
+        202-XTR#show lisp all instance-id 101 ipv6 statistics 
+        =====================================================
+        Output for router lisp 0
+        =====================================================
+        LISP EID Statistics for instance ID 101 - last cleared: never
+        Control Packets:
+          Map-Requests in/out:                      0/6
+            Encapsulated Map-Requests in/out:       0/5
+            RLOC-probe Map-Requests in/out:         0/1
+            SMR-based Map-Requests in/out:          0/0
+            Map-Requests expired on-queue/no-reply  0/1
+            Map-Resolver Map-Requests forwarded:    0
+            Map-Server Map-Requests forwarded:      0
+          Map-Reply records in/out:                 2/1
+            Authoritative records in/out:           1/1
+            Non-authoritative records in/out:       1/0
+            Negative records in/out:                0/0
+            RLOC-probe records in/out:              1/1
+            Map-Server Proxy-Reply records out:     0
+          WLC Map-Subscribe records in/out:         0/2
+            Map-Subscribe failures in/out:          0/0
+          WLC Map-Unsubscribe records in/out:       0/0
+            Map-Unsubscribe failures in/out:        0/0
+          Map-Register records in/out:              0/52
+            Map-Server AF disabled:                 0
+            Authentication failures:                0
+          WLC Map-Register records in/out:          0/0
+            WLC AP Map-Register in/out:             0/0
+            WLC Client Map-Register in/out:         0/0
+            WLC Map-Register failures in/out:       0/0
+          Map-Notify records in/out:                2/0
+            Authentication failures:                0
+          WLC Map-Notify records in/out:            0/0
+            WLC AP Map-Notify in/out:               0/0
+            WLC Client Map-Notify in/out:           0/0
+            WLC Map-Notify failures in/out:         0/0
+          Dropped control packets in input queue:   0
+          Deferred packet transmission:             0/0
+            DDT referral deferred/dropped:          0/0
+            DDT request deferred/dropped:           0/0
+            Map-Reply deferred/dropped:             0/0
+            MR negative Map-Reply deferred/dropped: 0/0
+            MR Map-Request fwd deferred/dropped:    0/0
+            MS Map-Request fwd deferred/dropped:    0/0
+            MS proxy Map-Reply deferred/dropped:    0/0
+            xTR mcast Map-Notify deferred/dropped:  0/0
+            MS Info-Reply deferred/dropped:         0/0
+            RTR Map-Register fwd deferred/dropped:  0/0
+            RTR Map-Notify fwd deferred/dropped:    0/0
+            ETR Info-Request deferred/dropped:      0/0
+        Errors:
+          Map-Request invalid source rloc drops:    0
+          Map-Register invalid source rloc drops:   0
+          DDT ITR Map-Requests dropped:             0 (nonce-collision: 0, bad-xTR-nonce: 0)
+        Cache Related:
+          Cache entries created/deleted:            4/2
+          NSF CEF replay entry count                0
+          Number of EID-prefixes in map-cache:      2
+          Number of negative entries in map-cache:  1
+          Total number of RLOCs in map-cache:       1
+          Average RLOCs per EID-prefix:             1
+        Forwarding:
+          Number of data signals processed:         2 (+ dropped 0)
+          Number of reachability reports:           0 (+ dropped 0)
+        ITR Map-Resolvers:
+          Map-Resolver         LastReply  Metric ReqsSent Positive Negative No-Reply
+          4.4.4.4              00:15:36       19        2        1        0        1
+          13.13.13.13          00:17:11       31        3        0        0        2
+        LISP RLOC Statistics - last cleared: never
+        Control Packets:
+            RTR Map-Requests forwarded:             0
+            RTR Map-Notifies forwarded:             0
+          DDT-Map-Requests in/out:                  0/0
+          DDT-Map-Referrals in/out:                 0/0
+        Errors:
+          Map-Request format errors:                0
+          Map-Reply format errors:                  0
+          Map-Referral format errors:               0
+          Mapping record TTL alerts:                0
+          DDT Requests failed:                      0
+        LISP Miscellaneous Statistics - last cleared: never
+        Errors:
+          Invalid IP version drops:                 0
+          Invalid IP header drops:                  0
+          Invalid IP proto field drops:             0
+          Invalid packet size dropss:               0
+          Invalid LISP control port drops:          0
+          Invalid LISP checksum drops:              0
+          Unsupported LISP packet type drops:       0
+          Unknown packet drops:                     0
+
+        '''}
+
+    golden_parsed_output3 = {
+        'lisp_router_instances': {0: {'service': {'ethernet': {'statistics': {'EID': {'authentication_failures': '0',
+                                                                               'authoritative_records_in_out': '0/0',
+                                                                               'average_rlocs_per_eid_prefix': '0',
+                                                                               'cache_entries_created_deleted': '2/2',
+                                                                               'ddt_itr_map_requests_dropped': '0 '
+                                                                                                               '(nonce-collision: '
+                                                                                                               '0, '
+                                                                                                               'bad-xTR-nonce: '
+                                                                                                               '0)',
+                                                                               'encapsulated_map_requests_in_out': '0/0',
+                                                                               'extranet_smr_cross_iid_map_requests_in': '0',
+                                                                               'last_cleared': 'never',
+                                                                               'map_notify_records_in_out': '372/0',
+                                                                               'map_register_invalid_source_rloc_drops': '0',
+                                                                               'map_register_records_in_out': '0/6460',
+                                                                               'map_reply_records_in_out': '0/0',
+                                                                               'map_request_invalid_source_rloc_drops': '0',
+                                                                               'map_requests_in_out': '0/0',
+                                                                               'map_resolver_map_requests_forwarded': '0',
+                                                                               'map_rseolvers': {'44.44.44.44': {'last_reply': 'never',
+                                                                                                                 'metric': '1',
+                                                                                                                 'negative': 0,
+                                                                                                                 'no_reply': 1,
+                                                                                                                 'positive': 1,
+                                                                                                                 'reqs_sent': 6},
+                                                                                                 '66.66.66.66': {'last_reply': 'never',
+                                                                                                                 'metric': 'Unreach',
+                                                                                                                 'negative': 0,
+                                                                                                                 'no_reply': 0,
+                                                                                                                 'positive': 0,
+                                                                                                                 'reqs_sent': 0}},
+                                                                               'map_server_af_disabled': '0',
+                                                                               'map_server_map_requests_forwarded': '0',
+                                                                               'map_server_proxy_reply_records_out': '0',
+                                                                               'map_subscribe_failures_in_out': '0/0',
+                                                                               'map_unsubscribe_failures_in_out': '0/0',
+                                                                               'negative_records_in_out': '0/0',
+                                                                               'non_authoritative_records_in_out': '0/0',
+                                                                               'number_of_data_signals_processed': '0 '
+                                                                                                                   '(+ '
+                                                                                                                   'dropped '
+                                                                                                                   '0)',
+                                                                               'number_of_eid_prefixes_in_map_cache': '0',
+                                                                               'number_of_negative_entries_in_map_cache': '0',
+                                                                               'number_of_reachability_reports': '0 '
+                                                                                                                 '(+ '
+                                                                                                                 'dropped '
+                                                                                                                 '0)',
+                                                                               'number_of_rejected_eid_prefixes_due_to_limit_': '0',
+                                                                               'number_of_smr_signals_dropped': '0',
+                                                                               'rloc_probe_map_requests_in_out': '0/0',
+                                                                               'rloc_probe_records_in_out': '0/0',
+                                                                               'smr_based_map_requests_in_out': '0/0',
+                                                                               'total_number_of_rlocs_in_map_cache': '0',
+                                                                               'wlc_ap_map_notify_in_out': '0/0',
+                                                                               'wlc_ap_map_register_in_out': '0/0',
+                                                                               'wlc_client_map_notify_in_out': '30/0',
+                                                                               'wlc_client_map_register_in_out': '0/0',
+                                                                               'wlc_map_notify_failures_in_out': '0/0',
+                                                                               'wlc_map_notify_records_in_out': '30/0',
+                                                                               'wlc_map_register_failures_in_out': '0/0',
+                                                                               'wlc_map_register_records_in_out': '0/0',
+                                                                               'wlc_map_subscribe_records_in_out': '0/15',
+                                                                               'wlc_map_unsubscribe_records_in_out': '0/0'},
+                                                                       'Miscellaneous': {'invalid_ip_header_drops': '0',
+                                                                                         'invalid_ip_proto_field_drops': '0',
+                                                                                         'invalid_ip_version_drops': '0',
+                                                                                         'invalid_lisp_checksum_drops': '0',
+                                                                                         'invalid_lisp_control_port_drops': '0',
+                                                                                         'invalid_packet_size_dropss': '0',
+                                                                                         'last_cleared': 'never',
+                                                                                         'unknown_packet_drops': '0',
+                                                                                         'unsupported_lisp_packet_type_drops': '0'},
+                                                                       'RLOC': {'ddt_map_referrals_in_out': '0/0',
+                                                                                'ddt_map_requests_in_out': '0/0',
+                                                                                'ddt_requests_failed': '0',
+                                                                                'last_cleared': 'never',
+                                                                                'map_referral_format_errors': '0',
+                                                                                'map_reply_format_errors': '0',
+                                                                                'map_request_format_errors': '0',
+                                                                                'mapping_record_ttl_alerts': '0',
+                                                                                'rtr_map_notifies_forwarded': '0',
+                                                                                'rtr_map_requests_forwarded': '0'}}}}}}}
+
+    golden_output3 = {'execute.return_value': '''
+        OTT-LISP-C3K-3-xTR1#show lisp all instance-id * ethernet statistics
+
+        =================================================
+        Output for router lisp 0 instance-id 0
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 1
+        =================================================
+        LISP EID Statistics for instance ID 1 - last cleared: never
+        Control Packets:
+          Map-Requests in/out:                              8/40
+            Encapsulated Map-Requests in/out:               8/36
+            RLOC-probe Map-Requests in/out:                 0/4
+            SMR-based Map-Requests in/out:                  0/4
+            Extranet SMR cross-IID Map-Requests in:         0
+            Map-Requests expired on-queue/no-reply          0/13
+            Map-Resolver Map-Requests forwarded:            0
+            Map-Server Map-Requests forwarded:              0
+          Map-Reply records in/out:                         0/0
+            Authoritative records in/out:                   0/0
+            Non-authoritative records in/out:               0/0
+            Negative records in/out:                        0/0
+            RLOC-probe records in/out:                      0/0
+            Map-Server Proxy-Reply records out:             0
+          WLC Map-Subscribe records in/out:                 0/15
+            Map-Subscribe failures in/out:                  0/0
+          WLC Map-Unsubscribe records in/out:               0/0
+            Map-Unsubscribe failures in/out:                0/0
+          Map-Register records in/out:                      0/15516
+            Map-Server AF disabled:                         0
+            Authentication failures:                        0
+          WLC Map-Register records in/out:                  0/0
+            WLC AP Map-Register in/out:                     0/0
+            WLC Client Map-Register in/out:                 0/0
+            WLC Map-Register failures in/out:               0/0
+          Map-Notify records in/out:                        2014/0
+            Authentication failures:                        0
+          WLC Map-Notify records in/out:                    453/0
+            WLC AP Map-Notify in/out:                       12/0
+            WLC Client Map-Notify in/out:                   441/0
+            WLC Map-Notify failures in/out:                 0/0
+        Errors:
+          Map-Request invalid source rloc drops:            0
+          Map-Register invalid source rloc drops:           0
+          DDT ITR Map-Requests dropped:                     0 (nonce-collision: 0, bad-xTR-nonce: 0)
+        Cache Related:
+          Cache entries created/deleted:                    166/162
+          NSF CEF replay entry count                        0
+          Number of EID-prefixes in map-cache:              4
+          Number of rejected EID-prefixes due to limit :    0
+          Number of negative entries in map-cache:          0
+          Total number of RLOCs in map-cache:               4
+          Average RLOCs per EID-prefix:                     1
+        Forwarding:
+          Number of data signals processed:                 0 (+ dropped 40)
+          Number of reachability reports:                   0 (+ dropped 0)
+          Number of SMR signals dropped:                    0
+        ITR Map-Resolvers:
+          Map-Resolver         LastReply  Metric ReqsSent Positive Negative No-Reply
+          44.44.44.44          never           1      306       18        0       66
+          66.66.66.66          never     Unreach        0        0        0        0
+        LISP RLOC Statistics - last cleared: never
+        Control Packets:
+            RTR Map-Requests forwarded:                     0
+            RTR Map-Notifies forwarded:                     0
+          DDT-Map-Requests in/out:                          0/0
+          DDT-Map-Referrals in/out:                         0/0
+        Errors:
+          Map-Request format errors:                        0
+          Map-Reply format errors:                          0
+          Map-Referral format errors:                       0
+          Mapping record TTL alerts:                        0
+          DDT Requests failed:                              0
+        LISP Miscellaneous Statistics - last cleared: never
+        Errors:
+          Invalid IP version drops:                         0
+          Invalid IP header drops:                          0
+          Invalid IP proto field drops:                     0
+          Invalid packet size dropss:                       0
+          Invalid LISP control port drops:                  0
+          Invalid LISP checksum drops:                      0
+          Unsupported LISP packet type drops:               0
+          Unknown packet drops:                             0
+
+        =================================================
+        Output for router lisp 0 instance-id 2
+        =================================================
+        LISP EID Statistics for instance ID 2 - last cleared: never
+        Control Packets:
+          Map-Requests in/out:                              0/0
+            Encapsulated Map-Requests in/out:               0/0
+            RLOC-probe Map-Requests in/out:                 0/0
+            SMR-based Map-Requests in/out:                  0/0
+            Extranet SMR cross-IID Map-Requests in:         0
+            Map-Requests expired on-queue/no-reply          0/0
+            Map-Resolver Map-Requests forwarded:            0
+            Map-Server Map-Requests forwarded:              0
+          Map-Reply records in/out:                         0/0
+            Authoritative records in/out:                   0/0
+            Non-authoritative records in/out:               0/0
+            Negative records in/out:                        0/0
+            RLOC-probe records in/out:                      0/0
+            Map-Server Proxy-Reply records out:             0
+          WLC Map-Subscribe records in/out:                 0/15
+            Map-Subscribe failures in/out:                  0/0
+          WLC Map-Unsubscribe records in/out:               0/0
+            Map-Unsubscribe failures in/out:                0/0
+          Map-Register records in/out:                      0/6460
+            Map-Server AF disabled:                         0
+            Authentication failures:                        0
+          WLC Map-Register records in/out:                  0/0
+            WLC AP Map-Register in/out:                     0/0
+            WLC Client Map-Register in/out:                 0/0
+            WLC Map-Register failures in/out:               0/0
+          Map-Notify records in/out:                        372/0
+            Authentication failures:                        0
+          WLC Map-Notify records in/out:                    30/0
+            WLC AP Map-Notify in/out:                       0/0
+            WLC Client Map-Notify in/out:                   30/0
+            WLC Map-Notify failures in/out:                 0/0
+        Errors:
+          Map-Request invalid source rloc drops:            0
+          Map-Register invalid source rloc drops:           0
+          DDT ITR Map-Requests dropped:                     0 (nonce-collision: 0, bad-xTR-nonce: 0)
+        Cache Related:
+          Cache entries created/deleted:                    2/2
+          NSF CEF replay entry count                        0
+          Number of EID-prefixes in map-cache:              0
+          Number of rejected EID-prefixes due to limit :    0
+          Number of negative entries in map-cache:          0
+          Total number of RLOCs in map-cache:               0
+          Average RLOCs per EID-prefix:                     0
+        Forwarding:
+          Number of data signals processed:                 0 (+ dropped 0)
+          Number of reachability reports:                   0 (+ dropped 0)
+          Number of SMR signals dropped:                    0
+        ITR Map-Resolvers:
+          Map-Resolver         LastReply  Metric ReqsSent Positive Negative No-Reply
+          44.44.44.44          never           1        6        1        0        1
+          66.66.66.66          never     Unreach        0        0        0        0
+        LISP RLOC Statistics - last cleared: never
+        Control Packets:
+            RTR Map-Requests forwarded:                     0
+            RTR Map-Notifies forwarded:                     0
+          DDT-Map-Requests in/out:                          0/0
+          DDT-Map-Referrals in/out:                         0/0
+        Errors:
+          Map-Request format errors:                        0
+          Map-Reply format errors:                          0
+          Map-Referral format errors:                       0
+          Mapping record TTL alerts:                        0
+          DDT Requests failed:                              0
+        LISP Miscellaneous Statistics - last cleared: never
+        Errors:
+          Invalid IP version drops:                         0
+          Invalid IP header drops:                          0
+          Invalid IP proto field drops:                     0
+          Invalid packet size dropss:                       0
+          Invalid LISP control port drops:                  0
+          Invalid LISP checksum drops:                      0
+          Unsupported LISP packet type drops:               0
+          Unknown packet drops:                             0
+
+        =================================================
+        Output for router lisp 0 instance-id 102
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 131
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 132
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 133
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 134
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 135
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 136
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 137
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 138
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 139
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 140
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 141
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 142
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 143
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 144
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 145
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 146
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 147
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 148
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 149
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 150
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 151
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 152
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 153
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 154
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 155
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 156
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 157
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 158
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 159
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 160
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 161
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 162
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 163
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 164
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 165
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 166
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 167
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 168
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 169
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 170
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 171
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 172
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 173
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 174
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 175
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 176
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 177
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 178
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 179
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 180
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 181
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 182
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 183
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 184
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 185
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 186
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 187
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 188
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 189
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 190
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 191
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 192
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 193
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 194
+        =================================================
+        % EID table not enabled for MAC.
+
+        =================================================
+        Output for router lisp 0 instance-id 195
+        =================================================
+        % EID table not enabled for MAC.
+        '''}
+
+    def test_show_lisp_service_statistics_full1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowLispServiceStatistics(device=self.device)
+        parsed_output = obj.parse(service='ipv4', instance_id='101')
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_lisp_service_statistics_full2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowLispServiceStatistics(device=self.device)
+        parsed_output = obj.parse(service='ipv6', instance_id='101')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_show_lisp_service_statistics_full3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowLispServiceStatistics(device=self.device)
+        parsed_output = obj.parse(service='ethernet', instance_id='*')
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
+
+    def test_show_lisp_service_statistics_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowLispServiceStatistics(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(service='ipv4', instance_id='*')
 

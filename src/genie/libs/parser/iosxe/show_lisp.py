@@ -2589,7 +2589,7 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
 
         # Execute command on device
         out = self.device.execute('show lisp all service instance_id '
-                                  '{instance_id} {service} detail internal'.\
+                            '{instance_id} {service} serverdetail internal'.\
                             format(service=service, instance_id=instance_id))
 
         # Init vars
@@ -2848,6 +2848,152 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
                 locator_dict['priority'] = int(group['priority'])
                 locator_dict['weight'] = int(group['weight'])
                 locator_dict['scope'] = group['scope']
+                continue
+
+        return parsed_dict
+
+
+# =========================================================================
+# Schema for 'show lisp all instance-id <instance_id> <service> statistics'
+# =========================================================================
+class ShowLispServiceStatisticsSchema(MetaParser):
+
+    '''Schema for "show lisp all instance-id <instance_id> <service> statistics" '''
+
+    schema = {
+        'lisp_router_instances':
+            {Any():
+                {'service':
+                    {Any():
+                        {'statistics':
+                            {Any():
+                                {'last_cleared': str,
+                                Any(): Any(),
+                                Optional('map_resolvers'):
+                                    {Any():
+                                        {'last_reply': str,
+                                        'metric': str,
+                                        'reqs_sent': int,
+                                        'positive': int,
+                                        'negative': int,
+                                        'no_reply': int,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+
+# =========================================================================
+# Parser for 'show lisp all instance-id <instance_id> <service> statistics'
+# =========================================================================
+class ShowLispServiceStatistics(ShowLispServiceStatisticsSchema):
+
+    '''Parser for "show lisp all instance-id <instance_id> <service> statistics"'''
+
+    def cli(self, service, instance_id):
+
+        assert service in ['ipv4', 'ipv6', 'ethernet']
+
+        # Execute command on device
+        out = self.device.execute('show lisp all service instance_id '
+                                  '{instance_id} {service} statistics'.\
+                            format(service=service, instance_id=instance_id))
+
+        # Init vars
+        parsed_dict = {}
+
+        # state dict
+        state_dict = {
+            'yes': True,
+            'no': False,
+            }
+
+        # Output for router lisp 0
+        # Output for router lisp 0 instance-id 193
+        # Output for router lisp 2 instance-id 101
+        p1 = re.compile(r'^Output +for +router +lisp +(?P<router_id>(\S+))'
+                         '(?: +instance-id +(?P<instance_id>(\d+)))?$')
+
+        # LISP EID Statistics for instance ID 1 - last cleared: never
+        # LISP RLOC Statistics - last cleared: never
+        # LISP Miscellaneous Statistics - last cleared: never
+        p2 = re.compile(r'LISP +(?P<stat_type>(\S+)) +Statistics'
+                         '(?: +for +instance +ID +(?P<iid>(\d+)))?'
+                         ' +\- +last +cleared: +(?P<last_cleared>(\S+))$')
+
+        # Control Packets:
+        # Map-Requests in/out:                              8/40
+        # Encapsulated Map-Requests in/out:               8/36
+        # RLOC-probe Map-Requests in/out:                 0/4
+        # SMR-based Map-Requests in/out:                  0/4
+        # Extranet SMR cross-IID Map-Requests in:         0
+        # Map-Requests expired on-queue/no-reply          0/13
+        # Map-Resolver Map-Requests forwarded:            0
+        # Map-Server Map-Requests forwarded:              0
+        p3 = re.compile(r'^(?P<key>([a-zA-Z\-\/\s]+))\: +(?P<value>(.*))$')
+
+        # Map-Resolver    LastReply  Metric ReqsSent Positive Negative No-Reply
+        # 44.44.44.44     never           1      306       18        0       66
+        # 66.66.66.66     never     Unreach        0        0        0        0
+        p4 = re.compile(r'(?P<mr>([a-zA-Z0-9\.\:]+)) +(?P<last_reply>(\S+))'
+                         ' +(?P<metric>(\S+)) +(?P<sent>(\d+))'
+                         ' +(?P<positive>(\d+)) +(?P<negative>(\d+))'
+                         ' +(?P<no_reply>(\d+))$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Output for router lisp 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                lisp_router_id = int(group['router_id'])
+                if group['instance_id']:
+                    instance_id = group['instance_id']
+                continue
+
+            # LISP EID Statistics for instance ID 1 - last cleared: never
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                # Create stats dict
+                stats_dict = parsed_dict.\
+                                setdefault('lisp_router_instances', {}).\
+                                setdefault(lisp_router_id, {}).\
+                                setdefault('service', {}).\
+                                setdefault(service, {}).\
+                                setdefault('statistics', {}).\
+                                setdefault(group['stat_type'], {})
+                stats_dict['last_cleared'] = m.groupdict()['last_cleared']
+                continue
+
+            # SMR-based Map-Requests in/out:                  0/4
+            # Extranet SMR cross-IID Map-Requests in:         0
+            m = p3.match(line)
+            if m:
+                key = m.groupdict()['key'].lower().replace(" ", "_").\
+                        replace("-", "_").replace("/", "_")
+                stats_dict[key] = m.groupdict()['value']
+                continue
+
+            # Map-Resolver    LastReply  Metric ReqsSent Positive Negative No-Reply
+            # 66.66.66.66     never     Unreach        0        0        0        0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                mr_dict = stats_dict.setdefault('map_rseolvers', {}).\
+                            setdefault(group['mr'], {})
+                mr_dict['last_reply'] = group['last_reply']
+                mr_dict['metric'] = group['metric']
+                mr_dict['reqs_sent'] = int(group['sent'])
+                mr_dict['positive'] = int(group['positive'])
+                mr_dict['negative'] = int(group['negative'])
+                mr_dict['no_reply'] = int(group['no_reply'])
                 continue
 
         return parsed_dict
