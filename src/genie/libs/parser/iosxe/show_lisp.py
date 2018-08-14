@@ -32,7 +32,6 @@ IOSXE parsers for the following show commands:
     * show lisp all instance-id <instance_id> ipv4 server detail internal
     * show lisp all instance-id <instance_id> ipv6 server detail internal
     * show lisp all instance-id <instance_id> ethernet server detail internal
-
     * show lisp all instance-id <instance_id> ipv4 statistics
     * show lisp all instance-id <instance_id> ipv6 statistics
     * show lisp all instance-id <instance_id> ethernet statistics
