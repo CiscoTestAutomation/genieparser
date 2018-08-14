@@ -2527,6 +2527,44 @@ class ShowLispServiceServerDetailInternalSchema(MetaParser):
                                 {'sites':
                                     {Any():
                                         {'allowed_configured_locators': str,
+                                        Optional('allowed_eid_prefixes'):
+                                            {Any():
+                                                {'first_registered': str,
+                                                'last_registered': str,
+                                                'routing_table_tag': int,
+                                                'origin': str,
+                                                'merge_active': bool,
+                                                'proxy_reply': bool,
+                                                'ttl': str,
+                                                'state': str,
+                                                'authentication_failures': int,
+                                                'allowed_locators_mismatch': int,
+                                                Optional('registrations'):
+                                                    {Any():
+                                                        {'last_registered': str,
+                                                        'proxy_reply': bool,
+                                                        'map_notify': bool,
+                                                        'ttl': str,
+                                                        'merge_active': bool,
+                                                        'hash_function': str,
+                                                        'state': str,
+                                                        'security_capability': bool,
+                                                        'xtr_id': str,
+                                                        'site_id': str,
+                                                        'sourced_by': str,
+                                                        Optional('locator'):
+                                                            {Any():
+                                                                {'local': bool,
+                                                                'state': str,
+                                                                'priority': int,
+                                                                'weight': int,
+                                                                'scope': str,
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
                                         },
                                     },
                                 },
@@ -2557,6 +2595,12 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
         # Init vars
         parsed_dict = {}
 
+        # state dict
+        state_dict = {
+            'yes': True,
+            'no': False,
+            }
+
         # Output for router lisp 0
         # Output for router lisp 0 instance-id 193
         # Output for router lisp 2 instance-id 101
@@ -2571,25 +2615,68 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
         p3 = re.compile(r'Allowed +configured +locators: +(?P<val>(\S+))$')
 
         # EID-prefix: 192.168.0.1/32 instance-id 101
-        #     First registered:     01:12:41
-        #     Last registered:      01:12:41
-        #     Routing table tag:    0
-        #     Origin:               Dynamic, more specific of 192.168.0.0/24
-        #     Merge active:         No
-        #     Proxy reply:          Yes
-        #     TTL:                  1d00h
-        #     State:                complete
-        #     Registration errors:
-        #       Authentication failures:   0
-        #       Allowed locators mismatch: 0
-        #     ETR 2.2.2.2, last registered 01:12:41, proxy-reply, map-notify
-        #                  TTL 1d00h, no merge, hash-function sha1, nonce 0x70D18EF4-0x3A605D67
-        #                  state complete, no security-capability
-        #                  xTR-ID 0x21EDD25F-0x7598784C-0x769C8E4E-0xC04926EC
-        #                  site-ID unspecified
-        #                  sourced by reliable transport
-        #       Locator  Local  State      Pri/Wgt  Scope
-        #       2.2.2.2  yes    up          50/50   IPv4 none
+        p4 = re.compile(r'EID-prefix: +(?P<prefix>(\S+)) +instance-id'
+                         ' +(?P<iid>(\d+))$')
+
+        # First registered:     01:12:41
+        p5 = re.compile(r'First +registered: +(?P<first>(\S+))$')
+
+        # Last registered:      01:12:41
+        p6 = re.compile(r'Last +registered: +(?P<last>(\S+))$')
+
+        # Routing table tag:    0
+        p7 = re.compile(r'Routing +table +tag: +(?P<rtt>(\d+))$')
+
+        # Origin:               Dynamic, more specific of 192.168.0.0/24
+        p8 = re.compile(r'Origin: +(?P<origin>(.*))$')
+
+        # Merge active:         No
+        p9 = re.compile(r'Merge +active: +(?P<merge>(Yes|No))$')
+
+        # Proxy reply:          Yes
+        p10 = re.compile(r'Proxy +reply: +(?P<proxy>(Yes|No))$')
+
+        # TTL:                  1d00h
+        p11 = re.compile(r'TTL: +(?P<ttl>(\S+))$')
+
+        # State:                complete
+        p12 = re.compile(r'State: +(?P<state>(\S+))$')
+
+        # Registration errors:
+        #  Authentication failures:   0
+        p13 = re.compile(r'Authentication +failures: +(?P<auth_failures>(\d+))$')
+
+        # Allowed locators mismatch: 0
+        p14 = re.compile(r'Allowed +locators +mismatch: +(?P<mismatch>(\d+))$')
+
+        # ETR 2.2.2.2, last registered 01:12:41, proxy-reply, map-notify
+        p15 = re.compile(r'ETR +(?P<etr>(\S+)), +last +registered'
+                          ' +(?P<last_registered>(\S+)),'
+                          '(?: +(?P<proxy>(proxy-reply)),)?'
+                          '(?: +(?P<map>(map-notify)))?$')
+
+        # TTL 1d00h, no merge, hash-function sha1, nonce 0x70D18EF4-0x3A605D67
+        p16 = re.compile(r'TTL +(?P<ttl>(\S+)),(?: +(?P<merge>(no merge)),)?'
+                          ' +hash-function +(?P<hash>(.*))$')
+
+        # state complete, no security-capability
+        p17 = re.compile(r'state +(?P<state>(\S+))'
+                          '(?:, +(?P<security>(no security-capability)))?$')
+
+        # xTR-ID 0x21EDD25F-0x7598784C-0x769C8E4E-0xC04926EC
+        p18 = re.compile(r'xTR-ID +(?P<xtr_id>(.*))$')
+
+        # site-ID unspecified
+        p19 = re.compile(r'site-ID +(?P<site_id>(.*))$')
+
+        # sourced by reliable transport
+        p20 = re.compile(r'sourced +by +(?P<source>(.*))$')
+
+        # Locator  Local  State      Pri/Wgt  Scope
+        # 2.2.2.2  yes    up          50/50   IPv4 none
+        p21 = re.compile(r'(?P<locator>(\S+)) +(?P<local>(\S+))'
+                          ' +(?P<state>(\S+)) +(?P<priority>(\d+))\/'
+                          '(?P<weight>(\d+)) +(?P<scope>(.*))$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -2624,6 +2711,143 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
             m = p3.match(line)
             if m:
                 sites_dict['allowed_configured_locators'] = m.groupdict()['val']
+                continue
+
+            # EID-prefix: 192.168.0.1/32 instance-id 101
+            m = p4.match(line)
+            if m:
+                prefix_dict = sites_dict.\
+                                setdefault('allowed_eid_prefixes', {}).\
+                                setdefault(m.groupdict()['prefix'], {})
+                continue
+
+            # First registered:     01:12:41
+            m = p5.match(line)
+            if m:
+                prefix_dict['first_registered'] = m.groupdict()['first']
+                continue
+
+            #     Last registered:      01:12:41
+            m = p6.match(line)
+            if m:
+                prefix_dict['last_registered'] = m.groupdict()['last']
+                continue
+
+            # Routing table tag:    0
+            m = p7.match(line)
+            if m:
+                prefix_dict['routing_table_tag'] = int(m.groupdict()['rtt'])
+                continue
+
+            # Origin:               Dynamic, more specific of 192.168.0.0/24
+            m = p8.match(line)
+            if m:
+                prefix_dict['origin'] = m.groupdict()['origin']
+                continue
+
+            # Merge active:         No
+            m = p9.match(line)
+            if m:
+                prefix_dict['merge_active'] = \
+                    state_dict[m.groupdict()['merge'].lower()]
+                continue
+
+            # Proxy reply:          Yes
+            m = p10.match(line)
+            if m:
+                prefix_dict['proxy_reply'] = \
+                    state_dict[m.groupdict()['proxy'].lower()]
+                continue
+
+            # TTL:                  1d00h
+            m = p11.match(line)
+            if m:
+                prefix_dict['ttl'] = m.groupdict()['ttl']
+                continue
+
+            # State:                complete
+            m = p12.match(line)
+            if m:
+                prefix_dict['state'] = m.groupdict()['state']
+                continue
+
+            # Registration errors:
+            #  Authentication failures:   0
+            m = p13.match(line)
+            if m:
+                prefix_dict['authentication_failures'] = \
+                    int(m.groupdict()['auth_failures'])
+                continue
+
+            # Allowed locators mismatch: 0
+            m = p14.match(line)
+            if m:
+                prefix_dict['allowed_locators_mismatch'] = \
+                    int(m.groupdict()['mismatch'])
+                continue
+
+            # ETR 2.2.2.2, last registered 01:12:41, proxy-reply, map-notify
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                reg_dict = prefix_dict.setdefault('registrations', {}).\
+                            setdefault(group['etr'], {})
+                reg_dict['last_registered'] = group['last_registered']
+                if group['proxy']:
+                    reg_dict['proxy_reply'] = True
+                if group['map']:
+                    reg_dict['map_notify'] = True
+                continue
+
+            #  TTL 1d00h, no merge, hash-function sha1, nonce 0x70D18EF4-0x3A605D67
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                reg_dict['ttl'] = group['ttl']
+                if group['merge'] == 'no merge':
+                    reg_dict['merge_active'] = False
+                reg_dict['hash_function'] = group['hash']
+                continue
+
+            # state complete, no security-capability
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                reg_dict['state'] = group['state']
+                if 'no' in group['security']:
+                    reg_dict['security_capability'] = True
+                continue
+
+            # xTR-ID 0x21EDD25F-0x7598784C-0x769C8E4E-0xC04926EC
+            m = p18.match(line)
+            if m:
+                reg_dict['xtr_id'] = m.groupdict()['xtr_id']
+                continue
+
+            # site-ID unspecified
+            m = p19.match(line)
+            if m:
+                reg_dict['site_id'] = m.groupdict()['site_id']
+                continue
+
+            # sourced by reliable transport
+            m = p20.match(line)
+            if m:
+                reg_dict['sourced_by'] = m.groupdict()['source']
+                continue
+
+            # Locator  Local  State      Pri/Wgt  Scope
+            # 2.2.2.2  yes    up          50/50   IPv4 none
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                locator_dict = reg_dict.setdefault('locator', {}).\
+                                setdefault(group['locator'], {})
+                locator_dict['local'] = state_dict[group['local']]
+                locator_dict['state'] = group['state']
+                locator_dict['priority'] = int(group['priority'])
+                locator_dict['weight'] = int(group['weight'])
+                locator_dict['scope'] = group['scope']
                 continue
 
         return parsed_dict

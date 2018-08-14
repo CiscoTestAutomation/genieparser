@@ -3722,7 +3722,104 @@ class test_show_lisp_service_server_detail_internal(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output1 = {}
+    golden_parsed_output1 = {
+        'lisp_router_instances': 
+            {0: 
+                {'lisp_router_instance_id': 0,
+                'service': 
+                    {'ipv4': 
+                        {'instance_id': 
+                            {'101': 
+                                {'sites': 
+                                    {'provider': 
+                                        {'allowed_configured_locators': 'any'},
+                                    'xtr1_1': 
+                                        {'allowed_configured_locators': 'any',
+                                        'allowed_eid_prefixes': 
+                                            {'192.168.0.0/24': 
+                                                {'allowed_locators_mismatch': 0,
+                                                'authentication_failures': 0,
+                                                'first_registered': '1w4d',
+                                                'last_registered': '02:41:22',
+                                                'merge_active': False,
+                                                'origin': 'Configuration, '
+                                                       'accepting '
+                                                       'more '
+                                                       'specifics',
+                                                'proxy_reply': False,
+                                                'routing_table_tag': 0,
+                                                'state': 'unknown',
+                                                'ttl': '00:00:00'},
+                                            '192.168.0.1/32': {'allowed_locators_mismatch': 0,
+                                                'authentication_failures': 0,
+                                                'first_registered': '01:12:41',
+                                                'last_registered': '01:12:41',
+                                                'merge_active': False,
+                                                'origin': 'Dynamic, '
+                                                       'more '
+                                                       'specific '
+                                                       'of '
+                                                       '192.168.0.0/24',
+                                                'proxy_reply': True,
+                                                'registrations': 
+                                                    {'2.2.2.2': 
+                                                        {'hash_function': 'sha1, nonce 0x70D18EF4-0x3A605D67',
+                                                        'last_registered': '01:12:41',
+                                                        'locator': {'2.2.2.2': {'local': True,
+                                                                               'priority': 50,
+                                                                               'scope': 'IPv4 '
+                                                                                        'none',
+                                                                               'state': 'up',
+                                                                               'weight': 50}},
+                                                        'map_notify': True,
+                                                        'merge_active': False,
+                                                        'proxy_reply': True,
+                                                        'security_capability': True,
+                                                        'site_id': 'unspecified',
+                                                        'sourced_by': 'reliable '
+                                                                     'transport',
+                                                        'state': 'complete',
+                                                        'ttl': '1d00h',
+                                                        'xtr_id': '0x21EDD25F-0x7598784C-0x769C8E4E-0xC04926EC'}},
+                                                'routing_table_tag': 0,
+                                                'state': 'complete',
+                                                'ttl': '1d00h'}}},
+                                    'xtr1_2': 
+                                        {'allowed_configured_locators': 'any'},
+                                    'xtr2': 
+                                        {'allowed_configured_locators': 'any',
+                                        'allowed_eid_prefixes': 
+                                            {'192.168.9.0/24': 
+                                                {'allowed_locators_mismatch': 0,
+                                                'authentication_failures': 0,
+                                                'first_registered': '01:55:47',
+                                                'last_registered': '01:55:47',
+                                                'merge_active': False,
+                                                'origin': 'Configuration',
+                                                'proxy_reply': True,
+                                                'registrations': {'8.8.8.8': {'hash_function': 'sha1, '
+                                                                                              'nonce '
+                                                                                              '0xB06AE31D-0x6ADB0BA5',
+                                                                             'last_registered': '01:55:47',
+                                                                             'locator': {'8.8.8.8': {'local': True,
+                                                                                                     'priority': 50,
+                                                                                                     'scope': 'IPv4 '
+                                                                                                              'none',
+                                                                                                     'state': 'up',
+                                                                                                     'weight': 50}},
+                                                                             'map_notify': True,
+                                                                             'merge_active': False,
+                                                                             'proxy_reply': True,
+                                                                             'security_capability': True,
+                                                                             'site_id': 'unspecified',
+                                                                             'sourced_by': 'reliable '
+                                                                                           'transport',
+                                                                             'state': 'complete',
+                                                                             'ttl': '1d00h',
+                                                                             'xtr_id': '0x77200484-0xD134DC48-0x0FBAD9DC-0x4A46CA5D'}},
+                                                'routing_table_tag': 0,
+                                                'state': 'complete',
+                                                'ttl': '1d00h'}}}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         204-MSMR#show lisp all instance-id 101 ipv4 server detail internal
@@ -3804,7 +3901,88 @@ class test_show_lisp_service_server_detail_internal(unittest.TestCase):
               8.8.8.8  yes    up          50/50   IPv4 none
         '''}
 
-    golden_parsed_output2 = {}
+    golden_parsed_output2 = {
+        'lisp_router_instances': 
+            {0: 
+                {'lisp_router_instance_id': 0,
+                'service': 
+                    {'ipv6': 
+                        {'instance_id': 
+                            {'101': 
+                                {'sites': 
+                                    {'provider': 
+                                        {'allowed_configured_locators': 'any'},
+                                    'xtr1_1': 
+                                        {'allowed_configured_locators': 'any',
+                                        'allowed_eid_prefixes': 
+                                            {'2001:192:168::/64': 
+                                                {'allowed_locators_mismatch': 0,
+                                                'authentication_failures': 0,
+                                                'first_registered': '00:13:19',
+                                                'last_registered': '00:13:19',
+                                                'merge_active': False,
+                                                'origin': 'Configuration',
+                                                'proxy_reply': True,
+                                                'registrations': 
+                                                    {'2.2.2.2': 
+                                                        {'hash_function': 'sha1, nonce 0xF8845AAB-0x44B8B869',
+                                                        'last_registered': '00:13:19',
+                                                        'locator': {'2.2.2.2': {'local': True,
+                                                                              'priority': 50,
+                                                                              'scope': 'IPv4 '
+                                                                                       'none',
+                                                                              'state': 'up',
+                                                                              'weight': 50}},
+                                                        'map_notify': True,
+                                                        'merge_active': False,
+                                                        'proxy_reply': True,
+                                                        'security_capability': True,
+                                                        'site_id': 'unspecified',
+                                                        'sourced_by': 'reliable '
+                                                                    'transport',
+                                                        'state': 'complete',
+                                                        'ttl': '1d00h',
+                                                        'xtr_id': '0x5B6A0468-0x55E69768-0xD1AE2E61-0x4A082FD5'}},
+                                                'routing_table_tag': 0,
+                                                'state': 'complete',
+                                                'ttl': '1d00h'}}},
+                                    'xtr1_2': 
+                                        {'allowed_configured_locators': 'any'},
+                                    'xtr2': 
+                                        {'allowed_configured_locators': 'any',
+                                        'allowed_eid_prefixes': 
+                                            {'2001:192:168:9::/64': 
+                                                {'allowed_locators_mismatch': 0,
+                                                'authentication_failures': 0,
+                                                'first_registered': '00:13:19',
+                                                'last_registered': '00:13:19',
+                                                'merge_active': False,
+                                                'origin': 'Configuration',
+                                                'proxy_reply': True,
+                                                'registrations': 
+                                                    {'8.8.8.8': 
+                                                        {'hash_function': 'sha1, nonce 0x90004FBE-0x03D2420E',
+                                                        'last_registered': '00:13:19',
+                                                        'locator': {'8.8.8.8': {'local': True,
+                                                                              'priority': 50,
+                                                                              'scope': 'IPv4 '
+                                                                                       'none',
+                                                                              'state': 'up',
+                                                                              'weight': 50}},
+                                                        'map_notify': True,
+                                                        'merge_active': False,
+                                                        'proxy_reply': True,
+                                                        'security_capability': True,
+                                                        'site_id': 'unspecified',
+                                                        'sourced_by': 'reliable '
+                                                                    'transport',
+                                                        'state': 'complete',
+                                                        'ttl': '1d00h',
+                                                        'xtr_id': '0x6BE732BF-0xD9530F52-0xF9162AA3-0x6283920A'}},
+                                                'routing_table_tag': 0,
+                                                'state': 'complete',
+                                                'ttl': '1d00h'}}}}}}}}}}}
+
 
     golden_output2 = {'execute.return_value': '''
         204-MSMR#show lisp all instance-id 101 ipv6 server detail internal 
@@ -4148,20 +4326,19 @@ class test_show_lisp_service_server_detail_internal(unittest.TestCase):
 
         '''}
 
-    # def test_show_lisp_service_server_detail_internal_full1(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.golden_output1)
-    #     obj = ShowLispServiceServerDetailInternal(device=self.device)
-    #     parsed_output = obj.parse(service='ipv4', instance_id='101')
-    #     import pdb ; pdb.set_trace()
-    #     self.assertEqual(parsed_output, self.golden_parsed_output1)
+    def test_show_lisp_service_server_detail_internal_full1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowLispServiceServerDetailInternal(device=self.device)
+        parsed_output = obj.parse(service='ipv4', instance_id='101')
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
-    # def test_show_lisp_service_server_detail_internal_full2(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.golden_output2)
-    #     obj = ShowLispServiceServerDetailInternal(device=self.device)
-    #     parsed_output = obj.parse(service='ipv6', instance_id='101')
-    #     self.assertEqual(parsed_output, self.golden_parsed_output2)
+    def test_show_lisp_service_server_detail_internal_full2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowLispServiceServerDetailInternal(device=self.device)
+        parsed_output = obj.parse(service='ipv6', instance_id='101')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
     def test_show_lisp_service_server_detail_internal_full3(self):
         self.maxDiff = None
@@ -4176,6 +4353,7 @@ class test_show_lisp_service_server_detail_internal(unittest.TestCase):
         obj = ShowLispServiceServerDetailInternal(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(service='ipv4', instance_id='*')
+
 
 
 if __name__ == '__main__':
