@@ -1910,7 +1910,7 @@ class ShowLispServiceSummarySchema(MetaParser):
                 {'lisp_router_instance_id': int,
                 Optional('service'):
                     {Optional(Any()):
-                        {'map_server':
+                        {'etr':
                             {'summary':
                                 {'instance_count': int,
                                 'total_eid_tables': int,
@@ -2039,7 +2039,7 @@ class ShowLispServiceSummary(ShowLispServiceSummarySchema):
                     # Create summary dict
                     sum_dict = lisp_dict.setdefault('service', {}).\
                                     setdefault(service, {}).\
-                                    setdefault('map_server', {}).\
+                                    setdefault('etr', {}).\
                                     setdefault('summary', {})
                 continue
 
@@ -2058,7 +2058,7 @@ class ShowLispServiceSummary(ShowLispServiceSummarySchema):
                 group = m.groupdict()
                 iid_dict = sum_dict.setdefault('instance_id', {}).\
                                 setdefault(group['iid'], {})
-                iid_dict['interface'] = group['interface']
+                iid_dict['interface'] = group['interface'] + '.' + group['iid']
                 iid_dict['db_size'] = int(group['db_size'])
                 iid_dict['db_no_route'] = int(group['db_no_route'])
                 iid_dict['cache_size'] = int(group['cache_size'])

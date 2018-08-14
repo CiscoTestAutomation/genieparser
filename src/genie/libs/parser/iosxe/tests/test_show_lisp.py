@@ -1314,7 +1314,7 @@ class test_show_lisp_service(unittest.TestCase):
                     'xtr_id': '0x730E0861-0x12996F6D-0xEFEA2114-0xE1C951F7'},
                 'lisp_router_instance_id': 0,
                 'service': 
-                    {'ethernet': 
+                    {'ipv4': 
                         {'delegated_database_tree': False,
                         'etr': 
                             {'accept_mapping_data': 'disabled, verify disabled',
@@ -1367,7 +1367,7 @@ class test_show_lisp_service(unittest.TestCase):
                             {'enabled': False},
                         'mobility_first_hop_router': False,
                         'nat_traversal_router': False,
-                        'service': 'ethernet'}}}}}
+                        'service': 'ipv4'}}}}}
 
     golden_output4 =  {'execute.return_value': '''
         202-XTR#show lisp all service ipv4
@@ -1418,7 +1418,7 @@ class test_show_lisp_service(unittest.TestCase):
                     'xtr_id': '0x5B6A0468-0x55E69768-0xD1AE2E61-0x4A082FD5'},
                 'lisp_router_instance_id': 0,
                 'service': 
-                    {'ethernet': 
+                    {'ipv6': 
                         {'delegated_database_tree': False,
                         'etr': 
                             {'accept_mapping_data': 'disabled, verify disabled',
@@ -1471,7 +1471,7 @@ class test_show_lisp_service(unittest.TestCase):
                             {'enabled': False},
                         'mobility_first_hop_router': False,
                         'nat_traversal_router': False,
-                        'service': 'ethernet'}}}}}
+                        'service': 'ipv6'}}}}}
 
     golden_output5 = {'execute.return_value': '''
         202-XTR#show lisp all service ipv6
@@ -1654,14 +1654,14 @@ class test_show_lisp_service(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output4)
         obj = ShowLispService(device=self.device)
-        parsed_output = obj.parse(instance_id='*', service='ethernet')
+        parsed_output = obj.parse(instance_id='*', service='ipv4')
         self.assertEqual(parsed_output, self.golden_parsed_output4)
 
     def test_show_lisp_service_full5(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output5)
         obj = ShowLispService(device=self.device)
-        parsed_output = obj.parse(instance_id='*', service='ethernet')
+        parsed_output = obj.parse(instance_id='*', service='ipv6')
         self.assertEqual(parsed_output, self.golden_parsed_output5)
 
     def test_show_lisp_service_full6(self):
@@ -2627,7 +2627,7 @@ class test_show_lisp_service_summary(unittest.TestCase):
                 {'lisp_router_instance_id': 0,
                 'service': 
                     {'ipv4': 
-                        {'map_server': 
+                        {'etr': 
                             {'summary': 
                                 {'eid_tables_incomplete_map_cache_entries': 0,
                                 'eid_tables_inconsistent_locators': 0,
@@ -2641,7 +2641,7 @@ class test_show_lisp_service_summary(unittest.TestCase):
                                         'db_size': 1,
                                         'incomplete': '0.0%',
                                         'vrf': 'blue',
-                                        'interface': 'LISP0',
+                                        'interface': 'LISP0.102',
                                         'role': 'ITR-ETR'},
                                     '101': 
                                         {'cache_idle': '0.0%',
@@ -2650,7 +2650,7 @@ class test_show_lisp_service_summary(unittest.TestCase):
                                         'db_size': 1,
                                         'incomplete': '0.0%',
                                         'vrf': 'red',
-                                        'interface': 'LISP0',
+                                        'interface': 'LISP0.101',
                                         'role': 'ITR-ETR'}},
                                 'total_db_entries': 2,
                                 'total_db_entries_inactive': 0,
@@ -2690,7 +2690,7 @@ class test_show_lisp_service_summary(unittest.TestCase):
                 {'lisp_router_instance_id': 0,
                 'service': 
                     {'ipv6': 
-                        {'map_server': 
+                        {'etr': 
                             {'summary': 
                                 {'eid_tables_incomplete_map_cache_entries': 0,
                                 'eid_tables_inconsistent_locators': 0,
@@ -2704,7 +2704,7 @@ class test_show_lisp_service_summary(unittest.TestCase):
                                         'db_size': 1,
                                         'incomplete': '0.0%',
                                         'vrf': 'red',
-                                        'interface': 'LISP0',
+                                        'interface': 'LISP0.101',
                                         'role': 'ITR-ETR'}},
                                 'total_db_entries': 1,
                                 'total_db_entries_inactive': 0,
@@ -2742,7 +2742,7 @@ class test_show_lisp_service_summary(unittest.TestCase):
                 {'lisp_router_instance_id': 0,
                 'service': 
                     {'ethernet': 
-                        {'map_server': 
+                        {'etr': 
                             {'summary': 
                                 {'eid_tables_incomplete_map_cache_entries': 0,
                                 'eid_tables_inconsistent_locators': 0,
@@ -2755,7 +2755,7 @@ class test_show_lisp_service_summary(unittest.TestCase):
                                         'db_no_route': 0,
                                         'db_size': 2,
                                         'incomplete': '0.0%',
-                                        'interface': 'LISP0',
+                                        'interface': 'LISP0.1',
                                         'role': 'NONE'},
                                     '2': 
                                         {'cache_idle': '0%',
@@ -2763,7 +2763,7 @@ class test_show_lisp_service_summary(unittest.TestCase):
                                         'db_no_route': 0,
                                         'db_size': 2,
                                         'incomplete': '0%',
-                                        'interface': 'LISP0',
+                                        'interface': 'LISP0.2',
                                         'role': 'NONE'}},
                                 'total_db_entries': 4,
                                 'total_db_entries_inactive': 0,
