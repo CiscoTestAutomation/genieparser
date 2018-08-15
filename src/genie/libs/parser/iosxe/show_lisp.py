@@ -2926,6 +2926,11 @@ class ShowLispServiceStatistics(ShowLispServiceStatisticsSchema):
                          ' +\- +last +cleared: +(?P<last_cleared>(\S+))$')
 
         # Control Packets:
+        p3_1 = re.compile(r'Control Packets:$')
+
+        # Errors:
+        p3_2 = re.compile(r'Errors:$')
+
         # Map-Requests in/out:                              8/40
         # Encapsulated Map-Requests in/out:               8/36
         # RLOC-probe Map-Requests in/out:                 0/4
@@ -2934,12 +2939,12 @@ class ShowLispServiceStatistics(ShowLispServiceStatisticsSchema):
         # Map-Requests expired on-queue/no-reply          0/13
         # Map-Resolver Map-Requests forwarded:            0
         # Map-Server Map-Requests forwarded:              0
-        p3 = re.compile(r'^(?P<key>([a-zA-Z\-\/\s]+))\: +(?P<value>(.*))$')
+        p4 = re.compile(r'^(?P<key>([a-zA-Z\-\/\s]+))\: +(?P<value>(.*))$')
 
         # Map-Resolver    LastReply  Metric ReqsSent Positive Negative No-Reply
         # 44.44.44.44     never           1      306       18        0       66
         # 66.66.66.66     never     Unreach        0        0        0        0
-        p4 = re.compile(r'(?P<mr>([a-zA-Z0-9\.\:]+)) +(?P<last_reply>(\S+))'
+        p5 = re.compile(r'(?P<mr>([a-zA-Z0-9\.\:]+)) +(?P<last_reply>(\S+))'
                          ' +(?P<metric>(\S+)) +(?P<sent>(\d+))'
                          ' +(?P<positive>(\d+)) +(?P<negative>(\d+))'
                          ' +(?P<no_reply>(\d+))$')
@@ -2971,21 +2976,48 @@ class ShowLispServiceStatistics(ShowLispServiceStatisticsSchema):
                 stats_dict['last_cleared'] = m.groupdict()['last_cleared']
                 continue
 
+            # Control Packets:
+            m = p3_1.match(line)
+            if m:
+                last_dict = stats_dict.setdefault('conrol', {})
+                continue
+
+            # Errors:
+            m = p3_2.match(line)
+            if m:
+                last_dict = stats_dict.setdefault('errors', {})
+                continue
+
             # SMR-based Map-Requests in/out:                  0/4
             # Extranet SMR cross-IID Map-Requests in:         0
-            m = p3.match(line)
+            m = p4.match(line)
             if m:
-                key = m.groupdict()['key'].lower().replace(" ", "_").\
-                        replace("-", "_").replace("/", "_")
-                stats_dict[key] = m.groupdict()['value']
+                group = m.groupdict()
+                if "/" in group['key']:
+                    # split the key into 2
+                    splitkey = re.search('(?P<splitkey>(\S+\/\S+))', group['key'])\
+                                .groupdict()['splitkey']
+                    splitkey1, splitkey2 = splitkey.split("/")
+                    key = group['key'].replace(splitkey, "").strip().lower().\
+                            replace(" ", "_").replace("-", "_")
+                    key1 = key + "_" + splitkey1
+                    key2 = key + "_" + splitkey2
+                    # set values
+                    val1, val2 = group['value'].split("/")
+                    last_dict[key1] = val1
+                    last_dict[key2] = val2
+                else:
+                    key = group['key'].lower().replace(" ", "_").\
+                            replace("-", "_")
+                    last_dict[key] = group['value']
                 continue
 
             # Map-Resolver    LastReply  Metric ReqsSent Positive Negative No-Reply
             # 66.66.66.66     never     Unreach        0        0        0        0
-            m = p4.match(line)
+            m = p5.match(line)
             if m:
                 group = m.groupdict()
-                mr_dict = stats_dict.setdefault('map_rseolvers', {}).\
+                mr_dict = last_dict.setdefault('map_rseolvers', {}).\
                             setdefault(group['mr'], {})
                 mr_dict['last_reply'] = group['last_reply']
                 mr_dict['metric'] = group['metric']
