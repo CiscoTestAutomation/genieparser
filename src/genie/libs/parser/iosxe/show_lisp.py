@@ -2372,7 +2372,7 @@ class ShowLispServiceServerSummary(ShowLispServiceServerSummarySchema):
 
         # Execute command on device
         out = self.device.execute('show lisp all service instance_id '
-                                  '{instance_id} {service} summary'.\
+                                  '{instance_id} {service} server summary'.\
                             format(service=service, instance_id=instance_id))
 
         # Init vars
