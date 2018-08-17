@@ -2194,6 +2194,7 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                     {Any(): 
                         {Optional('bgp_table_version'): int,
                          Optional('session_state'): str,
+                         Optional('state_reason'): str,
                          Optional('neighbor_version'): int,
                          Optional('send_community'): str,
                          Optional('soo'): str,
@@ -2772,8 +2773,12 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                     ['address_family']:
                     parsed_dict['neighbor'][neighbor_id]['address_family']\
                         [address_family] = {}
-                parsed_dict['neighbor'][neighbor_id]['address_family'][address_family] \
-                    ['session_state'] = session_state.lower()
+                parsed_dict['neighbor'][neighbor_id]['address_family']\
+                    [address_family]['session_state'] = session_state.lower()
+                if 'state_reason' in parsed_dict['neighbor'][neighbor_id]:
+                    parsed_dict['neighbor'][neighbor_id]['address_family']\
+                    [address_family]['state_reason'] = \
+                        parsed_dict['neighbor'][neighbor_id]['state_reason']
                 continue
 
             # BGP table version 48, neighbor version 48
