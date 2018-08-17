@@ -2518,47 +2518,74 @@ class ShowLispServiceServerDetailInternalSchema(MetaParser):
     schema = {
         'lisp_router_instances':
             {Any():
-                {'lisp_router_instance_id': int,
-                Optional('service'):
-                    {Optional(Any()):
-                        {'instance_id':
-                            {Any():
-                                {'sites':
-                                    {Any():
-                                        {'allowed_configured_locators': str,
-                                        Optional('allowed_eid_prefixes'):
-                                            {Any():
-                                                {'first_registered': str,
-                                                'last_registered': str,
-                                                'routing_table_tag': int,
-                                                'origin': str,
-                                                'merge_active': bool,
-                                                'proxy_reply': bool,
-                                                'ttl': str,
-                                                'state': str,
-                                                'authentication_failures': int,
+                {'service':
+                    {Any():
+                        {'map_server':
+                            {'sites':
+                                {Any():
+                                    {'site_id': str,
+                                    'allowed_configured_locators': str,
+                                    },
+                                },
+                            Optional('virtual_network_ids'):
+                                {Any():
+                                    {'vni': str,
+                                    'mappings':
+                                        {Any():
+                                            {'eid_id': str,
+                                            'address_type': str,
+                                            Optional('ipv4'):
+                                                {'ipv4': str,
+                                                },
+                                            Optional('ipv6'):
+                                                {'ipv6': str,
+                                                },
+                                            'site_id': str,
+                                            'first_registered': str,
+                                            'last_registered': str,
+                                            'routing_table_tag': int,
+                                            'origin': str,
+                                            Optional('more_specifics_accepted'): bool,
+                                            'merge_active': bool,
+                                            'proxy_reply': bool,
+                                            'ttl': str,
+                                            'state': str,
+                                            'registration_errors': 
+                                                {'authentication_failures': int,
                                                 'allowed_locators_mismatch': int,
-                                                Optional('registrations'):
-                                                    {Any():
-                                                        {'last_registered': str,
+                                                },
+                                            Optional('mapping_records'): 
+                                                {Any():
+                                                    {'xtr_id': str,
+                                                    'site_id': str,
+                                                    'etr': str,
+                                                    'eid':
+                                                        {'address_type': str,
+                                                        Optional('ipv4'): 
+                                                            {'ipv4': str,
+                                                            },
+                                                        Optional('ipv6'): 
+                                                            {'ipv6': str,
+                                                            },
+                                                        'ttl': str,
+                                                        'time_to_live': int,
+                                                        'creation_time': str,
+                                                        'merge': bool,
                                                         'proxy_reply': bool,
                                                         'map_notify': bool,
-                                                        'ttl': str,
-                                                        'merge_active': bool,
                                                         'hash_function': str,
+                                                        'nonce': str,
                                                         'state': str,
                                                         'security_capability': bool,
-                                                        'xtr_id': str,
-                                                        'site_id': str,
                                                         'sourced_by': str,
-                                                        Optional('locator'):
-                                                            {Any():
-                                                                {'local': bool,
-                                                                'state': str,
-                                                                'priority': int,
-                                                                'weight': int,
-                                                                'scope': str,
-                                                                },
+                                                        },
+                                                    'locator': 
+                                                        {Any():
+                                                            {'local': bool,
+                                                            'state': str,
+                                                            'priority': int,
+                                                            'weight': int,
+                                                            'scope': str,
                                                             },
                                                         },
                                                     },
@@ -2588,7 +2615,7 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
 
         # Execute command on device
         out = self.device.execute('show lisp all service instance_id '
-                            '{instance_id} {service} serverdetail internal'.\
+                            '{instance_id} {service} server detail internal'.\
                             format(service=service, instance_id=instance_id))
 
         # Init vars
@@ -2614,7 +2641,7 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
         p3 = re.compile(r'Allowed +configured +locators: +(?P<val>(\S+))$')
 
         # EID-prefix: 192.168.0.1/32 instance-id 101
-        p4 = re.compile(r'EID-prefix: +(?P<prefix>(\S+)) +instance-id'
+        p4 = re.compile(r'EID-prefix: +(?P<eid>(\S+)) +instance-id'
                          ' +(?P<iid>(\d+))$')
 
         # First registered:     01:12:41
@@ -2627,7 +2654,12 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
         p7 = re.compile(r'Routing +table +tag: +(?P<rtt>(\d+))$')
 
         # Origin:               Dynamic, more specific of 192.168.0.0/24
-        p8 = re.compile(r'Origin: +(?P<origin>(.*))$')
+        p8_1 = re.compile(r'Origin: +(?P<origin>(\S+))(?:, +more +specific +of'
+                         ' +(\S+))?$')
+
+        # Origin:               Configuration, accepting more specifics
+        p8_2 = re.compile(r'Origin: +(?P<origin>(\S+))(?:,'
+                         ' +(?P<more_specific>(accepting more specifics)))?$')
 
         # Merge active:         No
         p9 = re.compile(r'Merge +active: +(?P<merge>(Yes|No))$')
@@ -2651,12 +2683,13 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
         # ETR 2.2.2.2, last registered 01:12:41, proxy-reply, map-notify
         p15 = re.compile(r'ETR +(?P<etr>(\S+)), +last +registered'
                           ' +(?P<last_registered>(\S+)),'
-                          '(?: +(?P<proxy>(proxy-reply)),)?'
-                          '(?: +(?P<map>(map-notify)))?$')
+                          '(?: +(?P<proxy_reply>(proxy-reply)),)?'
+                          '(?: +(?P<map_notify>(map-notify)))?$')
 
         # TTL 1d00h, no merge, hash-function sha1, nonce 0x70D18EF4-0x3A605D67
         p16 = re.compile(r'TTL +(?P<ttl>(\S+)),(?: +(?P<merge>(no merge)),)?'
-                          ' +hash-function +(?P<hash>(.*))$')
+                          ' +hash-function +(?P<hash>(\S+)) +nonce'
+                          ' +(?P<nonce>(\S+))$')
 
         # state complete, no security-capability
         p17 = re.compile(r'state +(?P<state>(\S+))'
@@ -2692,18 +2725,18 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
             # Site name: prov1
             m = p2.match(line)
             if m:
-                # Create lisp_dict
-                lisp_dict = parsed_dict.\
-                            setdefault('lisp_router_instances', {}).\
-                            setdefault(lisp_router_id, {})
-                lisp_dict['lisp_router_instance_id'] = lisp_router_id
-                # Create ms dict
-                sites_dict = lisp_dict.setdefault('service', {}).\
+                site_id = m.groupdict()['site_name']
+                # Create service dict
+                ms_dict = parsed_dict.\
+                                setdefault('lisp_router_instances', {}).\
+                                setdefault(lisp_router_id, {}).\
+                                setdefault('service', {}).\
                                 setdefault(service, {}).\
-                                setdefault('instance_id', {}).\
-                                setdefault(instance_id, {}).\
-                                setdefault('sites', {}).\
-                                setdefault(m.groupdict()['site_name'], {})
+                                setdefault('map_server', {})
+                # Create sites dict
+                sites_dict = ms_dict.setdefault('sites', {}).\
+                                setdefault(site_id, {})
+                sites_dict['site_id'] = site_id
                 continue
 
             # Allowed configured locators: any
@@ -2715,73 +2748,96 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
             # EID-prefix: 192.168.0.1/32 instance-id 101
             m = p4.match(line)
             if m:
-                prefix_dict = sites_dict.\
-                                setdefault('allowed_eid_prefixes', {}).\
-                                setdefault(m.groupdict()['prefix'], {})
+                group = m.groupdict()
+                eid = group['eid']
+                # Create vni dict
+                vni_dict = ms_dict.setdefault('virtual_network_ids', {}).\
+                            setdefault(group['iid'], {})
+                vni_dict['vni'] = group['iid']
+                mappings_dict = vni_dict.setdefault('mappings', {}).\
+                                    setdefault(eid, {})
+                mappings_dict['eid_id'] = eid
+                if ":" not in eid:
+                    mappings_dict['address_type'] = 'ipv4-afi'
+                    mappings_dict.setdefault('ipv4', {})['ipv4'] = eid
+                else:
+                    mappings_dict['address_type'] = 'ipv6-afi'
+                    mappings_dict.setdefault('ipv6', {})['ipv6'] = eid
+                mappings_dict['site_id'] = site_id
                 continue
 
             # First registered:     01:12:41
             m = p5.match(line)
             if m:
-                prefix_dict['first_registered'] = m.groupdict()['first']
+                mappings_dict['first_registered'] = m.groupdict()['first']
                 continue
 
             #     Last registered:      01:12:41
             m = p6.match(line)
             if m:
-                prefix_dict['last_registered'] = m.groupdict()['last']
+                mappings_dict['last_registered'] = m.groupdict()['last']
                 continue
 
             # Routing table tag:    0
             m = p7.match(line)
             if m:
-                prefix_dict['routing_table_tag'] = int(m.groupdict()['rtt'])
+                mappings_dict['routing_table_tag'] = int(m.groupdict()['rtt'])
                 continue
 
             # Origin:               Dynamic, more specific of 192.168.0.0/24
-            m = p8.match(line)
+            m = p8_1.match(line)
             if m:
-                prefix_dict['origin'] = m.groupdict()['origin']
+                mappings_dict['origin'] = m.groupdict()['origin']
+                continue
+
+            # Origin:               Configuration, accepting more specifics
+            m = p8_2.match(line)
+            if m:
+                mappings_dict['origin'] = m.groupdict()['origin']
+                if m.groupdict()['more_specific']:
+                    mappings_dict['more_specifics_accepted'] = True
                 continue
 
             # Merge active:         No
             m = p9.match(line)
             if m:
-                prefix_dict['merge_active'] = \
+                mappings_dict['merge_active'] = \
                     state_dict[m.groupdict()['merge'].lower()]
                 continue
 
             # Proxy reply:          Yes
             m = p10.match(line)
             if m:
-                prefix_dict['proxy_reply'] = \
+                mappings_dict['proxy_reply'] = \
                     state_dict[m.groupdict()['proxy'].lower()]
                 continue
 
             # TTL:                  1d00h
             m = p11.match(line)
             if m:
-                prefix_dict['ttl'] = m.groupdict()['ttl']
+                mappings_dict['ttl'] = m.groupdict()['ttl']
                 continue
 
             # State:                complete
             m = p12.match(line)
             if m:
-                prefix_dict['state'] = m.groupdict()['state']
+                mappings_dict['state'] = m.groupdict()['state']
                 continue
 
             # Registration errors:
             #  Authentication failures:   0
             m = p13.match(line)
             if m:
-                prefix_dict['authentication_failures'] = \
+                reg_errors_dict = mappings_dict.\
+                                    setdefault('registration_errors', {})
+                reg_errors_dict['authentication_failures'] = \
                     int(m.groupdict()['auth_failures'])
                 continue
 
             # Allowed locators mismatch: 0
             m = p14.match(line)
             if m:
-                prefix_dict['allowed_locators_mismatch'] = \
+                reg_errors_dict['allowed_locators_mismatch'] = \
                     int(m.groupdict()['mismatch'])
                 continue
 
@@ -2789,50 +2845,79 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
             m = p15.match(line)
             if m:
                 group = m.groupdict()
-                reg_dict = prefix_dict.setdefault('registrations', {}).\
-                            setdefault(group['etr'], {})
-                reg_dict['last_registered'] = group['last_registered']
-                if group['proxy']:
-                    reg_dict['proxy_reply'] = True
-                if group['map']:
-                    reg_dict['map_notify'] = True
+                etr = group['etr']
+                creation_time = group['last_registered']
+                if group['proxy_reply']:
+                    proxy_reply = True
+                if group['map_notify']:
+                    map_notify = True
                 continue
 
             #  TTL 1d00h, no merge, hash-function sha1, nonce 0x70D18EF4-0x3A605D67
             m = p16.match(line)
             if m:
                 group = m.groupdict()
-                reg_dict['ttl'] = group['ttl']
+                ttl = group['ttl']
+                n = re.match('(?P<day>(\d+))d(?P<hours>(\d+))h', ttl)
+                days = n.groupdict()['day'] ; hours = n.groupdict()['hours']
+                time_to_live = (int(days) * 86400) + (int(hours) * 3600)
                 if group['merge'] == 'no merge':
-                    reg_dict['merge_active'] = False
-                reg_dict['hash_function'] = group['hash']
+                    merge_active = False
+                hash_function = group['hash']
+                nonce = group['nonce']
                 continue
 
             # state complete, no security-capability
             m = p17.match(line)
             if m:
                 group = m.groupdict()
-                reg_dict['state'] = group['state']
+                state = group['state']
                 if 'no' in group['security']:
-                    reg_dict['security_capability'] = True
+                    security_capability = False
+                else:
+                    security_capability = True
                 continue
 
             # xTR-ID 0x21EDD25F-0x7598784C-0x769C8E4E-0xC04926EC
             m = p18.match(line)
             if m:
-                reg_dict['xtr_id'] = m.groupdict()['xtr_id']
+                group = m.groupdict()
+                mapping_records_dict = mappings_dict.\
+                                        setdefault('mapping_records', {}).\
+                                        setdefault(group['xtr_id'], {})
+                mapping_records_dict['xtr_id'] = group['xtr_id']
+                mapping_records_dict['etr'] = etr
+                mr_eid_dict = mapping_records_dict.setdefault('eid', {})
+                if ":" not in eid:
+                    mr_eid_dict['address_type'] = 'ipv4-afi'
+                    mr_eid_dict.setdefault('ipv4', {})['ipv4'] = eid
+                else:
+                    mr_eid_dict['address_type'] = 'ipv6-afi'
+                    mr_eid_dict.setdefault('ipv6', {})['ipv6'] = eid
+                # Set previously parsed values
+                mr_eid_dict['security_capability'] = security_capability
+                mr_eid_dict['state'] = state
+                mr_eid_dict['nonce'] = nonce
+                mr_eid_dict['hash_function'] = hash_function
+                mr_eid_dict['merge'] = merge_active
+                mr_eid_dict['ttl'] = ttl
+                mr_eid_dict['time_to_live'] = time_to_live
+                mr_eid_dict['map_notify'] = map_notify
+                mr_eid_dict['proxy_reply'] = proxy_reply
+                mr_eid_dict['map_notify'] = map_notify
+                mr_eid_dict['creation_time'] = creation_time
                 continue
 
             # site-ID unspecified
             m = p19.match(line)
             if m:
-                reg_dict['site_id'] = m.groupdict()['site_id']
+                mapping_records_dict['site_id'] = m.groupdict()['site_id']
                 continue
 
             # sourced by reliable transport
             m = p20.match(line)
             if m:
-                reg_dict['sourced_by'] = m.groupdict()['source']
+                mr_eid_dict['sourced_by'] = m.groupdict()['source']
                 continue
 
             # Locator  Local  State      Pri/Wgt  Scope
@@ -2840,7 +2925,7 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
             m = p21.match(line)
             if m:
                 group = m.groupdict()
-                locator_dict = reg_dict.setdefault('locator', {}).\
+                locator_dict = mapping_records_dict.setdefault('locator', {}).\
                                 setdefault(group['locator'], {})
                 locator_dict['local'] = state_dict[group['local']]
                 locator_dict['state'] = group['state']

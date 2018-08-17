@@ -3726,101 +3726,131 @@ class test_show_lisp_service_server_detail_internal(unittest.TestCase):
     golden_parsed_output1 = {
         'lisp_router_instances': 
             {0: 
-                {'lisp_router_instance_id': 0,
-                'service': 
+                {'service': 
                     {'ipv4': 
-                        {'instance_id': 
-                            {'101': 
-                                {'sites': 
-                                    {'provider': 
-                                        {'allowed_configured_locators': 'any'},
-                                    'xtr1_1': 
-                                        {'allowed_configured_locators': 'any',
-                                        'allowed_eid_prefixes': 
-                                            {'192.168.0.0/24': 
+                        {'map_server': 
+                            {'sites': 
+                                {'provider': 
+                                    {'allowed_configured_locators': 'any',
+                                    'site_id': 'provider'},
+                                'xtr1_1': 
+                                    {'allowed_configured_locators': 'any',
+                                    'site_id': 'xtr1_1'},
+                                'xtr1_2': 
+                                    {'allowed_configured_locators': 'any',
+                                    'site_id': 'xtr1_2'},
+                                'xtr2': 
+                                    {'allowed_configured_locators': 'any',
+                                    'site_id': 'xtr2'}},
+                            'virtual_network_ids': 
+                                {'101': 
+                                    {'mappings': 
+                                        {'192.168.0.0/24': 
+                                            {'address_type': 'ipv4-afi',
+                                            'eid_id': '192.168.0.0/24',
+                                            'first_registered': '1w4d',
+                                            'ipv4': 
+                                                {'ipv4': '192.168.0.0/24'},
+                                            'last_registered': '02:41:22',
+                                            'merge_active': False,
+                                            'more_specifics_accepted': True,
+                                            'origin': 'Configuration',
+                                            'proxy_reply': False,
+                                            'registration_errors': 
                                                 {'allowed_locators_mismatch': 0,
-                                                'authentication_failures': 0,
-                                                'first_registered': '1w4d',
-                                                'last_registered': '02:41:22',
-                                                'merge_active': False,
-                                                'origin': 'Configuration, '
-                                                       'accepting '
-                                                       'more '
-                                                       'specifics',
-                                                'proxy_reply': False,
-                                                'routing_table_tag': 0,
-                                                'state': 'unknown',
-                                                'ttl': '00:00:00'},
-                                            '192.168.0.1/32': {'allowed_locators_mismatch': 0,
-                                                'authentication_failures': 0,
-                                                'first_registered': '01:12:41',
-                                                'last_registered': '01:12:41',
-                                                'merge_active': False,
-                                                'origin': 'Dynamic, '
-                                                       'more '
-                                                       'specific '
-                                                       'of '
-                                                       '192.168.0.0/24',
-                                                'proxy_reply': True,
-                                                'registrations': 
-                                                    {'2.2.2.2': 
-                                                        {'hash_function': 'sha1, nonce 0x70D18EF4-0x3A605D67',
-                                                        'last_registered': '01:12:41',
-                                                        'locator': {'2.2.2.2': {'local': True,
-                                                                               'priority': 50,
-                                                                               'scope': 'IPv4 '
-                                                                                        'none',
-                                                                               'state': 'up',
-                                                                               'weight': 50}},
+                                                'authentication_failures': 0},
+                                            'routing_table_tag': 0,
+                                            'site_id': 'xtr1_1',
+                                            'state': 'unknown',
+                                            'ttl': '00:00:00'},
+                                        '192.168.0.1/32': 
+                                            {'address_type': 'ipv4-afi',
+                                            'eid_id': '192.168.0.1/32',
+                                            'first_registered': '01:12:41',
+                                            'ipv4': 
+                                                {'ipv4': '192.168.0.1/32'},
+                                            'last_registered': '01:12:41',
+                                            'mapping_records': 
+                                                {'0x21EDD25F-0x7598784C-0x769C8E4E-0xC04926EC': 
+                                                    {'eid': 
+                                                        {'address_type': 'ipv4-afi',
+                                                        'creation_time': '01:12:41',
+                                                        'hash_function': 'sha1,',
+                                                        'ipv4': 
+                                                            {'ipv4': '192.168.0.1/32'},
                                                         'map_notify': True,
-                                                        'merge_active': False,
+                                                        'merge': False,
+                                                        'nonce': '0x70D18EF4-0x3A605D67',
                                                         'proxy_reply': True,
-                                                        'security_capability': True,
-                                                        'site_id': 'unspecified',
-                                                        'sourced_by': 'reliable '
-                                                                     'transport',
+                                                        'security_capability': False,
+                                                        'sourced_by': 'reliable transport',
                                                         'state': 'complete',
-                                                        'ttl': '1d00h',
-                                                        'xtr_id': '0x21EDD25F-0x7598784C-0x769C8E4E-0xC04926EC'}},
-                                                'routing_table_tag': 0,
-                                                'state': 'complete',
-                                                'ttl': '1d00h'}}},
-                                    'xtr1_2': 
-                                        {'allowed_configured_locators': 'any'},
-                                    'xtr2': 
-                                        {'allowed_configured_locators': 'any',
-                                        'allowed_eid_prefixes': 
-                                            {'192.168.9.0/24': 
+                                                        'time_to_live': 86400,
+                                                        'ttl': '1d00h'},
+                                                    'etr': '2.2.2.2',
+                                                    'locator': 
+                                                        {'2.2.2.2': 
+                                                            {'local': True,
+                                                            'priority': 50,
+                                                            'scope': 'IPv4 none',
+                                                            'state': 'up',
+                                                            'weight': 50}},
+                                                    'site_id': 'unspecified',
+                                                    'xtr_id': '0x21EDD25F-0x7598784C-0x769C8E4E-0xC04926EC'}},
+                                            'merge_active': False,
+                                            'origin': 'Dynamic',
+                                            'proxy_reply': True,
+                                            'registration_errors': 
                                                 {'allowed_locators_mismatch': 0,
-                                                'authentication_failures': 0,
-                                                'first_registered': '01:55:47',
-                                                'last_registered': '01:55:47',
-                                                'merge_active': False,
-                                                'origin': 'Configuration',
-                                                'proxy_reply': True,
-                                                'registrations': {'8.8.8.8': {'hash_function': 'sha1, '
-                                                                                              'nonce '
-                                                                                              '0xB06AE31D-0x6ADB0BA5',
-                                                                             'last_registered': '01:55:47',
-                                                                             'locator': {'8.8.8.8': {'local': True,
-                                                                                                     'priority': 50,
-                                                                                                     'scope': 'IPv4 '
-                                                                                                              'none',
-                                                                                                     'state': 'up',
-                                                                                                     'weight': 50}},
-                                                                             'map_notify': True,
-                                                                             'merge_active': False,
-                                                                             'proxy_reply': True,
-                                                                             'security_capability': True,
-                                                                             'site_id': 'unspecified',
-                                                                             'sourced_by': 'reliable '
-                                                                                           'transport',
-                                                                             'state': 'complete',
-                                                                             'ttl': '1d00h',
-                                                                             'xtr_id': '0x77200484-0xD134DC48-0x0FBAD9DC-0x4A46CA5D'}},
-                                                'routing_table_tag': 0,
-                                                'state': 'complete',
-                                                'ttl': '1d00h'}}}}}}}}}}}
+                                                'authentication_failures': 0},
+                                            'routing_table_tag': 0,
+                                            'site_id': 'xtr1_1',
+                                            'state': 'complete',
+                                            'ttl': '1d00h'},
+                                        '192.168.9.0/24': 
+                                            {'address_type': 'ipv4-afi',
+                                            'eid_id': '192.168.9.0/24',
+                                            'first_registered': '01:55:47',
+                                            'ipv4': 
+                                                {'ipv4': '192.168.9.0/24'},
+                                            'last_registered': '01:55:47',
+                                            'mapping_records': 
+                                                {'0x77200484-0xD134DC48-0x0FBAD9DC-0x4A46CA5D': 
+                                                    {'eid': 
+                                                        {'address_type': 'ipv4-afi',
+                                                        'creation_time': '01:55:47',
+                                                        'hash_function': 'sha1,',
+                                                        'ipv4': 
+                                                            {'ipv4': '192.168.9.0/24'},
+                                                        'map_notify': True,
+                                                        'merge': False,
+                                                        'nonce': '0xB06AE31D-0x6ADB0BA5',
+                                                        'proxy_reply': True,
+                                                        'security_capability': False,
+                                                        'sourced_by': 'reliable transport',
+                                                        'state': 'complete',
+                                                        'time_to_live': 86400,
+                                                        'ttl': '1d00h'},
+                                                    'etr': '8.8.8.8',
+                                                    'locator': 
+                                                        {'8.8.8.8': 
+                                                            {'local': True,
+                                                            'priority': 50,
+                                                            'scope': 'IPv4 none',
+                                                            'state': 'up',
+                                                            'weight': 50}},
+                                                    'site_id': 'unspecified',
+                                                    'xtr_id': '0x77200484-0xD134DC48-0x0FBAD9DC-0x4A46CA5D'}},
+                                            'merge_active': False,
+                                            'origin': 'Configuration',
+                                            'proxy_reply': True,
+                                            'registration_errors': {'allowed_locators_mismatch': 0,
+                                                               'authentication_failures': 0},
+                                            'routing_table_tag': 0,
+                                            'site_id': 'xtr2',
+                                            'state': 'complete',
+                                            'ttl': '1d00h'}},
+                                    'vni': '101'}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         204-MSMR#show lisp all instance-id 101 ipv4 server detail internal
@@ -3905,84 +3935,113 @@ class test_show_lisp_service_server_detail_internal(unittest.TestCase):
     golden_parsed_output2 = {
         'lisp_router_instances': 
             {0: 
-                {'lisp_router_instance_id': 0,
-                'service': 
+                {'service': 
                     {'ipv6': 
-                        {'instance_id': 
-                            {'101': 
-                                {'sites': 
-                                    {'provider': 
-                                        {'allowed_configured_locators': 'any'},
-                                    'xtr1_1': 
-                                        {'allowed_configured_locators': 'any',
-                                        'allowed_eid_prefixes': 
-                                            {'2001:192:168::/64': 
-                                                {'allowed_locators_mismatch': 0,
-                                                'authentication_failures': 0,
-                                                'first_registered': '00:13:19',
-                                                'last_registered': '00:13:19',
-                                                'merge_active': False,
-                                                'origin': 'Configuration',
-                                                'proxy_reply': True,
-                                                'registrations': 
-                                                    {'2.2.2.2': 
-                                                        {'hash_function': 'sha1, nonce 0xF8845AAB-0x44B8B869',
-                                                        'last_registered': '00:13:19',
-                                                        'locator': {'2.2.2.2': {'local': True,
-                                                                              'priority': 50,
-                                                                              'scope': 'IPv4 '
-                                                                                       'none',
-                                                                              'state': 'up',
-                                                                              'weight': 50}},
+                        {'map_server': 
+                            {'sites': 
+                                {'provider': 
+                                    {'allowed_configured_locators': 'any',
+                                    'site_id': 'provider'},
+                                'xtr1_1': 
+                                    {'allowed_configured_locators': 'any',
+                                    'site_id': 'xtr1_1'},
+                                'xtr1_2': 
+                                    {'allowed_configured_locators': 'any',
+                                    'site_id': 'xtr1_2'},
+                                'xtr2': 
+                                    {'allowed_configured_locators': 'any',
+                                    'site_id': 'xtr2'}},
+                            'virtual_network_ids': 
+                                {'101': 
+                                    {'mappings': 
+                                        {'2001:192:168:9::/64': 
+                                            {'address_type': 'ipv6-afi',
+                                            'eid_id': '2001:192:168:9::/64',
+                                            'first_registered': '00:13:19',
+                                            'ipv6': 
+                                                {'ipv6': '2001:192:168:9::/64'},
+                                            'last_registered': '00:13:19',
+                                            'mapping_records': 
+                                                {'0x6BE732BF-0xD9530F52-0xF9162AA3-0x6283920A': 
+                                                    {'eid': 
+                                                        {'address_type': 'ipv6-afi',
+                                                        'creation_time': '00:13:19',
+                                                        'hash_function': 'sha1,',
+                                                        'ipv6': {'ipv6': '2001:192:168:9::/64'},
                                                         'map_notify': True,
-                                                        'merge_active': False,
+                                                        'merge': False,
+                                                        'nonce': '0x90004FBE-0x03D2420E',
                                                         'proxy_reply': True,
-                                                        'security_capability': True,
-                                                        'site_id': 'unspecified',
-                                                        'sourced_by': 'reliable '
-                                                                    'transport',
+                                                        'security_capability': False,
+                                                        'sourced_by': 'reliable transport',
                                                         'state': 'complete',
-                                                        'ttl': '1d00h',
-                                                        'xtr_id': '0x5B6A0468-0x55E69768-0xD1AE2E61-0x4A082FD5'}},
-                                                'routing_table_tag': 0,
-                                                'state': 'complete',
-                                                'ttl': '1d00h'}}},
-                                    'xtr1_2': 
-                                        {'allowed_configured_locators': 'any'},
-                                    'xtr2': 
-                                        {'allowed_configured_locators': 'any',
-                                        'allowed_eid_prefixes': 
-                                            {'2001:192:168:9::/64': 
+                                                        'time_to_live': 86400,
+                                                        'ttl': '1d00h'},
+                                                    'etr': '8.8.8.8',
+                                                    'locator': 
+                                                        {'8.8.8.8': 
+                                                            {'local': True,
+                                                            'priority': 50,
+                                                            'scope': 'IPv4 none',
+                                                            'state': 'up',
+                                                            'weight': 50}},
+                                                    'site_id': 'unspecified',
+                                                    'xtr_id': '0x6BE732BF-0xD9530F52-0xF9162AA3-0x6283920A'}},
+                                            'merge_active': False,
+                                            'origin': 'Configuration',
+                                            'proxy_reply': True,
+                                            'registration_errors': 
                                                 {'allowed_locators_mismatch': 0,
-                                                'authentication_failures': 0,
-                                                'first_registered': '00:13:19',
-                                                'last_registered': '00:13:19',
-                                                'merge_active': False,
-                                                'origin': 'Configuration',
-                                                'proxy_reply': True,
-                                                'registrations': 
-                                                    {'8.8.8.8': 
-                                                        {'hash_function': 'sha1, nonce 0x90004FBE-0x03D2420E',
-                                                        'last_registered': '00:13:19',
-                                                        'locator': {'8.8.8.8': {'local': True,
-                                                                              'priority': 50,
-                                                                              'scope': 'IPv4 '
-                                                                                       'none',
-                                                                              'state': 'up',
-                                                                              'weight': 50}},
+                                                'authentication_failures': 0},
+                                            'routing_table_tag': 0,
+                                            'site_id': 'xtr2',
+                                            'state': 'complete',
+                                            'ttl': '1d00h'},
+                                        '2001:192:168::/64': 
+                                            {'address_type': 'ipv6-afi',
+                                            'eid_id': '2001:192:168::/64',
+                                            'first_registered': '00:13:19',
+                                            'ipv6': 
+                                                {'ipv6': '2001:192:168::/64'},
+                                            'last_registered': '00:13:19',
+                                            'mapping_records': 
+                                                {'0x5B6A0468-0x55E69768-0xD1AE2E61-0x4A082FD5': 
+                                                    {'eid': 
+                                                        {'address_type': 'ipv6-afi',
+                                                        'creation_time': '00:13:19',
+                                                        'hash_function': 'sha1,',
+                                                        'ipv6': 
+                                                            {'ipv6': '2001:192:168::/64'},
                                                         'map_notify': True,
-                                                        'merge_active': False,
+                                                        'merge': False,
+                                                        'nonce': '0xF8845AAB-0x44B8B869',
                                                         'proxy_reply': True,
-                                                        'security_capability': True,
-                                                        'site_id': 'unspecified',
-                                                        'sourced_by': 'reliable '
-                                                                    'transport',
+                                                        'security_capability': False,
+                                                        'sourced_by': 'reliable transport',
                                                         'state': 'complete',
-                                                        'ttl': '1d00h',
-                                                        'xtr_id': '0x6BE732BF-0xD9530F52-0xF9162AA3-0x6283920A'}},
-                                                'routing_table_tag': 0,
-                                                'state': 'complete',
-                                                'ttl': '1d00h'}}}}}}}}}}}
+                                                        'time_to_live': 86400,
+                                                        'ttl': '1d00h'},
+                                                    'etr': '2.2.2.2',
+                                                    'locator': 
+                                                        {'2.2.2.2': 
+                                                            {'local': True,
+                                                            'priority': 50,
+                                                            'scope': 'IPv4 none',
+                                                            'state': 'up',
+                                                            'weight': 50}},
+                                                    'site_id': 'unspecified',
+                                                    'xtr_id': '0x5B6A0468-0x55E69768-0xD1AE2E61-0x4A082FD5'}},
+                                            'merge_active': False,
+                                            'origin': 'Configuration',
+                                            'proxy_reply': True,
+                                            'registration_errors': 
+                                                {'allowed_locators_mismatch': 0,
+                                                'authentication_failures': 0},
+                                            'routing_table_tag': 0,
+                                            'site_id': 'xtr1_1',
+                                            'state': 'complete',
+                                            'ttl': '1d00h'}},
+                                    'vni': '101'}}}}}}}}
 
     golden_output2 = {'execute.return_value': '''
         204-MSMR#show lisp all instance-id 101 ipv6 server detail internal 
@@ -4050,60 +4109,31 @@ class test_show_lisp_service_server_detail_internal(unittest.TestCase):
     golden_parsed_output3 = {
         'lisp_router_instances': 
             {2: 
-                {'lisp_router_instance_id': 2,
-                'service': 
+                {'service': 
                     {'ethernet': 
-                        {'instance_id': 
-                            {'101': 
-                                {'sites':  {'prov1': {'allowed_configured_locators': 'any'},
-                                            'prov2': {'allowed_configured_locators': 'any'},
-                                            'prov3': {'allowed_configured_locators': 'any'},
-                                            'provider': {'allowed_configured_locators': 'any'},
-                                            'xtr1_1': {'allowed_configured_locators': 'any'},
-                                            'xtr1_2': {'allowed_configured_locators': 'any'},
-                                            'xtr1_3': {'allowed_configured_locators': 'any'}}},
-                            '102': {'sites': {'prov1': {'allowed_configured_locators': 'any'},
-                                              'prov2': {'allowed_configured_locators': 'any'},
-                                              'prov3': {'allowed_configured_locators': 'any'},
-                                              'provider': {'allowed_configured_locators': 'any'},
-                                              'xtr1_1': {'allowed_configured_locators': 'any'},
-                                              'xtr1_2': {'allowed_configured_locators': 'any'},
-                                              'xtr1_3': {'allowed_configured_locators': 'any'}}},
-                            '103': {'sites': {'prov1': {'allowed_configured_locators': 'any'},
-                                              'prov2': {'allowed_configured_locators': 'any'},
-                                              'prov3': {'allowed_configured_locators': 'any'},
-                                              'provider': {'allowed_configured_locators': 'any'},
-                                              'xtr1_1': {'allowed_configured_locators': 'any'},
-                                              'xtr1_2': {'allowed_configured_locators': 'any'},
-                                              'xtr1_3': {'allowed_configured_locators': 'any'}}},
-                            '104': {'sites': {'prov1': {'allowed_configured_locators': 'any'},
-                                              'prov2': {'allowed_configured_locators': 'any'},
-                                              'prov3': {'allowed_configured_locators': 'any'},
-                                              'provider': {'allowed_configured_locators': 'any'},
-                                              'xtr1_1': {'allowed_configured_locators': 'any'},
-                                              'xtr1_2': {'allowed_configured_locators': 'any'},
-                                              'xtr1_3': {'allowed_configured_locators': 'any'}}},
-                            '107': {'sites': {'prov1': {'allowed_configured_locators': 'any'},
-                                              'prov2': {'allowed_configured_locators': 'any'},
-                                              'prov3': {'allowed_configured_locators': 'any'},
-                                              'provider': {'allowed_configured_locators': 'any'},
-                                              'xtr1_1': {'allowed_configured_locators': 'any'},
-                                              'xtr1_2': {'allowed_configured_locators': 'any'},
-                                              'xtr1_3': {'allowed_configured_locators': 'any'}}},
-                            '108': {'sites': {'prov1': {'allowed_configured_locators': 'any'},
-                                              'prov2': {'allowed_configured_locators': 'any'},
-                                              'prov3': {'allowed_configured_locators': 'any'},
-                                              'provider': {'allowed_configured_locators': 'any'},
-                                              'xtr1_1': {'allowed_configured_locators': 'any'},
-                                              'xtr1_2': {'allowed_configured_locators': 'any'},
-                                              'xtr1_3': {'allowed_configured_locators': 'any'}}},
-                            '109': {'sites': {'prov1': {'allowed_configured_locators': 'any'},
-                                              'prov2': {'allowed_configured_locators': 'any'},
-                                              'prov3': {'allowed_configured_locators': 'any'},
-                                              'provider': {'allowed_configured_locators': 'any'},
-                                              'xtr1_1': {'allowed_configured_locators': 'any'},
-                                              'xtr1_2': {'allowed_configured_locators': 'any'},
-                                              'xtr1_3': {'allowed_configured_locators': 'any'}}}}}}}}}
+                        {'map_server': 
+                            {'sites': 
+                                {'prov1': 
+                                    {'allowed_configured_locators': 'any',
+                                    'site_id': 'prov1'},
+                                'prov2': 
+                                    {'allowed_configured_locators': 'any',
+                                    'site_id': 'prov2'},
+                                'prov3': 
+                                    {'allowed_configured_locators': 'any',
+                                    'site_id': 'prov3'},
+                                'provider': 
+                                    {'allowed_configured_locators': 'any',
+                                    'site_id': 'provider'},
+                                'xtr1_1': 
+                                    {'allowed_configured_locators': 'any',
+                                    'site_id': 'xtr1_1'},
+                                'xtr1_2': 
+                                    {'allowed_configured_locators': 'any',
+                                    'site_id': 'xtr1_2'},
+                                'xtr1_3': 
+                                    {'allowed_configured_locators': 'any',
+                                    'site_id': 'xtr1_3'}}}}}}}}
 
     golden_output3 = {'execute.return_value': '''
         OTT-LISP-C9K-20-MSMR#show lisp all instance-id * ethernet server detail internal
