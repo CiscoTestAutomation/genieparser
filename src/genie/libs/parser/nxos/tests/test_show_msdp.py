@@ -82,14 +82,10 @@ class test_show_ip_msdp_peer_vrf(unittest.TestCase):
                             "sa_limit": "44",
                             "description": "R4",
                             "elapsed_time": "01:03:22",
-                            "local_address": "33.33.33.34",
-                            "sa_filter": {
-                                "in": "none",
-                                "out": "none"
-                            },
+                            "connect_source_address": "33.33.33.34",
                             "authentication": {
                                 "password": {
-                                    "key": "not set"
+                                    "set": False
                                 },
                             },
                             "connect_source": "loopback3",
@@ -104,7 +100,7 @@ class test_show_ip_msdp_peer_vrf(unittest.TestCase):
                                     "remote": 0,
                                     "local": 0
                                 },
-                                "sent": {
+                                "received": {
                                     "notification": 0,
                                     "data_message": 0,
                                     "sa_response": 0,
@@ -114,7 +110,7 @@ class test_show_ip_msdp_peer_vrf(unittest.TestCase):
                                     "ctrl_message": 0
                                 },
                                 "cache_lifetime": "00:03:30",
-                                "received": {
+                                "sent": {
                                     "notification": 0,
                                     "data_message": 0,
                                     "sa_response": 0,
@@ -143,14 +139,11 @@ class test_show_ip_msdp_peer_vrf(unittest.TestCase):
                             "sa_limit": "111",
                             "description": "R1",
                             "elapsed_time": "01:27:25",
-                            "local_address": "3.3.3.3",
-                            "sa_filter": {
-                                "in": "none",
-                                "out": "none"
-                            },
+                            "connect_source_address": "3.3.3.3",
+                            "reset_reason": 'Keepalive timer expired',
                             "authentication": {
                                 "password": {
-                                    "key": "not set"
+                                    "set": False
                                 },
                             },
                             "connect_source": "loopback0",
@@ -165,7 +158,7 @@ class test_show_ip_msdp_peer_vrf(unittest.TestCase):
                                     "remote": 26743,
                                     "local": 639
                                 },
-                                "sent": {
+                                "received": {
                                     "notification": 0,
                                     "data_message": 0,
                                     "sa_response": 0,
@@ -175,7 +168,7 @@ class test_show_ip_msdp_peer_vrf(unittest.TestCase):
                                     "ctrl_message": 0
                                 },
                                 "cache_lifetime": "00:03:30",
-                                "received": {
+                                "sent": {
                                     "notification": 6,
                                     "data_message": 0,
                                     "sa_response": 0,

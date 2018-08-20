@@ -26,10 +26,11 @@ class ShowIpMsdpPeerVrfSchema(MetaParser):
                     Any(): {
                         'connect_source': str,
                         'peer_as': str,
-                        'local_address': str,
+                        'connect_source_address': str,
                         Optional('authentication'): {
                             'password': {
-                                'key': str,
+                                'set': bool,
+                                Optional('key'): str,
                             }
                         },
                         'enable': bool,
@@ -106,7 +107,7 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
         p1 = re.compile(r'^\s*MSDP +peer +(?P<address>[\d\.]+) +for +VRF +\"(?P<vrf>[\w]+)\"$')
 
         # AS 100, local address: 3.3.3.3 (loopback0)
-        p2 = re.compile(r'^\s*AS +(?P<peer_as>[\d]+), +local address: +(?P<local_address>[\d\.]+)'
+        p2 = re.compile(r'^\s*AS +(?P<peer_as>[\d]+), +local address: +(?P<connect_source_address>[\d\.]+)'
                         ' +\((?P<connect_source>[\w]+)\)$')
         #   Description: R1
         p3 = re.compile(r'^\s*Description: +(?P<description>[\w\s]+)$')
@@ -119,7 +120,7 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
         p5 = re.compile(r'^\s*Uptime\(Downtime\): +(?P<elapsed_time>[\w\:]+)$')
 
         #     Last reset reason: Keepalive timer expired
-        p6 = re.compile(r'^\s*Last +reset +reason: +(?P<reset_reason>[\S]+)$')
+        p6 = re.compile(r'^\s*Last +reset +reason: +(?P<reset_reason>[\S\s]+)$')
 
         #     Password: not set
         p7 = re.compile(r'^\s*Password: +(?P<password>[\w\s]+)$')
@@ -234,7 +235,11 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
             if m:
                 group = m.groupdict()
                 passsword_dict = address_dict.setdefault('authentication',{}).setdefault('password',{})
-                passsword_dict.update({'key': group.get("password")})
+                passsword_dict.update({'set': False if 'not set' in group.get("password") else True})
+                if 'not set' not in group.get("password"):
+                    passsword_dict.update({'key': group.get("password")})
+
+
                 continue
 
             m = p8.match(line)
@@ -264,8 +269,14 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
             m = p12.match(line)
             if m:
                 group = m.groupdict()
-                filter_dict.update({"in": group.get("sa_in")})
-                filter_dict.update({"out": group.get("sa_out")})
+                sa_in = group.get("sa_in")
+                sa_out = group.get("sa_out")
+                if 'none' not in sa_in:
+                    filter_dict.update({"in": sa_in})
+                if 'none' not in sa_out:
+                    filter_dict.update({"out": sa_out})
+                if sa_in == sa_out == 'none':
+                    address_dict.pop('sa_filter')
                 continue
 
             m = p13.match(line)
@@ -296,21 +307,21 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
                 group = m.groupdict()
                 sent_dict = statistic_dict.setdefault("sent", {})
                 received_dict = statistic_dict.setdefault("received", {})
-                sent_dict.update({"sa_request": int(group.get("in_sa_request"))})
-                received_dict.update({"sa_request": int(group.get("out_sa_request"))})
-                sent_dict.update({"total": int(group.get("in_sas"))})
-                received_dict.update({"total": int(group.get("out_sas"))})
-                sent_dict.update({"sa_response": int(group.get("in_sa_response"))})
-                received_dict.update({"sa_response": int(group.get("out_sa_response"))})
+                received_dict.update({"sa_request": int(group.get("in_sa_request"))})
+                sent_dict.update({"sa_request": int(group.get("out_sa_request"))})
+                received_dict.update({"total": int(group.get("in_sas"))})
+                sent_dict.update({"total": int(group.get("out_sas"))})
+                received_dict.update({"sa_response": int(group.get("in_sa_response"))})
+                sent_dict.update({"sa_response": int(group.get("out_sa_response"))})
                 continue
 
             m = p18.match(line)
             if m:
                 group = m.groupdict()
-                sent_dict.update({"ctrl_message": int(group.get("in_ctrl_msg"))})
-                received_dict.update({"ctrl_message": int(group.get("out_ctrl_msg"))})
-                sent_dict.update({"data_message": int(group.get("in_data_messages"))})
-                received_dict.update({"data_message": int(group.get("out_data_messages"))})
+                received_dict.update({"ctrl_message": int(group.get("in_ctrl_msg"))})
+                sent_dict.update({"ctrl_message": int(group.get("out_ctrl_msg"))})
+                received_dict.update({"data_message": int(group.get("in_data_messages"))})
+                sent_dict.update({"data_message": int(group.get("out_data_messages"))})
                 continue
 
             m = p19.match(line)
@@ -324,10 +335,10 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
             m = p20.match(line)
             if m:
                 group = m.groupdict()
-                sent_dict.update({"keepalive": int(group.get("in_keepalive"))})
-                received_dict.update({"keepalive": int(group.get("out_keepalive"))})
-                sent_dict.update({"notification": int(group.get("in_notification"))})
-                received_dict.update({"notification": int(group.get("out_notification"))})
+                received_dict.update({"keepalive": int(group.get("in_keepalive"))})
+                sent_dict.update({"keepalive": int(group.get("out_keepalive"))})
+                received_dict.update({"notification": int(group.get("in_notification"))})
+                sent_dict.update({"notification": int(group.get("out_notification"))})
                 continue
 
             m = p21.match(line)
@@ -410,7 +421,7 @@ class ShowIpMsdpSaCacheDetailVrf(ShowIpMsdpSaCacheDetailVrfSchema):
 
         # Source          Group            RP               ASN         Uptime
         # 173.1.1.2       228.1.1.1        10.106.106.106   100         00:02:43
-        p2 = re.compile(r'^\s*(?P<source>[\d\.]+) +(?P<group>[\d\.]+) +(?P<rp>[\d\.]+) +(?P<asn>[\d\.]+) +(?P<uptime>[\d\:]+)$')
+        p2 = re.compile(r'^\s*(?P<source>[\d\.]+) +(?P<group>[\d\.]+) +(?P<rp>[\d\.]+) +(?P<asn>[\d\.]+) +(?P<uptime>[\d\:\.]+)$')
 
         #     Peer: 10.106.106.106, Expires: 00:02:32
         p3 = re.compile(r'^\s*Peer: +(?P<peer>[\d\.]+), +Expires: +(?P<expire>[\d\:]+)$')
