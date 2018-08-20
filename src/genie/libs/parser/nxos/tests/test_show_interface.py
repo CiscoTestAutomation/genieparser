@@ -2871,18 +2871,43 @@ class test_show_nve_interface(unittest.TestCase):
 
     golden_parsed_output = {'interface':
                                 {'nve1':
-                                    {'source_interface':
-                                        {'loopback0':
+                                    {'state': 'Up',
+                                    'encapsulation': 'VXLAN',
+                                    'source_interface':
+                                        {'loopback1':
                                             {'secondary': '0.0.0.0',
-                                             'primary': '2.0.0.1'}
+                                             'primary': '3.0.0.1'}
+                                        },
+                                    'vpc_capability':
+                                        {'VPC-VIP-Only':
+                                            {'notified': False}
                                         }
                                     }
                                 }
                             }
 
     golden_output = {'execute.return_value': '''\
-        CH-P2-TOR-1# sh nve interface nve 1 detail | grep Source-Interface
-         Source-Interface: loopback0 (primary: 2.0.0.1, secondary: 0.0.0.0)
+        CH-P2-TOR-1# sh nve interface nve 1 detail
+        Interface: nve1, State: Up, encapsulation: VXLAN
+         VPC Capability: VPC-VIP-Only [not-notified]
+         Local Router MAC: 00f2.8b7a.f8ff
+         Host Learning Mode: Control-Plane
+         Source-Interface: loopback1 (primary: 3.0.0.1, secondary: 0.0.0.0)
+         Source Interface State: Up
+         IR Capability Mode: No
+         Virtual RMAC Advertisement: No
+         NVE Flags:
+         Interface Handle: 0x49000001
+         Source Interface hold-down-time: 180
+         Source Interface hold-up-time: 30
+         Remaining hold-down time: 0 seconds
+         Virtual Router MAC: N/A
+         Interface state: nve-intf-add-complete
+         unknown-peer-forwarding: disable
+         down-stream vni config mode: n/a
+        Nve Src node last notif sent: None
+        Nve Mcast Src node last notif sent: None
+        Nve MultiSite Src node last notif sent: None
     '''
     }
 
@@ -3004,4 +3029,4 @@ class test_show_ip_interface_brief_vrf_all(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main() 
