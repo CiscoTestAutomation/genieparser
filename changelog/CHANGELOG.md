@@ -1,4 +1,5 @@
 # 2018
 
-* [May](2018/MAY.md)
+* [August](2018/AUGUST.md)
 * [July](2018/JULY.md)
+* [May](2018/MAY.md)

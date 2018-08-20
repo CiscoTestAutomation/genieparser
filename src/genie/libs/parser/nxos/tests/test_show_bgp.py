@@ -7413,7 +7413,8 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         {'as_override': True,
                         'as_override_count': 9,
                         'bgp_table_version': 2,
-                        'session_state': 'shut (admin)',
+                        'session_state': 'shut',
+                        'state_reason': 'admin',
                         'inherit_peer_policy':
                             {'PEER-POLICY':
                                 {'inherit_peer_seq': 10},
@@ -7491,7 +7492,8 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'sent_bytes_queue': 0,
                 'sent_messages': 0,
                 'sent_notifications': 0,
-                'session_state': 'shut (admin)',
+                'session_state': 'shut',
+                'state_reason': 'admin',
                 'shutdown': True,
                 'tcp_md5_auth': 'enabled',
                 'tcp_md5_auth_config': 'TCP MD5 authentication '
@@ -7911,7 +7913,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 {'address_family':
                     {'ipv4 multicast':
                         {'bgp_table_version': 55,
-                         'session_state': 'idle',
+                        'session_state': 'idle',
                         'neighbor_version': 0,
                         'path':
                             {'accepted_paths': 0,
@@ -8062,7 +8064,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 {'address_family':
                     {'ipv4 unicast':
                         {'bgp_table_version': 6765004,
-                         'session_state': 'established',
+                        'session_state': 'established',
                         'neighbor_version': 6765004,
                         'third_party_nexthop': True,
                         'path':
@@ -8148,7 +8150,8 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 {'address_family':
                     {'ipv4 unicast':
                         {'bgp_table_version': 6765004,
-                         'session_state': 'idle',
+                        'session_state': 'idle',
+                        'state_reason': 'connect failure',
                         'neighbor_version': 0,
                         'path':
                             {'accepted_paths': 0,
@@ -8156,7 +8159,8 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'send_community': 'both'},
                     'ipv6 multicast':
                         {'bgp_table_version': 2,
-                         'session_state': 'idle',
+                        'session_state': 'idle',
+                        'state_reason': 'connect failure',
                         'neighbor_version': 0,
                         'path':
                             {'accepted_paths': 0,
@@ -8164,7 +8168,8 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'send_community': 'both'},
                     'ipv6 unicast':
                         {'bgp_table_version': 2,
-                         'session_state': 'idle',
+                        'session_state': 'idle',
+                        'state_reason': 'connect failure',
                         'neighbor_version': 0,
                         'path':
                             {'accepted_paths': 0,
@@ -8218,6 +8223,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'retry_time': '00:00:29',
                 'router_id': '0.0.0.0',
                 'session_state': 'idle',
+                'state_reason': 'connect failure',
                 'shutdown': False,
                 'up_time': '01:27:55'}}}
 
@@ -8591,7 +8597,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
 
         BGP neighbor is fec1::2002, remote AS 888, ebgp link, Peer index 4
           BGP version 4, remote router ID 0.0.0.0
-          BGP state = Idle, down for 01:27:55, retry in 00:00:29
+          BGP state = Idle (Connect failure), down for 01:27:55, retry in 00:00:29
           Peer is directly attached, interface Ethernet1/1
           Last read never, hold time = 180, keepalive interval is 60 seconds
           Last written never, keepalive timer not running
@@ -9137,41 +9143,47 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                         'route_reflector_client': True,
                         'send_community': 'both'}},
                 'allow_own_as': 0,
-                'bgp_negotiated_keepalive_timers': {'hold_time': 180,
-                                         'keepalive_interval': 60,
-                                         'keepalive_timer': 'not '
-                                                            'running',
-                                         'last_read': 'never',
-                                         'last_written': 'never'},
-                'bgp_neighbor_counters': {'messages': {'received': {'bytes_in_queue': 0,
-                                                         'capability': 0,
-                                                         'keepalives': 0,
-                                                         'notifications': 0,
-                                                         'opens': 0,
-                                                         'route_refresh': 0,
-                                                         'total': 0,
-                                                         'total_bytes': 0,
-                                                         'updates': 0},
-                                            'sent': {'bytes_in_queue': 0,
-                                                     'capability': 0,
-                                                     'keepalives': 0,
-                                                     'notifications': 0,
-                                                     'opens': 0,
-                                                     'route_refresh': 0,
-                                                     'total': 0,
-                                                     'total_bytes': 0,
-                                                     'updates': 0}}},
-                'bgp_session_transport': {'connection': {'dropped': 0,
-                                              'established': 0,
-                                              'last_reset': 'never',
-                                              'reset_by': 'peer',
-                                              'reset_reason': 'no '
-                                                              'error'},
-                               'transport': {'foreign_host': 'unspecified',
-                                             'foreign_port': 'fec1::1002',
-                                             'local_host': '::',
-                                             'local_port': 'unspecified',
-                                             'passive_mode': 'false'}},
+                'bgp_negotiated_keepalive_timers': 
+                    {'hold_time': 180,
+                    'keepalive_interval': 60,
+                    'keepalive_timer': 'not running',
+                    'last_read': 'never',
+                    'last_written': 'never'},
+                'bgp_neighbor_counters': 
+                    {'messages': 
+                        {'received': 
+                            {'bytes_in_queue': 0,
+                            'capability': 0,
+                            'keepalives': 0,
+                            'notifications': 0,
+                            'opens': 0,
+                            'route_refresh': 0,
+                            'total': 0,
+                            'total_bytes': 0,
+                            'updates': 0},
+                        'sent': 
+                            {'bytes_in_queue': 0,
+                            'capability': 0,
+                            'keepalives': 0,
+                            'notifications': 0,
+                            'opens': 0,
+                            'route_refresh': 0,
+                            'total': 0,
+                            'total_bytes': 0,
+                            'updates': 0}}},
+                'bgp_session_transport': 
+                    {'connection': 
+                        {'dropped': 0,
+                        'established': 0,
+                        'last_reset': 'never',
+                        'reset_by': 'peer',
+                        'reset_reason': 'no error'},
+                    'transport': 
+                        {'foreign_host': 'unspecified',
+                        'foreign_port': 'fec1::1002',
+                        'local_host': '::',
+                        'local_port': 'unspecified',
+                        'passive_mode': 'false'}},
                 'bgp_version': 4,
                 'description': 'None',
                 'graceful_restart': False,
@@ -9204,65 +9216,79 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                 {'address_family':
                     {'ipv4 unicast':
                         {'bgp_table_version': 358,
-                         'session_state': 'idle',
+                        'session_state': 'idle',
+                        'state_reason': 'connect failure',
                         'enabled': True,
                         'graceful_restart': False,
                         'ipv4_unicast_send_default_route': False,
                         'neighbor_version': 0,
-                        'path': {'accepted_paths': 0,
-                              'memory_usage': 0},
+                        'path': 
+                            {'accepted_paths': 0,
+                            'memory_usage': 0},
                         'send_community': 'both'},
-                    'ipv6 multicast': {'bgp_table_version': 2,
-                                       'session_state': 'idle',
-                                       'neighbor_version': 0,
-                                       'path': {'accepted_paths': 0,
-                                                'memory_usage': 0},
-                                       'send_community': 'both'},
-                    'ipv6 unicast': {'bgp_table_version': 99,
-                                     'session_state': 'idle',
-                                     'enabled': True,
-                                     'graceful_restart': False,
-                                     'ipv6_unicast_send_default_route': False,
-                                     'neighbor_version': 0,
-                                     'path': {'accepted_paths': 0,
-                                              'memory_usage': 0},
-                                     'send_community': 'both'}},
+                    'ipv6 multicast': 
+                        {'bgp_table_version': 2,
+                        'session_state': 'idle',
+                        'state_reason': 'connect failure',
+                        'neighbor_version': 0,
+                        'path': 
+                            {'accepted_paths': 0,
+                            'memory_usage': 0},
+                        'send_community': 'both'},
+                    'ipv6 unicast': 
+                        {'bgp_table_version': 99,
+                        'session_state': 'idle',
+                        'state_reason': 'connect failure',
+                        'enabled': True,
+                        'graceful_restart': False,
+                        'ipv6_unicast_send_default_route': False,
+                        'neighbor_version': 0,
+                        'path': 
+                            {'accepted_paths': 0,
+                            'memory_usage': 0},
+                        'send_community': 'both'}},
                 'allow_own_as': 0,
-                'bgp_negotiated_keepalive_timers': {'hold_time': 180,
-                                                 'keepalive_interval': 60,
-                                                 'keepalive_timer': 'not '
-                                                                    'running',
-                                                 'last_read': 'never',
-                                                 'last_written': 'never'},
-                'bgp_neighbor_counters': {'messages': {'received': {'bytes_in_queue': 0,
-                                                                 'capability': 0,
-                                                                 'keepalives': 0,
-                                                                 'notifications': 0,
-                                                                 'opens': 0,
-                                                                 'route_refresh': 0,
-                                                                 'total': 0,
-                                                                 'total_bytes': 0,
-                                                                 'updates': 0},
-                                                    'sent': {'bytes_in_queue': 0,
-                                                             'capability': 0,
-                                                             'keepalives': 0,
-                                                             'notifications': 0,
-                                                             'opens': 0,
-                                                             'route_refresh': 0,
-                                                             'total': 0,
-                                                             'total_bytes': 0,
-                                                             'updates': 0}}},
-                'bgp_session_transport': {'connection': {'dropped': 0,
-                                                      'established': 0,
-                                                      'last_reset': 'never',
-                                                      'reset_by': 'peer',
-                                                      'reset_reason': 'no '
-                                                                      'error'},
-                                       'transport': {'foreign_host': 'unspecified',
-                                                     'foreign_port': 'fec1::2002',
-                                                     'local_host': '::',
-                                                     'local_port': 'unspecified',
-                                                     'passive_mode': 'false'}},
+                'bgp_negotiated_keepalive_timers': 
+                    {'hold_time': 180,
+                    'keepalive_interval': 60,
+                    'keepalive_timer': 'not running',
+                    'last_read': 'never',
+                    'last_written': 'never'},
+                'bgp_neighbor_counters': 
+                    {'messages': 
+                        {'received': 
+                            {'bytes_in_queue': 0,
+                            'capability': 0,
+                            'keepalives': 0,
+                            'notifications': 0,
+                            'opens': 0,
+                            'route_refresh': 0,
+                            'total': 0,
+                            'total_bytes': 0,
+                            'updates': 0},
+                        'sent': 
+                            {'bytes_in_queue': 0,
+                            'capability': 0,
+                            'keepalives': 0,
+                            'notifications': 0,
+                            'opens': 0,
+                            'route_refresh': 0,
+                            'total': 0,
+                            'total_bytes': 0,
+                            'updates': 0}}},
+                'bgp_session_transport': 
+                    {'connection': 
+                        {'dropped': 0,
+                        'established': 0,
+                        'last_reset': 'never',
+                        'reset_by': 'peer',
+                        'reset_reason': 'no error'},
+                    'transport': 
+                        {'foreign_host': 'unspecified',
+                        'foreign_port': 'fec1::2002',
+                        'local_host': '::',
+                        'local_port': 'unspecified',
+                        'passive_mode': 'false'}},
                 'bgp_version': 4,
                 'description': 'None',
                 'graceful_restart': False,
@@ -9289,6 +9315,7 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                 'router_id': '0.0.0.0',
                 'send_community': 'BOTH',
                 'session_state': 'idle',
+                'state_reason': 'connect failure',
                 'shutdown': False,
                 'up_time': '1w4d'}}}
 
@@ -9645,7 +9672,7 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
 
         BGP neighbor is fec1::2002, remote AS 888, ebgp link, Peer index 8
           BGP version 4, remote router ID 0.0.0.0
-          BGP state = Idle, down for 1w4d, retry in 00:00:03
+          BGP state = Idle (Connect failure), down for 1w4d, retry in 00:00:03
           Last read never, hold time = 180, keepalive interval is 60 seconds
           Last written never, keepalive timer not running
           Received 0 messages, 0 notifications, 0 bytes in queue
