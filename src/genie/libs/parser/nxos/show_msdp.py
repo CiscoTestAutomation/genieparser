@@ -20,7 +20,7 @@ class ShowIpMsdpPeerVrfSchema(MetaParser):
         show show ip msdp peer vrf <vrf>"""
 
     schema = {
-        'vrfs': {
+        'vrf': {
             Any(): {
                 'peer': {
                     Any(): {
@@ -101,61 +101,86 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
 
         out = self.device.execute('show ip msdp peer vrf {}'.format(vrf if vrf else "all"))
         result_dict = {}
+
         # MSDP peer 1.1.1.1 for VRF "default"
+        p1 = re.compile(r'^\s*MSDP +peer +(?P<address>[\d\.]+) +for +VRF +\"(?P<vrf>[\w]+)\"$')
+
         # AS 100, local address: 3.3.3.3 (loopback0)
+        p2 = re.compile(r'^\s*AS +(?P<peer_as>[\d]+), +local address: +(?P<local_address>[\d\.]+)'
+                        ' +\((?P<connect_source>[\w]+)\)$')
         #   Description: R1
+        p3 = re.compile(r'^\s*Description: +(?P<description>[\w\s]+)$')
+
         #   Connection status: Established
         #   Connection status: Admin-shutdown
+        p4 = re.compile(r'^\s*Connection status: +(?P<session_state>[\w]+)(, +Connecting +in:'
+                        ' +(?P<conecting_time>[\w\:]+))?$')
         #     Uptime(Downtime): 01:27:25
-        #     Last reset reason: Keepalive timer expired
-        #     Password: not set
-        #   Keepalive Interval: 60 sec
-        #   Keepalive Timeout: 90 sec
-        #   Reconnection Interval: 33 sec
-        #   Policies:
-        #     SA in: none, SA out: none
-        #     SA limit: 111
-        #   Member of mesh-group: 1
-        #   Statistics (in/out):
-        #     Last messaged received: 00:00:22
-        #     SAs: 0/0, SA-Requests: 0/0, SA-Responses: 0/0
-        #     In/Out Ctrl Msgs: 0/0, In/Out Data Msgs: 0/0
-        #     Remote/Local Port 26743/639
-        #     Keepalives: 92/119, Notifications: 0/6
-        #     RPF check failures: 0
-        #     Cache Lifetime: 00:03:30
-        #     Established Transitions: 6
-        #     Connection Attempts: 0
-        #     Discontinuity Time: 01:27:25
-
-        p1 = re.compile(r'^\s*MSDP +peer +(?P<address>[\d\.]+) +for +VRF +\"(?P<vrf>[\w]+)\"$')
-        p2 = re.compile(r'^\s*AS +(?P<peer_as>[\d]+), +local address: +(?P<local_address>[\d\.]+) +\((?P<connect_source>[\w]+)\)$')
-        p3 = re.compile(r'^\s*Description: +(?P<description>[\w\s]+)$')
-        p4 = re.compile(r'^\s*Connection status: +(?P<session_state>[\w]+)(, +Connecting +in: +(?P<conecting_time>[\w\:]+))?$')
         p5 = re.compile(r'^\s*Uptime\(Downtime\): +(?P<elapsed_time>[\w\:]+)$')
+
+        #     Last reset reason: Keepalive timer expired
         p6 = re.compile(r'^\s*Last +reset +reason: +(?P<reset_reason>[\S]+)$')
+
+        #     Password: not set
         p7 = re.compile(r'^\s*Password: +(?P<password>[\w\s]+)$')
+
+        #   Keepalive Interval: 60 sec
         p8 = re.compile(r'^\s*Keepalive Interval: +(?P<keepalive_interval>[\d]+) +sec$')
+
+        #   Keepalive Timeout: 90 sec
         p9 = re.compile(r'^\s*Keepalive Timeout: +(?P<keepalive_timeout>[\d]+) +sec$')
+
+        #   Reconnection Interval: 33 sec
         p10 = re.compile(r'^\s*Reconnection Interval: +(?P<reconnection_interval>[\d]+) +sec$')
+
+        #   Policies:
         p11 = re.compile(r'^\s*Policies:$')
+
+        #     SA in: none, SA out: none
         p12 = re.compile(r'^\s*SA +in: +(?P<sa_in>[\w]+), +SA +out: +(?P<sa_out>[\w]+)$')
+
+        #     SA limit: 111
         p13 = re.compile(r'^\s*SA +limit: +(?P<sa_limit>[\w]+)$')
+
+        #   Member of mesh-group: 1
         p14 = re.compile(r'^\s*Member +of +mesh-group: +(?P<mesh_group>[\w]+)$')
+
+        #   Statistics (in/out):
         p15 = re.compile(r'^\s*Statistics +\(in/out\):$')
+
+        #     Last messaged received: 00:00:22
         p16 = re.compile(r'^\s*Last messaged received: +(?P<last_message_received>[\w\:]+)$')
-        p17 = re.compile(r'^\s*SAs: +(?P<in_sas>[\d]+)/+(?P<out_sas>[\d]+), +SA-Requests: +(?P<in_sa_request>[\d]+)/+(?P<out_sa_request>[\d]+)'
+
+        #     SAs: 0/0, SA-Requests: 0/0, SA-Responses: 0/0
+        p17 = re.compile(r'^\s*SAs: +(?P<in_sas>[\d]+)/+(?P<out_sas>[\d]+), +SA-Requests:'
+                         ' +(?P<in_sa_request>[\d]+)/+(?P<out_sa_request>[\d]+)'
                          ', SA-Responses: +(?P<in_sa_response>[\d]+)/+(?P<out_sa_response>[\d]+)$')
+
+        #     In/Out Ctrl Msgs: 0/0, In/Out Data Msgs: 0/0
         p18 = re.compile(r'^\s*In/Out +Ctrl +Msgs: +(?P<in_ctrl_msg>[\d]+)/+(?P<out_ctrl_msg>[\d]+), In/Out Data Msgs:'
                          ' +(?P<in_data_messages>[\d]+)/+(?P<out_data_messages>[\d]+)$')
+
+        #     Remote/Local Port 26743/639
         p19 = re.compile(r'^\s*Remote/Local Port +(?P<remote_port>[\d]+)/+(?P<local_port>[\d]+)$')
+
+        #     Keepalives: 92/119, Notifications: 0/6
         p20 = re.compile(
             r'^\s*Keepalives: +(?P<in_keepalive>[\d]+)/+(?P<out_keepalive>[\d]+), Notifications:'
             ' +(?P<in_notification>[\d]+)/+(?P<out_notification>[\d]+)$')
+
+        #     RPF check failures: 0
         p21 = re.compile(r'^\s*RPF check failures: +(?P<rpf_check_failures>[\d]+)$')
+
+        #     Cache Lifetime: 00:03:30
         p22 = re.compile(r'^\s*Cache Lifetime: +(?P<cache_lifetime>[\w\:]+)$')
+
+        #     Established Transitions: 6
         p23 = re.compile(r'^\s*Established Transitions: +(?P<established_transition>[\d]+)$')
+
+        #     Connection Attempts: 0
         p24 = re.compile(r'^\s*Connection Attempts: +(?P<connection_attemps>[\d]+)$')
+
+        #     Discontinuity Time: 01:27:25
         p25 = re.compile(r'^\s*Discontinuity Time: +(?P<discontinuity_time>[\w\:]+)$')
 
         for line in out.splitlines():
@@ -169,7 +194,7 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
                 group = m.groupdict()
                 address = group.get("address")
                 vrf = group.get("vrf")
-                peer_dict = result_dict.setdefault('vrfs',{}).setdefault(vrf,{}).setdefault('peer',{})
+                peer_dict = result_dict.setdefault('vrf',{}).setdefault(vrf,{}).setdefault('peer',{})
                 address_dict = peer_dict.setdefault(address,{})
                 continue
 
@@ -346,7 +371,7 @@ class ShowIpMsdpSaCacheDetailVrfSchema(MetaParser):
         show ip msdp sa-cache detail vrf <vrf>"""
 
     schema = {
-        'vrfs': {
+        'vrf': {
             Any(): {
                 'sa_cache': {
                     Any(): {
@@ -402,7 +427,7 @@ class ShowIpMsdpSaCacheDetailVrf(ShowIpMsdpSaCacheDetailVrfSchema):
                 vrf = group.get("vrf")
                 entries = int(group.get("number_of_entries"))
                 if entries:
-                    sa_cache_dict = result_dict.setdefault('vrfs',{}).setdefault(vrf,{}).setdefault('sa_cache',{})
+                    sa_cache_dict = result_dict.setdefault('vrf',{}).setdefault(vrf,{}).setdefault('sa_cache',{})
                 continue
 
             m = p2.match(line)

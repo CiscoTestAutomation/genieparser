@@ -23,7 +23,7 @@ class test_show_ip_msdp_sa_cache_detail_vrf(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-        'vrfs': {
+        'vrf': {
             'default':{
                 'sa_cache': {
                     "228.1.1.1 173.1.1.2": {
@@ -75,7 +75,7 @@ class test_show_ip_msdp_peer_vrf(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-            "vrfs": {
+            "vrf": {
                 "VRF1": {
                     "peer": {
                         "44.44.44.44": {
