@@ -2096,6 +2096,7 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                  Optional('bgp_version'): int,
                  Optional('router_id'): str,
                  Optional('session_state'): str,
+                 Optional('state_reason'): str,
                  Optional('shutdown'): bool,
                  Optional('up_time'): str,
                  Optional('peer_group'): str,
@@ -2193,6 +2194,7 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                     {Any(): 
                         {Optional('bgp_table_version'): int,
                          Optional('session_state'): str,
+                         Optional('state_reason'): str,
                          Optional('neighbor_version'): int,
                          Optional('send_community'): str,
                          Optional('soo'): str,
@@ -2296,14 +2298,17 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
             # BGP state = Established, up for 5w0d
             # BGP state = Idle, down for 4w6d, retry in 0.000000
             # BGP state = Shut (Admin), down for 5w0d
-            p4 = re.compile(r'^\s*BGP +state +='
-                             ' +(?P<session_state>[a-zA-Z\(\)\s]+), +(up|down)'
-                             ' +for +(?P<up_time>[a-zA-Z0-9\:\.]+)'
+            p4 = re.compile(r'^\s*\s*BGP +state += +(?P<session_state>(\S+))'
+                             '(?: +\((?P<reason>([a-zA-Z\s]+))\))?,'
+                             ' +(up|down) +for +(?P<up_time>[a-zA-Z0-9\:\.]+)'
                              '(?: *, +retry +in +(?P<retry_time>[0-9\.\:]+))?$')
             m = p4.match(line)
             if m:
                 parsed_dict['neighbor'][neighbor_id]['session_state'] = \
                         str(m.groupdict()['session_state']).lower()
+                if m.groupdict()['reason']:
+                    parsed_dict['neighbor'][neighbor_id]['state_reason'] = \
+                        str(m.groupdict()['reason']).lower()
                 parsed_dict['neighbor'][neighbor_id]['up_time'] = \
                         str(m.groupdict()['up_time'])
                 parsed_dict['neighbor'][neighbor_id]['retry_time'] = \
@@ -2768,8 +2773,12 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                     ['address_family']:
                     parsed_dict['neighbor'][neighbor_id]['address_family']\
                         [address_family] = {}
-                parsed_dict['neighbor'][neighbor_id]['address_family'][address_family] \
-                    ['session_state'] = session_state.lower()
+                parsed_dict['neighbor'][neighbor_id]['address_family']\
+                    [address_family]['session_state'] = session_state.lower()
+                if 'state_reason' in parsed_dict['neighbor'][neighbor_id]:
+                    parsed_dict['neighbor'][neighbor_id]['address_family']\
+                    [address_family]['state_reason'] = \
+                        parsed_dict['neighbor'][neighbor_id]['state_reason']
                 continue
 
             # BGP table version 48, neighbor version 48

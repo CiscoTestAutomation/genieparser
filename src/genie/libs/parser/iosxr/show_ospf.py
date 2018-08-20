@@ -2807,8 +2807,9 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
 
             # OSPF Router with ID (3.3.3.3) (Process ID 1)
             # OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
+            # OSPF Router with ID (1.1.1.1) (Process ID mpls1)
             p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
-                             ' +\(Process +ID +(?P<instance>(\d+))'
+                             ' +\(Process +ID +(?P<instance>(\S+))'
                              '(?:, +VRF +(?P<vrf>(\S+)))?\)$')
             m = p1.match(line)
             if m:
