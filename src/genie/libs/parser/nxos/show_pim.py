@@ -4203,7 +4203,7 @@ class ShowRunningConfigPim(ShowRunningConfigPimSchema):
         p4 = re.compile(r'^$')
 
         # ip pim send-rp-announce loopback0 group-list 236.0.0.0/8
-        # ----  ipv6 mpt supported -----
+        # ----  ipv6 not supported -----
         p5 = re.compile(r'^ip +pim +(send\-rp\-announce|(auto\-rp +rp\-candidate)) +'
                          '((?P<send_rp_announce_intf>(lo|Lo|Eth|eth|Port|port)\w+)|'
                          '(?P<send_rp_announce_rp_group>(\d+\.){3}\d+)) +'
@@ -4214,7 +4214,7 @@ class ShowRunningConfigPim(ShowRunningConfigPimSchema):
 
         # ip pim send-rp-discovery loopback0
         # ip pim send-rp-discovery loopback0 scope 34
-        # ----  ipv6 mpt supported -----
+        # ----  ipv6 not supported -----
         p6 = re.compile(r'^ip +pim +send\-rp\-discovery +(?P<send_rp_discovery_intf>[\w\/\.\-]+)'
                          '( scope +(?P<send_rp_discovery_scope>\d+))?$')
 
@@ -4232,7 +4232,7 @@ class ShowRunningConfigPim(ShowRunningConfigPimSchema):
         p10 = re.compile(r'^$')
 
         # ip pim auto-rp forward listen
-        # ----  ipv6 mpt supported -----
+        # ----  ipv6 not supported -----
         p11 = re.compile(r'^ip +pim +auto\-rp +forward +listen$')
 
         for line in out.splitlines():
