@@ -2625,13 +2625,18 @@ class ShowIpPimNeighbor(ShowIpPimNeighborSchema):
             # Neighbor        Interface            Uptime    Expires   DR       Bidir-  BFD
             #                                              Priority Capable State
             # 10.11.33.33     Ethernet2/2          07:31:30  00:01:25  1        yes     n/a
+            
+            # Neighbor        Interface            Uptime    Expires   DR       Bidir-  BFD    ECMP Redirect
+            #                                                          Priority Capable State     Capable
+            # 10.2.3.3        Ethernet1/3.11       00:31:08  00:01:39  1        yes     n/a     no
             p2 = re.compile(r'^\s*(?P<neighbor>[\S]+)'
                             ' +(?P<intf_name>[\S]+)'
                             ' +(?P<up_time>[\S]+)'
                             ' +(?P<expires>[\S]+)'
                             ' +(?P<dr_priority>\d+)'
                             ' +(?P<bidir_capable>\w+)'
-                            ' +(?P<bfd_state>[\S]+)$')
+                            ' +(?P<bfd_state>[\S]+)'
+                            '( +(?P<redict_capable>[\S]+))?$')
             m = p2.match(line)
             if m:
                 neighbor = m.groupdict()['neighbor']
