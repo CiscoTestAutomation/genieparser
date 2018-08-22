@@ -3430,11 +3430,16 @@ class test_show_lisp_service_server_summary(unittest.TestCase):
                         {'instance_id':
                             {'101':
                                 {'map_server': 
-                                    {'counters': 
-                                        {'num_configured_eid_prefixes': 2,
-                                        'num_configured_sites': 2,
-                                        'num_registered_eid_prefixes': 2,
-                                        'num_registered_sites': 2,
+                                    {'summary': 
+                                        {'number_registered_sites': 2,
+                                        'number_configured_sites': 2,
+                                        'af_datum': 
+                                            {'ipv4-afi':
+                                                {'address_type': 'ipv4-afi',
+                                                'number_registered_eids': 2,
+                                                'number_configured_eids': 2,
+                                                },
+                                            },
                                         'sites_with_inconsistent_registrations': 0},
                                     'sites': 
                                         {'xtr1_1': 
@@ -3475,11 +3480,16 @@ class test_show_lisp_service_server_summary(unittest.TestCase):
                         {'instance_id':
                             {'101':
                                 {'map_server': 
-                                    {'counters': 
-                                        {'num_configured_eid_prefixes': 2,
-                                        'num_configured_sites': 2,
-                                        'num_registered_eid_prefixes': 2,
-                                        'num_registered_sites': 2,
+                                    {'summary': 
+                                        {'number_configured_sites': 2,
+                                        'number_registered_sites': 2,
+                                        'af_datum':
+                                            {'ipv6-afi':
+                                                {'address_type': 'ipv6-afi',
+                                                'number_configured_eids': 2,
+                                                'number_registered_eids': 2,
+                                                },
+                                            },
                                         'sites_with_inconsistent_registrations': 0},
                                     'sites': 
                                         {'xtr1_1': 
@@ -3520,9 +3530,9 @@ class test_show_lisp_service_server_summary(unittest.TestCase):
                         {'instance_id': 
                             {'101': 
                                 {'map_server': 
-                                    {'counters': 
-                                        {'num_configured_sites': 1,
-                                        'num_registered_sites': 0,
+                                    {'summary': 
+                                        {'number_configured_sites': 1,
+                                        'number_registered_sites': 0,
                                         'site_registration_count': 0,
                                         'site_registration_limit': 0,
                                         'sites_with_inconsistent_registrations': 0},
@@ -3532,60 +3542,90 @@ class test_show_lisp_service_server_summary(unittest.TestCase):
                                             'inconsistent': 0,
                                             'registered': 0,
                                             'site_id': 'xtr1_1'}}}},
-                            '102': {'map_server': {'counters': {'num_configured_sites': 1,
-                                                                'num_registered_sites': 0,
-                                                                'site_registration_count': 0,
-                                                                'site_registration_limit': 0,
-                                                                'sites_with_inconsistent_registrations': 0},
-                                                   'sites': {'xtr1_2': {'configured': 0,
-                                                                        'inconsistent': 0,
-                                                                        'registered': 0,
-                                                                        'site_id': 'xtr1_2'}}}},
-                            '103': {'map_server': {'counters': {'num_configured_sites': 1,
-                                                                'num_registered_sites': 0,
-                                                                'site_registration_count': 0,
-                                                                'site_registration_limit': 0,
-                                                                'sites_with_inconsistent_registrations': 0},
-                                                   'sites': {'provider': {'configured': 0,
-                                                                          'inconsistent': 0,
-                                                                          'registered': 0,
-                                                                          'site_id': 'provider'}}}},
-                            '104': {'map_server': {'counters': {'num_configured_sites': 1,
-                                                                'num_registered_sites': 0,
-                                                                'site_registration_count': 0,
-                                                                'site_registration_limit': 0,
-                                                                'sites_with_inconsistent_registrations': 0},
-                                                   'sites': {'xtr1_3': {'configured': 0,
-                                                                        'inconsistent': 0,
-                                                                        'registered': 0,
-                                                                        'site_id': 'xtr1_3'}}}},
-                            '107': {'map_server': {'counters': {'num_configured_sites': 1,
-                                                                'num_registered_sites': 0,
-                                                                'site_registration_count': 0,
-                                                                'site_registration_limit': 0,
-                                                                'sites_with_inconsistent_registrations': 0},
-                                                   'sites': {'prov1': {'configured': 0,
-                                                                       'inconsistent': 0,
-                                                                       'registered': 0,
-                                                                       'site_id': 'prov1'}}}},
-                            '108': {'map_server': {'counters': {'num_configured_sites': 1,
-                                                                'num_registered_sites': 0,
-                                                                'site_registration_count': 0,
-                                                                'site_registration_limit': 0,
-                                                                'sites_with_inconsistent_registrations': 0},
-                                                   'sites': {'prov2': {'configured': 0,
-                                                                       'inconsistent': 0,
-                                                                       'registered': 0,
-                                                                       'site_id': 'prov2'}}}},
-                            '109': {'map_server': {'counters': {'num_configured_sites': 1,
-                                                                'num_registered_sites': 0,
-                                                                'site_registration_count': 0,
-                                                                'site_registration_limit': 0,
-                                                                'sites_with_inconsistent_registrations': 0},
-                                                   'sites': {'prov3': {'configured': 0,
-                                                                       'inconsistent': 0,
-                                                                       'registered': 0,
-                                                                       'site_id': 'prov3'}}}}}}}}}}
+                            '102': 
+                                {'map_server': 
+                                    {'summary': 
+                                        {'number_configured_sites': 1,
+                                        'number_registered_sites': 0,
+                                        'site_registration_count': 0,
+                                        'site_registration_limit': 0,
+                                        'sites_with_inconsistent_registrations': 0},
+                                    'sites': 
+                                        {'xtr1_2': 
+                                            {'configured': 0,
+                                            'inconsistent': 0,
+                                            'registered': 0,
+                                            'site_id': 'xtr1_2'}}}},
+                            '103': 
+                                {'map_server': 
+                                    {'summary': 
+                                        {'number_configured_sites': 1,
+                                        'number_registered_sites': 0,
+                                        'site_registration_count': 0,
+                                        'site_registration_limit': 0,
+                                        'sites_with_inconsistent_registrations': 0},
+                                    'sites': 
+                                        {'provider': 
+                                            {'configured': 0,
+                                            'inconsistent': 0,
+                                            'registered': 0,
+                                            'site_id': 'provider'}}}},
+                            '104': 
+                                {'map_server': 
+                                    {'summary': 
+                                        {'number_configured_sites': 1,
+                                        'number_registered_sites': 0,
+                                        'site_registration_count': 0,
+                                        'site_registration_limit': 0,
+                                        'sites_with_inconsistent_registrations': 0},
+                                    'sites': 
+                                        {'xtr1_3': 
+                                            {'configured': 0,
+                                            'inconsistent': 0,
+                                            'registered': 0,
+                                            'site_id': 'xtr1_3'}}}},
+                            '107': 
+                                {'map_server': 
+                                    {'summary': 
+                                        {'number_configured_sites': 1,
+                                        'number_registered_sites': 0,
+                                        'site_registration_count': 0,
+                                        'site_registration_limit': 0,
+                                        'sites_with_inconsistent_registrations': 0},
+                                    'sites': 
+                                        {'prov1': 
+                                            {'configured': 0,
+                                            'inconsistent': 0,
+                                            'registered': 0,
+                                            'site_id': 'prov1'}}}},
+                            '108': 
+                                {'map_server': 
+                                    {'summary': 
+                                        {'number_configured_sites': 1,
+                                        'number_registered_sites': 0,
+                                        'site_registration_count': 0,
+                                        'site_registration_limit': 0,
+                                        'sites_with_inconsistent_registrations': 0},
+                                    'sites': 
+                                        {'prov2': 
+                                            {'configured': 0,
+                                            'inconsistent': 0,
+                                            'registered': 0,
+                                            'site_id': 'prov2'}}}},
+                            '109': 
+                                {'map_server': 
+                                    {'summary': 
+                                        {'number_configured_sites': 1,
+                                        'number_registered_sites': 0,
+                                        'site_registration_count': 0,
+                                        'site_registration_limit': 0,
+                                        'sites_with_inconsistent_registrations': 0},
+                                    'sites': 
+                                        {'prov3': 
+                                            {'configured': 0,
+                                            'inconsistent': 0,
+                                            'registered': 0,
+                                            'site_id': 'prov3'}}}}}}}}}}
 
     golden_output3 = {'execute.return_value': '''
         OTT-LISP-C9K-20-MSMR#show lisp all instance-id * ethernet server summary
@@ -4913,7 +4953,6 @@ class test_show_lisp_service_statistics(unittest.TestCase):
           Invalid LISP checksum drops:              0
           Unsupported LISP packet type drops:       0
           Unknown packet drops:                     0
-
         '''}
 
     golden_parsed_output3 = {

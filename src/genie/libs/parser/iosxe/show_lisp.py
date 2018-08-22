@@ -2337,8 +2337,8 @@ class ShowLispServiceServerSummarySchema(MetaParser):
         'lisp_router_instances':
             {Any():
                 {'lisp_router_instance_id': int,
-                Optional('service'):
-                    {Optional(Any()):
+                'service':
+                    {Any():
                         {'instance_id':
                             {Any():
                                 {'map_server':
@@ -2350,11 +2350,16 @@ class ShowLispServiceServerSummarySchema(MetaParser):
                                             'inconsistent': int,
                                             },
                                         },
-                                    'counters':
-                                        {'num_configured_sites': int,
-                                        'num_registered_sites':int,
-                                        Optional('num_configured_eid_prefixes'): int,
-                                        Optional('num_registered_eid_prefixes'): int,
+                                    'summary':
+                                        {'number_configured_sites': int,
+                                        'number_registered_sites':int,
+                                        Optional('af_datum'):
+                                            {Any():
+                                                {'address_type': str,
+                                                Optional('number_configured_eids'): int,
+                                                Optional('number_registered_eids'): int,
+                                                },
+                                            },
                                         'sites_with_inconsistent_registrations': int,
                                         Optional('site_registration_limit'): int,
                                         Optional('site_registration_count'): int,
@@ -2381,8 +2386,8 @@ class ShowLispServiceServerSummary(ShowLispServiceServerSummarySchema):
         assert service in ['ipv4', 'ipv6', 'ethernet']
 
         # Execute command on device
-        out = self.device.execute('show lisp all service instance_id '
-                                  '{instance_id} {service} server summary'.\
+        out = self.device.execute('show lisp all instance-id {instance_id} '
+                                  '{service} server summary'.\
                             format(service=service, instance_id=instance_id))
 
         # Init vars
@@ -2463,55 +2468,59 @@ class ShowLispServiceServerSummary(ShowLispServiceServerSummarySchema):
                 sites_dict['registered'] = int(group['registered'])
                 sites_dict['inconsistent'] = int(group['incons'])
                 # Create counters dict
-                counters_dict = ms_dict.setdefault('counters', {})
+                summary_dict = ms_dict.setdefault('summary', {})
                 continue
 
             # Number of configured sites:                     2
             m = p3.match(line)
             if m:
-                counters_dict['num_configured_sites'] = \
+                summary_dict['number_configured_sites'] = \
                     int(m.groupdict()['val'])
                 continue
 
             # Number of registered sites:                     2
             m = p4.match(line)
             if m:
-                counters_dict['num_registered_sites'] = \
+                summary_dict['number_registered_sites'] = \
                     int(m.groupdict()['val'])
                 continue
 
             # Number of configured EID prefixes:            2
             m = p5.match(line)
             if m:
-                counters_dict['num_configured_eid_prefixes'] = \
+                address_type = service + '-afi'
+                datum_dict = summary_dict.setdefault('af_datum', {}).\
+                                setdefault(address_type, {})
+                datum_dict['address_type'] = address_type
+                datum_dict['number_configured_eids'] = \
                     int(m.groupdict()['val'])
                 continue
 
             # Number of registered EID prefixes:            2
             m = p6.match(line)
             if m:
-                counters_dict['num_registered_eid_prefixes'] = \
+                datum_dict['number_registered_eids'] = \
                     int(m.groupdict()['val'])
                 continue
 
             # Site-registration limit for router lisp 2:            0
             m = p7.match(line)
             if m:
-                counters_dict['site_registration_limit'] = \
+                summary_dict['site_registration_limit'] = \
                     int(m.groupdict()['val'])
                 continue
 
             # Site-registration count for router lisp 2:            0
             m = p8.match(line)
             if m:
-                counters_dict['site_registration_count'] = \
+                summary_dict['site_registration_count'] = \
                     int(m.groupdict()['val'])
                 continue
 
             # Sites with inconsistent registrations:          0
             m = p9.match(line)
             if m:
-                counters_dict['sites_with_inconsistent_registrations'] = \
+                summary_dict['sites_with_inconsistent_registrations'] = \
                     int(m.groupdict()['val'])
                 continue
 
@@ -3013,9 +3022,9 @@ class ShowLispServiceStatistics(ShowLispServiceStatisticsSchema):
         assert service in ['ipv4', 'ipv6', 'ethernet']
 
         # Execute command on device
-        out = self.device.execute('show lisp all service instance_id '
-                                  '{instance_id} {service} statistics'.\
-                            format(service=service, instance_id=instance_id))
+        out = self.device.execute('show lisp all instance-id {instance_id} '
+                                  '{service} statistics'.format(service=service,
+                                  instance_id=instance_id))
 
         # Init vars
         parsed_dict = {}
