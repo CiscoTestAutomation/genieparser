@@ -286,20 +286,20 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
                             {'ff1e:1111::1:0/128': 
                                 {'source_address': 
                                     {'*': 
-                                        {'flags': 'mld pim6 ipv6',
+                                        {'flags': 'ipv6 mld pim6',
                                         'incoming_interface_list': 
                                             {'loopback10': 
                                                 {'rpf_nbr': '2001:9999::1'}},
                                         'oil_count': '3',
                                         'uptime': '00:04:03'},
                                     '2001::222:1:1:1234/128': 
-                                        {'flags': 'ipv6 pim6 m6rib',
+                                        {'flags': 'ipv6 m6rib pim6',
                                         'incoming_interface_list': 
                                             {'Ethernet1/33.10': 
                                                 {'rpf_nbr': '2001::222:1:1:1234, internal'}},
                                         'oil_count': '3',
                                         'uptime': '00:04:03'},
-                                    '2001::222:1:2:1234/128': {'flags': 'ipv6 pim6 m6rib',
+                                    '2001::222:1:2:1234/128': {'flags': 'ipv6 m6rib pim6',
                                                              'incoming_interface_list': {'Ethernet1/33.11': {'rpf_nbr': '2001::222:1:2:1234, '
                                                                                                                         'internal'}},
                                                              'oil_count': '3',
@@ -307,12 +307,12 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
                                                                                                              'oil_flags': 'm6rib',
                                                                                                              'oil_uptime': '00:04:03'}},
                                                              'uptime': '00:04:03'},
-                                    '2001::222:2:3:1234/128': {'flags': 'pim6 m6rib ipv6',
+                                    '2001::222:2:3:1234/128': {'flags': 'ipv6 m6rib pim6',
                                                              'incoming_interface_list': {'Ethernet1/26': {'rpf_nbr': 'fe80::10, '
                                                                                                                      'internal'}},
                                                              'oil_count': '1',
                                                              'uptime': '00:04:03'},
-                                    '2001::222:2:44:1234/128': {'flags': 'pim6 m6rib ipv6',
+                                    '2001::222:2:44:1234/128': {'flags': 'ipv6 m6rib pim6',
                                                               'incoming_interface_list': {'Ethernet1/26': {'rpf_nbr': 'fe80::10, '
                                                                                                                       'internal'}},
                                                               'oil_count': '1',
@@ -320,16 +320,16 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
                             'ff1e:1111:ffff::/128': 
                                 {'source_address': 
                                     {'*': 
-                                        {'flags': 'mld pim6 ipv6',
+                                        {'flags': 'ipv6 mld pim6',
                                         'incoming_interface_list': {'Ethernet1/33.10': {'rpf_nbr': '2001::222:1:1:1'}},
                                         'oil_count': '2',
                                         'uptime': '00:04:03'},
-                                    '2001::222:1:1:1234/128': {'flags': 'ipv6 pim6 m6rib',
+                                    '2001::222:1:1:1234/128': {'flags': 'ipv6 m6rib pim6',
                                                                'incoming_interface_list': {'Ethernet1/33.10': {'rpf_nbr': '2001::222:1:1:1234, '
                                                                                                                           'internal'}},
                                                                'oil_count': '3',
                                                                'uptime': '00:04:03'},
-                                    '2001::222:1:2:1234/128': {'flags': 'ipv6 pim6 m6rib',
+                                    '2001::222:1:2:1234/128': {'flags': 'ipv6 m6rib pim6',
                                                                'incoming_interface_list': {'Ethernet1/33.11': {'rpf_nbr': '2001::222:1:2:1234, '
                                                                                                                           'internal'}},
                                                                'oil_count': '2',
@@ -337,12 +337,12 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
                                                                                                                'oil_flags': 'm6rib',
                                                                                                                'oil_uptime': '00:04:03'}},
                                                                'uptime': '00:04:03'},
-                                    '2001::222:2:3:1234/128': {'flags': 'pim6 m6rib ipv6',
+                                    '2001::222:2:3:1234/128': {'flags': 'ipv6 m6rib pim6',
                                                                'incoming_interface_list': {'Ethernet1/26': {'rpf_nbr': 'fe80::10, '
                                                                                                                        'internal'}},
                                                                'oil_count': '1',
                                                                'uptime': '00:04:03'},
-                                    '2001::222:2:44:1234/128': {'flags': 'pim6 m6rib ipv6',
+                                    '2001::222:2:44:1234/128': {'flags': 'ipv6 m6rib pim6',
                                                                 'incoming_interface_list': {'Ethernet1/26': {'rpf_nbr': 'fe80::10, '
                                                                                                                         'internal'}},
                                                                 'oil_count': '1',
@@ -350,7 +350,7 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
                             'ff1e:2222:ffff::/128': 
                                 {'source_address': 
                                     {'*': 
-                                        {'flags': 'mld pim6 ipv6',
+                                        {'flags': 'ipv6 mld pim6',
                                         'incoming_interface_list': 
                                             {'Ethernet1/26': 
                                                 {'rpf_nbr': 'fe80::10'}},
@@ -377,7 +377,7 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
                                                                 'uptime': '00:04:02'}}},
                             'ff1e:2222:ffff::1:0/128': 
                                 {'source_address': 
-                                    {'*': {'flags': 'mld pim6 ipv6',
+                                    {'*': {'flags': 'ipv6 mld pim6',
                                           'incoming_interface_list': {'Ethernet1/26': {'rpf_nbr': 'fe80::10'}},
                                           'oil_count': '1',
                                           'uptime': '00:04:03'},
@@ -399,7 +399,7 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
                             'ff1e:3333::1:0/128': 
                                 {'source_address': 
                                     {'*': 
-                                        {'flags': 'mld pim6 ipv6',
+                                        {'flags': 'ipv6 mld pim6',
                                         'incoming_interface_list': {'Ethernet1/26': {'rpf_nbr': 'fe80::10'}},
                                         'oil_count': '1',
                                         'uptime': '00:04:03'},
@@ -417,7 +417,7 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
                             'ff1e:3333:ffff::/128': 
                                 {'source_address': 
                                     {'*': 
-                                        {'flags': 'mld pim6 ipv6',
+                                        {'flags': 'ipv6 mld pim6',
                                         'incoming_interface_list': {'Ethernet1/26': {'rpf_nbr': 'fe80::10'}},
                                         'oil_count': '1',
                                         'uptime': '00:04:03'},
@@ -451,7 +451,7 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
                             'ff30::/12': 
                                 {'source_address': 
                                     {'*': 
-                                        {'flags': 'pim6 ipv6',
+                                        {'flags': 'ipv6 pim6',
                                         'incoming_interface_list': {'Null': {'rpf_nbr': '0::'}},
                                         'oil_count': '0',
                                         'uptime': '19:55:47'}}}}}}},
@@ -462,7 +462,7 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
                             {'ff30::/12': 
                                 {'source_address': 
                                     {'*': 
-                                        {'flags': 'pim6 ipv6',
+                                        {'flags': 'ipv6 pim6',
                                         'incoming_interface_list': {'Null': {'rpf_nbr': '0::'}},
                                         'oil_count': '0',
                                         'uptime': '00:11:23'}}}}}}}}}
@@ -658,7 +658,7 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
                             {'ff30::/12': 
                                 {'source_address': 
                                     {'*': 
-                                        {'flags': 'pim6 ipv6',
+                                        {'flags': 'ipv6 pim6',
                                         'incoming_interface_list': 
                                             {'Null': 
                                                 {'rpf_nbr': '0::'}},
@@ -681,7 +681,7 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
                             'ff30::/12': 
                                 {'source_address': 
                                     {'*': 
-                                        {'flags': 'pim6 ipv6',
+                                        {'flags': 'ipv6 pim6',
                                         'incoming_interface_list': 
                                             {'Null': 
                                                 {'rpf_nbr': '0::'}},
@@ -718,6 +718,7 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
             parsed_output = ipv6_mroute_vrf_all_obj.parse()
 
     def test_golden(self):
+        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         ipv6_mroute_vrf_all_obj = ShowIpv6MrouteVrfAll(device=self.device)
         parsed_output = ipv6_mroute_vrf_all_obj.parse()
