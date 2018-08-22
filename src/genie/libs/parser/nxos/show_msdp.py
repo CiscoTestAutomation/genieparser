@@ -422,7 +422,7 @@ class ShowIpMsdpSaCacheDetailVrf(ShowIpMsdpSaCacheDetailVrfSchema):
 
         # Source          Group            RP               ASN         Uptime
         # 173.1.1.2       228.1.1.1        10.106.106.106   100         00:02:43
-        p2 = re.compile(r'^\s*(?P<source>[\d\.]+) +(?P<group>[\d\.]+) +(?P<rp>[\d\.]+) +(?P<asn>[\d\.]+) +(?P<uptime>[\d\:\.]+)$')
+        p2 = re.compile(r'^\s*(?P<source>[\d\.]+) +(?P<group>[\d\.]+) +(?P<rp>[\d\.]+) +(?P<asn>[\d\.]+) +(?P<uptime>[\w\:\.]+)$')
 
         #     Peer: 10.106.106.106, Expires: 00:02:32
         p3 = re.compile(r'^\s*Peer: +(?P<peer>[\d\.]+), +Expires: +(?P<expire>[\d\:]+)$')
