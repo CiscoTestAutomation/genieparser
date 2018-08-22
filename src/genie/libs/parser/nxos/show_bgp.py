@@ -9889,6 +9889,15 @@ class ShowBgpL2vpnEvpnRouteTypeSchema(MetaParser):
                                                         Optional('advertisedto'): list,
                                                         Optional('originatorid'): str,
                                                         Optional('clusterlist'): list,
+                                                        Optional('tunnel_attribute'): {
+                                                            Any(): {
+                                                                Optional('flags'): str,
+                                                                Optional('label'): str,
+                                                                Optional('tunnel_type'): str,
+                                                                Optional('tunnel_id'): str,
+
+                                                            }
+                                                        }
                                                     }
                                                 }
                                              }
@@ -9911,6 +9920,7 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
     """parser for:
         show bgp l2vpn evpn route-type <1>
         show bgp l2vpn evpn route-type <2>
+        show bgp l2vpn evpn route-type <3>
         show bgp l2vpn evpn route-type <4>"""
 
     def cli(self,route_type):
@@ -9939,23 +9949,30 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
 
         p1 = re.compile(r'^\s*BGP +routing +table +information +for +VRF +(?P<vrf_name_out>[\w]+),'
                         ' +address +family +(?P<af_name>[\w\s]+)$')
-        p2 = re.compile(r'^\s*Route Distinguisher: +(?P<rd>[\w\.\:]+)( +\(ES +(?P<es>[\w\s\[\]\.]+)\))?( +\(L(2|3)VNI +(?P<rd_vniid>[\d]+)\))?$')
+        p2 = re.compile(r'^\s*Route Distinguisher: +(?P<rd>[\w\.\:]+)( +\(ES +(?P<es>[\w\s\[\]\.]+)\))?( +\((?P<rd_vrf>[\w]+)VNI +(?P<rd_vniid>[\d]+)\))?$')
         p3 = re.compile(r'^\s*BGP routing table entry for +(?P<nonipprefix>[\w\[\]\:\.\/]+), +version +(?P<prefixversion>[\d]+)$')
         p4 = re.compile(r'^\s*Paths: +\((?P<totalpaths>[\d]+) +available, +best +#(?P<bestpathnr>[\d]+)\)$')
         p5 = re.compile(r'^\s*Flags: (?P<flag_xmit>[\S\s]+) +on +xmit-list(, +(?P<flags_attr>[\w\s\/\,]+))?$')
         p6 = re.compile(r'^\s*Multipath: +(?P<multipath>[\w]+)$')
         p7 = re.compile(r'^\s*Advertised path-id +(?P<path_id>[\d]+)$')
-        p8 = re.compile(r'^\s*Path type: +(?P<path_type>[\w\s\(\)]+), +(?P<pathtypes>[\w\s\,]+)?$')
-        p9 = re.compile(r'^\s*AS-Path: +(?P<as_path>[\w]+)(, +path locally originated)?(, +path sourced internal to AS)?$')
+        p8 = re.compile(r'^\s*Path type: +(?P<path_type>[\w\s\(\)]+), +(?P<pathtypes>[\S\s\,\:\/]+)?$')
+        p9 = re.compile(r'^\s*AS-Path: +(?P<as_path>[\w]+)(, +path locally originated)?(, +path sourced +(?P<internal_external>[\w]+) to AS)?$')
         p10 = re.compile(r'^\s*(?P<ipnexthop>[\d\.]+) +\(metric +(?P<nexthopmetric>[\d]+)\) +from +(?P<neighbor>[\d\.]+)'
                          ' +\((?P<neighborid>[\d\.]+)\)$')
-        p11 = re.compile(r'^\s*Origin +(?P<origin>[\w]+), +(MED not set,)? +localpref +(?P<localpref>[\d]+),'
+        p11 = re.compile(r'^\s*Origin +(?P<origin>[\w]+), +(MED +(?P<med>[\w\s]+),)? +localpref +(?P<localpref>[\d]+),'
                          ' +weight +(?P<weight>[\d]+)$')
         p12 = re.compile(r'^\s*Extcommunity: +(?P<extcommunity>[\w\s\:\.]+)$')
-        p13 = re.compile(r'^\s*Originator: +(?P<originatorid>[\d\.]+) +Cluster list: +(?P<clusterlist>[\d\.]+)$')
+        p13 = re.compile(r'^\s*Originator: +(?P<originatorid>[\d\.]+) +Cluster +list: +(?P<clusterlist>[\d\.]+)$')
         p14 = re.compile(r'^\s*Path-id +(?P<path_id>[\d]+) +advertised to peers:$')
         p15 = re.compile(r'^\s*(?P<advertisedto>[\d\s\.]+)$')
         p16 = re.compile(r'^\s*Received +label +(?P<inlabel>[\d]+)$')
+
+        # PMSI Tunnel Attribute:
+        p17 = re.compile(r'^\s*(?P<attribute>[\w]+) +Tunnel +Attribute:$')
+        #         flags: 0x00, Tunnel type: Ingress Replication
+        p18 = re.compile(r'^\s*flags: +(?P<flags>[\w]+), +Tunnel type: +(?P<tunnel_type>[\w\s]+)$')
+        #         Label: 10101, Tunnel Id: 7.7.7.7
+        p19 = re.compile(r'^\s*Label: +(?P<label>[\d]+), +Tunnel +Id: +(?P<tunnel_id>[\d\.]+)$')
 
         for line in out.splitlines():
             if line:
@@ -9981,7 +9998,7 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
                 rd_dict = af_dict.setdefault('rd',{}).setdefault(rd,{})
                 rd_dict.update({'rd':rd})
                 if group.get('rd_vniid'):
-                    rd_dict.update({'rd_vrf': 'l2'})
+                    rd_dict.update({'rd_vrf': group.pop('rd_vrf').lower()})
                     rd_dict.update({'rd_vniid': int(group.pop('rd_vniid'))})
                 continue
 
@@ -9992,6 +10009,7 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
                 prefix_dict = rd_dict.setdefault('prefix',{}).setdefault(nonipprefix,{})
                 prefix_dict.update({'nonipprefix': nonipprefix})
                 prefix_dict.update({'prefixversion': int(group.pop('prefixversion'))})
+                index = 0
                 continue
 
             m = p4.match(line)
@@ -10015,15 +10033,16 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
 
             m = p7.match(line)
             if m:
-                index = 1
                 group = m.groupdict()
-                path_dict = prefix_dict.setdefault('path',{}).setdefault(index,{})
-                path_dict.update({'pathnr':int(group.pop('path_id'))})
+                path_temp_dict = prefix_dict.setdefault('path',{})
                 continue
 
             m = p8.match(line)
             if m:
-                index = 1
+                index += 1
+                path_temp_dict = prefix_dict.setdefault('path', {})
+                path_dict = path_temp_dict.setdefault(index, {})
+                path_dict.update({'pathnr': index-1})
                 group = m.groupdict()
                 pathtypes = group.get('pathtypes')
                 if 'path is valid' in pathtypes:
@@ -10086,6 +10105,58 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
                 group = m.groupdict()
                 path_dict.update({'inlabel': int(group.pop('inlabel'))})
                 continue
+
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                tunnel_attribute = group.get('attribute')
+                tunnel_dict = path_dict.setdefault('tunnel_attribute',{}).setdefault(tunnel_attribute,{})
+                continue
+
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                tunnel_dict.update({k:v for k, v in group.items()})
+                continue
+
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                tunnel_dict.update({k: v for k, v in group.items()})
+                continue
+
+        if 'instance' not in result_dict:
+            return result_dict
+
+        for instance in result_dict['instance']:
+            if 'vrf' not in result_dict['instance'][instance]:
+                continue
+            for vrf in result_dict['instance'][instance]['vrf']:
+                vrf_dict = result_dict['instance'][instance]['vrf'][vrf]
+                if 'address_family' not in vrf_dict:
+                    continue
+                for af in vrf_dict['address_family']:
+                    af_dict = vrf_dict['address_family'][af]
+                    if 'rd' not in af_dict:
+                        continue
+                    for rd in af_dict['rd']:
+                        if 'prefix' not in af_dict['rd'][rd]:
+                            continue
+                        for prefix in af_dict['rd'][rd]['prefix']:
+                            if 'path' not in af_dict['rd'][rd]['prefix'][prefix]:
+                                continue
+                            for index in af_dict['rd'][rd]['prefix'][prefix]['path']:
+                                if len(af_dict['rd'][rd]['prefix'][prefix]['path'][index].keys()) > 1:
+                                    ind = 1
+                                    next_dict = {}
+                                    sorted_list = sorted(af_dict['rd'][rd]['prefix'][prefix]['path'].items(),
+                                                         key=lambda x: x[1]['neighbor'])
+                                    for i, j in enumerate(sorted_list):
+                                        next_dict[ind] = af_dict['rd'][rd]['prefix'][prefix]['path'][j[0]]
+                                        ind += 1
+                                    del (af_dict['rd'][rd]['prefix'][prefix]['path'])
+                                    af_dict['rd'][rd]['prefix'][prefix]['path'] = next_dict
+
 
         return result_dict
 
