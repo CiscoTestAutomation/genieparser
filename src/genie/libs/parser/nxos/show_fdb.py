@@ -51,15 +51,16 @@ class ShowMacAddressTableVni(ShowMacAddressTableVniSchema):
         # initial return dictionary
         ret_dict = {}
 
+        # C 1001     0000.04b1.0000   dynamic  0         F      F    nve1(3.0.0.101)
+        # * 1001     0000.0191.0000   dynamic  0         F      F    Eth1/11
+        p1 = re.compile(r'^\s*(?P<entry>[A-Z\*\(\+\)]+) +(?P<evi>[0-9]+) '
+            '+(?P<mac_address>[0-9a-z\.]+) +(?P<mac_type>[a-z]+) '
+            '+(?P<age>[0-9\-\:]+) +(?P<secure>[A-Z]+) +(?P<ntfy>[A-Z]+) '
+            '+([a-z0-9]+\((?P<next_hop>[0-9\.]+)\))?(?P<ports>[a-zA-Z0-9\/\.]+)?$')
+
         for line in out.splitlines():
             line = line.strip()
 
-            # C 1001     0000.04b1.0000   dynamic  0         F      F    nve1(3.0.0.101)
-            # * 1001     0000.0191.0000   dynamic  0         F      F    Eth1/11
-            p1 = re.compile(r'^\s*(?P<entry>[A-Z\*\(\+\)]+) +(?P<evi>[0-9]+) '
-                '+(?P<mac_address>[0-9a-z\.]+) +(?P<mac_type>[a-z]+) '
-                '+(?P<age>[0-9\-\:]+) +(?P<secure>[A-Z]+) +(?P<ntfy>[A-Z]+) '
-                '+([a-z0-9]+\((?P<next_hop>[0-9\.]+)\))?(?P<ports>[a-zA-Z0-9\/\.]+)?$')
             m = p1.match(line)
             if m:
 
