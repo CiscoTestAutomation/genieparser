@@ -714,6 +714,11 @@ class ShowLispServiceSchema(MetaParser):
                         'itr':
                             {'enabled': bool,
                             'proxy_itr_router': bool,
+                            Optional('proxy_itrs'):
+                                {Any():
+                                    {'proxy_etr_address': str,
+                                    },
+                                },
                             'solicit_map_request': str,
                             'max_smr_per_map_cache_entry': str,
                             'multiple_smr_suppression_time': int,
@@ -812,9 +817,11 @@ class ShowLispService(ShowLispServiceSchema):
 
         # Proxy-ITR Router (PITR):             disabled
         # Proxy-ETR Router (PETR):             disabled
+        # Proxy-ETR Router (PETR):             enabled RLOCs: 10.10.10.10
         p7 = re.compile(r'Proxy\-(ITR|ETR) +Router'
                          ' +\((?P<proxy_type>(PITR|PETR))\) *:'
-                         ' +(?P<state>(enabled|disabled))$')
+                         ' +(?P<state>(enabled|disabled))'
+                         '(?: +RLOCs: +(?P<proxy_itr>(\S+)))?$')
 
         # NAT-traversal Router (NAT-RTR):      disabled
         p8 = re.compile(r'NAT-traversal +Router +\(NAT\-RTR\) *:'
@@ -1044,13 +1051,18 @@ class ShowLispService(ShowLispServiceSchema):
             # Proxy-ETR Router (PETR):             disabled
             m = p7.match(line)
             if m:
-                proxy_type = m.groupdict()['proxy_type'].lower()
+                group = m.groupdict()
+                proxy_type = group['proxy_type'].lower()
                 if proxy_type == 'pitr':
                     itr_dict['proxy_itr_router'] = \
-                        state_dict[m.groupdict()['state']]
+                        state_dict[group['state']]
                 elif proxy_type == 'petr':
                     etr_dict['proxy_etr_router'] = \
-                        state_dict[m.groupdict()['state']]
+                        state_dict[group['state']]
+                if group['proxy_itr']:
+                    pitr_dict = itr_dict.setdefault('proxy_itrs', {}).\
+                                setdefault(group['proxy_itr'], {})
+                    pitr_dict['proxy_etr_address'] = group['proxy_itr']
                 continue
 
             # NAT-traversal Router (NAT-RTR):      disabled

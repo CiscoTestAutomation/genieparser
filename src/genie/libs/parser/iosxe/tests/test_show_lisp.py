@@ -1347,7 +1347,10 @@ class test_show_lisp_service(unittest.TestCase):
                                     {'map_resolver': '4.4.4.4'}},
                             'max_smr_per_map_cache_entry': '8 more specifics',
                             'multiple_smr_suppression_time': 20,
-                            'proxy_itr_router': False,
+                            'proxy_itr_router': True,
+                            'proxy_itrs': 
+                                {'10.10.10.10': 
+                                    {'proxy_etr_address': '10.10.10.10'}},
                             'solicit_map_request': 'accept and process'},
                         'locator_status_algorithms': 
                             {'ipv4_rloc_min_mask_len': 0,
@@ -1377,7 +1380,7 @@ class test_show_lisp_service(unittest.TestCase):
           Locator table:                       default
           Ingress Tunnel Router (ITR):         enabled
           Egress Tunnel Router (ETR):          enabled
-          Proxy-ITR Router (PITR):             disabled
+          Proxy-ITR Router (PITR):             enabled RLOCs: 10.10.10.10
           Proxy-ETR Router (PETR):             disabled
           NAT-traversal Router (NAT-RTR):      disabled
           Mobility First-Hop Router:           disabled
