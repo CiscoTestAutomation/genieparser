@@ -38,3 +38,8 @@ Current version: genie.libs.parser - 3.0.5
     - show lisp all instance-id <instance_id> ipv4 statistics
     - show lisp all instance-id <instance_id> ipv6 statistics
     - show lisp all instance-id <instance_id> ethernet statistics
+
+# August 22nd
+
+* Added parsers for Pim (NXOS):
+    - show running-config pim [ | inc <pip string> ]
