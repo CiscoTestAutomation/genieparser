@@ -20,7 +20,8 @@ from genie.libs.parser.nxos.show_vxlan import  ShowNvePeers,\
                                     ShowL2routeMacAllDetail,\
                                     ShowL2routeMacIpAllDetail,\
                                     ShowL2routeSummary,\
-                                    ShowL2routeFlAll
+                                    ShowL2routeFlAll, \
+                                    ShowNveVniIngressReplication
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
@@ -1303,6 +1304,63 @@ class test_show_l2route_fl_all(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+
+# =========================================================
+#  Unit test for 'show nve vni ingress-replication'
+# =========================================================
+class test_show_nve_vni_ingress_replication(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'nve1': {
+            'vni': {
+                10101:{
+                    'vni': 10101,
+                    'replication_list': ["7.7.7.7"],
+                    'uptime': "1d02h",
+                    'source': "bgp-imet",
+                },
+                10201: {
+                    'vni': 10201,
+                    'replication_list': ["7.7.7.7"],
+                    'uptime': "1d02h",
+                    'source': "bgp-imet",
+                },
+                10202: {
+                    'vni': 10202,
+                    'replication_list': ["7.7.7.7"],
+                    'uptime': "1d02h",
+                    'source': "bgp-imet",
+                },
+            },
+        },
+    }
+
+    golden_output = {'execute.return_value': '''
+    R6# show nve vni ingress-replication
+    Interface VNI      Replication List  Source  Up Time
+    --------- -------- ----------------- ------- -------
+
+    nve1      10101    7.7.7.7           BGP-IMET 1d02h
+
+    nve1      10201    7.7.7.7           BGP-IMET 1d02h
+
+    nve1      10202    7.7.7.7           BGP-IMET 1d02h
+        '''}
+
+    def test_show_nve_vni_ingress_replication_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowNveVniIngressReplication(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_nve_vni_ingress_replication_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowNveVniIngressReplication(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
 
 if __name__ == '__main__':
     unittest.main()
