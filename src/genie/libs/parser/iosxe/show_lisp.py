@@ -769,10 +769,12 @@ class ShowLispService(ShowLispServiceSchema):
         assert service in ['ipv4', 'ipv6', 'ethernet']
 
         # Build the command
-        cmd = 'show lisp all'
+        cmd = 'show lisp all '
         if instance_id:
-            cmd += ' instance-id {}'.format(instance_id)
-        cmd += ' service {}'.format(service)
+            cmd += 'instance-id {iid} {service}'.format(iid=instance_id,
+                                                         service=service)
+        else:
+            cmd += 'service {}'.format(service)
         
         # Execute command on device
         out = self.device.execute(cmd)
@@ -1909,7 +1911,23 @@ class ShowLispServiceSummarySchema(MetaParser):
                 {'lisp_router_instance_id': int,
                 Optional('service'):
                     {Optional(Any()):
-                        {'etr':
+                        {'virtual_network_ids':
+                            {Any():
+                                {Optional('vrf'): str,
+                                'interface': str,
+                                'db_size': int,
+                                'db_no_route': int,
+                                'cache_size': int,
+                                'incomplete': str,
+                                'cache_idle': str,
+                                'lisp_role':
+                                    {Any():
+                                        {'lisp_role_type': str,
+                                        },
+                                    },
+                                },
+                            },
+                        'etr':
                             {'summary':
                                 {'instance_count': int,
                                 'total_eid_tables': int,
@@ -1919,18 +1937,6 @@ class ShowLispServiceSummarySchema(MetaParser):
                                 'eid_tables_inconsistent_locators': int,
                                 'eid_tables_incomplete_map_cache_entries': int,
                                 'eid_tables_pending_map_cache_update_to_fib': int,
-                                'instance_id':
-                                    {Any():
-                                        {Optional('vrf'): str,
-                                        'interface': str,
-                                        'db_size': int,
-                                        'db_no_route': int,
-                                        'cache_size': int,
-                                        'incomplete': str,
-                                        'cache_idle': str,
-                                        'role': str,
-                                        },
-                                    },
                                 },
                             },
                         },
@@ -2055,17 +2061,21 @@ class ShowLispServiceSummary(ShowLispServiceSummarySchema):
             m = m1 if m1 else m2
             if m:
                 group = m.groupdict()
-                iid_dict = sum_dict.setdefault('instance_id', {}).\
-                                setdefault(group['iid'], {})
-                iid_dict['interface'] = group['interface'] + '.' + group['iid']
-                iid_dict['db_size'] = int(group['db_size'])
-                iid_dict['db_no_route'] = int(group['db_no_route'])
-                iid_dict['cache_size'] = int(group['cache_size'])
-                iid_dict['incomplete'] = group['incomplete']
-                iid_dict['cache_idle'] = group['cache_idle']
-                iid_dict['role'] = group['role']
+                vni_dict = lisp_dict.setdefault('service', {}).\
+                            setdefault(service, {}).\
+                            setdefault('virtual_network_ids', {}).\
+                            setdefault(group['iid'], {})
+                vni_dict['interface'] = group['interface'] + '.' + group['iid']
+                vni_dict['db_size'] = int(group['db_size'])
+                vni_dict['db_no_route'] = int(group['db_no_route'])
+                vni_dict['cache_size'] = int(group['cache_size'])
+                vni_dict['incomplete'] = group['incomplete']
+                vni_dict['cache_idle'] = group['cache_idle']
+                role_dict = vni_dict.setdefault('lisp_role', {}).\
+                                setdefault(group['role'].lower(), {})
+                role_dict['lisp_role_type'] = group['role'].lower()
                 if 'vrf' in group:
-                    iid_dict['vrf'] = group['vrf']
+                    vni_dict['vrf'] = group['vrf']
                 continue
 
             # Number of eid-tables:                                 2
@@ -2533,12 +2543,21 @@ class ShowLispServiceServerDetailInternalSchema(MetaParser):
                                     'mappings':
                                         {Any():
                                             {'eid_id': str,
-                                            'address_type': str,
-                                            Optional('ipv4'):
-                                                {'ipv4': str,
-                                                },
-                                            Optional('ipv6'):
-                                                {'ipv6': str,
+                                            'eid_address':
+                                                {'address_type': str,
+                                                'virtual_network_id': str,
+                                                Optional('ipv4'):
+                                                    {'ipv4': str,
+                                                    },
+                                                Optional('ipv6'):
+                                                    {'ipv6': str,
+                                                    },
+                                                Optional('ipv4_prefix'):
+                                                    {'ipv4_prefix': str,
+                                                    },
+                                                Optional('ipv6_prefix'):
+                                                    {'ipv6_prefix': str,
+                                                    },
                                                 },
                                             'site_id': str,
                                             'first_registered': str,
@@ -2561,24 +2580,31 @@ class ShowLispServiceServerDetailInternalSchema(MetaParser):
                                                     'etr': str,
                                                     'eid':
                                                         {'address_type': str,
-                                                        Optional('ipv4'): 
+                                                        'virtual_network_id': str,
+                                                        Optional('ipv4'):
                                                             {'ipv4': str,
                                                             },
-                                                        Optional('ipv6'): 
+                                                        Optional('ipv6'):
                                                             {'ipv6': str,
                                                             },
-                                                        'ttl': str,
-                                                        'time_to_live': int,
-                                                        'creation_time': str,
-                                                        'merge': bool,
-                                                        'proxy_reply': bool,
-                                                        'map_notify': bool,
-                                                        'hash_function': str,
-                                                        'nonce': str,
-                                                        'state': str,
-                                                        'security_capability': bool,
-                                                        'sourced_by': str,
+                                                        Optional('ipv4_prefix'):
+                                                            {'ipv4_prefix': str,
+                                                            },
+                                                        Optional('ipv6_prefix'):
+                                                            {'ipv6_prefix': str,
+                                                            },
                                                         },
+                                                    'ttl': str,
+                                                    'time_to_live': int,
+                                                    'creation_time': str,
+                                                    'merge': bool,
+                                                    'proxy_reply': bool,
+                                                    'map_notify': bool,
+                                                    'hash_function': str,
+                                                    'nonce': str,
+                                                    'state': str,
+                                                    'security_capability': bool,
+                                                    'sourced_by': str,
                                                     'locator': 
                                                         {Any():
                                                             {'local': bool,
@@ -2614,8 +2640,8 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
         assert service in ['ipv4', 'ipv6', 'ethernet']
 
         # Execute command on device
-        out = self.device.execute('show lisp all service instance_id '
-                            '{instance_id} {service} server detail internal'.\
+        out = self.device.execute('show lisp all instance-id {instance_id}'
+                                  ' {service} server detail internal'.\
                             format(service=service, instance_id=instance_id))
 
         # Init vars
@@ -2757,12 +2783,14 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
                 mappings_dict = vni_dict.setdefault('mappings', {}).\
                                     setdefault(eid, {})
                 mappings_dict['eid_id'] = eid
+                eid_address_dict = mappings_dict.setdefault('eid_address', {})
+                eid_address_dict['virtual_network_id'] = group['iid']
                 if ":" not in eid:
-                    mappings_dict['address_type'] = 'ipv4-afi'
-                    mappings_dict.setdefault('ipv4', {})['ipv4'] = eid
+                    eid_address_dict['address_type'] = 'ipv4-afi'
+                    eid_address_dict.setdefault('ipv4', {})['ipv4'] = eid
                 else:
-                    mappings_dict['address_type'] = 'ipv6-afi'
-                    mappings_dict.setdefault('ipv6', {})['ipv6'] = eid
+                    eid_address_dict['address_type'] = 'ipv6-afi'
+                    eid_address_dict.setdefault('ipv6', {})['ipv6'] = eid
                 mappings_dict['site_id'] = site_id
                 continue
 
@@ -2888,6 +2916,7 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
                 mapping_records_dict['xtr_id'] = group['xtr_id']
                 mapping_records_dict['etr'] = etr
                 mr_eid_dict = mapping_records_dict.setdefault('eid', {})
+                mr_eid_dict['virtual_network_id'] = instance_id
                 if ":" not in eid:
                     mr_eid_dict['address_type'] = 'ipv4-afi'
                     mr_eid_dict.setdefault('ipv4', {})['ipv4'] = eid
@@ -2895,17 +2924,17 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
                     mr_eid_dict['address_type'] = 'ipv6-afi'
                     mr_eid_dict.setdefault('ipv6', {})['ipv6'] = eid
                 # Set previously parsed values
-                mr_eid_dict['security_capability'] = security_capability
-                mr_eid_dict['state'] = state
-                mr_eid_dict['nonce'] = nonce
-                mr_eid_dict['hash_function'] = hash_function
-                mr_eid_dict['merge'] = merge_active
-                mr_eid_dict['ttl'] = ttl
-                mr_eid_dict['time_to_live'] = time_to_live
-                mr_eid_dict['map_notify'] = map_notify
-                mr_eid_dict['proxy_reply'] = proxy_reply
-                mr_eid_dict['map_notify'] = map_notify
-                mr_eid_dict['creation_time'] = creation_time
+                mapping_records_dict['security_capability'] = security_capability
+                mapping_records_dict['state'] = state
+                mapping_records_dict['nonce'] = nonce
+                mapping_records_dict['hash_function'] = hash_function
+                mapping_records_dict['merge'] = merge_active
+                mapping_records_dict['ttl'] = ttl
+                mapping_records_dict['time_to_live'] = time_to_live
+                mapping_records_dict['map_notify'] = map_notify
+                mapping_records_dict['proxy_reply'] = proxy_reply
+                mapping_records_dict['map_notify'] = map_notify
+                mapping_records_dict['creation_time'] = creation_time
                 continue
 
             # site-ID unspecified
@@ -2917,7 +2946,7 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
             # sourced by reliable transport
             m = p20.match(line)
             if m:
-                mr_eid_dict['sourced_by'] = m.groupdict()['source']
+                mapping_records_dict['sourced_by'] = m.groupdict()['source']
                 continue
 
             # Locator  Local  State      Pri/Wgt  Scope
