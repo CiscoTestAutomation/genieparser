@@ -1707,8 +1707,8 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                     'mappings': 
                                         {'0.0.0.0/0': 
                                             {'id': '0.0.0.0/0',
-                                            'uptime': '15:23:50',
-                                            'expires': 'never',
+                                            'creation_time': '15:23:50',
+                                            'time_to_live': 'never',
                                             'via': 'static-send-map-request',
                                             'eid': 
                                                 {'address_type': 'ipv4-afi',
@@ -1718,8 +1718,8 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                             'negative_mapping': {'map_reply_action': 'send-map-request'}},
                                         '192.168.9.0/24': 
                                             {'id': '192.168.9.0/24',
-                                            'uptime': '00:04:02',
-                                            'expires': '23:55:57',
+                                            'creation_time': '00:04:02',
+                                            'time_to_live': '23:55:57',
                                             'via': 'map-reply, complete',
                                             'eid': 
                                                 {'address_type': 'ipv4-afi',
@@ -1730,16 +1730,16 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                                 {'rlocs': 
                                                     {1: 
                                                         {'id': '1',
+                                                        'encap_iid': '-',
+                                                        'priority': 50,
+                                                        'state': 'up',
+                                                        'uptime': '00:04:02',
+                                                        'weight': 50,
                                                         'locator_address': 
                                                             {'address_type': 'ipv4-afi',
-                                                            'encap_iid': '-',
-                                                            'ipv4': 
-                                                                {'ipv4': '8.8.8.8'},
-                                                            'priority': 50,
-                                                            'state': 'up',
-                                                            'uptime': '00:04:02',
                                                             'virtual_network_id': '101',
-                                                            'weight': 50}}}}}}}}}}}}}}
+                                                            'ipv4': 
+                                                                {'ipv4': '8.8.8.8'}}}}}}}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         202-XTR#show lisp all instance-id 101 ipv4 map-cache 
@@ -1770,47 +1770,48 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                     'mappings': 
                                         {'172.16.10.0/24': 
                                             {'eid': 
-                                                {'address_type': 'ipv6-afi',
+                                                {'address_type': 'ipv4-afi',
                                                 'ipv4': 
                                                     {'ipv4': '172.16.10.0/24'},
                                                 'vrf': 'red'},
-                                            'expires': '23:59:59',
+                                            'time_to_live': '23:59:59',
                                             'id': '172.16.10.0/24',
                                             'positive_mapping': 
                                                 {'rlocs': 
                                                     {1: 
                                                         {'id': '1',
+                                                        'priority': 1,
+                                                        'state': 'up',
+                                                        'uptime': '00:00:00',
+                                                        'weight': 50,
                                                         'locator_address': 
-                                                            {'address_type': 'ipv6-afi',
-                                                            'ipv4': {'ipv4': '172.16.156.134'},
-                                                            'priority': 1,
-                                                            'state': 'up',
-                                                            'uptime': '00:00:00',
-                                                            'virtual_network_id': '101',
-                                                            'weight': 50}},
+                                                            {'address_type': 'ipv4-afi',
+                                                            'ipv4': 
+                                                                {'ipv4': '172.16.156.134'},
+                                                            'virtual_network_id': '101'}},
                                                     2: 
                                                         {'id': '2',
+                                                        'priority': 1,
+                                                        'state': 'up',
+                                                        'uptime': '00:00:00',
+                                                        'weight': 50,
                                                         'locator_address': 
-                                                            {'address_type': 'ipv6-afi',
+                                                            {'address_type': 'ipv4-afi',
                                                             'ipv4': 
                                                                 {'ipv4': '192.168.65.94'},
-                                                            'priority': 1,
-                                                            'state': 'up',
-                                                            'uptime': '00:00:00',
-                                                            'virtual_network_id': '101',
-                                                            'weight': 50}},
+                                                            'virtual_network_id': '101'}},
                                                     3: 
                                                         {'id': '3',
+                                                        'priority': 2,
+                                                        'state': 'up',
+                                                        'uptime': '00:00:00',
+                                                        'weight': 100,
                                                         'locator_address': 
                                                             {'address_type': 'ipv6-afi',
                                                             'ipv6': 
                                                                 {'ipv6': '2001:468:D01:9C::80DF:9C86'},
-                                                            'priority': 2,
-                                                            'state': 'up',
-                                                            'uptime': '00:00:00',
-                                                            'virtual_network_id': '101',
-                                                            'weight': 100}}}},
-                                            'uptime': '00:00:00',
+                                                            'virtual_network_id': '101'}}}},
+                                            'creation_time': '00:00:00',
                                             'via': 'map-reply, complete'},
                                         '2001:192:168:9::/64': 
                                             {'eid': 
@@ -1818,23 +1819,23 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                                 'ipv6': 
                                                     {'ipv6': '2001:192:168:9::/64'},
                                                 'vrf': 'red'},
-                                            'expires': '23:53:08',
+                                            'time_to_live': '23:53:08',
                                             'id': '2001:192:168:9::/64',
                                             'positive_mapping': 
                                                 {'rlocs': 
                                                     {1: 
                                                         {'id': '1',
+                                                        'encap_iid': '-',
+                                                        'priority': 50,
+                                                        'state': 'up',
+                                                        'uptime': '00:06:51',
+                                                        'weight': 50,
                                                         'locator_address': 
-                                                            {'address_type': 'ipv6-afi',
-                                                            'encap_iid': '-',
+                                                            {'address_type': 'ipv4-afi',
                                                             'ipv4': 
                                                                 {'ipv4': '8.8.8.8'},
-                                                            'priority': 50,
-                                                            'state': 'up',
-                                                            'uptime': '00:06:51',
-                                                            'virtual_network_id': '101',
-                                                            'weight': 50}}}},
-                                            'uptime': '00:06:51',
+                                                            'virtual_network_id': '101'}}}},
+                                            'creation_time': '00:06:51',
                                             'via': 'map-reply, complete'},
                                         '::/0': 
                                             {'eid': 
@@ -1842,11 +1843,11 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                                 'ipv6': 
                                                     {'ipv6': '::/0'},
                                                 'vrf': 'red'},
-                                            'expires': 'never',
+                                            'time_to_live': 'never',
                                             'id': '::/0',
                                             'negative_mapping': 
                                                 {'map_reply_action': 'send-map-request'},
-                                            'uptime': '00:11:28',
+                                            'creation_time': '00:11:28',
                                             'via': 'static-send-map-request'}}}}}}}}}}
 
     golden_output2 = {'execute.return_value': '''
@@ -1884,98 +1885,100 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                     'mappings': 
                                         {'b827.eb51.f5ce/48': 
                                             {'eid': 
-                                                {'address_type': 'mac-afi',
+                                                {'address_type': 'ipv4-afi',
                                                 'ipv4': 
                                                     {'ipv4': 'b827.eb51.f5ce/48'},
                                                 'vrf': '101'},
-                                            'expires': '01:10:17',
+                                            'time_to_live': '01:10:17',
                                             'id': 'b827.eb51.f5ce/48',
                                             'positive_mapping': 
                                                 {'rlocs': 
                                                     {1: 
                                                         {'id': '1',
+                                                        'priority': 0,
+                                                        'state': 'up',
+                                                        'uptime': '22:49:42',
+                                                        'encap_iid': '-',
+                                                        'weight': 0,
                                                         'locator_address': 
-                                                            {'address_type': 'mac-afi',
-                                                            'encap_iid': '-',
+                                                            {'address_type': 'ipv4-afi',
                                                             'ipv4': 
                                                                 {'ipv4': '22.22.22.1'},
-                                                            'priority': 0,
-                                                            'state': 'up',
-                                                            'uptime': '22:49:42',
-                                                            'virtual_network_id': '193',
-                                                            'weight': 0}}}},
-                                            'uptime': '22:49:42',
+                                                            'virtual_network_id': '193'}}}},
+                                            'creation_time': '22:49:42',
                                             'via': 'WLC Map-Notify, complete'},
                                         'b827.eb73.159c/48': 
                                             {'eid': 
-                                                {'address_type': 'mac-afi',
+                                                {'address_type': 'ipv4-afi',
                                                 'ipv4': 
                                                     {'ipv4': 'b827.eb73.159c/48'},
                                                 'vrf': '101'},
-                                            'expires': '08:57:24',
+                                            'time_to_live': '08:57:24',
                                             'id': 'b827.eb73.159c/48',
                                             'positive_mapping': 
                                                 {'rlocs': 
                                                     {1: 
                                                         {'id': '1',
+                                                        'encap_iid': '-',
+                                                        'priority': 0,
+                                                        'state': 'up',
+                                                        'uptime': '15:02:35',
+                                                        'weight': 0,
                                                         'locator_address': 
-                                                            {'address_type': 'mac-afi',
-                                                            'encap_iid': '-',
+                                                            {'address_type': 'ipv4-afi',
                                                             'ipv4': 
                                                                 {'ipv4': '22.22.22.1'},
-                                                            'priority': 0,
-                                                            'state': 'up',
-                                                            'uptime': '15:02:35',
                                                             'virtual_network_id': '193',
-                                                            'weight': 0}}}},
-                                            'uptime': '15:02:35',
+                                                            }}}},
+                                            'creation_time': '15:02:35',
                                             'via': 'WLC Map-Notify, complete'},
                                         'b827.ebd0.acc6/48': 
                                             {'eid': 
-                                                {'address_type': 'mac-afi',
+                                                {'address_type': 'ipv4-afi',
                                                 'ipv4': 
                                                     {'ipv4': 'b827.ebd0.acc6/48'},
                                                 'vrf': '101'},
-                                            'expires': '08:57:25',
+                                            'time_to_live': '08:57:25',
                                             'id': 'b827.ebd0.acc6/48',
                                             'positive_mapping': 
                                                 {'rlocs': 
                                                     {1: 
                                                         {'id': '1',
+                                                        'encap_iid': '-',
+                                                        'priority': 0,
+                                                        'state': 'up',
+                                                        'uptime': '15:02:34',
+                                                        'weight': 0,
                                                         'locator_address': 
-                                                            {'address_type': 'mac-afi',
-                                                            'encap_iid': '-',
+                                                            {'address_type': 'ipv4-afi',
                                                             'ipv4': 
                                                                 {'ipv4': '22.22.22.1'},
-                                                            'priority': 0,
-                                                            'state': 'up',
-                                                            'uptime': '15:02:34',
-                                                            'virtual_network_id': '193',
-                                                            'weight': 0}}}},
-                                            'uptime': '15:02:34',
+                                                            'virtual_network_id': '193'}}}},
+                                            'creation_time': '15:02:34',
                                             'via': 'WLC Map-Notify, complete'},
                                         'b827.ebd6.0c63/48': 
                                             {'eid': 
-                                                {'address_type': 'mac-afi',
+                                                {'address_type': 'ipv4-afi',
                                                 'ipv4': 
                                                     {'ipv4': 'b827.ebd6.0c63/48'},
                                                 'vrf': '101'},
-                                            'expires': '09:02:44',
+                                            'time_to_live': '09:02:44',
                                             'id': 'b827.ebd6.0c63/48',
                                             'positive_mapping': 
                                                 {'rlocs': 
                                                     {1: 
                                                         {'id': '1',
-                                                        'locator_address': 
-                                                            {'address_type': 'mac-afi',
                                                         'encap_iid': '-',
-                                                        'ipv4': {'ipv4': '22.22.22.1'},
                                                         'priority': 0,
                                                         'state': 'up',
                                                         'uptime': '14:57:15',
-                                                        'virtual_network_id': '193',
-                                                        'weight': 0}}}},
-                                            'uptime': '14:57:15',
+                                                        'weight': 0,
+                                                        'locator_address': 
+                                                            {'address_type': 'ipv4-afi',
+                                                            'ipv4': 
+                                                                {'ipv4': '22.22.22.1'},
+                                                            'virtual_network_id': '193'}}}},
+                                            'creation_time': '14:57:15',
                                             'via': 'WLC Map-Notify, complete'}}}}}}}}}}
 
     golden_output3 = {'execute.return_value': '''

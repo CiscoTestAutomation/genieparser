@@ -1443,8 +1443,8 @@ class ShowLispServiceMapCacheSchema(MetaParser):
                                     'mappings':
                                         {Any():
                                             {'id': str,
-                                            'uptime': str,
-                                            'expires': str,
+                                            'creation_time': str,
+                                            'time_to_live': str,
                                             'via': str,
                                             'eid':
                                                 {'address_type': str,
@@ -1469,14 +1469,14 @@ class ShowLispServiceMapCacheSchema(MetaParser):
                                                 {'rlocs':
                                                     {Any():
                                                         {'id': str,
+                                                        'uptime': str,
+                                                        'state': str,
+                                                        'priority': int,
+                                                        'weight': int,
+                                                        Optional('encap_iid'): str,
                                                         'locator_address':
                                                             {'address_type': str,
                                                             'virtual_network_id': str,
-                                                            'uptime': str,
-                                                            'state': str,
-                                                            'priority': int,
-                                                            'weight': int,
-                                                            Optional('encap_iid'): str,
                                                             Optional('ipv4'):
                                                                 {'ipv4': str,
                                                                 },
@@ -1517,8 +1517,8 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
         assert service in ['ipv4', 'ipv6', 'ethernet']
 
         # Execute command on device
-        out = self.device.execute('show lisp all instance-id {instance_id}'
-                                    ' service {service} map-cache'.\
+        out = self.device.execute('show lisp all instance-id {instance_id} '
+                                  '{service} map-cache'.\
                             format(instance_id=instance_id, service=service))
 
         # Init vars
@@ -1603,23 +1603,22 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
                 # reset rloc counter
                 rloc_id = 1
                 group = m.groupdict()
-                mapping_dict = map_cache_dict.setdefault('mappings', {}).\
+                mapping_dict = map_cache_dict.\
+                                setdefault('mappings', {}).\
                                 setdefault(group['map_id'], {})
                 mapping_dict['id'] = group['map_id']
-                mapping_dict['uptime'] = group['uptime']
-                mapping_dict['expires'] = group['expires']
+                mapping_dict['creation_time'] = group['uptime']
+                mapping_dict['time_to_live'] = group['expires']
                 mapping_dict['via'] = group['via']
                 eid_dict = mapping_dict.setdefault('eid', {})
                 if ':' in group['map_id']:
                     ipv6_dict = eid_dict.setdefault('ipv6', {})
                     ipv6_dict['ipv6'] = group['map_id']
+                    eid_dict['address_type'] = 'ipv6-afi'
                 else:
                     ipv4_dict = eid_dict.setdefault('ipv4', {})
                     ipv4_dict['ipv4'] = group['map_id']
-                try:
-                    eid_dict['address_type'] = address_type.lower() + '-afi'
-                except:
-                    pass
+                    eid_dict['address_type'] = 'ipv4-afi'
                 try:
                     eid_dict['vrf'] = vrf_name
                 except:
@@ -1637,25 +1636,29 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                postive_dict = mapping_dict.setdefault('positive_mapping', {}).\
-                                setdefault('rlocs', {})
-                rloc_dict = postive_dict.setdefault(rloc_id, {})
-                rloc_dict['id'] = str(rloc_id)
-                locator_dict = rloc_dict.setdefault('locator_address', {})
-                locator_dict['address_type'] = address_type.lower() + '-afi'
-                locator_dict['virtual_network_id'] = str(instance_id)
-                locator_dict['uptime'] = group['uptime']
-                locator_dict['state'] = group['state']
-                locator_dict['priority'] = int(group['priority'])
-                locator_dict['weight'] = int(group['weight'])
+                # positive_mapping
+                postive_dict = mapping_dict.\
+                                setdefault('positive_mapping', {}).\
+                                setdefault('rlocs', {}).\
+                                setdefault(rloc_id, {})
+                postive_dict['id'] = str(rloc_id)
+                postive_dict['uptime'] = group['uptime']
+                postive_dict['state'] = group['state']
+                postive_dict['priority'] = int(group['priority'])
+                postive_dict['weight'] = int(group['weight'])
                 if group['encap_iid']:
-                    locator_dict['encap_iid'] = group['encap_iid']
+                    postive_dict['encap_iid'] = group['encap_iid']
+                # locator_address
+                locator_dict = postive_dict.setdefault('locator_address', {})
+                locator_dict['virtual_network_id'] = str(instance_id)
                 if ':' in group['locator']:
                     ipv6_dict = locator_dict.setdefault('ipv6', {})
                     ipv6_dict['ipv6'] = group['locator']
+                    locator_dict['address_type'] = 'ipv6-afi'
                 else:
                     ipv4_dict = locator_dict.setdefault('ipv4', {})
                     ipv4_dict['ipv4'] = group['locator']
+                    locator_dict['address_type'] = 'ipv4-afi'
                 # Increment entry
                 rloc_id += 1
                 continue
