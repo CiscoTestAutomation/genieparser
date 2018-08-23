@@ -115,7 +115,7 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
         #   Connection status: Established
         #   Connection status: Admin-shutdown
         #   Connection status: Inactive, Connecting in: 0.217135
-        p4 = re.compile(r'^\s*Connection status: +(?P<session_state>[\w]+)(, +Connecting +in:'
+        p4 = re.compile(r'^\s*Connection status: +(?P<session_state>[\w\-]+)(, +Connecting +in:'
                         ' +(?P<conecting_time>[\w\:\.]+))?$')
         #     Uptime(Downtime): 01:27:25
         p5 = re.compile(r'^\s*Uptime\(Downtime\): +(?P<elapsed_time>[\w\:]+)$')
