@@ -2883,7 +2883,8 @@ class test_show_lisp_service_database(unittest.TestCase):
                         {'etr': 
                             {'local_eids': 
                                 {'101': 
-                                    {'total_eid_entries': 1,
+                                    {'vni': '101',
+                                    'total_eid_entries': 1,
                                     'no_route_eid_entries': 0,
                                     'inactive_eid_entries': 0,
                                     'eids': 
@@ -2924,7 +2925,8 @@ class test_show_lisp_service_database(unittest.TestCase):
                         {'etr': 
                             {'local_eids': 
                                 {'101': 
-                                    {'total_eid_entries': 1,
+                                    {'vni': '101',
+                                    'total_eid_entries': 1,
                                     'no_route_eid_entries': 0,
                                     'inactive_eid_entries': 0,
                                     'eids': 
@@ -2965,7 +2967,8 @@ class test_show_lisp_service_database(unittest.TestCase):
                         {'etr': 
                             {'local_eids': 
                                 {'1': 
-                                    {'total_eid_entries': 2,
+                                    {'vni': '1',
+                                    'total_eid_entries': 2,
                                     'no_route_eid_entries': 0,
                                     'inactive_eid_entries': 0,
                                     'dynamic_eids': 
@@ -2994,7 +2997,8 @@ class test_show_lisp_service_database(unittest.TestCase):
                                         'state': 'site-self, reachable',
                                         'weight': 100}}},
                                 '2': 
-                                    {'total_eid_entries': 2,
+                                    {'vni': '2',
+                                    'total_eid_entries': 2,
                                     'no_route_eid_entries': 0,
                                     'inactive_eid_entries': 0,
                                     'dynamic_eids': 

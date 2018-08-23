@@ -2159,7 +2159,8 @@ class ShowLispServiceDatabaseSchema(MetaParser):
                         {'etr':
                             {'local_eids':
                                 {Any(): 
-                                    {'total_eid_entries': int,
+                                    {'vni': str,
+                                    'total_eid_entries': int,
                                     'no_route_eid_entries': int,
                                     'inactive_eid_entries': int,
                                     Optional('dynamic_eids'):
@@ -2215,8 +2216,8 @@ class ShowLispServiceDatabase(ShowLispServiceDatabaseSchema):
         assert service in ['ipv4', 'ipv6', 'ethernet']
 
         # Execute command on device
-        out = self.device.execute('show lisp all service instance_id '
-                                  '{instance_id} {service} summary'.\
+        out = self.device.execute('show lisp all instance-id {instance_id} '
+                                  '{service} database'.\
                             format(service=service, instance_id=instance_id))
 
         # Init vars
@@ -2306,6 +2307,7 @@ class ShowLispServiceDatabase(ShowLispServiceDatabaseSchema):
                                 setdefault('etr', {}).\
                                 setdefault('local_eids', {}).\
                                 setdefault(instance_id, {})
+                etr_dict['vni'] = instance_id
                 etr_dict['total_eid_entries'] = total_entries
                 etr_dict['no_route_eid_entries'] = no_route_entries
                 etr_dict['inactive_eid_entries'] = inactive_entries
