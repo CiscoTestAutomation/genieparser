@@ -704,6 +704,11 @@ class ShowLispServiceSchema(MetaParser):
                             'proxy_etr_router': bool,
                             'accept_mapping_data': str,
                             'map_cache_ttl': str,
+                            Optional('use_petrs'):
+                                {Any():
+                                    {'use_petr': str,
+                                    },
+                                },
                             'mapping_servers':
                                 {Any():
                                     {'ms_address': str,
@@ -1192,7 +1197,12 @@ class ShowLispService(ShowLispServiceSchema):
             # ITR use proxy ETR RLOC(s):           10.10.10.10
             m = p20.match(line)
             if m:
-                iid_itr_dict['use_proxy_etr_rloc'] = m.groupdict()['val']
+                group = m.groupdict()
+                iid_itr_dict['use_proxy_etr_rloc'] = group['val']
+                use_petr_dict = etr_dict.\
+                                setdefault('use_petrs', {}).\
+                                setdefault(group['val'], {})
+                use_petr_dict['use_petr'] = group['val']
                 continue
 
             # ITR Solicit Map Request (SMR):       accept and process

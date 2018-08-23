@@ -462,6 +462,11 @@ class test_show_lisp_service(unittest.TestCase):
                             'enabled': True,
                             'encapsulation': 'lisp',
                             'map_cache_ttl': '1d00h',
+                            'use_petrs':
+                                {'10.10.10.10':
+                                    {'use_petr': '10.10.10.10',
+                                    },
+                                },
                             'mapping_servers': 
                                 {'13.13.13.13': 
                                     {'ms_address': '13.13.13.13',
@@ -601,6 +606,11 @@ class test_show_lisp_service(unittest.TestCase):
                             'enabled': True,
                             'encapsulation': 'lisp',
                             'map_cache_ttl': '1d00h',
+                            'use_petrs':
+                                {'10.10.10.10':
+                                    {'use_petr': '10.10.10.10',
+                                    },
+                                },
                             'mapping_servers': 
                                 {'13.13.13.13': 
                                     {'ms_address': '13.13.13.13',
