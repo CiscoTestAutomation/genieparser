@@ -23,7 +23,8 @@ from genie.libs.parser.nxos.show_pim import ShowIpPimInterface,\
                                  ShowIpPimDf,\
                                  ShowIpv6PimDf,\
                                  ShowIpv6PimRp,\
-                                 ShowIpv6PimInterface
+                                 ShowIpv6PimInterface, \
+                                 ShowRunningConfigPim
 
 
 # ============================================
@@ -3099,6 +3100,144 @@ class test_show_ipv6_pim_vrf_all_detail(unittest.TestCase):
         obj = ShowIpv6PimVrfAllDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+
+
+# ============================================
+# Parser for 'show running-config pim'
+# Parser for 'show running-config pim6'
+# ============================================
+outputs = {}
+
+def mapper(key):
+    return outputs[key]
+
+class test_show_running_config_pim_pim6(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    parsed_output = {
+        'feature_pim': True,
+        'feature_pim6': True,
+        'vrf': {'VRF1': {'address_family': {'ipv4': {'rp': {'autorp': {'send_rp_announce': {'group_list': '236.0.0.0/8',
+                                                                                           'interface': 'loopback11'},
+                                                                      'send_rp_discovery': {'interface': 'loopback11'}}}}}},
+               'default': {'address_family': {'ipv4': {'rp': {'autorp': {'send_rp_announce': {'group_list': '236.0.0.0/8',
+                                                                                              'interface': 'loopback0'},
+                                                                         'send_rp_discovery': {'interface': 'loopback0'}}}}}}}
+    }
+
+    parsed_output_v4 = {
+        'feature_pim': True,
+        'vrf': {'VRF1': {'address_family': {'ipv4': {'rp': {'autorp': {'send_rp_announce': {'group_list': '236.0.0.0/8',
+                                                                                           'interface': 'loopback11'},
+                                                                      'send_rp_discovery': {'interface': 'loopback11'}}}}}},
+               'default': {'address_family': {'ipv4': {'rp': {'autorp': {'send_rp_announce': {'group_list': '236.0.0.0/8',
+                                                                                              'interface': 'loopback0'},
+                                                                         'send_rp_discovery': {'interface': 'loopback0'}}}}}}}
+    }
+    parsed_output_v6 = {
+        'feature_pim6': True, 'vrf': {'VRF1': {}, 'default': {}}
+    }
+    parsed_output_default_attr = {
+        'vrf': {'default': {'address_family': {'ipv4': {'rp': {'autorp': {'send_rp_announce': {'group_list': '236.0.0.0/8',
+                                                                                              'interface': 'loopback0'}}}}}}}
+    }
+    parsed_output_non_default_attr = {
+        'vrf': {'VRF1': {'address_family': {'ipv4': {'rp': {'autorp': {'send_rp_announce': {'group_list': '236.0.0.0/8',
+                                                                                              'interface': 'loopback11'}}}}}}}
+    }
+
+    golden_output_v4 = {'execute.return_value': '''
+        N95_2_R2# show run pim
+
+!Command: show running-config pim
+!Time: Wed Aug 15 15:47:22 2018
+
+version 7.0(3)I7(3)
+feature pim
+
+ip pim send-rp-announce loopback0 group-list 236.0.0.0/8
+ip pim send-rp-discovery loopback0
+
+vrf context VRF1
+  ip pim send-rp-announce loopback11 group-list 236.0.0.0/8
+  ip pim send-rp-discovery loopback11
+    '''}
+
+    golden_output_v6 = {'execute.return_value': '''
+        N95_2_R2# show run pim6
+
+!Command: show running-config pim6
+!Time: Tue Aug 14 18:32:21 2018
+
+version 7.0(3)I7(3)
+feature pim6
+
+ipv6 pim rp-address 2001:6:6:6::6 group-list fff0::/12
+ipv6 pim ssm range ff30::/12
+
+vrf context VRF1
+  ipv6 pim rp-address 2001:6:6:6::6 group-list fff0::/12
+  ipv6 pim ssm range ff30::/12
+    '''}
+
+    golden_output_default_attr = {'execute.return_value': '''
+        N95_2_R2# show run pim | section '^i' | inc send-rp-announce
+ip pim send-rp-announce loopback0 group-list 236.0.0.0/8
+    '''}
+
+    golden_output_non_default_attr = {'execute.return_value': '''
+        N95_2_R2# show running-config pim | sec VRF1 | inc send-rp-announce
+  ip pim send-rp-announce loopback11 group-list 236.0.0.0/8
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpv6PimVrfAllDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+        
+    def test_golden_all(self):
+        self.maxDiff = None
+        # Mock device output
+        outputs['show running-config pim'] = self.golden_output_v4['execute.return_value']
+        outputs['show running-config pim6'] = self.golden_output_v6['execute.return_value']
+        self.device.execute = Mock()
+        self.device.execute.side_effect = mapper
+
+        obj = ShowRunningConfigPim(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.parsed_output)
+
+    def test_golden_pim(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_v4)
+        obj = ShowRunningConfigPim(device=self.device)
+        parsed_output = obj.parse(address_family='ipv4')
+        self.assertEqual(parsed_output, self.parsed_output_v4)
+
+    def test_golden_pim6(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_v6)
+        obj = ShowRunningConfigPim(device=self.device)
+        parsed_output = obj.parse(address_family='ipv6')
+        self.assertEqual(parsed_output, self.parsed_output_v6)
+
+    def test_golden_vrf_default_attr(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_default_attr)
+        obj = ShowRunningConfigPim(device=self.device)
+        parsed_output = obj.parse(address_family='ipv4', vrf='default', pip_str='send-rp-announce')
+        self.assertEqual(parsed_output, self.parsed_output_default_attr)
+
+    def test_golden_vrf_non_default_attr(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_non_default_attr)
+        obj = ShowRunningConfigPim(device=self.device)
+        parsed_output = obj.parse(address_family='ipv4', vrf='VRF1', pip_str='send-rp-announce')
+        self.assertEqual(parsed_output, self.parsed_output_non_default_attr)
 
 if __name__ == '__main__':
     unittest.main()
