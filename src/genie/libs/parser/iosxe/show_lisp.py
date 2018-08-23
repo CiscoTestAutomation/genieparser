@@ -3129,7 +3129,7 @@ class ShowLispServiceStatistics(ShowLispServiceStatisticsSchema):
             # Control Packets:
             m = p3_1.match(line)
             if m:
-                last_dict = stats_dict.setdefault('conrol', {})
+                last_dict = stats_dict.setdefault('control', {})
                 continue
 
             # Errors:
