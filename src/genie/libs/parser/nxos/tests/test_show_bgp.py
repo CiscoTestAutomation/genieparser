@@ -26760,13 +26760,11 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
                                                                 "ENCAP:8"
                                                             ],
                                                             "origin": "igp",
-                                                            "tunnel_attribute": {
-                                                                "PMSI": {
+                                                            "pmsi_tunnel_attribute": {
                                                                     "label": "10202",
                                                                     "flags": "0x00",
                                                                     "tunnel_id": "7.7.7.7",
                                                                     "tunnel_type": "Ingress Replication"
-                                                                }
                                                             },
                                                             "weight": 0
                                                         }
@@ -26800,13 +26798,11 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
                                                                 "ENCAP:8"
                                                             ],
                                                             "origin": "igp",
-                                                            "tunnel_attribute": {
-                                                                "PMSI": {
-                                                                    "label": "10201",
-                                                                    "flags": "0x00",
-                                                                    "tunnel_id": "7.7.7.7",
-                                                                    "tunnel_type": "Ingress Replication"
-                                                                }
+                                                            "pmsi_tunnel_attribute": {
+                                                                "label": "10201",
+                                                                "flags": "0x00",
+                                                                "tunnel_id": "7.7.7.7",
+                                                                "tunnel_type": "Ingress Replication"
                                                             },
                                                             "weight": 0
                                                         }
@@ -26840,13 +26836,11 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
                                                                 "ENCAP:8"
                                                             ],
                                                             "origin": "igp",
-                                                            "tunnel_attribute": {
-                                                                "PMSI": {
-                                                                    "label": "10101",
-                                                                    "flags": "0x00",
-                                                                    "tunnel_id": "7.7.7.7",
-                                                                    "tunnel_type": "Ingress Replication"
-                                                                }
+                                                            "pmsi_tunnel_attribute": {
+                                                                "label": "10101",
+                                                                "flags": "0x00",
+                                                                "tunnel_id": "7.7.7.7",
+                                                                "tunnel_type": "Ingress Replication"
                                                             },
                                                             "weight": 0
                                                         }
@@ -26882,13 +26876,11 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
                                                                 "ENCAP:8"
                                                             ],
                                                             "origin": "igp",
-                                                            "tunnel_attribute": {
-                                                                "PMSI": {
-                                                                    "label": "10101",
-                                                                    "flags": "0x00",
-                                                                    "tunnel_id": "7.7.7.7",
-                                                                    "tunnel_type": "Ingress Replication"
-                                                                }
+                                                            "pmsi_tunnel_attribute": {
+                                                                "label": "10101",
+                                                                "flags": "0x00",
+                                                                "tunnel_id": "7.7.7.7",
+                                                                "tunnel_type": "Ingress Replication"
                                                             },
                                                             "weight": 0
                                                         }
@@ -26920,13 +26912,11 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
                                                                 "ENCAP:8"
                                                             ],
                                                             "origin": "igp",
-                                                            "tunnel_attribute": {
-                                                                "PMSI": {
-                                                                    "label": "10101",
-                                                                    "flags": "0x00",
-                                                                    "tunnel_id": "6.6.6.6",
-                                                                    "tunnel_type": "Ingress Replication"
-                                                                }
+                                                            "pmsi_tunnel_attribute": {
+                                                                "label": "10101",
+                                                                "flags": "0x00",
+                                                                "tunnel_id": "6.6.6.6",
+                                                                "tunnel_type": "Ingress Replication"
                                                             },
                                                             "weight": 32768
                                                         }
@@ -26962,13 +26952,11 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
                                                                 "ENCAP:8"
                                                             ],
                                                             "origin": "igp",
-                                                            "tunnel_attribute": {
-                                                                "PMSI": {
-                                                                    "label": "10202",
-                                                                    "flags": "0x00",
-                                                                    "tunnel_id": "7.7.7.7",
-                                                                    "tunnel_type": "Ingress Replication"
-                                                                }
+                                                            "pmsi_tunnel_attribute": {
+                                                                "label": "10202",
+                                                                "flags": "0x00",
+                                                                "tunnel_id": "7.7.7.7",
+                                                                "tunnel_type": "Ingress Replication"
                                                             },
                                                             "weight": 0
                                                         }
@@ -27000,13 +26988,11 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
                                                                 "ENCAP:8"
                                                             ],
                                                             "origin": "igp",
-                                                            "tunnel_attribute": {
-                                                                "PMSI": {
-                                                                    "label": "10202",
-                                                                    "flags": "0x00",
-                                                                    "tunnel_id": "6.6.6.6",
-                                                                    "tunnel_type": "Ingress Replication"
-                                                                }
+                                                            "pmsi_tunnel_attribute": {
+                                                                "label": "10202",
+                                                                "flags": "0x00",
+                                                                "tunnel_id": "6.6.6.6",
+                                                                "tunnel_type": "Ingress Replication"
                                                             },
                                                             "weight": 32768
                                                         }
@@ -27042,13 +27028,11 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
                                                                 "ENCAP:8"
                                                             ],
                                                             "origin": "igp",
-                                                            "tunnel_attribute": {
-                                                                "PMSI": {
-                                                                    "label": "10201",
-                                                                    "flags": "0x00",
-                                                                    "tunnel_id": "7.7.7.7",
-                                                                    "tunnel_type": "Ingress Replication"
-                                                                }
+                                                            "pmsi_tunnel_attribute": {
+                                                                "label": "10201",
+                                                                "flags": "0x00",
+                                                                "tunnel_id": "7.7.7.7",
+                                                                "tunnel_type": "Ingress Replication"
                                                             },
                                                             "weight": 0
                                                         }
@@ -27080,13 +27064,11 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
                                                                 "ENCAP:8"
                                                             ],
                                                             "origin": "igp",
-                                                            "tunnel_attribute": {
-                                                                "PMSI": {
-                                                                    "label": "10201",
-                                                                    "flags": "0x00",
-                                                                    "tunnel_id": "6.6.6.6",
-                                                                    "tunnel_type": "Ingress Replication"
-                                                                }
+                                                            "pmsi_tunnel_attribute": {
+                                                                "label": "10201",
+                                                                "flags": "0x00",
+                                                                "tunnel_id": "6.6.6.6",
+                                                                "tunnel_type": "Ingress Replication"
                                                             },
                                                             "weight": 32768
                                                         }
@@ -27120,13 +27102,11 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
                                                                 "ENCAP:8"
                                                             ],
                                                             "origin": "igp",
-                                                            "tunnel_attribute": {
-                                                                "PMSI": {
-                                                                    "label": "10102",
-                                                                    "flags": "0x00",
-                                                                    "tunnel_id": "7.7.7.7",
-                                                                    "tunnel_type": "Ingress Replication"
-                                                                }
+                                                            "pmsi_tunnel_attribute": {
+                                                                "label": "10102",
+                                                                "flags": "0x00",
+                                                                "tunnel_id": "7.7.7.7",
+                                                                "tunnel_type": "Ingress Replication"
                                                             },
                                                             "weight": 0
                                                         }

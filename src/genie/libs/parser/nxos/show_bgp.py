@@ -9889,14 +9889,12 @@ class ShowBgpL2vpnEvpnRouteTypeSchema(MetaParser):
                                                         Optional('advertisedto'): list,
                                                         Optional('originatorid'): str,
                                                         Optional('clusterlist'): list,
-                                                        Optional('tunnel_attribute'): {
-                                                            Any(): {
-                                                                Optional('flags'): str,
-                                                                Optional('label'): str,
-                                                                Optional('tunnel_type'): str,
-                                                                Optional('tunnel_id'): str,
+                                                        Optional('pmsi_tunnel_attribute'): {
+                                                            Optional('flags'): str,
+                                                            Optional('label'): str,
+                                                            Optional('tunnel_type'): str,
+                                                            Optional('tunnel_id'): str,
 
-                                                            }
                                                         }
                                                     }
                                                 }
@@ -10109,8 +10107,7 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
             m = p17.match(line)
             if m:
                 group = m.groupdict()
-                tunnel_attribute = group.get('attribute')
-                tunnel_dict = path_dict.setdefault('tunnel_attribute',{}).setdefault(tunnel_attribute,{})
+                tunnel_dict = path_dict.setdefault('pmsi_tunnel_attribute',{})
                 continue
 
             m = p18.match(line)

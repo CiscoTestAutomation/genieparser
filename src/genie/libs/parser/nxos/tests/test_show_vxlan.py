@@ -1317,20 +1317,20 @@ class test_show_nve_vni_ingress_replication(unittest.TestCase):
             'vni': {
                 10101:{
                     'vni': 10101,
-                    'replication_list': ["7.7.7.7"],
-                    'uptime': "1d02h",
+                    'repl_ip': "7.7.7.7",
+                    'up_time': "1d02h",
                     'source': "bgp-imet",
                 },
                 10201: {
                     'vni': 10201,
-                    'replication_list': ["7.7.7.7"],
-                    'uptime': "1d02h",
+                    'repl_ip': "7.7.7.7",
+                    'up_time': "1d02h",
                     'source': "bgp-imet",
                 },
                 10202: {
                     'vni': 10202,
-                    'replication_list': ["7.7.7.7"],
-                    'uptime': "1d02h",
+                    'repl_ip': "7.7.7.7",
+                    'up_time': "1d02h",
                     'source': "bgp-imet",
                 },
             },

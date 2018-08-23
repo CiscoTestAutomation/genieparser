@@ -1470,9 +1470,9 @@ class ShowNveVniIngressReplicationSchema(MetaParser):
             'vni': {
                 Any(): {
                     'vni': int,
-                    'replication_list': list,
+                    'repl_ip': str,
                     'source': str,
-                    'uptime': str,
+                    'up_time': str,
                 }
             }
         }
@@ -1510,9 +1510,9 @@ class ShowNveVniIngressReplication(ShowNveVniIngressReplicationSchema):
                 vni = int(group.pop('vni'))
                 nve_dict = result_dict.setdefault(nve_name,{}).setdefault('vni',{}).setdefault(vni,{})
                 nve_dict.update({'vni': vni})
-                nve_dict.update({'replication_list': group.pop('replication_list').split( )})
+                nve_dict.update({'repl_ip': group.pop('replication_list').strip()})
                 nve_dict.update({'source': group.pop('source').lower()})
-                nve_dict.update({'uptime': group.pop('uptime')})
+                nve_dict.update({'up_time': group.pop('uptime')})
                 continue
 
         return result_dict
