@@ -323,7 +323,7 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
                 m = p1.match(line)
                 if m:
                     group = m.groupdict()
-                    nve_name = group.get('nve')
+                    nve_name = '{}{}'.format('nve', group.get('nve'))
                     nve_list.append(nve_name)
                     continue
 
