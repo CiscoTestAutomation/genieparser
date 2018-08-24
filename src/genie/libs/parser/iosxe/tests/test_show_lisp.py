@@ -462,6 +462,11 @@ class test_show_lisp_service(unittest.TestCase):
                             'enabled': True,
                             'encapsulation': 'lisp',
                             'map_cache_ttl': '1d00h',
+                            'use_petrs':
+                                {'10.10.10.10':
+                                    {'use_petr': '10.10.10.10',
+                                    },
+                                },
                             'mapping_servers': 
                                 {'13.13.13.13': 
                                     {'ms_address': '13.13.13.13',
@@ -601,6 +606,11 @@ class test_show_lisp_service(unittest.TestCase):
                             'enabled': True,
                             'encapsulation': 'lisp',
                             'map_cache_ttl': '1d00h',
+                            'use_petrs':
+                                {'10.10.10.10':
+                                    {'use_petr': '10.10.10.10',
+                                    },
+                                },
                             'mapping_servers': 
                                 {'13.13.13.13': 
                                     {'ms_address': '13.13.13.13',
@@ -849,7 +859,6 @@ class test_show_lisp_service(unittest.TestCase):
                                 'vlan101': 
                                     {'address': '11.11.11.1',
                                     'interface': 'Loopback0'}}}}}}}}
-
 
     golden_output3 = {'execute.return_value': '''
         OTT-LISP-C3K-3-xTR1#show lisp all instance-id * ethernet
@@ -1348,7 +1357,10 @@ class test_show_lisp_service(unittest.TestCase):
                                     {'map_resolver': '4.4.4.4'}},
                             'max_smr_per_map_cache_entry': '8 more specifics',
                             'multiple_smr_suppression_time': 20,
-                            'proxy_itr_router': False,
+                            'proxy_itr_router': True,
+                            'proxy_itrs': 
+                                {'10.10.10.10': 
+                                    {'proxy_etr_address': '10.10.10.10'}},
                             'solicit_map_request': 'accept and process'},
                         'locator_status_algorithms': 
                             {'ipv4_rloc_min_mask_len': 0,
@@ -1378,7 +1390,7 @@ class test_show_lisp_service(unittest.TestCase):
           Locator table:                       default
           Ingress Tunnel Router (ITR):         enabled
           Egress Tunnel Router (ETR):          enabled
-          Proxy-ITR Router (PITR):             disabled
+          Proxy-ITR Router (PITR):             enabled RLOCs: 10.10.10.10
           Proxy-ETR Router (PETR):             disabled
           NAT-traversal Router (NAT-RTR):      disabled
           Mobility First-Hop Router:           disabled
@@ -1705,8 +1717,8 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                     'mappings': 
                                         {'0.0.0.0/0': 
                                             {'id': '0.0.0.0/0',
-                                            'uptime': '15:23:50',
-                                            'expires': 'never',
+                                            'creation_time': '15:23:50',
+                                            'time_to_live': 'never',
                                             'via': 'static-send-map-request',
                                             'eid': 
                                                 {'address_type': 'ipv4-afi',
@@ -1716,8 +1728,8 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                             'negative_mapping': {'map_reply_action': 'send-map-request'}},
                                         '192.168.9.0/24': 
                                             {'id': '192.168.9.0/24',
-                                            'uptime': '00:04:02',
-                                            'expires': '23:55:57',
+                                            'creation_time': '00:04:02',
+                                            'time_to_live': '23:55:57',
                                             'via': 'map-reply, complete',
                                             'eid': 
                                                 {'address_type': 'ipv4-afi',
@@ -1728,16 +1740,16 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                                 {'rlocs': 
                                                     {1: 
                                                         {'id': '1',
+                                                        'encap_iid': '-',
+                                                        'priority': 50,
+                                                        'state': 'up',
+                                                        'uptime': '00:04:02',
+                                                        'weight': 50,
                                                         'locator_address': 
                                                             {'address_type': 'ipv4-afi',
-                                                            'encap_iid': '-',
-                                                            'ipv4': 
-                                                                {'ipv4': '8.8.8.8'},
-                                                            'priority': 50,
-                                                            'state': 'up',
-                                                            'uptime': '00:04:02',
                                                             'virtual_network_id': '101',
-                                                            'weight': 50}}}}}}}}}}}}}}
+                                                            'ipv4': 
+                                                                {'ipv4': '8.8.8.8'}}}}}}}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         202-XTR#show lisp all instance-id 101 ipv4 map-cache 
@@ -1768,47 +1780,48 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                     'mappings': 
                                         {'172.16.10.0/24': 
                                             {'eid': 
-                                                {'address_type': 'ipv6-afi',
+                                                {'address_type': 'ipv4-afi',
                                                 'ipv4': 
                                                     {'ipv4': '172.16.10.0/24'},
                                                 'vrf': 'red'},
-                                            'expires': '23:59:59',
+                                            'time_to_live': '23:59:59',
                                             'id': '172.16.10.0/24',
                                             'positive_mapping': 
                                                 {'rlocs': 
                                                     {1: 
                                                         {'id': '1',
+                                                        'priority': 1,
+                                                        'state': 'up',
+                                                        'uptime': '00:00:00',
+                                                        'weight': 50,
                                                         'locator_address': 
-                                                            {'address_type': 'ipv6-afi',
-                                                            'ipv4': {'ipv4': '172.16.156.134'},
-                                                            'priority': 1,
-                                                            'state': 'up',
-                                                            'uptime': '00:00:00',
-                                                            'virtual_network_id': '101',
-                                                            'weight': 50}},
+                                                            {'address_type': 'ipv4-afi',
+                                                            'ipv4': 
+                                                                {'ipv4': '172.16.156.134'},
+                                                            'virtual_network_id': '101'}},
                                                     2: 
                                                         {'id': '2',
+                                                        'priority': 1,
+                                                        'state': 'up',
+                                                        'uptime': '00:00:00',
+                                                        'weight': 50,
                                                         'locator_address': 
-                                                            {'address_type': 'ipv6-afi',
+                                                            {'address_type': 'ipv4-afi',
                                                             'ipv4': 
                                                                 {'ipv4': '192.168.65.94'},
-                                                            'priority': 1,
-                                                            'state': 'up',
-                                                            'uptime': '00:00:00',
-                                                            'virtual_network_id': '101',
-                                                            'weight': 50}},
+                                                            'virtual_network_id': '101'}},
                                                     3: 
                                                         {'id': '3',
+                                                        'priority': 2,
+                                                        'state': 'up',
+                                                        'uptime': '00:00:00',
+                                                        'weight': 100,
                                                         'locator_address': 
                                                             {'address_type': 'ipv6-afi',
                                                             'ipv6': 
                                                                 {'ipv6': '2001:468:D01:9C::80DF:9C86'},
-                                                            'priority': 2,
-                                                            'state': 'up',
-                                                            'uptime': '00:00:00',
-                                                            'virtual_network_id': '101',
-                                                            'weight': 100}}}},
-                                            'uptime': '00:00:00',
+                                                            'virtual_network_id': '101'}}}},
+                                            'creation_time': '00:00:00',
                                             'via': 'map-reply, complete'},
                                         '2001:192:168:9::/64': 
                                             {'eid': 
@@ -1816,23 +1829,23 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                                 'ipv6': 
                                                     {'ipv6': '2001:192:168:9::/64'},
                                                 'vrf': 'red'},
-                                            'expires': '23:53:08',
+                                            'time_to_live': '23:53:08',
                                             'id': '2001:192:168:9::/64',
                                             'positive_mapping': 
                                                 {'rlocs': 
                                                     {1: 
                                                         {'id': '1',
+                                                        'encap_iid': '-',
+                                                        'priority': 50,
+                                                        'state': 'up',
+                                                        'uptime': '00:06:51',
+                                                        'weight': 50,
                                                         'locator_address': 
-                                                            {'address_type': 'ipv6-afi',
-                                                            'encap_iid': '-',
+                                                            {'address_type': 'ipv4-afi',
                                                             'ipv4': 
                                                                 {'ipv4': '8.8.8.8'},
-                                                            'priority': 50,
-                                                            'state': 'up',
-                                                            'uptime': '00:06:51',
-                                                            'virtual_network_id': '101',
-                                                            'weight': 50}}}},
-                                            'uptime': '00:06:51',
+                                                            'virtual_network_id': '101'}}}},
+                                            'creation_time': '00:06:51',
                                             'via': 'map-reply, complete'},
                                         '::/0': 
                                             {'eid': 
@@ -1840,11 +1853,11 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                                 'ipv6': 
                                                     {'ipv6': '::/0'},
                                                 'vrf': 'red'},
-                                            'expires': 'never',
+                                            'time_to_live': 'never',
                                             'id': '::/0',
                                             'negative_mapping': 
                                                 {'map_reply_action': 'send-map-request'},
-                                            'uptime': '00:11:28',
+                                            'creation_time': '00:11:28',
                                             'via': 'static-send-map-request'}}}}}}}}}}
 
     golden_output2 = {'execute.return_value': '''
@@ -1882,98 +1895,100 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                     'mappings': 
                                         {'b827.eb51.f5ce/48': 
                                             {'eid': 
-                                                {'address_type': 'mac-afi',
+                                                {'address_type': 'ipv4-afi',
                                                 'ipv4': 
                                                     {'ipv4': 'b827.eb51.f5ce/48'},
                                                 'vrf': '101'},
-                                            'expires': '01:10:17',
+                                            'time_to_live': '01:10:17',
                                             'id': 'b827.eb51.f5ce/48',
                                             'positive_mapping': 
                                                 {'rlocs': 
                                                     {1: 
                                                         {'id': '1',
+                                                        'priority': 0,
+                                                        'state': 'up',
+                                                        'uptime': '22:49:42',
+                                                        'encap_iid': '-',
+                                                        'weight': 0,
                                                         'locator_address': 
-                                                            {'address_type': 'mac-afi',
-                                                            'encap_iid': '-',
+                                                            {'address_type': 'ipv4-afi',
                                                             'ipv4': 
                                                                 {'ipv4': '22.22.22.1'},
-                                                            'priority': 0,
-                                                            'state': 'up',
-                                                            'uptime': '22:49:42',
-                                                            'virtual_network_id': '193',
-                                                            'weight': 0}}}},
-                                            'uptime': '22:49:42',
+                                                            'virtual_network_id': '193'}}}},
+                                            'creation_time': '22:49:42',
                                             'via': 'WLC Map-Notify, complete'},
                                         'b827.eb73.159c/48': 
                                             {'eid': 
-                                                {'address_type': 'mac-afi',
+                                                {'address_type': 'ipv4-afi',
                                                 'ipv4': 
                                                     {'ipv4': 'b827.eb73.159c/48'},
                                                 'vrf': '101'},
-                                            'expires': '08:57:24',
+                                            'time_to_live': '08:57:24',
                                             'id': 'b827.eb73.159c/48',
                                             'positive_mapping': 
                                                 {'rlocs': 
                                                     {1: 
                                                         {'id': '1',
+                                                        'encap_iid': '-',
+                                                        'priority': 0,
+                                                        'state': 'up',
+                                                        'uptime': '15:02:35',
+                                                        'weight': 0,
                                                         'locator_address': 
-                                                            {'address_type': 'mac-afi',
-                                                            'encap_iid': '-',
+                                                            {'address_type': 'ipv4-afi',
                                                             'ipv4': 
                                                                 {'ipv4': '22.22.22.1'},
-                                                            'priority': 0,
-                                                            'state': 'up',
-                                                            'uptime': '15:02:35',
                                                             'virtual_network_id': '193',
-                                                            'weight': 0}}}},
-                                            'uptime': '15:02:35',
+                                                            }}}},
+                                            'creation_time': '15:02:35',
                                             'via': 'WLC Map-Notify, complete'},
                                         'b827.ebd0.acc6/48': 
                                             {'eid': 
-                                                {'address_type': 'mac-afi',
+                                                {'address_type': 'ipv4-afi',
                                                 'ipv4': 
                                                     {'ipv4': 'b827.ebd0.acc6/48'},
                                                 'vrf': '101'},
-                                            'expires': '08:57:25',
+                                            'time_to_live': '08:57:25',
                                             'id': 'b827.ebd0.acc6/48',
                                             'positive_mapping': 
                                                 {'rlocs': 
                                                     {1: 
                                                         {'id': '1',
+                                                        'encap_iid': '-',
+                                                        'priority': 0,
+                                                        'state': 'up',
+                                                        'uptime': '15:02:34',
+                                                        'weight': 0,
                                                         'locator_address': 
-                                                            {'address_type': 'mac-afi',
-                                                            'encap_iid': '-',
+                                                            {'address_type': 'ipv4-afi',
                                                             'ipv4': 
                                                                 {'ipv4': '22.22.22.1'},
-                                                            'priority': 0,
-                                                            'state': 'up',
-                                                            'uptime': '15:02:34',
-                                                            'virtual_network_id': '193',
-                                                            'weight': 0}}}},
-                                            'uptime': '15:02:34',
+                                                            'virtual_network_id': '193'}}}},
+                                            'creation_time': '15:02:34',
                                             'via': 'WLC Map-Notify, complete'},
                                         'b827.ebd6.0c63/48': 
                                             {'eid': 
-                                                {'address_type': 'mac-afi',
+                                                {'address_type': 'ipv4-afi',
                                                 'ipv4': 
                                                     {'ipv4': 'b827.ebd6.0c63/48'},
                                                 'vrf': '101'},
-                                            'expires': '09:02:44',
+                                            'time_to_live': '09:02:44',
                                             'id': 'b827.ebd6.0c63/48',
                                             'positive_mapping': 
                                                 {'rlocs': 
                                                     {1: 
                                                         {'id': '1',
-                                                        'locator_address': 
-                                                            {'address_type': 'mac-afi',
                                                         'encap_iid': '-',
-                                                        'ipv4': {'ipv4': '22.22.22.1'},
                                                         'priority': 0,
                                                         'state': 'up',
                                                         'uptime': '14:57:15',
-                                                        'virtual_network_id': '193',
-                                                        'weight': 0}}}},
-                                            'uptime': '14:57:15',
+                                                        'weight': 0,
+                                                        'locator_address': 
+                                                            {'address_type': 'ipv4-afi',
+                                                            'ipv4': 
+                                                                {'ipv4': '22.22.22.1'},
+                                                            'virtual_network_id': '193'}}}},
+                                            'creation_time': '14:57:15',
                                             'via': 'WLC Map-Notify, complete'}}}}}}}}}}
 
     golden_output3 = {'execute.return_value': '''
@@ -2627,31 +2642,42 @@ class test_show_lisp_service_summary(unittest.TestCase):
                 {'lisp_router_instance_id': 0,
                 'service': 
                     {'ipv4': 
-                        {'etr': 
+                        {'virtual_network_ids':
+                            {'102':
+                                {'cache_idle': '0%',
+                                'cache_size': 1,
+                                'db_no_route': 0,
+                                'db_size': 1,
+                                'incomplete': '0.0%',
+                                'vrf': 'blue',
+                                'interface': 'LISP0.102',
+                                'lisp_role':
+                                    {'itr-etr':
+                                        {'lisp_role_type': 'itr-etr',
+                                        },
+                                    },
+                                },
+                            '101':
+                                {'cache_idle': '0.0%',
+                                'cache_size': 2,
+                                'db_no_route': 0,
+                                'db_size': 1,
+                                'incomplete': '0.0%',
+                                'vrf': 'red',
+                                'interface': 'LISP0.101',
+                                'lisp_role':
+                                    {'itr-etr':
+                                        {'lisp_role_type': 'itr-etr',
+                                        },
+                                    },
+                                },
+                            },
+                        'etr':
                             {'summary': 
                                 {'eid_tables_incomplete_map_cache_entries': 0,
                                 'eid_tables_inconsistent_locators': 0,
                                 'eid_tables_pending_map_cache_update_to_fib': 0,
                                 'instance_count': 2,
-                                'instance_id': 
-                                    {'102':
-                                        {'cache_idle': '0%',
-                                        'cache_size': 1,
-                                        'db_no_route': 0,
-                                        'db_size': 1,
-                                        'incomplete': '0.0%',
-                                        'vrf': 'blue',
-                                        'interface': 'LISP0.102',
-                                        'role': 'ITR-ETR'},
-                                    '101': 
-                                        {'cache_idle': '0.0%',
-                                        'cache_size': 2,
-                                        'db_no_route': 0,
-                                        'db_size': 1,
-                                        'incomplete': '0.0%',
-                                        'vrf': 'red',
-                                        'interface': 'LISP0.101',
-                                        'role': 'ITR-ETR'}},
                                 'total_db_entries': 2,
                                 'total_db_entries_inactive': 0,
                                 'total_eid_tables': 2,
@@ -2690,22 +2716,28 @@ class test_show_lisp_service_summary(unittest.TestCase):
                 {'lisp_router_instance_id': 0,
                 'service': 
                     {'ipv6': 
-                        {'etr': 
+                        {'virtual_network_ids':
+                            {'101':
+                                {'cache_idle': '0.0%',
+                                'cache_size': 2,
+                                'db_no_route': 0,
+                                'db_size': 1,
+                                'incomplete': '0.0%',
+                                'vrf': 'red',
+                                'interface': 'LISP0.101',
+                                'lisp_role':
+                                    {'itr-etr':
+                                        {'lisp_role_type': 'itr-etr',
+                                        },
+                                    },
+                                },
+                            },
+                        'etr':
                             {'summary': 
                                 {'eid_tables_incomplete_map_cache_entries': 0,
                                 'eid_tables_inconsistent_locators': 0,
                                 'eid_tables_pending_map_cache_update_to_fib': 0,
                                 'instance_count': 2,
-                                'instance_id': 
-                                    {'101': 
-                                        {'cache_idle': '0.0%',
-                                        'cache_size': 2,
-                                        'db_no_route': 0,
-                                        'db_size': 1,
-                                        'incomplete': '0.0%',
-                                        'vrf': 'red',
-                                        'interface': 'LISP0.101',
-                                        'role': 'ITR-ETR'}},
                                 'total_db_entries': 1,
                                 'total_db_entries_inactive': 0,
                                 'total_eid_tables': 1,
@@ -2742,29 +2774,40 @@ class test_show_lisp_service_summary(unittest.TestCase):
                 {'lisp_router_instance_id': 0,
                 'service': 
                     {'ethernet': 
-                        {'etr': 
+                        {'virtual_network_ids':
+                            {'1':
+                                {'cache_idle': '100%',
+                                'cache_size': 4,
+                                'db_no_route': 0,
+                                'db_size': 2,
+                                'incomplete': '0.0%',
+                                'interface': 'LISP0.1',
+                                'lisp_role':
+                                    {'none':
+                                        {'lisp_role_type': 'none',
+                                        },
+                                    },
+                                },
+                            '2':
+                                {'cache_idle': '0%',
+                                'cache_size': 0,
+                                'db_no_route': 0,
+                                'db_size': 2,
+                                'incomplete': '0%',
+                                'interface': 'LISP0.2',
+                                'lisp_role':
+                                    {'none':
+                                        {'lisp_role_type': 'none',
+                                        },
+                                    },
+                                },
+                            },
+                        'etr':
                             {'summary': 
                                 {'eid_tables_incomplete_map_cache_entries': 0,
                                 'eid_tables_inconsistent_locators': 0,
                                 'eid_tables_pending_map_cache_update_to_fib': 0,
                                 'instance_count': 69,
-                                'instance_id': 
-                                    {'1': 
-                                        {'cache_idle': '100%',
-                                        'cache_size': 4,
-                                        'db_no_route': 0,
-                                        'db_size': 2,
-                                        'incomplete': '0.0%',
-                                        'interface': 'LISP0.1',
-                                        'role': 'NONE'},
-                                    '2': 
-                                        {'cache_idle': '0%',
-                                        'cache_size': 0,
-                                        'db_no_route': 0,
-                                        'db_size': 2,
-                                        'incomplete': '0%',
-                                        'interface': 'LISP0.2',
-                                        'role': 'NONE'}},
                                 'total_db_entries': 4,
                                 'total_db_entries_inactive': 0,
                                 'total_eid_tables': 2,
@@ -2850,7 +2893,8 @@ class test_show_lisp_service_database(unittest.TestCase):
                         {'etr': 
                             {'local_eids': 
                                 {'101': 
-                                    {'total_eid_entries': 1,
+                                    {'vni': '101',
+                                    'total_eid_entries': 1,
                                     'no_route_eid_entries': 0,
                                     'inactive_eid_entries': 0,
                                     'eids': 
@@ -2891,7 +2935,8 @@ class test_show_lisp_service_database(unittest.TestCase):
                         {'etr': 
                             {'local_eids': 
                                 {'101': 
-                                    {'total_eid_entries': 1,
+                                    {'vni': '101',
+                                    'total_eid_entries': 1,
                                     'no_route_eid_entries': 0,
                                     'inactive_eid_entries': 0,
                                     'eids': 
@@ -2932,7 +2977,8 @@ class test_show_lisp_service_database(unittest.TestCase):
                         {'etr': 
                             {'local_eids': 
                                 {'1': 
-                                    {'total_eid_entries': 2,
+                                    {'vni': '1',
+                                    'total_eid_entries': 2,
                                     'no_route_eid_entries': 0,
                                     'inactive_eid_entries': 0,
                                     'dynamic_eids': 
@@ -2961,7 +3007,8 @@ class test_show_lisp_service_database(unittest.TestCase):
                                         'state': 'site-self, reachable',
                                         'weight': 100}}},
                                 '2': 
-                                    {'total_eid_entries': 2,
+                                    {'vni': '2',
+                                    'total_eid_entries': 2,
                                     'no_route_eid_entries': 0,
                                     'inactive_eid_entries': 0,
                                     'dynamic_eids': 
@@ -3403,11 +3450,16 @@ class test_show_lisp_service_server_summary(unittest.TestCase):
                         {'instance_id':
                             {'101':
                                 {'map_server': 
-                                    {'counters': 
-                                        {'num_configured_eid_prefixes': 2,
-                                        'num_configured_sites': 2,
-                                        'num_registered_eid_prefixes': 2,
-                                        'num_registered_sites': 2,
+                                    {'summary': 
+                                        {'number_registered_sites': 2,
+                                        'number_configured_sites': 2,
+                                        'af_datum': 
+                                            {'ipv4-afi':
+                                                {'address_type': 'ipv4-afi',
+                                                'number_registered_eids': 2,
+                                                'number_configured_eids': 2,
+                                                },
+                                            },
                                         'sites_with_inconsistent_registrations': 0},
                                     'sites': 
                                         {'xtr1_1': 
@@ -3448,11 +3500,16 @@ class test_show_lisp_service_server_summary(unittest.TestCase):
                         {'instance_id':
                             {'101':
                                 {'map_server': 
-                                    {'counters': 
-                                        {'num_configured_eid_prefixes': 2,
-                                        'num_configured_sites': 2,
-                                        'num_registered_eid_prefixes': 2,
-                                        'num_registered_sites': 2,
+                                    {'summary': 
+                                        {'number_configured_sites': 2,
+                                        'number_registered_sites': 2,
+                                        'af_datum':
+                                            {'ipv6-afi':
+                                                {'address_type': 'ipv6-afi',
+                                                'number_configured_eids': 2,
+                                                'number_registered_eids': 2,
+                                                },
+                                            },
                                         'sites_with_inconsistent_registrations': 0},
                                     'sites': 
                                         {'xtr1_1': 
@@ -3493,9 +3550,9 @@ class test_show_lisp_service_server_summary(unittest.TestCase):
                         {'instance_id': 
                             {'101': 
                                 {'map_server': 
-                                    {'counters': 
-                                        {'num_configured_sites': 1,
-                                        'num_registered_sites': 0,
+                                    {'summary': 
+                                        {'number_configured_sites': 1,
+                                        'number_registered_sites': 0,
                                         'site_registration_count': 0,
                                         'site_registration_limit': 0,
                                         'sites_with_inconsistent_registrations': 0},
@@ -3505,60 +3562,90 @@ class test_show_lisp_service_server_summary(unittest.TestCase):
                                             'inconsistent': 0,
                                             'registered': 0,
                                             'site_id': 'xtr1_1'}}}},
-                            '102': {'map_server': {'counters': {'num_configured_sites': 1,
-                                                                'num_registered_sites': 0,
-                                                                'site_registration_count': 0,
-                                                                'site_registration_limit': 0,
-                                                                'sites_with_inconsistent_registrations': 0},
-                                                   'sites': {'xtr1_2': {'configured': 0,
-                                                                        'inconsistent': 0,
-                                                                        'registered': 0,
-                                                                        'site_id': 'xtr1_2'}}}},
-                            '103': {'map_server': {'counters': {'num_configured_sites': 1,
-                                                                'num_registered_sites': 0,
-                                                                'site_registration_count': 0,
-                                                                'site_registration_limit': 0,
-                                                                'sites_with_inconsistent_registrations': 0},
-                                                   'sites': {'provider': {'configured': 0,
-                                                                          'inconsistent': 0,
-                                                                          'registered': 0,
-                                                                          'site_id': 'provider'}}}},
-                            '104': {'map_server': {'counters': {'num_configured_sites': 1,
-                                                                'num_registered_sites': 0,
-                                                                'site_registration_count': 0,
-                                                                'site_registration_limit': 0,
-                                                                'sites_with_inconsistent_registrations': 0},
-                                                   'sites': {'xtr1_3': {'configured': 0,
-                                                                        'inconsistent': 0,
-                                                                        'registered': 0,
-                                                                        'site_id': 'xtr1_3'}}}},
-                            '107': {'map_server': {'counters': {'num_configured_sites': 1,
-                                                                'num_registered_sites': 0,
-                                                                'site_registration_count': 0,
-                                                                'site_registration_limit': 0,
-                                                                'sites_with_inconsistent_registrations': 0},
-                                                   'sites': {'prov1': {'configured': 0,
-                                                                       'inconsistent': 0,
-                                                                       'registered': 0,
-                                                                       'site_id': 'prov1'}}}},
-                            '108': {'map_server': {'counters': {'num_configured_sites': 1,
-                                                                'num_registered_sites': 0,
-                                                                'site_registration_count': 0,
-                                                                'site_registration_limit': 0,
-                                                                'sites_with_inconsistent_registrations': 0},
-                                                   'sites': {'prov2': {'configured': 0,
-                                                                       'inconsistent': 0,
-                                                                       'registered': 0,
-                                                                       'site_id': 'prov2'}}}},
-                            '109': {'map_server': {'counters': {'num_configured_sites': 1,
-                                                                'num_registered_sites': 0,
-                                                                'site_registration_count': 0,
-                                                                'site_registration_limit': 0,
-                                                                'sites_with_inconsistent_registrations': 0},
-                                                   'sites': {'prov3': {'configured': 0,
-                                                                       'inconsistent': 0,
-                                                                       'registered': 0,
-                                                                       'site_id': 'prov3'}}}}}}}}}}
+                            '102': 
+                                {'map_server': 
+                                    {'summary': 
+                                        {'number_configured_sites': 1,
+                                        'number_registered_sites': 0,
+                                        'site_registration_count': 0,
+                                        'site_registration_limit': 0,
+                                        'sites_with_inconsistent_registrations': 0},
+                                    'sites': 
+                                        {'xtr1_2': 
+                                            {'configured': 0,
+                                            'inconsistent': 0,
+                                            'registered': 0,
+                                            'site_id': 'xtr1_2'}}}},
+                            '103': 
+                                {'map_server': 
+                                    {'summary': 
+                                        {'number_configured_sites': 1,
+                                        'number_registered_sites': 0,
+                                        'site_registration_count': 0,
+                                        'site_registration_limit': 0,
+                                        'sites_with_inconsistent_registrations': 0},
+                                    'sites': 
+                                        {'provider': 
+                                            {'configured': 0,
+                                            'inconsistent': 0,
+                                            'registered': 0,
+                                            'site_id': 'provider'}}}},
+                            '104': 
+                                {'map_server': 
+                                    {'summary': 
+                                        {'number_configured_sites': 1,
+                                        'number_registered_sites': 0,
+                                        'site_registration_count': 0,
+                                        'site_registration_limit': 0,
+                                        'sites_with_inconsistent_registrations': 0},
+                                    'sites': 
+                                        {'xtr1_3': 
+                                            {'configured': 0,
+                                            'inconsistent': 0,
+                                            'registered': 0,
+                                            'site_id': 'xtr1_3'}}}},
+                            '107': 
+                                {'map_server': 
+                                    {'summary': 
+                                        {'number_configured_sites': 1,
+                                        'number_registered_sites': 0,
+                                        'site_registration_count': 0,
+                                        'site_registration_limit': 0,
+                                        'sites_with_inconsistent_registrations': 0},
+                                    'sites': 
+                                        {'prov1': 
+                                            {'configured': 0,
+                                            'inconsistent': 0,
+                                            'registered': 0,
+                                            'site_id': 'prov1'}}}},
+                            '108': 
+                                {'map_server': 
+                                    {'summary': 
+                                        {'number_configured_sites': 1,
+                                        'number_registered_sites': 0,
+                                        'site_registration_count': 0,
+                                        'site_registration_limit': 0,
+                                        'sites_with_inconsistent_registrations': 0},
+                                    'sites': 
+                                        {'prov2': 
+                                            {'configured': 0,
+                                            'inconsistent': 0,
+                                            'registered': 0,
+                                            'site_id': 'prov2'}}}},
+                            '109': 
+                                {'map_server': 
+                                    {'summary': 
+                                        {'number_configured_sites': 1,
+                                        'number_registered_sites': 0,
+                                        'site_registration_count': 0,
+                                        'site_registration_limit': 0,
+                                        'sites_with_inconsistent_registrations': 0},
+                                    'sites': 
+                                        {'prov3': 
+                                            {'configured': 0,
+                                            'inconsistent': 0,
+                                            'registered': 0,
+                                            'site_id': 'prov3'}}}}}}}}}}
 
     golden_output3 = {'execute.return_value': '''
         OTT-LISP-C9K-20-MSMR#show lisp all instance-id * ethernet server summary
@@ -3746,11 +3833,14 @@ class test_show_lisp_service_server_detail_internal(unittest.TestCase):
                                 {'101': 
                                     {'mappings': 
                                         {'192.168.0.0/24': 
-                                            {'address_type': 'ipv4-afi',
-                                            'eid_id': '192.168.0.0/24',
+                                            {'eid_id': '192.168.0.0/24',
                                             'first_registered': '1w4d',
-                                            'ipv4': 
-                                                {'ipv4': '192.168.0.0/24'},
+                                            'eid_address':
+                                                {'address_type': 'ipv4-afi',
+                                                'ipv4': 
+                                                    {'ipv4': '192.168.0.0/24'},
+                                                'virtual_network_id': '101',
+                                                },
                                             'last_registered': '02:41:22',
                                             'merge_active': False,
                                             'more_specifics_accepted': True,
@@ -3764,30 +3854,35 @@ class test_show_lisp_service_server_detail_internal(unittest.TestCase):
                                             'state': 'unknown',
                                             'ttl': '00:00:00'},
                                         '192.168.0.1/32': 
-                                            {'address_type': 'ipv4-afi',
-                                            'eid_id': '192.168.0.1/32',
+                                            {'eid_id': '192.168.0.1/32',
                                             'first_registered': '01:12:41',
-                                            'ipv4': 
-                                                {'ipv4': '192.168.0.1/32'},
+                                            'eid_address':
+                                                {'address_type': 'ipv4-afi',
+                                                'ipv4': 
+                                                    {'ipv4': '192.168.0.1/32'},
+                                                'virtual_network_id': '101',
+                                                },
                                             'last_registered': '01:12:41',
                                             'mapping_records': 
                                                 {'0x21EDD25F-0x7598784C-0x769C8E4E-0xC04926EC': 
                                                     {'eid': 
                                                         {'address_type': 'ipv4-afi',
-                                                        'creation_time': '01:12:41',
-                                                        'hash_function': 'sha1,',
                                                         'ipv4': 
                                                             {'ipv4': '192.168.0.1/32'},
-                                                        'map_notify': True,
-                                                        'merge': False,
-                                                        'nonce': '0x70D18EF4-0x3A605D67',
-                                                        'proxy_reply': True,
-                                                        'security_capability': False,
-                                                        'sourced_by': 'reliable transport',
-                                                        'state': 'complete',
-                                                        'time_to_live': 86400,
-                                                        'ttl': '1d00h'},
+                                                        'virtual_network_id': '101',
+                                                        },
                                                     'etr': '2.2.2.2',
+                                                    'map_notify': True,
+                                                    'merge': False,
+                                                    'nonce': '0x70D18EF4-0x3A605D67',
+                                                    'proxy_reply': True,
+                                                    'security_capability': False,
+                                                    'sourced_by': 'reliable transport',
+                                                    'state': 'complete',
+                                                    'time_to_live': 86400,
+                                                    'ttl': '1d00h',
+                                                    'creation_time': '01:12:41',
+                                                    'hash_function': 'sha1,',
                                                     'locator': 
                                                         {'2.2.2.2': 
                                                             {'local': True,
@@ -3808,30 +3903,35 @@ class test_show_lisp_service_server_detail_internal(unittest.TestCase):
                                             'state': 'complete',
                                             'ttl': '1d00h'},
                                         '192.168.9.0/24': 
-                                            {'address_type': 'ipv4-afi',
-                                            'eid_id': '192.168.9.0/24',
+                                            {'eid_id': '192.168.9.0/24',
                                             'first_registered': '01:55:47',
-                                            'ipv4': 
-                                                {'ipv4': '192.168.9.0/24'},
+                                            'eid_address':
+                                                {'address_type': 'ipv4-afi',
+                                                'ipv4': 
+                                                    {'ipv4': '192.168.9.0/24'},
+                                                'virtual_network_id': '101',
+                                                },
                                             'last_registered': '01:55:47',
                                             'mapping_records': 
                                                 {'0x77200484-0xD134DC48-0x0FBAD9DC-0x4A46CA5D': 
                                                     {'eid': 
                                                         {'address_type': 'ipv4-afi',
-                                                        'creation_time': '01:55:47',
-                                                        'hash_function': 'sha1,',
                                                         'ipv4': 
                                                             {'ipv4': '192.168.9.0/24'},
-                                                        'map_notify': True,
-                                                        'merge': False,
-                                                        'nonce': '0xB06AE31D-0x6ADB0BA5',
-                                                        'proxy_reply': True,
-                                                        'security_capability': False,
-                                                        'sourced_by': 'reliable transport',
-                                                        'state': 'complete',
-                                                        'time_to_live': 86400,
-                                                        'ttl': '1d00h'},
+                                                        'virtual_network_id': '101',
+                                                        },
                                                     'etr': '8.8.8.8',
+                                                    'creation_time': '01:55:47',
+                                                    'hash_function': 'sha1,',
+                                                    'map_notify': True,
+                                                    'merge': False,
+                                                    'nonce': '0xB06AE31D-0x6ADB0BA5',
+                                                    'proxy_reply': True,
+                                                    'security_capability': False,
+                                                    'sourced_by': 'reliable transport',
+                                                    'state': 'complete',
+                                                    'time_to_live': 86400,
+                                                    'ttl': '1d00h',
                                                     'locator': 
                                                         {'8.8.8.8': 
                                                             {'local': True,
@@ -3955,29 +4055,35 @@ class test_show_lisp_service_server_detail_internal(unittest.TestCase):
                                 {'101': 
                                     {'mappings': 
                                         {'2001:192:168:9::/64': 
-                                            {'address_type': 'ipv6-afi',
-                                            'eid_id': '2001:192:168:9::/64',
+                                            {'eid_id': '2001:192:168:9::/64',
                                             'first_registered': '00:13:19',
-                                            'ipv6': 
-                                                {'ipv6': '2001:192:168:9::/64'},
+                                            'eid_address':
+                                                {'address_type': 'ipv6-afi',
+                                                'ipv6': 
+                                                    {'ipv6': '2001:192:168:9::/64'},
+                                                'virtual_network_id': '101',
+                                                },
                                             'last_registered': '00:13:19',
                                             'mapping_records': 
                                                 {'0x6BE732BF-0xD9530F52-0xF9162AA3-0x6283920A': 
                                                     {'eid': 
                                                         {'address_type': 'ipv6-afi',
-                                                        'creation_time': '00:13:19',
-                                                        'hash_function': 'sha1,',
-                                                        'ipv6': {'ipv6': '2001:192:168:9::/64'},
-                                                        'map_notify': True,
-                                                        'merge': False,
-                                                        'nonce': '0x90004FBE-0x03D2420E',
-                                                        'proxy_reply': True,
-                                                        'security_capability': False,
-                                                        'sourced_by': 'reliable transport',
-                                                        'state': 'complete',
-                                                        'time_to_live': 86400,
-                                                        'ttl': '1d00h'},
+                                                        'ipv6': 
+                                                            {'ipv6': '2001:192:168:9::/64'},
+                                                        'virtual_network_id': '101',
+                                                        },
                                                     'etr': '8.8.8.8',
+                                                    'creation_time': '00:13:19',
+                                                    'hash_function': 'sha1,',
+                                                    'map_notify': True,
+                                                    'merge': False,
+                                                    'nonce': '0x90004FBE-0x03D2420E',
+                                                    'proxy_reply': True,
+                                                    'security_capability': False,
+                                                    'sourced_by': 'reliable transport',
+                                                    'state': 'complete',
+                                                    'time_to_live': 86400,
+                                                    'ttl': '1d00h',
                                                     'locator': 
                                                         {'8.8.8.8': 
                                                             {'local': True,
@@ -3998,30 +4104,35 @@ class test_show_lisp_service_server_detail_internal(unittest.TestCase):
                                             'state': 'complete',
                                             'ttl': '1d00h'},
                                         '2001:192:168::/64': 
-                                            {'address_type': 'ipv6-afi',
-                                            'eid_id': '2001:192:168::/64',
+                                            {'eid_id': '2001:192:168::/64',
                                             'first_registered': '00:13:19',
-                                            'ipv6': 
-                                                {'ipv6': '2001:192:168::/64'},
+                                            'eid_address':
+                                                {'address_type': 'ipv6-afi',
+                                                'ipv6': 
+                                                    {'ipv6': '2001:192:168::/64'},
+                                                'virtual_network_id': '101',
+                                                },
                                             'last_registered': '00:13:19',
                                             'mapping_records': 
                                                 {'0x5B6A0468-0x55E69768-0xD1AE2E61-0x4A082FD5': 
                                                     {'eid': 
                                                         {'address_type': 'ipv6-afi',
-                                                        'creation_time': '00:13:19',
-                                                        'hash_function': 'sha1,',
                                                         'ipv6': 
                                                             {'ipv6': '2001:192:168::/64'},
-                                                        'map_notify': True,
-                                                        'merge': False,
-                                                        'nonce': '0xF8845AAB-0x44B8B869',
-                                                        'proxy_reply': True,
-                                                        'security_capability': False,
-                                                        'sourced_by': 'reliable transport',
-                                                        'state': 'complete',
-                                                        'time_to_live': 86400,
-                                                        'ttl': '1d00h'},
+                                                        'virtual_network_id': '101',
+                                                        },
                                                     'etr': '2.2.2.2',
+                                                    'creation_time': '00:13:19',
+                                                    'hash_function': 'sha1,',
+                                                    'map_notify': True,
+                                                    'merge': False,
+                                                    'nonce': '0xF8845AAB-0x44B8B869',
+                                                    'proxy_reply': True,
+                                                    'security_capability': False,
+                                                    'sourced_by': 'reliable transport',
+                                                    'state': 'complete',
+                                                    'time_to_live': 86400,
+                                                    'ttl': '1d00h',
                                                     'locator': 
                                                         {'2.2.2.2': 
                                                             {'local': True,
@@ -4403,7 +4514,7 @@ class test_show_lisp_service_statistics(unittest.TestCase):
                     {'ipv4': 
                         {'statistics': 
                             {'EID': 
-                                {'conrol': 
+                                {'control': 
                                     {'authentication_failures': '0',
                                     'authoritative_records_in': '1',
                                     'authoritative_records_out': '1',
@@ -4523,7 +4634,7 @@ class test_show_lisp_service_statistics(unittest.TestCase):
                                     'unsupported_lisp_packet_type_drops': '0'},
                                 'last_cleared': 'never'},
                             'RLOC': 
-                                {'conrol': 
+                                {'control': 
                                     {'ddt_map_referrals_in': '0',
                                     'ddt_map_referrals_out': '0',
                                     'ddt_map_requests_in': '0',
@@ -4638,7 +4749,7 @@ class test_show_lisp_service_statistics(unittest.TestCase):
                     {'ipv6': 
                         {'statistics': 
                             {'EID': 
-                                {'conrol': 
+                                {'control': 
                                     {'authentication_failures': '0',
                                     'authoritative_records_in': '1',
                                     'authoritative_records_out': '1',
@@ -4756,7 +4867,7 @@ class test_show_lisp_service_statistics(unittest.TestCase):
                                         'unsupported_lisp_packet_type_drops': '0'},
                                     'last_cleared': 'never'},
                                 'RLOC': 
-                                    {'conrol': 
+                                    {'control': 
                                         {'ddt_map_referrals_in': '0',
                                         'ddt_map_referrals_out': '0',
                                         'ddt_map_requests_in': '0',
@@ -4862,7 +4973,6 @@ class test_show_lisp_service_statistics(unittest.TestCase):
           Invalid LISP checksum drops:              0
           Unsupported LISP packet type drops:       0
           Unknown packet drops:                     0
-
         '''}
 
     golden_parsed_output3 = {
@@ -4872,7 +4982,7 @@ class test_show_lisp_service_statistics(unittest.TestCase):
                     {'ethernet': 
                         {'statistics': 
                             {'EID': 
-                                {'conrol': 
+                                {'control': 
                                     {'authentication_failures': '0',
                                     'authoritative_records_in': '0',
                                     'authoritative_records_out': '0',
@@ -4967,7 +5077,7 @@ class test_show_lisp_service_statistics(unittest.TestCase):
                                     'unsupported_lisp_packet_type_drops': '0'},
                                 'last_cleared': 'never'},
                             'RLOC': 
-                                {'conrol': 
+                                {'control': 
                                     {'ddt_map_referrals_in': '0',
                                     'ddt_map_referrals_out': '0',
                                     'ddt_map_requests_in': '0',

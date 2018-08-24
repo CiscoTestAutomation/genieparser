@@ -14,6 +14,7 @@ NXOS parser for the following show commands:
     * show l2route mac all detail
     * show l2route mac-ip all detail
     * show l2route summary
+    * show nve vni ingress-replication
 """
 
 # Python
@@ -263,11 +264,11 @@ class ShowNveInterfaceDetailSchema(MetaParser):
     schema ={
         Any(): {
             'nve_name': str,
-            'if_state': str,
-            'encap_type': str,
-            'vpc_capability': str,
-            'local_rmac': str,
-            'host_reach_mode': str,
+            Optional('if_state'): str,
+            Optional('encap_type'): str,
+            Optional('vpc_capability'): str,
+            Optional('local_rmac'): str,
+            Optional('host_reach_mode'): str,
             Optional('source_if'): str,
             Optional('primary_ip'): str,
             Optional('secondary_ip'): str,
@@ -312,9 +313,9 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
         if not intf:
             cmd1 = 'show interface | i nve'
             out1 = self.device.execute(cmd1)
+            # Init vars
 
             # nve1 is down (other)
-            # nve1 is up
             p1 = re.compile(r'^\s*nve(?P<nve>(\d+)) +is +(?P<nve_state>[\w]+)( +(?P<other>[\w\(\)]+))?$')
 
             for line in out1.splitlines():
@@ -555,6 +556,7 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
                     continue
         return result_dict
 
+
 # ====================================================
 #  schema for show nve multisite dci-links
 # ====================================================
@@ -564,7 +566,7 @@ class ShowNveMultisiteDciLinksSchema(MetaParser):
 
     schema ={
         'multisite': {
-            'dci_links': {
+            Optional('dci_links'): {
                 Any():{
                     'if_name': str,
                     'if_state': str
@@ -1110,6 +1112,7 @@ class ShowL2routeMacAllDetailSchema(MetaParser):
                             'next_hop1': str,
                             'rte_res': str,
                             'fwd_state': str,
+                            Optional('peer_id'): int,
                             Optional('sent_to'): str,
                             Optional('soo'): int,
                         }
@@ -1140,8 +1143,8 @@ class ShowL2routeMacAllDetail(ShowL2routeMacAllDetailSchema):
                         ' +(?P<flags>[\w\,\-]+) +(?P<seq_num>[\d]+) +(?P<next_hop1>[\w\/\.]+)$')
 
         p2 = re.compile(r'^\s*Route +Resolution +Type: +(?P<rte_res>[\w]+)$')
-        p3 = re.compile(r'^\s*Forwarding +State: +(?P<fwd_state>[\w\s\:\(\)]+)$')
-        p4 = re.compile(r'^\s*Sent +To: +(?P<sent_to>[\w]+)$')
+        p3 = re.compile(r'^\s*Forwarding +State: +(?P<fwd_state>[\w]+)( +\(PeerID: +(?P<peer_id>[\d]+)\))?$')
+        p4 = re.compile(r'^\s*Sent +To: +(?P<sent_to>[\w\,]+)$')
         p5 = re.compile(r'^\s*SOO: +(?P<soo>[\d]+)$')
 
         for line in out.splitlines():
@@ -1188,7 +1191,9 @@ class ShowL2routeMacAllDetail(ShowL2routeMacAllDetailSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                topo_dict.update({k:v for k, v in group.items()})
+                topo_dict.update({'fwd_state': group.get('fwd_state')})
+                if group.get('peer_id'):
+                    topo_dict.update({'peer_id': int(group.get('peer_id'))})
                 continue
 
             m = p5.match(line)
@@ -1407,6 +1412,7 @@ class ShowL2routeFlAllSchema(MetaParser):
         'topology': {
             'topo_id': {
                 Any():{
+                    Optional('num_of_peer_id'): int,
                     'peer_id':{
                         Any():{
                             'topo_id': int,
@@ -1431,6 +1437,7 @@ class ShowL2routeFlAll(ShowL2routeFlAllSchema):
         out = self.device.execute('show l2route fl all')
 
         result_dict = {}
+        index = 0
         # Topology ID Peer-id     Flood List      Service Node
         # ----------- ----------- --------------- ------------
 
@@ -1448,15 +1455,207 @@ class ShowL2routeFlAll(ShowL2routeFlAllSchema):
                 topo_id = int(group.pop('topo_id'))
                 peer_id = int(group.pop('peer_id'))
                 peer_dict = result_dict.setdefault('topology', {}).setdefault('topo_id', {}).setdefault(topo_id, {}). \
-                                                setdefault('peer_id', {}).setdefault(peer_id, {})
+                                setdefault('peer_id', {}).setdefault(peer_id, {})
                 peer_dict.update({'topo_id': topo_id})
                 peer_dict.update({'peer_id': peer_id})
                 peer_dict.update({'flood_list': group.pop('flood_list')})
                 peer_dict.update({'is_service_node': group.pop('is_service_node').lower()})
                 continue
 
+        if result_dict:
+            for topo_id in result_dict['topology']['topo_id']:
+                num_of_peer_id = len(result_dict['topology']['topo_id'][topo_id]['peer_id'])
+                result_dict['topology']['topo_id'][topo_id]['num_of_peer_id'] = num_of_peer_id
+
         return result_dict
 
+# ===================================================
+#   Schema for show running-config nv ovelay
+# ===================================================
+class ShowRunningConfigNvOverlaySchema(MetaParser):
+    """Schema for:
+        show running-config nv overlay"""
+
+    schema = {
+            Optional('evpn_multisite_border_gateway'): int,
+            Optional('multisite_convergence_time') : int,
+            Optional('enabled_nv_overlay'): bool,
+            Any():{
+                Optional('nve_name'):str,
+                Optional('if_state'): str,
+                Optional('host_reachability_protocol'): str,
+                Optional('adv_vmac'): bool,
+                Optional('source_if'): str,
+                Optional('multisite_bgw_if'): str,
+                Optional('vni'):{
+                    Any():{
+                        Optional('vni'): int,
+                        Optional('associated_vrf'): bool,
+                        Optional('multisite_ingress_replication'): bool,
+                        Optional('mcast_group'): str
+                    },
+                },
+            },
+            Optional('multisite'):{
+                Optional('dci_links'):{
+                    Any():{
+                      'if_name': str,
+                      'if_state': str,
+                    },
+                },
+                Optional('fabric_links'): {
+                    Any(): {
+                        'if_name': str,
+                        'if_state': str,
+                    },
+                },
+            },
+        }
+
+# ====================================================
+#  Parser for show running-config nv overlay
+# =====================================================
+class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
+    """parser for:
+        show running-config nv overlay"""
+
+    def cli(self):
+        out = self.device.execute('show running-config nv overlay')
+
+        result_dict = {}
+        # feature nv overlay
+        p0 = re.compile(r'^\s*feature nv overlay$')
+        #   evpn multisite border-gateway 111111
+        p1 = re.compile(r'^\s*evpn multisite border-gateway +(?P<evpn_multisite_border_gateway>[\w]+)$')
+        #   delay-restore time 185
+        p2 = re.compile(r'^\s*delay-restore time +(?P<evpn_msite_bgw_delay_restore_time>[\d]+)$')
+        #   interface nve1
+        p3 = re.compile(r'^\s*interface +(?P<nve_name>nve[\d]+)$')
+        #   no shutdown
+        p4 = re.compile(r'^\s*no shutdown$')
+        #   host-reachability protocol bgp
+        p5 = re.compile(r'^\s*host-reachability protocol +(?P<host_reachability_protocol>[\w]+)$')
+        #   advertise virtual-rmac
+        p6 = re.compile(r'^\s*advertise virtual-rmac$')
+        #   source-interface loopback1
+        p7 = re.compile(r'^\s*source-interface +(?P<source_if>[\w]+)$')
+        #   multisite border-gateway interface loopback3
+        p8 = re.compile(r'^\s*multisite +border\-gateway +interface +(?P<multisite_bgw_if>[\w]+)$')
+        #   member vni 10100 associate-vrf
+        p9 = re.compile(r'^\s*member vni +(?P<nve_vni>[\d]+)( +(?P<associated_vrf>[\w\-]+))?$')
+        #   multisite ingress-replication
+        p10 = re.compile(r'^\s*multisite ingress-replication$')
+        #   mcast-group 231.100.1.1
+        p11 = re.compile(r'^\s*mcast-group +(?P<mcast_group>[\d\.]+)$')
+        #   interface Ethernet1/1
+        p12 = re.compile(r'^\s*interface +(?P<interface>(?!nve)[\w\/]+)$')
+        #   evpn multisite fabric-tracking
+        #   evpn multisite dci-tracking
+        p13 = re.compile(r'^\s*evpn multisite +(?P<fabric_dci_tracking>[\w\-]+)$')
+
+        for line in out.splitlines():
+            if line:
+                line = line.rstrip()
+            else:
+                continue
+
+            m = p0.match(line)
+            if m:
+                result_dict.update({'enabled_nv_overlay': True})
+                continue
+
+            m = p1.match(line)
+            if m:
+                multisite_border_gateway = m.groupdict().pop('evpn_multisite_border_gateway')
+                result_dict.update({'evpn_multisite_border_gateway': int(multisite_border_gateway)})
+                continue
+
+            m = p2.match(line)
+            if m:
+                evpn_msite_bgw_delay_restore_time = m.groupdict().pop('evpn_msite_bgw_delay_restore_time')
+                result_dict.update({'multisite_convergence_time': int(evpn_msite_bgw_delay_restore_time)})
+                continue
+
+            m = p3.match(line)
+            if m:
+                nve_name = m.groupdict().pop('nve_name')
+                nve_dict = result_dict.setdefault(nve_name, {})
+                nve_dict.update({'nve_name': nve_name})
+                continue
+
+            m = p4.match(line)
+            if m:
+                nve_dict.update({'if_state': "up"})
+                continue
+
+            m = p5.match(line)
+            if m:
+                host_reachability_protocol = m.groupdict().pop('host_reachability_protocol')
+                nve_dict.update({'host_reachability_protocol': host_reachability_protocol})
+                continue
+
+            m = p6.match(line)
+            if m:
+                nve_dict.update({'adv_vmac': True})
+                continue
+
+            m = p7.match(line)
+            if m:
+                source_if = m.groupdict().pop('source_if')
+                nve_dict.update({'source_if': source_if})
+                continue
+
+            m = p8.match(line)
+            if m:
+                multisite_bgw_if = m.groupdict().pop('multisite_bgw_if')
+                nve_dict.update({'multisite_bgw_if': multisite_bgw_if})
+                continue
+
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                nve_vni = int(group.pop('nve_vni'))
+                vni_dict = nve_dict.setdefault('vni',{}).setdefault(nve_vni,{})
+                vni_dict.update({'vni':nve_vni})
+
+                if group.get('associated_vrf'):
+                    vni_dict.update({'associated_vrf':True})
+                    group.pop('associated_vrf')
+                else:
+                    vni_dict.update({'associated_vrf': False})
+
+                continue
+
+            m = p10.match(line)
+            if m:
+                vni_dict.update({'multisite_ingress_replication': True})
+                continue
+
+            m = p11.match(line)
+            if m:
+                mcast = m.groupdict().pop('mcast_group')
+                vni_dict.update({'mcast_group': mcast})
+                continue
+
+            m = p12.match(line)
+            if m:
+                interface = m.groupdict().pop('interface')
+                continue
+
+            m = p13.match(line)
+            if m:
+                tracking = m.groupdict().pop('fabric_dci_tracking')
+                tracking_dict = result_dict.setdefault('multisite', {})
+                if 'fabric' in tracking:
+                    fabric_dict = tracking_dict.setdefault('fabric_links', {}).setdefault(interface, {})
+                    fabric_dict.update({'if_name': interface})
+                    fabric_dict.update({'if_state': 'up'})
+                if 'dci' in tracking:
+                    dci_dict = tracking_dict.setdefault('dci_links', {}).setdefault(interface, {})
+                    dci_dict.update({'if_name': interface})
+                    dci_dict.update({'if_state': 'up'})
+                continue
+        return result_dict
 
 # ====================================================
 #  schema for show nve vni ingress-replication

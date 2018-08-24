@@ -1,4 +1,3 @@
-
 # Python
 import re
 import unittest
@@ -8,38 +7,39 @@ from unittest.mock import Mock
 from ats.topology import Device
 
 # Parser
-from genie.libs.parser.nxos.show_vxlan import  ShowNvePeers,\
-                                    ShowNveVniSummary,\
-                                    ShowNveVni,\
-                                    ShowNveInterfaceDetail,\
-                                    ShowNveMultisiteFabricLinks,\
-                                    ShowNveMultisiteDciLinks, \
-                                    ShowNveEthernetSegment,\
-                                    ShowL2routeEvpnEternetSegmentAll,\
-                                    ShowL2routeTopologyDetail,\
-                                    ShowL2routeMacAllDetail,\
-                                    ShowL2routeMacIpAllDetail,\
-                                    ShowL2routeSummary,\
-                                    ShowL2routeFlAll, \
-                                    ShowNveVniIngressReplication
+from genie.libs.parser.nxos.show_vxlan import ShowNvePeers, \
+                                              ShowNveVniSummary, \
+                                              ShowNveVni, \
+                                              ShowNveInterfaceDetail, \
+                                              ShowNveMultisiteFabricLinks, \
+                                              ShowNveMultisiteDciLinks, \
+                                              ShowNveEthernetSegment, \
+                                              ShowL2routeEvpnEternetSegmentAll, \
+                                              ShowL2routeTopologyDetail, \
+                                              ShowL2routeMacAllDetail, \
+                                              ShowL2routeMacIpAllDetail, \
+                                              ShowL2routeSummary, \
+                                              ShowL2routeFlAll, \
+                                              ShowRunningConfigNvOverlay,\
+                                              ShowNveVniIngressReplication
+
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
- 
+
 # =================================
 #  Unit test for 'show nve peers'
 # =================================
 
 class test_show_nve_peers(unittest.TestCase):
-    
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-        'nve1':{
+        'nve1': {
             'nve_name': 'nve1',
             'peer_ip': {
-                '201.202.1.1':{
+                '201.202.1.1': {
                     'peer_state': 'up',
                     'learn_type': 'CP',
                     'uptime': '01:15:09',
@@ -53,7 +53,7 @@ class test_show_nve_peers(unittest.TestCase):
                 }
             },
         },
-     }
+    }
 
     golden_output = {'execute.return_value': '''
     BL1# show nve peers
@@ -68,8 +68,7 @@ class test_show_nve_peers(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowNvePeers(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
-
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_show_nve_empty(self):
         self.device = Mock(**self.empty_output)
@@ -95,9 +94,9 @@ class test_show_nve_vni_summary(unittest.TestCase):
                 'dp_vni_count': 0,
                 'dp_vni_up': 0,
                 'dp_vni_down': 0,
-                 },
             },
-        }
+        },
+    }
 
     golden_output = {'execute.return_value': '''
     BL1# show nve vni summary
@@ -133,13 +132,13 @@ class test_show_nve_vni(unittest.TestCase):
     golden_parsed_output = {
         'nve1': {
             'vni': {
-                5001:{
+                5001: {
                     'vni': 5001,
                     'mcast': "234.1.1.1",
                     'vni_state': "up",
                     'mode': "CP",
                     'type': "L2 [1001]",
-                    'flags':'',
+                    'flags': '',
                 },
                 5002: {
                     'vni': 5002,
@@ -404,8 +403,8 @@ class test_show_fabric_links(unittest.TestCase):
 
     golden_parsed_output = {
         'multisite': {
-            'fabric_links':{
-                'Ethernet1/53':{
+            'fabric_links': {
+                'Ethernet1/53': {
                     'if_name': 'Ethernet1/53',
                     'if_state': 'up'
                 },
@@ -439,6 +438,7 @@ class test_show_fabric_links(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+
 # ====================================================
 #  Unit test for 'show nve multisites dci-links'
 # ====================================================
@@ -449,8 +449,8 @@ class test_show_dci_links(unittest.TestCase):
 
     golden_parsed_output = {
         'multisite': {
-            'dci_links':{
-                'Ethernet1/50':{
+            'dci_links': {
+                'Ethernet1/50': {
                     'if_name': 'Ethernet1/50',
                     'if_state': 'up'
                 },
@@ -494,9 +494,9 @@ class test_show_nve_ethernet_segment(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-        'nve':{
-            'nve1':{
-			    'ethernet_segment': {
+        'nve': {
+            'nve1': {
+                'ethernet_segment': {
                     'esi': {
                         '0300.0000.0001.2c00.0309': {
                             'esi': '0300.0000.0001.2c00.0309',
@@ -507,17 +507,17 @@ class test_show_nve_ethernet_segment(unittest.TestCase):
                             'nve_state': 'up',
                             'host_reach_mode': 'control-plane',
                             'active_vlans': '1,101-105,1001-1100,2001-2100,3001-3005',
-                            'df_vlans': '102,104,1002,1004,1006,1008,1010,1012,1014,1016,1018,1020,1022,1024'\
-                                        ',1026,1028,1030,1032,1034,1036,1038,1040,1042,1044,1046,1048,1050,1052,1054,1056'\
-                                        ',1058,1060,1062,1064,1066,1068,1070,1072,1074,1076,1078,1080,1082,1084,1086,1088'\
-                                        ',1090,1092,1094,1096,1098,1100,2002,2004,2006,2008,2010,2012,2014,2016,2018,2020'\
-                                        ',2022,2024,2026,2028,2030,2032,2034,2036,2038,2040,2042,2044,2046,2048,2050,2052'\
-                                        ',2054,2056,2058,2060,2062,2064,2066,2068,2070,2072,2074,2076,2078,2080,2082,2084'\
+                            'df_vlans': '102,104,1002,1004,1006,1008,1010,1012,1014,1016,1018,1020,1022,1024' \
+                                        ',1026,1028,1030,1032,1034,1036,1038,1040,1042,1044,1046,1048,1050,1052,1054,1056' \
+                                        ',1058,1060,1062,1064,1066,1068,1070,1072,1074,1076,1078,1080,1082,1084,1086,1088' \
+                                        ',1090,1092,1094,1096,1098,1100,2002,2004,2006,2008,2010,2012,2014,2016,2018,2020' \
+                                        ',2022,2024,2026,2028,2030,2032,2034,2036,2038,2040,2042,2044,2046,2048,2050,2052' \
+                                        ',2054,2056,2058,2060,2062,2064,2066,2068,2070,2072,2074,2076,2078,2080,2082,2084' \
                                         ',2086,2088,2090,2092,2094,2096,2098,2100,3002,3004',
-                            'active_vnis':  '501001-501100,502001-502100,503001-503005,600101-600105',
+                            'active_vnis': '501001-501100,502001-502100,503001-503005,600101-600105',
                             'cc_failed_vlans': '',
                             'cc_timer_left': '0',
-                            'num_es_mem':  2,
+                            'num_es_mem': 2,
                             'local_ordinal': 0,
                             'df_timer_st': '00:00:00',
                             'config_status': 'n/a',
@@ -529,8 +529,8 @@ class test_show_nve_ethernet_segment(unittest.TestCase):
                     },
                 },
             },
-		},
-	}
+        },
+    }
 
     golden_output = {'execute.return_value': '''
     MS-BL5(config)# sh nve ethernet-segment
@@ -576,6 +576,7 @@ class test_show_nve_ethernet_segment(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+
 # ==============================================================
 #  Unit test for 'show l2route evpn ethernet-segment all'
 # ==============================================================
@@ -587,7 +588,7 @@ class test_show_l2route_evpn_ethernet_segment(unittest.TestCase):
     golden_parsed_output = {
         'evpn': {
             'ethernet_segment': {
-                1:{
+                1: {
                     'ethernet_segment': '0300.0000.0001.2c00.0309',
                     'originating_rtr': '201.0.0.55',
                     'prod_name': 'vxlan',
@@ -627,6 +628,7 @@ class test_show_l2route_evpn_ethernet_segment(unittest.TestCase):
         obj = ShowL2routeEvpnEternetSegmentAll(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+
 
 # ==============================================================
 #  Unit test for 'show l2route topology detail'
@@ -815,9 +817,6 @@ class test_show_l2route_topology_detail(unittest.TestCase):
         },
     }
 
-
-
-
     def test_show_l2route_topology(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -838,6 +837,7 @@ class test_show_l2route_topology_detail(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+
 # ==============================================================
 #  Unit test for 'show l2route mac all detail'
 # ==============================================================
@@ -851,14 +851,15 @@ class test_show_l2route_mac_all_detail(unittest.TestCase):
             'topo_id': {
                 101: {
                     'mac': {
-                        '5e00.0002.0007': {  # Ops Str '5e00.0002.0007'
+                        '5e00.0002.0007': {
                             'mac_addr': '5e00.0002.0007',
-                            'prod_type': 'vxlan',  # Ops Str 'vxlan'
-                            'flags': 'rmac',  # Ops Str 'rmac'
-                            'seq_num': 0,  # Ops Int 0
-                            'next_hop1': '204.1.1.1',  # Ops Str '204.1.1.1'
-                            'rte_res': 'regular',  # Ops Str 'regular'
-                            'fwd_state': 'Resolved (PeerID: 2)',  # Ops Str 'Resolved (PeerID: 2)'
+                            'prod_type': 'vxlan',
+                            'flags': 'rmac',
+                            'seq_num': 0,
+                            'next_hop1': '204.1.1.1',
+                            'rte_res': 'regular',
+                            'fwd_state': 'Resolved',
+                            'peer_id': 2,
                         },
                     },
                 },
@@ -882,7 +883,8 @@ class test_show_l2route_mac_all_detail(unittest.TestCase):
                             'seq_num': 0,
                             'next_hop1': '204.1.1.1',
                             'rte_res': 'regular',
-                            'fwd_state': 'Resolved (PeerID: 2)',
+                            'fwd_state': 'Resolved',
+                            'peer_id': 2,
                             'sent_to': 'l2fwder',
                         },
                     },
@@ -930,6 +932,7 @@ class test_show_l2route_mac_all_detail(unittest.TestCase):
         obj = ShowL2routeMacAllDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+
 
 # ==============================================================
 #  Unit test for 'show l2route mac-ip all detail'
@@ -995,6 +998,7 @@ class test_show_l2route_mac_ip_all_detail(unittest.TestCase):
         obj = ShowL2routeMacIpAllDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+
 
 # ==============================================================
 #  Unit test for 'show l2route summary'
@@ -1134,6 +1138,7 @@ class test_show_l2route_summary(unittest.TestCase):
             'numof_converged_tables': 47
         },
     }
+
     def test_show_l2route_summary(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -1220,6 +1225,7 @@ class test_show_l2route_mac_ip_all_detail(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+
 # ==============================================================
 #  Unit test for 'show l2route fl all'
 # ==============================================================
@@ -1231,11 +1237,12 @@ class test_show_l2route_fl_all(unittest.TestCase):
         'topology': {
             'topo_id': {
                 1001: {
+                    'num_of_peer_id': 3,
                     'peer_id': {
                         8: {
                             'topo_id': 1001,
                             'peer_id': 8,
-                            'flood_list' : '201.34.33.44',
+                            'flood_list': '201.34.33.44',
                             'is_service_node': 'no',
                         },
                         2: {
@@ -1253,6 +1260,7 @@ class test_show_l2route_fl_all(unittest.TestCase):
                     },
                 },
                 1002: {
+                    'num_of_peer_id': 3,
                     'peer_id': {
                         8: {
                             'topo_id': 1002,
@@ -1304,6 +1312,139 @@ class test_show_l2route_fl_all(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+
+# ==============================================================
+#  Unit test for 'show running-config nv overlay'
+# ==============================================================
+class test_show_running_config_nv_overlay(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'enabled_nv_overlay': True,
+        'evpn_multisite_border_gateway': 111111,
+        'multisite_convergence_time': 185,
+        'nve1': {
+            'nve_name': 'nve1',
+            'if_state': "up",
+            'host_reachability_protocol': "bgp",
+            'adv_vmac': True,
+            'source_if': "loopback1",
+            'multisite_bgw_if': "loopback3",
+            'vni': {
+                10100: {
+                    'vni': 10100,
+                    'associated_vrf': True,
+                },
+                10101: {
+                    'vni': 10101,
+                    'associated_vrf': False,
+                    'multisite_ingress_replication': True,
+                    'mcast_group': "231.100.1.1"
+                },
+                10102: {
+                    'vni': 10102,
+                    'associated_vrf': False,
+                    'multisite_ingress_replication': True,
+                    'mcast_group': "231.100.1.1"
+                },
+                10200: {
+                    'vni': 10200,
+                    'associated_vrf': True,
+                },
+                10201: {
+                    'vni': 10201,
+                    'associated_vrf': False,
+                    'multisite_ingress_replication': True,
+                    'mcast_group': "231.200.1.1"
+                },
+                10202: {
+                    'vni': 10202,
+                    'associated_vrf': False,
+                    'multisite_ingress_replication': True,
+                    'mcast_group': "231.200.1.1"
+                },
+            },
+        },
+        'multisite': {
+            'fabric_links': {
+                'Ethernet1/1': {
+                    'if_name': 'Ethernet1/1',
+                    'if_state': 'up',
+                },
+                'Ethernet1/2': {
+                    'if_name': 'Ethernet1/2',
+                    'if_state': 'up',
+                }
+            },
+            'dci_links': {
+                'Ethernet1/6': {
+                    'if_name': 'Ethernet1/6',
+                    'if_state': 'up',
+                }
+            },
+        },
+    }
+
+    golden_output = {'execute.return_value': '''
+R6# show running-config nv overlay
+ 
+!Command: show running-config nv overlay
+!No configuration change since last restart
+!Time: Wed May 30 14:42:18 2018
+ 
+version 9.2(1) Bios:version 
+feature nv overlay
+ 
+evpn multisite border-gateway 111111
+  delay-restore time 185
+ 
+ 
+interface nve1
+  no shutdown
+  host-reachability protocol bgp
+  advertise virtual-rmac
+  source-interface loopback1
+  multisite border-gateway interface loopback3
+  member vni 10100 associate-vrf
+  member vni 10101
+    multisite ingress-replication
+    mcast-group 231.100.1.1
+  member vni 10102
+    multisite ingress-replication
+    mcast-group 231.100.1.1
+  member vni 10200 associate-vrf
+  member vni 10201
+    multisite ingress-replication
+    mcast-group 231.200.1.1
+  member vni 10202
+    multisite ingress-replication
+    mcast-group 231.200.1.1
+ 
+interface Ethernet1/1
+  evpn multisite fabric-tracking
+ 
+interface Ethernet1/2
+  evpn multisite fabric-tracking
+ 
+interface Ethernet1/6
+  evpn multisite dci-tracking
+
+
+    '''}
+
+    def test_show_running_config_nv_overlay(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowRunningConfigNvOverlay(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_running_config_nv_overlay_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowRunningConfigNvOverlay(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
 
 # =========================================================
 #  Unit test for 'show nve vni ingress-replication'

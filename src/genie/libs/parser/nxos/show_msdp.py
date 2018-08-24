@@ -115,7 +115,7 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
         #   Connection status: Established
         #   Connection status: Admin-shutdown
         #   Connection status: Inactive, Connecting in: 0.217135
-        p4 = re.compile(r'^\s*Connection status: +(?P<session_state>[\w]+)(, +Connecting +in:'
+        p4 = re.compile(r'^\s*Connection status: +(?P<session_state>[\w\-]+)(, +Connecting +in:'
                         ' +(?P<conecting_time>[\w\:\.]+))?$')
         #     Uptime(Downtime): 01:27:25
         p5 = re.compile(r'^\s*Uptime\(Downtime\): +(?P<elapsed_time>[\w\:]+)$')
@@ -151,7 +151,7 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
         p15 = re.compile(r'^\s*Statistics +\(in/out\):$')
 
         #     Last messaged received: 00:00:22
-        p16 = re.compile(r'^\s*Last messaged received: +(?P<last_message_received>[\w\:]+)$')
+        p16 = re.compile(r'^\s*Last messaged received: +(?P<last_message_received>[\w\:\.]+)$')
 
         #     SAs: 0/0, SA-Requests: 0/0, SA-Responses: 0/0
         p17 = re.compile(r'^\s*SAs: +(?P<in_sas>[\d]+)/+(?P<out_sas>[\d]+), +SA-Requests:'
@@ -174,7 +174,7 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
         p21 = re.compile(r'^\s*RPF check failures: +(?P<rpf_check_failures>[\d]+)$')
 
         #     Cache Lifetime: 00:03:30
-        p22 = re.compile(r'^\s*Cache Lifetime: +(?P<cache_lifetime>[\w\:]+)$')
+        p22 = re.compile(r'^\s*Cache Lifetime: +(?P<cache_lifetime>[\w\:\.]+)$')
 
         #     Established Transitions: 6
         p23 = re.compile(r'^\s*Established Transitions: +(?P<established_transition>[\d]+)$')
@@ -183,7 +183,7 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
         p24 = re.compile(r'^\s*Connection Attempts: +(?P<connection_attemps>[\d]+)$')
 
         #     Discontinuity Time: 01:27:25
-        p25 = re.compile(r'^\s*Discontinuity Time: +(?P<discontinuity_time>[\w\:]+)$')
+        p25 = re.compile(r'^\s*Discontinuity Time: +(?P<discontinuity_time>[\w\:\.]+)$')
 
         for line in out.splitlines():
             if line:
@@ -217,7 +217,7 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
                 group = m.groupdict()
                 session_state = group.get("session_state").lower()
                 address_dict.update({'session_state': session_state})
-                address_dict.update({'enable': True if session_state not in ["shutdown",'inactive'] else False})
+                address_dict.update({'enable': True if session_state not in ["admin-shutdown",'inactive'] else False})
                 continue
 
             m = p5.match(line)
