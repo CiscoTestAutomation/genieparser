@@ -123,7 +123,7 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
         p4 = re.compile(r'^\s*Connection status: +(?P<session_state>[\w\-]+)(, +Connecting +in:'
                         ' +(?P<conecting_time>[\w\:\.]+))?$')
         #     Uptime(Downtime): 01:27:25
-        p5 = re.compile(r'^\s*Uptime\(Downtime\): +(?P<elapsed_time>[\w\:]+)$')
+        p5 = re.compile(r'^\s*Uptime\(Downtime\): +(?P<elapsed_time>[\w\:\.]+)$')
 
         #     Last reset reason: Keepalive timer expired
         p6 = re.compile(r'^\s*Last +reset +reason: +(?P<reset_reason>[\S\s]+)$')
@@ -647,9 +647,9 @@ class ShowIpMsdpPolicyStatisticsSaPolicyOut(ShowIpMsdpPolicyStatisticsSaPolicyIn
         return super().cli(peer=peer, method='out', vrf=vrf)
 
 
-# =====================================================================
+# ============================================
 # schema for show ip msdp summary [vrf <vrf>]
-# =====================================================================
+# ============================================
 class ShowIpMsdpSummarySchema(MetaParser):
     """Schema for:
         show ip msdp summary
@@ -683,9 +683,9 @@ class ShowIpMsdpSummarySchema(MetaParser):
     }
 
 
-# =====================================================================
+# ============================================
 # parser for show ip msdp summary [vrf <vrf>]
-# =====================================================================
+# ============================================
 class ShowIpMsdpSummary(ShowIpMsdpSummarySchema):
     """Parser for :
         show ip msdp summary
@@ -773,3 +773,114 @@ class ShowIpMsdpSummary(ShowIpMsdpSummarySchema):
                 continue
 
         return ret_dict
+
+
+# ====================================================
+# schema for show run msdp [| sec vrf | inc <pip_str>]
+# ====================================================
+class ShowRunningConfigMsdpSchema(MetaParser):
+    """Schema for:
+        show run msdp [| sec vrf | inc <pip_str>]"""
+
+    schema = {
+        'vrf': {
+            Any(): {
+                Optional('global'): {
+                    Optional('timer'): {
+                        'connect_retry_interval': int, # global_connect_retry_interval
+                    }
+                },
+                Optional('peer'): {
+                    Any(): { 
+                        Optional('description'): str, # description
+                        Optional('timer'): {
+                            'keepalive_interval': int, # keepalive_interval
+                            'holdtime_interval': int, # keepalive_interval
+                        },
+                    }
+                }
+            }
+        }
+    }
+
+
+# =======================================================
+# parser for show run msdp [| sec <vrf> | inc <pip_str>]
+# =======================================================
+class ShowRunningConfigMsdp(ShowRunningConfigMsdpSchema):
+    """Parser for :
+        show run msdp [| sec <vrf> | inc <pip_str>]"""
+
+    def cli(self, pip_str=None, vrf=None):
+
+        cmd  = 'show running-config msdp'
+        if vrf:
+            if vrf == 'default':
+                # command start with ip pim, or interface without spaces
+                cmd += " | sec '^i'"
+            else:
+                cmd += ' | sec %s' % vrf
+        if pip_str:
+            cmd += ' | inc %s' % pip_str
+
+        # initial output
+        out = self.device.execute(cmd)
+
+        # Init vars
+        msdp_dict = {}
+
+        # initial regular express
+        # vrf context VRF1
+        p_vrf  = re.compile(r'^vrf +context +(?P<vrf>\S+)$')
+
+        # ip msdp keepalive 6.6.6.6 20 30
+        p1 = re.compile(r'^ip +msdp +keepalive +(?P<peer>[\w\.\:]+) +'
+                         '(?P<keepalive_interval>\d+) +(?P<holdtime_interval>\d+)$')
+
+        # ip msdp description 6.6.6.6 some description
+        p2 = re.compile(r'^ip +msdp +description +(?P<peer>[\w\.\:]+) +'
+                         '(?P<description>.*)$')
+
+        # ip msdp reconnect-interval 20
+        p3 = re.compile(r'^ip +msdp +reconnect\-interval +(?P<connect_retry_interval>\d+)$')
+
+        for line in out.splitlines():
+            if line and not line.startswith(' '):
+                vrf_dict = msdp_dict.setdefault('vrf', {}).setdefault('default', {})
+            elif vrf:
+                vrf_dict = msdp_dict.setdefault('vrf', {}).setdefault(vrf, {})
+
+            line = line.strip()
+
+            # vrf context VRF1
+            m = p_vrf.match(line)
+            if m:
+                vrf_dict = msdp_dict.setdefault('vrf', {}).setdefault(m.groupdict()['vrf'], {})
+                continue
+
+            # ip msdp keepalive 6.6.6.6 20 30
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                timer_dict = vrf_dict.setdefault('peer', {})\
+                    .setdefault(groups['peer'], {}).setdefault('timer', {})
+                timer_dict['keepalive_interval'] = int(groups['keepalive_interval'])
+                timer_dict['holdtime_interval'] = int(groups['holdtime_interval'])
+                continue
+
+            # ip msdp description 6.6.6.6 some description
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                peer_dict = vrf_dict.setdefault('peer', {}).setdefault(groups['peer'], {})
+                peer_dict['description'] = groups['description']
+                continue
+
+            # ip msdp reconnect-interval 20
+            m = p3.match(line)
+            if m:
+                global_dict = vrf_dict.setdefault('global', {}).setdefault('timer', {})
+                global_dict['connect_retry_interval'] = int(m.groupdict()['connect_retry_interval'])        
+                continue
+
+        return msdp_dict
