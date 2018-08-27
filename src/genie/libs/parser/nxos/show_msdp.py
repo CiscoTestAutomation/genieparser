@@ -3,6 +3,11 @@
 NXOS parser for the following show commands:
     * show ip msdp peer vrf <vrf>
     * show ip msdp sa-cache detail vrf <vrf>
+    * show ip msdp policy statistics sa-policy <address> in [vrf <vrf>]
+    * show ip msdp policy statistics sa-policy <address> out [vrf <vrf>]
+    * show ip msdp summary
+    * show ip msdp summary vrf all
+    * show ip msdp summary vrf <vrf>
 """
 
 # Python
@@ -468,3 +473,303 @@ class ShowIpMsdpSaCacheDetailVrf(ShowIpMsdpSaCacheDetailVrfSchema):
                 continue
 
         return result_dict
+
+# =====================================================================
+# schema for show ip msdp policy statistics sa-policy <address> in|out
+# =====================================================================
+class ShowIpMsdpPolicyStatisticsSaPolicyInOutSchema(MetaParser):
+    """Schema for:
+        show ip msdp policy statistics sa-policy <address> in
+        show ip msdp policy statistics sa-policy <address> out"""
+
+    schema = {
+        'vrf': {
+            Any(): {
+                'peer': {
+                    Any(): {                        
+                        Optional('in'): {
+                           'total_accept_count': int,
+                           'total_reject_count': int,
+                            Any(): { # 'filtera'
+                                Any(): { # 'route-map filtera permit 10 match ip address mcast-all-groups'
+                                    Optional('num_of_comparison'): int,
+                                    Optional('num_of_matches'): int,
+                                    'match': str,
+                                },
+                            }
+                        },
+                        Optional('out'): {
+                           'total_accept_count': int,
+                           'total_reject_count': int,
+                            Any(): { # 'filtera'
+                                Any(): { # 'route-map filtera permit 10 match ip address mcast-all-groups'
+                                    Optional('num_of_comparison'): int,
+                                    Optional('num_of_matches'): int,
+                                    'match': str,
+                                },
+                            }
+                        }
+                    },
+                },
+            },
+        },
+    }
+
+
+# =====================================================================
+# parser for show ip msdp policy statistics sa-policy <address> in|out
+# =====================================================================
+class ShowIpMsdpPolicyStatisticsSaPolicyInOut(ShowIpMsdpPolicyStatisticsSaPolicyInOutSchema):
+    """Parser for :
+        show ip msdp policy statistics sa-policy <address> in
+        show ip msdp policy statistics sa-policy <address> out"""
+
+    def cli(self, peer, method, vrf='default'):
+
+        assert method in ['in', 'out']
+
+        cmd = 'show ip msdp policy statistics sa-policy %s %s' % (peer, method)
+
+        if vrf != 'default':
+            cmd += ' vrf %s' % vrf
+
+        out = self.device.execute(cmd)
+
+        ret_dict = {}
+        match1 = ''
+
+        # route-map filtera permit 10
+        p1 = re.compile(r'^(?P<match1>route\-map +(?P<sa_filter>\S+) +permit +(?P<permit>\d+))$')
+
+        # ip prefix-list pfxlista seq 5 permit 224.0.0.0/4             M: 0
+        # ip prefix-list pfxlista seq 10 permit 224.0.0.0/4 le 32      M: 0
+        p1_1 = re.compile(r'^(?P<match>ip +prefix\-list +(?P<sa_filter>\S+) +seq +(?P<seq>\d+) '
+                           '+permit +(?P<permit>\S+)(?P<operator>[\w\s]+)?)'
+                           '( +(C: +(?P<comparisions>\d+)))?( +(M: +(?P<matches>\d+)))?$')
+
+        # match ip address mcast-all-groups                          C: 0      M: 0
+        p2 = re.compile(r'^(?P<match2>match +ip +address +(?P<match_ip>\S+))'
+                         '( +(C: +(?P<comparisions>\d+)))?( +(M: +(?P<matches>\d+)))?$')
+
+        # Total accept count for policy: 0
+        p3 = re.compile(r'^Total +accept +count +for +policy: +(?P<total_accept_count>\d+)$')
+
+        # Total reject count for policy: 0
+        p4 = re.compile(r'^Total +reject +count +for +policy: +(?P<total_reject_count>\d+)$')
+
+        for line in out.splitlines():
+            if line:
+                line = line.strip()
+            else:
+                continue
+
+            # route-map filtera permit 10
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                match1 = group['match1']
+                sa_filter = group['sa_filter']
+                permit = group['permit']
+                sa_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {})\
+                    .setdefault('peer', {}).setdefault(peer, {}).setdefault(method, {})\
+                        .setdefault(sa_filter, {})
+                continue
+
+            # match ip address mcast-all-groups                          C: 0      M: 0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                match2 = group['match2']
+                match = '%s %s' % (match1, match2)
+                match_dict = sa_dict.setdefault(match.strip(), {})
+                if group['comparisions']:
+                    match_dict['num_of_comparison'] = int(group['comparisions'])
+                if group['matches']:
+                    match_dict['num_of_matches'] = int(group['matches'])
+                match_dict['match'] = match
+                continue
+
+            # ip prefix-list pfxlista seq 5 permit 224.0.0.0/4             M: 0
+            # ip prefix-list pfxlista seq 10 permit 224.0.0.0/4 le 32      M: 0
+            m = p1_1.match(line)
+            if m:
+                group = m.groupdict()
+                match = group['match'].strip()
+                sa_filter = group['sa_filter']
+                match_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {})\
+                    .setdefault('peer', {}).setdefault(peer, {}).setdefault(method, {})\
+                        .setdefault(sa_filter, {}).setdefault(match, {})
+                match_dict['match'] = match
+                if group['comparisions']:
+                    match_dict['num_of_comparison'] = int(group['comparisions'])
+                if group['matches']:
+                    match_dict['num_of_matches'] = int(group['matches'])
+                continue
+
+            # Total accept count for policy: 0
+            m = p3.match(line)
+            if m:
+                total_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {})\
+                    .setdefault('peer', {}).setdefault(peer, {}).setdefault(method, {})
+                total_dict['total_accept_count'] = int(m.groupdict()['total_accept_count'])
+                continue
+
+            # Total reject count for policy: 0
+            m = p4.match(line)
+            if m:
+                total_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {})\
+                    .setdefault('peer', {}).setdefault(peer, {}).setdefault(method, {})
+                total_dict['total_reject_count'] = int(m.groupdict()['total_reject_count'])
+                continue
+
+        return ret_dict
+
+
+# ================================================================
+# parser for show ip msdp policy statistics sa-policy <address> in
+# ================================================================
+class ShowIpMsdpPolicyStatisticsSaPolicyIn(ShowIpMsdpPolicyStatisticsSaPolicyInOut):
+    """Parser for :
+        show ip msdp policy statistics sa-policy <address> in"""
+
+    def cli(self, peer, vrf='default'):
+        return super().cli(peer=peer, method='in', vrf=vrf)
+
+
+# ================================================================
+# parser for show ip msdp policy statistics sa-policy <address> in
+# ================================================================
+class ShowIpMsdpPolicyStatisticsSaPolicyOut(ShowIpMsdpPolicyStatisticsSaPolicyInOut):
+    """Parser for :
+        show ip msdp policy statistics sa-policy <address> out"""
+
+    def cli(self, peer, vrf='default'):
+        return super().cli(peer=peer, method='out', vrf=vrf)
+
+
+# =====================================================================
+# schema for show ip msdp summary [vrf <vrf>]
+# =====================================================================
+class ShowIpMsdpSummarySchema(MetaParser):
+    """Schema for:
+        show ip msdp summary
+        show ip msdp summary vrf all
+        show ip msdp summary vrf <vrf>"""
+
+    schema = {
+        'vrf': {
+            Any(): {
+                'local_as': int,
+                'originator_id': str,
+                'statistics': {
+                    'num_of_configured_peers': int,
+                    'num_of_established_peers': int,
+                    'num_of_shutdown_peers': int,
+                },
+                Optional('peer'): {
+                    Any(): {
+                        'session_state': str,
+                        'peer_as': int,
+                        'elapsed_time': str,
+                        'address': str,
+                        'statistics': {
+                            'last_message_received': str,
+                            'num_of_sg_received': int,
+                        },
+                    }
+                },
+            },
+        },
+    }
+
+
+# =====================================================================
+# parser for show ip msdp summary [vrf <vrf>]
+# =====================================================================
+class ShowIpMsdpSummary(ShowIpMsdpSummarySchema):
+    """Parser for :
+        show ip msdp summary
+        show ip msdp summary vrf all
+        show ip msdp summary vrf <vrf>"""
+
+    def cli(self, vrf='default'):
+
+        cmd = 'show ip msdp summary'
+
+        if vrf != 'default':
+            cmd += ' vrf %s' % vrf
+
+        out = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # MSDP Peer Status Summary for VRF "default"
+        p1 = re.compile(r'^MSDP +Peer +Status +Summary +for +VRF +\"(?P<vrf>\S+)\"$')
+
+        # Local ASN: 0, originator-id: 2.2.2.2
+        p2 = re.compile(r'^Local +ASN: +(?P<local_as>\d+), +'
+                         'originator\-id: +(?P<originator_id>[\d\.]+)$')
+
+        # Number of configured peers:  1
+        p3 = re.compile(r'^Number +of +configured +peers: +(?P<num_of_configured_peers>\d+)$')
+        # Number of established peers: 1
+        p4 = re.compile(r'^Number +of +established +peers: +(?P<num_of_established_peers>\d+)$')
+        # Number of shutdown peers:    0
+        p5 = re.compile(r'^Number +of +shutdown +peers: +(?P<num_of_shutdown_peers>\d+)$')
+
+        # Peer            Peer        Connection      Uptime/   Last msg  (S,G)s
+        # Address         ASN         State           Downtime  Received  Received
+        # 6.6.6.6         0           Established     05:46:19  00:00:51  1
+        p6 = re.compile(r'^(?P<address>[\d\.]+) +(?P<peer_as>\d+) +(?P<session_state>[\w\/\-]+) +'
+                         '(?P<elapsed_time>[\w\.\:]+) +(?P<last_message_received>[\w\.\:]+) +'
+                         '(?P<num_of_sg_received>\d+)$')
+
+        for line in out.splitlines():
+            if line:
+                line = line.strip()
+            else:
+                continue
+
+            # MSDP Peer Status Summary for VRF "default"
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vrf = group['vrf']
+                vrf_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {})
+                continue
+
+            # Local ASN: 0, originator-id: 2.2.2.2
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_dict['local_as'] = int(group['local_as'])
+                vrf_dict['originator_id'] = group['originator_id']
+                continue
+
+            # Number of configured peers:  1
+            # Number of established peers: 1
+            # Number of shutdown peers:    0
+            m1 = p3.match(line)
+            m2 = p4.match(line)
+            m3 = p5.match(line)
+            m = m1 or m2 or m3
+            if m:
+                vrf_dict.setdefault('statistics', {}).update({k:int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # # 6.6.6.6         0           Established     05:46:19  00:00:51  1
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                address = group['address']
+                peer_dict = vrf_dict.setdefault('peer', {}).setdefault(address, {})
+                peer_dict['address'] = address
+                peer_dict['peer_as'] = int(group['peer_as'])
+                peer_dict['session_state'] = group['session_state'].lower()
+                peer_dict['elapsed_time'] = group['elapsed_time']
+                stat_dict = peer_dict.setdefault('statistics', {})
+                stat_dict['last_message_received'] = group['last_message_received']
+                stat_dict['num_of_sg_received'] = int(group['num_of_sg_received'])
+                continue
+
+        return ret_dict

@@ -8,7 +8,10 @@ from ats.topology import Device
 
 # Parser
 from genie.libs.parser.nxos.show_msdp import ShowIpMsdpSaCacheDetailVrf,\
-                                             ShowIpMsdpPeerVrf
+                                             ShowIpMsdpPeerVrf,\
+                                             ShowIpMsdpPolicyStatisticsSaPolicyIn, \
+                                             ShowIpMsdpPolicyStatisticsSaPolicyOut, \
+                                             ShowIpMsdpSummary
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
@@ -260,5 +263,306 @@ class test_show_ip_msdp_peer_vrf(unittest.TestCase):
         obj = ShowIpMsdpPeerVrf(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+
+
+# =============================================================================
+#  Unit test for 'show ip msdp policy statistics sa-policy <address> in|out'
+# =============================================================================
+
+class test_show_ip_msdp_policy_statistics_sa_poligy(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': '''No SA input policy set for this peer'''}
+
+    golden_parsed_output_in_1 = {
+        "vrf": {
+            "default": {
+               "peer": {
+                    "6.6.6.6": {
+                         "in": {
+                             "total_accept_count": 0,
+                             "total_reject_count": 0,
+                              "filtera": {
+                                   "route-map filtera permit 10 match ip address mcast-all-groups": {
+                                        "match": "route-map filtera permit 10 match ip address mcast-all-groups",
+                                        "num_of_matches": 0,
+                                        "num_of_comparison": 0
+                                   },
+                                   "route-map filtera permit 20 match ip address mcast-all-groups2": {
+                                        "match": "route-map filtera permit 20 match ip address mcast-all-groups2",
+                                        "num_of_matches": 0,
+                                        "num_of_comparison": 0
+                                   }
+                              }
+                         },
+                    }
+               }
+            }
+        }
+    }
+
+    golden_parsed_output_in_2 = {
+        "vrf": {
+            "default": {
+               "peer": {
+                    "6.6.6.6": {
+                         "in": {
+                             "total_accept_count": 0,
+                             "total_reject_count": 1,
+                              "pfxlista": {
+                                   "ip prefix-list pfxlista seq 10 permit 224.0.0.0/4 le 32": {
+                                        "num_of_matches": 0,
+                                        "match": "ip prefix-list pfxlista seq 10 permit 224.0.0.0/4 le 32"
+                                   },
+                                   "ip prefix-list pfxlista seq 5 permit 224.0.0.0/4": {
+                                        "num_of_matches": 0,
+                                        "match": "ip prefix-list pfxlista seq 5 permit 224.0.0.0/4",
+                                   }
+                              }
+                         },
+                    }
+               }
+            }
+        }
+    }
+
+    golden_parsed_output_out_1 = {
+       "vrf": {
+            "default": {
+               "peer": {
+                    "6.6.6.6": {
+                         "out": {
+                             "total_accept_count": 0,
+                             "total_reject_count": 0,
+                              "filtera": {
+                                   "route-map filtera permit 10 match ip address mcast-all-groups": {
+                                        "match": "route-map filtera permit 10 match ip address mcast-all-groups",
+                                        "num_of_matches": 0,
+                                        "num_of_comparison": 0
+                                   },
+                                   "route-map filtera permit 20 match ip address mcast-all-groups2": {
+                                        "match": "route-map filtera permit 20 match ip address mcast-all-groups2",
+                                        "num_of_matches": 0,
+                                        "num_of_comparison": 0
+                                   }
+                              }
+                         },
+                    }
+               }
+            }
+        }
+    }
+
+    golden_output_in_1 = {'execute.return_value': '''
+    N95_2_R2# show ip msdp policy statistics sa-policy 6.6.6.6 in 
+    C: No. of comparisions, M: No. of matches
+
+    route-map filtera permit 10
+      match ip address mcast-all-groups                          C: 0      M: 0     
+    route-map filtera permit 20
+      match ip address mcast-all-groups2                         C: 0      M: 0     
+
+    Total accept count for policy: 0     
+    Total reject count for policy: 0  
+    '''}
+
+    golden_output_in_2 = {'execute.return_value': '''
+    N95_2_R2# show ip msdp policy statistics sa-policy 6.6.6.6 in
+    C: No. of comparisions, M: No. of matches
+
+    ip prefix-list pfxlista seq 5 permit 224.0.0.0/4             M: 0     
+    ip prefix-list pfxlista seq 10 permit 224.0.0.0/4 le 32      M: 0     
+
+    Total accept count for policy: 0     
+    Total reject count for policy: 1 
+    '''}
+
+    golden_output_out_1 = {'execute.return_value': '''
+    N95_2_R2# show ip msdp policy statistics sa-policy 6.6.6.6 out
+    C: No. of comparisions, M: No. of matches
+
+    route-map filtera permit 10
+      match ip address mcast-all-groups                          C: 0      M: 0     
+    route-map filtera permit 20
+      match ip address mcast-all-groups2                         C: 0      M: 0     
+
+    Total accept count for policy: 0     
+    Total reject count for policy: 0
+    '''}
+
+    def test_golden_in_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_in_1)
+        obj = ShowIpMsdpPolicyStatisticsSaPolicyIn(device=self.device)
+        parsed_output = obj.parse(peer='6.6.6.6')
+        self.assertEqual(parsed_output, self.golden_parsed_output_in_1)
+
+    def test_golden_in_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_in_2)
+        obj = ShowIpMsdpPolicyStatisticsSaPolicyIn(device=self.device)
+        parsed_output = obj.parse(peer='6.6.6.6')
+        self.assertEqual(parsed_output, self.golden_parsed_output_in_2)
+
+    def test_golden_out_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_out_1)
+        obj = ShowIpMsdpPolicyStatisticsSaPolicyOut(device=self.device)
+        parsed_output = obj.parse(peer='6.6.6.6')
+        self.assertEqual(parsed_output, self.golden_parsed_output_out_1)
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpMsdpPolicyStatisticsSaPolicyIn(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(peer='6.6.6.6')
+        obj = ShowIpMsdpPolicyStatisticsSaPolicyOut(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(peer='6.6.6.6')
+
+
+# =============================================================================
+#  Unit test for 'show ip msdp summary [vrf <vrf>]'
+# =============================================================================
+
+class test_show_ip_msdp_summary(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''' '''}
+
+    golden_parsed_output = {
+        "vrf": {
+            "default": {
+               "local_as": 0,
+               "originator_id": "2.2.2.2",
+               "statistics": {
+                    "num_of_configured_peers": 1,
+                    "num_of_established_peers": 1,
+                    "num_of_shutdown_peers": 0
+               },
+               "peer": {
+                    "6.6.6.6": {
+                         "elapsed_time": "05:46:19",
+                         "statistics": {
+                              "num_of_sg_received": 1,
+                              "last_message_received": "00:00:51"
+                         },
+                         "session_state": "established",
+                         "address": "6.6.6.6",
+                         "peer_as": 0
+                    }
+                }
+            },
+            "VRF1": {
+               "local_as": 0,
+               "originator_id": "2.2.2.2",
+               "statistics": {
+                    "num_of_configured_peers": 1,
+                    "num_of_established_peers": 1,
+                    "num_of_shutdown_peers": 0
+               },
+               "peer": {
+                    "6.6.6.6": {
+                         "elapsed_time": "05:46:18",
+                         "statistics": {
+                              "num_of_sg_received": 0,
+                              "last_message_received": "00:00:55"
+                         },
+                         "session_state": "established",
+                         "address": "6.6.6.6",
+                         "peer_as": 0
+                    }
+                }
+            }
+        }
+    }
+
+    golden_parsed_output_vrf_default = {
+        "vrf": {
+            "default": {
+               "local_as": 0,
+               "originator_id": "2.2.2.2",
+               "statistics": {
+                    "num_of_configured_peers": 1,
+                    "num_of_established_peers": 1,
+                    "num_of_shutdown_peers": 0
+               },
+               "peer": {
+                    "6.6.6.6": {
+                         "elapsed_time": "06:15:59",
+                         "statistics": {
+                              "num_of_sg_received": 1,
+                              "last_message_received": "00:00:48"
+                         },
+                         "session_state": "established",
+                         "address": "6.6.6.6",
+                         "peer_as": 0
+                    }
+                }
+            },
+        }
+    }
+
+
+    golden_output = {'execute.return_value': '''
+    N95_2_R2# show ip msdp summary vrf all
+    MSDP Peer Status Summary for VRF "default"
+    Local ASN: 0, originator-id: 2.2.2.2
+
+    Number of configured peers:  1
+    Number of established peers: 1
+    Number of shutdown peers:    0
+
+    Peer            Peer        Connection      Uptime/   Last msg  (S,G)s
+    Address         ASN         State           Downtime  Received  Received
+    6.6.6.6         0           Established     05:46:19  00:00:51  1
+
+    MSDP Peer Status Summary for VRF "VRF1"
+    Local ASN: 0, originator-id: 2.2.2.2
+
+    Number of configured peers:  1
+    Number of established peers: 1
+    Number of shutdown peers:    0
+
+    Peer            Peer        Connection      Uptime/   Last msg  (S,G)s
+    Address         ASN         State           Downtime  Received  Received
+    6.6.6.6         0           Established     05:46:18  00:00:55  0
+ 
+    '''}
+
+    golden_output_vrf_default = {'execute.return_value': '''
+    N95_2_R2# show ip msdp summary 
+    MSDP Peer Status Summary for VRF "default"
+    Local ASN: 0, originator-id: 2.2.2.2
+
+    Number of configured peers:  1
+    Number of established peers: 1
+    Number of shutdown peers:    0
+
+    Peer            Peer        Connection      Uptime/   Last msg  (S,G)s
+    Address         ASN         State           Downtime  Received  Received
+    6.6.6.6         0           Established     06:15:59  00:00:48  1
+
+    '''}
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpMsdpSummary(device=self.device)
+        parsed_output = obj.parse(vrf='all')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_vrf_default(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_vrf_default)
+        obj = ShowIpMsdpSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_vrf_default)
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpMsdpSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+
 if __name__ == '__main__':
     unittest.main()
