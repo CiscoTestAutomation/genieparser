@@ -462,6 +462,11 @@ class test_show_lisp_service(unittest.TestCase):
                             'enabled': True,
                             'encapsulation': 'lisp',
                             'map_cache_ttl': '1d00h',
+                            'use_petrs':
+                                {'10.10.10.10':
+                                    {'use_petr': '10.10.10.10',
+                                    },
+                                },
                             'mapping_servers': 
                                 {'13.13.13.13': 
                                     {'ms_address': '13.13.13.13',
@@ -601,6 +606,11 @@ class test_show_lisp_service(unittest.TestCase):
                             'enabled': True,
                             'encapsulation': 'lisp',
                             'map_cache_ttl': '1d00h',
+                            'use_petrs':
+                                {'10.10.10.10':
+                                    {'use_petr': '10.10.10.10',
+                                    },
+                                },
                             'mapping_servers': 
                                 {'13.13.13.13': 
                                     {'ms_address': '13.13.13.13',
@@ -2883,7 +2893,8 @@ class test_show_lisp_service_database(unittest.TestCase):
                         {'etr': 
                             {'local_eids': 
                                 {'101': 
-                                    {'total_eid_entries': 1,
+                                    {'vni': '101',
+                                    'total_eid_entries': 1,
                                     'no_route_eid_entries': 0,
                                     'inactive_eid_entries': 0,
                                     'eids': 
@@ -2924,7 +2935,8 @@ class test_show_lisp_service_database(unittest.TestCase):
                         {'etr': 
                             {'local_eids': 
                                 {'101': 
-                                    {'total_eid_entries': 1,
+                                    {'vni': '101',
+                                    'total_eid_entries': 1,
                                     'no_route_eid_entries': 0,
                                     'inactive_eid_entries': 0,
                                     'eids': 
@@ -2965,7 +2977,8 @@ class test_show_lisp_service_database(unittest.TestCase):
                         {'etr': 
                             {'local_eids': 
                                 {'1': 
-                                    {'total_eid_entries': 2,
+                                    {'vni': '1',
+                                    'total_eid_entries': 2,
                                     'no_route_eid_entries': 0,
                                     'inactive_eid_entries': 0,
                                     'dynamic_eids': 
@@ -2994,7 +3007,8 @@ class test_show_lisp_service_database(unittest.TestCase):
                                         'state': 'site-self, reachable',
                                         'weight': 100}}},
                                 '2': 
-                                    {'total_eid_entries': 2,
+                                    {'vni': '2',
+                                    'total_eid_entries': 2,
                                     'no_route_eid_entries': 0,
                                     'inactive_eid_entries': 0,
                                     'dynamic_eids': 
@@ -4500,7 +4514,7 @@ class test_show_lisp_service_statistics(unittest.TestCase):
                     {'ipv4': 
                         {'statistics': 
                             {'EID': 
-                                {'conrol': 
+                                {'control': 
                                     {'authentication_failures': '0',
                                     'authoritative_records_in': '1',
                                     'authoritative_records_out': '1',
@@ -4620,7 +4634,7 @@ class test_show_lisp_service_statistics(unittest.TestCase):
                                     'unsupported_lisp_packet_type_drops': '0'},
                                 'last_cleared': 'never'},
                             'RLOC': 
-                                {'conrol': 
+                                {'control': 
                                     {'ddt_map_referrals_in': '0',
                                     'ddt_map_referrals_out': '0',
                                     'ddt_map_requests_in': '0',
@@ -4735,7 +4749,7 @@ class test_show_lisp_service_statistics(unittest.TestCase):
                     {'ipv6': 
                         {'statistics': 
                             {'EID': 
-                                {'conrol': 
+                                {'control': 
                                     {'authentication_failures': '0',
                                     'authoritative_records_in': '1',
                                     'authoritative_records_out': '1',
@@ -4853,7 +4867,7 @@ class test_show_lisp_service_statistics(unittest.TestCase):
                                         'unsupported_lisp_packet_type_drops': '0'},
                                     'last_cleared': 'never'},
                                 'RLOC': 
-                                    {'conrol': 
+                                    {'control': 
                                         {'ddt_map_referrals_in': '0',
                                         'ddt_map_referrals_out': '0',
                                         'ddt_map_requests_in': '0',
@@ -4968,7 +4982,7 @@ class test_show_lisp_service_statistics(unittest.TestCase):
                     {'ethernet': 
                         {'statistics': 
                             {'EID': 
-                                {'conrol': 
+                                {'control': 
                                     {'authentication_failures': '0',
                                     'authoritative_records_in': '0',
                                     'authoritative_records_out': '0',
@@ -5063,7 +5077,7 @@ class test_show_lisp_service_statistics(unittest.TestCase):
                                     'unsupported_lisp_packet_type_drops': '0'},
                                 'last_cleared': 'never'},
                             'RLOC': 
-                                {'conrol': 
+                                {'control': 
                                     {'ddt_map_referrals_in': '0',
                                     'ddt_map_referrals_out': '0',
                                     'ddt_map_requests_in': '0',

@@ -20,7 +20,8 @@ from genie.libs.parser.nxos.show_vxlan import  ShowNvePeers,\
                                     ShowL2routeMacAllDetail,\
                                     ShowL2routeMacIpAllDetail,\
                                     ShowL2routeSummary,\
-                                    ShowL2routeFlAll
+                                    ShowL2routeFlAll,\
+                                    ShowRunningConfigNvOverlay
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
@@ -850,14 +851,15 @@ class test_show_l2route_mac_all_detail(unittest.TestCase):
             'topo_id': {
                 101: {
                     'mac': {
-                        '5e00.0002.0007': {  # Ops Str '5e00.0002.0007'
+                        '5e00.0002.0007': {
                             'mac_addr': '5e00.0002.0007',
-                            'prod_type': 'vxlan',  # Ops Str 'vxlan'
-                            'flags': 'rmac',  # Ops Str 'rmac'
-                            'seq_num': 0,  # Ops Int 0
-                            'next_hop1': '204.1.1.1',  # Ops Str '204.1.1.1'
-                            'rte_res': 'regular',  # Ops Str 'regular'
-                            'fwd_state': 'Resolved (PeerID: 2)',  # Ops Str 'Resolved (PeerID: 2)'
+                            'prod_type': 'vxlan',
+                            'flags': 'rmac',
+                            'seq_num': 0,
+                            'next_hop1': '204.1.1.1',
+                            'rte_res': 'regular',
+                            'fwd_state': 'Resolved',
+                            'peer_id': 2,
                         },
                     },
                 },
@@ -881,7 +883,8 @@ class test_show_l2route_mac_all_detail(unittest.TestCase):
                             'seq_num': 0,
                             'next_hop1': '204.1.1.1',
                             'rte_res': 'regular',
-                            'fwd_state': 'Resolved (PeerID: 2)',
+                            'fwd_state': 'Resolved',
+                            'peer_id': 2,
                             'sent_to': 'l2fwder',
                         },
                     },
@@ -1230,6 +1233,7 @@ class test_show_l2route_fl_all(unittest.TestCase):
         'topology': {
             'topo_id': {
                 1001: {
+                    'num_of_peer_id': 3,
                     'peer_id': {
                         8: {
                             'topo_id': 1001,
@@ -1252,6 +1256,7 @@ class test_show_l2route_fl_all(unittest.TestCase):
                     },
                 },
                 1002: {
+                    'num_of_peer_id': 3,
                     'peer_id': {
                         8: {
                             'topo_id': 1002,
@@ -1303,6 +1308,139 @@ class test_show_l2route_fl_all(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+
+# ==============================================================
+#  Unit test for 'show running-config nv overlay'
+# ==============================================================
+class test_show_running_config_nv_overlay(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output ={
+        'enabled_nv_overlay': True,
+        'evpn_multisite_border_gateway': 111111,
+        'multisite_convergence_time': 185,
+        'nve1': {
+            'nve_name': 'nve1',
+            'if_state': "up",
+            'host_reachability_protocol': "bgp",
+            'adv_vmac': True,
+            'source_if': "loopback1",
+            'multisite_bgw_if': "loopback3",
+            'vni': {
+                10100: {
+                    'vni': 10100,
+                    'associated_vrf': True,
+                },
+                10101: {
+                    'vni': 10101,
+                    'associated_vrf': False,
+                    'multisite_ingress_replication': True,
+                    'mcast_group': "231.100.1.1"
+                },
+                10102: {
+                    'vni': 10102,
+                    'associated_vrf': False,
+                    'multisite_ingress_replication': True,
+                    'mcast_group': "231.100.1.1"
+                },
+                10200: {
+                    'vni': 10200,
+                    'associated_vrf': True,
+                },
+                10201: {
+                    'vni': 10201,
+                    'associated_vrf': False,
+                    'multisite_ingress_replication': True,
+                    'mcast_group': "231.200.1.1"
+                },
+                10202: {
+                    'vni': 10202,
+                    'associated_vrf': False,
+                    'multisite_ingress_replication': True,
+                    'mcast_group': "231.200.1.1"
+                },
+            },
+        },
+        'multisite': {
+            'fabric_links': {
+                'Ethernet1/1': {
+                    'if_name': 'Ethernet1/1',
+                    'if_state': 'up' ,
+                },
+                'Ethernet1/2': {
+                    'if_name': 'Ethernet1/2',
+                    'if_state': 'up',
+                }
+            },
+            'dci_links': {
+                'Ethernet1/6': {
+                    'if_name': 'Ethernet1/6',
+                    'if_state': 'up',
+                }
+            },
+        },
+    }
+
+    golden_output = {'execute.return_value': '''
+R6# show running-config nv overlay
+ 
+!Command: show running-config nv overlay
+!No configuration change since last restart
+!Time: Wed May 30 14:42:18 2018
+ 
+version 9.2(1) Bios:version 
+feature nv overlay
+ 
+evpn multisite border-gateway 111111
+  delay-restore time 185
+ 
+ 
+interface nve1
+  no shutdown
+  host-reachability protocol bgp
+  advertise virtual-rmac
+  source-interface loopback1
+  multisite border-gateway interface loopback3
+  member vni 10100 associate-vrf
+  member vni 10101
+    multisite ingress-replication
+    mcast-group 231.100.1.1
+  member vni 10102
+    multisite ingress-replication
+    mcast-group 231.100.1.1
+  member vni 10200 associate-vrf
+  member vni 10201
+    multisite ingress-replication
+    mcast-group 231.200.1.1
+  member vni 10202
+    multisite ingress-replication
+    mcast-group 231.200.1.1
+ 
+interface Ethernet1/1
+  evpn multisite fabric-tracking
+ 
+interface Ethernet1/2
+  evpn multisite fabric-tracking
+ 
+interface Ethernet1/6
+  evpn multisite dci-tracking
+
+
+    '''}
+
+    def test_show_running_config_nv_overlay(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowRunningConfigNvOverlay(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_running_config_nv_overlay_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowRunningConfigNvOverlay(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
 
 if __name__ == '__main__':
     unittest.main()
