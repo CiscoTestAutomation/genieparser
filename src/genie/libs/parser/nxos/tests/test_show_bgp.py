@@ -26541,6 +26541,594 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
         TOR1# E
     '''}
 
+    golden_output_3 = {'execute.return_value': '''
+         R6# show bgp l2vpn evpn route-type 3
+         BGP routing table information for VRF default, address family L2VPN EVPN
+         Route Distinguisher: 6.6.6.6:32868    (L2VNI 10101)
+         BGP routing table entry for [3]:[0]:[32]:[6.6.6.6]/88, version 5759
+         Paths: (1 available, best #1)
+         Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
+         Multipath: iBGP
+
+           Advertised path-id 1
+           Path type: local, path is valid, is best path, no labeled nexthop
+           AS-Path: NONE, path locally originated
+             6.6.6.6 (metric 0) from 0.0.0.0 (6.6.6.6)
+               Origin IGP, MED not set, localpref 100, weight 32768
+               Origin flag 0x2
+               Extcommunity: RT:100:10101 ENCAP:8
+               PMSI Tunnel Attribute:
+                 flags: 0x00, Tunnel type: Ingress Replication
+                 Label: 10101, Tunnel Id: 6.6.6.6
+
+           Path-id 1 advertised to peers:
+             20.6.7.7
+         BGP routing table entry for [3]:[0]:[32]:[7.7.7.7]/88, version 5809
+         Paths: (1 available, best #1)
+         Flags: (0x000012) (high32 00000000) on xmit-list, is in l2rib/evpn, is not in HW
+         Multipath: iBGP
+
+           Advertised path-id 1
+           Path type: external, path is valid, is best path, no labeled nexthop
+                      Imported from 7.7.7.7:32868:[3]:[0]:[32]:[7.7.7.7]/88
+           AS-Path: 200 , path sourced external to AS
+             7.7.7.7 (metric 20) from 20.6.7.7 (7.7.7.7)
+               Origin IGP, MED not set, localpref 100, weight 0
+               Extcommunity: RT:100:10101 ENCAP:8
+               PMSI Tunnel Attribute:
+                 flags: 0x00, Tunnel type: Ingress Replication
+                 Label: 10101, Tunnel Id: 7.7.7.7
+
+           Path-id 1 not advertised to any peer
+
+         Route Distinguisher: 6.6.6.6:32968    (L2VNI 10201)
+         BGP routing table entry for [3]:[0]:[32]:[6.6.6.6]/88, version 5760
+         Paths: (1 available, best #1)
+         Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
+         Multipath: iBGP
+
+           Advertised path-id 1
+           Path type: local, path is valid, is best path, no labeled nexthop
+           AS-Path: NONE, path locally originated
+             6.6.6.6 (metric 0) from 0.0.0.0 (6.6.6.6)
+               Origin IGP, MED not set, localpref 100, weight 32768
+               Origin flag 0x2
+               Extcommunity: RT:100:10201 ENCAP:8
+               PMSI Tunnel Attribute:
+                 flags: 0x00, Tunnel type: Ingress Replication
+                 Label: 10201, Tunnel Id: 6.6.6.6
+
+           Path-id 1 advertised to peers:
+             20.6.7.7
+         BGP routing table entry for [3]:[0]:[32]:[7.7.7.7]/88, version 5811
+         Paths: (1 available, best #1)
+         Flags: (0x000012) (high32 00000000) on xmit-list, is in l2rib/evpn, is not in HW
+         Multipath: iBGP
+
+           Advertised path-id 1
+           Path type: external, path is valid, is best path, no labeled nexthop
+                      Imported from 7.7.7.7:32968:[3]:[0]:[32]:[7.7.7.7]/88
+           AS-Path: 200 , path sourced external to AS
+             7.7.7.7 (metric 20) from 20.6.7.7 (7.7.7.7)
+               Origin IGP, MED not set, localpref 100, weight 0
+               Extcommunity: RT:100:10201 ENCAP:8
+               PMSI Tunnel Attribute:
+                 flags: 0x00, Tunnel type: Ingress Replication
+                 Label: 10201, Tunnel Id: 7.7.7.7
+
+           Path-id 1 not advertised to any peer
+
+         Route Distinguisher: 6.6.6.6:32969    (L2VNI 10202)
+         BGP routing table entry for [3]:[0]:[32]:[6.6.6.6]/88, version 5761
+         Paths: (1 available, best #1)
+         Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
+         Multipath: iBGP
+
+           Advertised path-id 1
+           Path type: local, path is valid, is best path, no labeled nexthop
+           AS-Path: NONE, path locally originated
+             6.6.6.6 (metric 0) from 0.0.0.0 (6.6.6.6)
+               Origin IGP, MED not set, localpref 100, weight 32768
+               Origin flag 0x2
+               Extcommunity: RT:100:10202 ENCAP:8
+               PMSI Tunnel Attribute:
+                 flags: 0x00, Tunnel type: Ingress Replication
+                 Label: 10202, Tunnel Id: 6.6.6.6
+
+           Path-id 1 advertised to peers:
+             20.6.7.7
+         BGP routing table entry for [3]:[0]:[32]:[7.7.7.7]/88, version 5813
+         Paths: (1 available, best #1)
+         Flags: (0x000012) (high32 00000000) on xmit-list, is in l2rib/evpn, is not in HW
+         Multipath: iBGP
+
+           Advertised path-id 1
+           Path type: external, path is valid, is best path, no labeled nexthop
+                      Imported from 7.7.7.7:32969:[3]:[0]:[32]:[7.7.7.7]/88
+           AS-Path: 200 , path sourced external to AS
+             7.7.7.7 (metric 20) from 20.6.7.7 (7.7.7.7)
+               Origin IGP, MED not set, localpref 100, weight 0
+               Extcommunity: RT:100:10202 ENCAP:8
+               PMSI Tunnel Attribute:
+                 flags: 0x00, Tunnel type: Ingress Replication
+                 Label: 10202, Tunnel Id: 7.7.7.7
+
+           Path-id 1 not advertised to any peer
+
+         Route Distinguisher: 7.7.7.7:32868
+         BGP routing table entry for [3]:[0]:[32]:[7.7.7.7]/88, version 5384
+         Paths: (1 available, best #1)
+         Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn, is not in HW
+         Multipath: iBGP
+
+           Advertised path-id 1
+           Path type: external, path is valid, is best path, no labeled nexthop
+                      Imported to 1 destination(s)
+           AS-Path: 200 , path sourced external to AS
+             7.7.7.7 (metric 20) from 20.6.7.7 (7.7.7.7)
+               Origin IGP, MED not set, localpref 100, weight 0
+               Extcommunity: RT:100:10101 ENCAP:8
+               PMSI Tunnel Attribute:
+                 flags: 0x00, Tunnel type: Ingress Replication
+                 Label: 10101, Tunnel Id: 7.7.7.7
+
+           Path-id 1 not advertised to any peer
+
+         Route Distinguisher: 7.7.7.7:32869
+         BGP routing table entry for [3]:[0]:[32]:[7.7.7.7]/88, version 5385
+         Paths: (1 available, best #1)
+         Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn, is not in HW
+         Multipath: iBGP
+
+           Advertised path-id 1
+           Path type: external, path is valid, is best path, no labeled nexthop
+           AS-Path: 200 , path sourced external to AS
+             7.7.7.7 (metric 20) from 20.6.7.7 (7.7.7.7)
+               Origin IGP, MED not set, localpref 100, weight 0
+               Extcommunity: RT:100:10102 ENCAP:8
+               PMSI Tunnel Attribute:
+                 flags: 0x00, Tunnel type: Ingress Replication
+                 Label: 10102, Tunnel Id: 7.7.7.7
+
+           Path-id 1 not advertised to any peer
+
+         Route Distinguisher: 7.7.7.7:32968
+         BGP routing table entry for [3]:[0]:[32]:[7.7.7.7]/88, version 5386
+         Paths: (1 available, best #1)
+         Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn, is not in HW
+         Multipath: iBGP
+
+           Advertised path-id 1
+           Path type: external, path is valid, is best path, no labeled nexthop
+                      Imported to 1 destination(s)
+           AS-Path: 200 , path sourced external to AS
+             7.7.7.7 (metric 20) from 20.6.7.7 (7.7.7.7)
+               Origin IGP, MED not set, localpref 100, weight 0
+               Extcommunity: RT:100:10201 ENCAP:8
+               PMSI Tunnel Attribute:
+                 flags: 0x00, Tunnel type: Ingress Replication
+                 Label: 10201, Tunnel Id: 7.7.7.7
+
+           Path-id 1 not advertised to any peer
+
+         Route Distinguisher: 7.7.7.7:32969
+         BGP routing table entry for [3]:[0]:[32]:[7.7.7.7]/88, version 5387
+         Paths: (1 available, best #1)
+         Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn, is not in HW
+         Multipath: iBGP
+
+           Advertised path-id 1
+           Path type: external, path is valid, is best path, no labeled nexthop
+                      Imported to 1 destination(s)
+           AS-Path: 200 , path sourced external to AS
+             7.7.7.7 (metric 20) from 20.6.7.7 (7.7.7.7)
+               Origin IGP, MED not set, localpref 100, weight 0
+               Extcommunity: RT:100:10202 ENCAP:8
+               PMSI Tunnel Attribute:
+                 flags: 0x00, Tunnel type: Ingress Replication
+                 Label: 10202, Tunnel Id: 7.7.7.7
+
+           Path-id 1 not advertised to any peer
+     '''}
+
+    golden_parsed_output_3 = \
+        {
+            "instance": {
+                "default": {
+                    "vrf": {
+                        "default": {
+                            "address_family": {
+                                "l2vpn evpn": {
+                                    "rd": {
+                                        "7.7.7.7:32969": {
+                                            "rd": "7.7.7.7:32969",
+                                            "prefix": {
+                                                "[3]:[0]:[32]:[7.7.7.7]/88": {
+                                                    "bestpathnr": 1,
+                                                    "path": {
+                                                        1: {
+                                                            "pathnr": 0,
+                                                            "pathnolabeledrnh": True,
+                                                            "neighbor": "20.6.7.7",
+                                                            "localpref": 100,
+                                                            "neighborid": "7.7.7.7",
+                                                            "pathbest": True,
+                                                            "nexthopmetric": 20,
+                                                            "pathvalid": True,
+                                                            "ipnexthop": "7.7.7.7",
+                                                            "extcommunity": [
+                                                                "RT:100:10202",
+                                                                "ENCAP:8"
+                                                            ],
+                                                            "origin": "igp",
+                                                            "pmsi_tunnel_attribute": {
+                                                                    "label": "10202",
+                                                                    "flags": "0x00",
+                                                                    "tunnel_id": "7.7.7.7",
+                                                                    "tunnel_type": "Ingress Replication"
+                                                            },
+                                                            "weight": 0
+                                                        }
+                                                    },
+                                                    "nonipprefix": "[3]:[0]:[32]:[7.7.7.7]/88",
+                                                    "mpath": "ibgp",
+                                                    "prefixversion": 5387,
+                                                    "totalpaths": 1,
+                                                    "on_xmitlist": True
+                                                }
+                                            }
+                                        },
+                                        "7.7.7.7:32968": {
+                                            "rd": "7.7.7.7:32968",
+                                            "prefix": {
+                                                "[3]:[0]:[32]:[7.7.7.7]/88": {
+                                                    "bestpathnr": 1,
+                                                    "path": {
+                                                        1: {
+                                                            "pathnr": 0,
+                                                            "pathnolabeledrnh": True,
+                                                            "neighbor": "20.6.7.7",
+                                                            "localpref": 100,
+                                                            "neighborid": "7.7.7.7",
+                                                            "pathbest": True,
+                                                            "nexthopmetric": 20,
+                                                            "pathvalid": True,
+                                                            "ipnexthop": "7.7.7.7",
+                                                            "extcommunity": [
+                                                                "RT:100:10201",
+                                                                "ENCAP:8"
+                                                            ],
+                                                            "origin": "igp",
+                                                            "pmsi_tunnel_attribute": {
+                                                                "label": "10201",
+                                                                "flags": "0x00",
+                                                                "tunnel_id": "7.7.7.7",
+                                                                "tunnel_type": "Ingress Replication"
+                                                            },
+                                                            "weight": 0
+                                                        }
+                                                    },
+                                                    "nonipprefix": "[3]:[0]:[32]:[7.7.7.7]/88",
+                                                    "mpath": "ibgp",
+                                                    "prefixversion": 5386,
+                                                    "totalpaths": 1,
+                                                    "on_xmitlist": True
+                                                }
+                                            }
+                                        },
+                                        "7.7.7.7:32868": {
+                                            "rd": "7.7.7.7:32868",
+                                            "prefix": {
+                                                "[3]:[0]:[32]:[7.7.7.7]/88": {
+                                                    "bestpathnr": 1,
+                                                    "path": {
+                                                        1: {
+                                                            "pathnr": 0,
+                                                            "pathnolabeledrnh": True,
+                                                            "neighbor": "20.6.7.7",
+                                                            "localpref": 100,
+                                                            "neighborid": "7.7.7.7",
+                                                            "pathbest": True,
+                                                            "nexthopmetric": 20,
+                                                            "pathvalid": True,
+                                                            "ipnexthop": "7.7.7.7",
+                                                            "extcommunity": [
+                                                                "RT:100:10101",
+                                                                "ENCAP:8"
+                                                            ],
+                                                            "origin": "igp",
+                                                            "pmsi_tunnel_attribute": {
+                                                                "label": "10101",
+                                                                "flags": "0x00",
+                                                                "tunnel_id": "7.7.7.7",
+                                                                "tunnel_type": "Ingress Replication"
+                                                            },
+                                                            "weight": 0
+                                                        }
+                                                    },
+                                                    "nonipprefix": "[3]:[0]:[32]:[7.7.7.7]/88",
+                                                    "mpath": "ibgp",
+                                                    "prefixversion": 5384,
+                                                    "totalpaths": 1,
+                                                    "on_xmitlist": True
+                                                }
+                                            }
+                                        },
+                                        "6.6.6.6:32868": {
+                                            "rd": "6.6.6.6:32868",
+                                            "rd_vniid": 10101,
+                                            "rd_vrf": "l2",
+                                            "prefix": {
+                                                "[3]:[0]:[32]:[7.7.7.7]/88": {
+                                                    "bestpathnr": 1,
+                                                    "path": {
+                                                        1: {
+                                                            "pathnr": 0,
+                                                            "pathnolabeledrnh": True,
+                                                            "neighbor": "20.6.7.7",
+                                                            "localpref": 100,
+                                                            "neighborid": "7.7.7.7",
+                                                            "pathbest": True,
+                                                            "nexthopmetric": 20,
+                                                            "pathvalid": True,
+                                                            "ipnexthop": "7.7.7.7",
+                                                            "extcommunity": [
+                                                                "RT:100:10101",
+                                                                "ENCAP:8"
+                                                            ],
+                                                            "origin": "igp",
+                                                            "pmsi_tunnel_attribute": {
+                                                                "label": "10101",
+                                                                "flags": "0x00",
+                                                                "tunnel_id": "7.7.7.7",
+                                                                "tunnel_type": "Ingress Replication"
+                                                            },
+                                                            "weight": 0
+                                                        }
+                                                    },
+                                                    "nonipprefix": "[3]:[0]:[32]:[7.7.7.7]/88",
+                                                    "mpath": "ibgp",
+                                                    "prefixversion": 5809,
+                                                    "totalpaths": 1,
+                                                    "on_xmitlist": True
+                                                },
+                                                "[3]:[0]:[32]:[6.6.6.6]/88": {
+                                                    "bestpathnr": 1,
+                                                    "path": {
+                                                        1: {
+                                                            "pathnr": 0,
+                                                            "pathnolabeledrnh": True,
+                                                            "ipnexthop": "6.6.6.6",
+                                                            "neighbor": "0.0.0.0",
+                                                            "localpref": 100,
+                                                            "neighborid": "6.6.6.6",
+                                                            "pathbest": True,
+                                                            "nexthopmetric": 0,
+                                                            "pathvalid": True,
+                                                            "advertisedto": [
+                                                                "20.6.7.7"
+                                                            ],
+                                                            "extcommunity": [
+                                                                "RT:100:10101",
+                                                                "ENCAP:8"
+                                                            ],
+                                                            "origin": "igp",
+                                                            "pmsi_tunnel_attribute": {
+                                                                "label": "10101",
+                                                                "flags": "0x00",
+                                                                "tunnel_id": "6.6.6.6",
+                                                                "tunnel_type": "Ingress Replication"
+                                                            },
+                                                            "weight": 32768
+                                                        }
+                                                    },
+                                                    "nonipprefix": "[3]:[0]:[32]:[6.6.6.6]/88",
+                                                    "mpath": "ibgp",
+                                                    "prefixversion": 5759,
+                                                    "totalpaths": 1,
+                                                    "on_xmitlist": True
+                                                }
+                                            }
+                                        },
+                                        "6.6.6.6:32969": {
+                                            "rd": "6.6.6.6:32969",
+                                            "rd_vniid": 10202,
+                                            "rd_vrf": "l2",
+                                            "prefix": {
+                                                "[3]:[0]:[32]:[7.7.7.7]/88": {
+                                                    "bestpathnr": 1,
+                                                    "path": {
+                                                        1: {
+                                                            "pathnr": 0,
+                                                            "pathnolabeledrnh": True,
+                                                            "neighbor": "20.6.7.7",
+                                                            "localpref": 100,
+                                                            "neighborid": "7.7.7.7",
+                                                            "pathbest": True,
+                                                            "nexthopmetric": 20,
+                                                            "pathvalid": True,
+                                                            "ipnexthop": "7.7.7.7",
+                                                            "extcommunity": [
+                                                                "RT:100:10202",
+                                                                "ENCAP:8"
+                                                            ],
+                                                            "origin": "igp",
+                                                            "pmsi_tunnel_attribute": {
+                                                                "label": "10202",
+                                                                "flags": "0x00",
+                                                                "tunnel_id": "7.7.7.7",
+                                                                "tunnel_type": "Ingress Replication"
+                                                            },
+                                                            "weight": 0
+                                                        }
+                                                    },
+                                                    "nonipprefix": "[3]:[0]:[32]:[7.7.7.7]/88",
+                                                    "mpath": "ibgp",
+                                                    "prefixversion": 5813,
+                                                    "totalpaths": 1,
+                                                    "on_xmitlist": True
+                                                },
+                                                "[3]:[0]:[32]:[6.6.6.6]/88": {
+                                                    "bestpathnr": 1,
+                                                    "path": {
+                                                        1: {
+                                                            "pathnr": 0,
+                                                            "pathnolabeledrnh": True,
+                                                            "ipnexthop": "6.6.6.6",
+                                                            "neighbor": "0.0.0.0",
+                                                            "localpref": 100,
+                                                            "neighborid": "6.6.6.6",
+                                                            "pathbest": True,
+                                                            "nexthopmetric": 0,
+                                                            "pathvalid": True,
+                                                            "advertisedto": [
+                                                                "20.6.7.7"
+                                                            ],
+                                                            "extcommunity": [
+                                                                "RT:100:10202",
+                                                                "ENCAP:8"
+                                                            ],
+                                                            "origin": "igp",
+                                                            "pmsi_tunnel_attribute": {
+                                                                "label": "10202",
+                                                                "flags": "0x00",
+                                                                "tunnel_id": "6.6.6.6",
+                                                                "tunnel_type": "Ingress Replication"
+                                                            },
+                                                            "weight": 32768
+                                                        }
+                                                    },
+                                                    "nonipprefix": "[3]:[0]:[32]:[6.6.6.6]/88",
+                                                    "mpath": "ibgp",
+                                                    "prefixversion": 5761,
+                                                    "totalpaths": 1,
+                                                    "on_xmitlist": True
+                                                }
+                                            }
+                                        },
+                                        "6.6.6.6:32968": {
+                                            "rd": "6.6.6.6:32968",
+                                            "rd_vniid": 10201,
+                                            "rd_vrf": "l2",
+                                            "prefix": {
+                                                "[3]:[0]:[32]:[7.7.7.7]/88": {
+                                                    "bestpathnr": 1,
+                                                    "path": {
+                                                        1: {
+                                                            "pathnr": 0,
+                                                            "pathnolabeledrnh": True,
+                                                            "neighbor": "20.6.7.7",
+                                                            "localpref": 100,
+                                                            "neighborid": "7.7.7.7",
+                                                            "pathbest": True,
+                                                            "nexthopmetric": 20,
+                                                            "pathvalid": True,
+                                                            "ipnexthop": "7.7.7.7",
+                                                            "extcommunity": [
+                                                                "RT:100:10201",
+                                                                "ENCAP:8"
+                                                            ],
+                                                            "origin": "igp",
+                                                            "pmsi_tunnel_attribute": {
+                                                                "label": "10201",
+                                                                "flags": "0x00",
+                                                                "tunnel_id": "7.7.7.7",
+                                                                "tunnel_type": "Ingress Replication"
+                                                            },
+                                                            "weight": 0
+                                                        }
+                                                    },
+                                                    "nonipprefix": "[3]:[0]:[32]:[7.7.7.7]/88",
+                                                    "mpath": "ibgp",
+                                                    "prefixversion": 5811,
+                                                    "totalpaths": 1,
+                                                    "on_xmitlist": True
+                                                },
+                                                "[3]:[0]:[32]:[6.6.6.6]/88": {
+                                                    "bestpathnr": 1,
+                                                    "path": {
+                                                        1: {
+                                                            "pathnr": 0,
+                                                            "pathnolabeledrnh": True,
+                                                            "ipnexthop": "6.6.6.6",
+                                                            "neighbor": "0.0.0.0",
+                                                            "localpref": 100,
+                                                            "neighborid": "6.6.6.6",
+                                                            "pathbest": True,
+                                                            "nexthopmetric": 0,
+                                                            "pathvalid": True,
+                                                            "advertisedto": [
+                                                                "20.6.7.7"
+                                                            ],
+                                                            "extcommunity": [
+                                                                "RT:100:10201",
+                                                                "ENCAP:8"
+                                                            ],
+                                                            "origin": "igp",
+                                                            "pmsi_tunnel_attribute": {
+                                                                "label": "10201",
+                                                                "flags": "0x00",
+                                                                "tunnel_id": "6.6.6.6",
+                                                                "tunnel_type": "Ingress Replication"
+                                                            },
+                                                            "weight": 32768
+                                                        }
+                                                    },
+                                                    "nonipprefix": "[3]:[0]:[32]:[6.6.6.6]/88",
+                                                    "mpath": "ibgp",
+                                                    "prefixversion": 5760,
+                                                    "totalpaths": 1,
+                                                    "on_xmitlist": True
+                                                }
+                                            }
+                                        },
+                                        "7.7.7.7:32869": {
+                                            "rd": "7.7.7.7:32869",
+                                            "prefix": {
+                                                "[3]:[0]:[32]:[7.7.7.7]/88": {
+                                                    "bestpathnr": 1,
+                                                    "path": {
+                                                        1: {
+                                                            "pathnr": 0,
+                                                            "pathnolabeledrnh": True,
+                                                            "neighbor": "20.6.7.7",
+                                                            "localpref": 100,
+                                                            "neighborid": "7.7.7.7",
+                                                            "pathbest": True,
+                                                            "nexthopmetric": 20,
+                                                            "pathvalid": True,
+                                                            "ipnexthop": "7.7.7.7",
+                                                            "extcommunity": [
+                                                                "RT:100:10102",
+                                                                "ENCAP:8"
+                                                            ],
+                                                            "origin": "igp",
+                                                            "pmsi_tunnel_attribute": {
+                                                                "label": "10102",
+                                                                "flags": "0x00",
+                                                                "tunnel_id": "7.7.7.7",
+                                                                "tunnel_type": "Ingress Replication"
+                                                            },
+                                                            "weight": 0
+                                                        }
+                                                    },
+                                                    "nonipprefix": "[3]:[0]:[32]:[7.7.7.7]/88",
+                                                    "mpath": "ibgp",
+                                                    "prefixversion": 5385,
+                                                    "totalpaths": 1,
+                                                    "on_xmitlist": True
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
     def test_show_l2route_route_type_4(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -26548,6 +27136,13 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
         parsed_output = obj.parse(route_type=4)
 
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_l2route_route_type_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowBgpL2vpnEvpnRouteType(device=self.device)
+        parsed_output = obj.parse(route_type=3)
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
     def test_show_l2route_route_type_2(self):
         self.maxDiff = None

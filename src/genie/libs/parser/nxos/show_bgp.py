@@ -9889,6 +9889,13 @@ class ShowBgpL2vpnEvpnRouteTypeSchema(MetaParser):
                                                         Optional('advertisedto'): list,
                                                         Optional('originatorid'): str,
                                                         Optional('clusterlist'): list,
+                                                        Optional('pmsi_tunnel_attribute'): {
+                                                            Optional('flags'): str,
+                                                            Optional('label'): str,
+                                                            Optional('tunnel_type'): str,
+                                                            Optional('tunnel_id'): str,
+
+                                                        }
                                                     }
                                                 }
                                              }
@@ -9911,6 +9918,7 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
     """parser for:
         show bgp l2vpn evpn route-type <1>
         show bgp l2vpn evpn route-type <2>
+        show bgp l2vpn evpn route-type <3>
         show bgp l2vpn evpn route-type <4>"""
 
     def cli(self,route_type):
@@ -9952,10 +9960,17 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
         p11 = re.compile(r'^\s*Origin +(?P<origin>[\w]+), +(MED +(?P<med>[\w\s]+),)? +localpref +(?P<localpref>[\d]+),'
                          ' +weight +(?P<weight>[\d]+)$')
         p12 = re.compile(r'^\s*Extcommunity: +(?P<extcommunity>[\w\s\:\.]+)$')
-        p13 = re.compile(r'^\s*Originator: +(?P<originatorid>[\d\.]+) +Cluster list: +(?P<clusterlist>[\d\.]+)$')
+        p13 = re.compile(r'^\s*Originator: +(?P<originatorid>[\d\.]+) +Cluster +list: +(?P<clusterlist>[\d\.]+)$')
         p14 = re.compile(r'^\s*Path-id +(?P<path_id>[\d]+) +advertised to peers:$')
         p15 = re.compile(r'^\s*(?P<advertisedto>[\d\s\.]+)$')
         p16 = re.compile(r'^\s*Received +label +(?P<inlabel>[\d]+)$')
+
+        # PMSI Tunnel Attribute:
+        p17 = re.compile(r'^\s*(?P<attribute>[\w]+) +Tunnel +Attribute:$')
+        #         flags: 0x00, Tunnel type: Ingress Replication
+        p18 = re.compile(r'^\s*flags: +(?P<flags>[\w]+), +Tunnel type: +(?P<tunnel_type>[\w\s]+)$')
+        #         Label: 10101, Tunnel Id: 7.7.7.7
+        p19 = re.compile(r'^\s*Label: +(?P<label>[\d]+), +Tunnel +Id: +(?P<tunnel_id>[\d\.]+)$')
 
         for line in out.splitlines():
             if line:
@@ -10087,6 +10102,24 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
             if m:
                 group = m.groupdict()
                 path_dict.update({'inlabel': int(group.pop('inlabel'))})
+                continue
+
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                tunnel_dict = path_dict.setdefault('pmsi_tunnel_attribute',{})
+                continue
+
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                tunnel_dict.update({k:v for k, v in group.items()})
+                continue
+
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                tunnel_dict.update({k: v for k, v in group.items()})
                 continue
 
         if 'instance' not in result_dict:

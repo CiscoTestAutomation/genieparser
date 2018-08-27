@@ -14,6 +14,7 @@ NXOS parser for the following show commands:
     * show l2route mac all detail
     * show l2route mac-ip all detail
     * show l2route summary
+    * show nve vni ingress-replication
 """
 
 # Python
@@ -1656,3 +1657,67 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
                 continue
         return result_dict
 
+# ====================================================
+#  schema for show nve vni ingress-replication
+# ====================================================
+class ShowNveVniIngressReplicationSchema(MetaParser):
+    """Schema for:
+        show nve vni ingress-replication"""
+
+    schema ={
+        Any(): {
+            'vni': {
+                Any(): {
+                    'vni': int,
+                     'repl_ip': {
+                         Any(): {
+                            'repl_ip': str,
+                            'source': str,
+                            'up_time': str,
+                         }
+                    }
+                }
+            }
+        }
+    }
+
+# ====================================================
+#  Parser for show nve vni ingress-replication
+# ====================================================
+class ShowNveVniIngressReplication(ShowNveVniIngressReplicationSchema):
+    """parser for:
+        show nve vni Ingress-replication"""
+
+    def cli(self):
+        out = self.device.execute('show nve vni ingress-replication')
+
+        result_dict = {}
+
+        # Interface VNI      Replication List  Source  Up Time
+        # --------- -------- ----------------- ------- -------
+        # nve1      10101    7.7.7.7           BGP-IMET 1d02h
+
+        p1 = re.compile(r'^\s*(?P<nve_name>[\w]+) +(?P<vni>[\d]+) +(?P<replication_list>[\w\s\.]+)'
+                        ' +(?P<source>[\w\-]+) +(?P<uptime>[\w\:]+)$')
+        for line in out.splitlines():
+            if line:
+                line = line.rstrip()
+            else:
+                continue
+
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                nve_name = group['nve_name']
+                vni = int(group['vni'])
+                nve_dict = result_dict.setdefault(nve_name,{}).setdefault('vni',{}).setdefault(vni,{})
+                nve_dict.update({'vni': vni})
+                repl_ip = group['replication_list'].strip()
+                repl_dict = nve_dict.setdefault('repl_ip', {}).setdefault(repl_ip, {})
+                repl_dict.update({'repl_ip': repl_ip})
+                repl_dict.update({'source': group['source'].lower()})
+                repl_dict.update({'up_time': group['uptime']})
+                continue
+
+        return result_dict
