@@ -283,16 +283,12 @@ class test_show_ip_msdp_policy_statistics_sa_poligy(unittest.TestCase):
                              "total_reject_count": 0,
                               "filtera": {
                                    "route-map filtera permit 10 match ip address mcast-all-groups": {
-                                        "sa_filter": "filtera",
-                                        "match_ip_address": "mcast-all-groups",
-                                        "permit": "10",
+                                        "match": "route-map filtera permit 10 match ip address mcast-all-groups",
                                         "num_of_matches": 0,
                                         "num_of_comparison": 0
                                    },
                                    "route-map filtera permit 20 match ip address mcast-all-groups2": {
-                                        "sa_filter": "filtera",
-                                        "match_ip_address": "mcast-all-groups2",
-                                        "permit": "20",
+                                        "match": "route-map filtera permit 20 match ip address mcast-all-groups2",
                                         "num_of_matches": 0,
                                         "num_of_comparison": 0
                                    }
@@ -315,16 +311,11 @@ class test_show_ip_msdp_policy_statistics_sa_poligy(unittest.TestCase):
                               "pfxlista": {
                                    "ip prefix-list pfxlista seq 10 permit 224.0.0.0/4 le 32": {
                                         "num_of_matches": 0,
-                                        "seq": 10,
-                                        "operator": "le 32",
-                                        "sa_filter": "pfxlista",
-                                        "permit": "224.0.0.0/4"
+                                        "match": "ip prefix-list pfxlista seq 10 permit 224.0.0.0/4 le 32"
                                    },
                                    "ip prefix-list pfxlista seq 5 permit 224.0.0.0/4": {
-                                        "seq": 5,
                                         "num_of_matches": 0,
-                                        "sa_filter": "pfxlista",
-                                        "permit": "224.0.0.0/4"
+                                        "match": "ip prefix-list pfxlista seq 5 permit 224.0.0.0/4",
                                    }
                               }
                          },
@@ -344,16 +335,12 @@ class test_show_ip_msdp_policy_statistics_sa_poligy(unittest.TestCase):
                              "total_reject_count": 0,
                               "filtera": {
                                    "route-map filtera permit 10 match ip address mcast-all-groups": {
-                                        "sa_filter": "filtera",
-                                        "match_ip_address": "mcast-all-groups",
-                                        "permit": "10",
+                                        "match": "route-map filtera permit 10 match ip address mcast-all-groups",
                                         "num_of_matches": 0,
                                         "num_of_comparison": 0
                                    },
                                    "route-map filtera permit 20 match ip address mcast-all-groups2": {
-                                        "sa_filter": "filtera",
-                                        "match_ip_address": "mcast-all-groups2",
-                                        "permit": "20",
+                                        "match": "route-map filtera permit 20 match ip address mcast-all-groups2",
                                         "num_of_matches": 0,
                                         "num_of_comparison": 0
                                    }
@@ -486,7 +473,6 @@ class test_show_ip_msdp_summary(unittest.TestCase):
                 }
             }
         }
-
     }
 
     golden_parsed_output_vrf_default = {

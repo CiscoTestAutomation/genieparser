@@ -494,11 +494,7 @@ class ShowIpMsdpPolicyStatisticsSaPolicyInOutSchema(MetaParser):
                                 Any(): { # 'route-map filtera permit 10 match ip address mcast-all-groups'
                                     Optional('num_of_comparison'): int,
                                     Optional('num_of_matches'): int,
-                                    'permit': str,
-                                    'sa_filter': str,
-                                    Optional('match_ip_address'): str,
-                                    Optional('seq'): int,
-                                    Optional('operator'): str,
+                                    'match': str,
                                 },
                             }
                         },
@@ -509,11 +505,7 @@ class ShowIpMsdpPolicyStatisticsSaPolicyInOutSchema(MetaParser):
                                 Any(): { # 'route-map filtera permit 10 match ip address mcast-all-groups'
                                     Optional('num_of_comparison'): int,
                                     Optional('num_of_matches'): int,
-                                    'permit': str,
-                                    'sa_filter': str,
-                                    Optional('match_ip_address'): str,
-                                    Optional('seq'): int,
-                                    Optional('operator'): str,
+                                    'match': str,
                                 },
                             }
                         }
@@ -594,9 +586,7 @@ class ShowIpMsdpPolicyStatisticsSaPolicyInOut(ShowIpMsdpPolicyStatisticsSaPolicy
                     match_dict['num_of_comparison'] = int(group['comparisions'])
                 if group['matches']:
                     match_dict['num_of_matches'] = int(group['matches'])
-                match_dict['permit'] = permit
-                match_dict['sa_filter'] = sa_filter
-                match_dict['match_ip_address'] = group['match_ip'].strip()
+                match_dict['match'] = match
                 continue
 
             # ip prefix-list pfxlista seq 5 permit 224.0.0.0/4             M: 0
@@ -609,11 +599,7 @@ class ShowIpMsdpPolicyStatisticsSaPolicyInOut(ShowIpMsdpPolicyStatisticsSaPolicy
                 match_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {})\
                     .setdefault('peer', {}).setdefault(peer, {}).setdefault(method, {})\
                         .setdefault(sa_filter, {}).setdefault(match, {})
-                match_dict['permit'] = group['permit']
-                match_dict['sa_filter'] = sa_filter
-                match_dict['seq'] = int(group['seq'])
-                if group['operator'].strip():
-                    match_dict['operator'] = group['operator'].strip()
+                match_dict['match'] = match
                 if group['comparisions']:
                     match_dict['num_of_comparison'] = int(group['comparisions'])
                 if group['matches']:
