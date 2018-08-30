@@ -42,4 +42,17 @@ Current version: genie.libs.parser - 3.0.5
 # August 22nd
 
 * Added parsers for Pim (NXOS):
-    - show running-config pim [ | inc <pip string> ]
+    - show running-config pim [ | sec <vrf> | inc <pip string> ]
+* Added parsers for Msdp (NXOS):
+    - show ip msdp peer vrf <vrf>
+    - show ip msdp sa-cache detail vrf <vrf>
+    - show ip msdp policy statistics sa-policy <address> in [vrf <vrf>]
+    - show ip msdp policy statistics sa-policy <address> out [vrf <vrf>]
+    - show ip msdp summary
+    - show ip msdp summary vrf all
+    - show ip msdp summary vrf <vrf>
+
+# August 30th
+
+* Added parsers for Msdp (NXOS):
+    - show running-config msdp [ | sec <vrf> | inc <pip string> ]

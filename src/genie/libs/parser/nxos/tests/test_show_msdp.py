@@ -585,14 +585,17 @@ class test_show_run_msdp(unittest.TestCase):
                          "timer": {
                               "keepalive_interval": 50,
                               "holdtime_interval": 60
-                         }
+                         },
+                         "connect_source": "loopback0",
                     }
                }
             },
             "VRF1": {
                "peer": {
                     "6.6.6.6": {
-                         "description": "test description on VRF1"
+                         "description": "test description on VRF1",
+                         "connect_source": "loopback11",
+                         "peer_as": "234",
                     }
                }
             }
@@ -644,9 +647,11 @@ feature msdp
 ip msdp description 6.6.6.6 test description
 ip msdp keepalive 6.6.6.6 50 60
 ip msdp reconnect-interval 15
+ip msdp peer 6.6.6.6 connect-source loopback0
 
 vrf context VRF1
   ip msdp description 6.6.6.6 test description on VRF1
+  ip msdp peer 6.6.6.6 connect-source loopback11 remote-as 234
  
     '''}
 

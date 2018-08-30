@@ -41,7 +41,7 @@ class ShowIpMsdpPeerVrfSchema(MetaParser):
                         'enable': bool,
                         Optional('description'): str,
                         Optional('reset_reason'): str,
-                        'mesh_group': str,
+                        Optional('mesh_group'): str,
                         'sa_limit': str,
                         'session_state': str,
                         'elapsed_time': str,
@@ -113,9 +113,9 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
 
         # AS 100, local address: 3.3.3.3 (loopback0)
         p2 = re.compile(r'^\s*AS +(?P<peer_as>[\d]+), +local address: +(?P<connect_source_address>[\d\.]+)'
-                        ' +\((?P<connect_source>[\w]+)\)$')
+                        ' +\((?P<connect_source>[\w\-\/\.]+)\)$')
         #   Description: R1
-        p3 = re.compile(r'^\s*Description: +(?P<description>[\w\s]+)$')
+        p3 = re.compile(r'^\s*Description: +(?P<description>[\S\s]+)$')
 
         #   Connection status: Established
         #   Connection status: Admin-shutdown
@@ -135,10 +135,10 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
         p8 = re.compile(r'^\s*Keepalive Interval: +(?P<keepalive_interval>[\d]+) +sec$')
 
         #   Keepalive Timeout: 90 sec
-        p9 = re.compile(r'^\s*Keepalive Timeout: +(?P<keepalive_timeout>[\d]+) +sec$')
+        p9 = re.compile(r'^\s*Keepalive +Timeout: +(?P<keepalive_timeout>[\d]+) +sec$')
 
         #   Reconnection Interval: 33 sec
-        p10 = re.compile(r'^\s*Reconnection Interval: +(?P<reconnection_interval>[\d]+) +sec$')
+        p10 = re.compile(r'^\s*Reconnection +Interval: +(?P<reconnection_interval>[\d]+) +sec$')
 
         #   Policies:
         p11 = re.compile(r'^\s*Policies:$')
@@ -150,7 +150,7 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
         p13 = re.compile(r'^\s*SA +limit: +(?P<sa_limit>[\w]+)$')
 
         #   Member of mesh-group: 1
-        p14 = re.compile(r'^\s*Member +of +mesh-group: +(?P<mesh_group>[\w]+)$')
+        p14 = re.compile(r'^\s*Member +of +mesh-group: +(?P<mesh_group>\S+)$')
 
         #   Statistics (in/out):
         p15 = re.compile(r'^\s*Statistics +\(in/out\):$')
@@ -214,7 +214,8 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                address_dict.update({'description': group.get("description")})
+                if group["description"] != 'none':
+                    address_dict.update({'description': group.get("description")})
                 continue
 
             m = p4.match(line)
@@ -294,7 +295,8 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
             m = p14.match(line)
             if m:
                 group = m.groupdict()
-                address_dict.update({'mesh_group': group.get("mesh_group")})
+                if group["mesh_group"] != 'no': 
+                    address_dict.update({'mesh_group': group.get("mesh_group")})
                 continue
 
             m = p15.match(line)
@@ -788,10 +790,13 @@ class ShowRunningConfigMsdpSchema(MetaParser):
                 Optional('global'): {
                     Optional('timer'): {
                         'connect_retry_interval': int, # global_connect_retry_interval
-                    }
+                    },
+                    Optional('originating_rp'): str,
                 },
                 Optional('peer'): {
                     Any(): { 
+                        Optional('connect_source'): str, # connected_source
+                        Optional('peer_as'): str, # peer_as
                         Optional('description'): str, # description
                         Optional('timer'): {
                             'keepalive_interval': int, # keepalive_interval
@@ -834,15 +839,23 @@ class ShowRunningConfigMsdp(ShowRunningConfigMsdpSchema):
         p_vrf  = re.compile(r'^vrf +context +(?P<vrf>\S+)$')
 
         # ip msdp keepalive 6.6.6.6 20 30
-        p1 = re.compile(r'^ip +msdp +keepalive +(?P<peer>[\w\.\:]+) +'
+        p1 = re.compile(r'^ip +msdp +keepalive +(?P<peer>[\d\.]+) +'
                          '(?P<keepalive_interval>\d+) +(?P<holdtime_interval>\d+)$')
 
         # ip msdp description 6.6.6.6 some description
-        p2 = re.compile(r'^ip +msdp +description +(?P<peer>[\w\.\:]+) +'
+        p2 = re.compile(r'^ip +msdp +description +(?P<peer>[\d\.]+) +'
                          '(?P<description>.*)$')
 
         # ip msdp reconnect-interval 20
         p3 = re.compile(r'^ip +msdp +reconnect\-interval +(?P<connect_retry_interval>\d+)$')
+
+        # ip msdp originator-id loopback11
+        p4 = re.compile(r'^ip +msdp +originator\-id +(?P<originating_rp>[\w\.\-\/]+)$')
+
+        # ip msdp peer 3.3.3.3 connect-source loopback0 remote-as 234
+        # ip msdp peer 6.6.6.6 connect-source loopback11
+        p5 = re.compile(r'^ip +msdp +peer +(?P<peer>[\d\.]+) +connect\-source +'
+                         '(?P<connected_source>[\w\-\/\.]+)( +remote\-as +(?P<peer_as>\d+))?$')
 
         for line in out.splitlines():
             if line and not line.startswith(' '):
@@ -881,6 +894,24 @@ class ShowRunningConfigMsdp(ShowRunningConfigMsdpSchema):
             if m:
                 global_dict = vrf_dict.setdefault('global', {}).setdefault('timer', {})
                 global_dict['connect_retry_interval'] = int(m.groupdict()['connect_retry_interval'])        
+                continue
+
+            # ip msdp originator-id loopback11
+            m = p4.match(line)
+            if m:
+                global_dict = vrf_dict.setdefault('global', {})
+                global_dict['originating_rp'] = m.groupdict()['originating_rp']
+                continue
+
+            # ip msdp peer 3.3.3.3 connect-source loopback0 remote-as 234
+            # ip msdp peer 6.6.6.6 connect-source loopback11
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                peer_dict = vrf_dict.setdefault('peer', {}).setdefault(groups['peer'], {})
+                peer_dict['connect_source'] = groups['connected_source']
+                if groups['peer_as']:
+                    peer_dict['peer_as'] = groups['peer_as']
                 continue
 
         return msdp_dict
