@@ -1,5 +1,4 @@
-Current version: genie.libs.parser - 3.0.5
-
+Release version: genie.libs.parser - 3.0.6
 
 # August 17th
 
