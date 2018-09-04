@@ -27,7 +27,7 @@ class ShowVrfDetailSchema(MetaParser):
                  Optional('vpn_id'): str,
                  Optional('interfaces'):  list,
                  Optional('flags'):  str,
-                 'address_family': {
+                 Optional('address_family'): {
                     Any(): {
                         'table_id': str,
                          Optional('flags'):  str,
