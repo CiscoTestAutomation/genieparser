@@ -11,7 +11,7 @@ from genie.libs.parser.nxos.show_msdp import ShowIpMsdpSaCacheDetailVrf,\
                                              ShowIpMsdpPeerVrf,\
                                              ShowIpMsdpPolicyStatisticsSaPolicyIn, \
                                              ShowIpMsdpPolicyStatisticsSaPolicyOut, \
-                                             ShowIpMsdpSummary
+                                             ShowIpMsdpSummary, ShowRunningConfigMsdp
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
@@ -501,7 +501,6 @@ class test_show_ip_msdp_summary(unittest.TestCase):
         }
     }
 
-
     golden_output = {'execute.return_value': '''
     N95_2_R2# show ip msdp summary vrf all
     MSDP Peer Status Summary for VRF "default"
@@ -560,6 +559,141 @@ class test_show_ip_msdp_summary(unittest.TestCase):
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpMsdpSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+
+# =============================================================================
+#  Unit test for 'show running-config msdp [| sec <vrf> | inc <str>]'
+# =============================================================================
+
+class test_show_run_msdp(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''' '''}
+
+    golden_parsed_output = {
+        "vrf": {
+            "default": {
+               "global": {
+                    "timer": {
+                         "connect_retry_interval": 15
+                    }
+               },
+               "peer": {
+                    "6.6.6.6": {
+                         "description": "test description",
+                         "timer": {
+                              "keepalive_interval": 50,
+                              "holdtime_interval": 60
+                         },
+                         "connect_source": "loopback0",
+                    }
+               }
+            },
+            "VRF1": {
+               "peer": {
+                    "6.6.6.6": {
+                         "description": "test description on VRF1",
+                         "connect_source": "loopback11",
+                         "peer_as": "234",
+                    }
+               }
+            }
+        }
+    }
+
+    golden_parsed_output_default_vrf = {
+        "vrf": {
+            "default": {
+               "global": {
+                    "timer": {
+                         "connect_retry_interval": 15
+                    }
+               },
+               "peer": {
+                    "6.6.6.6": {
+                         "description": "test description",
+                         "timer": {
+                              "keepalive_interval": 50,
+                              "holdtime_interval": 60
+                         }
+                    }
+               }
+            },
+        }
+    }
+
+
+    golden_parsed_output_vrf_pip = {
+        "vrf": {
+            "VRF1": {
+               "peer": {
+                    "6.6.6.6": {
+                         "description": "test description on VRF1"
+                    }
+               }
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''
+        N95_2_R2# show run msdp
+!Command: show running-config msdp
+!Time: Mon Aug 27 20:17:11 2018
+
+version 7.0(3)I7(3)
+feature msdp
+
+ip msdp description 6.6.6.6 test description
+ip msdp keepalive 6.6.6.6 50 60
+ip msdp reconnect-interval 15
+ip msdp peer 6.6.6.6 connect-source loopback0
+
+vrf context VRF1
+  ip msdp description 6.6.6.6 test description on VRF1
+  ip msdp peer 6.6.6.6 connect-source loopback11 remote-as 234
+ 
+    '''}
+
+
+    golden_output_vrf_default = {'execute.return_value': '''
+        N95_2_R2# show run msdp | sec '^i'
+ip msdp description 6.6.6.6 test description
+ip msdp keepalive 6.6.6.6 50 60
+ip msdp reconnect-interval 15
+ 
+    '''}
+
+
+    golden_output_vrf_VRF1_pip = {'execute.return_value': '''
+        N95_2_R2# show run msdp | sec VRF1 | inc description
+  ip msdp description 6.6.6.6 test description on VRF1 
+    '''}
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowRunningConfigMsdp(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_vrf_default(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_vrf_default)
+        obj = ShowRunningConfigMsdp(device=self.device)
+        parsed_output = obj.parse(vrf='default')
+        self.assertEqual(parsed_output, self.golden_parsed_output_default_vrf)
+
+    def test_golden_vrf_pip(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_vrf_VRF1_pip)
+        obj = ShowRunningConfigMsdp(device=self.device)
+        parsed_output = obj.parse(vrf='VRF1', pip_str='description')
+        self.assertEqual(parsed_output, self.golden_parsed_output_vrf_pip)
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowRunningConfigMsdp(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
