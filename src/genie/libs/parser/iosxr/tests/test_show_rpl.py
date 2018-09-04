@@ -134,7 +134,7 @@ class test_show_rpl_route_policy(unittest.TestCase):
     route-policy test3
       if extcommunity rt matches-any test then
         pass
-      elseif ospf-area is 1.1.1.1 and route-type is level-1 and route-type is level-2 then
+      elseif ospf-area is 1.1.1.1 and route-type is level-2 then
         pass
       elseif destination in prefix-set1 and as-path in test then
         pass

@@ -9,10 +9,10 @@ from ats.topology import Device
 from ats.topology import loader
 
 # Metaparser
-from metaparser.util.exceptions import SchemaEmptyParserError
+from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # YANG Parser
-from parser.yang.bgp_openconfig_yang import BgpOpenconfigYang
+from genie.libs.parser.yang.bgp_openconfig_yang import BgpOpenconfigYang
 
 
 # =======================================

@@ -2725,53 +2725,83 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
 
         return interface_dict
 
-# =====================================================================
-# Schema for 'show nve interface <WORD> detail | grep Source-Interface'
-# =====================================================================
+# ===============================
+# Schema for 'show nve interface'
+# ===============================
 class ShowNveInterfaceSchema(MetaParser):
-    """Schema for show nve interface <WORD> detail | grep Source-Interface"""
+    """Schema for show nve interface"""
 
     schema = {'interface':
                 {Any():
-                    {Optional('source_interface'):
+                    {'state': str,
+                    Optional('encapsulation'): str,
+                    Optional('source_interface'):
                         {Any():
                             {Optional('primary'): str,
                              Optional('secondary'): str,
+                            }
+                        },
+                    Optional('vpc_capability'):
+                        {Any():
+                            {Optional('notified'): bool,
                             }
                         },
                     }
                 },
             }
 
-# =====================================================================
-# Parser for 'show nve interface <WORD> detail | grep Source-Interface'
-# =====================================================================
+# ===============================
+# Parser for 'show nve interface'
+# ===============================
 class ShowNveInterface(ShowNveInterfaceSchema):
-    """Parser for show nve interface <WORD> detail | grep Source-Interface"""
+    """Parser for show nve interface"""
 
     def cli(self, intf):
-        cmd = 'show nve interface {} detail | grep Source-Interface'.format(intf)
+        cmd = 'sh nve interface {} detail'.format(intf)
         out = self.device.execute(cmd)
 
         # Init vars
         interface_dict = {}
 
+        # Interface: nve1, State: Up, encapsulation: VXLAN
+        p1 = re.compile(r'^\s*Interface: +(?P<intf>[\w]+)\,'
+            ' +State: +(?P<state>[\w]+)\, +encapsulation:'
+            ' +(?P<encapsulation>[\w]+)$')
+
+        # Source-Interface: loopback0 (primary: 2.0.0.1, secondary: 0.0.0.0)
+        p2 = re.compile(r'^\s*Source-Interface: +(?P<src_intf>[a-zA-Z0-9\-]+)'
+            ' +\(primary: +(?P<primary>[a-zA-Z0-9\.]+)\, +secondary:'
+            ' +(?P<secondary>[a-zA-Z0-9\.]+)\)$')
+
+        # VPC Capability: VPC-VIP-Only [not-notified]
+        p3 = re.compile(r'^\s*VPC Capability: +(?P<vpc>[a-zA-Z0-9\-]+)'
+            ' +\[(?P<notified>[a-zA-Z\-]+)\]$')
+
         for line in out.splitlines():
             line = line.rstrip()
 
-            # Source-Interface: loopback0 (primary: 2.0.0.1, secondary: 0.0.0.0)
-            p1 = re.compile(r'^\s*Source-Interface: +(?P<src_intf>[a-zA-Z0-9\-]+)'
-                ' +\(primary: +(?P<primary>[a-zA-Z0-9\.]+)\, +secondary:'
-                ' +(?P<secondary>[a-zA-Z0-9\.]+)\)$')
             m = p1.match(line)
             if m:
 
-                src_intf = str(m.groupdict()['src_intf'])
+                intf = str(m.groupdict()['intf'])
 
                 if 'interface' not in interface_dict:
                     interface_dict['interface'] = {}
                 if intf not in interface_dict['interface']:
                     interface_dict['interface'][intf] = {}
+
+                interface_dict['interface'][intf]['state'] = \
+                    str(m.groupdict()['state'])
+                interface_dict['interface'][intf]['encapsulation'] = \
+                    str(m.groupdict()['encapsulation'])
+
+                continue
+
+            m = p2.match(line)
+            if m:
+
+                src_intf = str(m.groupdict()['src_intf'])
+
                 if 'source_interface' not in interface_dict['interface'][intf]:
                     interface_dict['interface'][intf]['source_interface'] = {}
                 if src_intf not in interface_dict['interface'][intf]['source_interface']:
@@ -2781,6 +2811,90 @@ class ShowNveInterface(ShowNveInterfaceSchema):
                     str(m.groupdict()['primary'])
                 interface_dict['interface'][intf]['source_interface'][src_intf]['secondary'] = \
                     str(m.groupdict()['secondary'])
+
+                continue
+
+            m = p3.match(line)
+            if m:
+
+                vpc = str(m.groupdict()['vpc'])
+                notified = str(m.groupdict()['notified'])
+
+                if 'vpc_capability' not in interface_dict['interface'][intf]:
+                    interface_dict['interface'][intf]['vpc_capability'] = {}
+                if vpc not in interface_dict['interface'][intf]['vpc_capability']:
+                    interface_dict['interface'][intf]['vpc_capability'][vpc] = {}
+
+                if notified == 'notified':
+                    interface_dict['interface'][intf]['vpc_capability'][vpc]['notified'] = \
+                        True
+                else:
+                    interface_dict['interface'][intf]['vpc_capability'][vpc]['notified'] = \
+                        False
+
+                continue
+
+        return interface_dict
+
+# ============================================
+# Schema for 'show ip interface brief vrf all'
+# ============================================
+class ShowIpInterfaceBriefVrfAllSchema(MetaParser):
+    """Schema for show ip interface brief vrf all"""
+    schema = {'interface':
+                {Any():
+                    {Optional('ip_address'): str,
+                     Optional('interface_status'): str}
+                },
+            }
+
+# ============================================
+# Schema for 'show ip interface brief vrf all'
+# ============================================
+class ShowIpInterfaceBriefVrfAll(ShowIpInterfaceBriefVrfAllSchema):
+    """Parser for show ip interface brief vrf all"""
+
+    #*************************
+    # schema - class variable
+    #
+    # Purpose is to make sure the parser always return the output
+    # (nested dict) that has the same data structure across all supported
+    # parsing mechanisms (cli(), yang(), xml()).
+
+    def cli(self, ip=''):
+        ''' parsing mechanism: cli
+
+        Function cli() defines the cli type output parsing mechanism which
+        typically contains 3 steps: exe
+        cuting, transforming, returning
+        '''
+
+        cmd = 'show ip interface brief vrf all' if not ip else \
+              'show ip interface brief vrf all | include {}'.format(ip)
+
+        out = self.device.execute(cmd)
+        interface_dict = {}
+
+        # mgmt0                10.255.5.169    protocol-up/link-up/admin-up
+        p = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.\-]+) '
+            '+(?P<ip_address>[a-z0-9\.]+) +(?P<interface_status>[a-z\-\/]+)$')
+
+        for line in out.splitlines():
+            line = line.rstrip()
+
+            m = p.match(line)
+            if m:
+                interface = m.groupdict()['interface']
+
+                if 'interface' not in interface_dict:
+                    interface_dict['interface'] = {}
+                if interface not in interface_dict['interface']:
+                    interface_dict['interface'][interface] = {}
+
+                interface_dict['interface'][interface]['ip_address'] = \
+                    str(m.groupdict()['ip_address'])
+                interface_dict['interface'][interface]['interface_status'] = \
+                    str(m.groupdict()['interface_status'])
 
                 continue
 

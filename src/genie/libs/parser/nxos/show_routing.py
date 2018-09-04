@@ -52,6 +52,10 @@ class ShowRoutingVrfAllSchema(MetaParser):
                                                         Optional('tag'): str, 
                                                         Optional('mpls'): bool,
                                                         Optional('mpls_vpn'): bool,
+                                                        Optional('evpn'): bool,
+                                                        Optional('segid'): int,
+                                                        Optional('tunnelid'): str,
+                                                        Optional('encap'): str,
                                                     },
                                                 },
                                             },
@@ -99,8 +103,11 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
                     address_family = 'vpnv6 unicast'
                 continue
 
-            p2 = re.compile(r'^(?P<ip_mask>[\w\:\.\/]+), +ubest/mbest: +(?P<ubest>\d+)'
-                             '/(?P<mbest>\d+),? *(?P<attach>\w+)?$')
+            # 20.43.0.1/32, ubest/mbest: 1/0 time, attached
+            # 55.0.9.0/24, ubest/mbest: 1/0 time
+            p2 = re.compile(r'(?P<ip_mask>[\w\:\.\/]+), +ubest/mbest: +'
+                             '(?P<ubest>\d+)/(?P<mbest>\d+)( +time)?'
+                             '(, +(?P<attach>\w+))?$')
             m = p2.match(line)
             if m:
                 # Init vrf dict
@@ -136,13 +143,18 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
             # *via 3.3.3.3%default, [33/0], 5w0d, bgp-100, internal, tag 100 (mpls-vpn)
             # *via 2001:db8::5054:ff:fed5:63f9, Eth1/1, [0/0], 00:15:46, direct,
             # *via 2001:db8:2:2::2, Eth1/1, [0/0], 00:15:46, direct, , tag 222
-            p3 = re.compile(r'^(?P<cast>.*)via +(?P<nexthop>[\w\.\:\s]+)(%(?P<table>[\w\:]+))?, *'
+            # *via 100.0.130.2%default, [200/0], 3d07h, bgp-1, internal, tag 1 (evpn), segid: 50009 tunnelid: 0x64008202 encap: VXLAN
+            p3 = re.compile(r'^(?P<cast>.*)via +(?P<nexthop>[\w\.\:\s]+)'
+                             '(%(?P<table>[\w\:]+))?, *'
                              '((?P<int>[a-zA-Z0-9\./_]+),)? *'
                              '\[(?P<preference>\d+)/(?P<metric>\d+)\], *'
                              '(?P<up_time>[\w\:\.]+), *'
                              '(?P<protocol>\w+)(\-(?P<process>\d+))?,? *'
                              '(?P<attribute>\w+)?,? *'
-                             '(tag *(?P<tag>\w+))?,? *(?P<vpn>[a-zA-Z\(\)\-]+)?$')
+                             '(tag *(?P<tag>\w+))?,? *(?P<vpn>[a-zA-Z\(\)\-]+)?'
+                             ',?( +segid: +(?P<segid>\d+))?,?( +tunnelid: +'
+                             '(?P<tunnelid>[0-9x]+))?,?( +encap: +'
+                             '(?P<encap>[a-zA-Z0-9]+))?$')
             m = p3.match(line)
             if m:
                 cast = m.groupdict()['cast']
@@ -202,11 +214,25 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
                 if tag:
                     prot_dict[protocol]['tag'] = tag.strip()
                 
+                segid = m.groupdict()['segid']
+                if segid:
+                    prot_dict[protocol]['segid'] = int(segid)
+
+                tunnelid = m.groupdict()['tunnelid']
+                if tunnelid:
+                    prot_dict[protocol]['tunnelid'] = tunnelid
+
+                encap = m.groupdict()['encap']
+                if encap:
+                    prot_dict[protocol]['encap'] = encap.lower()
+
                 vpn = m.groupdict()['vpn']
                 if vpn and 'mpls-vpn' in vpn:
                     prot_dict[protocol]['mpls_vpn'] = True
                 elif vpn and 'mpls' in vpn:
                     prot_dict[protocol]['mpls'] = True
+                elif vpn and 'evpn' in vpn:
+                    prot_dict[protocol]['evpn'] = True
 
                 # Set extra values for BGP Ops
                 if attribute == 'external' and protocol == 'bgp':

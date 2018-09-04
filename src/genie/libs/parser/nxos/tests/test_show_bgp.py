@@ -7413,7 +7413,8 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         {'as_override': True,
                         'as_override_count': 9,
                         'bgp_table_version': 2,
-                        'session_state': 'shut (admin)',
+                        'session_state': 'shut',
+                        'state_reason': 'admin',
                         'inherit_peer_policy':
                             {'PEER-POLICY':
                                 {'inherit_peer_seq': 10},
@@ -7491,7 +7492,8 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'sent_bytes_queue': 0,
                 'sent_messages': 0,
                 'sent_notifications': 0,
-                'session_state': 'shut (admin)',
+                'session_state': 'shut',
+                'state_reason': 'admin',
                 'shutdown': True,
                 'tcp_md5_auth': 'enabled',
                 'tcp_md5_auth_config': 'TCP MD5 authentication '
@@ -7911,7 +7913,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 {'address_family':
                     {'ipv4 multicast':
                         {'bgp_table_version': 55,
-                         'session_state': 'idle',
+                        'session_state': 'idle',
                         'neighbor_version': 0,
                         'path':
                             {'accepted_paths': 0,
@@ -8062,7 +8064,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 {'address_family':
                     {'ipv4 unicast':
                         {'bgp_table_version': 6765004,
-                         'session_state': 'established',
+                        'session_state': 'established',
                         'neighbor_version': 6765004,
                         'third_party_nexthop': True,
                         'path':
@@ -8148,7 +8150,8 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 {'address_family':
                     {'ipv4 unicast':
                         {'bgp_table_version': 6765004,
-                         'session_state': 'idle',
+                        'session_state': 'idle',
+                        'state_reason': 'connect failure',
                         'neighbor_version': 0,
                         'path':
                             {'accepted_paths': 0,
@@ -8156,7 +8159,8 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'send_community': 'both'},
                     'ipv6 multicast':
                         {'bgp_table_version': 2,
-                         'session_state': 'idle',
+                        'session_state': 'idle',
+                        'state_reason': 'connect failure',
                         'neighbor_version': 0,
                         'path':
                             {'accepted_paths': 0,
@@ -8164,7 +8168,8 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'send_community': 'both'},
                     'ipv6 unicast':
                         {'bgp_table_version': 2,
-                         'session_state': 'idle',
+                        'session_state': 'idle',
+                        'state_reason': 'connect failure',
                         'neighbor_version': 0,
                         'path':
                             {'accepted_paths': 0,
@@ -8218,6 +8223,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'retry_time': '00:00:29',
                 'router_id': '0.0.0.0',
                 'session_state': 'idle',
+                'state_reason': 'connect failure',
                 'shutdown': False,
                 'up_time': '01:27:55'}}}
 
@@ -8591,7 +8597,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
 
         BGP neighbor is fec1::2002, remote AS 888, ebgp link, Peer index 4
           BGP version 4, remote router ID 0.0.0.0
-          BGP state = Idle, down for 01:27:55, retry in 00:00:29
+          BGP state = Idle (Connect failure), down for 01:27:55, retry in 00:00:29
           Peer is directly attached, interface Ethernet1/1
           Last read never, hold time = 180, keepalive interval is 60 seconds
           Last written never, keepalive timer not running
@@ -9137,41 +9143,47 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                         'route_reflector_client': True,
                         'send_community': 'both'}},
                 'allow_own_as': 0,
-                'bgp_negotiated_keepalive_timers': {'hold_time': 180,
-                                         'keepalive_interval': 60,
-                                         'keepalive_timer': 'not '
-                                                            'running',
-                                         'last_read': 'never',
-                                         'last_written': 'never'},
-                'bgp_neighbor_counters': {'messages': {'received': {'bytes_in_queue': 0,
-                                                         'capability': 0,
-                                                         'keepalives': 0,
-                                                         'notifications': 0,
-                                                         'opens': 0,
-                                                         'route_refresh': 0,
-                                                         'total': 0,
-                                                         'total_bytes': 0,
-                                                         'updates': 0},
-                                            'sent': {'bytes_in_queue': 0,
-                                                     'capability': 0,
-                                                     'keepalives': 0,
-                                                     'notifications': 0,
-                                                     'opens': 0,
-                                                     'route_refresh': 0,
-                                                     'total': 0,
-                                                     'total_bytes': 0,
-                                                     'updates': 0}}},
-                'bgp_session_transport': {'connection': {'dropped': 0,
-                                              'established': 0,
-                                              'last_reset': 'never',
-                                              'reset_by': 'peer',
-                                              'reset_reason': 'no '
-                                                              'error'},
-                               'transport': {'foreign_host': 'unspecified',
-                                             'foreign_port': 'fec1::1002',
-                                             'local_host': '::',
-                                             'local_port': 'unspecified',
-                                             'passive_mode': 'false'}},
+                'bgp_negotiated_keepalive_timers': 
+                    {'hold_time': 180,
+                    'keepalive_interval': 60,
+                    'keepalive_timer': 'not running',
+                    'last_read': 'never',
+                    'last_written': 'never'},
+                'bgp_neighbor_counters': 
+                    {'messages': 
+                        {'received': 
+                            {'bytes_in_queue': 0,
+                            'capability': 0,
+                            'keepalives': 0,
+                            'notifications': 0,
+                            'opens': 0,
+                            'route_refresh': 0,
+                            'total': 0,
+                            'total_bytes': 0,
+                            'updates': 0},
+                        'sent': 
+                            {'bytes_in_queue': 0,
+                            'capability': 0,
+                            'keepalives': 0,
+                            'notifications': 0,
+                            'opens': 0,
+                            'route_refresh': 0,
+                            'total': 0,
+                            'total_bytes': 0,
+                            'updates': 0}}},
+                'bgp_session_transport': 
+                    {'connection': 
+                        {'dropped': 0,
+                        'established': 0,
+                        'last_reset': 'never',
+                        'reset_by': 'peer',
+                        'reset_reason': 'no error'},
+                    'transport': 
+                        {'foreign_host': 'unspecified',
+                        'foreign_port': 'fec1::1002',
+                        'local_host': '::',
+                        'local_port': 'unspecified',
+                        'passive_mode': 'false'}},
                 'bgp_version': 4,
                 'description': 'None',
                 'graceful_restart': False,
@@ -9204,65 +9216,79 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                 {'address_family':
                     {'ipv4 unicast':
                         {'bgp_table_version': 358,
-                         'session_state': 'idle',
+                        'session_state': 'idle',
+                        'state_reason': 'connect failure',
                         'enabled': True,
                         'graceful_restart': False,
                         'ipv4_unicast_send_default_route': False,
                         'neighbor_version': 0,
-                        'path': {'accepted_paths': 0,
-                              'memory_usage': 0},
+                        'path': 
+                            {'accepted_paths': 0,
+                            'memory_usage': 0},
                         'send_community': 'both'},
-                    'ipv6 multicast': {'bgp_table_version': 2,
-                                       'session_state': 'idle',
-                                       'neighbor_version': 0,
-                                       'path': {'accepted_paths': 0,
-                                                'memory_usage': 0},
-                                       'send_community': 'both'},
-                    'ipv6 unicast': {'bgp_table_version': 99,
-                                     'session_state': 'idle',
-                                     'enabled': True,
-                                     'graceful_restart': False,
-                                     'ipv6_unicast_send_default_route': False,
-                                     'neighbor_version': 0,
-                                     'path': {'accepted_paths': 0,
-                                              'memory_usage': 0},
-                                     'send_community': 'both'}},
+                    'ipv6 multicast': 
+                        {'bgp_table_version': 2,
+                        'session_state': 'idle',
+                        'state_reason': 'connect failure',
+                        'neighbor_version': 0,
+                        'path': 
+                            {'accepted_paths': 0,
+                            'memory_usage': 0},
+                        'send_community': 'both'},
+                    'ipv6 unicast': 
+                        {'bgp_table_version': 99,
+                        'session_state': 'idle',
+                        'state_reason': 'connect failure',
+                        'enabled': True,
+                        'graceful_restart': False,
+                        'ipv6_unicast_send_default_route': False,
+                        'neighbor_version': 0,
+                        'path': 
+                            {'accepted_paths': 0,
+                            'memory_usage': 0},
+                        'send_community': 'both'}},
                 'allow_own_as': 0,
-                'bgp_negotiated_keepalive_timers': {'hold_time': 180,
-                                                 'keepalive_interval': 60,
-                                                 'keepalive_timer': 'not '
-                                                                    'running',
-                                                 'last_read': 'never',
-                                                 'last_written': 'never'},
-                'bgp_neighbor_counters': {'messages': {'received': {'bytes_in_queue': 0,
-                                                                 'capability': 0,
-                                                                 'keepalives': 0,
-                                                                 'notifications': 0,
-                                                                 'opens': 0,
-                                                                 'route_refresh': 0,
-                                                                 'total': 0,
-                                                                 'total_bytes': 0,
-                                                                 'updates': 0},
-                                                    'sent': {'bytes_in_queue': 0,
-                                                             'capability': 0,
-                                                             'keepalives': 0,
-                                                             'notifications': 0,
-                                                             'opens': 0,
-                                                             'route_refresh': 0,
-                                                             'total': 0,
-                                                             'total_bytes': 0,
-                                                             'updates': 0}}},
-                'bgp_session_transport': {'connection': {'dropped': 0,
-                                                      'established': 0,
-                                                      'last_reset': 'never',
-                                                      'reset_by': 'peer',
-                                                      'reset_reason': 'no '
-                                                                      'error'},
-                                       'transport': {'foreign_host': 'unspecified',
-                                                     'foreign_port': 'fec1::2002',
-                                                     'local_host': '::',
-                                                     'local_port': 'unspecified',
-                                                     'passive_mode': 'false'}},
+                'bgp_negotiated_keepalive_timers': 
+                    {'hold_time': 180,
+                    'keepalive_interval': 60,
+                    'keepalive_timer': 'not running',
+                    'last_read': 'never',
+                    'last_written': 'never'},
+                'bgp_neighbor_counters': 
+                    {'messages': 
+                        {'received': 
+                            {'bytes_in_queue': 0,
+                            'capability': 0,
+                            'keepalives': 0,
+                            'notifications': 0,
+                            'opens': 0,
+                            'route_refresh': 0,
+                            'total': 0,
+                            'total_bytes': 0,
+                            'updates': 0},
+                        'sent': 
+                            {'bytes_in_queue': 0,
+                            'capability': 0,
+                            'keepalives': 0,
+                            'notifications': 0,
+                            'opens': 0,
+                            'route_refresh': 0,
+                            'total': 0,
+                            'total_bytes': 0,
+                            'updates': 0}}},
+                'bgp_session_transport': 
+                    {'connection': 
+                        {'dropped': 0,
+                        'established': 0,
+                        'last_reset': 'never',
+                        'reset_by': 'peer',
+                        'reset_reason': 'no error'},
+                    'transport': 
+                        {'foreign_host': 'unspecified',
+                        'foreign_port': 'fec1::2002',
+                        'local_host': '::',
+                        'local_port': 'unspecified',
+                        'passive_mode': 'false'}},
                 'bgp_version': 4,
                 'description': 'None',
                 'graceful_restart': False,
@@ -9289,6 +9315,7 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                 'router_id': '0.0.0.0',
                 'send_community': 'BOTH',
                 'session_state': 'idle',
+                'state_reason': 'connect failure',
                 'shutdown': False,
                 'up_time': '1w4d'}}}
 
@@ -9645,7 +9672,7 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
 
         BGP neighbor is fec1::2002, remote AS 888, ebgp link, Peer index 8
           BGP version 4, remote router ID 0.0.0.0
-          BGP state = Idle, down for 1w4d, retry in 00:00:03
+          BGP state = Idle (Connect failure), down for 1w4d, retry in 00:00:03
           Last read never, hold time = 180, keepalive interval is 60 seconds
           Last written never, keepalive timer not running
           Received 0 messages, 0 notifications, 0 bytes in queue
@@ -25946,6 +25973,7 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
+
     golden_parsed_output = {
         'instance': {
             'default': {
@@ -25965,7 +25993,7 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                                  'bestpathnr': 1,
                                                  'path': {
                                                      1: {
-                                                        'pathnr': 1,
+                                                        'pathnr': 0,
                                                         'pathvalid': True,
                                                         'pathbest':True,
                                                         'pathnolabeledrnh': True,
@@ -25989,7 +26017,7 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                                 'bestpathnr': 1,
                                                 'path': {
                                                     1: {
-                                                        'pathnr': 1,
+                                                        'pathnr': 0,
                                                         'pathvalid': True,
                                                         'pathbest': True,
                                                         'pathnolabeledrnh': True,
@@ -26019,7 +26047,7 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                                 'bestpathnr': 1,
                                                 'path': {
                                                     1: {
-                                                        'pathnr': 1,
+                                                        'pathnr': 0,
                                                         'pathvalid': True,
                                                         'pathbest': True,
                                                         'pathnolabeledrnh': True,
@@ -26122,7 +26150,7 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                                 'bestpathnr': 1,
                                                 'path': {
                                                     1: {
-                                                        'pathnr': 1,
+                                                        'pathnr': 0,
                                                         'pathvalid': True,
                                                         'pathbest': True,
                                                         'pathnolabeledrnh': True,
@@ -26146,7 +26174,7 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                                 'bestpathnr': 1,
                                                 'path': {
                                                     1: {
-                                                        'pathnr': 1,
+                                                        'pathnr': 0,
                                                         'pathvalid': True,
                                                         'pathbest': True,
                                                         'pathnolabeledrnh': True,
@@ -26170,7 +26198,7 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                                 'bestpathnr': 1,
                                                 'path': {
                                                     1: {
-                                                        'pathnr': 1,
+                                                        'pathnr': 0,
                                                         'pathvalid': True,
                                                         'pathbest': True,
                                                         'pathnolabeledrnh': True,
@@ -26190,7 +26218,7 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                     },
                                     '205.1.1.1:33768': {  # Ops Str '11.0.0.55:27001'
                                         'rd': '205.1.1.1:33768',
-                                        'rd_vrf': 'l2',
+                                        'rd_vrf': 'l3',
                                         'rd_vniid': 25001,
                                         'prefix': {
                                             '[1]:[03bb.bbbb.bbbb.bb00.0016]:[0x0]/152': {
@@ -26201,7 +26229,7 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                                 'bestpathnr': 1,
                                                 'path': {
                                                     1: {
-                                                        'pathnr': 1,
+                                                        'pathnr': 0,
                                                         'pathvalid': True,
                                                         'pathbest': True,
                                                         'pathnolabeledrnh': True,
@@ -26229,7 +26257,7 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                                 'bestpathnr': 1,
                                                 'path': {
                                                     1: {
-                                                        'pathnr': 1,
+                                                        'pathnr': 0,
                                                         'pathvalid': True,
                                                         'pathbest': True,
                                                         'pathnolabeledrnh': True,
@@ -26257,7 +26285,7 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                                 'bestpathnr': 1,
                                                 'path': {
                                                     1: {
-                                                        'pathnr': 1,
+                                                        'pathnr': 0,
                                                         'pathvalid': True,
                                                         'pathbest': True,
                                                         'pathnolabeledrnh': True,
@@ -26333,7 +26361,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
 
   Path-id 1 not advertised to any peer
 
-Route Distinguisher: 205.1.1.1:33768    (L2VNI 25001)
+Route Distinguisher: 205.1.1.1:33768    (L3VNI 25001)
 BGP routing table entry for [1]:[03bb.bbbb.bbbb.bb00.0016]:[0x0]/152, version 4905
 Paths: (1 available, best #1)
 Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
@@ -26396,7 +26424,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
                                                 'bestpathnr': 1,
                                                 'path': {
                                                     1: {
-                                                        'pathnr': 1,
+                                                        'pathnr': 0,
                                                         'pathvalid': True,
                                                         'pathbest': True,
                                                         'pathnolabeledrnh': False,
@@ -26432,7 +26460,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
                                                 'mpath': 'ibgp',
                                                 'path': {
                                                     1: {
-                                                        'pathnr': 1,
+                                                        'pathnr': 0,
                                                         'pathvalid': True,
                                                         'pathbest': True,
                                                         'pathnolabeledrnh': False,
@@ -26513,6 +26541,594 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
         TOR1# E
     '''}
 
+    golden_output_3 = {'execute.return_value': '''
+         R6# show bgp l2vpn evpn route-type 3
+         BGP routing table information for VRF default, address family L2VPN EVPN
+         Route Distinguisher: 6.6.6.6:32868    (L2VNI 10101)
+         BGP routing table entry for [3]:[0]:[32]:[6.6.6.6]/88, version 5759
+         Paths: (1 available, best #1)
+         Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
+         Multipath: iBGP
+
+           Advertised path-id 1
+           Path type: local, path is valid, is best path, no labeled nexthop
+           AS-Path: NONE, path locally originated
+             6.6.6.6 (metric 0) from 0.0.0.0 (6.6.6.6)
+               Origin IGP, MED not set, localpref 100, weight 32768
+               Origin flag 0x2
+               Extcommunity: RT:100:10101 ENCAP:8
+               PMSI Tunnel Attribute:
+                 flags: 0x00, Tunnel type: Ingress Replication
+                 Label: 10101, Tunnel Id: 6.6.6.6
+
+           Path-id 1 advertised to peers:
+             20.6.7.7
+         BGP routing table entry for [3]:[0]:[32]:[7.7.7.7]/88, version 5809
+         Paths: (1 available, best #1)
+         Flags: (0x000012) (high32 00000000) on xmit-list, is in l2rib/evpn, is not in HW
+         Multipath: iBGP
+
+           Advertised path-id 1
+           Path type: external, path is valid, is best path, no labeled nexthop
+                      Imported from 7.7.7.7:32868:[3]:[0]:[32]:[7.7.7.7]/88
+           AS-Path: 200 , path sourced external to AS
+             7.7.7.7 (metric 20) from 20.6.7.7 (7.7.7.7)
+               Origin IGP, MED not set, localpref 100, weight 0
+               Extcommunity: RT:100:10101 ENCAP:8
+               PMSI Tunnel Attribute:
+                 flags: 0x00, Tunnel type: Ingress Replication
+                 Label: 10101, Tunnel Id: 7.7.7.7
+
+           Path-id 1 not advertised to any peer
+
+         Route Distinguisher: 6.6.6.6:32968    (L2VNI 10201)
+         BGP routing table entry for [3]:[0]:[32]:[6.6.6.6]/88, version 5760
+         Paths: (1 available, best #1)
+         Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
+         Multipath: iBGP
+
+           Advertised path-id 1
+           Path type: local, path is valid, is best path, no labeled nexthop
+           AS-Path: NONE, path locally originated
+             6.6.6.6 (metric 0) from 0.0.0.0 (6.6.6.6)
+               Origin IGP, MED not set, localpref 100, weight 32768
+               Origin flag 0x2
+               Extcommunity: RT:100:10201 ENCAP:8
+               PMSI Tunnel Attribute:
+                 flags: 0x00, Tunnel type: Ingress Replication
+                 Label: 10201, Tunnel Id: 6.6.6.6
+
+           Path-id 1 advertised to peers:
+             20.6.7.7
+         BGP routing table entry for [3]:[0]:[32]:[7.7.7.7]/88, version 5811
+         Paths: (1 available, best #1)
+         Flags: (0x000012) (high32 00000000) on xmit-list, is in l2rib/evpn, is not in HW
+         Multipath: iBGP
+
+           Advertised path-id 1
+           Path type: external, path is valid, is best path, no labeled nexthop
+                      Imported from 7.7.7.7:32968:[3]:[0]:[32]:[7.7.7.7]/88
+           AS-Path: 200 , path sourced external to AS
+             7.7.7.7 (metric 20) from 20.6.7.7 (7.7.7.7)
+               Origin IGP, MED not set, localpref 100, weight 0
+               Extcommunity: RT:100:10201 ENCAP:8
+               PMSI Tunnel Attribute:
+                 flags: 0x00, Tunnel type: Ingress Replication
+                 Label: 10201, Tunnel Id: 7.7.7.7
+
+           Path-id 1 not advertised to any peer
+
+         Route Distinguisher: 6.6.6.6:32969    (L2VNI 10202)
+         BGP routing table entry for [3]:[0]:[32]:[6.6.6.6]/88, version 5761
+         Paths: (1 available, best #1)
+         Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
+         Multipath: iBGP
+
+           Advertised path-id 1
+           Path type: local, path is valid, is best path, no labeled nexthop
+           AS-Path: NONE, path locally originated
+             6.6.6.6 (metric 0) from 0.0.0.0 (6.6.6.6)
+               Origin IGP, MED not set, localpref 100, weight 32768
+               Origin flag 0x2
+               Extcommunity: RT:100:10202 ENCAP:8
+               PMSI Tunnel Attribute:
+                 flags: 0x00, Tunnel type: Ingress Replication
+                 Label: 10202, Tunnel Id: 6.6.6.6
+
+           Path-id 1 advertised to peers:
+             20.6.7.7
+         BGP routing table entry for [3]:[0]:[32]:[7.7.7.7]/88, version 5813
+         Paths: (1 available, best #1)
+         Flags: (0x000012) (high32 00000000) on xmit-list, is in l2rib/evpn, is not in HW
+         Multipath: iBGP
+
+           Advertised path-id 1
+           Path type: external, path is valid, is best path, no labeled nexthop
+                      Imported from 7.7.7.7:32969:[3]:[0]:[32]:[7.7.7.7]/88
+           AS-Path: 200 , path sourced external to AS
+             7.7.7.7 (metric 20) from 20.6.7.7 (7.7.7.7)
+               Origin IGP, MED not set, localpref 100, weight 0
+               Extcommunity: RT:100:10202 ENCAP:8
+               PMSI Tunnel Attribute:
+                 flags: 0x00, Tunnel type: Ingress Replication
+                 Label: 10202, Tunnel Id: 7.7.7.7
+
+           Path-id 1 not advertised to any peer
+
+         Route Distinguisher: 7.7.7.7:32868
+         BGP routing table entry for [3]:[0]:[32]:[7.7.7.7]/88, version 5384
+         Paths: (1 available, best #1)
+         Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn, is not in HW
+         Multipath: iBGP
+
+           Advertised path-id 1
+           Path type: external, path is valid, is best path, no labeled nexthop
+                      Imported to 1 destination(s)
+           AS-Path: 200 , path sourced external to AS
+             7.7.7.7 (metric 20) from 20.6.7.7 (7.7.7.7)
+               Origin IGP, MED not set, localpref 100, weight 0
+               Extcommunity: RT:100:10101 ENCAP:8
+               PMSI Tunnel Attribute:
+                 flags: 0x00, Tunnel type: Ingress Replication
+                 Label: 10101, Tunnel Id: 7.7.7.7
+
+           Path-id 1 not advertised to any peer
+
+         Route Distinguisher: 7.7.7.7:32869
+         BGP routing table entry for [3]:[0]:[32]:[7.7.7.7]/88, version 5385
+         Paths: (1 available, best #1)
+         Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn, is not in HW
+         Multipath: iBGP
+
+           Advertised path-id 1
+           Path type: external, path is valid, is best path, no labeled nexthop
+           AS-Path: 200 , path sourced external to AS
+             7.7.7.7 (metric 20) from 20.6.7.7 (7.7.7.7)
+               Origin IGP, MED not set, localpref 100, weight 0
+               Extcommunity: RT:100:10102 ENCAP:8
+               PMSI Tunnel Attribute:
+                 flags: 0x00, Tunnel type: Ingress Replication
+                 Label: 10102, Tunnel Id: 7.7.7.7
+
+           Path-id 1 not advertised to any peer
+
+         Route Distinguisher: 7.7.7.7:32968
+         BGP routing table entry for [3]:[0]:[32]:[7.7.7.7]/88, version 5386
+         Paths: (1 available, best #1)
+         Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn, is not in HW
+         Multipath: iBGP
+
+           Advertised path-id 1
+           Path type: external, path is valid, is best path, no labeled nexthop
+                      Imported to 1 destination(s)
+           AS-Path: 200 , path sourced external to AS
+             7.7.7.7 (metric 20) from 20.6.7.7 (7.7.7.7)
+               Origin IGP, MED not set, localpref 100, weight 0
+               Extcommunity: RT:100:10201 ENCAP:8
+               PMSI Tunnel Attribute:
+                 flags: 0x00, Tunnel type: Ingress Replication
+                 Label: 10201, Tunnel Id: 7.7.7.7
+
+           Path-id 1 not advertised to any peer
+
+         Route Distinguisher: 7.7.7.7:32969
+         BGP routing table entry for [3]:[0]:[32]:[7.7.7.7]/88, version 5387
+         Paths: (1 available, best #1)
+         Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn, is not in HW
+         Multipath: iBGP
+
+           Advertised path-id 1
+           Path type: external, path is valid, is best path, no labeled nexthop
+                      Imported to 1 destination(s)
+           AS-Path: 200 , path sourced external to AS
+             7.7.7.7 (metric 20) from 20.6.7.7 (7.7.7.7)
+               Origin IGP, MED not set, localpref 100, weight 0
+               Extcommunity: RT:100:10202 ENCAP:8
+               PMSI Tunnel Attribute:
+                 flags: 0x00, Tunnel type: Ingress Replication
+                 Label: 10202, Tunnel Id: 7.7.7.7
+
+           Path-id 1 not advertised to any peer
+     '''}
+
+    golden_parsed_output_3 = \
+        {
+            "instance": {
+                "default": {
+                    "vrf": {
+                        "default": {
+                            "address_family": {
+                                "l2vpn evpn": {
+                                    "rd": {
+                                        "7.7.7.7:32969": {
+                                            "rd": "7.7.7.7:32969",
+                                            "prefix": {
+                                                "[3]:[0]:[32]:[7.7.7.7]/88": {
+                                                    "bestpathnr": 1,
+                                                    "path": {
+                                                        1: {
+                                                            "pathnr": 0,
+                                                            "pathnolabeledrnh": True,
+                                                            "neighbor": "20.6.7.7",
+                                                            "localpref": 100,
+                                                            "neighborid": "7.7.7.7",
+                                                            "pathbest": True,
+                                                            "nexthopmetric": 20,
+                                                            "pathvalid": True,
+                                                            "ipnexthop": "7.7.7.7",
+                                                            "extcommunity": [
+                                                                "RT:100:10202",
+                                                                "ENCAP:8"
+                                                            ],
+                                                            "origin": "igp",
+                                                            "pmsi_tunnel_attribute": {
+                                                                    "label": "10202",
+                                                                    "flags": "0x00",
+                                                                    "tunnel_id": "7.7.7.7",
+                                                                    "tunnel_type": "Ingress Replication"
+                                                            },
+                                                            "weight": 0
+                                                        }
+                                                    },
+                                                    "nonipprefix": "[3]:[0]:[32]:[7.7.7.7]/88",
+                                                    "mpath": "ibgp",
+                                                    "prefixversion": 5387,
+                                                    "totalpaths": 1,
+                                                    "on_xmitlist": True
+                                                }
+                                            }
+                                        },
+                                        "7.7.7.7:32968": {
+                                            "rd": "7.7.7.7:32968",
+                                            "prefix": {
+                                                "[3]:[0]:[32]:[7.7.7.7]/88": {
+                                                    "bestpathnr": 1,
+                                                    "path": {
+                                                        1: {
+                                                            "pathnr": 0,
+                                                            "pathnolabeledrnh": True,
+                                                            "neighbor": "20.6.7.7",
+                                                            "localpref": 100,
+                                                            "neighborid": "7.7.7.7",
+                                                            "pathbest": True,
+                                                            "nexthopmetric": 20,
+                                                            "pathvalid": True,
+                                                            "ipnexthop": "7.7.7.7",
+                                                            "extcommunity": [
+                                                                "RT:100:10201",
+                                                                "ENCAP:8"
+                                                            ],
+                                                            "origin": "igp",
+                                                            "pmsi_tunnel_attribute": {
+                                                                "label": "10201",
+                                                                "flags": "0x00",
+                                                                "tunnel_id": "7.7.7.7",
+                                                                "tunnel_type": "Ingress Replication"
+                                                            },
+                                                            "weight": 0
+                                                        }
+                                                    },
+                                                    "nonipprefix": "[3]:[0]:[32]:[7.7.7.7]/88",
+                                                    "mpath": "ibgp",
+                                                    "prefixversion": 5386,
+                                                    "totalpaths": 1,
+                                                    "on_xmitlist": True
+                                                }
+                                            }
+                                        },
+                                        "7.7.7.7:32868": {
+                                            "rd": "7.7.7.7:32868",
+                                            "prefix": {
+                                                "[3]:[0]:[32]:[7.7.7.7]/88": {
+                                                    "bestpathnr": 1,
+                                                    "path": {
+                                                        1: {
+                                                            "pathnr": 0,
+                                                            "pathnolabeledrnh": True,
+                                                            "neighbor": "20.6.7.7",
+                                                            "localpref": 100,
+                                                            "neighborid": "7.7.7.7",
+                                                            "pathbest": True,
+                                                            "nexthopmetric": 20,
+                                                            "pathvalid": True,
+                                                            "ipnexthop": "7.7.7.7",
+                                                            "extcommunity": [
+                                                                "RT:100:10101",
+                                                                "ENCAP:8"
+                                                            ],
+                                                            "origin": "igp",
+                                                            "pmsi_tunnel_attribute": {
+                                                                "label": "10101",
+                                                                "flags": "0x00",
+                                                                "tunnel_id": "7.7.7.7",
+                                                                "tunnel_type": "Ingress Replication"
+                                                            },
+                                                            "weight": 0
+                                                        }
+                                                    },
+                                                    "nonipprefix": "[3]:[0]:[32]:[7.7.7.7]/88",
+                                                    "mpath": "ibgp",
+                                                    "prefixversion": 5384,
+                                                    "totalpaths": 1,
+                                                    "on_xmitlist": True
+                                                }
+                                            }
+                                        },
+                                        "6.6.6.6:32868": {
+                                            "rd": "6.6.6.6:32868",
+                                            "rd_vniid": 10101,
+                                            "rd_vrf": "l2",
+                                            "prefix": {
+                                                "[3]:[0]:[32]:[7.7.7.7]/88": {
+                                                    "bestpathnr": 1,
+                                                    "path": {
+                                                        1: {
+                                                            "pathnr": 0,
+                                                            "pathnolabeledrnh": True,
+                                                            "neighbor": "20.6.7.7",
+                                                            "localpref": 100,
+                                                            "neighborid": "7.7.7.7",
+                                                            "pathbest": True,
+                                                            "nexthopmetric": 20,
+                                                            "pathvalid": True,
+                                                            "ipnexthop": "7.7.7.7",
+                                                            "extcommunity": [
+                                                                "RT:100:10101",
+                                                                "ENCAP:8"
+                                                            ],
+                                                            "origin": "igp",
+                                                            "pmsi_tunnel_attribute": {
+                                                                "label": "10101",
+                                                                "flags": "0x00",
+                                                                "tunnel_id": "7.7.7.7",
+                                                                "tunnel_type": "Ingress Replication"
+                                                            },
+                                                            "weight": 0
+                                                        }
+                                                    },
+                                                    "nonipprefix": "[3]:[0]:[32]:[7.7.7.7]/88",
+                                                    "mpath": "ibgp",
+                                                    "prefixversion": 5809,
+                                                    "totalpaths": 1,
+                                                    "on_xmitlist": True
+                                                },
+                                                "[3]:[0]:[32]:[6.6.6.6]/88": {
+                                                    "bestpathnr": 1,
+                                                    "path": {
+                                                        1: {
+                                                            "pathnr": 0,
+                                                            "pathnolabeledrnh": True,
+                                                            "ipnexthop": "6.6.6.6",
+                                                            "neighbor": "0.0.0.0",
+                                                            "localpref": 100,
+                                                            "neighborid": "6.6.6.6",
+                                                            "pathbest": True,
+                                                            "nexthopmetric": 0,
+                                                            "pathvalid": True,
+                                                            "advertisedto": [
+                                                                "20.6.7.7"
+                                                            ],
+                                                            "extcommunity": [
+                                                                "RT:100:10101",
+                                                                "ENCAP:8"
+                                                            ],
+                                                            "origin": "igp",
+                                                            "pmsi_tunnel_attribute": {
+                                                                "label": "10101",
+                                                                "flags": "0x00",
+                                                                "tunnel_id": "6.6.6.6",
+                                                                "tunnel_type": "Ingress Replication"
+                                                            },
+                                                            "weight": 32768
+                                                        }
+                                                    },
+                                                    "nonipprefix": "[3]:[0]:[32]:[6.6.6.6]/88",
+                                                    "mpath": "ibgp",
+                                                    "prefixversion": 5759,
+                                                    "totalpaths": 1,
+                                                    "on_xmitlist": True
+                                                }
+                                            }
+                                        },
+                                        "6.6.6.6:32969": {
+                                            "rd": "6.6.6.6:32969",
+                                            "rd_vniid": 10202,
+                                            "rd_vrf": "l2",
+                                            "prefix": {
+                                                "[3]:[0]:[32]:[7.7.7.7]/88": {
+                                                    "bestpathnr": 1,
+                                                    "path": {
+                                                        1: {
+                                                            "pathnr": 0,
+                                                            "pathnolabeledrnh": True,
+                                                            "neighbor": "20.6.7.7",
+                                                            "localpref": 100,
+                                                            "neighborid": "7.7.7.7",
+                                                            "pathbest": True,
+                                                            "nexthopmetric": 20,
+                                                            "pathvalid": True,
+                                                            "ipnexthop": "7.7.7.7",
+                                                            "extcommunity": [
+                                                                "RT:100:10202",
+                                                                "ENCAP:8"
+                                                            ],
+                                                            "origin": "igp",
+                                                            "pmsi_tunnel_attribute": {
+                                                                "label": "10202",
+                                                                "flags": "0x00",
+                                                                "tunnel_id": "7.7.7.7",
+                                                                "tunnel_type": "Ingress Replication"
+                                                            },
+                                                            "weight": 0
+                                                        }
+                                                    },
+                                                    "nonipprefix": "[3]:[0]:[32]:[7.7.7.7]/88",
+                                                    "mpath": "ibgp",
+                                                    "prefixversion": 5813,
+                                                    "totalpaths": 1,
+                                                    "on_xmitlist": True
+                                                },
+                                                "[3]:[0]:[32]:[6.6.6.6]/88": {
+                                                    "bestpathnr": 1,
+                                                    "path": {
+                                                        1: {
+                                                            "pathnr": 0,
+                                                            "pathnolabeledrnh": True,
+                                                            "ipnexthop": "6.6.6.6",
+                                                            "neighbor": "0.0.0.0",
+                                                            "localpref": 100,
+                                                            "neighborid": "6.6.6.6",
+                                                            "pathbest": True,
+                                                            "nexthopmetric": 0,
+                                                            "pathvalid": True,
+                                                            "advertisedto": [
+                                                                "20.6.7.7"
+                                                            ],
+                                                            "extcommunity": [
+                                                                "RT:100:10202",
+                                                                "ENCAP:8"
+                                                            ],
+                                                            "origin": "igp",
+                                                            "pmsi_tunnel_attribute": {
+                                                                "label": "10202",
+                                                                "flags": "0x00",
+                                                                "tunnel_id": "6.6.6.6",
+                                                                "tunnel_type": "Ingress Replication"
+                                                            },
+                                                            "weight": 32768
+                                                        }
+                                                    },
+                                                    "nonipprefix": "[3]:[0]:[32]:[6.6.6.6]/88",
+                                                    "mpath": "ibgp",
+                                                    "prefixversion": 5761,
+                                                    "totalpaths": 1,
+                                                    "on_xmitlist": True
+                                                }
+                                            }
+                                        },
+                                        "6.6.6.6:32968": {
+                                            "rd": "6.6.6.6:32968",
+                                            "rd_vniid": 10201,
+                                            "rd_vrf": "l2",
+                                            "prefix": {
+                                                "[3]:[0]:[32]:[7.7.7.7]/88": {
+                                                    "bestpathnr": 1,
+                                                    "path": {
+                                                        1: {
+                                                            "pathnr": 0,
+                                                            "pathnolabeledrnh": True,
+                                                            "neighbor": "20.6.7.7",
+                                                            "localpref": 100,
+                                                            "neighborid": "7.7.7.7",
+                                                            "pathbest": True,
+                                                            "nexthopmetric": 20,
+                                                            "pathvalid": True,
+                                                            "ipnexthop": "7.7.7.7",
+                                                            "extcommunity": [
+                                                                "RT:100:10201",
+                                                                "ENCAP:8"
+                                                            ],
+                                                            "origin": "igp",
+                                                            "pmsi_tunnel_attribute": {
+                                                                "label": "10201",
+                                                                "flags": "0x00",
+                                                                "tunnel_id": "7.7.7.7",
+                                                                "tunnel_type": "Ingress Replication"
+                                                            },
+                                                            "weight": 0
+                                                        }
+                                                    },
+                                                    "nonipprefix": "[3]:[0]:[32]:[7.7.7.7]/88",
+                                                    "mpath": "ibgp",
+                                                    "prefixversion": 5811,
+                                                    "totalpaths": 1,
+                                                    "on_xmitlist": True
+                                                },
+                                                "[3]:[0]:[32]:[6.6.6.6]/88": {
+                                                    "bestpathnr": 1,
+                                                    "path": {
+                                                        1: {
+                                                            "pathnr": 0,
+                                                            "pathnolabeledrnh": True,
+                                                            "ipnexthop": "6.6.6.6",
+                                                            "neighbor": "0.0.0.0",
+                                                            "localpref": 100,
+                                                            "neighborid": "6.6.6.6",
+                                                            "pathbest": True,
+                                                            "nexthopmetric": 0,
+                                                            "pathvalid": True,
+                                                            "advertisedto": [
+                                                                "20.6.7.7"
+                                                            ],
+                                                            "extcommunity": [
+                                                                "RT:100:10201",
+                                                                "ENCAP:8"
+                                                            ],
+                                                            "origin": "igp",
+                                                            "pmsi_tunnel_attribute": {
+                                                                "label": "10201",
+                                                                "flags": "0x00",
+                                                                "tunnel_id": "6.6.6.6",
+                                                                "tunnel_type": "Ingress Replication"
+                                                            },
+                                                            "weight": 32768
+                                                        }
+                                                    },
+                                                    "nonipprefix": "[3]:[0]:[32]:[6.6.6.6]/88",
+                                                    "mpath": "ibgp",
+                                                    "prefixversion": 5760,
+                                                    "totalpaths": 1,
+                                                    "on_xmitlist": True
+                                                }
+                                            }
+                                        },
+                                        "7.7.7.7:32869": {
+                                            "rd": "7.7.7.7:32869",
+                                            "prefix": {
+                                                "[3]:[0]:[32]:[7.7.7.7]/88": {
+                                                    "bestpathnr": 1,
+                                                    "path": {
+                                                        1: {
+                                                            "pathnr": 0,
+                                                            "pathnolabeledrnh": True,
+                                                            "neighbor": "20.6.7.7",
+                                                            "localpref": 100,
+                                                            "neighborid": "7.7.7.7",
+                                                            "pathbest": True,
+                                                            "nexthopmetric": 20,
+                                                            "pathvalid": True,
+                                                            "ipnexthop": "7.7.7.7",
+                                                            "extcommunity": [
+                                                                "RT:100:10102",
+                                                                "ENCAP:8"
+                                                            ],
+                                                            "origin": "igp",
+                                                            "pmsi_tunnel_attribute": {
+                                                                "label": "10102",
+                                                                "flags": "0x00",
+                                                                "tunnel_id": "7.7.7.7",
+                                                                "tunnel_type": "Ingress Replication"
+                                                            },
+                                                            "weight": 0
+                                                        }
+                                                    },
+                                                    "nonipprefix": "[3]:[0]:[32]:[7.7.7.7]/88",
+                                                    "mpath": "ibgp",
+                                                    "prefixversion": 5385,
+                                                    "totalpaths": 1,
+                                                    "on_xmitlist": True
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
     def test_show_l2route_route_type_4(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -26520,6 +27136,13 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
         parsed_output = obj.parse(route_type=4)
 
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_l2route_route_type_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowBgpL2vpnEvpnRouteType(device=self.device)
+        parsed_output = obj.parse(route_type=3)
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
     def test_show_l2route_route_type_2(self):
         self.maxDiff = None
@@ -26548,7 +27171,6 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
         obj = ShowBgpL2vpnEvpnRouteType(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(route_type=4)
-
 
 # ==============================================================
 #  Unit test for 'show bgp l2vpn evpn neighbors'

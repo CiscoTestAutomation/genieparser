@@ -102,6 +102,8 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
                 uptime = m.groupdict()['uptime']
                 flag = m.groupdict()['flag']
                 bidir = m.groupdict()['bidir']
+                if flag:
+                    flag = ' '.join(sorted(flag.split()))
 
                 if 'multicast_group' not in mroute_dict['vrf'][vrf]['address_family'][address_family]:
                     mroute_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'] = {}
@@ -273,6 +275,8 @@ class ShowIpv6MrouteVrfAll(ShowIpv6MrouteVrfAllSchema):
                 uptime = m.groupdict()['uptime']
                 flag = m.groupdict()['flag']
                 bidir = m.groupdict()['bidir']
+                if flag:
+                    flag = ' '.join(sorted(flag.split()))
 
                 if 'multicast_group' not in ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]:
                     ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'] = {}
