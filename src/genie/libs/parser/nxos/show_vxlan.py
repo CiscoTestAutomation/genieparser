@@ -1721,3 +1721,362 @@ class ShowNveVniIngressReplication(ShowNveVniIngressReplicationSchema):
                 continue
 
         return result_dict
+
+# ====================================================
+#  schema for show fabric multicast globals
+# ====================================================
+class ShowFabricMulticastGlobalsSchema(MetaParser):
+    """Schema for:
+        show fabric multicast globals"""
+
+    schema ={
+        'multicast': {
+            'globals': {
+                'pruning': str,
+                'switch_role': str,
+                'fabric_control_seg': str,
+                'peer_fabric_ctrl_addr': str,
+                'advertise_vpc_rpf_routes': str,
+                'created_vni_list': str,
+                'fwd_encap': str,
+                'overlay_distributed_dr': bool,
+                'overlay_spt_only': bool,
+                }
+            }
+        }
+
+# ====================================================
+#  Parser for show fabric multicast globals
+# ====================================================
+class ShowFabricMulticastGlobals(ShowFabricMulticastGlobalsSchema):
+    """parser for:
+        show fabric multicast globals"""
+
+    def cli(self):
+        out = self.device.execute('show fabric multicast globals')
+
+        result_dict = {}
+
+        # Pruning: segment-based
+        p1 = re.compile(r'^\s*Pruning: +(?P<pruning>[\w\-]+)$')
+
+        # Switch role:
+        p2 = re.compile(r'^\s*Switch +role:( +(?P<switch_role>[\w]+))?$')
+
+        # Fabric Control Seg: Null
+        p3 = re.compile(r'^\s*Fabric +Control +Seg: +(?P<fabric_control_seg>[\w]+)$')
+
+        # Peer Fabric Control Address: 0.0.0.0
+        p4 = re.compile(r'^\s*Peer +Fabric +Control +Address: +(?P<peer_fabric_ctrl_addr>[\w\.]+)$')
+
+        # Advertising vPC RPF routes: Disabled
+        p5 = re.compile(r'^\s*Advertising +vPC +RPF +routes: +(?P<advertise_vpc_rpf_routes>[\w]+)$')
+
+        # Created VNI List: -
+        p6 = re.compile(r'^\s*Created +VNI +List: +(?P<created_vni_list>[\w\-]+)$')
+
+        # Fwd Encap: (null)
+        p7 = re.compile(r'^\s*Fwd +Encap: +(?P<fwd_encap>[\w\\(\)]+)$')
+
+        # Overlay Distributed-DR: FALSE
+        p8 = re.compile(r'^\s*Overlay +Distributed\-DR: +(?P<overlay_distributed_dr>[\w]+)$')
+
+        # Overlay spt-only: TRUE
+        p9 = re.compile(r'^\s*Overlay +spt\-only: +(?P<overlay_spt_only>[\w]+)$')
+
+        for line in out.splitlines():
+            if line:
+                line = line.rstrip()
+            else:
+                continue
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                global_dict = result_dict.setdefault('multicast', {}).setdefault('globals', {})
+                global_dict.update({'pruning': group['pruning']})
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                if group['switch_role']:
+                    global_dict.update({'switch_role': group['switch_role']})
+                else:
+                    global_dict.update({'switch_role': ""})
+                continue
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                global_dict.update({'fabric_control_seg': group['fabric_control_seg']})
+                continue
+
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                global_dict.update({'peer_fabric_ctrl_addr': group['peer_fabric_ctrl_addr']})
+                continue
+
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                global_dict.update({'advertise_vpc_rpf_routes': group['advertise_vpc_rpf_routes'].lower()})
+                continue
+
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                global_dict.update({'created_vni_list': group['created_vni_list']})
+                continue
+
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                global_dict.update({'fwd_encap': group['fwd_encap']})
+                continue
+
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                global_dict.update({'overlay_distributed_dr': False if \
+                    group['overlay_distributed_dr'].lower()=='false' else True})
+                continue
+
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                global_dict.update({'overlay_spt_only': False if\
+                    group['overlay_spt_only'].lower()=='false' else True})
+                continue
+
+        return result_dict
+
+# ==========================================================
+#  schema for show fabric multicast ipv4 sa-ad-route vrf all
+# ==========================================================
+class ShowFabricMulticastIpSaAdRouteSchema(MetaParser):
+    """Schema for:
+        show fabric multicast ipv4 sa-ad-route
+        show fabric multicast ipv4 sa-ad-route vrf <vrf>
+        show fabric multicast ipv4 sa-ad-route vrf all"""
+
+    schema ={
+        "multicast": {
+            "vrf": {
+                Any(): {
+                    "vnid": str,
+                    Optional("address_family"): {
+                        Any(): {
+                            "sa_ad_routes": {
+                                "gaddr": {
+                                    Any(): {
+                                        "grp_len": int,
+                                        "saddr": {
+                                            Any(): {
+                                                "src_len": int,
+                                                "uptime": str,
+                                                Optional("interested_fabric_nodes"): {
+                                                    Any(): {
+                                                        "uptime": str,
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# ===========================================================
+#  Parser for show fabric multicast ipv4 sa-ad-route vrf all
+# ==========================================================
+class ShowFabricMulticastIpSaAdRoute(ShowFabricMulticastIpSaAdRouteSchema):
+    """parser for:
+        show fabric multicast ipv4 sa-ad-route
+        show fabric multicast ipv4 sa-ad-route vrf <vrf>
+        show fabric multicast ipv4 sa-ad-route vrf all"""
+
+    def cli(self,vrf=""):
+        if vrf:
+            out = self.device.execute('show fabric multicast ipv4 sa-ad-route {} {}'.format("vrf",vrf))
+        else:
+            out = self.device.execute('show fabric multicast ipv4 sa-ad-route')
+
+        result_dict = {}
+        # VRF "default" MVPN SA AD Route Database VNI: 0
+        # VRF "vni_10100" MVPN SA AD Route Database VNI: 10100
+        # VRF "vpc-keepalive" MVPN SA AD Route Database VNI: 0
+
+        p1 = re.compile(r'^\s*VRF +\"(?P<vrf_name>[\w\-]+)\" +MVPN +SA +AD +Route +Database'
+                        ' +VNI: +(?P<vnid>[\d]+)$')
+
+        # Src Active AD Route: (100.101.1.3/32, 238.8.4.101/32) uptime: 00:01:01
+        p2 = re.compile(r'^\s*Src +Active +AD +Route: +\((?P<saddr>[\w\/\.]+), +(?P<gaddr>[\w\/\.]+)\)'
+                        ' +uptime: +(?P<uptime>[\w\.\:]+)$')
+        #  Interested Fabric Nodes:
+        p3 = re.compile(r'^\s*Interested Fabric Nodes:$')
+
+        #    This node, uptime: 00:01:01
+        p4 = re.compile(r'^\s*(?P<interested_fabric_nodes>[\w\s\.]+), +uptime: +(?P<interest_uptime>[\w\.\:]+)$')
+
+        for line in out.splitlines():
+            if line:
+                line = line.rstrip()
+            else:
+                continue
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_dict = result_dict.setdefault('multicast', {}).setdefault('vrf', {}).\
+                    setdefault(group['vrf_name'], {})
+                vrf_dict.update({'vnid': group['vnid']})
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                address_family_dict = vrf_dict.setdefault('address_family', {}).setdefault('ipv4', {})
+                saddr = group['saddr']
+                gaddr = group['gaddr']
+                gaddr_dict = address_family_dict.setdefault('sa_ad_routes', {}).\
+                    setdefault('gaddr', {}).setdefault(gaddr ,{})
+                gaddr_dict.update({'grp_len': int(gaddr.split('/')[1])})
+
+                saddr_dict = gaddr_dict.setdefault('saddr', {}).setdefault(saddr, {})
+                saddr_dict.update({'src_len': int(saddr.split('/')[1])})
+                saddr_dict.update({'uptime': group['uptime']})
+                continue
+
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                group['interested_fabric_nodes'] = group['interested_fabric_nodes']
+                interested_dict = saddr_dict.setdefault('interested_fabric_nodes', {}).\
+                    setdefault(group['interested_fabric_nodes'], {})
+                interested_dict.update({'uptime': group['interest_uptime']})
+                continue
+
+        return result_dict
+
+
+# ==========================================================
+#  schema for show fabric multicast ipv4 l2-mroute vni all
+# ==========================================================
+class ShowFabricMulticastIpL2MrouteSchema(MetaParser):
+    """Schema for:
+        show fabric multicast ipv4 l2-mroute
+        show fabric multicast ipv4 l2-mroute vni <vni>
+        show fabric multicast ipv4 l2-mroute vni all"""
+
+    schema = {
+        'multicast': {
+            "l2_mroute": {
+                "vni": {
+                    Any(): {
+                        "vnid": str,
+                        "fabric_l2_mroutes": {
+                            "gaddr": {
+                                Any(): {
+                                    "saddr": {
+                                        Any(): {
+                                            "interested_fabric_nodes": {
+                                                Any(): {
+                                                    "node": str,
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+# ===========================================================
+#  Parser for show fabric multicast ipv4 l2-mroute vni all
+# ==========================================================
+class ShowFabricMulticastIpL2Mroute(ShowFabricMulticastIpL2MrouteSchema):
+    """parser for:
+        show fabric multicast ipv4 l2-mroute
+        show fabric multicast ipv4 l2-mroute vni <vni>
+        show fabric multicast ipv4 l2-mroute vni all"""
+
+    def cli(self, vni=""):
+        if vni:
+            out = self.device.execute('show fabric multicast ipv4 l2-mroute {} {}'.format("vni", vni))
+        else:
+            out = self.device.execute('show fabric multicast ipv4 l2-mroute')
+
+        result_dict = {}
+        # EVPN C-Mcast Route Database for VNI: 10101
+        p1 = re.compile(r'^\s*EVPN +C\-Mcast +Route +Database +for +VNI: +(?P<vni>[\d]+)$')
+
+        # Fabric L2-Mroute: (*, 231.1.3.101/32)
+        p2 = re.compile(r'^\s*Fabric +L2\-Mroute: +\((?P<saddr>[\w\/\.\*]+), +(?P<gaddr>[\w\/\.]+)\)$')
+
+        #  Interested Fabric Nodes:
+        p3 = re.compile(r'^\s*Interested Fabric Nodes:$')
+
+        #   This node
+        p4 = re.compile(r'^(?P<space>\s{4})(?P<interested_fabric_nodes>[\w\s\.]+)$')
+
+        interested_flag = False
+        for line in out.splitlines():
+            if line:
+                line = line.rstrip()
+            else:
+                continue
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                mroute_dict = result_dict.setdefault('multicast', {}).\
+                    setdefault('l2_mroute', {}).setdefault('vni', {}).\
+                    setdefault(group['vni'], {})
+                mroute_dict.update({'vnid': group['vni']})
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                fabric_dict = mroute_dict.setdefault('fabric_l2_mroutes', {})
+                saddr = group['saddr']
+                gaddr = group['gaddr']
+                gaddr_dict = fabric_dict.setdefault('gaddr', {}).setdefault(gaddr, {})
+                saddr_dict = gaddr_dict.setdefault('saddr', {}).setdefault(saddr, {})
+
+                interested_flag = False
+                continue
+
+            m = p3.match(line)
+            if m:
+                interested_flag=True
+                continue
+
+            m = p4.match(line)
+            if m:
+                if interested_flag:
+                    group = m.groupdict()
+                    interested_fabric_nodes = group['interested_fabric_nodes']
+                    interested_dict = saddr_dict.setdefault('interested_fabric_nodes', {}). \
+                        setdefault(interested_fabric_nodes, {})
+                    interested_dict.update({'node': interested_fabric_nodes})
+                    continue
+
+        return result_dict
+
+
+
+
+
