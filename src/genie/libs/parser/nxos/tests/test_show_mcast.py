@@ -13,9 +13,10 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
 from genie.libs.parser.nxos.show_mcast import ShowIpMrouteVrfAll,\
                                    ShowIpv6StaticRouteMulticast,\
                                    ShowIpStaticRouteMulticast,\
-                                   ShowIpv6MrouteVrfAll
+                                   ShowIpv6MrouteVrfAll,\
+                                   ShowForwardingDistributionMulticastRoute
 
-
+from genie.libs.parser.nxos.show_vrf import ShowVrf
 # =======================================
 # Unit test for 'show ip mroute vrf all'
 # =======================================
@@ -961,6 +962,208 @@ class test_show_ipv6_static_route_multicast(unittest.TestCase):
         ipv6_static_route_multicast_obj = ShowIpv6StaticRouteMulticast(device=self.device)
         parsed_output = ipv6_static_route_multicast_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+# ===============================================================
+# Unit test for 'show forwarding distribution multicast route'
+# ===============================================================
+class test_show_forwarding_distribution_multicast_route(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "distribution": {
+            "multicast": {
+                "route": {
+                    "vrf": {
+                        'default': {
+                            "address_family": {
+                                "ipv4": {
+                                    "num_groups": 5,
+                                    "gaddr": {
+                                        '224.0.0.0/4': {
+                                            "grp_len": 4,
+                                             "saddr": {
+                                                  '*': {
+                                                    "rpf_ifname": 'NULL',
+                                                    "flags": 'D',
+                                                    "rcv_packets": 0,
+                                                    "rcv_bytes": 0,
+                                                    "num_of_oifs": 0
+                                                    }
+                                                  }
+                                             },
+                                        '224.0.0.0/24': {
+                                            "grp_len": 24,
+                                            "saddr": {
+                                                '*': {
+                                                    "rpf_ifname": 'NULL',
+                                                    "flags": 'CP',
+                                                    "rcv_packets": 0,
+                                                    "rcv_bytes": 0,
+                                                    "num_of_oifs": 0
+                                                }
+                                            }
+                                        },
+                                        '231.100.1.1/32': {
+                                            "grp_len": 32,
+                                            "saddr": {
+                                                '*': {
+                                                    "rpf_ifname": 'Ethernet1/2',
+                                                    "flags": 'GLd',
+                                                    "rcv_packets": 0,
+                                                    "rcv_bytes": 0,
+                                                    "num_of_oifs": 1,
+                                                    "oifs": {
+                                                        "oif_index": 30,
+                                                        'nve1': {
+                                                            'oif': 'nve1',
+                                                        },
+                                                    },
+                                                },
+                                                '23.23.23.23/32': {
+                                                    "src_len": 32,
+                                                    "rpf_ifname": "loopback1",
+                                                    "rcv_packets": 0,
+                                                    "rcv_bytes": 0,
+                                                    "num_of_oifs": 1,
+                                                    "oifs": {
+                                                        "oif_index": 29,
+                                                        'Ethernet1/2': {
+                                                            'oif': 'Ethernet1/2',
+                                                        },
+                                                    },
+                                                }
+                                            }
+                                        },
+                                        '231.1.3.101/32': {
+                                            "grp_len": 32,
+                                            "saddr": {
+                                                '*': {
+                                                    "rpf_ifname": 'loopback100',
+                                                    "flags": 'GL',
+                                                    "rcv_packets": 0,
+                                                    "rcv_bytes": 0,
+                                                    "num_of_oifs": 1,
+                                                    "oifs": {
+                                                        "oif_index": 104,
+                                                        "Vlan101": {
+                                                            "oif": "Vlan101",
+                                                            "mem_l2_ports": "port-channel1 nve1",
+                                                            "l2_oiflist_index": 44,
+                                                        },
+                                                    },
+                                                },
+                                            }
+                                        },
+                                        "238.8.4.101/32": {
+                                            "grp_len": 32,
+                                            "saddr": {
+                                                "100.101.1.3/32": {
+                                                    "src_len": 32,
+                                                    "rpf_ifname": 'Vlan101',
+                                                    "rcv_packets": 0,
+                                                    "rcv_bytes": 0,
+                                                    "num_of_oifs": 2,
+                                                    "oifs": {
+                                                        "oif_index": 54,
+                                                        'Vlan100': {
+                                                            "oif": "Vlan100",
+                                                            "encap": 'vxlan',
+                                                            "mem_l2_ports": "nve1",
+                                                            "l2_oiflist_index": 19,
+                                                        },
+                                                        'Vlan101': {
+                                                            "oif": 'Vlan101',
+                                                            "mem_l2_ports": "nve1",
+                                                            "l2_oiflist_index": 19,
+                                                        },
+                                                    },
+                                                },
+                                            }
+                                        },
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''
+    R2# show forwarding distribution multicast route vrf all
+
+IPv4 Multicast Routing Table for table-id: 1
+Total number of groups: 5
+Legend:
+   C = Control Route
+   D = Drop Route
+   G = Local Group (directly connected receivers)
+   O = Drop on RPF Fail
+   P = Punt to supervisor
+   L = SRC behind L3
+   d = Decap Route
+   Es = Extranet src entry
+   Er = Extranet recv entry
+   Nf = VPC None-Forwarder
+
+  (*, 224.0.0.0/4), RPF Interface: NULL, flags: D
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 0
+    Null Outgoing Interface List
+
+  (*, 224.0.0.0/24), RPF Interface: NULL, flags: CP
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 0
+    Null Outgoing Interface List
+
+  (*, 231.100.1.1/32), RPF Interface: Ethernet1/2, flags: GLd
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 1
+    Outgoing Interface List Index: 30
+      nve1
+
+  (23.23.23.23/32, 231.100.1.1/32), RPF Interface: loopback1, flags:
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 1
+    Outgoing Interface List Index: 29
+      Ethernet1/2
+
+(*, 231.1.3.101/32), RPF Interface: loopback100, flags: GL
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 1
+    Outgoing Interface List Index: 104
+      Vlan101
+        ( Mem L2 Ports: port-channel1 nve1 )
+        l2_oiflist_index: 44
+
+(100.101.1.3/32, 238.8.4.101/32), RPF Interface: Vlan101, flags:
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 2
+    Outgoing Interface List Index: 54
+      Vlan100 (Vxlan Encap)
+        ( Mem L2 Ports: nve1 )
+        l2_oiflist_index: 19
+      Vlan101
+        ( Mem L2 Ports: nve1 )
+        l2_oiflist_index: 19
+      '''}
+
+    def test_show_forwarding_distribution_multicast_route_golden(self):
+        self.maxDiff = None
+
+        self.device = Mock(**self.golden_output)
+        obj = ShowForwardingDistributionMulticastRoute(device=self.device)
+        parsed_output = obj.parse(vrf="")
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_forwarding_distribution_multicast_route_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowForwardingDistributionMulticastRoute(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(vrf="")
 
 
 if __name__ == '__main__':

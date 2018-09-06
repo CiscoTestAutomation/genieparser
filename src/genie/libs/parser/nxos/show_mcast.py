@@ -15,7 +15,7 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional
-
+from genie.libs.parser.nxos.show_vrf import  ShowVrf
 
 # ===================================
 # Parser for 'show ip mroute vrf all'
@@ -717,3 +717,205 @@ class ShowIpv6StaticRouteMulticast(ShowIpv6StaticRouteMulticastSchema):
                 continue
         
         return ipv6_multicast_dict
+
+# =================================================================
+#  schema for show forwarding distribution multicast route vrf all
+# ================================================================
+class ShowForwardingDistributionMulticastRouteSchema(MetaParser):
+    """Schema for:
+        show forwarding distribution multicast route
+        show forwarding distribution multicast route vrf <vrf>
+        show forwarding distribution multicast route vrf all"""
+
+    schema = {
+        "distribution": {
+            "multicast": {
+                "route": {
+                    "vrf": {
+                        Any(): {
+                            "address_family": {
+                                Any(): {
+                                    "num_groups": int,
+                                    "gaddr": {
+                                        Any(): {
+                                            "grp_len": int,
+                                            "saddr": {
+                                                Any(): {
+                                                    "rpf_ifname": str,
+                                                    Optional("src_len"): int,
+                                                    Optional("flags"): str,
+                                                    "rcv_packets": int,
+                                                    "rcv_bytes": int,
+                                                    "num_of_oifs": int,
+                                                    Optional("oifs"): {
+                                                        "oif_index": int,
+                                                        Any(): {
+                                                            Optional('oif'): str,
+                                                            Optional("encap"): str,
+                                                            Optional("mem_l2_ports"): str,
+                                                            Optional("l2_oiflist_index"): int,
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+# =================================================================
+#  Parser for show forwarding distribution multicast route vrf all
+# =================================================================
+class ShowForwardingDistributionMulticastRoute(ShowForwardingDistributionMulticastRouteSchema):
+    """parser for:
+        show forwarding distribution multicast route
+        show forwarding distribution multicast route vrf <vrf>
+        show forwarding distribution multicast route vrf all"""
+
+    def cli(self, vrf=""):
+        # finding vrf names
+        vrf_dict = {}
+        #import pdb;pdb.set_trace()
+        if vrf:
+            if vrf == 'all':
+                showparser = ShowVrf(device=self.device)
+                vrfs_list = showparser.parse()
+                for vrf_name in vrfs_list['vrfs'].keys():
+                    vrf_id = vrfs_list['vrfs'][vrf_name]['vrf_id']
+                    vrf_dict.update({vrf_id: vrf_name})
+
+            out = self.device.execute('show forwarding distribution multicast route {} {}'.format("vrf", vrf))
+        else:
+            vrf = 'default'
+            out = self.device.execute('show forwarding distribution multicast route')
+
+        result_dict = {}
+
+        # IPv4 Multicast Routing Table for table-id: 1
+        p1 = re.compile(r'^\s*IPv4 +Multicast +Routing +Table +for +table\-id: +(?P<vrf_id>[\d]+)$')
+
+        # Total number of groups: 5
+        p2 = re.compile(r'^\s*Total +number +of +groups: +(?P<total_number_group>[\d]+)$')
+
+        #  (*, 224.0.0.0/4), RPF Interface: NULL, flags: D
+        #  (*, 231.100.1.1/32), RPF Interface: Ethernet1/2, flags: GLd
+        p3 = re.compile(r'^\s*\((?P<saddr>[\w\/\.\*]+), +(?P<gaddr>[\w\/\.]+)\), +RPF +Interface:'
+               ' +(?P<rpf_ifname>[\w\/\-]+), flags:( +(?P<flags>[\w]+))?$')
+
+        #   Received Packets: 0 Bytes: 0
+        p4 = re.compile(r'^\s*Received +Packets: +(?P<rcv_packets>[\d]+) +Bytes: +(?P<rcv_bytes>[\d]+)$')
+
+        #   Number of Outgoing Interfaces: 0
+        p5 = re.compile(r'^\s*Number +of +Outgoing +Interfaces: +(?P<num_of_oifs>[\d]+)$')
+
+        #   Null Outgoing Interface List
+        p6 = re.compile(r'^\s*Null +Outgoing +Interface +List$')
+
+        #   Outgoing Interface List Index: 30
+        p7 = re.compile(r'^\s*Outgoing +Interface +List +Index: +(?P<oif_index>[\d]+)$')
+
+        #    nve1
+        #    Vlan100 (Vxlan Encap)
+        p8 = re.compile(r'^(?P<space>\s{6})(?P<oif>[\w\-\/]+)( +\((?P<encap>[\w]+) +Encap\))?$')
+
+        #     ( Mem L2 Ports: nve1 )
+        #     ( Mem L2 Ports: port-channel1 nve1 )
+        p9 = re.compile(r'\s*\( +Mem +L2 +Ports: +(?P<mem_l2_ports>[\w\s\-\/]+) +\)$')
+
+        #     l2_oiflist_index: 19
+        p10 = re.compile(r'\s*l2_oiflist_index: +(?P<l2_oiflist_index>[\d]+)$')
+
+        for line in out.splitlines():
+            if line:
+                line = line.rstrip()
+            else:
+                continue
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                if vrf_dict:
+                    for vrf_id, vrf_name in vrf_dict.items():
+                        if vrf_id == int(group['vrf_id']) :
+                            vrf = vrf_name
+
+                address_family_dict = result_dict.setdefault('distribution', {}).\
+                    setdefault('multicast', {}).\
+                    setdefault('route', {}).setdefault('vrf', {}).\
+                    setdefault(vrf, {}).setdefault('address_family', {}).setdefault('ipv4', {})
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                address_family_dict.update({'num_groups': int(group['total_number_group'])})
+                continue
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                gaddr = group['gaddr']
+                gaddr_dict = address_family_dict.setdefault('gaddr', {}).setdefault(gaddr, {})
+                splited_gaddr = ""
+                if '/' in gaddr:
+                    splited_gaddr = int(gaddr.split('/')[1])
+
+                gaddr_dict.update({'grp_len': splited_gaddr})
+
+                saddr =group['saddr']
+                saddr_dict = gaddr_dict.setdefault('saddr', {}).setdefault(saddr, {})
+                if '/' in saddr:
+                    saddr_dict.update({'src_len': int(saddr.split('/')[1])})
+                saddr_dict.update({'rpf_ifname': group['rpf_ifname']})
+                if group['flags']:
+                    saddr_dict.update({'flags': group['flags']})
+                continue
+
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                saddr_dict.update({k:int(v) for k,v in group.items()})
+                continue
+
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                saddr_dict.update({'num_of_oifs': int(group['num_of_oifs'])})
+                continue
+
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                oif_dict = saddr_dict.setdefault('oifs', {})
+                oif_dict.update({'oif_index': int(group['oif_index'])})
+                continue
+
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                sub_oif_dict = oif_dict.setdefault(group['oif'], {})
+                sub_oif_dict.update({'oif': group['oif']})
+                if group['encap']:
+                    sub_oif_dict.update({'encap': group['encap'].lower()})
+                continue
+
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                sub_oif_dict.update({'mem_l2_ports': group['mem_l2_ports']})
+                continue
+
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                sub_oif_dict.update({'l2_oiflist_index': int(group['l2_oiflist_index'])})
+                continue
+
+        return result_dict
