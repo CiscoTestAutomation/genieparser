@@ -11495,8 +11495,6 @@ class test_show_bgp_vrf_all_all_nexthop_database(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_2)
         obj = ShowBgpVrfAllAllNextHopDatabase(device=self.device)
-        import pdb;
-        pdb.set_trace()
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
