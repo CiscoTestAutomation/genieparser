@@ -3133,7 +3133,7 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
 
             # Next Hop table for VRF VRF1, address family IPv4 Unicast:
             p1 = re.compile(r'^\s*Next +Hop +table +for +VRF'
-                             ' +(?P<vrf_name>[a-zA-Z0-9]+), +address +family'
+                             ' +(?P<vrf_name>[\w\-]+), +address +family'
                              ' +(?P<af>[a-zA-Z0-9\s\-]+) *:$')
             m = p1.match(line)
             if m:
