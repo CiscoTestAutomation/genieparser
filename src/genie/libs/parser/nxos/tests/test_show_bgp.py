@@ -37,7 +37,8 @@ from genie.libs.parser.nxos.show_bgp import ShowBgpProcessVrfAll,\
                                  ShowBgpL2vpnEvpnNeighbors,\
                                  ShowBgpL2vpnEvpnWord,\
                                  ShowBgpIpMvpnRouteType,\
-                                 ShowBgpIpMvpnSaadDetail
+                                 ShowBgpIpMvpnSaadDetail,\
+                                 ShowBgpL2vpnEvpn
 
 # =========================================
 #  Unit test for 'show bgp process vrf all'
@@ -28036,6 +28037,287 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn, is not in HW
         obj = ShowBgpIpMvpnSaadDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(vrf="all")
+
+
+# =======================================================================
+#  Unit test for 'show bgp l2vpn evpn vrf <vrf>'
+# ========================================================================
+class test_show_bgp_l2vpn_evpn(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    golden_parsed_output = {    "instance": {
+        "default": {
+            "vrf": {
+                "default": {
+                    "address_family": {
+                        "l2vpn evpn": {
+                            "af_name": "l2vpn evpn",
+                            "rd": {
+                                "2.2.2.2:3": {
+                                    "prefix": {
+                                        "[2]:[0]:[0]:[48]:[0006.0006.0003]:[32]:[100.101.6.3]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0006.0006.0003]:[32]:[100.101.6.3]/272",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "6.6.6.6",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "i",
+                                                    "weight": "0"
+                                                }
+                                            }
+                                        },
+                                        "[2]:[0]:[0]:[48]:[0006.0006.0003]:[32]:[100.102.6.3]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0006.0006.0003]:[32]:[100.102.6.3]/272",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "6.6.6.6",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "i",
+                                                    "weight": "0"
+                                                }
+                                            }
+                                        },
+                                        "[2]:[0]:[0]:[48]:[0006.0006.0004]:[32]:[100.101.6.4]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0006.0006.0004]:[32]:[100.101.6.4]/272",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "6.6.6.6",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "i",
+                                                    "weight": "0"
+                                                }
+                                            }
+                                        },
+                                        "[2]:[0]:[0]:[48]:[0006.0006.0004]:[32]:[100.102.6.4]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0006.0006.0004]:[32]:[100.102.6.4]/272",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "6.6.6.6",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "i",
+                                                    "weight": "0"
+                                                }
+                                            }
+                                        },
+                                        "[2]:[0]:[0]:[48]:[0007.0007.0003]:[32]:[100.101.7.3]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0007.0007.0003]:[32]:[100.101.7.3]/272",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "7.7.7.7",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "i",
+                                                    "weight": "0"
+                                                }
+                                            }
+                                        },
+                                        "[2]:[0]:[0]:[48]:[0007.0007.0003]:[32]:[100.102.7.3]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0007.0007.0003]:[32]:[100.102.7.3]/272",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "7.7.7.7",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "i",
+                                                    "weight": "0"
+                                                }
+                                            }
+                                        },
+                                        "[2]:[0]:[0]:[48]:[0007.0007.0004]:[32]:[100.101.7.4]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0007.0007.0004]:[32]:[100.101.7.4]/272",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "7.7.7.7",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "i",
+                                                    "weight": "0"
+                                                }
+                                            }
+                                        },
+                                        "[2]:[0]:[0]:[48]:[0007.0007.0004]:[32]:[100.102.7.4]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0007.0007.0004]:[32]:[100.102.7.4]/272",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "7.7.7.7",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "i",
+                                                    "weight": "0"
+                                                }
+                                            }
+                                        },
+                                        "[2]:[0]:[0]:[48]:[0008.0008.0003]:[32]:[100.101.8.3]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0008.0008.0003]:[32]:[100.101.8.3]/272",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "8.8.8.8",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "i",
+                                                    "weight": "0"
+                                                }
+                                            }
+                                        },
+                                        "[2]:[0]:[0]:[48]:[0008.0008.0003]:[32]:[100.102.8.3]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0008.0008.0003]:[32]:[100.102.8.3]/272",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "8.8.8.8",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "i",
+                                                    "weight": "0"
+                                                }
+                                            }
+                                        },
+                                        "[2]:[0]:[0]:[48]:[0008.0008.0004]:[32]:[100.101.8.4]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0008.0008.0004]:[32]:[100.101.8.4]/272",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "8.8.8.8",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "i",
+                                                    "weight": "0"
+                                                }
+                                            }
+                                        },
+                                        "[2]:[0]:[0]:[48]:[0008.0008.0004]:[32]:[100.102.8.4]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0008.0008.0004]:[32]:[100.102.8.4]/272",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "8.8.8.8",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "i",
+                                                    "weight": "0"
+                                                }
+                                            }
+                                        },
+                                        "[2]:[0]:[0]:[48]:[5e00.c005.0007]:[0]:[0.0.0.0]/216": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[5e00.c005.0007]:[0]:[0.0.0.0]/216",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "6.6.6.6",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "i",
+                                                    "weight": "0"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "rd_val": "2.2.2.2:3",
+                                    "rd_vrf": "10100"
+                                },
+                            },
+                            "router_id": "2.2.2.2",
+                            "table_version": "421384"
+                        }
+                    },
+                    "vrf_name_out": "default"
+                }
+            }
+        }
+    }
+}
+
+    golden_output = {'execute.return_value':"""
+    R2# show bgp l2vpn evpn vrf all
+BGP routing table information for VRF default, address family L2VPN EVPN
+BGP table version is 421384, Local Router ID is 2.2.2.2
+Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+   Network            Next Hop            Metric     LocPrf     Weight Path
+   Route Distinguisher: 2.2.2.2:3    (L3VNI 10100)
+*>i[2]:[0]:[0]:[48]:[5e00.c005.0007]:[0]:[0.0.0.0]/216
+                      6.6.6.6                           100          0 i
+*>i[2]:[0]:[0]:[48]:[0006.0006.0003]:[32]:[100.101.6.3]/272
+                      6.6.6.6                           100          0 i
+*>i[2]:[0]:[0]:[48]:[0006.0006.0003]:[32]:[100.102.6.3]/272
+                      6.6.6.6                           100          0 i
+*>i[2]:[0]:[0]:[48]:[0006.0006.0004]:[32]:[100.101.6.4]/272
+                      6.6.6.6                           100          0 i
+*>i[2]:[0]:[0]:[48]:[0006.0006.0004]:[32]:[100.102.6.4]/272
+                      6.6.6.6                           100          0 i
+*>i[2]:[0]:[0]:[48]:[0007.0007.0003]:[32]:[100.101.7.3]/272
+                      7.7.7.7                           100          0 i
+*>i[2]:[0]:[0]:[48]:[0007.0007.0003]:[32]:[100.102.7.3]/272
+                      7.7.7.7                           100          0 i
+*>i[2]:[0]:[0]:[48]:[0007.0007.0004]:[32]:[100.101.7.4]/272
+                      7.7.7.7                           100          0 i
+*>i[2]:[0]:[0]:[48]:[0007.0007.0004]:[32]:[100.102.7.4]/272
+                      7.7.7.7                           100          0 i
+*>i[2]:[0]:[0]:[48]:[0008.0008.0003]:[32]:[100.101.8.3]/272
+                      8.8.8.8                           100          0 i
+*>i[2]:[0]:[0]:[48]:[0008.0008.0003]:[32]:[100.102.8.3]/272
+                      8.8.8.8                           100          0 i
+*>i[2]:[0]:[0]:[48]:[0008.0008.0004]:[32]:[100.101.8.4]/272
+                      8.8.8.8                           100          0 i
+*>i[2]:[0]:[0]:[48]:[0008.0008.0004]:[32]:[100.102.8.4]/272
+                      8.8.8.8                           100          0 i
+
+"""}
+
+    def test_show_bgp_l2vpn_evpn_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpL2vpnEvpn(device=self.device)
+        parsed_output = obj.parse(vrf="all")
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_bgp_l2vpn_evpn_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpL2vpnEvpn(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(vrf="all")
+
 
 if __name__ == '__main__':
     unittest.main()
