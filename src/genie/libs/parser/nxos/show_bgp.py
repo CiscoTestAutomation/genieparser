@@ -10855,14 +10855,17 @@ class ShowBgpIpMvpnRouteType(ShowBgpIpMvpnRouteTypeSchema):
                show bgp ipv4 mvpn route-type <route_type> vrf <vrf>
                show bgp ipv4 mvpn route-type <route_type> vrf all"""
 
-    def cli(self, route_type="",vrf=""):
-        if vrf and route_type:
-            out = self.device.execute('show bgp ipv4 mvpn route-type {} vrf {}'.format(route_type,vrf))
-        elif route_type and not vrf:
-            vrf = 'default'
-            out = self.device.execute('show bgp ipv4 mvpn route-type {}'.format(route_type))
-        elif not route_type and not vrf:
-            out = self.device.execute('show bgp ipv4 mvpn')
+    def cli(self, route_type="",vrf="",cmd=""):
+        if cmd:
+            out = self.device.execute(cmd)
+        else:
+            if vrf and route_type:
+                out = self.device.execute('show bgp ipv4 mvpn route-type {} vrf {}'.format(route_type,vrf))
+            elif route_type and not vrf:
+                vrf = 'default'
+                out = self.device.execute('show bgp ipv4 mvpn route-type {}'.format(route_type))
+            elif not route_type and not vrf:
+                out = self.device.execute('show bgp ipv4 mvpn')
 
         result_dict = {}
         # BGP routing table information for VRF default, address family IPv4 MVPN
@@ -10881,7 +10884,7 @@ class ShowBgpIpMvpnRouteType(ShowBgpIpMvpnRouteTypeSchema):
         # *>l[5][100.101.1.3][238.8.4.101]/64
         p4 = re.compile(r'^\s*(?P<statuscode>[s|S|x|d|h|>|s|*\s]+)?'
                             '(?P<typecode>(i|e|c|l|a|r|I)+)?'
-                            '(?P<prefix>[\d\]\/\.\]\[]+)$')
+                            '(?P<prefix>[\w\]\/\:\.\]\[]+)$')
 
         #                       Next Hop            Metric     LocPrf     Weight Path
         #                       7.7.7.7                           100          0 i
@@ -11312,3 +11315,32 @@ class ShowBgpIpMvpnSaadDetail(ShowBgpIpMvpnSaadDetailSchema):
 
 
         return result_dict
+
+# ==================================================================
+#  Parser for show bgp l2vpn evpn vrf <vrf>
+# ==================================================================
+class ShowBgpL2vpnEvpn(ShowBgpIpMvpnRouteType):
+    """Parser for:
+           show bgp l2vpn evpn
+           show bgp l2vpn evpn vrf <vrf>
+           show bgp l2vpn evpn vrf all"""
+
+    def cli(self, vrf=""):
+        if vrf:
+            cmd = 'show bgp l2vpn evpn vrf {}'.format(vrf)
+        else:
+            cmd = 'show bgp l2vpn evpn'
+
+        return super().cli(cmd=cmd)
+
+
+# ==================================================================
+#  Parser for show bgp ipv4 mvpn
+# ==================================================================
+class ShowBgpIpMvpn(ShowBgpIpMvpnRouteType):
+    """Parser for:
+           show bgp ipv4 mvpn"""
+
+    def cli(self):
+        cmd = 'show bgp ipv4 mvpn'
+        return super().cli(cmd=cmd)
