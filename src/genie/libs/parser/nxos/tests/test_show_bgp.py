@@ -27482,7 +27482,7 @@ class test_show_bgp_l2vpn_evpn_word(unittest.TestCase):
 # =======================================================================
 #  Unit test for 'show bgp ipv4 mvpn route-type <route-type> vrf <vrf>'
 # ========================================================================
-class test_show_bgp_ip_mvpn_toute_type(unittest.TestCase):
+class test_show_bgp_ip_mvpn_route_type(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -27580,7 +27580,6 @@ class test_show_bgp_ip_mvpn_toute_type(unittest.TestCase):
                 }
             }
         }
-
     }
 
     golden_output = {'execute.return_value': '''
