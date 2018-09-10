@@ -1257,6 +1257,13 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
         p2 = re.compile(r'^\s*Sent +To: +(?P<sent_to>[\w]+)$')
         p3 = re.compile(r'^\s*SOO: +(?P<soo>[\d]+)$')
         p4 = re.compile(r'^\s*L3-Info: +(?P<l3_info>[\d]+)$')
+        # Topology    Mac Address    Host IP         Prod   Flags         Seq No     Next-Hops
+        # ----------- -------------- --------------- ------ ---------- ---------------
+        # 101         0000.9cfc.2596 100.101.1.3     BGP    --            0         23.23.23.23
+        p5 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<host_ip>[\w\/\.]+)'
+                        ' +(?P<mac_ip_prod_type>[\w\,]+)'
+                        ' +(?P<mac_ip_flags>[\w\,\-]+) +(?P<seq_num>[\d]+)'
+                        ' +(?P<next_hop1>[\w\/\.]+)$')
 
         for line in out.splitlines():
             if line:
@@ -1295,6 +1302,23 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
             if m:
                 group = m.groupdict()
                 topo_dict.update({k:v.lower() for k, v in group.items()})
+                continue
+
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                topo_id = int(group.pop('topo_id'))
+                mac_addr = group.pop('mac_addr')
+                topo_dict = result_dict.setdefault('topology', {}).setdefault('topo_id', {}).setdefault(topo_id, {}). \
+                    setdefault('mac_ip', {}).setdefault(mac_addr, {})
+
+                flags = group.pop('mac_ip_flags')
+                topo_dict.update({'mac_ip_flags': flags.lower()})
+                topo_dict.update({'mac_ip_prod_type': group.pop('mac_ip_prod_type').lower()})
+                topo_dict.update({'seq_num': int(group.pop('seq_num'))})
+                topo_dict.update({'mac_addr': mac_addr})
+                topo_dict.update({'host_ip': group.pop('host_ip')})
+                topo_dict.update({'next_hop1': group.pop('next_hop1').lower()})
                 continue
 
         return result_dict
