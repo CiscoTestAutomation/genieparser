@@ -1913,7 +1913,7 @@ class ShowFabricMulticastIpSaAdRoute(ShowFabricMulticastIpSaAdRouteSchema):
         # VRF "vni_10100" MVPN SA AD Route Database VNI: 10100
         # VRF "vpc-keepalive" MVPN SA AD Route Database VNI: 0
 
-        p1 = re.compile(r'^\s*VRF +\"(?P<vrf_name>[\w\-]+)\" +MVPN +SA +AD +Route +Database'
+        p1 = re.compile(r'^\s*VRF +\"(?P<vrf_name>\S+)\" +MVPN +SA +AD +Route +Database'
                         ' +VNI: +(?P<vnid>[\d]+)$')
 
         # Src Active AD Route: (100.101.1.3/32, 238.8.4.101/32) uptime: 00:01:01

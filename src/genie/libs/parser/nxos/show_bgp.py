@@ -10869,7 +10869,7 @@ class ShowBgpIpMvpnRouteType(ShowBgpIpMvpnRouteTypeSchema):
 
         result_dict = {}
         # BGP routing table information for VRF default, address family IPv4 MVPN
-        p1 = re.compile(r'^\s*BGP +routing +table +information +for +VRF +(?P<vrf>[\w\-]+),'
+        p1 = re.compile(r'^\s*BGP +routing +table +information +for +VRF +(?P<vrf>\S+),'
                 ' +address +family +(?P<af>[\w\s]+)$')
 
         # BGP table version is 390, Local Router ID is 2.2.2.2
@@ -10995,14 +10995,15 @@ class ShowBgpIpMvpnRouteType(ShowBgpIpMvpnRouteTypeSchema):
                         else:
                             path_dict.update({'statuscode': status_code})
 
-
-
                 path_dict.update({'ipnexthop': group['ipnexthop']})
                 path_dict.update({'weight': group['weight']})
                 path_dict.update({'origin': group['origin']})
                 path_dict.update({'localpref': group['localpref'] })
-
                 continue
+
+        if not len(list(Common.find_keys('rd', result_dict))) :
+            result_dict = {}
+
         return result_dict
 
 # ==========================================================
@@ -11097,7 +11098,7 @@ class ShowBgpIpMvpnSaadDetail(ShowBgpIpMvpnSaadDetailSchema):
         result_dict = {}
 
         # BGP routing table information for VRF default, address family IPv4 MVPN
-        p1 = re.compile(r'^\s*BGP +routing +table +information +for +VRF +(?P<vrf_name_out>[\w]+),'
+        p1 = re.compile(r'^\s*BGP +routing +table +information +for +VRF +(?P<vrf_name_out>\S+),'
                         ' +address +family +(?P<af_name>[\w\s]+)$')
 
         # Route Distinguisher: 2.2.2.2:3    (L3VNI 10100)
