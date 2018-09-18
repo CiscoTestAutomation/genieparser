@@ -3029,4 +3029,6 @@ class test_show_ip_interface_brief_vrf_all(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main() 
+    unittest.main()
+
+# vim: ft=python et sw=4

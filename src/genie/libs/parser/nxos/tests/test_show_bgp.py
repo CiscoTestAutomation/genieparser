@@ -11263,12 +11263,243 @@ class test_show_bgp_vrf_all_all_nexthop_database(unittest.TestCase):
           Critical: 3000 Non-critical: 10000
         '''}
 
+    golden_output_2 = {'execute.return_value': """
+    show bgp vrf all all nexthop-database
+
+    Next Hop table for VRF Tenant-1, address family IPv4 Unicast:
+    Next-hop trigger-delay(miliseconds)
+      Critical: 3000 Non-critical: 10000
+    IPv4 Next-hop table
+    IPv6 Next-hop table
+
+    Next Hop table for VRF Tenant-1, address family IPv6 Unicast:
+    Next-hop trigger-delay(miliseconds)
+      Critical: 3000 Non-critical: 10000
+    IPv4 Next-hop table
+    IPv6 Next-hop table
+
+    Next Hop table for VRF Tenant-4, address family IPv4 Unicast:
+    Next-hop trigger-delay(miliseconds)
+      Critical: 3000 Non-critical: 10000
+    IPv4 Next-hop table
+    IPv6 Next-hop table
+
+    Next Hop table for VRF Tenant-4, address family IPv6 Unicast:
+    Next-hop trigger-delay(miliseconds)
+      Critical: 3000 Non-critical: 10000
+    IPv4 Next-hop table
+    IPv6 Next-hop table
+
+    Next Hop table for VRF default, address family IPv4 Unicast:
+    Next-hop trigger-delay(miliseconds)
+      Critical: 3000 Non-critical: 10000
+    IPv4 Next-hop table
+    IPv6 Next-hop table
+
+    Next Hop table for VRF default, address family IPv6 Unicast:
+    Next-hop trigger-delay(miliseconds)
+      Critical: 3000 Non-critical: 10000
+    IPv4 Next-hop table
+    IPv6 Next-hop table
+
+    Next Hop table for VRF default, address family VPNv4 Unicast:
+    Next-hop trigger-delay(miliseconds)
+      Critical: 3000 Non-critical: 10000
+    IPv4 Next-hop table
+    IPv6 Next-hop table
+
+    Next Hop table for VRF default, address family VPNv6 Unicast:
+    Next-hop trigger-delay(miliseconds)
+      Critical: 3000 Non-critical: 10000
+    IPv4 Next-hop table
+    IPv6 Next-hop table
+
+    Next Hop table for VRF default, address family L2VPN EVPN:
+    Next-hop trigger-delay(miliseconds)
+      Critical: 3000 Non-critical: 10000
+    IPv4 Next-hop table
+    IPv6 Next-hop table
+
+    Next Hop table for VRF engineering, address family IPv4 Unicast:
+    Next-hop trigger-delay(miliseconds)
+      Critical: 3000 Non-critical: 10000
+    IPv4 Next-hop table
+    IPv6 Next-hop table
+
+    Next Hop table for VRF engineering, address family IPv6 Unicast:
+    Next-hop trigger-delay(miliseconds)
+      Critical: 3000 Non-critical: 10000
+    IPv4 Next-hop table
+    IPv6 Next-hop table
+
+    Next Hop table for VRF fifth-third, address family IPv4 Unicast:
+    Next-hop trigger-delay(miliseconds)
+      Critical: 3000 Non-critical: 10000
+    IPv4 Next-hop table
+    IPv6 Next-hop table
+
+    Next Hop table for VRF fifth-third, address family IPv6 Unicast:
+    Next-hop trigger-delay(miliseconds)
+      Critical: 3000 Non-critical: 10000
+    IPv4 Next-hop table
+    IPv6 Next-hop table
+
+    Next Hop table for VRF kevin, address family IPv4 Unicast:
+    Next-hop trigger-delay(miliseconds)
+      Critical: 3000 Non-critical: 10000
+    IPv4 Next-hop table
+    IPv6 Next-hop table
+
+    Next Hop table for VRF kevin, address family IPv6 Unicast:
+    Next-hop trigger-delay(miliseconds)
+      Critical: 3000 Non-critical: 10000
+    IPv4 Next-hop table
+    IPv6 Next-hop table
+
+    Next Hop table for VRF ten5, address family IPv4 Unicast:
+    Next-hop trigger-delay(miliseconds)
+      Critical: 3000 Non-critical: 10000
+    IPv4 Next-hop table
+    IPv6 Next-hop table
+
+    Next Hop table for VRF ten5, address family IPv6 Unicast:
+    Next-hop trigger-delay(miliseconds)
+      Critical: 3000 Non-critical: 10000
+    IPv4 Next-hop table
+    IPv6 Next-hop table
+    """}
+
+    golden_parsed_output_2 = {
+   "vrf": {
+      "ten5": {
+         "address_family": {
+            "ipv4 unicast": {
+               "af_nexthop_trigger_enable": True,
+               "nexthop_trigger_delay_non_critical": 10000,
+               "nexthop_trigger_delay_critical": 3000
+            },
+            "ipv6 unicast": {
+               "af_nexthop_trigger_enable": True,
+               "nexthop_trigger_delay_non_critical": 10000,
+               "nexthop_trigger_delay_critical": 3000
+            }
+         }
+      },
+      "default": {
+         "address_family": {
+            "ipv4 unicast": {
+               "af_nexthop_trigger_enable": True,
+               "nexthop_trigger_delay_non_critical": 10000,
+               "nexthop_trigger_delay_critical": 3000
+            },
+            "vpnv6 unicast": {
+               "af_nexthop_trigger_enable": True,
+               "nexthop_trigger_delay_non_critical": 10000,
+               "nexthop_trigger_delay_critical": 3000
+            },
+            "l2vpn evpn": {
+               "af_nexthop_trigger_enable": True,
+               "nexthop_trigger_delay_non_critical": 10000,
+               "nexthop_trigger_delay_critical": 3000
+            },
+            "vpnv4 unicast": {
+               "af_nexthop_trigger_enable": True,
+               "nexthop_trigger_delay_non_critical": 10000,
+               "nexthop_trigger_delay_critical": 3000
+            },
+            "ipv6 unicast": {
+               "af_nexthop_trigger_enable": True,
+               "nexthop_trigger_delay_non_critical": 10000,
+               "nexthop_trigger_delay_critical": 3000
+            }
+         }
+      },
+      "Tenant-1": {
+         "address_family": {
+            "ipv4 unicast": {
+               "af_nexthop_trigger_enable": True,
+               "nexthop_trigger_delay_non_critical": 10000,
+               "nexthop_trigger_delay_critical": 3000
+            },
+            "ipv6 unicast": {
+               "af_nexthop_trigger_enable": True,
+               "nexthop_trigger_delay_non_critical": 10000,
+               "nexthop_trigger_delay_critical": 3000
+            }
+         }
+      },
+      "Tenant-4": {
+         "address_family": {
+            "ipv4 unicast": {
+               "af_nexthop_trigger_enable": True,
+               "nexthop_trigger_delay_non_critical": 10000,
+               "nexthop_trigger_delay_critical": 3000
+            },
+            "ipv6 unicast": {
+               "af_nexthop_trigger_enable": True,
+               "nexthop_trigger_delay_non_critical": 10000,
+               "nexthop_trigger_delay_critical": 3000
+            }
+         }
+      },
+      "kevin": {
+         "address_family": {
+            "ipv4 unicast": {
+               "af_nexthop_trigger_enable": True,
+               "nexthop_trigger_delay_non_critical": 10000,
+               "nexthop_trigger_delay_critical": 3000
+            },
+            "ipv6 unicast": {
+               "af_nexthop_trigger_enable": True,
+               "nexthop_trigger_delay_non_critical": 10000,
+               "nexthop_trigger_delay_critical": 3000
+            }
+         }
+      },
+      "engineering": {
+         "address_family": {
+            "ipv4 unicast": {
+               "af_nexthop_trigger_enable": True,
+               "nexthop_trigger_delay_non_critical": 10000,
+               "nexthop_trigger_delay_critical": 3000
+            },
+            "ipv6 unicast": {
+               "af_nexthop_trigger_enable": True,
+               "nexthop_trigger_delay_non_critical": 10000,
+               "nexthop_trigger_delay_critical": 3000
+            }
+         }
+      },
+      "fifth-third": {
+         "address_family": {
+            "ipv4 unicast": {
+               "af_nexthop_trigger_enable": True,
+               "nexthop_trigger_delay_non_critical": 10000,
+               "nexthop_trigger_delay_critical": 3000
+            },
+            "ipv6 unicast": {
+               "af_nexthop_trigger_enable": True,
+               "nexthop_trigger_delay_non_critical": 10000,
+               "nexthop_trigger_delay_critical": 3000
+            }
+         }
+      }
+   }
+}
+
     def test_show_bgp_vrf_all_all_nexthop_database_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowBgpVrfAllAllNextHopDatabase(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_bgp_vrf_all_all_nexthop_database_golden_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowBgpVrfAllAllNextHopDatabase(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
     def test_show_bgp_vrf_all_all_nexthop_database_empty(self):
         self.device = Mock(**self.empty_output)

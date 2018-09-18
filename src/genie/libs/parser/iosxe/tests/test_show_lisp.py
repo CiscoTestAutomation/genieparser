@@ -4515,8 +4515,7 @@ class test_show_lisp_service_statistics(unittest.TestCase):
                         {'statistics': 
                             {'EID': 
                                 {'control': 
-                                    {'authentication_failures': '0',
-                                    'authoritative_records_in': '1',
+                                    {'authoritative_records_in': '1',
                                     'authoritative_records_out': '1',
                                     'ddt_referral_deferred': '0',
                                     'ddt_referral_dropped': '0',
@@ -4530,6 +4529,7 @@ class test_show_lisp_service_statistics(unittest.TestCase):
                                     'etr_info_request_dropped': '0',
                                     'map_notify_records_in': '4',
                                     'map_notify_records_out': '0',
+                                    'map_notify_auth_failures': '0',
                                     'map_register_records_in': '0',
                                     'map_register_records_out': '2857',
                                     'map_reply_deferred': '0',
@@ -4542,6 +4542,7 @@ class test_show_lisp_service_statistics(unittest.TestCase):
                                     'map_requests_out': '4',
                                     'map_resolver_map_requests_forwarded': '0',
                                     'map_server_af_disabled': '0',
+                                    'map_registers_in_auth_failed': '0',
                                     'map_server_map_requests_forwarded': '0',
                                     'map_server_proxy_reply_records_out': '0',
                                     'map_subscribe_failures_in': '0',
@@ -4750,8 +4751,7 @@ class test_show_lisp_service_statistics(unittest.TestCase):
                         {'statistics': 
                             {'EID': 
                                 {'control': 
-                                    {'authentication_failures': '0',
-                                    'authoritative_records_in': '1',
+                                    {'authoritative_records_in': '1',
                                     'authoritative_records_out': '1',
                                     'ddt_referral_deferred': '0',
                                     'ddt_referral_dropped': '0',
@@ -4765,6 +4765,7 @@ class test_show_lisp_service_statistics(unittest.TestCase):
                                     'etr_info_request_dropped': '0',
                                     'map_notify_records_in': '2',
                                     'map_notify_records_out': '0',
+                                    'map_notify_auth_failures': '0',
                                     'map_register_records_in': '0',
                                     'map_register_records_out': '52',
                                     'map_reply_deferred': '0',
@@ -4775,6 +4776,7 @@ class test_show_lisp_service_statistics(unittest.TestCase):
                                     'map_requests_out': '6',
                                     'map_resolver_map_requests_forwarded': '0',
                                     'map_server_af_disabled': '0',
+                                    'map_registers_in_auth_failed': '0',
                                     'map_server_map_requests_forwarded': '0',
                                     'map_server_proxy_reply_records_out': '0',
                                     'map_subscribe_failures_in': '0',
@@ -4983,14 +4985,14 @@ class test_show_lisp_service_statistics(unittest.TestCase):
                         {'statistics': 
                             {'EID': 
                                 {'control': 
-                                    {'authentication_failures': '0',
-                                    'authoritative_records_in': '0',
+                                    {'authoritative_records_in': '0',
                                     'authoritative_records_out': '0',
                                     'encapsulated_map_requests_in': '0',
                                     'encapsulated_map_requests_out': '0',
                                     'extranet_smr_cross_iid_map_requests_in': '0',
                                     'map_notify_records_in': '372',
                                     'map_notify_records_out': '0',
+                                    'map_notify_auth_failures': '0',
                                     'map_register_records_in': '0',
                                     'map_register_records_out': '6460',
                                     'map_reply_records_in': '0',
@@ -4999,6 +5001,7 @@ class test_show_lisp_service_statistics(unittest.TestCase):
                                     'map_requests_out': '0',
                                     'map_resolver_map_requests_forwarded': '0',
                                     'map_server_af_disabled': '0',
+                                    'map_registers_in_auth_failed': '0',
                                     'map_server_map_requests_forwarded': '0',
                                     'map_server_proxy_reply_records_out': '0',
                                     'map_subscribe_failures_in': '0',
