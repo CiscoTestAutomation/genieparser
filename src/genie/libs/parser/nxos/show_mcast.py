@@ -791,7 +791,7 @@ class ShowForwardingDistributionMulticastRoute(ShowForwardingDistributionMultica
                     vrf_id = vrfs_list['vrfs'][vrf_name]['vrf_id']
                     vrf_dict.update({vrf_id: vrf_name})
 
-            out = self.device.execute('show forwarding distribution multicast route {} {}'.format("vrf", vrf))
+            out = self.device.execute('show forwarding distribution multicast route vrf {}'.format(vrf))
         else:
             vrf = 'default'
             out = self.device.execute('show forwarding distribution multicast route')
