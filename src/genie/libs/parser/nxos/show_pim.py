@@ -234,19 +234,19 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
                 hello_md5_ah_authentication = m.groupdict()['md5_authentication']
 
             # PIM6 Neighbor policy: v4neighbor-policy
-            p13 = re.compile(r'^\s*PIM6 +Neighbor +policy: +(?P<nbr_policy>[\w\-\s]+)$')
+            p13 = re.compile(r'^\s*PIM6 +Neighbor +policy: +(?P<nbr_policy>(?!none +configured)[\w\-\s]+)$')
             m = p13.match(line)
             if m:
                 neighbor_filter = m.groupdict()['nbr_policy']
 
             # PIM6 Join-Prune inbound policy: v4jp-policy
-            p14 = re.compile(r'^\s*PIM6 +Join-Prune +inbound +policy: +(?P<jp_inbound_policy>[\w\-\s]+)$')
+            p14 = re.compile(r'^\s*PIM6 +Join-Prune +inbound +policy: +(?P<jp_inbound_policy>(?!none)[\w\-\s]+)$')
             m = p14.match(line)
             if m:
                 jp_inbound_policy = m.groupdict()['jp_inbound_policy']
 
             # PIM6 Join-Prune outbound policy: v4jp-policy
-            p15 = re.compile(r'^\s*PIM6 +Join-Prune +outbound +policy: +(?P<jp_outbound_policy>[\w\-\s]+)$')
+            p15 = re.compile(r'^\s*PIM6 +Join-Prune +outbound +policy: +(?P<jp_outbound_policy>(?!none)[\w\-\s]+)$')
             m = p15.match(line)
             if m:
                 jp_outbound_policy = m.groupdict()['jp_outbound_policy']
@@ -2822,7 +2822,7 @@ class ShowIpPimVrfDetail(ShowIpPimVrfDetailSchema):
                 continue
 
             # State Limit: None
-            p2 = re.compile(r'^\s*State +Limit: +(?P<state_limit>\w+)$')
+            p2 = re.compile(r'^\s*State +Limit: +(?P<state_limit>(?!None)\w+)$')
             m = p2.match(line)
             if m:
                 state_limit = m.groupdict()['state_limit'].lower()
@@ -2836,7 +2836,7 @@ class ShowIpPimVrfDetail(ShowIpPimVrfDetailSchema):
 
 
             # Register Rate Limit: none
-            p3 = re.compile(r'^\s*Register +Rate +Limit: +(?P<register_rate_limit>\w+)$')
+            p3 = re.compile(r'^\s*Register +Rate +Limit: +(?P<register_rate_limit>(?!none)\w+)$')
             m = p3.match(line)
             if m:
                 register_rate_limit = m.groupdict()['register_rate_limit'].lower()
@@ -2886,7 +2886,7 @@ class ShowIpPimVrfDetail(ShowIpPimVrfDetailSchema):
                 continue
 
             # Shared tree ranges: none
-            p5 = re.compile(r'^\s*Shared +tree +ranges: +(?P<shared_tree_ranges>\w+)$')
+            p5 = re.compile(r'^\s*Shared +tree +ranges: +(?P<shared_tree_ranges>(?!none)\w+)$')
             m = p5.match(line)
             if m:
                 shared_tree_ranges = m.groupdict()['shared_tree_ranges']
@@ -2945,7 +2945,7 @@ class ShowIpPimVrfDetail(ShowIpPimVrfDetailSchema):
                 continue
 
             #  (S,G)-list policy: sg-expiry-timer-sg-list
-            p8 = re.compile(r'^\s*\(S\,G\)\-list +policy: +(?P<sg_list_policy>[\w\S]+)$')
+            p8 = re.compile(r'^\s*\(S\,G\)\-list +policy: +(?P<sg_list_policy>(?!none)[\w\S]+)$')
             m = p8.match(line)
             if m:
                 sg_list_policy = m.groupdict()['sg_list_policy']
@@ -3500,6 +3500,7 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
                 oper_status = m.groupdict()['oper_status']
                 link_status = m.groupdict()['link_status']
                 admin_status = m.groupdict()['admin_status']
+                jp_outbound_policy = jp_inbound_policy = neighbor_filter = ""
 
             # IP address: 10.11.33.11, IP subnet: 10.11.33.0/24
             p3 = re.compile(r'^\s*IP +address: +(?P<address>[\w\.]+),'
@@ -3570,19 +3571,19 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
                 hello_md5_ah_authentication = m.groupdict()['md5_authentication']
 
             # PIM Neighbor policy: v4neighbor-policy
-            p13 = re.compile(r'^\s*PIM +Neighbor +policy: +(?P<nbr_policy>[\w\-\s]+)$')
+            p13 = re.compile(r'^\s*PIM +Neighbor +policy: +(?P<nbr_policy>(?!none)[\w\-\s]+)$')
             m = p13.match(line)
             if m:
                 neighbor_filter = m.groupdict()['nbr_policy']
 
             # PIM Join-Prune inbound policy: v4jp-policy
-            p14 = re.compile(r'^\s*PIM +Join-Prune +inbound +policy: +(?P<jp_inbound_policy>[\w\-\s]+)$')
+            p14 = re.compile(r'^\s*PIM +Join-Prune +inbound +policy: +(?P<jp_inbound_policy>(?!none)[\w\-\s]+)$')
             m = p14.match(line)
             if m:
                 jp_inbound_policy = m.groupdict()['jp_inbound_policy']
 
             # PIM Join-Prune outbound policy: v4jp-policy
-            p15 = re.compile(r'^\s*PIM +Join-Prune +outbound +policy: +(?P<jp_outbound_policy>[\w\-\s]+)$')
+            p15 = re.compile(r'^\s*PIM +Join-Prune +outbound +policy: +(?P<jp_outbound_policy>(?!none)[\w\-\s]+)$')
             m = p15.match(line)
             if m:
                 jp_outbound_policy = m.groupdict()['jp_outbound_policy']
@@ -4055,7 +4056,7 @@ class ShowIpv6PimVrfAllDetail(ShowIpv6PimVrfAllDetailSchema):
                 continue
 
             # State Limit: None
-            p2 = re.compile(r'^\s*State +Limit: +(?P<state_limit>\w+)$')
+            p2 = re.compile(r'^\s*State +Limit: +(?P<state_limit>(?!None)\w+)$')
             m = p2.match(line)
             if m:
                 state_limit = m.groupdict()['state_limit'].lower()
@@ -4065,7 +4066,7 @@ class ShowIpv6PimVrfAllDetail(ShowIpv6PimVrfAllDetailSchema):
 
 
             # Register Rate Limit: none
-            p3 = re.compile(r'^\s*Register +Rate +Limit: +(?P<register_rate_limit>\w+)$')
+            p3 = re.compile(r'^\s*Register +Rate +Limit: +(?P<register_rate_limit>(?!none)\w+)$')
             m = p3.match(line)
             if m:
                 register_rate_limit = m.groupdict()['register_rate_limit'].lower()
@@ -4095,7 +4096,7 @@ class ShowIpv6PimVrfAllDetail(ShowIpv6PimVrfAllDetailSchema):
                 continue
 
             # Shared tree ranges: none
-            p6 = re.compile(r'^\s*Shared +tree +ranges: +(?P<shared_tree_ranges>\w+)$')
+            p6 = re.compile(r'^\s*Shared +tree +ranges: +(?P<shared_tree_ranges>(?!none)\w+)$')
             m = p6.match(line)
             if m:
                 shared_tree_ranges = m.groupdict()['shared_tree_ranges']

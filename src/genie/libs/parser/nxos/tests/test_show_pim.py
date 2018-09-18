@@ -56,9 +56,6 @@ class test_show_ipv6_pim_interface(unittest.TestCase):
                                 'bsr_border': False,
                                 'genid': '0x25f72e3c',
                                 'hello_md5_ah_authentication': 'disabled',
-                                'neighbor_filter': 'none configured',
-                                'jp_inbound_policy': 'none configured',
-                                'jp_outbound_policy': 'none configured',
                                 'bfd': {
                                     'enable': False,
                                 },
@@ -118,9 +115,6 @@ class test_show_ipv6_pim_interface(unittest.TestCase):
                                 'bsr_border': False,
                                 'genid': '0x30a2ad71',
                                 'hello_md5_ah_authentication': 'disabled',
-                                'neighbor_filter': 'none configured',
-                                'jp_inbound_policy': 'none configured',
-                                'jp_outbound_policy': 'none configured',
                                 'bfd': {
                                     'enable': False,
                                 },
@@ -1613,13 +1607,10 @@ class test_show_ip_pim_vrf_detail(unittest.TestCase):
                         'mvpn': {
                             'enable': False,
                         },
-                        'state_limit': 'none',
-                        'register_rate_limit': 'none',
                         'pre_build_spt': 'disabled',
                         'cli_vrf_done': True,
                         'cibtype_auto_enabled': True,
                         'vxlan_vni_id': 0,
-                        'shared_tree_ranges':'none',
                         },
                     },
                 },
@@ -1633,7 +1624,6 @@ class test_show_ip_pim_vrf_detail(unittest.TestCase):
                                 'register_source': 'loopback1',
                                 'register_source_address': '11.11.11.11',
                                 'sg_expiry_timer': {
-                                    'sg_list': 'none',
                                     'sg_expiry_timer': 1200,
                                     'sg_expiry_timer_configured': True,
                                     'config_version': 1,
@@ -1650,14 +1640,11 @@ class test_show_ip_pim_vrf_detail(unittest.TestCase):
                         'mvpn': {
                             'enable': False,
                         },
-                        'state_limit': 'none',
-                        'register_rate_limit': 'none',
 
                         'pre_build_spt': 'disabled',
                         'cli_vrf_done': True,
                         'cibtype_auto_enabled': True,
                         'vxlan_vni_id': 0,
-                        'shared_tree_ranges': 'none',
                     },
                 },
             },
@@ -1717,19 +1704,15 @@ class test_show_ip_pim_vrf_detail(unittest.TestCase):
                     "sm": {
                         "asm": {
                             "sg_expiry_timer": {
-                                "sg_list": "none",
                                 "active_version": 0,
                                 "config_version": 0
                             }
                         }
                     },
                     "interface_count": 1,
-                    "shared_tree_ranges": "none",
                     "bfd": {
                         "enable": False
                     },
-                    'register_rate_limit': 'none',
-                    "state_limit": "none",
                     "cli_vrf_done": True,
                     "table_id": "0x00000003",
                     "cibtype_auto_enabled": True
@@ -1748,20 +1731,16 @@ class test_show_ip_pim_vrf_detail(unittest.TestCase):
                     "sm": {
                         "asm": {
                             "sg_expiry_timer": {
-                                "sg_list": "none",
                                 "active_version": 0,
                                 "config_version": 0
                             }
                         }
                     },
                     "interface_count": 1,
-                    "shared_tree_ranges": "none",
                     "bfd": {
                         "enable": False
                     },
-                    "state_limit": "none",
                     "cli_vrf_done": True,
-                    'register_rate_limit': 'none',
                     "table_id": "0x00000004",
                     "cibtype_auto_enabled": True
                 }
@@ -1780,7 +1759,6 @@ class test_show_ip_pim_vrf_detail(unittest.TestCase):
                         "asm": {
                             "register_source": "Ethernet4/1",
                             "sg_expiry_timer": {
-                                "sg_list": "none",
                                 "active_version": 1,
                                 "sg_expiry_timer": 1200,
                                 "sg_expiry_timer_configured": True,
@@ -1789,13 +1767,10 @@ class test_show_ip_pim_vrf_detail(unittest.TestCase):
                             "register_source_address": "0.0.0.0"
                         }
                     },
-                    'register_rate_limit': 'none',
                     "interface_count": 4,
-                    "shared_tree_ranges": "none",
                     "bfd": {
                         "enable": False
                     },
-                    "state_limit": "none",
                     "cli_vrf_done": True,
                     "table_id": "0x00000001",
                     "cibtype_auto_enabled": True
@@ -2759,9 +2734,6 @@ class test_show_ip_pim_interface(unittest.TestCase):
                                 'bsr_border': False,
                                 'genid': '0x2737c18b',
                                 'hello_md5_ah_authentication': 'disabled',
-                                'neighbor_filter': 'none configured',
-                                'jp_inbound_policy': 'none configured',
-                                'jp_outbound_policy': 'none configured',
                                 'jp_interval': 60,
                                 'jp_next_sending': 60,
                                 'bfd': {
@@ -2829,9 +2801,6 @@ class test_show_ip_pim_interface(unittest.TestCase):
                                 'bsr_border': False,
                                 'genid': '0x3148ed16',
                                 'hello_md5_ah_authentication': 'disabled',
-                                'neighbor_filter': 'none configured',
-                                'jp_inbound_policy': 'none configured',
-                                'jp_outbound_policy': 'none configured',
                                 'jp_interval': 60,
                                 'jp_next_sending': 60,
                                 'bfd': {
@@ -3032,9 +3001,6 @@ class test_show_ipv6_pim_vrf_all_detail(unittest.TestCase):
                         'bfd': {
                             'enable': False,
                         },
-
-                        'state_limit': 'none',
-                        'register_rate_limit': 'none',
                         'shared_tree_route_map':'v6spt-threshold-group-list',
                         },
                     },
@@ -3050,10 +3016,6 @@ class test_show_ipv6_pim_vrf_all_detail(unittest.TestCase):
                         'bfd': {
                             'enable': False,
                         },
-
-                        'state_limit': 'none',
-                        'register_rate_limit': 'none',
-                        'shared_tree_ranges': 'none',
                     },
                 },
             },
