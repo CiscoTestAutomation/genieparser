@@ -1904,8 +1904,9 @@ class ShowFabricMulticastIpSaAdRoute(ShowFabricMulticastIpSaAdRouteSchema):
 
     def cli(self,vrf=""):
         if vrf:
-            out = self.device.execute('show fabric multicast ipv4 sa-ad-route {} {}'.format("vrf",vrf))
+            out = self.device.execute('show fabric multicast ipv4 sa-ad-route vrf {}'.format(vrf))
         else:
+            vrf = "default"
             out = self.device.execute('show fabric multicast ipv4 sa-ad-route')
 
         result_dict = {}
@@ -2014,9 +2015,9 @@ class ShowFabricMulticastIpL2Mroute(ShowFabricMulticastIpL2MrouteSchema):
 
     def cli(self, vni=""):
         if vni:
-            out = self.device.execute('show fabric multicast ipv4 l2-mroute {} {}'.format("vni", vni))
+            out = self.device.execute('show fabric multicast ipv4 l2-mroute vni {}'.format(vni))
         else:
-            out = self.device.execute('show fabric multicast ipv4 l2-mroute')
+            out = self.device.execute('show fabric multicast ipv4 l2-mroute vni all')
 
         result_dict = {}
         # EVPN C-Mcast Route Database for VNI: 10101
