@@ -1153,17 +1153,16 @@ Legend:
 
     def test_show_forwarding_distribution_multicast_route_golden(self):
         self.maxDiff = None
-
         self.device = Mock(**self.golden_output)
         obj = ShowForwardingDistributionMulticastRoute(device=self.device)
-        parsed_output = obj.parse(vrf="all")
+        parsed_output = obj.parse(vrf="default")
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_show_forwarding_distribution_multicast_route_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowForwardingDistributionMulticastRoute(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(vrf="all")
+            parsed_output = obj.parse(vrf="default")
 
 
 if __name__ == '__main__':
