@@ -10792,3 +10792,557 @@ class ShowBgpL2vpnEvpnWord(ShowBgpL2vpnEvpnWordSchema):
                 continue
 
         return ret_dict
+
+# ==================================================================
+#  schema for show bgp ipv4 mvpn route-type <route_type> vrf <vrf>
+# ==================================================================
+class ShowBgpIpMvpnRouteTypeSchema(MetaParser):
+    """Schema for:
+           show bgp ipv4 mvpn
+           show bgp ipv4 mvpn route-type <route_type>
+           show bgp ipv4 mvpn route-type <route_type> vrf <vrf>
+           show bgp ipv4 mvpn route-type <route_type> vrf all"""
+
+    schema = {
+        'instance': {
+            Any(): {
+                'vrf': {
+                    Any(): {
+                        'vrf_name_out': str,
+                        'address_family': {
+                            Any(): {
+                                'af_name': str,
+                                'table_version': str,
+                                'router_id': str,
+                                'rd': {
+                                    Any(): {
+                                        Optional('rd_val'): str,
+                                        Optional('rd_vrf'): str,
+                                        'prefix': {
+                                            Any(): {
+                                                'nonipprefix': str,
+                                                'path': {
+                                                    Any(): {
+                                                        'pathnr': int,
+                                                        Optional('statuscode'): str,
+                                                        Optional('bestcode'): str,
+                                                        Optional('typecode'): str,
+                                                        'ipnexthop': str,
+                                                        'weight': str,
+                                                        'origin': str,
+                                                        'localpref': str,
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+# ===================================================================
+#  Parser for show bgp ipv4 mvpn route-type <route_type> vrf <vrf>
+# ===================================================================
+class ShowBgpIpMvpnRouteType(ShowBgpIpMvpnRouteTypeSchema):
+    """Parser for:
+               show bgp ipv4 mvpn
+               show bgp ipv4 mvpn route-type <route_type>
+               show bgp ipv4 mvpn route-type <route_type> vrf <vrf>
+               show bgp ipv4 mvpn route-type <route_type> vrf all"""
+
+    def cli(self, route_type="",vrf="",cmd=""):
+        if cmd:
+            out = self.device.execute(cmd)
+        else:
+            if vrf and route_type:
+                out = self.device.execute('show bgp ipv4 mvpn route-type {} vrf {}'.format(route_type,vrf))
+            elif route_type and not vrf:
+                vrf = 'default'
+                out = self.device.execute('show bgp ipv4 mvpn route-type {}'.format(route_type))
+            elif not route_type and not vrf:
+                out = self.device.execute('show bgp ipv4 mvpn')
+
+        result_dict = {}
+        # BGP routing table information for VRF default, address family IPv4 MVPN
+        p1 = re.compile(r'^\s*BGP +routing +table +information +for +VRF +(?P<vrf>\S+),'
+                ' +address +family +(?P<af>[\w\s]+)$')
+
+        # BGP table version is 390, Local Router ID is 2.2.2.2
+        p2 = re.compile(r'^\s*BGP +table +version +is +(?P<table_version>[\d]+),'
+                        ' +Local +Router +ID +is +(?P<router_id>[\d\.]+)$')
+
+        #    Network            Next Hop            Metric     LocPrf     Weight Path
+        # Route Distinguisher: 2.2.2.2:3    (L3VNI 10100)
+        p3 = re.compile(r'^\s*Route +Distinguisher: +(?P<rd>[\d\.\:]+)'
+                        '( +\((L[2|3]VNI|Local VNI:) +(?P<rd_vrf>[\d]+)\))?$')
+
+        # *>l[5][100.101.1.3][238.8.4.101]/64
+        p4 = re.compile(r'^\s*(?P<statuscode>[s|S|x|d|h|>|s|*\s]+)?'
+                            '(?P<typecode>(i|e|c|l|a|r|I)+)?'
+                            '(?P<prefix>[\w\]\/\:\.\]\[]+)$')
+
+        #                       Next Hop            Metric     LocPrf     Weight Path
+        #                       7.7.7.7                           100          0 i
+        # *>i                   7.7.7.7                           100          0 i
+        p6 = re.compile(r'^\s*(?P<statuscode>[s|S|x|d|h|>|s|*\s]+)?'
+                        '(?P<typecode>(i|e|c|l|a|r|I)+)?'
+                        '(?P<space>\s{15,20})(?P<ipnexthop>[\d\.]+)?'
+                        '(?P<space1>\s{6,18})?'
+                        '(?P<metric>[\d]+)?'
+                        '(?P<space2>\s{6,12})'
+                        '(?P<localpref>[\d]+)?'
+                        '(?P<space3>\s{6,16})?'
+                        '(?P<weight>[\d]+)'
+                        ' +(?P<origin>[i|e|c|l|a|I]+)$')
+
+        for line in out.splitlines():
+            if line:
+                line = line.rstrip()
+            else:
+                continue
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vrf = group['vrf']
+                af = group['af'].lower()
+                vrf_dict = result_dict.setdefault('instance', {}).\
+                    setdefault('default', {}).setdefault('vrf', {}).\
+                    setdefault(vrf, {})
+                vrf_dict.update({'vrf_name_out': vrf})
+
+                af_dict = vrf_dict.setdefault('address_family',{}).\
+                    setdefault(af, {})
+                af_dict.update({'af_name': af})
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                af_dict.update({'table_version': group['table_version']})
+                af_dict.update({'router_id': group['router_id']})
+                continue
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                rd = group['rd']
+                rd_dict = af_dict.setdefault('rd', {}).setdefault(rd , {})
+                rd_dict.update({'rd_val': rd})
+                if group['rd_vrf']:
+                    rd_dict.update({'rd_vrf': group['rd_vrf']})
+                continue
+
+            m = p4.match(line)
+            if m:
+                index = 0
+                group = m.groupdict()
+                bestcode= ""
+                statuscode = ""
+                prefix = group['prefix']
+                prefix_dict = rd_dict.setdefault('prefix', {}).setdefault(prefix, {})
+                prefix_dict.update({'nonipprefix': prefix})
+                status_code = group.pop('statuscode')
+
+                if status_code:
+                    status_code = status_code.strip()
+                    if len(status_code) > 1:
+                        bestcode =  status_code[1]
+                        statuscode = status_code[0]
+                    else:
+                        if '>' in status_code:
+                            bestcode = status_code
+                        else:
+                            statuscode = status_code
+
+                if group['typecode']:
+                    typecode = group['typecode']
+                continue
+
+            m = p6.match(line)
+            if m:
+                index +=1
+                group = m.groupdict()
+                path_dict = prefix_dict.setdefault('path', {}).setdefault(index, {})
+                path_dict.update({'pathnr': 0})
+                type_code = group.pop('typecode')
+
+                if type_code and index > 1:
+                    path_dict.update({'typecode': type_code})
+                elif typecode:
+                    path_dict.update({'typecode':typecode})
+
+                status_code = group.pop('statuscode')
+                if not status_code:
+                    if bestcode and index == 1:
+                        path_dict.update({'bestcode':bestcode})
+                    if statuscode and index == 1:
+                        path_dict.update({'statuscode':statuscode})
+
+                if status_code and index >1:
+                    status_code = status_code.strip()
+                    if len(status_code) > 1:
+                        path_dict.update({'bestcode': status_code[1]})
+                        path_dict.update({'statuscode': status_code[0]})
+                    else:
+                        if '>' in status_code:
+                            path_dict.update({'bestcode': status_code})
+                        else:
+                            path_dict.update({'statuscode': status_code})
+
+                path_dict.update({'ipnexthop': group['ipnexthop']})
+                path_dict.update({'weight': group['weight']})
+                path_dict.update({'origin': group['origin']})
+                path_dict.update({'localpref': group['localpref'] })
+                continue
+
+        if not len(list(Common.find_keys('rd', result_dict))) :
+            result_dict = {}
+
+        return result_dict
+
+# ==========================================================
+#  schema for show bgp ipv4 mvpn sa-ad detail vrf <vrf>
+# ===========================================================
+class ShowBgpIpMvpnSaadDetailSchema(MetaParser):
+    """Schema for:
+        show bgp ipv4 mvpn sa-ad detail vrf <vrf>"""
+
+    schema = {
+        'instance': {
+            Any():{
+                'vrf': {
+                    Any(): {
+                        'vrf_name_out': str,
+                        'address_family': {
+                            Any(): {
+                                'af_name': str,
+                                'rd': {
+                                    Any(): {
+                                        Optional('rd_val'): str,
+                                        Optional('rd_vrf'): str,
+                                        'prefix': {
+                                            Any(): {
+                                                'nonipprefix': str,
+                                                'prefixversion': int,
+                                                Optional('totalpaths'): int,
+                                                'bestpathnr': int,
+                                                Optional('mpath'): str,
+                                                Optional('on_newlist'): bool,
+                                                Optional('on_xmitlist'): bool,
+                                                Optional('suppressed'): bool,
+                                                Optional('needsresync'): bool,
+                                                Optional('locked'): bool,
+                                                'path': {
+                                                    Any(): {
+                                                        Optional('pathnr'): int,
+                                                        'pathtype': str,
+                                                        Optional('policyincomplete'): bool,
+                                                        'pathvalid': bool,
+                                                        'pathbest': bool,
+                                                        Optional('pathdeleted'): bool,
+                                                        Optional('pathstaled'): bool,
+                                                        Optional('pathhistory'): bool,
+                                                        Optional('pathovermaxaslimit'): bool,
+                                                        Optional('pathmultipath'): bool,
+                                                        Optional('pathnolabeledrnh'): bool,
+                                                        'ipnexthop': str,
+                                                        Optional('nexthop_status'):str,
+                                                        'nexthopmetric': int,
+                                                        'neighbor': str,
+                                                        'neighborid': str,
+                                                        Optional('origin'): str,
+                                                        'localpref': int,
+                                                        'weight': int,
+                                                        Optional('inlabel'): int,
+                                                        Optional('extcommunity'): list,
+                                                        Optional('advertisedto'): list,
+                                                        Optional('originatorid'): str,
+                                                        Optional('clusterlist'): list,
+                                                    }
+                                                }
+                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+# ===========================================================
+#  Parser for show bgp ipv4 mvpn sa-ad detail vrf <vrf>
+# ===========================================================
+class ShowBgpIpMvpnSaadDetail(ShowBgpIpMvpnSaadDetailSchema):
+    """parser for:
+        show bgp ipv4 mvpn sa-ad detail
+        show bgp ipv4 mvpn sa-ad detail vrf <vrf>
+        show bgp ipv4 mvpn sa-ad detail vrf all"""
+
+    def cli(self,vrf=""):
+        if vrf:
+            out = self.device.execute('show bgp ipv4 mvpn sa-ad detail vrf {}'.format(vrf))
+        else:
+            out = self.device.execute('show bgp ipv4 mvpn sa-ad detail')
+
+
+        result_dict = {}
+
+        # BGP routing table information for VRF default, address family IPv4 MVPN
+        p1 = re.compile(r'^\s*BGP +routing +table +information +for +VRF +(?P<vrf_name_out>\S+),'
+                        ' +address +family +(?P<af_name>[\w\s]+)$')
+
+        # Route Distinguisher: 2.2.2.2:3    (L3VNI 10100)
+        p2 = re.compile(r'^\s*Route Distinguisher: +(?P<rd>[\w\.\:]+)'
+                        '( +\((L[2|3]VNI|Local VNI:) +(?P<rd_vrf>[\d]+)\))?$')
+
+        # BGP routing table entry for [5][100.101.1.3][238.8.4.s101]/64, version 388
+        p3 = re.compile(
+            r'^\s*BGP +routing +table +entry +for +(?P<nonipprefix>[\d\[\]\:\.\/]+),'
+            ' +version +(?P<prefixversion>[\d]+)$')
+
+        # Paths: (1 available, best #1)
+        p4 = re.compile(r'^\s*Paths: +\((?P<totalpaths>[\d]+) +available,'
+                        ' +best +#(?P<bestpathnr>[\d]+)\)$')
+
+        # Flags: (0x000002)(high32 00000000) on xmit-list, is not in mvpn
+        # Flags: (0x000002)(high32 00000000) on xmit-list, is not in mvpn, is not in HW
+        p5 = re.compile(r'^\s*Flags: (?P<flag_xmit>[\S\s]+) +on +xmit-list'
+            '(, +(?P<flags_attr>[\w\s\/\,]+))?$')
+
+        #   Advertised path-id 1
+        p7 = re.compile(r'^\s*Advertised path-id +(?P<path_id>[\d]+)$')
+
+        # Path type: local, path is valid, is best path, no labeled nexthop
+        # Path type: internal, path is invalid(rnh not resolved),
+        #        not best reason: Neighbor Address, no labeled nexthop
+        p8 = re.compile(r'^\s*Path type: +(?P<path_type>[\w\s\(\)]+),'
+                        ' +(?P<pathtypes>[\S\s\,\:\/\(\)]+)?$')
+
+        #   AS-Path: NONE, path locally originated
+        p9 = re.compile(
+            r'^\s*AS-Path: +(?P<as_path>[\w]+)(, +path locally originated)?'
+                '(, +path sourced +(?P<internal_external>[\w]+) to AS)?$')
+
+        #     0.0.0.0 (metric 0) from 0.0.0.0 (2.2.2.2)
+        #     6.6.6.6 (inaccessible, metric 4294967295) from 4.4.4.4 (4.4.4.4)
+        p10 = re.compile(
+            r'^\s*(?P<ipnexthop>[\d\.]+) +\(((?P<nexthop_status>[\w]+), )?metric +(?P<nexthopmetric>[\d]+)\)'
+            ' +from +(?P<neighbor>[\d\.]+)'
+            ' +\((?P<neighborid>[\d\.]+)\)$')
+
+        #       Origin IGP, MED not set, localpref 100, weight 32768
+        p11 = re.compile(r'^\s*Origin +(?P<origin>[\w]+), +(MED +(?P<med>[\w\s]+),)?'
+                         ' +localpref +(?P<localpref>[\d]+),'
+                         ' +weight +(?P<weight>[\d]+)$')
+
+        #       Extcommunity: RT:100:10100
+        p12 = re.compile(r'^\s*Extcommunity: +(?P<extcommunity>[\w\s\:\.]+)$')
+
+        # Originator: 6.6.6.6 Cluster list: 5.5.5.5 
+        p13 = re.compile(r'^\s*Originator: +(?P<originatorid>[\d\.]+)'
+                         ' +Cluster +list: +(?P<clusterlist>[\d\.]+)$')
+
+        #   Path-id 1 advertised to peers:
+        #     4.4.4.4            5.5.5.5        
+        p14 = re.compile(r'^\s*Path-id +(?P<path_id>[\d]+) +advertised to peers:$')
+        p15 = re.compile(r'^\s*(?P<advertisedto>[\d\s\.]+)$')
+
+
+        for line in out.splitlines():
+            if line:
+                line = line.rstrip()
+            else:
+                continue
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                instance = 'default'
+                vrf_name_out = group['vrf_name_out']
+                af_name = group['af_name'].lower()
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                bgp_dict = result_dict.setdefault('instance', {}).setdefault(instance, {}).\
+                                                setdefault('vrf', {}).setdefault(vrf_name_out, {})
+                bgp_dict.update({'vrf_name_out': vrf_name_out})
+                af_dict = bgp_dict.setdefault('address_family', {}).setdefault(af_name, {})
+                af_dict.update({'af_name': af_name})
+                rd = group['rd']
+                rd_dict = af_dict.setdefault('rd',{}).setdefault(rd,{})
+                rd_dict.update({'rd_val':rd})
+                if group['rd_vrf']:
+                    rd_dict.update({'rd_vrf': group['rd_vrf'].lower()})
+                continue
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                nonipprefix = group['nonipprefix'].strip()
+                prefix_dict = rd_dict.setdefault('prefix',{}).setdefault(nonipprefix,{})
+                prefix_dict.update({'nonipprefix': nonipprefix})
+                prefix_dict.update({'prefixversion': int(group['prefixversion'])})
+                index = 0
+                continue
+
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                prefix_dict.update({k:int(v) for k,v in group.items()})
+                continue
+
+            m = p5.match(line)
+            if m:
+                prefix_dict.update({'on_xmitlist':True})
+                continue
+
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                path_temp_dict = prefix_dict.setdefault('path',{})
+                continue
+
+            m = p8.match(line)
+            if m:
+                index += 1
+                path_temp_dict = prefix_dict.setdefault('path', {})
+                path_dict = path_temp_dict.setdefault(index, {})
+                path_dict.update({'pathnr': 0})
+                group = m.groupdict()
+                path_dict.update({'pathtype': group['path_type']})
+
+                pathtypes = group.get('pathtypes')
+                if 'path is valid' in pathtypes:
+                    path_dict.update({'pathvalid': True})
+                else:
+                    path_dict.update({'pathvalid': False})
+
+                if 'is best path' in pathtypes:
+                    path_dict.update({'pathbest': True})
+                else:
+                    path_dict.update({'pathbest': False})
+
+                if 'no labeled nexthop' in pathtypes:
+                    path_dict.update({'pathnolabeledrnh': True})
+                else:
+                    path_dict.update({'pathnolabeledrnh': False})
+                continue
+
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                path_dict.update({k:v for k,v in group.items()})
+                path_dict.update({'nexthopmetric': int(group['nexthopmetric'])})
+                if not group['nexthop_status']:
+                    path_dict.pop('nexthop_status')
+                continue
+
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                path_dict.update({'origin': group['origin'].lower()})
+                path_dict.update({'localpref': int(group['localpref'])})
+                path_dict.update({'weight': int(group['weight'])})
+                continue
+
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                path_dict.update({k: sorted(v.split( )) for k, v in group.items()})
+                continue
+
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                path_dict.update({'originatorid': group['originatorid']})
+                path_dict.update({'clusterlist': sorted(group['clusterlist'].split( ))})
+                continue
+
+
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                for k, v in group.items():
+                    if k in path_dict:
+                        path_dict[k].append(v)
+                    else:
+                        path_dict.update({k:v.split()})
+                continue
+
+
+        if 'instance' not in result_dict:
+            return result_dict
+
+        for instance in result_dict['instance']:
+            if 'vrf' not in result_dict['instance'][instance]:
+                continue
+            for vrf in result_dict['instance'][instance]['vrf']:
+                vrf_dict = result_dict['instance'][instance]['vrf'][vrf]
+                if 'address_family' not in vrf_dict:
+                    continue
+                for af in vrf_dict['address_family']:
+                    af_dict = vrf_dict['address_family'][af]
+                    if 'rd' not in af_dict:
+                        continue
+                    for rd in af_dict['rd']:
+                        if 'prefix' not in af_dict['rd'][rd]:
+                            continue
+                        for prefix in af_dict['rd'][rd]['prefix']:
+                            if 'path' not in af_dict['rd'][rd]['prefix'][prefix]:
+                                continue
+                            for index in af_dict['rd'][rd]['prefix'][prefix]['path']:
+                                if len(af_dict['rd'][rd]['prefix'][prefix]['path'][index].keys()) > 1:
+                                    ind = 1
+                                    next_dict = {}
+                                    sorted_list = sorted(af_dict['rd'][rd]['prefix'][prefix]['path'].items(),
+                                                         key=lambda x: x[1]['neighbor'])
+                                    for i, j in enumerate(sorted_list):
+                                        next_dict[ind] = af_dict['rd'][rd]['prefix'][prefix]['path'][j[0]]
+                                        ind += 1
+                                    del (af_dict['rd'][rd]['prefix'][prefix]['path'])
+                                    af_dict['rd'][rd]['prefix'][prefix]['path'] = next_dict
+
+
+        return result_dict
+
+# ==================================================================
+#  Parser for show bgp l2vpn evpn vrf <vrf>
+# ==================================================================
+class ShowBgpL2vpnEvpn(ShowBgpIpMvpnRouteType):
+    """Parser for:
+           show bgp l2vpn evpn
+           show bgp l2vpn evpn vrf <vrf>
+           show bgp l2vpn evpn vrf all"""
+
+    def cli(self, vrf=""):
+        if vrf:
+            cmd = 'show bgp l2vpn evpn vrf {}'.format(vrf)
+        else:
+            cmd = 'show bgp l2vpn evpn'
+
+        return super().cli(cmd=cmd)
+
+
+# ==================================================================
+#  Parser for show bgp ipv4 mvpn
+# ==================================================================
+class ShowBgpIpMvpn(ShowBgpIpMvpnRouteType):
+    """Parser for:
+           show bgp ipv4 mvpn"""
+
+    def cli(self):
+        cmd = 'show bgp ipv4 mvpn'
+        return super().cli(cmd=cmd)

@@ -21,7 +21,10 @@ from genie.libs.parser.nxos.show_vxlan import ShowNvePeers, \
                                               ShowL2routeSummary, \
                                               ShowL2routeFlAll, \
                                               ShowRunningConfigNvOverlay,\
-                                              ShowNveVniIngressReplication
+                                              ShowNveVniIngressReplication,\
+                                              ShowFabricMulticastGlobals,\
+                                              ShowFabricMulticastIpSaAdRoute, \
+                                              ShowFabricMulticastIpL2Mroute
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
@@ -1515,5 +1518,588 @@ class test_show_nve_vni_ingress_replication(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+# =========================================================
+#  Unit test for 'show fabric multicast globals'
+# =========================================================
+class test_show_fabric_multicast_globals(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "multicast": {
+            "globals": {
+                "pruning": "segment-based",
+                "switch_role": "",
+                "fabric_control_seg": "Null",
+                "peer_fabric_ctrl_addr": "0.0.0.0",
+                "advertise_vpc_rpf_routes": "disabled",
+                "created_vni_list":  "-",
+                "fwd_encap": "(null)",
+                "overlay_distributed_dr": False,
+                "overlay_spt_only": True,
+            },
+        },
+    }
+
+    golden_output = {'execute.return_value': '''
+    R2# show fabric multicast globals
+        Pruning: segment-based
+        Switch role:
+        Fabric Control Seg: Null
+        Peer Fabric Control Address: 0.0.0.0
+        Advertising vPC RPF routes: Disabled
+        Created VNI List: -
+        Fwd Encap: (null)
+        Overlay Distributed-DR: FALSE
+        Overlay spt-only: TRUE
+        '''}
+
+    def test_show_fabric_multicast_globals_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowFabricMulticastGlobals(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_fabric_multicast_globals_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowFabricMulticastGlobals(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+# ================================================================
+#  Unit test for 'show fabric multicast ipv4 sa-ad-route vrf all'
+# ================================================================
+class test_show_fabric_multicast_ip_sa_ad_route(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "multicast": {
+            "vrf": {
+                "default": {
+                    "vnid": '0',
+                },
+                "vni_10100":{
+                    "vnid": "10100",
+                    "address_family": {
+                        "ipv4": {
+                            "sa_ad_routes": {
+                                "gaddr": {
+                                    "238.8.4.101/32": {
+                                        "grp_len": 32,
+                                        "saddr": {
+                                            "100.101.1.3/32": {
+                                                "src_len": 32,
+                                                "uptime": "00:01:01",
+                                                "interested_fabric_nodes": {
+                                                    "This node": {
+                                                        "uptime": "00:01:01",
+                                                    }
+                                                }
+                                            },
+                                            "100.101.1.4/32": {
+                                                "src_len": 32,
+                                                "uptime": "00:01:01",
+                                                "interested_fabric_nodes": {
+                                                    "This node": {
+                                                        "uptime": "00:01:01",
+                                                    }
+                                                }
+                                            },
+                                            "100.101.6.3/32": {
+                                                "src_len": 32,
+                                                "uptime": "00:49:39",
+                                                "interested_fabric_nodes": {
+                                                    "6.6.6.6": {
+                                                        "uptime": "00:49:39",
+                                                    }
+                                                }
+                                            },
+                                            "100.101.6.4/32": {
+                                                "src_len": 32,
+                                                "uptime": "00:49:39",
+                                                "interested_fabric_nodes": {
+                                                    "6.6.6.6": {
+                                                        "uptime": "00:49:39",
+                                                    }
+                                                }
+                                            },
+                                            "100.101.7.3/32": {
+                                                "src_len": 32,
+                                                "uptime": "00:02:38",
+                                                "interested_fabric_nodes": {
+                                                    "7.7.7.7": {
+                                                        "uptime": "00:02:38",
+                                                    }
+                                                }
+                                            },
+                                            "100.101.8.3/32": {
+                                                "src_len": 32,
+                                                "uptime": "00:49:39",
+                                                "interested_fabric_nodes": {
+                                                    "8.8.8.8": {
+                                                        "uptime": "00:49:39",
+                                                    }
+                                                }
+                                            },
+                                        }
+                                    },
+                                    "238.8.4.102/32":{
+                                        "grp_len": 32,
+                                        'saddr': {
+                                            "100.102.1.3/32": {
+                                                "src_len": 32,
+                                                "uptime": "00:00:10",
+                                                "interested_fabric_nodes": {
+                                                    "This node": {
+                                                        "uptime": "00:00:10",
+                                                    }
+                                                }
+                                            },
+                                            "100.102.2.3/32": {
+                                                "src_len": 32,
+                                                "uptime": "00:47:51",
+                                                "interested_fabric_nodes": {
+                                                    "This node": {
+                                                        "uptime": "00:47:51",
+                                                    }
+                                                }
+                                            },
+                                            "100.102.6.3/32": {
+                                                "src_len": 32,
+                                                "uptime": "00:49:39",
+                                                "interested_fabric_nodes": {
+                                                    "6.6.6.6": {
+                                                        "uptime": "00:49:39",
+                                                    }
+                                                }
+                                            },
+                                        },
+                                    },
+                                }
+                            }
+                        }
+                    }
+                },
+                "vni_10200": {
+                    "vnid": "10200",
+                    "address_family": {
+                        "ipv4": {
+                            "sa_ad_routes": {
+                                "gaddr": {
+                                    "238.8.4.201/32": {
+                                        "grp_len": 32,
+                                        "saddr": {
+                                            "200.201.1.3/32": {
+                                                "src_len": 32,
+                                                "uptime": "00:03:24",
+                                                "interested_fabric_nodes": {
+                                                    "This node": {
+                                                        "uptime": "00:03:24",
+                                                    }
+                                                }
+                                            },
+                                            "200.201.2.3/32": {
+                                                "src_len": 32,
+                                                "uptime": "00:07:48",
+                                                "interested_fabric_nodes": {
+                                                    "This node": {
+                                                        "uptime": "00:07:48",
+                                                    }
+                                                }
+                                            },
+                                            "200.201.6.3/32": {
+                                                "src_len": 32,
+                                                "uptime": "00:49:39",
+                                                "interested_fabric_nodes": {
+                                                    "6.6.6.6": {
+                                                        "uptime": "00:49:39",
+                                                    }
+                                                }
+                                            },
+
+                                        }
+                                    },
+                                    "238.8.4.202/32": {
+                                        "grp_len": 32,
+                                        "saddr": {
+                                            "200.202.1.3/32": {
+                                                "src_len": 32,
+                                                "uptime": "00:02:10",
+                                                "interested_fabric_nodes": {
+                                                    "This node": {
+                                                        "uptime": "00:02:10",
+                                                    }
+                                                }
+                                            },
+                                            "200.202.2.3/32": {
+                                                "src_len": 32,
+                                                "uptime": "00:49:39",
+                                                "interested_fabric_nodes": {
+                                                    "This node": {
+                                                        "uptime": "00:49:39",
+                                                    }
+                                                }
+                                            },
+                                            "200.202.6.3/32": {
+                                                "src_len": 32,
+                                                "uptime": "00:49:39",
+                                                "interested_fabric_nodes": {
+                                                    "6.6.6.6": {
+                                                        "uptime": "00:49:39",
+                                                    }
+                                                }
+                                            },
+
+                                        }
+                                    },
+                                }
+                            }
+                        }
+                    }
+                },
+                "vpc-keepalive": {
+                    "vnid": '0',
+                },
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''
+    R2# show fabric multicast ipv4 sa-ad-route vrf all
+
+VRF "default" MVPN SA AD Route Database VNI: 0
+
+VRF "vni_10100" MVPN SA AD Route Database VNI: 10100
+
+Src Active AD Route: (100.101.1.3/32, 238.8.4.101/32) uptime: 00:01:01
+  Interested Fabric Nodes:
+    This node, uptime: 00:01:01
+
+Src Active AD Route: (100.101.1.4/32, 238.8.4.101/32) uptime: 00:01:01
+  Interested Fabric Nodes:
+    This node, uptime: 00:01:01
+
+Src Active AD Route: (100.101.6.3/32, 238.8.4.101/32) uptime: 00:49:39
+  Interested Fabric Nodes:
+    6.6.6.6, uptime: 00:49:39
+
+Src Active AD Route: (100.101.6.4/32, 238.8.4.101/32) uptime: 00:49:39
+  Interested Fabric Nodes:
+    6.6.6.6, uptime: 00:49:39
+
+Src Active AD Route: (100.101.7.3/32, 238.8.4.101/32) uptime: 00:02:38
+  Interested Fabric Nodes:
+    7.7.7.7, uptime: 00:02:38
+
+Src Active AD Route: (100.101.8.3/32, 238.8.4.101/32) uptime: 00:49:39
+  Interested Fabric Nodes:
+    8.8.8.8, uptime: 00:49:39
+
+Src Active AD Route: (100.102.1.3/32, 238.8.4.102/32) uptime: 00:00:10
+  Interested Fabric Nodes:
+    This node, uptime: 00:00:10
+
+Src Active AD Route: (100.102.2.3/32, 238.8.4.102/32) uptime: 00:47:51
+  Interested Fabric Nodes:
+    This node, uptime: 00:47:51
+
+Src Active AD Route: (100.102.6.3/32, 238.8.4.102/32) uptime: 00:49:39
+  Interested Fabric Nodes:
+    6.6.6.6, uptime: 00:49:39
+
+VRF "vni_10200" MVPN SA AD Route Database VNI: 10200
+
+Src Active AD Route: (200.201.1.3/32, 238.8.4.201/32) uptime: 00:03:24
+  Interested Fabric Nodes:
+    This node, uptime: 00:03:24
+
+Src Active AD Route: (200.201.2.3/32, 238.8.4.201/32) uptime: 00:07:48
+  Interested Fabric Nodes:
+    This node, uptime: 00:07:48
+
+Src Active AD Route: (200.201.6.3/32, 238.8.4.201/32) uptime: 00:49:39
+  Interested Fabric Nodes:
+    6.6.6.6, uptime: 00:49:39
+
+Src Active AD Route: (200.202.1.3/32, 238.8.4.202/32) uptime: 00:02:10
+  Interested Fabric Nodes:
+    This node, uptime: 00:02:10
+
+Src Active AD Route: (200.202.2.3/32, 238.8.4.202/32) uptime: 00:49:39
+  Interested Fabric Nodes:
+    This node, uptime: 00:49:39
+
+Src Active AD Route: (200.202.6.3/32, 238.8.4.202/32) uptime: 00:49:39
+  Interested Fabric Nodes:
+    6.6.6.6, uptime: 00:49:39
+
+VRF "vpc-keepalive" MVPN SA AD Route Database VNI: 0
+
+        '''}
+
+    def test_show_fabric_multicast_ip_sa_ad_route_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowFabricMulticastIpSaAdRoute(device=self.device)
+        parsed_output = obj.parse(vrf="all")
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_fabric_multicast_ip_sa_ad_route_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowFabricMulticastIpSaAdRoute(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(vrf="all")
+
+# ================================================================
+#  Unit test for 'show fabric multicast ipv4 l2-mroute vni all'
+# ================================================================
+class test_show_fabric_multicast_ip_l2_mroute(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "multicast": {
+            "l2_mroute": {
+                "vni": {
+                    "10101":{
+                        "vnid": "10101",
+                        'fabric_l2_mroutes': {
+                            "gaddr": {
+                                "231.1.3.101/32": {
+                                    "saddr": {
+                                        "*": {
+                                            "interested_fabric_nodes": {
+                                                "This node":{
+                                                    "node": "This node"
+                                                }
+                                            },
+                                        },
+                                    }
+                                },
+                                "231.1.4.101/32": {
+                                    "saddr": {
+                                        "*": {
+                                            "interested_fabric_nodes": {
+                                                "This node":{
+                                                    "node": "This node"
+                                                }
+                                            },
+                                        },
+                                    }
+                                },
+                                "232.2.3.101/32": {
+                                    "saddr": {
+                                        "*": {
+                                            "interested_fabric_nodes": {
+                                                "This node": {
+                                                    "node": "This node"
+                                                }
+                                            },
+                                        },
+                                    }
+                                },
+                                "232.2.4.101/32": {
+                                    "saddr": {
+                                        "*": {
+                                            "interested_fabric_nodes": {
+                                                "This node": {
+                                                    "node": "This node"
+                                                }
+                                            },
+                                        },
+                                    }
+                                },
+                                "233.3.3.101/32": {
+                                    "saddr": {
+                                        "*": {
+                                            "interested_fabric_nodes": {
+                                                "This node": {
+                                                    "node": "This node"
+                                                }
+                                            },
+                                        },
+                                    }
+                                },
+                                "233.3.4.101/32": {
+                                    "saddr": {
+                                        "*": {
+                                            "interested_fabric_nodes": {
+                                                "This node": {
+                                                    "node": "This node"
+                                                }
+                                            },
+                                        },
+                                    }
+                                },
+                                "236.6.3.101/32": {
+                                    "saddr": {
+                                        "*": {
+                                            "interested_fabric_nodes": {
+                                                "6.6.6.6": {
+                                                    "node": "6.6.6.6"
+                                                }
+                                            },
+                                        },
+                                    }
+                                },
+                                "236.6.4.101/32": {
+                                    "saddr": {
+                                        "*": {
+                                            "interested_fabric_nodes": {
+                                                "6.6.6.6":{
+                                                    "node": "6.6.6.6"
+                                                }
+                                            },
+                                        },
+                                    }
+                                },
+                                "237.7.3.101/32": {
+                                    "saddr": {
+                                        "*": {
+                                            "interested_fabric_nodes": {
+                                                "8.8.8.8": {
+                                                    "node": "8.8.8.8"
+                                                }
+                                            },
+                                        },
+                                    }
+                                },
+                            }
+                        },
+                    },
+                    "10102": {
+                        "vnid": "10102",
+                        'fabric_l2_mroutes': {
+                            "gaddr": {
+                                "238.8.4.102/32": {
+                                    "saddr": {
+                                        "*": {
+                                            "interested_fabric_nodes": {
+                                                "8.8.8.8": {
+                                                    "node": "8.8.8.8"
+                                                },
+                                            },
+                                        }
+                                    },
+                                }
+                            }
+                        },
+                    },
+                    "10201": {
+                        "vnid": "10201",
+                        'fabric_l2_mroutes': {
+                            "gaddr": {
+                                "238.8.4.201/32": {
+                                    "saddr": {
+                                        "*": {
+                                            "interested_fabric_nodes": {
+                                                "8.8.8.8": {
+                                                    "node": "8.8.8.8"
+                                                    }
+                                                },
+                                            },
+                                        }
+                                    },
+                                }
+                            }
+                        },
+                    "10202": {
+                        "vnid": "10202",
+                        'fabric_l2_mroutes': {
+                            "gaddr": {
+                                "238.8.4.202/32": {
+                                    "saddr": {
+                                        "*": {
+                                            "interested_fabric_nodes": {
+                                                "8.8.8.8": {
+                                                    "node": "8.8.8.8"
+                                                }
+                                            },
+                                        },
+                                    }
+                                },
+                            }
+                        },
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''
+ R2# show fabric multicast ipv4 l2-mroute vni all
+
+EVPN C-Mcast Route Database for VNI: 10101
+
+Fabric L2-Mroute: (*, 231.1.3.101/32)
+  Interested Fabric Nodes:
+    This node
+
+Fabric L2-Mroute: (*, 231.1.4.101/32)
+  Interested Fabric Nodes:
+    This node
+
+Fabric L2-Mroute: (*, 232.2.3.101/32)
+  Interested Fabric Nodes:
+    This node
+
+Fabric L2-Mroute: (*, 232.2.4.101/32)
+  Interested Fabric Nodes:
+    This node
+
+Fabric L2-Mroute: (*, 233.3.3.101/32)
+  Interested Fabric Nodes:
+    This node
+
+Fabric L2-Mroute: (*, 233.3.4.101/32)
+  Interested Fabric Nodes:
+    This node
+
+Fabric L2-Mroute: (*, 236.6.3.101/32)
+  Interested Fabric Nodes:
+    6.6.6.6
+
+Fabric L2-Mroute: (*, 236.6.4.101/32)
+  Interested Fabric Nodes:
+    6.6.6.6
+
+Fabric L2-Mroute: (*, 237.7.3.101/32)
+  Interested Fabric Nodes:
+    8.8.8.8
+
+EVPN C-Mcast Route Database for VNI: 10102
+
+Fabric L2-Mroute: (*, 238.8.4.102/32)
+  Interested Fabric Nodes:
+    8.8.8.8
+
+EVPN C-Mcast Route Database for VNI: 10201
+
+Fabric L2-Mroute: (*, 238.8.4.201/32)
+  Interested Fabric Nodes:
+    8.8.8.8
+
+EVPN C-Mcast Route Database for VNI: 10202
+
+Fabric L2-Mroute: (*, 238.8.4.202/32)
+  Interested Fabric Nodes:
+    8.8.8.8
+
+        '''}
+
+    def test_show_fabric_multicast_ip_l2_mroute_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowFabricMulticastIpL2Mroute(device=self.device)
+        parsed_output = obj.parse(vni="all")
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_fabric_multicast_ip_l2_mroute_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowFabricMulticastIpL2Mroute(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(vni="all")
 if __name__ == '__main__':
     unittest.main()
