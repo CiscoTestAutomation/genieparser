@@ -105,7 +105,10 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
 
     def cli(self,vrf=""):
 
-        out = self.device.execute('show ip msdp peer vrf {}'.format(vrf if vrf else "all"))
+        if vrf and vrf !='default':
+            out = self.device.execute('show ip msdp peer vrf {}'.format(vrf))
+        else:
+            out = self.device.execute('show ip msdp peer')
         result_dict = {}
 
         # MSDP peer 1.1.1.1 for VRF "default"
@@ -421,7 +424,10 @@ class ShowIpMsdpSaCacheDetailVrf(ShowIpMsdpSaCacheDetailVrfSchema):
 
     def cli(self,vrf=""):
 
-        out = self.device.execute('show ip msdp sa-cache detail vrf {}'.format(vrf if vrf else "all"))
+        if vrf and vrf !='default':
+            out = self.device.execute('show ip msdp sa-cache detail vrf {}'.format(vrf))
+        else:
+            out = self.device.execute('show ip msdp sa-cache detail')
 
         result_dict = {}
         # MSDP SA Route Cache for VRF "default" - 1 entries
@@ -526,13 +532,13 @@ class ShowIpMsdpPolicyStatisticsSaPolicyInOut(ShowIpMsdpPolicyStatisticsSaPolicy
         show ip msdp policy statistics sa-policy <address> in
         show ip msdp policy statistics sa-policy <address> out"""
 
-    def cli(self, peer, method, vrf='default'):
+    def cli(self, peer, method, vrf=''):
 
         assert method in ['in', 'out']
 
         cmd = 'show ip msdp policy statistics sa-policy %s %s' % (peer, method)
 
-        if vrf != 'default':
+        if vrf and vrf != 'default':
             cmd += ' vrf %s' % vrf
 
         out = self.device.execute(cmd)
@@ -634,7 +640,7 @@ class ShowIpMsdpPolicyStatisticsSaPolicyIn(ShowIpMsdpPolicyStatisticsSaPolicyInO
     """Parser for :
         show ip msdp policy statistics sa-policy <address> in"""
 
-    def cli(self, peer, vrf='default'):
+    def cli(self, peer, vrf=''):
         return super().cli(peer=peer, method='in', vrf=vrf)
 
 
@@ -645,7 +651,7 @@ class ShowIpMsdpPolicyStatisticsSaPolicyOut(ShowIpMsdpPolicyStatisticsSaPolicyIn
     """Parser for :
         show ip msdp policy statistics sa-policy <address> out"""
 
-    def cli(self, peer, vrf='default'):
+    def cli(self, peer, vrf=''):
         return super().cli(peer=peer, method='out', vrf=vrf)
 
 
@@ -694,14 +700,12 @@ class ShowIpMsdpSummary(ShowIpMsdpSummarySchema):
         show ip msdp summary vrf all
         show ip msdp summary vrf <vrf>"""
 
-    def cli(self, vrf='default'):
+    def cli(self, vrf=''):
 
-        cmd = 'show ip msdp summary'
-
-        if vrf != 'default':
-            cmd += ' vrf %s' % vrf
-
-        out = self.device.execute(cmd)
+        if vrf and vrf !='default':
+            out = self.device.execute('show ip msdp summary vrf {}'.format(vrf))
+        else:
+            out = self.device.execute('show ip msdp summary')
 
         ret_dict = {}
 

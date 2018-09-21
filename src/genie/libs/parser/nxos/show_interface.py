@@ -1925,7 +1925,7 @@ class ShowIpv6InterfaceVrfAllSchema(MetaParser):
                 'ipv6_report_link_local': str,
                 'ipv6_forwarding_feature': str,
                 Optional('ipv6_multicast_groups'): list,
-                'ipv6_multicast_entries': str,
+                Optional('ipv6_multicast_entries'): str,
                 'ipv6_mtu': int,
                 'ipv6_unicast_rev_path_forwarding': str,
                 'ipv6_load_sharing': str,
@@ -1984,6 +1984,7 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
                 # init multicast groups list to empty for this interface
                 ipv6_multicast_groups = []
                 ipv6_virtual_groups = []
+                ipv6_multicast_entries = multicast_groups = False
                 continue
 
             # IPv6 address:
@@ -2159,13 +2160,20 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
                      = sorted(ipv6_multicast_groups)
                     continue
 
-            #IPv6 multicast (S,G) entries joined: none
-            p12 = re.compile(r'^\s*IPv6 *multicast *\(S\,G\) *entries *joined:'
-                              ' *(?P<ipv6_multicast_entries>[a-z]+)$')
+            # IPv6 multicast (S,G) entries joined: none
+            # IPv6 multicast (S,G) entries joined: 
+            #  (2001:20:1:1::254, ff38::1)
+            p12 = re.compile(r'^\s*IPv6 *multicast *\(S\,G\) *entries *joined:$')
             m = p12.match(line)
             if m:
-                ipv6_multicast_entries = m.groupdict()['ipv6_multicast_entries']
+                ipv6_multicast_entries = True
+                continue
 
+            #  (2001:20:1:1::254, ff38::1)
+            p12_1 = re.compile(r'^\s*\((?P<ip_list>.*)\)')
+            m = p12_1.match(line)
+            if m and ipv6_multicast_entries:
+                ipv6_multicast_entries = m.groupdict()['ip_list']
                 ipv6_interface_dict[interface]['ipv6']['ipv6_multicast_entries']\
                  = ipv6_multicast_entries
                 continue
