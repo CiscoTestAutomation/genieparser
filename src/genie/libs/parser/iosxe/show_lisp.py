@@ -397,7 +397,7 @@ class ShowLispDynamicEidDetailSchema(MetaParser):
     schema = {
         'lisp_router_instances':
             {Any():
-                {'service':
+                {Optional('service'):
                     {Any():
                         {'etr':
                             {'local_eids':
@@ -1941,7 +1941,7 @@ class ShowLispServiceSummarySchema(MetaParser):
                 {'lisp_router_instance_id': int,
                 Optional('service'):
                     {Optional(Any()):
-                        {'virtual_network_ids':
+                        {Optional('virtual_network_ids'):
                             {Any():
                                 {Optional('vrf'): str,
                                 'interface': str,
