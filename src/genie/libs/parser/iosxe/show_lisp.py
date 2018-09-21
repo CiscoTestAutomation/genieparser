@@ -3081,6 +3081,15 @@ class ShowLispServiceStatistics(ShowLispServiceStatisticsSchema):
         # Errors:
         p3_2 = re.compile(r'Errors:$')
 
+        # Map-Register records in/out:              0/52
+        p4 = re.compile(r'Map-Register +records +in\/out: +(?P<in>(\d+))\/(?P<out>(\d+))$')
+
+        # Map-Notify records in/out:                2/0
+        p5 = re.compile(r'Map-Notify +records +in\/out: +(?P<in>(\d+))\/(?P<out>(\d+))$')
+
+        # Authentication failures:                0
+        p6 = re.compile(r'Authentication +failures: +(?P<auth_failures>(\d+))$')
+
         # Map-Requests in/out:                              8/40
         # Encapsulated Map-Requests in/out:               8/36
         # RLOC-probe Map-Requests in/out:                 0/4
@@ -3089,12 +3098,12 @@ class ShowLispServiceStatistics(ShowLispServiceStatisticsSchema):
         # Map-Requests expired on-queue/no-reply          0/13
         # Map-Resolver Map-Requests forwarded:            0
         # Map-Server Map-Requests forwarded:              0
-        p4 = re.compile(r'^(?P<key>([a-zA-Z\-\/\s]+))\: +(?P<value>(.*))$')
+        p7 = re.compile(r'^(?P<key>([a-zA-Z\-\/\s]+))\: +(?P<value>(.*))$')
 
         # Map-Resolver    LastReply  Metric ReqsSent Positive Negative No-Reply
         # 44.44.44.44     never           1      306       18        0       66
         # 66.66.66.66     never     Unreach        0        0        0        0
-        p5 = re.compile(r'(?P<mr>([a-zA-Z0-9\.\:]+)) +(?P<last_reply>(\S+))'
+        p8 = re.compile(r'(?P<mr>([a-zA-Z0-9\.\:]+)) +(?P<last_reply>(\S+))'
                          ' +(?P<metric>(\S+)) +(?P<sent>(\d+))'
                          ' +(?P<positive>(\d+)) +(?P<negative>(\d+))'
                          ' +(?P<no_reply>(\d+))$')
@@ -3138,9 +3147,43 @@ class ShowLispServiceStatistics(ShowLispServiceStatisticsSchema):
                 last_dict = stats_dict.setdefault('errors', {})
                 continue
 
+            # Map-Register records in/out:              0/52
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                last_dict['map_register_records_in'] = group['in']
+                last_dict['map_register_records_out'] = group['out']
+                map_register = True
+                continue
+
+            # Map-Notify records in/out:                2/0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                last_dict['map_notify_records_in'] = group['in']
+                last_dict['map_notify_records_out'] = group['out']
+                map_register = False
+                continue
+
+            # Authentication failures:                0
+            m = p6.match(line)
+            if m:
+                failures = m.groupdict()['auth_failures']
+                if map_register:
+                    last_dict['map_registers_in_auth_failed'] = failures
+                else:
+                    last_dict['map_notify_auth_failures'] = failures
+                continue
+
+            # Map-Requests in/out:                              8/40
+            # Encapsulated Map-Requests in/out:               8/36
+            # RLOC-probe Map-Requests in/out:                 0/4
             # SMR-based Map-Requests in/out:                  0/4
             # Extranet SMR cross-IID Map-Requests in:         0
-            m = p4.match(line)
+            # Map-Requests expired on-queue/no-reply          0/13
+            # Map-Resolver Map-Requests forwarded:            0
+            # Map-Server Map-Requests forwarded:              0
+            m = p7.match(line)
             if m:
                 group = m.groupdict()
                 if "/" in group['key']:
@@ -3163,8 +3206,9 @@ class ShowLispServiceStatistics(ShowLispServiceStatisticsSchema):
                 continue
 
             # Map-Resolver    LastReply  Metric ReqsSent Positive Negative No-Reply
+            # 44.44.44.44     never           1      306       18        0       66
             # 66.66.66.66     never     Unreach        0        0        0        0
-            m = p5.match(line)
+            m = p8.match(line)
             if m:
                 group = m.groupdict()
                 mr_dict = last_dict.setdefault('map_rseolvers', {}).\
