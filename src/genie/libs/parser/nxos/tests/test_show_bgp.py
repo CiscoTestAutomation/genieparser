@@ -35,8 +35,11 @@ from genie.libs.parser.nxos.show_bgp import ShowBgpProcessVrfAll,\
                                  ShowBgpL2vpnEvpnSummary,\
                                  ShowBgpL2vpnEvpnRouteType,\
                                  ShowBgpL2vpnEvpnNeighbors,\
-                                 ShowBgpL2vpnEvpnWord
-
+                                 ShowBgpL2vpnEvpnWord,\
+                                 ShowBgpIpMvpnRouteType,\
+                                 ShowBgpIpMvpnSaadDetail,\
+                                 ShowBgpL2vpnEvpn,\
+                                 ShowBgpIpMvpn
 
 # =========================================
 #  Unit test for 'show bgp process vrf all'
@@ -27707,6 +27710,1102 @@ class test_show_bgp_l2vpn_evpn_word(unittest.TestCase):
         obj = ShowBgpL2vpnEvpnWord(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(mac='0000.04b1.0000', count1='10')
+
+
+# =======================================================================
+#  Unit test for 'show bgp ipv4 mvpn route-type <route-type> vrf <vrf>'
+# ========================================================================
+class test_show_bgp_ip_mvpn_route_type(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'instance': {
+            'default': {
+                'vrf': {
+                    'default': {
+                        'vrf_name_out': 'default',
+                        'address_family': {
+                            'ipv4 mvpn': {
+                                'af_name': 'ipv4 mvpn',
+                                'table_version': '390',
+                                'router_id': '2.2.2.2',
+                                'rd': {
+                                    '2.2.2.2:3': {
+                                        'rd_val': '2.2.2.2:3',
+                                        'rd_vrf': '10100',
+                                        'prefix': {
+                                            '[5][100.101.1.3][238.8.4.101]/64': {
+                                                'nonipprefix': '[5][100.101.1.3][238.8.4.101]/64',
+                                                'path': {
+                                                    1: {
+                                                        'pathnr': 0,
+                                                        'statuscode': '*',
+                                                        'bestcode': '>',
+                                                        'typecode': 'l',
+                                                        'ipnexthop': '0.0.0.0',
+                                                        'weight': '32768',
+                                                        'origin': 'i',
+                                                        'localpref': '100',
+                                                    }
+                                                }
+                                            },
+                                            '[5][100.102.1.3][238.8.4.102]/64': {
+                                                'nonipprefix': '[5][100.102.1.3][238.8.4.102]/64',
+                                                'path': {
+                                                    1: {
+                                                        'pathnr': 0,
+                                                        'statuscode': '*',
+                                                        'bestcode': '>',
+                                                        'typecode': 'l',
+                                                        'ipnexthop': '0.0.0.0',
+                                                        'weight': '32768',
+                                                        'origin': 'i',
+                                                        'localpref': '100',
+                                                    }
+                                                }
+                                            },
+                                            '[5][100.101.2.3][238.8.4.101]/64': {
+                                                'nonipprefix': '[5][100.101.2.3][238.8.4.101]/64',
+                                                'path': {
+                                                    1: {
+                                                        'pathnr': 0,
+                                                        'statuscode': '*',
+                                                        'bestcode': '>',
+                                                        'typecode': 'l',
+                                                        'ipnexthop': '0.0.0.0',
+                                                        'weight': '32768',
+                                                        'origin': 'i',
+                                                        'localpref': '100',
+                                                    }
+                                                }
+                                            },
+                                            '[5][100.101.7.3][238.8.4.101]/64': {
+                                                'nonipprefix': '[5][100.101.7.3][238.8.4.101]/64',
+                                                'path': {
+                                                    1: {
+                                                        'pathnr': 0,
+                                                        'typecode': 'i',
+                                                        'statuscode': '*',
+                                                        'bestcode': '>',
+                                                        'ipnexthop': '7.7.7.7',
+                                                        'weight': '0',
+                                                        'origin': 'i',
+                                                        'localpref': '100',
+                                                    },
+                                                    2: {
+                                                        'pathnr': 0,
+                                                        'typecode': 'i',
+                                                        'statuscode': '*',
+                                                        'ipnexthop': '7.7.7.7',
+                                                        'weight': '0',
+                                                        'origin': 'i',
+                                                        'localpref': '100',
+                                                    }
+                                                }
+                                            },
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''
+     R2# show bgp ipv4 mvpn route-type 5 vrf all
+
+    BGP routing table information for VRF default, address family IPv4 MVPN
+    BGP table version is 390, Local Router ID is 2.2.2.2
+
+    Route Distinguisher: 2.2.2.2:3    (L3VNI 10100)
+    *>l[5][100.101.1.3][238.8.4.101]/64
+                          0.0.0.0                           100      32768 i
+    *>l[5][100.102.1.3][238.8.4.102]/64
+                          0.0.0.0                           100      32768 i
+    *>l[5][100.101.2.3][238.8.4.101]/64
+                          0.0.0.0                           100      32768 i
+    *>i[5][100.101.7.3][238.8.4.101]/64
+                          7.7.7.7                           100          0 i
+    * i                   7.7.7.7                           100          0 i
+
+    '''}
+
+
+    golden_output_1 = {'execute.return_value':'''
+        R2# show bgp ipv4 mvpn route-type 1 vrf all
+    BGP routing table information for VRF default, address family IPv4 MVPN
+    BGP table version is 90654, Local Router ID is 2.2.2.2
+    Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+    Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+    Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+       Network            Next Hop            Metric     LocPrf     Weight Path
+    '''}
+
+    def test_show_bgp_ipv4_mvpn_route_Type_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpIpMvpnRouteType(device=self.device)
+        parsed_output = obj.parse(route_type="5",vrf="all")
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_bgp_ipv4_mvpn_route_Type_golden_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowBgpIpMvpnRouteType(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(route_type="1", vrf="all")
+
+    def test_show_bgp_ipv4_mvpn_route_Type_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpIpMvpnRouteType(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(route_type="5",vrf="all")
+
+# =======================================================================
+#  Unit test for 'show bgp ipv4 mvpn sa-ad detail vrf <vrf>'
+# ========================================================================
+class test_show_bgp_ip_mvpn_saad_detail(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'instance': {
+            'default': {
+                'vrf': {
+                    'default': {
+                        'vrf_name_out': 'default',
+                        'address_family': {
+                            'ipv4 mvpn': {
+                                'af_name': 'ipv4 mvpn',
+                                'rd': {
+                                    '2.2.2.2:3': {
+                                        'rd_val': '2.2.2.2:3',
+                                        'rd_vrf': '10100',
+                                        'prefix': {
+                                            '[5][100.101.1.3][238.8.4.101]/64': {
+                                                'nonipprefix': '[5][100.101.1.3][238.8.4.101]/64',
+                                                'prefixversion': 388,
+                                                'totalpaths': 1,
+                                                'bestpathnr': 1,
+                                                'on_xmitlist': True,
+                                                'path': {
+                                                    1: {
+                                                        'pathnr': 0,
+                                                        'pathtype': 'local',
+                                                        'pathvalid': True,
+                                                        'pathbest': True,
+                                                        'pathnolabeledrnh': True,
+                                                        'ipnexthop': '0.0.0.0',
+                                                        'nexthopmetric': 0,
+                                                        'neighbor': '0.0.0.0',
+                                                        'neighborid': '2.2.2.2',
+                                                        'origin': 'igp',
+                                                        'localpref': 100,
+                                                        'weight': 32768,
+                                                        'extcommunity': ['RT:100:10100'],
+                                                        'advertisedto': ['4.4.4.4','5.5.5.5'],
+                                                    }
+                                                }
+                                            },
+                                            '[5][100.102.1.3][238.8.4.102]/64': {
+                                                'nonipprefix': '[5][100.102.1.3][238.8.4.102]/64',
+                                                'prefixversion': 409,
+                                                'totalpaths': 1,
+                                                'bestpathnr': 1,
+                                                'on_xmitlist': True,
+                                                'path': {
+                                                    1: {
+                                                        'pathnr': 0,
+                                                        'pathtype': 'local',
+                                                        'pathvalid': True,
+                                                        'pathbest': True,
+                                                        'pathnolabeledrnh': True,
+                                                        'ipnexthop': '0.0.0.0',
+                                                        'nexthopmetric': 0,
+                                                        'neighbor': '0.0.0.0',
+                                                        'neighborid': '2.2.2.2',
+                                                        'origin': 'igp',
+                                                        'localpref': 100,
+                                                        'weight': 32768,
+                                                        'extcommunity': ['RT:100:10100'],
+                                                        'advertisedto': ['4.4.4.4', '5.5.5.5'],
+                                                    }
+                                                }
+                                            },
+                                            '[5][100.101.2.3][238.8.4.101]/64': {
+                                                'nonipprefix': '[5][100.101.2.3][238.8.4.101]/64',
+                                                'prefixversion': 24,
+                                                'totalpaths': 1,
+                                                'bestpathnr': 1,
+                                                'on_xmitlist': True,
+                                                'path': {
+                                                    1: {
+                                                        'pathnr': 0,
+                                                        'pathtype': 'local',
+                                                        'pathvalid': True,
+                                                        'pathbest': True,
+                                                        'pathnolabeledrnh': True,
+                                                        'ipnexthop': '0.0.0.0',
+                                                        'nexthopmetric': 0,
+                                                        'neighbor': '0.0.0.0',
+                                                        'neighborid': '2.2.2.2',
+                                                        'origin': 'igp',
+                                                        'localpref': 100,
+                                                        'weight': 32768,
+                                                        'extcommunity': ['RT:100:10100'],
+                                                        'advertisedto': ['4.4.4.4', '5.5.5.5'],
+                                                    }
+                                                }
+                                            },
+                                            '[5][100.102.2.3][238.8.4.102]/64': {
+                                                'nonipprefix': '[5][100.102.2.3][238.8.4.102]/64',
+                                                'prefixversion': 58,
+                                                'totalpaths': 1,
+                                                'bestpathnr': 1,
+                                                'on_xmitlist': True,
+                                                'path': {
+                                                    1: {
+                                                        'pathnr': 0,
+                                                        'pathtype': 'local',
+                                                        'pathvalid': True,
+                                                        'pathbest': True,
+                                                        'pathnolabeledrnh': True,
+                                                        'ipnexthop': '0.0.0.0',
+                                                        'nexthopmetric': 0,
+                                                        'neighbor': '0.0.0.0',
+                                                        'neighborid': '2.2.2.2',
+                                                        'origin': 'igp',
+                                                        'localpref': 100,
+                                                        'weight': 32768,
+                                                        'extcommunity': ['RT:100:10100'],
+                                                        'advertisedto': ['4.4.4.4', '5.5.5.5'],
+                                                    }
+                                                }
+                                            },
+                                            '[5][100.101.1.4][238.8.4.101]/64': {
+                                                'nonipprefix': '[5][100.101.1.4][238.8.4.101]/64',
+                                                'prefixversion': 410,
+                                                'totalpaths': 1,
+                                                'bestpathnr': 1,
+                                                'on_xmitlist': True,
+                                                'path': {
+                                                    1: {
+                                                        'pathnr': 0,
+                                                        'pathtype': 'local',
+                                                        'pathvalid': True,
+                                                        'pathbest': True,
+                                                        'pathnolabeledrnh': True,
+                                                        'ipnexthop': '0.0.0.0',
+                                                        'nexthopmetric': 0,
+                                                        'neighbor': '0.0.0.0',
+                                                        'neighborid': '2.2.2.2',
+                                                        'origin': 'igp',
+                                                        'localpref': 100,
+                                                        'weight': 32768,
+                                                        'extcommunity': ['RT:100:10100'],
+                                                        'advertisedto': ['4.4.4.4', '5.5.5.5'],
+                                                    }
+                                                }
+                                            },
+                                            '[5][100.101.2.4][238.8.4.101]/64': {
+                                                'nonipprefix': '[5][100.101.2.4][238.8.4.101]/64',
+                                                'prefixversion': 7,
+                                                'totalpaths': 1,
+                                                'bestpathnr': 1,
+                                                'on_xmitlist': True,
+                                                'path': {
+                                                    1: {
+                                                        'pathnr': 0,
+                                                        'pathtype': 'local',
+                                                        'pathvalid': True,
+                                                        'pathbest': True,
+                                                        'pathnolabeledrnh': True,
+                                                        'ipnexthop': '0.0.0.0',
+                                                        'nexthopmetric': 0,
+                                                        'neighbor': '0.0.0.0',
+                                                        'neighborid': '2.2.2.2',
+                                                        'origin': 'igp',
+                                                        'localpref': 100,
+                                                        'weight': 32768,
+                                                        'extcommunity': ['RT:100:10100'],
+                                                        'advertisedto': ['4.4.4.4', '5.5.5.5'],
+                                                    }
+                                                }
+                                            },
+                                        }
+                                    },
+                                    '6.6.6.6:3': {
+                                        'rd_val': '6.6.6.6:3',
+                                        'prefix': {
+                                            '[5][100.101.6.3][238.8.4.101]/64': {
+                                                'nonipprefix': '[5][100.101.6.3][238.8.4.101]/64',
+                                                'prefixversion': 454,
+                                                'totalpaths': 2,
+                                                'bestpathnr': 0,
+                                                'on_xmitlist': True,
+                                                'path': {
+                                                    1: {
+                                                        'pathnr': 0,
+                                                        'pathtype': 'internal',
+                                                        'pathvalid': False,
+                                                        'pathbest': False,
+                                                        'pathnolabeledrnh': True,
+                                                        'ipnexthop': '6.6.6.6',
+                                                        'nexthop_status': 'inaccessible',
+                                                        'nexthopmetric': 4294967295,
+                                                        'neighbor': '4.4.4.4',
+                                                        'neighborid': '4.4.4.4',
+                                                        'origin': 'igp',
+                                                        'localpref': 100,
+                                                        'weight': 0,
+                                                        'extcommunity': ['RT:100:10100'],
+                                                        'originatorid': '6.6.6.6',
+                                                        'clusterlist': [
+                                                            '4.4.4.4'
+                                                                        ],
+                                                    },
+                                                    2: {
+                                                        'pathnr': 0,
+                                                        'pathtype': 'internal',
+                                                        'pathvalid': False,
+                                                        'pathbest': False,
+                                                        'pathnolabeledrnh': True,
+                                                        'ipnexthop': '6.6.6.6',
+                                                        'nexthop_status': 'inaccessible',
+                                                        'nexthopmetric': 4294967295,
+                                                        'neighbor': '5.5.5.5',
+                                                        'neighborid': '5.5.5.5',
+                                                        'origin': 'igp',
+                                                        'localpref': 100,
+                                                        'weight': 0,
+                                                        'extcommunity': ['RT:100:10100'],
+                                                        'originatorid': '6.6.6.6',
+                                                        'clusterlist': [
+                                                            '5.5.5.5'
+                                                        ],
+                                                    },
+                                                }
+                                            },
+                                            '[5][100.102.6.3][238.8.4.102]/64': {
+                                                'nonipprefix': '[5][100.102.6.3][238.8.4.102]/64',
+                                                'prefixversion': 456,
+                                                'totalpaths': 2,
+                                                'bestpathnr': 0,
+                                                'on_xmitlist': True,
+                                                'path': {
+                                                    1: {
+                                                        'pathnr': 0,
+                                                        'pathtype': 'internal',
+                                                        'pathvalid': False,
+                                                        'pathbest': False,
+                                                        'pathnolabeledrnh': True,
+                                                        'ipnexthop': '6.6.6.6',
+                                                        'nexthopmetric': 4294967295,
+                                                        'nexthop_status': 'inaccessible',
+                                                        'neighbor': '4.4.4.4',
+                                                        'neighborid': '4.4.4.4',
+                                                        'origin': 'igp',
+                                                        'localpref': 100,
+                                                        'weight': 0,
+                                                        'extcommunity': [
+                                                            'RT:100:10100'
+                                                        ],
+                                                        'originatorid': '6.6.6.6',
+                                                        'clusterlist': [
+                                                            '4.4.4.4'
+                                                        ],
+                                                    },
+                                                    2: {
+                                                        'pathnr': 0,
+                                                        'pathtype': 'internal',
+                                                        'pathvalid': False,
+                                                        'pathbest': False,
+                                                        'pathnolabeledrnh': True,
+                                                        'ipnexthop': '6.6.6.6',
+                                                        'nexthopmetric': 4294967295,
+                                                        'nexthop_status': 'inaccessible',
+                                                        'neighbor': '5.5.5.5',
+                                                        'neighborid': '5.5.5.5',
+                                                        'origin': 'igp',
+                                                        'localpref': 100,
+                                                        'weight': 0,
+                                                        'extcommunity': ['RT:100:10100'],
+                                                        'originatorid': '6.6.6.6',
+                                                        'clusterlist': [
+                                                            '5.5.5.5'
+                                                        ],
+                                                    },
+                                                },
+                                            },
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''
+R2# show bgp ipv4 mvpn sa-ad detail vrf all
+
+BGP routing table information for VRF default, address family IPv4 MVPN
+Route Distinguisher: 2.2.2.2:3    (L3VNI 10100)
+BGP routing table entry for [5][100.101.1.3][238.8.4.101]/64, version 388
+Paths: (1 available, best #1)
+Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
+
+  Advertised path-id 1
+  Path type: local, path is valid, is best path, no labeled nexthop
+  AS-Path: NONE, path locally originated
+    0.0.0.0 (metric 0) from 0.0.0.0 (2.2.2.2)
+      Origin IGP, MED not set, localpref 100, weight 32768
+      Extcommunity: RT:100:10100
+
+  Path-id 1 advertised to peers:
+   4.4.4.4         5.5.5.5        
+BGP routing table entry for [5][100.102.1.3][238.8.4.102]/64, version 409
+Paths: (1 available, best #1)
+Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
+
+  Advertised path-id 1
+  Path type: local, path is valid, is best path, no labeled nexthop
+  AS-Path: NONE, path locally originated
+    0.0.0.0 (metric 0) from 0.0.0.0 (2.2.2.2)
+      Origin IGP, MED not set, localpref 100, weight 32768
+      Extcommunity: RT:100:10100
+
+  Path-id 1 advertised to peers:
+    4.4.4.4        5.5.5.5        
+BGP routing table entry for [5][100.101.2.3][238.8.4.101]/64, version 24
+Paths: (1 available, best #1)
+Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
+
+  Advertised path-id 1
+  Path type: local, path is valid, is best path, no labeled nexthop
+  AS-Path: NONE, path locally originated
+    0.0.0.0 (metric 0) from 0.0.0.0 (2.2.2.2)
+      Origin IGP, MED not set, localpref 100, weight 32768
+      Extcommunity: RT:100:10100
+
+  Path-id 1 advertised to peers:
+    4.4.4.4        5.5.5.5        
+BGP routing table entry for [5][100.102.2.3][238.8.4.102]/64, version 58
+Paths: (1 available, best #1)
+Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
+
+  Advertised path-id 1
+  Path type: local, path is valid, is best path, no labeled nexthop
+  AS-Path: NONE, path locally originated
+   0.0.0.0 (metric 0) from 0.0.0.0 (2.2.2.2)
+     Origin IGP, MED not set, localpref 100, weight 32768
+     Extcommunity: RT:100:10100
+
+  Path-id 1 advertised to peers:
+   4.4.4.4         5.5.5.5        
+BGP routing table entry for [5][100.101.1.4][238.8.4.101]/64, version 410
+Paths: (1 available, best #1)
+Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
+
+  Advertised path-id 1
+  Path type: local, path is valid, is best path, no labeled nexthop
+  AS-Path: NONE, path locally originated
+    0.0.0.0 (metric 0) from 0.0.0.0 (2.2.2.2)
+      Origin IGP, MED not set, localpref 100, weight 32768
+      Extcommunity: RT:100:10100
+
+  Path-id 1 advertised to peers:
+    4.4.4.4            5.5.5.5        
+BGP routing table entry for [5][100.101.2.4][238.8.4.101]/64, version 7
+Paths: (1 available, best #1)
+Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
+
+  Advertised path-id 1
+  Path type: local, path is valid, is best path, no labeled nexthop
+  AS-Path: NONE, path locally originated
+    0.0.0.0 (metric 0) from 0.0.0.0 (2.2.2.2)
+      Origin IGP, MED not set, localpref 100, weight 32768
+      Extcommunity: RT:100:10100
+
+  Path-id 1 advertised to peers:
+    4.4.4.4            5.5.5.5        
+
+Route Distinguisher: 6.6.6.6:3
+BGP routing table entry for [5][100.101.6.3][238.8.4.101]/64, version 454
+Paths: (2 available, best #0)
+Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn, is not in HW
+
+  Path type: internal, path is invalid(rnh not resolved), not best reason: Neighbor Address, no labeled nexthop
+  AS-Path: NONE, path sourced internal to AS
+    6.6.6.6 (inaccessible, metric 4294967295) from 5.5.5.5 (5.5.5.5)
+      Origin IGP, MED not set, localpref 100, weight 0
+      Extcommunity: RT:100:10100
+      Originator: 6.6.6.6 Cluster list: 5.5.5.5 
+
+  Path type: internal, path is invalid(rnh not resolved), no labeled nexthop
+  AS-Path: NONE, path sourced internal to AS
+    6.6.6.6 (inaccessible, metric 4294967295) from 4.4.4.4 (4.4.4.4)
+      Origin IGP, MED not set, localpref 100, weight 0
+      Extcommunity: RT:100:10100
+      Originator: 6.6.6.6 Cluster list: 4.4.4.4 
+
+BGP routing table entry for [5][100.102.6.3][238.8.4.102]/64, version 456
+Paths: (2 available, best #0)
+Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn, is not in HW
+
+  Path type: internal, path is invalid(rnh not resolved), not best reason: Neighbor Address, no labeled nexthop
+  AS-Path: NONE, path sourced internal to AS
+    6.6.6.6 (inaccessible, metric 4294967295) from 5.5.5.5 (5.5.5.5)
+      Origin IGP, MED not set, localpref 100, weight 0
+      Extcommunity: RT:100:10100
+      Originator: 6.6.6.6 Cluster list: 5.5.5.5 
+
+  Path type: internal, path is invalid(rnh not resolved), no labeled nexthop
+  AS-Path: NONE, path sourced internal to AS
+    6.6.6.6 (inaccessible, metric 4294967295) from 4.4.4.4 (4.4.4.4)
+      Origin IGP, MED not set, localpref 100, weight 0
+      Extcommunity: RT:100:10100
+      Originator: 6.6.6.6 Cluster list: 4.4.4.4 
+
+'''}
+
+    def test_show_bgp_ipv4_mvpn_saad_detail_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpIpMvpnSaadDetail(device=self.device)
+        parsed_output = obj.parse(vrf="all")
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_bgp_ipv4_mvpn_saad_detail_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpIpMvpnSaadDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(vrf="all")
+
+
+# =======================================================================
+#  Unit test for 'show bgp l2vpn evpn vrf <vrf>'
+# ========================================================================
+class test_show_bgp_l2vpn_evpn(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    golden_parsed_output = {
+        "instance": {
+        "default": {
+            "vrf": {
+                "default": {
+                    "address_family": {
+                        "l2vpn evpn": {
+                            "af_name": "l2vpn evpn",
+                            "rd": {
+                                "2.2.2.2:3": {
+                                    "prefix": {
+                                        "[2]:[0]:[0]:[48]:[0006.0006.0003]:[32]:[100.101.6.3]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0006.0006.0003]:[32]:[100.101.6.3]/272",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "6.6.6.6",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "i",
+                                                    "weight": "0"
+                                                }
+                                            }
+                                        },
+                                        "[2]:[0]:[0]:[48]:[0006.0006.0003]:[32]:[100.102.6.3]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0006.0006.0003]:[32]:[100.102.6.3]/272",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "6.6.6.6",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "i",
+                                                    "weight": "0"
+                                                }
+                                            }
+                                        },
+                                        "[2]:[0]:[0]:[48]:[0006.0006.0004]:[32]:[100.101.6.4]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0006.0006.0004]:[32]:[100.101.6.4]/272",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "6.6.6.6",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "i",
+                                                    "weight": "0"
+                                                }
+                                            }
+                                        },
+                                        "[2]:[0]:[0]:[48]:[0006.0006.0004]:[32]:[100.102.6.4]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0006.0006.0004]:[32]:[100.102.6.4]/272",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "6.6.6.6",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "i",
+                                                    "weight": "0"
+                                                }
+                                            }
+                                        },
+                                        "[2]:[0]:[0]:[48]:[0007.0007.0003]:[32]:[100.101.7.3]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0007.0007.0003]:[32]:[100.101.7.3]/272",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "7.7.7.7",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "i",
+                                                    "weight": "0"
+                                                }
+                                            }
+                                        },
+                                        "[2]:[0]:[0]:[48]:[0007.0007.0003]:[32]:[100.102.7.3]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0007.0007.0003]:[32]:[100.102.7.3]/272",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "7.7.7.7",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "i",
+                                                    "weight": "0"
+                                                }
+                                            }
+                                        },
+                                        "[2]:[0]:[0]:[48]:[0007.0007.0004]:[32]:[100.101.7.4]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0007.0007.0004]:[32]:[100.101.7.4]/272",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "7.7.7.7",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "i",
+                                                    "weight": "0"
+                                                }
+                                            }
+                                        },
+                                        "[2]:[0]:[0]:[48]:[0007.0007.0004]:[32]:[100.102.7.4]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0007.0007.0004]:[32]:[100.102.7.4]/272",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "7.7.7.7",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "i",
+                                                    "weight": "0"
+                                                }
+                                            }
+                                        },
+                                        "[2]:[0]:[0]:[48]:[0008.0008.0003]:[32]:[100.101.8.3]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0008.0008.0003]:[32]:[100.101.8.3]/272",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "8.8.8.8",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "i",
+                                                    "weight": "0"
+                                                }
+                                            }
+                                        },
+                                        "[2]:[0]:[0]:[48]:[0008.0008.0003]:[32]:[100.102.8.3]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0008.0008.0003]:[32]:[100.102.8.3]/272",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "8.8.8.8",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "i",
+                                                    "weight": "0"
+                                                }
+                                            }
+                                        },
+                                        "[2]:[0]:[0]:[48]:[0008.0008.0004]:[32]:[100.101.8.4]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0008.0008.0004]:[32]:[100.101.8.4]/272",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "8.8.8.8",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "i",
+                                                    "weight": "0"
+                                                }
+                                            }
+                                        },
+                                        "[2]:[0]:[0]:[48]:[0008.0008.0004]:[32]:[100.102.8.4]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0008.0008.0004]:[32]:[100.102.8.4]/272",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "8.8.8.8",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "i",
+                                                    "weight": "0"
+                                                }
+                                            }
+                                        },
+                                        "[2]:[0]:[0]:[48]:[5e00.c005.0007]:[0]:[0.0.0.0]/216": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[5e00.c005.0007]:[0]:[0.0.0.0]/216",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "6.6.6.6",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "i",
+                                                    "weight": "0"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "rd_val": "2.2.2.2:3",
+                                    "rd_vrf": "10100"
+                                },
+                            },
+                            "router_id": "2.2.2.2",
+                            "table_version": "421384"
+                        }
+                    },
+                    "vrf_name_out": "default"
+                }
+            }
+        }
+    }
+}
+
+    golden_output = {'execute.return_value':"""
+    R2# show bgp l2vpn evpn vrf all
+BGP routing table information for VRF default, address family L2VPN EVPN
+BGP table version is 421384, Local Router ID is 2.2.2.2
+Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+   Network            Next Hop            Metric     LocPrf     Weight Path
+   Route Distinguisher: 2.2.2.2:3    (L3VNI 10100)
+*>i[2]:[0]:[0]:[48]:[5e00.c005.0007]:[0]:[0.0.0.0]/216
+                      6.6.6.6                           100          0 i
+*>i[2]:[0]:[0]:[48]:[0006.0006.0003]:[32]:[100.101.6.3]/272
+                      6.6.6.6                           100          0 i
+*>i[2]:[0]:[0]:[48]:[0006.0006.0003]:[32]:[100.102.6.3]/272
+                      6.6.6.6                           100          0 i
+*>i[2]:[0]:[0]:[48]:[0006.0006.0004]:[32]:[100.101.6.4]/272
+                      6.6.6.6                           100          0 i
+*>i[2]:[0]:[0]:[48]:[0006.0006.0004]:[32]:[100.102.6.4]/272
+                      6.6.6.6                           100          0 i
+*>i[2]:[0]:[0]:[48]:[0007.0007.0003]:[32]:[100.101.7.3]/272
+                      7.7.7.7                           100          0 i
+*>i[2]:[0]:[0]:[48]:[0007.0007.0003]:[32]:[100.102.7.3]/272
+                      7.7.7.7                           100          0 i
+*>i[2]:[0]:[0]:[48]:[0007.0007.0004]:[32]:[100.101.7.4]/272
+                      7.7.7.7                           100          0 i
+*>i[2]:[0]:[0]:[48]:[0007.0007.0004]:[32]:[100.102.7.4]/272
+                      7.7.7.7                           100          0 i
+*>i[2]:[0]:[0]:[48]:[0008.0008.0003]:[32]:[100.101.8.3]/272
+                      8.8.8.8                           100          0 i
+*>i[2]:[0]:[0]:[48]:[0008.0008.0003]:[32]:[100.102.8.3]/272
+                      8.8.8.8                           100          0 i
+*>i[2]:[0]:[0]:[48]:[0008.0008.0004]:[32]:[100.101.8.4]/272
+                      8.8.8.8                           100          0 i
+*>i[2]:[0]:[0]:[48]:[0008.0008.0004]:[32]:[100.102.8.4]/272
+                      8.8.8.8                           100          0 i
+
+"""}
+
+    def test_show_bgp_l2vpn_evpn_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpL2vpnEvpn(device=self.device)
+        parsed_output = obj.parse(vrf="all")
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_bgp_l2vpn_evpn_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpL2vpnEvpn(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(vrf="all")
+
+# =======================================================================
+#  Unit test for 'show bgp ipv4 mvpn'
+# ========================================================================
+class test_show_bgp_ipv4_mvpn(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value':"""
+    R2# show bgp ipv4 mvpn
+BGP routing table information for VRF default, address family IPv4 MVPN
+BGP table version is 90654, Local Router ID is 2.2.2.2
+Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+   Network            Next Hop            Metric     LocPrf     Weight Path
+Route Distinguisher: 2.2.2.2:3    (L3VNI 10100)
+*>l[5][100.101.1.3][238.8.4.101]/64
+                      0.0.0.0                           100      32768 i
+*>l[5][100.102.1.3][238.8.4.102]/64
+                      0.0.0.0                           100      32768 i
+*>l[5][100.101.2.3][238.8.4.101]/64
+                      0.0.0.0                           100      32768 i
+*>l[5][100.102.2.3][238.8.4.102]/64
+                      0.0.0.0                           100      32768 i
+*>l[5][100.101.1.4][238.8.4.101]/64
+                      0.0.0.0                           100      32768 i
+*>l[5][100.101.2.4][238.8.4.101]/64
+                      0.0.0.0                           100      32768 i
+
+Route Distinguisher: 2.2.2.2:4    (L3VNI 10200)
+*>l[5][200.201.1.3][238.8.4.201]/64
+                      0.0.0.0                           100      32768 i
+*>l[5][200.202.1.3][238.8.4.202]/64
+                      0.0.0.0                           100      32768 i
+*>l[5][200.201.2.3][238.8.4.201]/64
+                      0.0.0.0                           100      32768 i
+*>l[5][200.202.2.3][238.8.4.202]/64
+                      0.0.0.0                           100      32768 i
+
+"""}
+    golden_parsed_output = {
+    "instance": {
+        "default": {
+            "vrf": {
+                "default": {
+                    "address_family": {
+                        "ipv4 mvpn": {
+                            "af_name": "ipv4 mvpn",
+                            "rd": {
+                                "2.2.2.2:3": {
+                                    "prefix": {
+                                        "[5][100.101.1.3][238.8.4.101]/64": {
+                                            "nonipprefix": "[5][100.101.1.3][238.8.4.101]/64",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "0.0.0.0",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "l",
+                                                    "weight": "32768"
+                                                }
+                                            }
+                                        },
+                                        "[5][100.101.1.4][238.8.4.101]/64": {
+                                            "nonipprefix": "[5][100.101.1.4][238.8.4.101]/64",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "0.0.0.0",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "l",
+                                                    "weight": "32768"
+                                                }
+                                            }
+                                        },
+                                        "[5][100.101.2.3][238.8.4.101]/64": {
+                                            "nonipprefix": "[5][100.101.2.3][238.8.4.101]/64",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "0.0.0.0",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "l",
+                                                    "weight": "32768"
+                                                }
+                                            }
+                                        },
+                                        "[5][100.101.2.4][238.8.4.101]/64": {
+                                            "nonipprefix": "[5][100.101.2.4][238.8.4.101]/64",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "0.0.0.0",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "l",
+                                                    "weight": "32768"
+                                                }
+                                            }
+                                        },
+                                        "[5][100.102.1.3][238.8.4.102]/64": {
+                                            "nonipprefix": "[5][100.102.1.3][238.8.4.102]/64",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "0.0.0.0",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "l",
+                                                    "weight": "32768"
+                                                }
+                                            }
+                                        },
+                                        "[5][100.102.2.3][238.8.4.102]/64": {
+                                            "nonipprefix": "[5][100.102.2.3][238.8.4.102]/64",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "0.0.0.0",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "l",
+                                                    "weight": "32768"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "rd_val": "2.2.2.2:3",
+                                    "rd_vrf": "10100"
+                                },
+                                "2.2.2.2:4": {
+                                    "prefix": {
+                                        "[5][200.201.1.3][238.8.4.201]/64": {
+                                            "nonipprefix": "[5][200.201.1.3][238.8.4.201]/64",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "0.0.0.0",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "l",
+                                                    "weight": "32768"
+                                                }
+                                            }
+                                        },
+                                        "[5][200.201.2.3][238.8.4.201]/64": {
+                                            "nonipprefix": "[5][200.201.2.3][238.8.4.201]/64",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "0.0.0.0",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "l",
+                                                    "weight": "32768"
+                                                }
+                                            }
+                                        },
+                                        "[5][200.202.1.3][238.8.4.202]/64": {
+                                            "nonipprefix": "[5][200.202.1.3][238.8.4.202]/64",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "0.0.0.0",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "l",
+                                                    "weight": "32768"
+                                                }
+                                            }
+                                        },
+                                        "[5][200.202.2.3][238.8.4.202]/64": {
+                                            "nonipprefix": "[5][200.202.2.3][238.8.4.202]/64",
+                                            "path": {
+                                                1: {
+                                                    "bestcode": ">",
+                                                    "ipnexthop": "0.0.0.0",
+                                                    "localpref": "100",
+                                                    "origin": "i",
+                                                    "pathnr": 0,
+                                                    "statuscode": "*",
+                                                    "typecode": "l",
+                                                    "weight": "32768"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "rd_val": "2.2.2.2:4",
+                                    "rd_vrf": "10200"
+                                }
+                            },
+                            "router_id": "2.2.2.2",
+                            "table_version": "90654"
+                        }
+                    },
+                    "vrf_name_out": "default"
+                }
+            }
+        }
+    }
+}
+    def test_show_bgp_ipv4_mvpn_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpIpMvpn(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_bgp_ipv4_mvpn_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpIpMvpn(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
 
 if __name__ == '__main__':
     unittest.main()
