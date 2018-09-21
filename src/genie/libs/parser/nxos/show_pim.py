@@ -1018,17 +1018,9 @@ class ShowPimRp(ShowPimRpSchema):
                             ' +expires: +(?P<expires>[\w\d\S][^,]+)(?P<comma>[\,]+)?$')
             m = p8.match(line)
             if m:
-                if 'vrf' not in parsed_output:
-                    parsed_output['vrf'] = {}
-                if vrf_name not in parsed_output['vrf']:
-                    parsed_output['vrf'][vrf_name] = {}
-                if 'address_family' not in parsed_output['vrf'][vrf_name]:
-                    parsed_output['vrf'][vrf_name]['address_family'] = {}
-                if af_name not in parsed_output['vrf'][vrf_name]['address_family']:
-                    parsed_output['vrf'][vrf_name]['address_family'][af_name] = {}
+                rp_dict = parsed_output.setdefault('vrf', {}).setdefault(vrf_name, {})\
+                    .setdefault('address_family', {}).setdefault(af_name, {}).setdefault('rp', {})
 
-                if 'rp' not in parsed_output['vrf'][vrf_name]['address_family'][af_name]:
-                    parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp'] = {}
                 rp_address = m.groupdict()['rp'].replace('*','')
                 df_ordinal = m.groupdict()['df_ordinal']
                 uptime = m.groupdict()['uptime']
@@ -1040,17 +1032,9 @@ class ShowPimRp(ShowPimRpSchema):
             p8_1 = re.compile(r'^\s*RP: +(?P<rp>[\w\d\S]+), +\(+(?P<df_ordinal>[\d\S]+)+\),$')
             m = p8_1.match(line)
             if m:
-                if 'vrf' not in parsed_output:
-                    parsed_output['vrf'] = {}
-                if vrf_name not in parsed_output['vrf']:
-                    parsed_output['vrf'][vrf_name] = {}
-                if 'address_family' not in parsed_output['vrf'][vrf_name]:
-                    parsed_output['vrf'][vrf_name]['address_family'] = {}
-                if af_name not in parsed_output['vrf'][vrf_name]['address_family']:
-                    parsed_output['vrf'][vrf_name]['address_family'][af_name] = {}
+                rp_dict = parsed_output.setdefault('vrf', {}).setdefault(vrf_name, {})\
+                    .setdefault('address_family', {}).setdefault(af_name, {}).setdefault('rp', {})
 
-                if 'rp' not in parsed_output['vrf'][vrf_name]['address_family'][af_name]:
-                    parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp'] = {}
                 rp_address = m.groupdict()['rp'].replace('*','')
                 df_ordinal = m.groupdict()['df_ordinal']
                 connection_flag = False
@@ -1085,21 +1069,25 @@ class ShowPimRp(ShowPimRpSchema):
                 continue 
 
             # RP-source: 2.2.2.2 (A), 2.2.2.2 (B),
+            # RP-source: 6.6.6.6 (A), 2.2.2.2 (B), (local), 
             p8_4 = re.compile(r'^\s*RP\-source: +(?P<rp_source>\S+) +\(+(?P<info_source_type>\w+)+\),')
             m = p8_4.match(line)
             if m:
-                p = re.compile(r'(?P<rp_source>\S+) +\(+(?P<info_source_type>\w+)+\),')
+                p = re.compile(r'(?P<rp_source>\S+) +(?P<info_source_type>[\w\(\)\,\s]+),')
                 m = p.findall(line)
                 info_source_type_conversions = []
                 rp_sources = []
                 for rp_source, info_source_type in m:
-                    rp_sources.append(rp_source)
-                    if info_source_type.lower() == 'local':
-                        info_source_type_conversions.append('static')
-                    if info_source_type.lower() == 'b':
-                        info_source_type_conversions.append('bootstrap')
-                    if info_source_type.lower() == 'a':
-                        info_source_type_conversions.append('autorp')
+                    conversions = []
+                    if 'local' in info_source_type.lower():
+                        conversions.append('static')
+                    if '(b)' in info_source_type.lower():
+                        conversions.append('bootstrap')
+                    if '(a)' in info_source_type.lower():
+                        conversions.append('autorp')
+
+                    rp_sources.extend([rp_source] * len(conversions))
+                    info_source_type_conversions.extend(conversions)
                 continue 
 
             # group ranges:
@@ -1155,163 +1143,114 @@ class ShowPimRp(ShowPimRpSchema):
                 except Exception:
                     expires = m.groupdict()['expires']
 
-                # rp_list
-                if 'rp_list' not in parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']:
-                    parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']['rp_list'] = {}
-
+                # rp_list dict
+                rp_list_d = rp_dict.setdefault('rp_list', {})
                 for info_source_type_conversion, rp_source in zip(info_source_type_conversions, rp_sources):
 
                     rp_address_source_type = rp_address + " " + mode + ' ' + info_source_type_conversion
-                    if rp_address_source_type not in parsed_output['vrf'][vrf_name]['address_family']\
-                            [af_name]['rp']['rp_list']:
-                        parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                            ['rp_list'][rp_address_source_type] = {}
 
-                    parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                    ['rp_list'][rp_address_source_type]['address'] = rp_address
+                    rp_list_dict = rp_list_d.setdefault(rp_address_source_type, {})
 
-                    parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp'] \
-                        ['rp_list'][rp_address_source_type]['info_source_type'] = info_source_type_conversion
+                    rp_list_dict['address'] = rp_address
+
+                    rp_list_dict['info_source_type'] = info_source_type_conversion
 
                     if rp_source:
-                        parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                        ['rp_list'][rp_address_source_type]['info_source_address'] = rp_source
+                        rp_list_dict['info_source_address'] = rp_source
 
-                    parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                        ['rp_list'][rp_address_source_type]['up_time'] = uptime
+                    rp_list_dict['up_time'] = uptime
 
                     if expires:
-                        parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp'] \
-                            ['rp_list'][rp_address_source_type]['expiration'] = expires
+                        rp_list_dict['expiration'] = expires
 
                     if df_ordinal:
-                        parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp'] \
-                            ['rp_list'][rp_address_source_type]['df_ordinal'] = int(df_ordinal)
+                        rp_list_dict['df_ordinal'] = int(df_ordinal)
 
                     if priority:
-                        parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                            ['rp_list'][rp_address_source_type]['priority'] = priority
+                        rp_list_dict['priority'] = priority
 
-                    parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp'] \
-                        ['rp_list'][rp_address_source_type]['mode'] = mode
+                    rp_list_dict['mode'] = mode
 
-                    parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp'] \
-                        ['rp_list'][rp_address_source_type]['group_ranges'] = group_ranges
+                    # append to the list if group-ranges have many entries
+                    group_range = rp_list_dict.get('group_ranges', '')
+                    group_range = set(group_range.split())
+                    group_range.add(group_ranges)
+                    rp_list_dict['group_ranges'] = ' '.join(sorted(group_range))
 
                     # static
                     if info_source_type_conversion == 'static':
-                        if 'static_rp' not in parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']:
-                            parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']['static_rp'] = {}
-                        if rp_address not in parsed_output['vrf'][vrf_name]['address_family'][af_name]\
-                            ['rp']['static_rp']:
-                            parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                                ['static_rp'][rp_address] = {}
                         s_mode = mode.lower()
-                        if s_mode not in parsed_output['vrf'][vrf_name]['address_family'][af_name]\
-                            ['rp']['static_rp'][rp_address]:
-                            parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                                ['static_rp'][rp_address][s_mode] = {}
-                        parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                            ['static_rp'][rp_address][s_mode]['policy_name'] = group_ranges
+                        static_rp_dict = rp_dict.setdefault('static_rp', {})\
+                            .setdefault(rp_address, {}).setdefault(s_mode, {})
+
+                        static_rp_dict['policy_name'] = group_ranges
                         if route_map:                                
-                            parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                                ['static_rp'][rp_address][s_mode]['route_map'] = route_map
+                            static_rp_dict['route_map'] = route_map
 
                     # autorp
                     if info_source_type_conversion == 'autorp':
-                        if 'autorp' not in parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']:
-                            parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']['autorp'] = {}
-                        if 'send_rp_announce' not in parsed_output['vrf'][vrf_name]['address_family'][af_name]\
-                            ['rp']['autorp']:
-                            parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                                ['autorp']['send_rp_announce'] = {}
+                        autorp_dict = rp_dict.setdefault('autorp', {}).setdefault('send_rp_announce', {})
                         if rp_source:
-                            parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                                ['autorp']['send_rp_announce']['rp_source'] = rp_source
+                            autorp_dict['rp_source'] = rp_source
                         
-                        parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                            ['autorp']['send_rp_announce']['scope'] = int(df_ordinal)
+                        autorp_dict['scope'] = int(df_ordinal)
 
-                        parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                            ['autorp']['send_rp_announce']['bidir'] = True if mode == 'BIDIR' else False
+                        autorp_dict['bidir'] = True if mode == 'BIDIR' else False
 
-                        parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                            ['autorp']['send_rp_announce']['group_list'] = group_ranges
+                        autorp_dict['group_list'] = group_ranges
 
-                        parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                            ['autorp']['send_rp_announce']['group'] = group_ranges.split('/')[0]
+                        autorp_dict['group'] = group_ranges.split('/')[0]
 
                     # rp_mappings
-                    if 'rp_mappings' not in parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']:
-                        parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']['rp_mappings'] = {}
-
                     key = group_ranges + ' ' + rp_address + ' ' + info_source_type_conversion
-                    if key not in parsed_output['vrf'][vrf_name]['address_family']\
-                            [af_name]['rp']['rp_mappings']:
-                        parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                            ['rp_mappings'][key] = {}
 
-                    parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                    ['rp_mappings'][key]['rp_address'] = rp_address
+                    rp_mappings_dict = rp_dict.setdefault('rp_mappings', {}).setdefault(key, {})
 
-                    parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp'] \
-                        ['rp_mappings'][key]['protocol'] = info_source_type_conversion
+                    rp_mappings_dict['rp_address'] = rp_address
 
-                    parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                        ['rp_mappings'][key]['group'] = group_ranges
+                    rp_mappings_dict['protocol'] = info_source_type_conversion
 
-                    parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                        ['rp_mappings'][key]['up_time'] = uptime
+                    rp_mappings_dict['group'] = group_ranges
+
+                    rp_mappings_dict['up_time'] = uptime
 
                     if expires:
-                        parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp'] \
-                            ['rp_mappings'][key]['expiration'] = expires
+                        rp_mappings_dict['expiration'] = expires
 
-                    # rp  bsr  bsr_rp_candidate_address]
+                    # rp  bsr  bsr_rp_candidate_address
                     if info_source_type_conversion == 'bootstrap' and rp_source:
-                        if 'bsr' not in parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']:
-                            parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']['bsr'] = {}
-                        if 'bsr_address' not in parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']['bsr']:
-                            parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']['bsr']['bsr_address'] = {}
-                        if rp_source not in parsed_output['vrf'][vrf_name]['address_family'][af_name]\
-                            ['rp']['bsr']['bsr_address']:
-                            parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                                ['bsr']['bsr_address'][rp_source] = {}
+                        bsr_dict = rp_dict.setdefault('bsr', {}).setdefault('bsr_address', {}).setdefault(rp_source, {})
 
-                        parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                            ['bsr']['bsr_address'][rp_source]['address'] = rp_source
+                        bsr_dict['address'] = rp_source
 
-                        parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                            ['bsr']['bsr_address'][rp_source]['policy'] = group_ranges
+                        # append to the list if group-ranges have many entries
+                        group_range = bsr_dict.get('policy', '')
+                        group_range = set(group_range.split())
+                        group_range.add(group_ranges)
+                        bsr_dict['policy'] = ' '.join(sorted(group_range))
 
-                        parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                            ['bsr']['bsr_address'][rp_source]['mode'] = mode
+                        bsr_dict['mode'] = mode
 
-                        parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                            ['bsr']['bsr_address'][rp_source]['priority'] = priority
+                        bsr_dict['priority'] = priority
+
                         if expires:
-                            parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                                ['bsr']['rp_candidate_next_advertisement'] = expires
+                            rp_dict.setdefault('bsr', {}).setdefault('rp_candidate_next_advertisement', expires)
 
 
                     # rp  bsr  rp
                     if info_source_type_conversion == 'bootstrap':
-                        if 'bsr' not in parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']:
-                            parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']['bsr'] = {}
-                        if 'rp' not in parsed_output['vrf'][vrf_name]['address_family'][af_name]\
-                            ['rp']['bsr']:
-                            parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                                ['bsr']['rp'] = {}
+                        bsr_rp_dict = rp_dict.setdefault('bsr', {}).setdefault('rp', {})
 
                         if rp_source:
-                            parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                                ['bsr']['rp']['rp_address'] = rp_source
+                            bsr_rp_dict['rp_address'] = rp_source
 
-                        parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                            ['bsr']['rp']['group_policy'] = group_ranges
+                        # append to the list if group-ranges have many entries
+                        group_range = bsr_rp_dict.get('group_policy', '')
+                        group_range = set(group_range.split())
+                        group_range.add(group_ranges)
+                        bsr_rp_dict['group_policy'] = ' '.join(sorted(group_range))
 
-                        parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                            ['bsr']['rp']['up_time'] = uptime
+                        bsr_rp_dict['up_time'] = uptime
                 continue
 
             #    priority: 111, hash-length: 30
@@ -4141,6 +4080,27 @@ class ShowRunningConfigPimSchema(MetaParser):
                                 },
                                 Optional('listener'): bool, #autorp_listener
                             },
+                            Optional('bsr'): {
+                                Any(): { # bsr_rp_candidate_interface
+                                    Optional('interface'): str, # bsr_rp_candidate_interface
+                                    Optional('policy'): str, # bsr_rp_candidate_group_list
+                                    Optional('mode'): str, # bsr_rp_candidate_bidir
+                                    Optional('priority'): int, # bsr_rp_candidate_priority
+                                    Optional('interval'): int, # bsr_rp_candidate_interval
+                                    Optional('route_map'): str, # bsr_rp_candidate_route_map
+                                    Optional('prefix_list'): str, # bsr_rp_candidate_prefix_list
+                                },
+                            },
+                            Optional('static_rp'): {
+                                Any(): { # static_rp_addressl
+                                    Optional('policy_name'): str, # static_rp_group_list
+                                    Optional('override'): bool, # static_rp_override
+                                    Optional('policy'): int, # static_rp_policy
+                                    Optional('bidir'): bool, # static_rp_bidir
+                                    Optional('route_map'): str, # static_rp_route_map
+                                    Optional('prefix_list'): str, # static_rp_prefix_list
+                                },
+                            }
                         }
                     }
                 }
@@ -4201,12 +4161,19 @@ class ShowRunningConfigPim(ShowRunningConfigPimSchema):
 
         # ip pim rp-address 6.6.6.6 group-list 234.0.0.0/8
         # ip pim rp-address 6.6.6.6 group-list 239.1.1.0/24 bidir
-        # ip pim rp-address 26.26.26.26 group-list 237.0.0.0/8
-        # ip pim rp-address 126.126.126.126 group-list 238.0.0.0/8
-        p3 = re.compile(r'^$')
+        p3 = re.compile(r'^(?P<af>ip|ipv6) +pim +rp\-address +(?P<static_rp_address>[\w\.\:]+) +'
+                         '((group\-list +(?P<static_rp_group_list>[\w\.]+\/\d+))|'
+                         '(route\-map +(?P<static_rp_route_map>\w+))|'
+                         '(prefix\-list +(?P<static_rp_prefix_list>\w+)))'
+                         '( *(?P<dummy>.*))?$$')
 
         # ip pim bsr rp-candidate loopback0 group-list 235.0.0.0/8 priority 128
-        p4 = re.compile(r'^$')
+        # ip pim rp-candidate Ethernet1/1 group-list 239.0.0.0/24 priority 10 interval 60 bidir
+        p4 = re.compile(r'^(?P<af>ip|ipv6) +pim( *bsr)? +rp\-candidate +(?P<bsr_rp_candidate_interface>[\w\/\.\-]+) +'
+                         '((group\-list +(?P<bsr_rp_candidate_group_list>[\w\.]+\/\d+))|'
+                         '(route\-map +(?P<bsr_rp_candidate_route_map>\w+))|'
+                         '(prefix\-list +(?P<bsr_rp_candidate_prefix_list>\w+)))'
+                         '( *(?P<dummy>.*))?$')
 
         # ip pim send-rp-announce loopback0 group-list 236.0.0.0/8
         # ----  ipv6 not supported -----
@@ -4266,6 +4233,67 @@ class ShowRunningConfigPim(ShowRunningConfigPimSchema):
             if m:
                 pim_dict['feature_pim6'] = True
                 continue
+           
+            # ip pim rp-address 6.6.6.6 group-list 234.0.0.0/8
+            # ip pim rp-address 6.6.6.6 group-list 239.1.1.0/24 bidir
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                af = 'ipv4' if groups['af'] == 'ip' else 'ipv6'
+
+                rp_dict = vrf_dict.setdefault('address_family', {}).setdefault(af, {})\
+                          .setdefault('rp', {}).setdefault('static_rp', {})\
+                            .setdefault(groups['static_rp_address'], {})
+
+                rp_dict.setdefault('policy_name', groups['static_rp_group_list']) \
+                    if groups['static_rp_group_list'] else None
+
+                rp_dict.setdefault('route_map', groups['static_rp_route_map']) \
+                    if groups['static_rp_route_map'] else None
+
+                rp_dict.setdefault('prefix_list', groups['static_rp_prefix_list']) \
+                    if groups['static_rp_prefix_list'] else None
+
+                if 'bidir' in str(groups['dummy']):
+                    rp_dict['bidir'] = True
+                if 'override' in str(groups['dummy']):
+                    rp_dict['override'] = True
+                continue
+
+            # ip pim bsr rp-candidate loopback0 group-list 235.0.0.0/8 priority 128
+            # ip pim rp-candidate loopback10 route-map filtera bidir
+            # ip pim rp-candidate loopback10 prefix-list pfxlista priority 10
+            # ip pim rp-candidate Ethernet1/1 group-list 239.0.0.0/24 priority 10 interval 60 bidir
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                af = 'ipv4' if groups['af'] == 'ip' else 'ipv6'
+
+                rp_dict = vrf_dict.setdefault('address_family', {}).setdefault(af, {})\
+                          .setdefault('rp', {}).setdefault('bsr', {})\
+                            .setdefault(groups['bsr_rp_candidate_interface'], {})
+
+                rp_dict['interface'] = groups['bsr_rp_candidate_interface']
+
+                rp_dict.setdefault('policy', groups['bsr_rp_candidate_group_list']) \
+                    if groups['bsr_rp_candidate_group_list'] else None
+
+                rp_dict.setdefault('route_map', groups['bsr_rp_candidate_route_map']) \
+                    if groups['bsr_rp_candidate_route_map'] else None
+
+                rp_dict.setdefault('prefix_list', groups['bsr_rp_candidate_prefix_list']) \
+                    if groups['bsr_rp_candidate_prefix_list'] else None
+
+                interval = re.search('interval +(\d+)', groups['dummy'])
+                priority = re.search('priority +(\d+)', groups['dummy'])
+                bidir = re.search('bidir', groups['dummy'])
+                if interval:
+                    rp_dict['interval'] = int(interval.groups()[0])
+                if priority:
+                    rp_dict['priority'] = int(priority.groups()[0])
+                if bidir:
+                    rp_dict['mode'] = 'bidir'
+                continue
 
             # ip pim send-rp-announce loopback0 group-list 236.0.0.0/8 bidir interval 60 scope 43
             # ip pim send-rp-announce 2.2.2.2 prefix-list abc bidir
@@ -4288,9 +4316,9 @@ class ShowRunningConfigPim(ShowRunningConfigPimSchema):
                 scope = re.search('scope +(\d+)', groups['dummy'])
                 bidir = re.search('bidir', groups['dummy'])
                 if interval:
-                    rp_dict['interval'] = int(ret.groups()[0])
+                    rp_dict['interval'] = int(interval.groups()[0])
                 if scope:
-                    rp_dict['scope'] = int(ret.groups()[0])
+                    rp_dict['scope'] = int(scope.groups()[0])
                 if bidir:
                     rp_dict['bidir'] = True
                 continue

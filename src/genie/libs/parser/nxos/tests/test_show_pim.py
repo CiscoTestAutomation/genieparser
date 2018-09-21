@@ -3079,24 +3079,114 @@ class test_show_running_config_pim_pim6(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     parsed_output = {
-        'feature_pim': True,
-        'feature_pim6': True,
-        'vrf': {'VRF1': {'address_family': {'ipv4': {'rp': {'autorp': {'send_rp_announce': {'group_list': '236.0.0.0/8',
-                                                                                           'interface': 'loopback11'},
-                                                                      'send_rp_discovery': {'interface': 'loopback11'}}}}}},
-               'default': {'address_family': {'ipv4': {'rp': {'autorp': {'send_rp_announce': {'group_list': '236.0.0.0/8',
-                                                                                              'interface': 'loopback0'},
-                                                                         'send_rp_discovery': {'interface': 'loopback0'}}}}}}}
+        "feature_pim6": True,
+        "vrf": {
+             "VRF1": {
+                  "address_family": {
+                       "ipv4": {
+                            "rp": {
+                                 "bsr": {
+                                      "loopback10": {
+                                           "interface": "loopback10",
+                                           "route_map": "filtera"
+                                      }
+                                 },
+                                 "autorp": {
+                                      "send_rp_discovery": {
+                                           "interface": "loopback11"
+                                      },
+                                      "send_rp_announce": {
+                                           "group_list": "236.0.0.0/8",
+                                           "interface": "loopback11"
+                                      }
+                                 }
+                            }
+                       }
+                  }
+             },
+             "default": {
+                  "address_family": {
+                       "ipv4": {
+                            "rp": {
+                                 "bsr": {
+                                      "Ethernet1/1": {
+                                           "interface": "Ethernet1/1",
+                                           "priority": 10,
+                                           "policy": "239.0.0.0/24",
+                                           "interval": 60,
+                                           "mode": "bidir"
+                                      }
+                                 },
+                                 "autorp": {
+                                      "send_rp_discovery": {
+                                           "interface": "loopback0"
+                                      },
+                                      "send_rp_announce": {
+                                           "group_list": "236.0.0.0/8",
+                                           "interface": "loopback0"
+                                      }
+                                 }
+                            }
+                       }
+                  }
+             }
+        },
+        "feature_pim": True
     }
 
     parsed_output_v4 = {
-        'feature_pim': True,
-        'vrf': {'VRF1': {'address_family': {'ipv4': {'rp': {'autorp': {'send_rp_announce': {'group_list': '236.0.0.0/8',
-                                                                                           'interface': 'loopback11'},
-                                                                      'send_rp_discovery': {'interface': 'loopback11'}}}}}},
-               'default': {'address_family': {'ipv4': {'rp': {'autorp': {'send_rp_announce': {'group_list': '236.0.0.0/8',
-                                                                                              'interface': 'loopback0'},
-                                                                         'send_rp_discovery': {'interface': 'loopback0'}}}}}}}
+        "vrf": {
+             "VRF1": {
+                  "address_family": {
+                       "ipv4": {
+                            "rp": {
+                                 "bsr": {
+                                      "loopback10": {
+                                           "interface": "loopback10",
+                                           "route_map": "filtera"
+                                      }
+                                 },
+                                 "autorp": {
+                                      "send_rp_discovery": {
+                                           "interface": "loopback11"
+                                      },
+                                      "send_rp_announce": {
+                                           "group_list": "236.0.0.0/8",
+                                           "interface": "loopback11"
+                                      }
+                                 }
+                            }
+                       }
+                  }
+             },
+             "default": {
+                  "address_family": {
+                       "ipv4": {
+                            "rp": {
+                                 "bsr": {
+                                      "Ethernet1/1": {
+                                           "interface": "Ethernet1/1",
+                                           "priority": 10,
+                                           "policy": "239.0.0.0/24",
+                                           "interval": 60,
+                                           "mode": "bidir"
+                                      }
+                                 },
+                                 "autorp": {
+                                      "send_rp_discovery": {
+                                           "interface": "loopback0"
+                                      },
+                                      "send_rp_announce": {
+                                           "group_list": "236.0.0.0/8",
+                                           "interface": "loopback0"
+                                      }
+                                 }
+                            }
+                       }
+                  }
+             }
+        },
+        "feature_pim": True
     }
     parsed_output_v6 = {
         'feature_pim6': True, 'vrf': {'VRF1': {}, 'default': {}}
@@ -3121,10 +3211,12 @@ feature pim
 
 ip pim send-rp-announce loopback0 group-list 236.0.0.0/8
 ip pim send-rp-discovery loopback0
+ip pim rp-candidate Ethernet1/1 group-list 239.0.0.0/24 priority 10 interval 60 bidir
 
 vrf context VRF1
   ip pim send-rp-announce loopback11 group-list 236.0.0.0/8
   ip pim send-rp-discovery loopback11
+  ip pim rp-candidate loopback10 route-map filtera
     '''}
 
     golden_output_v6 = {'execute.return_value': '''
@@ -3168,7 +3260,6 @@ ip pim send-rp-announce loopback0 group-list 236.0.0.0/8
         outputs['show running-config pim6'] = self.golden_output_v6['execute.return_value']
         self.device.execute = Mock()
         self.device.execute.side_effect = mapper
-
         obj = ShowRunningConfigPim(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.parsed_output)
