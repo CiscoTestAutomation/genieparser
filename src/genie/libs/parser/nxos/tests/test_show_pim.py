@@ -1777,8 +1777,8 @@ class test_show_ip_pim_vrf_detail(unittest.TestCase):
                 }
             }
         }
+      }
     }
-  }
 
     golden_output_vrf_detail_3 ={'execute.return_value':'''
 R1_nx# show ip pim vrf all detail
@@ -2309,7 +2309,7 @@ class test_show_ip_pim_rp(unittest.TestCase):
                                           "mode": "BIDIR",
                                           "group_ranges": "226.0.0.0/8",
                                           "df_ordinal": 0,
-                                          "expiration": "never",
+                                          "expiration": "00:02:24",
                                           "up_time": "04:30:45",
                                           "priority": 255,
                                           "address": "200.12.0.2",
@@ -2339,7 +2339,7 @@ class test_show_ip_pim_rp(unittest.TestCase):
                                           "protocol": "autorp",
                                           "rp_address": "200.12.0.2",
                                           "up_time": "04:30:45",
-                                          "expiration": "never"
+                                          "expiration": "00:02:24"
                                      }
                                 }
                            }

@@ -1026,6 +1026,7 @@ class ShowPimRp(ShowPimRpSchema):
                 uptime = m.groupdict()['uptime']
                 expires = m.groupdict()['expires']
                 connection_flag = False
+                code = None
                 continue
 
             # RP: 55.55.55.51, (0), 
@@ -1038,6 +1039,7 @@ class ShowPimRp(ShowPimRpSchema):
                 rp_address = m.groupdict()['rp'].replace('*','')
                 df_ordinal = m.groupdict()['df_ordinal']
                 connection_flag = False
+                code = None
                 continue
 
             # uptime: 1d13h   priority: 255, 
@@ -1057,6 +1059,7 @@ class ShowPimRp(ShowPimRpSchema):
                                ' *(group-map: +(?P<route_map>[\w\-]+),)?$')
             m = p8_3.match(line)
             if m:
+                code = None
                 rp_sources = [m.groupdict()['rp_source']]
                 route_map = m.groupdict()['route_map']
                 info_source_type = m.groupdict()['info_source_type']
@@ -1088,6 +1091,7 @@ class ShowPimRp(ShowPimRpSchema):
 
                     rp_sources.extend([rp_source] * len(conversions))
                     info_source_type_conversions.extend(conversions)
+                code = None
                 continue 
 
             # group ranges:
@@ -1116,11 +1120,13 @@ class ShowPimRp(ShowPimRpSchema):
 
                 if info_source_type.lower() == 'local':
                     info_source_type_conversions = ['static']
+                    code = 'static'
                 if info_source_type.lower() == 'b':
                     info_source_type_conversions = ['bootstrap']
+                    code = 'bootstrap'
                 if info_source_type.lower() == 'a':
                     info_source_type_conversions = ['autorp']
-
+                    code = 'autorp'
                 continue
 
             #      224.0.0.0/4
@@ -1129,9 +1135,10 @@ class ShowPimRp(ShowPimRpSchema):
             # 226.0.0.0/8   (bidir)  ,  expires: 00:02:24 (A)
             p10 = re.compile(r'^\s*(?P<group_ranges>[\w\/\.\:\s]+)'
                              '( +\((?P<bidir>\w+)\))?'
-                             '( *, *expires: (?P<expires>[\w\.\:]+)( *\((\w+)\))?)?$')
+                             '( *, *expires: (?P<expires>[\w\.\:]+)( *\((?P<code>\w+)\))?)?$')
             m = p10.match(line)
             if m and connection_flag:
+                expire_dict = {}
                 group_ranges = m.groupdict()['group_ranges'].strip()
                 if  m.groupdict()['bidir'] and 'bidir' in m.groupdict()['bidir'].lower():
                     mode = 'BIDIR'
@@ -1139,9 +1146,21 @@ class ShowPimRp(ShowPimRpSchema):
                     mode = 'SM'
 
                 try:
-                    expires
+                    expires = m.groupdict()['expires'] or expires
                 except Exception:
-                    expires = m.groupdict()['expires']
+                    expires = None
+
+                try:
+                    code = m.groupdict()['code'] or code
+                    if not code:
+                        code = 'static'
+                except Exception:
+                    code = None
+
+                if code and 'b' == code.lower():
+                    code = 'bootstrap'
+                elif code and 'a' == code.lower():
+                    code = 'autorp'
 
                 # rp_list dict
                 rp_list_d = rp_dict.setdefault('rp_list', {})
@@ -1214,7 +1233,7 @@ class ShowPimRp(ShowPimRpSchema):
 
                     rp_mappings_dict['up_time'] = uptime
 
-                    if expires:
+                    if expires and code and code in info_source_type_conversion:
                         rp_mappings_dict['expiration'] = expires
 
                     # rp  bsr  bsr_rp_candidate_address
