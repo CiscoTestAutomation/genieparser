@@ -153,7 +153,7 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
                 nbr_count = configured_dr_priority = neighbor_holdtime = neighbor_filter = vpc_svi =last_rest = ""
 
             # Ethernet2/2, Interface status: protocol-up/link-up/admin-up
-            p2 = re.compile(r'^\s*(?P<interface_name>[\w\/]+),'
+            p2 = re.compile(r'^\s*(?P<interface_name>[\w\/\.\-]+),'
                             ' +Interface +status: +protocol\-(?P<oper_status>[\w]+)/'
                             'link\-(?P<link_status>[\w]+)/'
                             'admin\-(?P<admin_status>[\w]+)$')
@@ -3447,7 +3447,7 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
                 nbr_count = configured_dr_priority = ip_subnet = neighbor_holdtime = neighbor_filter = vpc_svi = bad_version_packets = ""
 
             # Ethernet2/2, Interface status: protocol-up/link-up/admin-up
-            p2 = re.compile(r'^\s*(?P<interface_name>[\w\/]+),?'
+            p2 = re.compile(r'^\s*(?P<interface_name>[\w\/\.\-]+),?'
                             ' +Interface +status:'
                             ' +protocol-(?P<oper_status>[\w]+)(/)?'
                             'link\-(?P<link_status>[\w]+)(/)?'
