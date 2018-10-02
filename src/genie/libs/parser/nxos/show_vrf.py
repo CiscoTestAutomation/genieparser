@@ -11,9 +11,10 @@ import xmltodict
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
-                                         Default, Use
+from genie.metaparser.util.schemaengine import Schema, Any, Optional
 
+# import parser utils
+from genie.libs.parser.utils.common import Common
 
 # =====================
 # Parser for 'show vrf'
@@ -208,5 +209,130 @@ class ShowVrfDetail(ShowVrfDetailSchema):
 
         return vrf_dict
 
+# =====================================================================
+#  Schema for "Parser for show running-config vrf <vrf> | sec '^vrf'"
+# =====================================================================
+class ShowRunningConfigVrfSchema(MetaParser):
+    """Schema for show running-config vrf <vrf> | sec '^vrf'"""
 
-# vim: ft=python et sw=4
+    schema = {
+        'vrf': {
+            Any(): {
+                Optional('vrf_name'): str,
+                Optional('vni'): int,
+                Optional('rd'): str,
+                Optional('address_family'): {
+                    Any(): {
+                        Optional('route_target'): {
+                            Any():{  # rt
+                                Optional('rt_type'): str,
+                                Optional('protocol'):{
+                                    Any():{    # mvpn , evpn
+                                    'rt': str,
+                                    'rt_type': str,
+                                    Optional('rt_evpn'): bool,
+                                    Optional('rt_mvpn'): bool,
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+        }
+    }
+
+# ========================================================================
+#  Schema for "Parser for show running-config vrf <vrf> | sec '^vrf'"
+# ========================================================================
+class ShowRunningConfigVrf(ShowRunningConfigVrfSchema):
+    """Parser for show running-config vrf <vrf> | sec '^vrf' """
+
+    def cli(self):
+        # Init vars
+        vrf_list = []
+        result_dict = {}
+
+        # vrf context vni_10100
+        p1 = re.compile(r'^vrf +context +(?P<vrf>\S+)$')
+
+        #   vni 10100
+        p2= re.compile(r'^\s*vni +(?P<vni>\d+)$')
+
+        #   rd auto
+        p3 = re.compile(r'^\s*rd +(?P<rd>\S+)$')
+
+        #   address-family ipv4 unicast
+        p4 = re.compile(r'^\s*address-family +(?P<af>[\S\s]+)$')
+
+        #     route-target both auto
+        #     route-target both auto mvpn
+        #     route-target both auto evpn
+        p5 = re.compile(r'^\s*route-target +(?P<rt_type>\w+) +(?P<rt>\w+)( +(?P<rt_evpn_mvpn>\w+))?$')
+
+        # find all list of vrfs
+        showVrf = ShowVrf(device=self.device)
+        vrfs = showVrf.parse()
+        for vrf in vrfs['vrfs'].keys():
+            vrf_list.append(vrf)
+
+
+        for vrf in vrf_list:
+            cmd = "show running-config vrf {} | sec '^vrf'".format(vrf)
+            out = self.device.execute(cmd)
+
+            for line in out.splitlines():
+                line = line.strip()
+
+                m = p1.match(line)
+                if m:
+                    vrf = m.groupdict()['vrf']
+                    vrf_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {})
+                    vrf_dict.update({'vrf_name': vrf})
+                    continue
+
+                m = p2.match(line)
+                if m:
+                    vni = m.groupdict()['vni']
+                    vrf_dict.update({'vni': int(vni)})
+                    continue
+
+                m = p3.match(line)
+                if m:
+                    rd = m.groupdict()['rd']
+                    vrf_dict.update({'rd': rd})
+                    continue
+
+                m = p4.match(line)
+                if m:
+                    af = m.groupdict()['af']
+                    af_dict = vrf_dict.setdefault('address_family', {}).setdefault(af, {})
+                    continue
+
+                m = p5.match(line)
+                if m:
+                    rt = m.groupdict()['rt']
+                    rt_type = m.groupdict()['rt_type']
+                    route_target_dict = af_dict.setdefault('route_target', {}).setdefault(rt, {})
+                    route_target_dict.update({'rt_type': m.groupdict()['rt_type']})
+
+                    if m.groupdict()['rt_evpn_mvpn']:
+                        if 'evpn' in m.groupdict()['rt_evpn_mvpn']:
+                            rt_evpn_mvpn = 'evpn'
+                        if 'mvpn' in m.groupdict()['rt_evpn_mvpn']:
+                            rt_evpn_mvpn = 'mvpn'
+                        protocol_dict = route_target_dict.setdefault('protocol', {}).setdefault(rt_evpn_mvpn, {})
+                        protocol_dict.update({'rt': rt})
+                        protocol_dict.update({'rt_type': rt_type})
+                        if 'mvpn' in rt_evpn_mvpn:
+                            protocol_dict.update({'rt_mvpn': True})
+                        if 'evpn' in rt_evpn_mvpn:
+                            protocol_dict.update({'rt_evpn': True})
+
+                    continue
+
+        for i in list(result_dict['vrf']):
+            if not len(result_dict['vrf'][i]):
+                del result_dict['vrf'][i]
+
+        return result_dict
