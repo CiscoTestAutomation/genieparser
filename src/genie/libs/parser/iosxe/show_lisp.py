@@ -397,7 +397,7 @@ class ShowLispDynamicEidDetailSchema(MetaParser):
     schema = {
         'lisp_router_instances':
             {Any():
-                {'service':
+                {Optional('service'):
                     {Any():
                         {'etr':
                             {'local_eids':
@@ -468,8 +468,9 @@ class ShowLispDynamicEidDetail(ShowLispDynamicEidDetailSchema):
         parsed_dict = {}
 
         # Output for router lisp 0
-        p1 = re.compile(r'Output +for +router +lisp'
-                         ' +(?P<lisp_router_id>(\S+))$')
+        # Output for router lisp 0 instance-id 101
+        p1 = re.compile(r'Output +for +router +lisp +(?P<lisp_router_id>(\S+))'
+                         '(?: +instance-id +(?P<instance_id>(\d+)))?$')
 
         # LISP Dynamic EID Information for VRF "red"
         p2 = re.compile(r'LISP +Dynamic +EID +Information +for +VRF'
@@ -518,11 +519,15 @@ class ShowLispDynamicEidDetail(ShowLispDynamicEidDetailSchema):
             line = line.strip()
 
             # Output for router lisp 0
+            # Output for router lisp 0 instance-id 101
             m = p1.match(line)
             if m:
-                lisp_router_id = int(m.groupdict()['lisp_router_id'])
+                group = m.groupdict()
+                lisp_router_id = int(group['lisp_router_id'])
                 lisp_dict = parsed_dict.setdefault(
                     'lisp_router_instances', {}).setdefault(lisp_router_id, {})
+                if group['instance_id']:
+                    instance_id = group['instance_id']
                 continue
 
             # LISP Dynamic EID Information for VRF "red"
@@ -649,7 +654,7 @@ class ShowLispServiceSchema(MetaParser):
         'lisp_router_instances':
             {Any():
                 {'lisp_router_instance_id': int,
-                'lisp_router_id':
+                Optional('lisp_router_id'):
                     {'site_id': str,
                     'xtr_id': str,
                     },
@@ -679,7 +684,7 @@ class ShowLispServiceSchema(MetaParser):
                                     Optional('import_site_db_limit'): int,
                                     Optional('proxy_db_size'): int,
                                     },
-                                'mapping_servers':
+                                Optional('mapping_servers'):
                                     {Any():
                                         {'ms_address': str,
                                         Optional('uptime'): str,
@@ -689,7 +694,7 @@ class ShowLispServiceSchema(MetaParser):
                                     {'local_rloc_last_resort': str,
                                     Optional('use_proxy_etr_rloc'): str,
                                     },
-                                'map_cache':
+                                Optional('map_cache'):
                                     {Optional('imported_route_count'): int,
                                     Optional('imported_route_limit'): int,
                                     Optional('map_cache_size'): int,
@@ -709,7 +714,7 @@ class ShowLispServiceSchema(MetaParser):
                                     {'use_petr': str,
                                     },
                                 },
-                            'mapping_servers':
+                            Optional('mapping_servers'):
                                 {Any():
                                     {'ms_address': str,
                                     Optional('uptime'): str,
@@ -727,7 +732,7 @@ class ShowLispServiceSchema(MetaParser):
                             'solicit_map_request': str,
                             'max_smr_per_map_cache_entry': str,
                             'multiple_smr_suppression_time': int,
-                            'map_resolvers':
+                            Optional('map_resolvers'):
                                 {Any():
                                     {'map_resolver': str,
                                     },
@@ -1442,7 +1447,7 @@ class ShowLispServiceMapCacheSchema(MetaParser):
         'lisp_router_instances':
             {Any():
                 {'lisp_router_instance_id': int,
-                'service':
+                Optional('service'):
                     {Any():
                         {'service': str,
                         'itr':
@@ -1936,7 +1941,7 @@ class ShowLispServiceSummarySchema(MetaParser):
                 {'lisp_router_instance_id': int,
                 Optional('service'):
                     {Optional(Any()):
-                        {'virtual_network_ids':
+                        {Optional('virtual_network_ids'):
                             {Any():
                                 {Optional('vrf'): str,
                                 'interface': str,
@@ -2369,7 +2374,7 @@ class ShowLispServiceServerSummarySchema(MetaParser):
                         {'instance_id':
                             {Any():
                                 {'map_server':
-                                    {'sites':
+                                    {Optional('sites'):
                                         {Any():
                                             {'site_id': str,
                                             'configured': int,
@@ -2469,13 +2474,6 @@ class ShowLispServiceServerSummary(ShowLispServiceServerSummarySchema):
                 lisp_router_id = int(group['router_id'])
                 if group['instance_id']:
                     instance_id = group['instance_id']
-                continue
-
-            #  Site name            Configured Registered Incons
-            # xtr2                           1          1      0
-            m = p2.match(line)
-            if m:
-                group = m.groupdict()
                 # Create lisp_dict
                 lisp_dict = parsed_dict.\
                             setdefault('lisp_router_instances', {}).\
@@ -2487,6 +2485,15 @@ class ShowLispServiceServerSummary(ShowLispServiceServerSummarySchema):
                                 setdefault('instance_id', {}).\
                                 setdefault(instance_id, {}).\
                                 setdefault('map_server', {})
+                # Create counters dict
+                summary_dict = ms_dict.setdefault('summary', {})
+                continue
+
+            #  Site name            Configured Registered Incons
+            # xtr2                           1          1      0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
                 # Create sites dict
                 sites_dict = ms_dict.setdefault('sites', {}).\
                                 setdefault(group['site_name'], {})
@@ -2494,8 +2501,6 @@ class ShowLispServiceServerSummary(ShowLispServiceServerSummarySchema):
                 sites_dict['configured'] = int(group['cfgd'])
                 sites_dict['registered'] = int(group['registered'])
                 sites_dict['inconsistent'] = int(group['incons'])
-                # Create counters dict
-                summary_dict = ms_dict.setdefault('summary', {})
                 continue
 
             # Number of configured sites:                     2

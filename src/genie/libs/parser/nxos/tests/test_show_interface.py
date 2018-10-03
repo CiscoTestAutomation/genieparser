@@ -2412,7 +2412,6 @@ class test_show_ipv6_interface_vrf_all(unittest.TestCase):
                           'ipv6_ll_state': 'valid',
                           'ipv6_load_sharing': 'none',
                           'ipv6_mtu': 1600,
-                          'ipv6_multicast_entries': 'none',
                           'ipv6_multicast_groups': ['ff02::1',
                                                     'ff02::1:ff00:0',
                                                     'ff02::1:ff00:1',

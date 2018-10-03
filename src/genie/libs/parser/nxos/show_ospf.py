@@ -2627,32 +2627,26 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                 continue
 
             # TOS: 0
-            # TOS: 0 Metric: 1
-            p12 = re.compile(r'^TOS:? +(?P<tos>(\d+))'
-                              '(?: +Metric: +(?P<metric>(\d+)))?$')
-            m = p12.match(line)
+            p12_1 = re.compile(r'^TOS: +(?P<tos>(\d+))$')
+            m = p12_1.match(line)
             if m:
-                if db_type == 'router':
-                    tos = int(m.groupdict()['tos'])
-                    if m.groupdict()['metric']:
-                        metric = int(m.groupdict()['metric'])
-                        continue
-                else:
-                    db_topo_dict['tos'] = int(m.groupdict()['tos'])
-                    if m.groupdict()['metric']:
-                        db_topo_dict['metric'] = int(m.groupdict()['metric'])
-                        continue
+                db_topo_dict['tos'] = int(m.groupdict()['tos'])
+                continue
+
+            # TOS: 0 Metric: 1
+            p12_2 = re.compile(r'^TOS: +(?P<tos>(\d+)) +Metric: +(?P<metric>(\d+))$')
+            m = p12_2.match(line)
+            if m:
+                db_topo_dict['tos'] = int(m.groupdict()['tos'])
+                db_topo_dict['metric'] = int(m.groupdict()['metric'])
+                continue
 
             # Metric: 20
             p13 = re.compile(r'^Metric: +(?P<metric>(\d+))$')
             m = p13.match(line)
             if m:
-                if db_type == 'router':
-                    metric = int(m.groupdict()['metric'])
-                    continue
-                else: 
-                    db_topo_dict['metric'] = int(m.groupdict()['metric'])
-                    continue
+                db_topo_dict['metric'] = int(m.groupdict()['metric'])
+                continue
 
             # Forward Address: 0.0.0.0
             p14 = re.compile(r'^Forward +Address: +(?P<addr>(\S+))$')
@@ -2719,22 +2713,7 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                     db_dict['links'][link_id]['topologies'] = {}
                 if mt_id not in db_dict['links'][link_id]['topologies']:
                     db_dict['links'][link_id]['topologies'][mt_id] = {}
-                
-                # Set previously parsed values
-                try:
-                    db_dict['links'][link_id]['topologies'][mt_id]['mt_id'] = mt_id
-                except Exception:
-                    pass
-                try:
-                    db_dict['links'][link_id]['topologies'][mt_id]['metric'] = metric
-                    del metric
-                except Exception:
-                    pass
-                try:
-                    db_dict['links'][link_id]['topologies'][mt_id]['tos'] = tos
-                    del tos
-                except Exception:
-                    pass
+                db_dict['links'][link_id]['topologies'][mt_id]['mt_id'] = mt_id
                 continue
                 
             # (Link ID) Designated Router address: 20.6.7.6
@@ -2763,24 +2742,11 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                     db_dict['links'][link_id]['topologies'] = {}
                 if mt_id not in db_dict['links'][link_id]['topologies']:
                     db_dict['links'][link_id]['topologies'][mt_id] = {}
-                # Set previously parsed values
-                try:
-                    db_dict['links'][link_id]['topologies'][mt_id]['mt_id'] = mt_id
-                except Exception:
-                    pass
-                try:
-                    db_dict['links'][link_id]['topologies'][mt_id]['metric'] = metric
-                    del metric
-                except Exception:
-                    pass
-                try:
-                    db_dict['links'][link_id]['topologies'][mt_id]['tos'] = tos
-                    del tos
-                except Exception:
-                    pass
+                db_dict['links'][link_id]['topologies'][mt_id]['mt_id'] = mt_id
                 continue
 
             # (Link ID) Neighboring Router ID: 22.22.22.22
+            # (Link ID) Neighboring Router ID: 81.0.0.2
             p19_3 = re.compile(r'^\(Link +ID\) +Neighboring +Router +ID:'
                                 ' +(?P<link_id>(\S+))$')
             m = p19_3.match(line)
@@ -2806,21 +2772,7 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                     db_dict['links'][link_id]['topologies'] = {}
                 if mt_id not in db_dict['links'][link_id]['topologies']:
                     db_dict['links'][link_id]['topologies'][mt_id] = {}
-                # Set previously parsed values
-                try:
-                    db_dict['links'][link_id]['topologies'][mt_id]['mt_id'] = mt_id
-                except Exception:
-                    pass
-                try:
-                    db_dict['links'][link_id]['topologies'][mt_id]['metric'] = metric
-                    del metric
-                except Exception:
-                    pass
-                try:
-                    db_dict['links'][link_id]['topologies'][mt_id]['tos'] = tos
-                    del tos
-                except Exception:
-                    pass
+                db_dict['links'][link_id]['topologies'][mt_id]['mt_id'] = mt_id
                 continue
 
             # (Link Data) Network Mask: 255.255.255.255
@@ -2847,6 +2799,15 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
             if m:
                 db_dict['links'][link_id]['num_tos_metrics'] = \
                     int(m.groupdict()['num'])
+                continue
+
+            # TOS   0 Metric: 1
+            p21_1 = re.compile(r'^TOS +(?P<tos>(\d+)) +Metric: +(?P<metric>(\d+))$')
+            m = p21_1.match(line)
+            if m:
+                if db_type == 'router':
+                    db_dict['links'][link_id]['topologies'][mt_id]['tos'] = int(m.groupdict()['tos'])
+                    db_dict['links'][link_id]['topologies'][mt_id]['metric'] = int(m.groupdict()['metric'])
                 continue
 
             # Opaque Type: 1
@@ -3348,8 +3309,8 @@ class ShowIpOspfDatabaseRouterDetailSchema(MetaParser):
                                                                                 'topologies': 
                                                                                     {Any(): 
                                                                                         {'mt_id': int,
-                                                                                        Optional('metric'): int,
-                                                                                        Optional('tos'): int},
+                                                                                        'metric': int,
+                                                                                        'tos': int},
                                                                                     },
                                                                                 },
                                                                             },

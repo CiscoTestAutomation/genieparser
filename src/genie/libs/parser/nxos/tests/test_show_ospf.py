@@ -2567,7 +2567,7 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                                         'num_tos_metrics': 0,
                                                                                         'topologies': 
                                                                                             {0: 
-                                                                                                {'metric': 111,
+                                                                                                {'metric': 1,
                                                                                                 'mt_id': 0,
                                                                                                 'tos': 0}},
                                                                                         'type': 'transit network'},
@@ -2577,7 +2577,7 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                                         'num_tos_metrics': 0,
                                                                                         'topologies': 
                                                                                             {0: 
-                                                                                                {'metric': 1,
+                                                                                                {'metric': 111,
                                                                                                 'mt_id': 0,
                                                                                                 'tos': 0}},
                                                                                         'type': 'router (point-to-point)'}},
@@ -2605,7 +2605,7 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                                     'num_tos_metrics': 0,
                                                                                     'topologies': 
                                                                                         {0: 
-                                                                                            {'metric': 40,
+                                                                                            {'metric': 1,
                                                                                             'mt_id': 0,
                                                                                             'tos': 0}},
                                                                                     'type': 'router (point-to-point)'},
@@ -2615,7 +2615,7 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                                     'num_tos_metrics': 0,
                                                                                     'topologies': 
                                                                                         {0: 
-                                                                                            {'metric': 1,
+                                                                                            {'metric': 40,
                                                                                             'mt_id': 0,
                                                                                             'tos': 0}},
                                                                                     'type': 'transit network'}},
@@ -2671,7 +2671,7 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                                     'num_tos_metrics': 0,
                                                                                     'topologies': 
                                                                                         {0: 
-                                                                                            {'metric': 30,
+                                                                                            {'metric': 1,
                                                                                             'mt_id': 0,
                                                                                             'tos': 0}},
                                                                                             'type': 'transit network'},
@@ -2681,7 +2681,7 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                                     'num_tos_metrics': 0,
                                                                                     'topologies': 
                                                                                         {0: 
-                                                                                            {'metric': 1,
+                                                                                            {'metric': 30,
                                                                                             'mt_id': 0,
                                                                                             'tos': 0}},
                                                                                     'type': 'transit network'},
@@ -2719,7 +2719,7 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                                     'num_tos_metrics': 0,
                                                                                     'topologies': 
                                                                                         {0: 
-                                                                                            {'metric': 30,
+                                                                                            {'metric': 1,
                                                                                             'mt_id': 0,
                                                                                             'tos': 0}},
                                                                                             'type': 'transit network'},
@@ -2729,7 +2729,7 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                                     'num_tos_metrics': 0,
                                                                                     'topologies': 
                                                                                         {0: 
-                                                                                            {'metric': 1,
+                                                                                            {'metric': 30,
                                                                                             'mt_id': 0,
                                                                                             'tos': 0}},
                                                                                     'type': 'transit network'},
@@ -2739,7 +2739,7 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                                     'num_tos_metrics': 0,
                                                                                     'topologies': 
                                                                                         {0: 
-                                                                                            {'metric': 1,
+                                                                                            {'metric': 30,
                                                                                             'mt_id': 0,
                                                                                             'tos': 0}},
                                                                                     'type': 'transit network'},
@@ -2777,7 +2777,7 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                                     'num_tos_metrics': 0,
                                                                                     'topologies': 
                                                                                         {0: 
-                                                                                            {'metric': 30,
+                                                                                            {'metric': 1,
                                                                                             'mt_id': 0,
                                                                                             'tos': 0}},
                                                                                     'type': 'transit network'},
@@ -2787,7 +2787,7 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                                     'num_tos_metrics': 0,
                                                                                     'topologies': 
                                                                                         {0: 
-                                                                                            {'metric': 1,
+                                                                                            {'metric': 30,
                                                                                             'mt_id': 0,
                                                                                             'tos': 0}},
                                                                                     'type': 'transit network'},
@@ -2797,7 +2797,7 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                                     'num_tos_metrics': 0,
                                                                                     'topologies': 
                                                                                         {0: 
-                                                                                            {'metric': 30,
+                                                                                            {'metric': 1,
                                                                                             'mt_id': 0,
                                                                                             'tos': 0}},
                                                                                     'type': 'stub network'}},
@@ -2837,8 +2837,10 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                                 'num_tos_metrics': 0,
                                                                                 'topologies': 
                                                                                     {0: 
-                                                                                        {'mt_id': 0}},
-                                                                                        'type': 'stub network'},
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'stub network'},
                                                                             '10.1.2.1': 
                                                                                 {'link_data': '10.1.2.1',
                                                                                 'link_id': '10.1.2.1',
@@ -2846,8 +2848,8 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                                 'topologies': 
                                                                                     {0: 
                                                                                         {'metric': 1,
-                                                                                    'mt_id': 0,
-                                                                                    'tos': 0}},
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
                                                                                 'type': 'transit network'},
                                                                             '10.1.4.4': 
                                                                                 {'link_data': '10.1.4.1',
@@ -2858,7 +2860,7 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                                         {'metric': 1,
                                                                                         'mt_id': 0,
                                                                                         'tos': 0}},
-                                                                                        'type': 'transit network'}},
+                                                                                'type': 'transit network'}},
                                                                         'num_of_links': 3}},
                                                                 'header': 
                                                                     {'adv_router': '1.1.1.1',
@@ -2870,7 +2872,8 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                     'option_desc': 'No TOS-capability, DC',
                                                                     'seq_num': '0x8000003e',
                                                                     'type': 1}}},
-                                                        '2.2.2.2 2.2.2.2': {'adv_router': '2.2.2.2',
+                                                        '2.2.2.2 2.2.2.2': 
+                                                            {'adv_router': '2.2.2.2',
                                                             'lsa_id': '2.2.2.2',
                                                             'ospfv2': 
                                                                 {'body': 
@@ -2913,8 +2916,8 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                                 'topologies': 
                                                                                     {0: 
                                                                                         {'metric': 1,
-                                                                                    'mt_id': 0,
-                                                                                    'tos': 0}},
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
                                                                                     'type': 'stub network'}},
                                                                         'num_of_links': 4}},
                                                             'header': 
@@ -3331,12 +3334,350 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
              TOS   0 Metric: 1
         '''}
 
-    def test_full(self):
+    golden_parsed_output2 = {
+        'vrf': 
+            {'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'UNDERLAY': 
+                                {'areas': 
+                                    {'0.0.0.0': 
+                                        {'database': 
+                                            {'lsa_types': 
+                                                {1: 
+                                                    {'lsa_type': 1,
+                                                    'lsas': 
+                                                        {'81.0.0.1 81.0.0.1': 
+                                                            {'adv_router': '81.0.0.1',
+                                                            'lsa_id': '81.0.0.1',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'router': 
+                                                                        {'links': 
+                                                                            {'100.0.1.1': 
+                                                                                {'link_data': '255.255.255.255',
+                                                                                'link_id': '100.0.1.1',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'stub network'},
+                                                                            '51.0.0.1': 
+                                                                                {'link_data': '255.255.255.255',
+                                                                                'link_id': '51.0.0.1',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'stub network'},
+                                                                            '81.0.0.1': 
+                                                                                {'link_data': '255.255.255.255',
+                                                                                'link_id': '81.0.0.1',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'stub network'},
+                                                                            '81.0.0.2': 
+                                                                                {'link_data': '81.0.1.1',
+                                                                                'link_id': '81.0.0.2',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0:
+                                                                                        {'metric': 40,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'router (point-to-point)'},
+                                                                            '81.0.0.3': 
+                                                                                {'link_data': '0.0.0.5',
+                                                                                'link_id': '81.0.0.3',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 4,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'router (point-to-point)'},
+                                                                            '81.0.0.4': 
+                                                                                {'link_data': '0.0.0.4',
+                                                                                'link_id': '81.0.0.4',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 4,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'router (point-to-point)'},
+                                                                            '81.0.1.0': 
+                                                                                {'link_data': '255.255.255.0',
+                                                                                'link_id': '81.0.1.0',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 40,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'stub network'}},
+                                                                        'num_of_links': 7}},
+                                                                'header': 
+                                                                    {'adv_router': '81.0.0.1',
+                                                                    'age': 29,
+                                                                    'checksum': '0x5cf6',
+                                                                    'length': 108,
+                                                                    'lsa_id': '81.0.0.1',
+                                                                    'option': '0x2',
+                                                                    'option_desc': 'No TOS-capability, No DC',
+                                                                    'seq_num': '0x80000905',
+                                                                    'type': 1}}}}}}}}}}}}}}}}
+
+    golden_output2 = {'execute.return_value': '''
+        show ip ospf database router detail vrf all
+            OSPF Router with ID (81.0.0.1) (Process ID UNDERLAY VRF default)
+
+                    Router Link States (Area 0.0.0.0)
+
+        LS age: 29
+        Options: 0x2 (No TOS-capability, No DC)
+        LS Type: Router Links
+        Link State ID: 81.0.0.1
+        Advertising Router: 81.0.0.1
+        LS Seq Number: 0x80000905
+        Checksum: 0x5cf6
+        Length: 108
+        Number of links: 7
+
+         Link connected to: a Stub Network
+          (Link ID) Network/Subnet Number: 81.0.0.1
+          (Link Data) Network Mask: 255.255.255.255
+           Number of TOS metrics: 0
+             TOS   0 Metric: 1
+
+         Link connected to: a Stub Network
+          (Link ID) Network/Subnet Number: 51.0.0.1
+          (Link Data) Network Mask: 255.255.255.255
+           Number of TOS metrics: 0
+             TOS   0 Metric: 1
+
+         Link connected to: a Stub Network
+          (Link ID) Network/Subnet Number: 100.0.1.1
+          (Link Data) Network Mask: 255.255.255.255
+           Number of TOS metrics: 0
+             TOS   0 Metric: 1
+
+         Link connected to: a Router (point-to-point)
+         (Link ID) Neighboring Router ID: 81.0.0.2
+         (Link Data) Router Interface address: 81.0.1.1
+           Number of TOS metrics: 0
+             TOS   0 Metric: 40
+
+         Link connected to: a Stub Network
+          (Link ID) Network/Subnet Number: 81.0.1.0
+          (Link Data) Network Mask: 255.255.255.0
+           Number of TOS metrics: 0
+             TOS   0 Metric: 40
+
+         Link connected to: a Router (point-to-point)
+         (Link ID) Neighboring Router ID: 81.0.0.4
+         (Link Data) Router Interface address: 0.0.0.4
+           Number of TOS metrics: 0
+             TOS   0 Metric: 4
+
+         Link connected to: a Router (point-to-point)
+         (Link ID) Neighboring Router ID: 81.0.0.3
+         (Link Data) Router Interface address: 0.0.0.5
+           Number of TOS metrics: 0
+             TOS   0 Metric: 4
+        '''}
+
+    golden_parsed_output3 = {
+        'vrf': 
+            {'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'UNDERLAY': 
+                                {'areas': 
+                                    {'0.0.0.0': 
+                                        {'database': 
+                                            {'lsa_types': 
+                                                {1: 
+                                                    {'lsa_type': 1,
+                                                    'lsas': 
+                                                        {'81.0.0.1 81.0.0.1': 
+                                                            {'adv_router': '81.0.0.1',
+                                                            'lsa_id': '81.0.0.1',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'router': 
+                                                                        {'links': 
+                                                                            {'100.0.1.1': 
+                                                                                {'link_data': '255.255.255.255',
+                                                                                'link_id': '100.0.1.1',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'stub network'},
+                                                                            '51.0.0.1': 
+                                                                                {'link_data': '255.255.255.255',
+                                                                                'link_id': '51.0.0.1',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'stub network'},
+                                                                            '81.0.0.1': 
+                                                                                {'link_data': '255.255.255.255',
+                                                                                'link_id': '81.0.0.1',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'stub network'},
+                                                                            '81.0.0.2': 
+                                                                                {'link_data': '81.0.1.1',
+                                                                                'link_id': '81.0.0.2',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0:
+                                                                                        {'metric': 40,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'router (point-to-point)'},
+                                                                            '81.0.0.3': 
+                                                                                {'link_data': '0.0.0.2',
+                                                                                'link_id': '81.0.0.3',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 4,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'router (point-to-point)'},
+                                                                            '81.0.0.4': 
+                                                                                {'link_data': '0.0.0.3',
+                                                                                'link_id': '81.0.0.4',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 4,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'router (point-to-point)'},
+                                                                            '81.0.1.0': 
+                                                                                {'link_data': '255.255.255.0',
+                                                                                'link_id': '81.0.1.0',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 40,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'stub network'}},
+                                                                        'num_of_links': 7}},
+                                                                'header': 
+                                                                    {'adv_router': '81.0.0.1',
+                                                                    'age': 587,
+                                                                    'checksum': '0x0155',
+                                                                    'length': 108,
+                                                                    'lsa_id': '81.0.0.1',
+                                                                    'option': '0x2',
+                                                                    'option_desc': 'No TOS-capability, No DC',
+                                                                    'seq_num': '0x80000906',
+                                                                    'type': 1}}}}}}}}}}}}}}}}
+
+    golden_output3 = {'execute.return_value': '''
+        show ip ospf database router detail vrf all
+            OSPF Router with ID (81.0.0.1) (Process ID UNDERLAY VRF default)
+
+                    Router Link States (Area 0.0.0.0)
+
+        LS age: 587
+        Options: 0x2 (No TOS-capability, No DC)
+        LS Type: Router Links
+        Link State ID: 81.0.0.1
+        Advertising Router: 81.0.0.1
+        LS Seq Number: 0x80000906
+        Checksum: 0x0155
+        Length: 108
+        Number of links: 7
+
+         Link connected to: a Stub Network
+          (Link ID) Network/Subnet Number: 81.0.0.1
+          (Link Data) Network Mask: 255.255.255.255
+           Number of TOS metrics: 0
+             TOS   0 Metric: 1
+
+         Link connected to: a Router (point-to-point)
+         (Link ID) Neighboring Router ID: 81.0.0.3
+         (Link Data) Router Interface address: 0.0.0.2
+           Number of TOS metrics: 0
+             TOS   0 Metric: 4
+
+         Link connected to: a Router (point-to-point)
+         (Link ID) Neighboring Router ID: 81.0.0.4
+         (Link Data) Router Interface address: 0.0.0.3
+           Number of TOS metrics: 0
+             TOS   0 Metric: 4
+
+         Link connected to: a Stub Network
+          (Link ID) Network/Subnet Number: 51.0.0.1
+          (Link Data) Network Mask: 255.255.255.255
+           Number of TOS metrics: 0
+             TOS   0 Metric: 1
+
+         Link connected to: a Stub Network
+          (Link ID) Network/Subnet Number: 100.0.1.1
+          (Link Data) Network Mask: 255.255.255.255
+           Number of TOS metrics: 0
+             TOS   0 Metric: 1
+
+         Link connected to: a Router (point-to-point)
+         (Link ID) Neighboring Router ID: 81.0.0.2
+         (Link Data) Router Interface address: 81.0.1.1
+           Number of TOS metrics: 0
+             TOS   0 Metric: 40
+
+         Link connected to: a Stub Network
+          (Link ID) Network/Subnet Number: 81.0.1.0
+          (Link Data) Network Mask: 255.255.255.0
+           Number of TOS metrics: 0
+             TOS   0 Metric: 40    
+        '''}
+
+    def test_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowIpOspfDatabaseRouterDetail(device=self.device)
         parsed_output = obj.parse(vrf='all')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_full2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowIpOspfDatabaseRouterDetail(device=self.device)
+        parsed_output = obj.parse(vrf='all')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_full3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowIpOspfDatabaseRouterDetail(device=self.device)
+        parsed_output = obj.parse(vrf='all')
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
     def test_empty(self):
         self.maxDiff = None
