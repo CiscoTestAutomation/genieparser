@@ -741,9 +741,10 @@ class ShowInterface(ShowInterfaceSchema):
                 continue
 
             #0 runts  0 giants  0 CRC/FCS  0 no buffer
+            #0 runts  0 giants  0 CRC  0 no buffer
             p27 = re.compile(r'^\s*(?P<in_runts>[0-9]+) *runts'
                               ' *(?P<in_oversize_frame>[0-9]+) *giants'
-                              ' *(?P<in_crc_errors>[0-9]+) *CRC/FCS'
+                              ' *(?P<in_crc_errors>[0-9]+) *CRC(/FCS)?'
                               ' *(?P<in_no_buffer>[0-9]+) *no *buffer$')
             m = p27.match(line)
             if m:
