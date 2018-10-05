@@ -228,8 +228,6 @@ class ShowRunningConfigVrfSchema(MetaParser):
                                 Optional('rt_type'): str,
                                 Optional('protocol'):{
                                     Any():{    # mvpn , evpn
-                                    'rt': str,
-                                    'rt_type': str,
                                     Optional('rt_evpn'): bool,
                                     Optional('rt_mvpn'): bool,
                                     }
@@ -322,17 +320,17 @@ class ShowRunningConfigVrf(ShowRunningConfigVrfSchema):
                         if 'mvpn' in m.groupdict()['rt_evpn_mvpn']:
                             rt_evpn_mvpn = 'mvpn'
                         protocol_dict = route_target_dict.setdefault('protocol', {}).setdefault(rt_evpn_mvpn, {})
-                        protocol_dict.update({'rt': rt})
-                        protocol_dict.update({'rt_type': rt_type})
+
                         if 'mvpn' in rt_evpn_mvpn:
                             protocol_dict.update({'rt_mvpn': True})
+
                         if 'evpn' in rt_evpn_mvpn:
                             protocol_dict.update({'rt_evpn': True})
 
                     continue
 
         for i in list(result_dict['vrf']):
-            if not len(result_dict['vrf'][i]):
+            if len(result_dict['vrf'][i]) < 2:
                 del result_dict['vrf'][i]
 
         return result_dict
