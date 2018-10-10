@@ -58,3 +58,15 @@
 
 * Fixed the following parsers for BGP (NXOS):
     - ShowBgpVrfAllAllNextHopDatabase
+
+# September 25th
+
+* Added the following parsers for TRM (NXOS)
+    - ShowFabricMulticastGlobals
+    - ShowFabricMulticastIpSaAdRoute
+    - ShowFabricMulticastIpL2Mroute
+    - ShowForwardingDistributionMulticastRoute
+    - ShowBgpIpMvpnRouteType
+    - ShowBgpIpMvpnSaadDetail
+    - ShowBgpL2vpnEvpn
+    - ShowBgpIpMvpn
