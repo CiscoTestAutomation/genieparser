@@ -1,5 +1,3 @@
-Release version: genie.libs.parser - 3.0.6
-
 # August 17th
 
 * Added parsers for Lisp (IOSXE):
@@ -55,3 +53,8 @@ Release version: genie.libs.parser - 3.0.6
 
 * Added parsers for Msdp (NXOS):
     * show running-config msdp [ | sec <vrf> | inc <pip string> ]
+
+# September 10th
+
+* Fixed the following parsers for BGP (NXOS):
+    - ShowBgpVrfAllAllNextHopDatabase
