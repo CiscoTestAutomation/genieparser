@@ -226,3 +226,25 @@ class Common():
             # P4M13DT21H21M19S
             standard_time = xml_time
         return standard_time
+
+
+    @classmethod
+    def find_keys(self, key, dictionary):
+        '''
+        find all keys in dictionary
+        Args:
+            dictionary:
+
+        Returns:
+
+        '''
+        for k, v in dictionary.items():
+            if k == key:
+                yield v
+            elif isinstance(v, dict):
+                for result in self.find_keys(key, v):
+                    yield result
+            elif isinstance(v, list):
+                for d in v:
+                    for result in self.find_keys(key, d):
+                        yield result

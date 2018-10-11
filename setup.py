@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /bin/env python
 
 '''Setup file for Libs
 
@@ -6,32 +6,39 @@ See:
     https://packaging.python.org/en/latest/distributing.html
 '''
 
+from ciscodistutils import setup, find_packages, is_devnet_build
+from ciscodistutils.tools import (read,
+                                  version_info,
+                                  generate_cython_modules)
 
-import os
-import re
+_INTERNAL_SUPPORT = 'pyats-support@cisco.com'
+_EXTERNAL_SUPPORT = 'pyats-support-ext@cisco.com'
 
-from setuptools import setup, find_packages
+_INTERNAL_LICENSE = 'Cisco Systems, Inc. Cisco Confidential',
+_EXTERNAL_LICENSE = 'Apache 2.0'
 
-def read(*paths):
-    '''read and return txt content of file'''
-    with open(os.path.join(*paths)) as fp:
-        return fp.read()
+_INTERNAL_URL = 'http://wwwin-genie.cisco.com/'
+_EXTERNAL_URL = 'https://developer.cisco.com/site/pyats/'
 
 
-def find_version(*paths):
-    '''reads a file and returns the defined __version__ value'''
-    version_match = re.search(r"^__version__ ?= ?['\"]([^'\"]*)['\"]",
-                              read(*paths), re.M)
-    if version_match:
-        return version_match.group(1)
-    raise RuntimeError("Unable to find version string.")
+# pyats support mailer
+SUPPORT = _EXTERNAL_SUPPORT if is_devnet_build() else _INTERNAL_SUPPORT
 
+# license statement
+LICENSE = _EXTERNAL_LICENSE if is_devnet_build() else _INTERNAL_LICENSE
+
+# project url
+URL = _EXTERNAL_URL if is_devnet_build() else _INTERNAL_URL
 
 # compute version range
-version = find_version('src', 'genie', 'libs', 'parser', '__init__.py')
+version, version_range = version_info('src', 'genie', 'libs', 'parser', '__init__.py')
 
 # generate package dependencies
 install_requires = ['xmltodict']
+
+#install_requires.extend(['genie.{pkg} {range}'.format(pkg = pkg,
+#                                                     range = version_range)
+#                        for pkg in GENIE_PKG_DEPENDENCIES])
 
 # launch setup
 setup(
@@ -43,14 +50,14 @@ setup(
     long_description = read('DESCRIPTION.rst'),
 
     # the project's main homepage.
-    url = 'https://developer.cisco.com/site/pyats/',
+    url = URL,
 
     # author details
     author = 'Cisco Systems Inc.',
-    author_email = 'pyats-support-ext@cisco.com',
+    author_email = SUPPORT,
 
     # project licensing
-    license = 'Apache 2.0',
+    license = LICENSE,
 
     # see https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[

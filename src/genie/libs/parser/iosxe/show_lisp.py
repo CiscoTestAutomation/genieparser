@@ -397,7 +397,7 @@ class ShowLispDynamicEidDetailSchema(MetaParser):
     schema = {
         'lisp_router_instances':
             {Any():
-                {'service':
+                {Optional('service'):
                     {Any():
                         {'etr':
                             {'local_eids':
@@ -468,8 +468,9 @@ class ShowLispDynamicEidDetail(ShowLispDynamicEidDetailSchema):
         parsed_dict = {}
 
         # Output for router lisp 0
-        p1 = re.compile(r'Output +for +router +lisp'
-                         ' +(?P<lisp_router_id>(\S+))$')
+        # Output for router lisp 0 instance-id 101
+        p1 = re.compile(r'Output +for +router +lisp +(?P<lisp_router_id>(\S+))'
+                         '(?: +instance-id +(?P<instance_id>(\d+)))?$')
 
         # LISP Dynamic EID Information for VRF "red"
         p2 = re.compile(r'LISP +Dynamic +EID +Information +for +VRF'
@@ -518,11 +519,15 @@ class ShowLispDynamicEidDetail(ShowLispDynamicEidDetailSchema):
             line = line.strip()
 
             # Output for router lisp 0
+            # Output for router lisp 0 instance-id 101
             m = p1.match(line)
             if m:
-                lisp_router_id = int(m.groupdict()['lisp_router_id'])
+                group = m.groupdict()
+                lisp_router_id = int(group['lisp_router_id'])
                 lisp_dict = parsed_dict.setdefault(
                     'lisp_router_instances', {}).setdefault(lisp_router_id, {})
+                if group['instance_id']:
+                    instance_id = group['instance_id']
                 continue
 
             # LISP Dynamic EID Information for VRF "red"
@@ -649,7 +654,7 @@ class ShowLispServiceSchema(MetaParser):
         'lisp_router_instances':
             {Any():
                 {'lisp_router_instance_id': int,
-                'lisp_router_id':
+                Optional('lisp_router_id'):
                     {'site_id': str,
                     'xtr_id': str,
                     },
@@ -679,7 +684,7 @@ class ShowLispServiceSchema(MetaParser):
                                     Optional('import_site_db_limit'): int,
                                     Optional('proxy_db_size'): int,
                                     },
-                                'mapping_servers':
+                                Optional('mapping_servers'):
                                     {Any():
                                         {'ms_address': str,
                                         Optional('uptime'): str,
@@ -689,7 +694,7 @@ class ShowLispServiceSchema(MetaParser):
                                     {'local_rloc_last_resort': str,
                                     Optional('use_proxy_etr_rloc'): str,
                                     },
-                                'map_cache':
+                                Optional('map_cache'):
                                     {Optional('imported_route_count'): int,
                                     Optional('imported_route_limit'): int,
                                     Optional('map_cache_size'): int,
@@ -709,7 +714,7 @@ class ShowLispServiceSchema(MetaParser):
                                     {'use_petr': str,
                                     },
                                 },
-                            'mapping_servers':
+                            Optional('mapping_servers'):
                                 {Any():
                                     {'ms_address': str,
                                     Optional('uptime'): str,
@@ -727,7 +732,7 @@ class ShowLispServiceSchema(MetaParser):
                             'solicit_map_request': str,
                             'max_smr_per_map_cache_entry': str,
                             'multiple_smr_suppression_time': int,
-                            'map_resolvers':
+                            Optional('map_resolvers'):
                                 {Any():
                                     {'map_resolver': str,
                                     },
@@ -1442,7 +1447,7 @@ class ShowLispServiceMapCacheSchema(MetaParser):
         'lisp_router_instances':
             {Any():
                 {'lisp_router_instance_id': int,
-                'service':
+                Optional('service'):
                     {Any():
                         {'service': str,
                         'itr':
@@ -1936,7 +1941,7 @@ class ShowLispServiceSummarySchema(MetaParser):
                 {'lisp_router_instance_id': int,
                 Optional('service'):
                     {Optional(Any()):
-                        {'virtual_network_ids':
+                        {Optional('virtual_network_ids'):
                             {Any():
                                 {Optional('vrf'): str,
                                 'interface': str,
@@ -2369,7 +2374,7 @@ class ShowLispServiceServerSummarySchema(MetaParser):
                         {'instance_id':
                             {Any():
                                 {'map_server':
-                                    {'sites':
+                                    {Optional('sites'):
                                         {Any():
                                             {'site_id': str,
                                             'configured': int,
@@ -2469,13 +2474,6 @@ class ShowLispServiceServerSummary(ShowLispServiceServerSummarySchema):
                 lisp_router_id = int(group['router_id'])
                 if group['instance_id']:
                     instance_id = group['instance_id']
-                continue
-
-            #  Site name            Configured Registered Incons
-            # xtr2                           1          1      0
-            m = p2.match(line)
-            if m:
-                group = m.groupdict()
                 # Create lisp_dict
                 lisp_dict = parsed_dict.\
                             setdefault('lisp_router_instances', {}).\
@@ -2487,6 +2485,15 @@ class ShowLispServiceServerSummary(ShowLispServiceServerSummarySchema):
                                 setdefault('instance_id', {}).\
                                 setdefault(instance_id, {}).\
                                 setdefault('map_server', {})
+                # Create counters dict
+                summary_dict = ms_dict.setdefault('summary', {})
+                continue
+
+            #  Site name            Configured Registered Incons
+            # xtr2                           1          1      0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
                 # Create sites dict
                 sites_dict = ms_dict.setdefault('sites', {}).\
                                 setdefault(group['site_name'], {})
@@ -2494,8 +2501,6 @@ class ShowLispServiceServerSummary(ShowLispServiceServerSummarySchema):
                 sites_dict['configured'] = int(group['cfgd'])
                 sites_dict['registered'] = int(group['registered'])
                 sites_dict['inconsistent'] = int(group['incons'])
-                # Create counters dict
-                summary_dict = ms_dict.setdefault('summary', {})
                 continue
 
             # Number of configured sites:                     2
@@ -3081,6 +3086,15 @@ class ShowLispServiceStatistics(ShowLispServiceStatisticsSchema):
         # Errors:
         p3_2 = re.compile(r'Errors:$')
 
+        # Map-Register records in/out:              0/52
+        p4 = re.compile(r'Map-Register +records +in\/out: +(?P<in>(\d+))\/(?P<out>(\d+))$')
+
+        # Map-Notify records in/out:                2/0
+        p5 = re.compile(r'Map-Notify +records +in\/out: +(?P<in>(\d+))\/(?P<out>(\d+))$')
+
+        # Authentication failures:                0
+        p6 = re.compile(r'Authentication +failures: +(?P<auth_failures>(\d+))$')
+
         # Map-Requests in/out:                              8/40
         # Encapsulated Map-Requests in/out:               8/36
         # RLOC-probe Map-Requests in/out:                 0/4
@@ -3089,12 +3103,12 @@ class ShowLispServiceStatistics(ShowLispServiceStatisticsSchema):
         # Map-Requests expired on-queue/no-reply          0/13
         # Map-Resolver Map-Requests forwarded:            0
         # Map-Server Map-Requests forwarded:              0
-        p4 = re.compile(r'^(?P<key>([a-zA-Z\-\/\s]+))\: +(?P<value>(.*))$')
+        p7 = re.compile(r'^(?P<key>([a-zA-Z\-\/\s]+))\: +(?P<value>(.*))$')
 
         # Map-Resolver    LastReply  Metric ReqsSent Positive Negative No-Reply
         # 44.44.44.44     never           1      306       18        0       66
         # 66.66.66.66     never     Unreach        0        0        0        0
-        p5 = re.compile(r'(?P<mr>([a-zA-Z0-9\.\:]+)) +(?P<last_reply>(\S+))'
+        p8 = re.compile(r'(?P<mr>([a-zA-Z0-9\.\:]+)) +(?P<last_reply>(\S+))'
                          ' +(?P<metric>(\S+)) +(?P<sent>(\d+))'
                          ' +(?P<positive>(\d+)) +(?P<negative>(\d+))'
                          ' +(?P<no_reply>(\d+))$')
@@ -3138,9 +3152,43 @@ class ShowLispServiceStatistics(ShowLispServiceStatisticsSchema):
                 last_dict = stats_dict.setdefault('errors', {})
                 continue
 
+            # Map-Register records in/out:              0/52
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                last_dict['map_register_records_in'] = group['in']
+                last_dict['map_register_records_out'] = group['out']
+                map_register = True
+                continue
+
+            # Map-Notify records in/out:                2/0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                last_dict['map_notify_records_in'] = group['in']
+                last_dict['map_notify_records_out'] = group['out']
+                map_register = False
+                continue
+
+            # Authentication failures:                0
+            m = p6.match(line)
+            if m:
+                failures = m.groupdict()['auth_failures']
+                if map_register:
+                    last_dict['map_registers_in_auth_failed'] = failures
+                else:
+                    last_dict['map_notify_auth_failures'] = failures
+                continue
+
+            # Map-Requests in/out:                              8/40
+            # Encapsulated Map-Requests in/out:               8/36
+            # RLOC-probe Map-Requests in/out:                 0/4
             # SMR-based Map-Requests in/out:                  0/4
             # Extranet SMR cross-IID Map-Requests in:         0
-            m = p4.match(line)
+            # Map-Requests expired on-queue/no-reply          0/13
+            # Map-Resolver Map-Requests forwarded:            0
+            # Map-Server Map-Requests forwarded:              0
+            m = p7.match(line)
             if m:
                 group = m.groupdict()
                 if "/" in group['key']:
@@ -3163,8 +3211,9 @@ class ShowLispServiceStatistics(ShowLispServiceStatisticsSchema):
                 continue
 
             # Map-Resolver    LastReply  Metric ReqsSent Positive Negative No-Reply
+            # 44.44.44.44     never           1      306       18        0       66
             # 66.66.66.66     never     Unreach        0        0        0        0
-            m = p5.match(line)
+            m = p8.match(line)
             if m:
                 group = m.groupdict()
                 mr_dict = last_dict.setdefault('map_rseolvers', {}).\
