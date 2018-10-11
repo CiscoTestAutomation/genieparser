@@ -741,9 +741,10 @@ class ShowInterface(ShowInterfaceSchema):
                 continue
 
             #0 runts  0 giants  0 CRC/FCS  0 no buffer
+            #0 runts  0 giants  0 CRC  0 no buffer
             p27 = re.compile(r'^\s*(?P<in_runts>[0-9]+) *runts'
                               ' *(?P<in_oversize_frame>[0-9]+) *giants'
-                              ' *(?P<in_crc_errors>[0-9]+) *CRC/FCS'
+                              ' *(?P<in_crc_errors>[0-9]+) *CRC(/FCS)?'
                               ' *(?P<in_no_buffer>[0-9]+) *no *buffer$')
             m = p27.match(line)
             if m:
@@ -1687,46 +1688,12 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
                 interface_switchport_dict[interface]['switchport_monitor'] = switchport_monitor
                 continue
 
-            #Operational Mode: trunk
-            p4 = re.compile(r'^\s*Operational *Mode: *(?P<switchport_mode>\w+)$')
+            # Operational Mode: trunk
+            p4 = re.compile(r'^\s*Operational *Mode: *(?P<switchport_mode>\S+)$')
             m = p4.match(line)
             if m:
-                switchport_mode = m.groupdict()['switchport_mode']
-                if switchport_status == 'enabled' and switchport_mode == 'trunk':
-                    operation_mode = 'trunk'
-
-                interface_switchport_dict[interface]['switchport_mode'] = switchport_mode 
+                interface_switchport_dict[interface]['switchport_mode'] = m.groupdict()['switchport_mode'] 
                 continue
-
-            p4_1 = re.compile(r'^\s*Operational *Mode: *(?P<switchport_mode>[a-z]+)$')
-            m = p4_1.match(line)
-            if m:
-                switchport_mode = m.groupdict()['switchport_mode']
-                if switchport_status == 'Enabled' and switchport_mode == 'access':
-                    operation_mode = 'access' 
-
-                    interface_switchport_dict[interface]['switchport_mode'] = switchport_mode 
-                    continue
-
-            p4_2 = re.compile(r'^\s*Operational *Mode: *(?P<switchport_mode>[a-z]+)$')
-            m = p4_2.match(line)
-            if m:
-                switchport_mode = m.groupdict()['switchport_mode']
-                if switchport_status == 'Disabled' and switchport_mode == 'access':
-                    operation_mode = 'Disabled' 
-
-                    interface_switchport_dict[interface]['switchport_mode'] = switchport_mode 
-                    continue
-
-            p4_3 = re.compile(r'^\s*Operational *Mode: *(?P<switchport_mode>[a-z]+)$')
-            m = p4_3.match(line)
-            if m:
-                switchport_mode = m.groupdict()['switchport_mode']
-                if switchport_status == 'Disabled' and switchport_mode == 'access':
-                    operation_mode = 'Disabled' 
-
-                    interface_switchport_dict[interface]['switchport_mode'] = switchport_mode 
-                    continue
 
             # Access Mode VLAN: 1 (default)
             # Access Mode VLAN: 7 (server-vlan7)
@@ -1925,7 +1892,7 @@ class ShowIpv6InterfaceVrfAllSchema(MetaParser):
                 'ipv6_report_link_local': str,
                 'ipv6_forwarding_feature': str,
                 Optional('ipv6_multicast_groups'): list,
-                'ipv6_multicast_entries': str,
+                Optional('ipv6_multicast_entries'): str,
                 'ipv6_mtu': int,
                 'ipv6_unicast_rev_path_forwarding': str,
                 'ipv6_load_sharing': str,
@@ -1984,6 +1951,7 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
                 # init multicast groups list to empty for this interface
                 ipv6_multicast_groups = []
                 ipv6_virtual_groups = []
+                ipv6_multicast_entries = multicast_groups = False
                 continue
 
             # IPv6 address:
@@ -2159,13 +2127,20 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
                      = sorted(ipv6_multicast_groups)
                     continue
 
-            #IPv6 multicast (S,G) entries joined: none
-            p12 = re.compile(r'^\s*IPv6 *multicast *\(S\,G\) *entries *joined:'
-                              ' *(?P<ipv6_multicast_entries>[a-z]+)$')
+            # IPv6 multicast (S,G) entries joined: none
+            # IPv6 multicast (S,G) entries joined: 
+            #  (2001:20:1:1::254, ff38::1)
+            p12 = re.compile(r'^\s*IPv6 *multicast *\(S\,G\) *entries *joined:$')
             m = p12.match(line)
             if m:
-                ipv6_multicast_entries = m.groupdict()['ipv6_multicast_entries']
+                ipv6_multicast_entries = True
+                continue
 
+            #  (2001:20:1:1::254, ff38::1)
+            p12_1 = re.compile(r'^\s*\((?P<ip_list>.*)\)')
+            m = p12_1.match(line)
+            if m and ipv6_multicast_entries:
+                ipv6_multicast_entries = m.groupdict()['ip_list']
                 ipv6_interface_dict[interface]['ipv6']['ipv6_multicast_entries']\
                  = ipv6_multicast_entries
                 continue
