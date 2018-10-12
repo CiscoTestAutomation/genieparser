@@ -640,15 +640,21 @@ class test_show_inventory(unittest.TestCase):
                "sn": "FOC1808NEND",
                "vid": "V05"
           },
+          "module 0/RSP1/CPU0": {
+               "pid": "A9K-RSP440-TR",
+               "descr": "ASR9K Route Switch Processor with 440G/slot Fabric and 6GB",
+               "sn": "FOC1808NEP5",
+               "vid": "V05"
+          },
           "module mau 0/0/0/1": {
                "pid": "GLC-T",
                "descr": "Unknown or Unsupported CPAK Module",
                "sn": "00000MTC17150731",
                "vid": "N/A"
           },
-          "module 0/RSP1/CPU0": {
+          "module 0/0/CPU0": {
                "pid": "A9K-MOD80-SE",
-               "descr": "ASR9K Route Switch Processor with 440G/slot Fabric and 6GB",
+               "descr": "80G Modular Linecard, Service Edge Optimized",
                "sn": "FOC1821NEET",
                "vid": "V06"
           },

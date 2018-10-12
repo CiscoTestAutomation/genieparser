@@ -560,8 +560,10 @@ class ShowInventory(ShowInventorySchema):
 
             # NAME: "module 0/RSP0/CPU0", DESCR: "ASR9K Route Switch Processor with 440G/slot Fabric and 6GB"
             # NAME: "Rack 0", DESCR: "Cisco XRv9K Centralized Virtual Router"
+            # NAME: "Rack 0", DESCR: "Sherman 1RU Chassis with 24x400GE QSFP56-DD & 12x100G QSFP28"
+            # NAME: "0/FT4", DESCR: "Sherman Fan Module Reverse Airflow / exhaust, BLUE"
             p1 = re.compile(r'\s*NAME: +\"(?P<module_name>[a-zA-Z0-9\/\s]+)\",'
-                             ' +DESCR: +\"(?P<descr>[\w\-\.\:\/\s]+)\"$')
+                             ' +DESCR: +\"(?P<descr>[\w\-\.\:\/\s,&]+)\"$')
             m = p1.match(line)
             if m:
                 if 'module_name' not in inventory_dict:
