@@ -254,10 +254,10 @@ class ShowLispExtranetSchema(MetaParser):
     schema = {
         'lisp_router_instances':
             {Any():
-                {'service':
+                {Optional('service'):
                     {Any():
-                        {'map_server':
-                            {'virtual_network_ids': 
+                        {Optional('map_server'):
+                            {Optional('virtual_network_ids'): 
                                 {'total_extranet_entries': int,
                                 Any():
                                     {'vni': str,
@@ -658,7 +658,7 @@ class ShowLispServiceSchema(MetaParser):
                     {'site_id': str,
                     'xtr_id': str,
                     },
-                'service':
+                Optional('service'):
                     {Any():
                         {'service': str,
                         'delegated_database_tree': bool,
@@ -2569,7 +2569,7 @@ class ShowLispServiceServerDetailInternalSchema(MetaParser):
     schema = {
         'lisp_router_instances':
             {Any():
-                {'service':
+                {Optional('service'):
                     {Any():
                         {'map_server':
                             {'sites':
