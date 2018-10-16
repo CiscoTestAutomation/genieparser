@@ -1,6 +1,13 @@
-# August 17th
 
-* Added parsers for Lisp (IOSXE):
+| Module                  | Version       |
+| ------------------------|:-------------:|
+| ``genie.libs.parser``   | 3.1.0         |
+
+--------------------------------------------------------------------------------
+                                LISP
+--------------------------------------------------------------------------------
+
+* IOSXE
     * show lisp session
     * show lisp platform
     * show lisp all extranet <extranet> instance-id <instance_id>
@@ -36,11 +43,18 @@
     * show lisp all instance-id <instance_id> ipv6 statistics
     * show lisp all instance-id <instance_id> ethernet statistics
 
-# August 22nd
+--------------------------------------------------------------------------------
+                                PIM
+--------------------------------------------------------------------------------
 
-* Added parsers for Pim (NXOS):
+* NXOS:
     * show running-config pim [ | sec <vrf> | inc <pip string> ]
-* Added parsers for Msdp (NXOS):
+
+--------------------------------------------------------------------------------
+                                MSDP
+--------------------------------------------------------------------------------
+
+* NXOS
     * show ip msdp peer vrf <vrf>
     * show ip msdp sa-cache detail vrf <vrf>
     * show ip msdp policy statistics sa-policy <address> in [vrf <vrf>]
@@ -48,25 +62,25 @@
     * show ip msdp summary
     * show ip msdp summary vrf all
     * show ip msdp summary vrf <vrf>
-
-# August 30th
-
-* Added parsers for Msdp (NXOS):
     * show running-config msdp [ | sec <vrf> | inc <pip string> ]
 
-# September 10th
+--------------------------------------------------------------------------------
+                                TRM
+--------------------------------------------------------------------------------
+
+* NXOS
+    * ShowFabricMulticastGlobals
+    * ShowFabricMulticastIpSaAdRoute
+    * ShowFabricMulticastIpL2Mroute
+    * ShowForwardingDistributionMulticastRoute
+    * ShowBgpIpMvpnRouteType
+    * ShowBgpIpMvpnSaadDetail
+    * ShowBgpL2vpnEvpn
+    * ShowBgpIpMvpn
+
+--------------------------------------------------------------------------------
+                                BGP
+--------------------------------------------------------------------------------
 
 * Fixed the following parsers for BGP (NXOS):
     - ShowBgpVrfAllAllNextHopDatabase
-
-# September 25th
-
-* Added the following parsers for TRM (NXOS)
-    - ShowFabricMulticastGlobals
-    - ShowFabricMulticastIpSaAdRoute
-    - ShowFabricMulticastIpL2Mroute
-    - ShowForwardingDistributionMulticastRoute
-    - ShowBgpIpMvpnRouteType
-    - ShowBgpIpMvpnSaadDetail
-    - ShowBgpL2vpnEvpn
-    - ShowBgpIpMvpn
