@@ -244,7 +244,8 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # Description: desc
-            p3 = re.compile(r'^Description: *(?P<description>\S+)$')
+            # Description: Pim Register Tunnel (Encap) for RP 11.10.1.1
+            p3 = re.compile(r'^Description: *(?P<description>.*)$')
             m = p3.match(line)
             if m:
                 description = m.groupdict()['description']
@@ -330,7 +331,8 @@ class ShowInterfaces(ShowInterfacesSchema):
             # Encapsulation 802.1Q Virtual LAN, Vlan ID 20, medium is p2p
             # Encapsulation ARPA, medium is broadcast
             # Encapsulation QinQ Virtual LAN, outer ID  10, inner ID 20
-            p8 = re.compile(r'^Encapsulation +(?P<encapsulation>[\w\s]+),'
+            # Encapsulation 802.1Q Virtual LAN, Vlan ID  1., loopback not set
+            p8 = re.compile(r'^Encapsulation +(?P<encapsulation>[\w\s\.]+),'
                              ' +(?P<rest>.*)$')
             m = p8.match(line)
             if m:
@@ -353,19 +355,28 @@ class ShowInterfaces(ShowInterfacesSchema):
                 #  outer ID  10, inner ID 20
                 m3 = re.compile(r'outer +ID +(?P<first>[0-9]+), +'
                                  'inner +ID (?P<second>[0-9]+)$').match(rest)
+
+                #  Vlan ID  1., loopback not set
+                m4 = re.compile(r'Vlan +ID +(?P<first_dot1q>[0-9]+).?, +'
+                                 '(?P<rest>.+)$').match(rest)
                 if m1:
                     first_dot1q = m1.groupdict()['first_dot1q']
                     if first_dot1q:
                         interface_dict[interface]['encapsulations']\
                             ['first_dot1q'] = first_dot1q
                     interface_dict[interface]['medium'] = medium
-                if m3:
+                elif m3:
                     first_dot1q = m3.groupdict()['first']
                     second_dot1q = m3.groupdict()['second']
                     interface_dict[interface]['encapsulations']\
                         ['first_dot1q'] = first_dot1q
                     interface_dict[interface]['encapsulations']\
                         ['second_dot1q'] = second_dot1q
+                elif m4:
+                    first_dot1q = m4.groupdict()['first_dot1q']
+                    if first_dot1q:
+                        interface_dict[interface]['encapsulations']\
+                            ['first_dot1q'] = first_dot1q
                 continue
 
             # reliability 255/255, txload 1/255, rxload 1/255
@@ -773,6 +784,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # Interface is unnumbered. Using address of Loopback0 (1.1.1.1)
+            # Interface is unnumbered. Using address of GigabitEthernet0/2.1 (201.0.2.1)
             p35 = re.compile(r'^Interface +is +unnumbered. +Using +address +of +'
                               '(?P<unnumbered_intf>[\w\/\.]+) +'
                               '\((?P<unnumbered_ip>[\w\.\:]+)\)$')
@@ -1504,6 +1516,7 @@ class ShowIpInterfaceSchema(MetaParser):
                     Optional('network_address_translation'): bool,
                     Optional('bgp_policy_mapping'): bool,
                     Optional('input_features'): list,
+                    Optional('multicast_groups'): list,
                 },
             }
 
@@ -1534,6 +1547,9 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                     interface_dict[interface]['enabled'] = True
                 interface_dict[interface]['oper_status'] = \
                     m.groupdict()['oper_status'].lower()
+
+                # initial variables
+                multicast_groups = []
                 continue
 
             # Internet address is 201.11.14.1/24
@@ -1622,6 +1638,28 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                     interface_dict[interface]['directed_broadcast_forwarding'] = False
                 else:
                     interface_dict[interface]['directed_broadcast_forwarding'] = True                    
+                continue
+
+            # Multicast reserved groups joined: 224.0.0.1 224.0.0.2 224.0.0.22 224.0.0.13
+            p41 = re.compile(r'^Multicast +reserved +groups +joined: +(?P<multicast_groups>[\w\s\.]+)$')
+            m = p41.match(line)
+            if m:
+                multicast_groups_address = str(m.groupdict()['multicast_groups'])
+
+                #Split string of addressed into a list
+                multicast_groups = multicast_groups_address.split()
+
+                interface_dict[interface]['multicast_groups']\
+                 = sorted(multicast_groups)                              
+                continue
+
+            # Multicast reserved groups joined: 224.0.0.1 224.0.0.2 224.0.0.22 224.0.0.13
+            p41_1 = re.compile(r'(?P<multicast_groups>\d+\.\d+\.\d+\.\d+)')
+            m = p41_1.findall(line)
+            if m and multicast_groups:
+                multicast_groups.extend(m)
+                interface_dict[interface]['multicast_groups']\
+                 = sorted(multicast_groups)                              
                 continue
 
             # Outgoing Common access list is not set 
@@ -2013,19 +2051,16 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                 unnumbered_dict[interface]['unnumbered_intf'] = unnumbered_intf
                 unnumbered_dict[interface]['unnumbered_ip'] = unnumbered_ip
 
-
                 if unnumbered_intf in interface_dict:
                     if 'ipv4' in interface_dict[unnumbered_intf]:
                         for address in interface_dict[unnumbered_intf]['ipv4']:
                             if unnumbered_ip in address:
-                                if 'ipv4' not in interface_dict[interface]:
-                                    interface_dict[interface]['ipv4'] = {}
-                                if address not in interface_dict[interface]['ipv4']:
-                                    interface_dict[interface]['ipv4'][address] = {}
+                                ip_dict = interface_dict[interface].\
+                                    setdefault('ipv4', {}).setdefault(address, {})
                                 m = re.search('([\w\.\:]+)\/(\d+)', address)
-                                interface_dict[interface]['ipv4'][address]['ip'] = m.groups()[0]
-                                interface_dict[interface]['ipv4'][address]['prefix_length'] = m.groups()[1]
-                                interface_dict[interface]['ipv4'][address]['secondary'] = False
+                                ip_dict['ip'] = m.groups()[0]
+                                ip_dict['prefix_length'] = m.groups()[1]
+                                ip_dict['secondary'] = False
                                 break
                 else:
                     address = unnumbered_ip 
@@ -2752,13 +2787,20 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
         ret_dict = {}
 
         # initial regexp pattern
-        p1 = re.compile(r'^\s*(?P<interface>[a-zA-Z\-\d\/]+)\s?$')
-        p2 = re.compile(r'^\s*(?P<protocol>\S+)\s+(?P<pkts_in>\d+)\s+'
+        # GigabitEthernet0/0/0/0
+        p1 = re.compile(r'^(?P<interface>[a-zA-Z\-\d\/\.]+)$')
+
+        # Tunnel0 Pim Register Tunnel (Encap) for RP 11.10.1.1
+        p1_1 = re.compile(r'^(?P<interface>Tunnel\d+) +Pim +Register +'
+                           'Tunnel +\(Encap\) +for +RP +(?P<rp>[\w\.]+)$')
+
+        #   IPV4_UNICAST             9943           797492           50             3568
+        p2 = re.compile(r'^(?P<protocol>[\w\_\-\s]+)\s+(?P<pkts_in>\d+)\s+'
                          '(?P<chars_in>\d+)\s+(?P<pkts_out>\d+)\s+'
                          '(?P<chars_out>\d+)')
         for line in out.splitlines():
             if line:
-                line = line.rstrip()
+                line = line.strip()
             else:
                 continue
 
@@ -2772,7 +2814,7 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
             m = p2.match(line)
             if m:
                 protocol_dict = m.groupdict()
-                protocol = protocol_dict.pop('protocol').lower()
+                protocol = protocol_dict.pop('protocol').lower().strip()
                 ret_dict.setdefault(intf, {}).\
                     setdefault('accounting', {}).setdefault(protocol, {})
                 ret_dict[intf]['accounting'][protocol].update({k: int(v) \
