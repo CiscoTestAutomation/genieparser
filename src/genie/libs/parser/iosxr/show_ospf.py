@@ -3076,7 +3076,6 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
             m = p12.match(line)
             if m:
                 if db_type == 'router':
-                    # import pdb ; pdb.set_trace()
                     if m.groupdict()['tos']:
                         db_dict['links'][link_id]['topologies'][mt_id]\
                             ['tos'] = int(m.groupdict()['tos'])
