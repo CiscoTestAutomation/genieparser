@@ -935,8 +935,10 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
                 sub_dict['mpls']['ldp']['autoconfig'] = True
                 continue
 
+            # LDP Sync is enabled, is required and is achieved
+            # LDP Sync is enabled, is required and not achieved
             # LDP Sync is enabled, not required
-            p3_1 = re.compile(r'^LDP +Sync +is +enabled, +not +required$')
+            p3_1 = re.compile(r'^LDP +Sync +is +enabled, +(?P<req>(is|not)) +required( +and +(?P<ach>(is|not)) +achieved)?$')
             m = p3_1.match(line)
             if m:
                 # Set at area level
