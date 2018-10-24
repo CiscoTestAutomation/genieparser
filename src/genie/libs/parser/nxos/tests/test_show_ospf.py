@@ -550,7 +550,7 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                          {'autoconfig': True,
                                                           'autoconfig_area_id': '0.0.1.1',
                                                           'igp_sync': True}},
-                                                'interfaces':
+                                               'interfaces':
                                                     {'port-channel4001':
                                                          {'area': '0.0.1.1',
                                                           'interface_type': 'point_to_point',
@@ -560,7 +560,17 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                                     'autoconfig_area_id': '0.0.1.1',
                                                                     'igp_sync': True}},
                                                           'name': 'port-channel4001',
-                                                          'state': 'point_to_point'}},
+                                                          'state': 'point_to_point'},
+                                                    'port-channel4002':
+                                                         {'area': '0.0.1.1',
+                                                          'interface_type': 'point_to_point',
+                                                          'mpls':
+                                                              {'ldp':
+                                                                   {'autoconfig': True,
+                                                                    'autoconfig_area_id': '0.0.1.1',
+                                                                    'igp_sync': True}},
+                                                          'name': 'port-channel4002',
+                                                          'state': 'point_to_point'}}
                                                 }}}}}}}
              }}
 
@@ -596,6 +606,10 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
        port-channel4001 - Process ID 1 VRF VRF2, area 0.0.1.1
             LDP Autoconfig is enabled
             LDP Sync is enabled, is required and is achieved
+            State P2P, Network type P2P
+       port-channel4002 - Process ID 1 VRF VRF2, area 0.0.1.1
+            LDP Autoconfig is enabled
+            LDP Sync is enabled, is required and not achieved
             State P2P, Network type P2P
         '''}
 
