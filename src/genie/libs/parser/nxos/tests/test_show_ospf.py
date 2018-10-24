@@ -537,7 +537,32 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                         'autoconfig_area_id': '0.0.0.0',
                                                         'igp_sync': False}},
                                                 'name': 'loopback0',
-                                                'state': 'loopback'}}}}}}}}}}}
+                                                'state': 'loopback'}}}}}}}}},
+             'VRF2':
+                 {'address_family':
+                      {'ipv4':
+                           {'instance':
+                                {'1':
+                                     {'areas':
+                                          {'0.0.1.1':
+                                               {'mpls':
+                                                    {'ldp':
+                                                         {'autoconfig': True,
+                                                          'autoconfig_area_id': '0.0.1.1',
+                                                          'igp_sync': True}},
+                                                'interfaces':
+                                                    {'port-channel4001':
+                                                         {'area': '0.0.1.1',
+                                                          'interface_type': 'point_to_point',
+                                                          'mpls':
+                                                              {'ldp':
+                                                                   {'autoconfig': True,
+                                                                    'autoconfig_area_id': '0.0.1.1',
+                                                                    'igp_sync': True}},
+                                                          'name': 'port-channel4001',
+                                                          'state': 'point_to_point'}},
+                                                }}}}}}}
+             }}
 
     golden_output1 = {'execute.return_value': '''
         loopback0 - Process ID 1 VRF default, area 0.0.0.0
@@ -567,6 +592,10 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
         SL2-0.0.0.0-22.22.22.22-33.33.33.33 - Process ID 1 VRF VRF1, area 0.0.0.1
             LDP Autoconfig not enabled
             LDP Sync not enabled, not required
+            State P2P, Network type P2P
+       port-channel4001 - Process ID 1 VRF VRF2, area 0.0.1.1
+            LDP Autoconfig is enabled
+            LDP Sync is enabled, is required and is achieved
             State P2P, Network type P2P
         '''}
 
