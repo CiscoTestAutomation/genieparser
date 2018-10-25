@@ -486,42 +486,42 @@ class test_show_ip_route(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_output_1 = {'execute.return_value': '''
-    R3_nxosv# show ip route vrf all
-    IP Route Table for VRF "default"
-    '*' denotes best ucast next-hop
-    '**' denotes best mcast next-hop
-    '[x/y]' denotes [preference/metric]
-    '%<string>' in via output denotes VRF <string>
+        R3_nxosv# show ip route vrf all
+        IP Route Table for VRF "default"
+        '*' denotes best ucast next-hop
+        '**' denotes best mcast next-hop
+        '[x/y]' denotes [preference/metric]
+        '%<string>' in via output denotes VRF <string>
 
-    1.1.1.1/32, ubest/mbest: 2/0
-        *via 10.1.3.1, Eth1/2, [1/0], 01:01:30, static
-        *via 20.1.3.1, Eth1/3, [1/0], 01:01:30, static
-    2.2.2.2/32, ubest/mbest: 2/0
-        *via 10.2.3.2, Eth1/4, [1/0], 01:01:30, static
-        *via 20.2.3.2, Eth1/1, [1/0], 01:01:29, static
-    3.3.3.3/32, ubest/mbest: 2/0, attached
-        *via 3.3.3.3, Lo0, [0/0], 01:01:31, local
-        *via 3.3.3.3, Lo0, [0/0], 01:01:31, direct
-    10.1.2.0/24, ubest/mbest: 4/0
-        *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra
-        *via 10.2.3.2, Eth1/4, [110/41], 01:01:18, ospf-1, intra
-        *via 20.1.3.1, Eth1/3, [110/41], 01:01:18, ospf-1, intra
-        *via 20.2.3.2, Eth1/1, [110/41], 01:01:18, ospf-1, intra
-    33.33.33.33/32, ubest/mbest: 2/0, attached
-        *via 33.33.33.33, Lo3, [0/0], 01:01:30, local
-        *via 33.33.33.33, Lo3, [0/0], 01:01:30, direct
+        1.1.1.1/32, ubest/mbest: 2/0
+            *via 10.1.3.1, Eth1/2, [1/0], 01:01:30, static
+            *via 20.1.3.1, Eth1/3, [1/0], 01:01:30, static
+        2.2.2.2/32, ubest/mbest: 2/0
+            *via 10.2.3.2, Eth1/4, [1/0], 01:01:30, static
+            *via 20.2.3.2, Eth1/1, [1/0], 01:01:29, static
+        3.3.3.3/32, ubest/mbest: 2/0, attached
+            *via 3.3.3.3, Lo0, [0/0], 01:01:31, local
+            *via 3.3.3.3, Lo0, [0/0], 01:01:31, direct
+        10.1.2.0/24, ubest/mbest: 4/0
+            *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra
+            *via 10.2.3.2, Eth1/4, [110/41], 01:01:18, ospf-1, intra
+            *via 20.1.3.1, Eth1/3, [110/41], 01:01:18, ospf-1, intra
+            *via 20.2.3.2, Eth1/1, [110/41], 01:01:18, ospf-1, intra
+        33.33.33.33/32, ubest/mbest: 2/0, attached
+            *via 33.33.33.33, Lo3, [0/0], 01:01:30, local
+            *via 33.33.33.33, Lo3, [0/0], 01:01:30, direct
 
-    IP Route Table for VRF "VRF1"
-    '*' denotes best ucast next-hop
-    '**' denotes best mcast next-hop
-    '[x/y]' denotes [preference/metric]
-    '%<string>' in via output denotes VRF <string>
+        IP Route Table for VRF "VRF1"
+        '*' denotes best ucast next-hop
+        '**' denotes best mcast next-hop
+        '[x/y]' denotes [preference/metric]
+        '%<string>' in via output denotes VRF <string>
 
-    1.1.1.1/32, ubest/mbest: 2/0, attached
-        *via 1.1.1.1, Lo4, [0/0], 00:00:10, local
-        *via 1.1.1.1, Lo4, [0/0], 00:00:10, direct
-    '''
-}
+        1.1.1.1/32, ubest/mbest: 2/0, attached
+            *via 1.1.1.1, Lo4, [0/0], 00:00:10, local
+            *via 1.1.1.1, Lo4, [0/0], 00:00:10, direct
+        '''
+     }
     golden_parsed_output_1 = {
         'vrf':{
             'default':{
@@ -617,7 +617,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'mbest': 0,
                                 'route_preference': 110,
                                 'source_protocol': 'ospf',
-                                'process_id': 1,
+                                'process_id': '1',
                                 'source_protocol_status': 'intra',
                                 'metric': 41,
                                 'next_hop': {
@@ -725,6 +725,93 @@ class test_show_ip_route(unittest.TestCase):
         },
     }
 
+    golden_output_2 = {'execute.return_value': '''
+        R3_nxosv# show ip route vrf all
+        IP Route Table for VRF "default"
+        '*' denotes best ucast next-hop
+        '**' denotes best mcast next-hop
+        '[x/y]' denotes [preference/metric]
+        '%<string>' in via output denotes VRF <string>
+
+        10.2.1.1/32, ubest/mbest: 2/0, attached
+            *via 10.2.1.1, Lo0, [0/0], 3w6d, local
+            *via 10.2.1.1, Lo0, [0/0], 3w6d, direct
+        10.2.1.2/32, ubest/mbest: 2/0
+            *via 172.16.0.1, Eth1/1, [110/81], 3w6d, ospf-Underlay, intra
+            *via 172.16.0.17, Eth1/2, [110/81], 3w6d, ospf-Underlay, intra
+        10.2.1.3/32, ubest/mbest: 2/0
+
+        '''
+    }
+    golden_parsed_output_2 = {
+        "vrf": {
+            "default": {
+               "address_family": {
+                    "ipv4": {
+                         "routes": {
+                              "10.2.1.2/32": {
+                                   "route": "10.2.1.2/32",
+                                   "route_preference": 110,
+                                   "process_id": "Underlay",
+                                   "source_protocol_status": "intra",
+                                   "metric": 81,
+                                   "source_protocol": "ospf",
+                                   "mbest": 0,
+                                   "ubest": 2,
+                                   "active": True,
+                                   "next_hop": {
+                                        "next_hop_list": {
+                                             1: {
+                                                  "outgoing_interface": "Ethernet1/1",
+                                                  "best_ucast_nexthop": True,
+                                                  "index": 1,
+                                                  "next_hop": "172.16.0.1",
+                                                  "updated": "3w6d"
+                                             },
+                                             2: {
+                                                  "outgoing_interface": "Ethernet1/2",
+                                                  "best_ucast_nexthop": True,
+                                                  "index": 2,
+                                                  "next_hop": "172.16.0.17",
+                                                  "updated": "3w6d"
+                                             }
+                                        }
+                                   }
+                              },
+                              "10.2.1.1/32": {
+                                   "route": "10.2.1.1/32",
+                                   "route_preference": 0,
+                                   "next_hop": {
+                                        "next_hop_list": {
+                                             1: {
+                                                  "outgoing_interface": "Loopback0",
+                                                  "best_ucast_nexthop": True,
+                                                  "index": 1,
+                                                  "next_hop": "10.2.1.1",
+                                                  "updated": "3w6d"
+                                             },
+                                             2: {
+                                                  "outgoing_interface": "Loopback0",
+                                                  "best_ucast_nexthop": True,
+                                                  "index": 2,
+                                                  "next_hop": "10.2.1.1",
+                                                  "updated": "3w6d"
+                                             }
+                                        }
+                                   },
+                                   "ubest": 2,
+                                   "attached": True,
+                                   "mbest": 0,
+                                   "metric": 0,
+                                   "source_protocol": "local",
+                                   "active": True
+                              },
+                              "10.2.1.3/32": {
+                                   "route": "10.2.1.3/32",
+                                   "mbest": 0,
+                                   "active": True,
+                                   "ubest": 2}}}}}}
+    }
 
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
@@ -738,6 +825,13 @@ class test_show_ip_route(unittest.TestCase):
         obj = ShowIpRoute(device=self.device)
         parsed_output = obj.parse(vrf="all")
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
+
+    def test_show_ip_route_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowIpRoute(device=self.device)
+        parsed_output = obj.parse(vrf="all")
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 # ============================================
 # unit test for 'show ipv6 route'
@@ -833,7 +927,7 @@ class test_show_ipv6_route(unittest.TestCase):
                                 'route_preference': 110,
                                 'metric': 41,
                                 'source_protocol': 'ospfv3',
-                                'process_id': 1,
+                                'process_id': '1',
                                 'source_protocol_status': 'intra',
                                 'next_hop': {
                                     'next_hop_list': {
@@ -876,7 +970,7 @@ class test_show_ipv6_route(unittest.TestCase):
                                 'route_preference': 200,
                                 'source_protocol': 'bgp',
                                 'source_protocol_status': 'internal',
-                                'process_id': 100,
+                                'process_id': '100',
                                 'tag': 100,
                                 'metric': 0,
                                 'next_hop': {
@@ -901,7 +995,7 @@ class test_show_ipv6_route(unittest.TestCase):
                                 'route_preference': 200,
                                 'source_protocol': 'bgp',
                                 'source_protocol_status': 'internal',
-                                'process_id': 100,
+                                'process_id': '100',
                                 'tag': 100,
                                 'metric': 0,
                                 'next_hop': {
