@@ -48,21 +48,13 @@ DEPENDENCIES  = restview psutil Sphinx wheel asynctest
 DEPENDENCIES += setproctitle sphinxcontrib-napoleon sphinx-rtd-theme httplib2
 DEPENDENCIES += pip-tools Cython requests xmltodict
 
-# force cythonize if uploading to pypi
 ifeq ($(UPLOADPYPI), true)
 	DEVNET = true
-	CYTHONIZE = true
 endif
 
 ifeq ($(MAKECMDGOALS), devnet)
 	DEVNET = true
-	CYTHONIZE = true
 	INCLUDE_TESTS = false
-endif
-
-# build options
-ifeq ($(CYTHONIZE), true)
-	BUILD_CMD += --cythonize
 endif
 
 ifeq ($(INCLUDE_TESTS), true)
@@ -74,8 +66,8 @@ ifeq ($(DEVNET), true)
 	BUILD_CMD += --devnet
 endif
 
-# add upload flag ONLY if it's a devnet build, cythonized and asked for upload
-ifeq ($(DEVNET)$(CYTHONIZE)$(UPLOADPYPI), truetruetrue)
+# add upload flag ONLY if it's a devnet build, and asked for upload
+ifeq ($(DEVNET)$(UPLOADPYPI), truetrue)
 	BUILD_CMD += upload -r $(PYPIREPO)
 endif
 
@@ -110,9 +102,8 @@ help:
 	@echo "                  the same as running 'make distribute' in ./docs/"
 	@echo ""
 	@echo "     --- build arguments ---"
-	@echo " DEVNET=true              build for devnet style (cythonized, no ut)"
-	@echo " CYTHONIZE=true           build cythonized package"
-	@echo " INCLUDE_TESTS=true       build include unittests in cythonized pkgs"
+	@echo " DEVNET=true              build for devnet style (no ut)"
+	@echo " INCLUDE_TESTS=true       build include unittests in pkgs"
 
 docs:
 	@echo ""
