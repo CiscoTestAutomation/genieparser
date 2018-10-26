@@ -17,12 +17,12 @@
 # Version:
 #   v2.1
 #
-# Date: 
+# Date:
 #   April 2018
 #
 # About This File:
 #   This script will build Genie Parser into Python PyPI packages.
-#	Make sure all requirements are met before adding new package names to 
+#	Make sure all requirements are met before adding new package names to
 #	PACKAGES variable.
 #
 # Requirements:
@@ -31,6 +31,7 @@
 ################################################################################
 
 # Variables
+PKG_NAME      = genie/libs
 BUILD_ROOT    = $(shell pwd)/__build__
 OUTPUT_DIR    = $(BUILD_ROOT)/dist
 BUILD_CMD     = python setup.py bdist_wheel --dist-dir=$(OUTPUT_DIR)
@@ -44,15 +45,8 @@ PYPIREPO      = pypitest
 
 # Development pkg requirements
 DEPENDENCIES  = restview psutil Sphinx wheel asynctest
-DEPENDENCIES += setproctitle sphinxcontrib-napoleon sphinx-rtd-theme httplib2 
+DEPENDENCIES += setproctitle sphinxcontrib-napoleon sphinx-rtd-theme httplib2
 DEPENDENCIES += pip-tools Cython requests xmltodict
-
-# Internal variables.
-# (note - build examples & templates last because it will fail uploading to pypi
-#  due to duplicates, and we'll for now accept that error)
-PYPI_PKGS      = parser
-
-ALL_PKGS       = $(PYPI_PKGS)
 
 # force cythonize if uploading to pypi
 ifeq ($(UPLOADPYPI), true)
@@ -87,7 +81,7 @@ endif
 
 
 .PHONY: help docs distribute_docs clean check\
-	    develop undevelop distribute test $(ALL_PKGS)
+	    develop undevelop distribute test package
 
 help:
 	@echo "Please use 'make <target>' where <target> is one of"
@@ -103,7 +97,7 @@ help:
 	@echo ""
 	@echo "     --- build specific targets ---"
 	@echo ""
-	@echo " parser                build Genie.parser - Genie Parser libraries"
+	@echo " package              build Genie.parser - Genie Parser libraries"
 	@echo ""
 	@echo "     --- distributions to production environment ---"
 	@echo ""
@@ -171,29 +165,18 @@ undevelop:
 	@echo "Done."
 	@echo ""
 
-distribute: 
+distribute:
 	@echo ""
 	@echo "--------------------------------------------------------------------"
 	@echo "Copying all distributable to $(PROD_PKGS)"
-	@test -d $(BUILD_ROOT) || { echo "Nothing to distribute! Exiting..."; exit 1; }
-	@echo "Organizing distributable into folders"
-	@python tools/organize_dist.py --dist $(OUTPUT_DIR)
-	@echo "Distributing..."
-	@rsync -rtlv --progress $(OUTPUT_DIR)/* $(PROD_USER):$(PROD_PKGS)/pyats
-	@echo -e "The following pyATS packages were distributed by ${USER} to \
-	$(PROD_USER):$(PROD_PKGS)/pyats\n\n\
-	`ls -1 $(OUTPUT_DIR)/*/*`\n\n\
-	-----------------------------------------------------------------------\n\n\
-	Distribution Environment:\n\n\
-	`git status --`\n\n\
-	-----------------------------------------------\n\n\
-	`git log -n 1 --stat --`\n\n" | \
-	mail -s "$(HEADER) Genie Package Distribution by ${USER}" $(WATCHERS)
+	@test -d $(OUTPUT_DIR) || { echo "Nothing to distribute! Exiting..."; exit 1; }
+	@ssh -q $(PROD_USER) 'test -e $(PROD_PKGS)/$(PKG_NAME) || mkdir $(PROD_PKGS)/$(PKG_NAME)'
+	@scp $(OUTPUT_DIR)/* $(PROD_USER):$(PROD_PKGS)/$(PKG_NAME)/
 	@echo ""
 	@echo "Done."
 	@echo ""
 
-parser:
+package:
 	@echo ""
 	@echo "--------------------------------------------------------------------"
 	@echo "Building Genie Parser Package"
@@ -214,7 +197,7 @@ test:
 	@echo "Running all unit tests..."
 	@echo ""
 
-	@$(TESTCMD) 
+	@$(TESTCMD)
 
 	@echo "Completed unit testing"
 	@echo ""
