@@ -5,13 +5,14 @@
 See:
     https://packaging.python.org/en/latest/distributing.html
 '''
+
 import os
 import re
 import sys
 
 from setuptools import setup, find_packages
 
-_INTERNAL_SUPPORT = 'pyats-support@cisco.com'
+_INTERNAL_SUPPORT = 'asg-genie-support@cisco.com'
 _EXTERNAL_SUPPORT = 'pyats-support-ext@cisco.com'
 
 _INTERNAL_LICENSE = 'Cisco Systems, Inc. Cisco Confidential',
