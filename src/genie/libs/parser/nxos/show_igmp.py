@@ -387,6 +387,7 @@ class ShowIpIgmpInterfaceSchema(MetaParser):
                             Optional('subnet'): str,
                             Optional('querier'): str,
                             Optional('querier_version'): int,
+                            Optional('expires'): str,
                             Optional('next_query_sent_in'): str,
                             Optional('membership_count'): int,
                             Optional('old_membership_count'): int,
@@ -514,15 +515,28 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
                 continue
 
             # Active querier: 10.1.2.1, version: 3, next query sent in: 00:00:47
-            p4 = re.compile(r'^Active +querier: +(?P<querier>[\w\.\:]+), +'
+            # Active querier: 0.0.0.0
+            p4 = re.compile(r'^Active +querier: +(?P<querier>[\w\.\:]+)(, +'
                              'version: +(?P<version>\d+), +'
-                             'next +query +sent +in: +(?P<in>[\w\.\:]+)$')
+                             'next +query +sent +in: +(?P<in>[\w\.\:\.]+))?$')
             m = p4.match(line)
             if m:
                 ret_dict['vrfs'][vrf]['interface'][intf]['querier'] = m.groupdict()['querier']
                 ret_dict['vrfs'][vrf]['interface'][intf]['querier_version'] = int(m.groupdict()['version'])
                 ret_dict['vrfs'][vrf]['interface'][intf]['next_query_sent_in'] = m.groupdict()['in']
                 continue
+
+            # Active querier: 10.3.5.3, expires: 00:02:59, querier version: 2
+            p4_1 = re.compile(r'^Active +querier: +(?P<querier>[\w\.\:]+), +'
+                             'expires: +(?P<expires>[\w\.\:\.]+), +'
+                             'querier +version: +(?P<version>\d+)$')
+            m = p4_1.match(line)
+            if m:
+                ret_dict['vrfs'][vrf]['interface'][intf]['querier'] = m.groupdict()['querier']
+                ret_dict['vrfs'][vrf]['interface'][intf]['querier_version'] = int(m.groupdict()['version'])
+                ret_dict['vrfs'][vrf]['interface'][intf]['expires'] = m.groupdict()['expires']
+                continue
+
 
             # Membership count: 4
             p5 = re.compile(r'^Membership +count: +(?P<count>\d+)$')
@@ -885,7 +899,7 @@ class ShowIpIgmpGroups(ShowIpIgmpGroupsSchema):
                 continue
 
             # 239.5.5.5          S    Ethernet2/1         00:21:00  never     10.1.2.1
-            p3 = re.compile(r'^(?P<group>[\w\.\:]+) +(?P<type>[SDLT]+) +(?P<intf>[\w\.\/\-]+)'
+            p3 = re.compile(r'^(?P<group>[\w\.\:]+) +(?P<type>[SDLTH\*]+) +(?P<intf>[\w\.\/\-]+)'
                              ' +(?P<uptime>[\w\.\:]+) +(?P<expires>[\w\.\:]+)'
                              ' +(?P<last_reporter>[\w\.\:]+)$')
             m = p3.match(line)
