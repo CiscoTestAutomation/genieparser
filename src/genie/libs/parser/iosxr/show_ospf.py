@@ -304,8 +304,10 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                     continue
 
             # Internet Address 10.2.3.3/24, Area 0
+            # Internet Address 200.5.0.1/32, Area 1, SID 0, Strict-SPF SID 0
             p3 = re.compile(r'^Internet +Address +(?P<address>(\S+)),'
-                             ' +Area +(?P<area>(\S+))$')
+                             ' +Area +(?P<area>(\S+))'
+                             '(, +(?P<dummy>.+))?$')
             m = p3.match(line)
             if m:
                 ip_address = str(m.groupdict()['address'])
