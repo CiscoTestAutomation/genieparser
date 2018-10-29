@@ -8,3 +8,10 @@
 * NXOS
     * parser fix for 'show ip|ipv6 route vrf all' on output 
       '*via 172.16.0.1, Eth1/1, [110/81], 3w6d, ospf-Underlay, intra' which ospf is not a number
+
+--------------------------------------------------------------------------------
+                                INTERFACE
+--------------------------------------------------------------------------------
+* IOSXE
+    * remove duplicated ShowEtherchannelSummary parser from 
+      iosxe show_interface.py, keep the one in shwo_lag.py, and combine two structures
