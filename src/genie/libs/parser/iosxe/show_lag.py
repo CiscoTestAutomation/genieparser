@@ -614,12 +614,21 @@ class ShowEtherchannelSummarySchema(MetaParser):
                     Any(): {
                         Optional('interface'): str,
                         Optional('flags'): str,
-                        Optional('bundled'): bool,
+                        Optional('bundled'): bool,                        
+                        'port_channel': {
+                            'port_channel_member': bool,
+                            Optional('port_channel_int'): str,
+                        },
                     }
+                },
+                Optional('port_channel'): {
+                    'port_channel_member': bool,
+                    Optional('port_channel_member_intfs'): list,
                 },
             },
         }
     }
+
 # ====================================================
 #  parser for show etherchannel summary
 # ====================================================
@@ -648,6 +657,7 @@ class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
         for line in out.splitlines():
             if line:
                 line = line.rstrip()
+                line = line.replace('\t', '  ')
             else:
                 continue
 
@@ -672,6 +682,7 @@ class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
                 group = m1.groupdict()
                 name = Common.convert_intf_name(group.pop("name"))
                 intf_dict = result_dict.setdefault('interfaces', {}).setdefault(name, {})
+
                 intf_dict.update({'name': name})
                 intf_dict.update({'bundle_id': int(group.pop("bundle_id"))})
                 if group.get("protocol"):
@@ -692,15 +703,30 @@ class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
 
                 if group.get('ports'):
                     ports = group.pop('ports').split()
+
+                    # port_channel
+                    eth_list = []
+
                     port_dict = intf_dict.setdefault('members', {})
                     for port in ports:
                         port_value = port.split('(')
                         interface = Common.convert_intf_name(port_value[0])
                         state = port_value[1].replace(')','')
+                        eth_list.append(interface)
 
                         port_item = port_dict.setdefault(interface, {})
                         port_item.update({'interface': interface})
                         port_item.update({'flags': state})
                         port_item.update({'bundled': True if state in ['bndl','P'] else False})
+
+                        # port_channel
+                        port_item.setdefault('port_channel', {}).update({'port_channel_member': True,
+                                                                         'port_channel_int': name})
+
+                    # port_channel
+                    if eth_list:
+                        port_dict = intf_dict.setdefault('port_channel', {})
+                        port_dict['port_channel_member'] = True
+                        port_dict['port_channel_member_intfs'] = sorted(eth_list)
                 continue
         return result_dict

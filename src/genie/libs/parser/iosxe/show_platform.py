@@ -1369,12 +1369,12 @@ class ShowBootSchema(MetaParser):
               Optional('boot_mode'): str,
               Optional('ipxe_timeout'): int,
               Optional('active'): {              
-                  'configuration_register': str,
-                  'boot_variable': str,
+                  Optional('configuration_register'): str,
+                  Optional('boot_variable'): str,
               },
               Optional('standby'): {              
-                  'configuration_register': str,
-                  'boot_variable': str,
+                  Optional('configuration_register'): str,
+                  Optional('boot_variable'): str,
               },
     }
 

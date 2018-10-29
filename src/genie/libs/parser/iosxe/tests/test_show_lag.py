@@ -412,17 +412,18 @@ class test_show_pagp_neighbor(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output = {'execute.return_value': '''
-iosvl2-1#show pagp neighbor
-Flags:  S - Device is sending Slow hello.  C - Device is in Consistent state.
-        A - Device is in Auto mode.        P - Device learns on physical port.
+        iosvl2-1#show pagp neighbor
+        Flags:  S - Device is sending Slow hello.  C - Device is in Consistent state.
+                A - Device is in Auto mode.        P - Device learns on physical port.
 
-Channel group 14 neighbors
-         Partner              Partner          Partner         Partner Group
-Port      Name                 Device ID        Port       Age  Flags   Cap.
-Gi1/0/7   R4                   ecbd.1d09.5680	Gi1/0/7     22s SC	E0001
-Gi1/0/8   R4                   ecbd.1d09.5680	Gi1/0/8     16s SC	E0001
-Gi1/0/9   R4                   ecbd.1d09.5680	Gi1/0/9     18s SC	E0001
-    '''}
+        Channel group 14 neighbors
+                 Partner              Partner          Partner         Partner Group
+        Port      Name                 Device ID        Port       Age  Flags   Cap.
+        Gi1/0/7   R4                   ecbd.1d09.5680	Gi1/0/7     22s SC	E0001
+        Gi1/0/8   R4                   ecbd.1d09.5680	Gi1/0/8     16s SC	E0001
+        Gi1/0/9   R4                   ecbd.1d09.5680	Gi1/0/9     18s SC	E0001
+    '''
+    }
 
     golden_parsed_output = {
         "interfaces": {
@@ -708,33 +709,34 @@ class test_show_etherchannel_summary(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output = {'execute.return_value': '''
-csr1000v-1#show etherchannel summary
-Flags:  D - down        P/bndl - bundled in port-channel
-        I - stand-alone s/susp - suspended
-        H - Hot-standby (LACP only)
-        R - Layer3      S - Layer2
-        U - in use      f - failed to allocate aggregator
+        csr1000v-1#show etherchannel summary
+        Flags:  D - down        P/bndl - bundled in port-channel
+                I - stand-alone s/susp - suspended
+                H - Hot-standby (LACP only)
+                R - Layer3      S - Layer2
+                U - in use      f - failed to allocate aggregator
 
-        M - not in use, minimum links not met
-        u - unsuitable for bundling
-        w - waiting to be aggregated
-        d - default port
-
-
-Number of channel-groups in use: 2
-Number of aggregators:           2
-
-Group  Port-channel  Protocol    Ports
-------+-------------+-----------+-----------------------------------------------
-1	Po1(RU)		LACP	 Gi2(bndl) Gi3(bndl)
-2	Po2(RU)		LACP	 Gi4(bndl) Gi5(hot-sby) Gi6(bndl)
+                M - not in use, minimum links not met
+                u - unsuitable for bundling
+                w - waiting to be aggregated
+                d - default port
 
 
-RU - L3 port-channel UP State
-SU - L2 port-channel UP state
-P/bndl -  Bundled
-S/susp  - Suspended
-    '''}
+        Number of channel-groups in use: 2
+        Number of aggregators:           2
+
+        Group  Port-channel  Protocol    Ports
+        ------+-------------+-----------+-----------------------------------------------
+        1	Po1(RU)		LACP	 Gi2(bndl) Gi3(bndl)
+        2	Po2(RU)		LACP	 Gi4(bndl) Gi5(hot-sby) Gi6(bndl)
+
+
+        RU - L3 port-channel UP State
+        SU - L2 port-channel UP state
+        P/bndl -  Bundled
+        S/susp  - Suspended
+    '''
+    }
 
     golden_parsed_output = {
         'number_of_lag_in_use': 2,
@@ -751,14 +753,26 @@ S/susp  - Suspended
                         'interface': 'GigabitEthernet2',
                         'flags': 'bndl',
                         'bundled': True,
+                        'port_channel': {
+                           "port_channel_member": True,
+                           "port_channel_int": "Port-channel1"
+                        },
                         },
                     'GigabitEthernet3': {
                         'interface': 'GigabitEthernet3',
                         'flags': 'bndl',
                         'bundled': True,
-                       },
+                        'port_channel': {
+                           "port_channel_member": True,
+                           "port_channel_int": "Port-channel1"
+                        },
                     },
                 },
+                'port_channel': {
+                    'port_channel_member': True,
+                    'port_channel_member_intfs': ['GigabitEthernet2', 'GigabitEthernet3'],
+                }
+            },
             'Port-channel2': {
                 'name': 'Port-channel2',
                 'bundle_id': 2,
@@ -770,18 +784,34 @@ S/susp  - Suspended
                         'interface': 'GigabitEthernet4',
                         'flags': 'bndl',
                         'bundled': True,
+                        'port_channel': {
+                           "port_channel_member": True,
+                           "port_channel_int": "Port-channel2"
+                        },
                     },
                     'GigabitEthernet5': {
                         'interface': 'GigabitEthernet5',
                         'flags': 'hot-sby',
                         'bundled': False,
+                        'port_channel': {
+                           "port_channel_member": True,
+                           "port_channel_int": "Port-channel2"
+                        },
                     },
                     'GigabitEthernet6': {
                         'interface': 'GigabitEthernet6',
                         'flags': 'bndl',
                         'bundled': True,
+                        'port_channel': {
+                           "port_channel_member": True,
+                           "port_channel_int": "Port-channel2"
+                        },
                     },
                 },
+                'port_channel': {
+                    'port_channel_member': True,
+                    'port_channel_member_intfs': ['GigabitEthernet4', 'GigabitEthernet5', 'GigabitEthernet6'],
+                }
             },
         },
     }
