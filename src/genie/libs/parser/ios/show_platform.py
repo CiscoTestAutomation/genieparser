@@ -21,16 +21,21 @@ from genie.metaparser.util.schemaengine import Schema, \
                                          Any, Optional
 
 # import iosxe parser
-from genie.libs.parser.iosxe.show_platform import *
+from genie.libs.parser.iosxe.show_platform import \
+        ShowVersion as ShowVersion_iosxe, \
+        Dir as Dir_iosxe, \
+        ShowInventorySchema as ShowInventorySchema_iosxe, \
+        ShowRedundancy as ShowRedundancy_iosxe, \
+        ShowProcessesCpuSorted as ShowProcessesCpuSorted_iosxe
 
 
-class ShowVersion(ShowVersion):
+class ShowVersion(ShowVersion_iosxe):
     """Parser for show version
     """
     pass
 
 
-class Dir(Dir):
+class Dir(Dir_iosxe):
     """Parser for dir
     """
     pass
@@ -65,13 +70,13 @@ class ShowRedundancyIosSchema(MetaParser):
             }
 
 
-class ShowRedundancy(ShowRedundancyIosSchema, ShowRedundancy):
+class ShowRedundancy(ShowRedundancyIosSchema, ShowRedundancy_iosxe):
     """Parser for show redundancy
     """
     pass
 
 
-class ShowInventory(ShowInventorySchema):
+class ShowInventory(ShowInventorySchema_iosxe):
     """Parser for show Inventory
     """
     def cli(self):
@@ -180,7 +185,7 @@ class ShowBootvarSchema(MetaParser):
     }
 
 
-class ShowBootvar(ShowBoot, ShowBootvarSchema):
+class ShowBootvar(ShowBootvarSchema):
     """Parser for show boot"""
 
     def cli(self):
@@ -256,7 +261,7 @@ class ShowBootvar(ShowBoot, ShowBootvarSchema):
         return boot_dict
 
 
-class ShowProcessesCpuSorted(ShowProcessesCpuSorted):
+class ShowProcessesCpuSorted(ShowProcessesCpuSorted_iosxe):
     """Parser for show processes cpu sorted
                   show processes cpu sorted <1min|5min|5sec>
                   show processes cpu sorted | include <WORD>
