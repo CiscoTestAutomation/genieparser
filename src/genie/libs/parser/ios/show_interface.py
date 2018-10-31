@@ -22,44 +22,50 @@ from genie.metaparser.util.schemaengine import Schema, \
                                          Any, Optional
 
 # import iosxe parser
-from genie.libs.parser.iosxe.show_interface import *
+from genie.libs.parser.iosxe.show_interface import \
+    ShowInterfaces as ShowInterfaces_iosxe, \
+    ShowIpInterfaceBrief as ShowIpInterfaceBrief_iosxe, \
+    ShowIpInterfaceBriefPipeVlan as ShowIpInterfaceBriefPipeVlan_iosxe, \
+    ShowIpInterfaceBriefPipeIp as ShowIpInterfaceBriefPipeIp_iosxe, \
+    ShowIpInterface as ShowIpInterface_iosxe, \
+    ShowIpv6Interface as ShowIpv6Interface_iosxe, \
+    ShowInterfacesAccounting as ShowInterfacesAccounting_iosxe
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
 
 
-class ShowInterfaces(ShowInterfaces):
+class ShowInterfaces(ShowInterfaces_iosxe):
     """parser for show interfaces"""
-
     pass
 
 
-class ShowIpInterfaceBrief(ShowIpInterfaceBrief):
+class ShowIpInterfaceBrief(ShowIpInterfaceBrief_iosxe):
     """Parser for: show ip interface brief"""
     pass
 
 
-class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBriefPipeVlan):
+class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBriefPipeVlan_iosxe):
     """Parser for: show ip interface brief | include Vlan"""
     pass
 
 
-class ShowIpInterfaceBriefPipeIp(ShowIpInterfaceBriefPipeIp):
+class ShowIpInterfaceBriefPipeIp(ShowIpInterfaceBriefPipeIp_iosxe):
     """Parser for:  show ip interface brief | include <WORD>"""
     pass
 
 
-class ShowIpInterface(ShowIpInterface):
+class ShowIpInterface(ShowIpInterface_iosxe):
     """Parser for show ip interface"""
     pass
 
 
-class ShowIpv6Interface(ShowIpv6Interface):
+class ShowIpv6Interface(ShowIpv6Interface_iosxe):
     """Parser for show ipv6 interface"""
     pass
 
 
-class ShowInterfacesAccounting(ShowInterfacesAccounting):
+class ShowInterfacesAccounting(ShowInterfacesAccounting_iosxe):
     """Parser for:
         show interfaces accounting
         show interfaces <interface> accounting
