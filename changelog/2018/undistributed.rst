@@ -15,3 +15,18 @@
 * IOSXE
     * remove duplicated ShowEtherchannelSummary parser from 
       iosxe show_interface.py, keep the one in shwo_lag.py, and combine two structures
+
+* IOSXR
+    * fix parser schema for ShowInterfaceBrief to hve key 'ethernet' as optional
+
+--------------------------------------------------------------------------------
+                                PLATFORM
+--------------------------------------------------------------------------------
+* IOSXE
+    * fix regexp for 'show version' to support more output to get version information
+
+--------------------------------------------------------------------------------
+                                OSPF
+--------------------------------------------------------------------------------
+* IOSXR
+    * fix regexp to support area output as non-digit id
