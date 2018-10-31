@@ -394,7 +394,7 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                                 else:
                                     q_vrf = 'default'
                                 q_inst = str(q.groupdict()['q_inst'])
-                                q_area = str(m.groupdict()['q_area'])
+                                q_area = str(q.groupdict()['q_area'])
                                 if q_area.isdigit():
                                     q_area = str(IPAddress(q_area))
                                 remote_id = str(q.groupdict()['remote_id'])
