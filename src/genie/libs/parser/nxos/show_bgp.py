@@ -1112,8 +1112,9 @@ class ShowBgpPeerSession(ShowBgpPeerSessionSchema):
             line = line.rstrip()
 
             # template peer-session PEER-SESSION
+            # template peer-session PS-1
             p1 = re.compile(r'^\s*template +peer-session '
-                             '+(?P<session_name>[a-zA-Z\-\_]+)$')
+                             '+(?P<session_name>[a-zA-Z\-\_0-9]+)$')
             m = p1.match(line)
             if m:
                 # Create top level key
@@ -1127,7 +1128,6 @@ class ShowBgpPeerSession(ShowBgpPeerSessionSchema):
             
             # Execute bgp show command now
             for session in peer_sessions:
-                
                 # Create session key
                 if session not in parsed_dict['peer_session']:
                     parsed_dict['peer_session'][session] = {}

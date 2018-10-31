@@ -297,7 +297,7 @@ class ShowProtocolsAfiAllAll(ShowProtocolsAfiAllAllSchema):
                 continue
 
             # Area 0
-            p5 = re.compile(r'^Area +(?P<area>(\d+))$')
+            p5 = re.compile(r'^Area +(?P<area>(\S+))$')
             m = p5.match(line)
             if m:
                 area = str(IPAddress(str(m.groupdict()['area'])))
