@@ -451,7 +451,8 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                             {'ldp': 
                                                 {'autoconfig': False,
                                                 'autoconfig_area_id': '0.0.0.1',
-                                                'igp_sync': False}},
+                                                'igp_sync': False,
+                                                'required': False}},
                                         'interfaces': 
                                             {'Ethernet2/1': 
                                                 {'area': '0.0.0.1',
@@ -460,7 +461,8 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                     {'ldp': 
                                                         {'autoconfig': False,
                                                         'autoconfig_area_id': '0.0.0.1',
-                                                        'igp_sync': False}},
+                                                        'igp_sync': False,
+                                                        'required': False}},
                                                 'name': 'Ethernet2/1',
                                                 'state': 'bdr'}},
                                         'sham_links': 
@@ -471,7 +473,8 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                     {'ldp': 
                                                         {'autoconfig': False,
                                                         'autoconfig_area_id': '0.0.0.1',
-                                                        'igp_sync': False}},
+                                                        'igp_sync': False,
+                                                        'required': False}},
                                                 'name': '22.22.22.22 11.11.11.11',
                                                 'state': 'point_to_point'},
                                             '22.22.22.22 33.33.33.33': 
@@ -481,7 +484,8 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                     {'ldp': 
                                                         {'autoconfig': False,
                                                         'autoconfig_area_id': '0.0.0.1',
-                                                        'igp_sync': False}},
+                                                        'igp_sync': False,
+                                                        'required': False}},
                                                 'name': '22.22.22.22 '
                                                 '33.33.33.33',
                                                 'state': 'point_to_point'}}}}}}}}},
@@ -496,7 +500,8 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                             {'ldp': 
                                                 {'autoconfig': False,
                                                 'autoconfig_area_id': '0.0.0.0',
-                                                'igp_sync': False}},
+                                                'igp_sync': False,
+                                                'required': False}},
                                         'interfaces': 
                                             {'Ethernet2/2': 
                                                 {'area': '0.0.0.0',
@@ -505,7 +510,8 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                     {'ldp': 
                                                         {'autoconfig': False,
                                                         'autoconfig_area_id': '0.0.0.0',
-                                                        'igp_sync': False}},
+                                                        'igp_sync': False,
+                                                        'required': False}},
                                                 'name': 'Ethernet2/2',
                                                 'state': 'bdr'},
                                             'Ethernet2/3': 
@@ -515,7 +521,8 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                     {'ldp': 
                                                         {'autoconfig': False,
                                                         'autoconfig_area_id': '0.0.0.0',
-                                                        'igp_sync': False}},
+                                                        'igp_sync': False,
+                                                        'required': False}},
                                                 'name': 'Ethernet2/3',
                                                 'state': 'bdr'},
                                             'Ethernet2/4': 
@@ -525,7 +532,8 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                     {'ldp': 
                                                         {'autoconfig': False,
                                                         'autoconfig_area_id': '0.0.0.0',
-                                                        'igp_sync': False}},
+                                                        'igp_sync': False,
+                                                        'required': False}},
                                                 'name': 'Ethernet2/4',
                                                 'state': 'bdr'},
                                             'loopback0': 
@@ -535,7 +543,8 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                     {'ldp': 
                                                         {'autoconfig': False,
                                                         'autoconfig_area_id': '0.0.0.0',
-                                                        'igp_sync': False}},
+                                                        'igp_sync': False,
+                                                        'required': False}},
                                                 'name': 'loopback0',
                                                 'state': 'loopback'}}}}}}}}},
              'VRF2':
@@ -549,7 +558,8 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                     {'ldp':
                                                          {'autoconfig': True,
                                                           'autoconfig_area_id': '0.0.1.1',
-                                                          'igp_sync': True}},
+                                                          'igp_sync': False,
+                                                          'required': False}},
                                                'interfaces':
                                                     {'port-channel4001':
                                                          {'area': '0.0.1.1',
@@ -558,7 +568,8 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                               {'ldp':
                                                                    {'autoconfig': True,
                                                                     'autoconfig_area_id': '0.0.1.1',
-                                                                    'igp_sync': True}},
+                                                                    'igp_sync': False,
+                                                                    'required': False}},
                                                           'name': 'port-channel4001',
                                                           'state': 'point_to_point'},
                                                     'port-channel4002':
@@ -568,7 +579,8 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                               {'ldp':
                                                                    {'autoconfig': True,
                                                                     'autoconfig_area_id': '0.0.1.1',
-                                                                    'igp_sync': True}},
+                                                                    'igp_sync': False,
+                                                                    'required': False}},
                                                           'name': 'port-channel4002',
                                                           'state': 'point_to_point'}}
                                                 }}}}}}}
@@ -603,13 +615,13 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
             LDP Autoconfig not enabled
             LDP Sync not enabled, not required
             State P2P, Network type P2P
-       port-channel4001 - Process ID 1 VRF VRF2, area 0.0.1.1
+        port-channel4001 - Process ID 1 VRF VRF2, area 0.0.1.1
             LDP Autoconfig is enabled
-            LDP Sync is enabled, is required and is achieved
+            LDP Sync not enabled, not required
             State P2P, Network type P2P
-       port-channel4002 - Process ID 1 VRF VRF2, area 0.0.1.1
+        port-channel4002 - Process ID 1 VRF VRF2, area 0.0.1.1
             LDP Autoconfig is enabled
-            LDP Sync is enabled, is required and not achieved
+            LDP Sync not enabled, not required
             State P2P, Network type P2P
         '''}
 
@@ -626,7 +638,8 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                             {'ldp': 
                                                 {'autoconfig': False,
                                                 'autoconfig_area_id': '0.0.0.0',
-                                                'igp_sync': False}},
+                                                'igp_sync': False,
+                                                'required': False}},
                                         'interfaces': 
                                             {'Ethernet4/1': 
                                                 {'area': '0.0.0.0',
@@ -635,7 +648,8 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                     {'ldp': 
                                                         {'autoconfig': False,
                                                         'autoconfig_area_id': '0.0.0.0',
-                                                        'igp_sync': False}},
+                                                        'igp_sync': False,
+                                                        'required': False}},
                                                 'name': 'Ethernet4/1',
                                                 'state': 'down'},
                                             'Ethernet4/10': 
@@ -645,7 +659,8 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                     {'ldp': 
                                                         {'autoconfig': False,
                                                         'autoconfig_area_id': '0.0.0.0',
-                                                        'igp_sync': False}},
+                                                        'igp_sync': False,
+                                                        'required': False}},
                                                 'name': 'Ethernet4/10',
                                                 'state': 'down'},
                                             'loopback1': 
@@ -655,7 +670,8 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                     {'ldp': 
                                                         {'autoconfig': False,
                                                         'autoconfig_area_id': '0.0.0.0',
-                                                        'igp_sync': False}},
+                                                        'igp_sync': False,
+                                                        'required': False}},
                                                 'name': 'loopback1',
                                                 'state': 'loopback'},
                                             'loopback2': 
@@ -665,7 +681,8 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                     {'ldp': 
                                                         {'autoconfig': False,
                                                         'autoconfig_area_id': '0.0.0.0',
-                                                        'igp_sync': False}},
+                                                        'igp_sync': False,
+                                                        'required': False}},
                                                 'name': 'loopback2',
                                                 'state': 'loopback'},
                                             'loopback3': 
@@ -675,7 +692,8 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                     {'ldp': 
                                                         {'autoconfig': False,
                                                         'autoconfig_area_id': '0.0.0.0',
-                                                        'igp_sync': False}},
+                                                        'igp_sync': False,
+                                                        'required': False}},
                                                 'name': 'loopback3',
                                                 'state': 'loopback'},
                                             'loopback4': 
@@ -685,7 +703,8 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                     {'ldp': 
                                                         {'autoconfig': False,
                                                         'autoconfig_area_id': '0.0.0.0',
-                                                        'igp_sync': False}},
+                                                        'igp_sync': False,
+                                                        'required': False}},
                                                 'name': 'loopback4',
                                                 'state': 'loopback'}}}}}}}}}}}
 
@@ -716,27 +735,145 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
             State LOOPBACK, Network type LOOPBACK
         '''}
 
+    golden_output3 = {'execute.return_value': '''
+        port-channel4001 - Process ID 1 VRF VRF2, area 0.0.1.1
+            LDP Autoconfig is enabled
+            LDP Sync is enabled, is required and is achieved
+            State P2P, Network type P2P
+        port-channel4002 - Process ID 1 VRF VRF2, area 0.0.1.1
+            LDP Autoconfig is enabled
+            LDP Sync is enabled, is required and is achieved
+            State P2P, Network type P2P
+    '''}
+    golden_parsed_output3 = {
+        'vrf':{
+            'VRF2':
+                {'address_family':
+                     {'ipv4':
+                          {'instance':
+                               {'1':
+                                    {'areas':
+                                         {'0.0.1.1':
+                                              {'mpls':
+                                                   {'ldp':
+                                                        {'autoconfig': True,
+                                                         'autoconfig_area_id': '0.0.1.1',
+                                                         'igp_sync': True,
+                                                         'required': True,
+                                                         'achieved': True}},
+                                              'interfaces':
+                                                   {'port-channel4001':
+                                                        {'area': '0.0.1.1',
+                                                         'interface_type': 'point_to_point',
+                                                         'mpls':
+                                                             {'ldp':
+                                                                  {'autoconfig': True,
+                                                                   'autoconfig_area_id': '0.0.1.1',
+                                                                   'igp_sync': True,
+                                                                   'required': True,
+                                                                   'achieved': True}},
+                                                         'name': 'port-channel4001',
+                                                         'state': 'point_to_point'},
+                                                   'port-channel4002':
+                                                        {'area': '0.0.1.1',
+                                                         'interface_type': 'point_to_point',
+                                                         'mpls':
+                                                             {'ldp':
+                                                                  {'autoconfig': True,
+                                                                   'autoconfig_area_id': '0.0.1.1',
+                                                                   'igp_sync': True,
+                                                                   'required': True,
+                                                                   'achieved': True}},
+                                                         'name': 'port-channel4002',
+                                                         'state': 'point_to_point'}}
+                                               }}}}}}}
+    }}
+    golden_output4 = {'execute.return_value': '''
+            port-channel4001 - Process ID 1 VRF VRF1, area 0.0.1.1
+                LDP Autoconfig is enabled
+                LDP Sync is enabled, is required and not achieved
+                State P2P, Network type P2P
+            port-channel4002 - Process ID 1 VRF VRF1, area 0.0.1.1
+                LDP Autoconfig is enabled
+                LDP Sync is enabled, is required and not achieved
+                State P2P, Network type P2P
+        '''}
+    golden_parsed_output4 = {
+        'vrf': {
+            'VRF1':
+                {'address_family':
+                     {'ipv4':
+                          {'instance':
+                               {'1':
+                                    {'areas':
+                                         {'0.0.1.1':
+                                              {'mpls':
+                                                   {'ldp':
+                                                        {'autoconfig': True,
+                                                         'autoconfig_area_id': '0.0.1.1',
+                                                         'igp_sync': True,
+                                                         'required': True,
+                                                         'achieved': False}},
+                                               'interfaces':
+                                                   {'port-channel4001':
+                                                        {'area': '0.0.1.1',
+                                                         'interface_type': 'point_to_point',
+                                                         'mpls':
+                                                             {'ldp':
+                                                                  {'autoconfig': True,
+                                                                   'autoconfig_area_id': '0.0.1.1',
+                                                                   'igp_sync': True,
+                                                                   'required': True,
+                                                                   'achieved': False}},
+                                                         'name': 'port-channel4001',
+                                                         'state': 'point_to_point'},
+                                                    'port-channel4002':
+                                                        {'area': '0.0.1.1',
+                                                         'interface_type': 'point_to_point',
+                                                         'mpls':
+                                                             {'ldp':
+                                                                  {'autoconfig': True,
+                                                                   'autoconfig_area_id': '0.0.1.1',
+                                                                   'igp_sync': True,
+                                                                   'required': True,
+                                                                   'achieved': False}},
+                                                         'name': 'port-channel4002',
+                                                         'state': 'point_to_point'}}
+                                               }}}}}}}
+        }}
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpOspfMplsLdpInterface(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
-    def test_vrf_all(self):
+    def test_show_ip_ospf_mpls_ldp_interface_vrf_all(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowIpOspfMplsLdpInterface(device=self.device)
         parsed_output = obj.parse(vrf='all')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
-    def test_default_vrf(self):
+    def test_show_ip_ospf_mpls_ldp_interface(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowIpOspfMplsLdpInterface(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
+    def test_show_ip_ospf_mpls_ldp_interface_vrf_vrf2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowIpOspfMplsLdpInterface(device=self.device)
+        parsed_output = obj.parse(vrf="VRF2")
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
+    def test_show_ip_ospf_mpls_ldp_interface_vrf_vrf1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output4)
+        obj = ShowIpOspfMplsLdpInterface(device=self.device)
+        parsed_output = obj.parse(vrf="VRF1")
+        self.assertEqual(parsed_output, self.golden_parsed_output4)
 # ===================================================
 #  Unit test for 'show ip ospf virtual-links vrf all'
 # ===================================================
