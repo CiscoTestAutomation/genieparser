@@ -30,3 +30,17 @@
 --------------------------------------------------------------------------------
 * IOSXR
     * fix regexp to support area output as non-digit id
+
+--------------------------------------------------------------------------------
+                                IMGP
+--------------------------------------------------------------------------------
+* NXOS
+    * Convert interface name to standard style (Loopback, Ethernet,etc.) for 
+      ShowIpIgmpGroups
+
+--------------------------------------------------------------------------------
+                                MLD
+--------------------------------------------------------------------------------
+* NXOS
+    * Convert interface name to standard style (Loopback, Ethernet,etc.) for 
+      ShowIpv6MldGroups

@@ -504,7 +504,7 @@ class ShowIpv6MldGroups(ShowIpv6MldGroupsSchema):
             p3 = re.compile(r'^Type: +(?P<type>\w+), Interface: +(?P<intf>[\w\.\/\-]+)$')
             m = p3.match(line)
             if m:
-                intf = m.groupdict()['intf']
+                intf = m.groupdict()['intf'].capitalize()
                 if 'interface' not in ret_dict['vrfs'][vrf]:
                     ret_dict['vrfs'][vrf]['interface'] = {}
                 if intf not in ret_dict['vrfs'][vrf]['interface']:
