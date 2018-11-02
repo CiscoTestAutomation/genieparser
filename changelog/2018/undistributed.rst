@@ -1,4 +1,4 @@
-* Please follow the template we introduced in OCTOBER.md file.
+* Please follow the template we introduced in NOVEMBER.md file.
 * Every parser need to be added under the corresponding feature.
 
 --------------------------------------------------------------------------------
@@ -24,6 +24,10 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * fix regexp for 'show version' to support more output to get version information
+
+* IOSXR
+    * Add new key 'full_slot' for ShowPlatorm to parse out the full slot name
+    * Fix Dir parser with different output
 
 --------------------------------------------------------------------------------
                                 OSPF
