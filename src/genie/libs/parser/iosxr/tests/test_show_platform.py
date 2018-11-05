@@ -326,6 +326,7 @@ class test_show_platform(unittest.TestCase):
                     'config_state': 'PWR,NSHUT,MON',
                     'name': 'A9K-MOD80-SE',
                     'state': 'IOS XR RUN',
+                    'full_slot': '0/0/CPU0',
                     'subslot': {
                         '0': {
                             'config_state': 'PWR,NSHUT,MON',
@@ -334,11 +335,13 @@ class test_show_platform(unittest.TestCase):
                             'state': 'OK'}}}},
             'rp': {
                 '0/RSP0': {
+                    'full_slot': '0/RSP0/CPU0',
                     'config_state': 'PWR,NSHUT,MON',
                     'name': 'A9K-RSP440-TR',
                     'redundancy_state': 'Active',
                     'state': 'IOS XR RUN'},
                 '0/RSP1': {
+                    'full_slot': '0/RSP1/CPU0',
                     'config_state': 'PWR,NSHUT,MON',
                     'name': 'A9K-RSP440-TR',
                     'redundancy_state': 'Standby',
