@@ -361,11 +361,13 @@ class test_show_platform(unittest.TestCase):
             'lc': {
                 '0/0': {
                     'config_state': 'NSHUT',
+                    'full_slot': '0/0/CPU0',
                     'name': 'R-IOSXRV9000-LC-C',
                     'state': 'IOS XR RUN'}},
             'rp': {
                 '0/RP0': {
                     'config_state': 'NSHUT',
+                    'full_slot': '0/RP0/CPU0',
                     'name': 'R-IOSXRV9000-RP-C',
                     'redundancy_state': 'Active',
                     'state': 'IOS XR RUN'}}}}
@@ -383,6 +385,7 @@ class test_show_platform(unittest.TestCase):
             'rp': {
                 '0/0': {
                     'config_state': 'PWR,NSHUT,MON',
+                    'full_slot': '0/0/CPU0',
                     'name': 'RP',
                     'plim': 'N/A',
                     'redundancy_state': 'Active',
@@ -400,6 +403,7 @@ class test_show_platform(unittest.TestCase):
                 '0/0': {
                     'config_state': 'PWR,NSHUT,MON',
                     'name': 'A9K-MOD80-SE',
+                    'full_slot': '0/0/CPU0',
                     'state': 'IOS XR RUN',
                     'subslot': {
                         '0': {
@@ -420,12 +424,14 @@ class test_show_platform(unittest.TestCase):
             'rp': {
                 '0/RSP0': {
                     'config_state': 'PWR,NSHUT,MON',
+                    'full_slot': '0/RSP0/CPU0',
                     'name': 'A9K-RSP440-TR',
                     'redundancy_state': 'Active',
                     'state': 'IOS XR RUN'},
                 '0/RSP1': {
                     'config_state': 'PWR,NSHUT,MON',
                     'name': 'A9K-RSP440-TR',
+                    'full_slot': '0/RSP1/CPU0',
                     'redundancy_state': 'Standby',
                     'state': 'IOS XR RUN'}}}}
 
@@ -446,6 +452,7 @@ class test_show_platform(unittest.TestCase):
                 '0/0': {
                     'config_state': 'PWR,NSHUT,MON',
                     'name': 'A9K-MPA-20X1GE',
+                    'full_slot': '0/0/0',
                     'state': 'OK',
                     'subslot': {
                         '0': {
@@ -466,11 +473,13 @@ class test_show_platform(unittest.TestCase):
             'rp': {
                 '0/RSP0': {
                     'config_state': 'PWR,NSHUT,MON',
+                    'full_slot': '0/RSP0/CPU0',
                     'name': 'A9K-RSP440-TR',
                     'redundancy_state': 'Active',
                     'state': 'IOS XR RUN'},
                  '0/RSP1': {
                     'config_state': 'PWR,NSHUT,MON',
+                    'full_slot': '0/RSP1/CPU0',
                     'name': 'A9K-RSP440-TR',
                     'redundancy_state': 'Standby',
                     'state': 'IOS XR RUN'}}}}
