@@ -7,7 +7,8 @@
 
 * NXOS
     * parser fix for 'show ip|ipv6 route vrf all' on output 
-      '*via 172.16.0.1, Eth1/1, [110/81], 3w6d, ospf-Underlay, intra' which ospf is not a number
+      '*via 172.16.0.1, Eth1/1, [110/81], 3w6d, ospf-Underlay, intra'
+      which ospf is not a number
 
 --------------------------------------------------------------------------------
                                 INTERFACE
@@ -30,7 +31,20 @@
 --------------------------------------------------------------------------------
 * IOSXR
     * fix regexp to support area output as non-digit id
-
-
 * NXOS
-    * updated parser schema for ShowIpOspfMplsLdpInterface to support 'required' and 'achieved' as optional
+    * updated parser schema for ShowIpOspfMplsLdpInterface to
+      support 'required' and 'achieved' as optional
+
+--------------------------------------------------------------------------------
+                                IMGP
+--------------------------------------------------------------------------------
+* NXOS
+    * Convert interface name to standard style (Loopback, Ethernet,etc.) for 
+      ShowIpIgmpGroups
+
+--------------------------------------------------------------------------------
+                                MLD
+--------------------------------------------------------------------------------
+* NXOS
+    * Convert interface name to standard style (Loopback, Ethernet,etc.) for 
+      ShowIpv6MldGroups
