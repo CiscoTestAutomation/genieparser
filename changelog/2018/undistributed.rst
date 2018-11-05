@@ -17,7 +17,7 @@
       iosxe show_interface.py, keep the one in shwo_lag.py, and combine two structures
 
 * IOSXR
-    * fix parser schema for ShowInterfaceBrief to hve key 'ethernet' as optional
+    * fix parser schema for ShowInterfaceBrief to have key 'ethernet' as optional
 
 --------------------------------------------------------------------------------
                                 PLATFORM
@@ -30,3 +30,7 @@
 --------------------------------------------------------------------------------
 * IOSXR
     * fix regexp to support area output as non-digit id
+
+
+* NXOS
+    * updated parser schema for ShowIpOspfMplsLdpInterface to support 'required' and 'achieved' as optional
