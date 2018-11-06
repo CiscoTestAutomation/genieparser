@@ -59,7 +59,7 @@ class ShowNtpPeerStatus(ShowNtpPeerStatusSchema):
     MODE_MAP = {'*': 'synchronized',
                 '+': 'active',
                 '-': 'passive',
-                '=': 'polled in client',
+                '=': 'client',
                 None: 'unsynchronized'}
 
     def cli(self):
