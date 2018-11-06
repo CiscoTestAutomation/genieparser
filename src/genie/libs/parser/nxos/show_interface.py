@@ -962,7 +962,7 @@ class ShowIpInterfaceVrfAllSchema(MetaParser):
          'multicast_routing': str,
          'icmp_redirects': str,
          'directed_broadcast': str,
-         'ip_forwarding': str,
+         Optional('ip_forwarding'): str,
          'icmp_unreachable': str,
          'icmp_port_unreachable': str,
          'unicast_reverse_path': str,

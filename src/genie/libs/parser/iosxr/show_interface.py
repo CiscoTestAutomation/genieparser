@@ -229,7 +229,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
 class ShowInterfaceBriefSchema(MetaParser):
     """Schema for show interface brief"""
     schema = {'interface':
-                {'ethernet':
+                {Optional('ethernet'):
                     {Any():
                         {Optional('vlan'): str,
                          Optional('type'): str,
