@@ -290,6 +290,7 @@ class ShowPlatformSchema(MetaParser):
                     {'name': str,
                      'state': str,
                      'config_state': str,
+                     'full_slot': str,
                      Optional('redundancy_state'): str,
                      Optional('plim'): str,
                      Optional('subslot'): 
@@ -372,6 +373,7 @@ class ShowPlatform(ShowPlatformSchema):
                 if slot not in show_platform['slot'][slot_type]:
                     show_platform['slot'][slot_type][slot] = {}
                     show_platform['slot'][slot_type][slot]['name'] = name
+                    show_platform['slot'][slot_type][slot]['full_slot'] = node
                     show_platform['slot'][slot_type][slot]['state'] = state
                     show_platform['slot'][slot_type][slot]['config_state'] = config_state
                     if redundancy_state != 'None':
@@ -560,8 +562,10 @@ class ShowInventory(ShowInventorySchema):
 
             # NAME: "module 0/RSP0/CPU0", DESCR: "ASR9K Route Switch Processor with 440G/slot Fabric and 6GB"
             # NAME: "Rack 0", DESCR: "Cisco XRv9K Centralized Virtual Router"
+            # NAME: "Rack 0", DESCR: "Sherman 1RU Chassis with 24x400GE QSFP56-DD & 12x100G QSFP28"
+            # NAME: "0/FT4", DESCR: "Sherman Fan Module Reverse Airflow / exhaust, BLUE"
             p1 = re.compile(r'\s*NAME: +\"(?P<module_name>[a-zA-Z0-9\/\s]+)\",'
-                             ' +DESCR: +\"(?P<descr>[\w\-\.\:\/\s]+)\"$')
+                             ' +DESCR: +\"(?P<descr>[\w\-\.\:\/\s,&]+)\"$')
             m = p1.match(line)
             if m:
                 if 'module_name' not in inventory_dict:
@@ -1129,7 +1133,8 @@ class Dir(DirSchema):
             # 20 -rw-r--r-- 1   773 May 10  2017 cvac.log
             # 15 lrwxrwxrwx 1    12 May 10  2017 config -> /misc/config
             # 11 drwx------ 2 16384 Mar 28 12:23 lost+found
-            p3 = re.compile(r'^\s*(?P<index>[0-9]+) +(?P<permission>[a-z\-]+) '
+            # 14 -rw-r--r--. 1 10429 Oct 26 16:17 pnet_cfg.log
+            p3 = re.compile(r'^\s*(?P<index>[0-9]+) +(?P<permission>[a-z\-]+)(\.)? '
                 '+(?P<unknown>[0-9]+) +(?P<size>[0-9]+) +(?P<month>[a-zA-Z]+) '
                 '+(?P<day>[0-9]+) +(?P<year>[0-9\:]+) '
                 '+(?P<file>[a-zA-Z0-9\.\/\_\-\+\>\s]+)$')

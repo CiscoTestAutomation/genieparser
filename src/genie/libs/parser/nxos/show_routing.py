@@ -273,7 +273,7 @@ class ShowIpRouteSchema(MetaParser):
                                 Optional('mbest'): int,
                                 Optional('source_protocol'): str,
                                 Optional('source_protocol_status'): str,
-                                Optional('process_id'): int,
+                                Optional('process_id'): str,
                                 Optional('route_preference'): int,
                                 Optional('metric'): int,
                                 Optional('tag'): int,
@@ -481,7 +481,7 @@ class ShowIpRoute(ShowIpRouteSchema):
                             ['route_preference'] = int(route_preference)
                     if process_id:
                         result_dict['vrf'][vrf]['address_family'][af]['routes'][route]\
-                            ['process_id'] = int(process_id)
+                            ['process_id'] = process_id
                     if source_protocol:
                         result_dict['vrf'][vrf]['address_family'][af]['routes'][route]\
                             ['source_protocol'] = source_protocol
@@ -574,7 +574,7 @@ class ShowIpv6RouteSchema(MetaParser):
                                 Optional('mbest'): int,
                                 Optional('source_protocol'): str,
                                 Optional('source_protocol_status'): str,
-                                Optional('process_id'): int,
+                                Optional('process_id'): str,
                                 Optional('route_preference'): int,
                                 Optional('metric'): int,
                                 Optional('tag'): int,
@@ -790,7 +790,7 @@ class ShowIpv6Route(ShowIpv6RouteSchema):
                             ['route_preference'] = int(route_preference)
                     if process_id:
                         result_dict['vrf'][vrf]['address_family'][af]['routes'][route]\
-                            ['process_id'] = int(process_id)
+                            ['process_id'] = process_id
                     if source_protocol:
                         result_dict['vrf'][vrf]['address_family'][af]['routes'][route]\
                             ['source_protocol'] = source_protocol

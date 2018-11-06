@@ -738,7 +738,10 @@ class ShowIpOspfMplsLdpInterfaceSchema(MetaParser):
                                             {'ldp': 
                                                 {'autoconfig': bool,
                                                 'autoconfig_area_id': str,
-                                                'igp_sync': bool},
+                                                'igp_sync': bool,
+                                                 Optional('required'): bool,
+                                                 Optional('achieved'): bool,
+                                             },
                                             },
                                         Optional('interfaces'): 
                                             {Any(): 
@@ -750,7 +753,10 @@ class ShowIpOspfMplsLdpInterfaceSchema(MetaParser):
                                                     {'ldp': 
                                                         {'autoconfig': bool,
                                                         'autoconfig_area_id': str,
-                                                        'igp_sync': bool},
+                                                        'igp_sync': bool,
+                                                         Optional('required'): bool,
+                                                         Optional('achieved'): bool,
+                                                         },
                                                     },
                                                 },
                                             },
@@ -764,7 +770,10 @@ class ShowIpOspfMplsLdpInterfaceSchema(MetaParser):
                                                     {'ldp': 
                                                         {'autoconfig': bool,
                                                         'autoconfig_area_id': str,
-                                                        'igp_sync': bool},
+                                                        'igp_sync': bool,
+                                                         Optional('required'): bool,
+                                                         Optional('achieved'): bool,
+                                                         },
                                                     },
                                                 },
                                             },
@@ -778,7 +787,10 @@ class ShowIpOspfMplsLdpInterfaceSchema(MetaParser):
                                                     {'ldp': 
                                                         {'autoconfig': bool,
                                                         'autoconfig_area_id': str,
-                                                        'igp_sync': bool},
+                                                        'igp_sync': bool,
+                                                         Optional('required'): bool,
+                                                         Optional('achieved'): bool,
+                                                         },
                                                     },
                                                 },
                                             },
@@ -935,14 +947,25 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
                 sub_dict['mpls']['ldp']['autoconfig'] = True
                 continue
 
+            # LDP Sync is enabled, is required and is achieved
+            # LDP Sync is enabled, is required and not achieved
             # LDP Sync is enabled, not required
-            p3_1 = re.compile(r'^LDP +Sync +is +enabled, +not +required$')
+            p3_1 = re.compile(r'^LDP +Sync +is +enabled, +(?P<req>(is|not)) +required( +and +(?P<ach>(is|not)) +achieved)?$')
             m = p3_1.match(line)
             if m:
                 # Set at area level
                 area_dict['mpls']['ldp']['igp_sync'] = True
+                if m.groupdict()['req']:
+                    area_dict['mpls']['ldp']['required'] = True if 'is' in m.groupdict()['req'] else False
+                if m.groupdict()['ach']:
+                    area_dict['mpls']['ldp']['achieved'] = True if 'is' in m.groupdict()['ach'] else False
+
                 # Set at interface level
                 sub_dict['mpls']['ldp']['igp_sync'] = True
+                if m.groupdict()['req']:
+                    sub_dict['mpls']['ldp']['required'] = True if 'is' in m.groupdict()['req'] else False
+                if m.groupdict('ach'):
+                    sub_dict['mpls']['ldp']['achieved'] = True if 'is' in m.groupdict()['ach'] else False
                 continue
 
             # LDP Sync not enabled, not required
@@ -951,8 +974,10 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
             if m:
                 # Set at area level
                 area_dict['mpls']['ldp']['igp_sync'] = False
+                area_dict['mpls']['ldp']['required'] = False
                 # Set at interface level
                 sub_dict['mpls']['ldp']['igp_sync'] = False
+                sub_dict['mpls']['ldp']['required'] = False
                 continue
 
             # State LOOPBACK, Network type LOOPBACK

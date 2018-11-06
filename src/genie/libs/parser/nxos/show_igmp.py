@@ -899,12 +899,13 @@ class ShowIpIgmpGroups(ShowIpIgmpGroupsSchema):
                 continue
 
             # 239.5.5.5          S    Ethernet2/1         00:21:00  never     10.1.2.1
-            p3 = re.compile(r'^(?P<group>[\w\.\:]+) +(?P<type>[SDLT]+) +(?P<intf>[\w\.\/\-]+)'
+            # 234.1.1.2          L   loopback11             00:00:20  never     5.5.5.5
+            p3 = re.compile(r'^(?P<group>[\w\.\:]+) +(?P<type>[SDLTH\*]+) +(?P<intf>[\w\.\/\-]+)'
                              ' +(?P<uptime>[\w\.\:]+) +(?P<expires>[\w\.\:]+)'
                              ' +(?P<last_reporter>[\w\.\:]+)$')
             m = p3.match(line)
             if m:
-                intf = m.groupdict()['intf']
+                intf = m.groupdict()['intf'].capitalize()
                 if 'interface' not in ret_dict['vrfs'][vrf]:
                     ret_dict['vrfs'][vrf]['interface'] = {}
                 if intf not in ret_dict['vrfs'][vrf]['interface']:

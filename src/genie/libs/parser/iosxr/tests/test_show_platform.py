@@ -326,6 +326,7 @@ class test_show_platform(unittest.TestCase):
                     'config_state': 'PWR,NSHUT,MON',
                     'name': 'A9K-MOD80-SE',
                     'state': 'IOS XR RUN',
+                    'full_slot': '0/0/CPU0',
                     'subslot': {
                         '0': {
                             'config_state': 'PWR,NSHUT,MON',
@@ -334,11 +335,13 @@ class test_show_platform(unittest.TestCase):
                             'state': 'OK'}}}},
             'rp': {
                 '0/RSP0': {
+                    'full_slot': '0/RSP0/CPU0',
                     'config_state': 'PWR,NSHUT,MON',
                     'name': 'A9K-RSP440-TR',
                     'redundancy_state': 'Active',
                     'state': 'IOS XR RUN'},
                 '0/RSP1': {
+                    'full_slot': '0/RSP1/CPU0',
                     'config_state': 'PWR,NSHUT,MON',
                     'name': 'A9K-RSP440-TR',
                     'redundancy_state': 'Standby',
@@ -358,11 +361,13 @@ class test_show_platform(unittest.TestCase):
             'lc': {
                 '0/0': {
                     'config_state': 'NSHUT',
+                    'full_slot': '0/0/CPU0',
                     'name': 'R-IOSXRV9000-LC-C',
                     'state': 'IOS XR RUN'}},
             'rp': {
                 '0/RP0': {
                     'config_state': 'NSHUT',
+                    'full_slot': '0/RP0/CPU0',
                     'name': 'R-IOSXRV9000-RP-C',
                     'redundancy_state': 'Active',
                     'state': 'IOS XR RUN'}}}}
@@ -380,6 +385,7 @@ class test_show_platform(unittest.TestCase):
             'rp': {
                 '0/0': {
                     'config_state': 'PWR,NSHUT,MON',
+                    'full_slot': '0/0/CPU0',
                     'name': 'RP',
                     'plim': 'N/A',
                     'redundancy_state': 'Active',
@@ -397,6 +403,7 @@ class test_show_platform(unittest.TestCase):
                 '0/0': {
                     'config_state': 'PWR,NSHUT,MON',
                     'name': 'A9K-MOD80-SE',
+                    'full_slot': '0/0/CPU0',
                     'state': 'IOS XR RUN',
                     'subslot': {
                         '0': {
@@ -417,12 +424,14 @@ class test_show_platform(unittest.TestCase):
             'rp': {
                 '0/RSP0': {
                     'config_state': 'PWR,NSHUT,MON',
+                    'full_slot': '0/RSP0/CPU0',
                     'name': 'A9K-RSP440-TR',
                     'redundancy_state': 'Active',
                     'state': 'IOS XR RUN'},
                 '0/RSP1': {
                     'config_state': 'PWR,NSHUT,MON',
                     'name': 'A9K-RSP440-TR',
+                    'full_slot': '0/RSP1/CPU0',
                     'redundancy_state': 'Standby',
                     'state': 'IOS XR RUN'}}}}
 
@@ -443,6 +452,7 @@ class test_show_platform(unittest.TestCase):
                 '0/0': {
                     'config_state': 'PWR,NSHUT,MON',
                     'name': 'A9K-MPA-20X1GE',
+                    'full_slot': '0/0/0',
                     'state': 'OK',
                     'subslot': {
                         '0': {
@@ -463,11 +473,13 @@ class test_show_platform(unittest.TestCase):
             'rp': {
                 '0/RSP0': {
                     'config_state': 'PWR,NSHUT,MON',
+                    'full_slot': '0/RSP0/CPU0',
                     'name': 'A9K-RSP440-TR',
                     'redundancy_state': 'Active',
                     'state': 'IOS XR RUN'},
                  '0/RSP1': {
                     'config_state': 'PWR,NSHUT,MON',
+                    'full_slot': '0/RSP1/CPU0',
                     'name': 'A9K-RSP440-TR',
                     'redundancy_state': 'Standby',
                     'state': 'IOS XR RUN'}}}}
@@ -640,15 +652,21 @@ class test_show_inventory(unittest.TestCase):
                "sn": "FOC1808NEND",
                "vid": "V05"
           },
+          "module 0/RSP1/CPU0": {
+               "pid": "A9K-RSP440-TR",
+               "descr": "ASR9K Route Switch Processor with 440G/slot Fabric and 6GB",
+               "sn": "FOC1808NEP5",
+               "vid": "V05"
+          },
           "module mau 0/0/0/1": {
                "pid": "GLC-T",
                "descr": "Unknown or Unsupported CPAK Module",
                "sn": "00000MTC17150731",
                "vid": "N/A"
           },
-          "module 0/RSP1/CPU0": {
+          "module 0/0/CPU0": {
                "pid": "A9K-MOD80-SE",
-               "descr": "ASR9K Route Switch Processor with 440G/slot Fabric and 6GB",
+               "descr": "80G Modular Linecard, Service Edge Optimized",
                "sn": "FOC1821NEET",
                "vid": "V06"
           },

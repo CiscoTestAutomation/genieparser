@@ -304,12 +304,16 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                     continue
 
             # Internet Address 10.2.3.3/24, Area 0
+            # Internet Address 200.5.0.1/32, Area 1, SID 0, Strict-SPF SID 0
             p3 = re.compile(r'^Internet +Address +(?P<address>(\S+)),'
-                             ' +Area +(?P<area>(\S+))$')
+                             ' +Area +(?P<area>(\S+))'
+                             '(, +(?P<dummy>.+))?$')
             m = p3.match(line)
             if m:
                 ip_address = str(m.groupdict()['address'])
-                area = str(IPAddress(str(m.groupdict()['area'])))
+                area = str(m.groupdict()['area'])
+                if area.isdigit():
+                    area = str(IPAddress(area))
                 continue
 
             # Process ID 1, Router ID 3.3.3.3, Network Type POINT_TO_POINT
@@ -381,7 +385,7 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                             # router ospf 1 vrf VRF1 area 1 sham-link 33.33.33.33 22.22.22.22
                             q = re.search('router +ospf +(?P<q_inst>(\d+))(?: +vrf'
                                          ' +(?P<q_vrf>(\S+)))? +area'
-                                         ' +(?P<q_area>(\d+)) +sham-link'
+                                         ' +(?P<q_area>(\S+)) +sham-link'
                                          ' +(?P<local_id>(\S+))'
                                          ' +(?P<remote_id>(\S+))', line)
                             if q:
@@ -390,7 +394,9 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                                 else:
                                     q_vrf = 'default'
                                 q_inst = str(q.groupdict()['q_inst'])
-                                q_area = str(IPAddress(str(q.groupdict()['q_area'])))
+                                q_area = str(q.groupdict()['q_area'])
+                                if q_area.isdigit():
+                                    q_area = str(IPAddress(q_area))
                                 remote_id = str(q.groupdict()['remote_id'])
 
                                 # Check parameters match
@@ -825,7 +831,9 @@ class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetai
                              ' +(?P<interface>(\S+))$')
             m = p3.match(line)
             if m:
-                area = str(IPAddress(str(m.groupdict()['area'])))
+                area = str(m.groupdict()['area'])
+                if area.isdigit():
+                    area = str(IPAddress(area))
                 interface = str(m.groupdict()['interface'])
 
                 # Determine if 'interface' or 'virtual_link'
@@ -1752,11 +1760,15 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
             m = p28_1.match(line)
             if m:
                 parsed_area = str(m.groupdict()['area'])
-                n = re.match('BACKBONE\((?P<area_num>(\d+))\)', parsed_area)
-                if n:
-                    area = str(IPAddress(str(n.groupdict()['area_num'])))
+                n = re.match('BACKBONE\((?P<area_num>(\S+))\)', parsed_area)
+                if n:                    
+                    area = str(n.groupdict()['area_num'])
+                    if area.isdigit():
+                        area = str(IPAddress(area))
                 else:
-                    area = str(IPAddress(str(m.groupdict()['area'])))
+                    area = str(m.groupdict()['area'])
+                    if area.isdigit():
+                        area = str(IPAddress(area))
 
                 # Create dict
                 if 'areas' not in sub_dict:
@@ -2094,7 +2106,9 @@ class ShowOspfVrfAllInclusiveLinksParser(MetaParser):
                              ' +(?P<source_address>(\S+))$')
             m = p3_1.match(line)
             if m:
-                area = str(IPAddress(str(m.groupdict()['area'])))
+                area = str(m.groupdict()['area'])
+                if area.isdigit():
+                    area = str(IPAddress(area))
                 source_address = str(m.groupdict()['source_address'])
 
                 # Set link_name for sham_link
@@ -2143,7 +2157,9 @@ class ShowOspfVrfAllInclusiveLinksParser(MetaParser):
                                 ' +Cost +of +using +(?P<cost>(\d+))$')
             m = p3_2.match(line)
             if m:
-                area = str(IPAddress(str(m.groupdict()['area'])))
+                area = str(m.groupdict()['area'])
+                if area.isdigit():
+                    area = str(IPAddress(area))
 
                 # Set link_name for virtual_link
                 link_name = area + ' ' + vl_router_id
@@ -2565,7 +2581,9 @@ class ShowOspfMplsTrafficEngLink(ShowOspfMplsTrafficEngLinkSchema):
                                ' +Area +instance +is +(?P<instance>(\d+))\.$')
             m = p2_1.match(line)
             if m:
-                area = str(IPAddress(str(m.groupdict()['area'])))
+                area = str(m.groupdict()['area'])
+                if area.isdigit():
+                    area = str(IPAddress(area))
                 if 'areas' not in ret_dict['vrf'][vrf]['address_family'][af]\
                         ['instance'][instance]:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
@@ -2594,11 +2612,14 @@ class ShowOspfMplsTrafficEngLink(ShowOspfMplsTrafficEngLinkSchema):
                 continue
 
             # Area 1 MPLS TE not initialized
-            p2_2 = re.compile(r'^Area +(?P<area>(\d+)) +MPLS +TE +not'
+            # Area 0.0.0.0 MPLS TE not initialized
+            p2_2 = re.compile(r'^Area +(?P<area>(\S+)) +MPLS +TE +not'
                                ' +initialized$')
             m = p2_2.match(line)
             if m:
-                area = str(IPAddress(str(m.groupdict()['area'])))
+                area = str(m.groupdict()['area'])
+                if area.isdigit():
+                    area = str(IPAddress(area))
                 if 'areas' not in ret_dict['vrf'][vrf]['address_family'][af]\
                         ['instance'][instance]:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
@@ -2837,6 +2858,7 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
 
             # Router Link States (Area 0)
             # Net Link States (Area 1)
+            # Net Link States (Area 0.0.0.0)
             # Summary Net Link States (Area 0.0.0.0)
             # Type-5 AS External Link States
             # Type-10 Opaque Link Area Link States (Area 0)
@@ -3076,7 +3098,6 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
             m = p12.match(line)
             if m:
                 if db_type == 'router':
-                    # import pdb ; pdb.set_trace()
                     if m.groupdict()['tos']:
                         db_dict['links'][link_id]['topologies'][mt_id]\
                             ['tos'] = int(m.groupdict()['tos'])
