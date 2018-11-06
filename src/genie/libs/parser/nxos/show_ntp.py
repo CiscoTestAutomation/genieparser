@@ -138,7 +138,7 @@ class ShowNtpPeersSchema(MetaParser):
             Any():{
                 'address': str,
                 'type': str,
-                'configured': bool
+                'isconfigured': bool
             }
         }
     }
@@ -170,7 +170,7 @@ class ShowNtpPeers(ShowNtpPeersSchema):
                 peer_dict = ret_dict.setdefault('peer', {}).setdefault(address, {})
                 peer_dict['address'] = address
                 peer_dict['type'] = groups['type'].lower()
-                peer_dict['configured'] = 'configured' in str(groups['conf'])
+                peer_dict['isconfigured'] = 'configured' in str(groups['conf'])
                 continue
 
         return ret_dict

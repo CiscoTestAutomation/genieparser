@@ -141,16 +141,16 @@ class test_show_ntp_peers(unittest.TestCase):
     
     golden_parsed_output_1 = {
     	'peer': {'1.1.1.1': {'address': '1.1.1.1',
-                             'configured': True,
+                             'isconfigured': True,
                              'type': 'server'},
                  '2.2.2.2': {'address': '2.2.2.2',
-                             'configured': True,
+                             'isconfigured': True,
                              'type': 'server'},
                  '4.4.4.4': {'address': '4.4.4.4',
-                             'configured': True,
+                             'isconfigured': True,
                              'type': 'server'},
                  '5.5.5.5': {'address': '5.5.5.5',
-                             'configured': True,
+                             'isconfigured': True,
                              'type': 'server'}}
     }
 
@@ -167,13 +167,13 @@ class test_show_ntp_peers(unittest.TestCase):
 
     golden_parsed_output_2 = {
     	'peer': {'10.1.0.63': {'address': '10.1.0.63',
-                               'configured': True,
+                               'isconfigured': True,
                                'type': 'server'},
                  '10.1.0.65': {'address': '10.1.0.65',
-                               'configured': True,
+                               'isconfigured': True,
                                'type': 'server'},
                  '10.100.4.156': {'address': '10.100.4.156',
-                                  'configured': True,
+                                  'isconfigured': True,
                                   'type': 'peer'}}
     }
 
