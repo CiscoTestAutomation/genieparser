@@ -52,3 +52,10 @@
 * NXOS
     * Convert interface name to standard style (Loopback, Ethernet,etc.) for 
       ShowIpv6MldGroups
+
+--------------------------------------------------------------------------------
+                                NTP
+--------------------------------------------------------------------------------
+* NXOS
+    * Add ShowNtpPeerStatus for 'show ntp peer-status'
+    * Add ShowNtpPeers for 'show ntp peers'
