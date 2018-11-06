@@ -26,17 +26,21 @@ class ShowNtpPeerStatusSchema(MetaParser):
 
     schema = {
         'total_peers': int,
-        'peer': {
+        'vrf': {
             Any():{
-                Optional('clock_state'): str,
-                'mode': str,
-                'remote': str,
-                'local': str,
-                'stratum': int,
-                'poll': int,
-                'reach': int,
-                'delay': float,
-                Optional('vrf'): str,
+                'peer': {
+                    Any():{
+                        Optional('clock_state'): str,
+                        'mode': str,
+                        'remote': str,
+                        'local': str,
+                        'stratum': int,
+                        'poll': int,
+                        'reach': int,
+                        'delay': float,
+                        Optional('vrf'): str,
+                    }
+                },
             }
         },
         'clock_state': {
@@ -44,7 +48,6 @@ class ShowNtpPeerStatusSchema(MetaParser):
                 'clock_state': str,
                 'clock_stratum': int,
                 'associations_address': str,
-                'associations_local_mode': str,
                 'root_delay': float,
             }
         }
@@ -102,7 +105,9 @@ class ShowNtpPeerStatus(ShowNtpPeerStatusSchema):
             if m:
                 groups = m.groupdict()
                 peer = groups['remote']
-                peer_dict = ret_dict.setdefault('peer', {}).setdefault(peer, {})
+                vrf = groups['vrf'] or 'default'
+                peer_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {})\
+                    .setdefault('peer', {}).setdefault(peer, {})
                 mode = self.MODE_MAP.get(groups['mode_code'])
                 peer_dict['mode'] = mode
                 peer_dict['remote'] = peer
@@ -120,7 +125,6 @@ class ShowNtpPeerStatus(ShowNtpPeerStatusSchema):
                     clock_dict['clock_state'] = mode
                     clock_dict['clock_stratum'] = int(groups['st'])
                     clock_dict['associations_address'] = peer
-                    clock_dict['associations_local_mode'] = mode
                     clock_dict['root_delay'] = float(groups['delay'])
 
         return ret_dict

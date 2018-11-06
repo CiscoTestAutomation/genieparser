@@ -22,68 +22,74 @@ class test_show_ntp_peer_status(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output_1 = {
-    	'clock_state': {'system_status': {'associations_address': '1.1.1.1',
-			                              'associations_local_mode': 'synchronized',
-			                              'clock_state': 'synchronized',
-			                              'clock_stratum': 8,
-			                              'root_delay': 0.01311}},
-		'peer': {'1.1.1.1': {'delay': 0.01311,
-			                 'local': '0.0.0.0',
-			                 'mode': 'synchronized',
-			                 'poll': 16,
-			                 'reach': 377,
-			                 'remote': '1.1.1.1',
-			                 'stratum': 8,
-			                 'vrf': 'default'},
-				'2.2.2.2': {'delay': 0.01062,
-				          'local': '0.0.0.0',
-				          'mode': 'client',
-				          'poll': 16,
-				          'reach': 377,
-				          'remote': '2.2.2.2',
-				          'stratum': 9,
-				          'vrf': 'default'},
-				'4.4.4.4': {'delay': 0.0,
-				          'local': '0.0.0.0',
-				          'mode': 'client',
-				          'poll': 256,
-				          'reach': 0,
-				          'remote': '4.4.4.4',
-				          'stratum': 16,
-				          'vrf': 'VRF1'},
-				'5.5.5.5': {'delay': 0.0,
-				          'local': '0.0.0.0',
-				          'mode': 'client',
-				          'poll': 64,
-				          'reach': 0,
-				          'remote': '5.5.5.5',
-				          'stratum': 16,
-				          'vrf': 'default'}},
-		'total_peers': 4
+        'clock_state': {'system_status': {'associations_address': '1.1.1.1',
+                                          'clock_state': 'synchronized',
+                                          'clock_stratum': 8,
+                                          'root_delay': 0.01311}},
+        'vrf': {
+            'default': {
+                'peer': {'1.1.1.1': {'delay': 0.01311,
+                                     'local': '0.0.0.0',
+                                     'mode': 'synchronized',
+                                     'poll': 16,
+                                     'reach': 377,
+                                     'remote': '1.1.1.1',
+                                     'stratum': 8,
+                                     'vrf': 'default'},
+                        '2.2.2.2': {'delay': 0.01062,
+                                  'local': '0.0.0.0',
+                                  'mode': 'client',
+                                  'poll': 16,
+                                  'reach': 377,
+                                  'remote': '2.2.2.2',
+                                  'stratum': 9,
+                                  'vrf': 'default'},
+                        '5.5.5.5': {'delay': 0.0,
+                                  'local': '0.0.0.0',
+                                  'mode': 'client',
+                                  'poll': 64,
+                                  'reach': 0,
+                                  'remote': '5.5.5.5',
+                                  'stratum': 16,
+                                  'vrf': 'default'}
+                }
+            },
+            'VRF1': {
+                'peer': {'4.4.4.4': {'delay': 0.0,
+                                     'local': '0.0.0.0',
+                                     'mode': 'client',
+                                     'poll': 256,
+                                     'reach': 0,
+                                     'remote': '4.4.4.4',
+                                     'stratum': 16,
+                                     'vrf': 'VRF1'}
+                }
+            },
+        },
+        'total_peers': 4
     }
 
     golden_parsed_output_2 = {
         'clock_state': {'system_status': {'associations_address': '4.4.4.32',
-                                          'associations_local_mode': 'synchronized',
                                           'clock_state': 'synchronized',
                                           'clock_stratum': 4,
                                           'root_delay': 0.02588}},
-        'peer': {'127.127.1.0': {'delay': 0.0,
-                                 'local': '10.100.100.1',
-                                 'mode': 'client',
-                                 'poll': 64,
-                                 'reach': 0,
-                                 'remote': '127.127.1.0',
-                                 'stratum': 8},
-                 '4.4.4.32': {'delay': 0.02588,
-                              'local': '10.100.100.1',
-                              'mode': 'synchronized',
-                              'poll': 64,
-                              'reach': 377,
-                              'remote': '4.4.4.32',
-                              'stratum': 4,
-                              'vrf': 'default'}},
-        'total_peers': 2
+        'total_peers': 2,
+        'vrf': {'default': {'peer': {'127.127.1.0': {'delay': 0.0,
+                                                     'local': '10.100.100.1',
+                                                     'mode': 'client',
+                                                     'poll': 64,
+                                                     'reach': 0,
+                                                     'remote': '127.127.1.0',
+                                                     'stratum': 8},
+                                     '4.4.4.32': {'delay': 0.02588,
+                                                  'local': '10.100.100.1',
+                                                  'mode': 'synchronized',
+                                                  'poll': 64,
+                                                  'reach': 377,
+                                                  'remote': '4.4.4.32',
+                                                  'stratum': 4,
+                                                  'vrf': 'default'}}}}
     }
 
     golden_output_1 = {'execute.return_value': '''
@@ -140,7 +146,7 @@ class test_show_ntp_peers(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     
     golden_parsed_output_1 = {
-    	'peer': {'1.1.1.1': {'address': '1.1.1.1',
+        'peer': {'1.1.1.1': {'address': '1.1.1.1',
                              'isconfigured': True,
                              'type': 'server'},
                  '2.2.2.2': {'address': '2.2.2.2',
@@ -166,7 +172,7 @@ class test_show_ntp_peers(unittest.TestCase):
     }
 
     golden_parsed_output_2 = {
-    	'peer': {'10.1.0.63': {'address': '10.1.0.63',
+        'peer': {'10.1.0.63': {'address': '10.1.0.63',
                                'isconfigured': True,
                                'type': 'server'},
                  '10.1.0.65': {'address': '10.1.0.65',
