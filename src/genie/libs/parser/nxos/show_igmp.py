@@ -899,7 +899,10 @@ class ShowIpIgmpGroups(ShowIpIgmpGroupsSchema):
                 continue
 
             # 239.5.5.5          S    Ethernet2/1         00:21:00  never     10.1.2.1
+<<<<<<< HEAD
             # 234.1.1.2          L   loopback11             00:00:20  never     5.5.5.5
+=======
+>>>>>>> 31276865dc7b1c81bad72ab4dfe1ab27fbd8ca18
             p3 = re.compile(r'^(?P<group>[\w\.\:]+) +(?P<type>[SDLTH\*]+) +(?P<intf>[\w\.\/\-]+)'
                              ' +(?P<uptime>[\w\.\:]+) +(?P<expires>[\w\.\:]+)'
                              ' +(?P<last_reporter>[\w\.\:]+)$')
