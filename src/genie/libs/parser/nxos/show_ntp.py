@@ -31,13 +31,13 @@ class ShowNtpPeerStatusSchema(MetaParser):
                 'peer': {
                     Any():{
                         Optional('clock_state'): str,
-                        'mode': str,
+                        Optional('mode'): str,
                         'remote': str,
-                        'local': str,
-                        'stratum': int,
-                        'poll': int,
-                        'reach': int,
-                        'delay': float,
+                        Optional('local'): str,
+                        Optional('stratum'): int,
+                        Optional('poll'): int,
+                        Optional('reach'): int,
+                        Optional('delay'): float,
                         Optional('vrf'): str,
                     }
                 },
