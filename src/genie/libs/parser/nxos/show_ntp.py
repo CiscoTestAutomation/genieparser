@@ -140,9 +140,13 @@ class ShowNtpPeersSchema(MetaParser):
     schema = {
         'peer': {
             Any():{
-                'address': str,
-                'type': str,
-                'isconfigured': bool
+                'isconfigured': {
+                    Any(): {
+                        'address': str,
+                        'type': str,
+                        'isconfigured': bool                    
+                    }
+                }
             }
         }
     }
@@ -171,10 +175,12 @@ class ShowNtpPeers(ShowNtpPeersSchema):
             if m:
                 groups = m.groupdict()
                 address = groups['peer']
-                peer_dict = ret_dict.setdefault('peer', {}).setdefault(address, {})
+                isconfigured = 'configured' in str(groups['conf'])
+                peer_dict = ret_dict.setdefault('peer', {}).setdefault(address, {})\
+                    .setdefault('isconfigured', {}).setdefault(str(isconfigured), {})
                 peer_dict['address'] = address
                 peer_dict['type'] = groups['type'].lower()
-                peer_dict['isconfigured'] = 'configured' in str(groups['conf'])
+                peer_dict['isconfigured'] = isconfigured
                 continue
 
         return ret_dict

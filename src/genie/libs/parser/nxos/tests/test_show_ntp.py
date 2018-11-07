@@ -146,18 +146,18 @@ class test_show_ntp_peers(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     
     golden_parsed_output_1 = {
-        'peer': {'1.1.1.1': {'address': '1.1.1.1',
-                             'isconfigured': True,
-                             'type': 'server'},
-                 '2.2.2.2': {'address': '2.2.2.2',
-                             'isconfigured': True,
-                             'type': 'server'},
-                 '4.4.4.4': {'address': '4.4.4.4',
-                             'isconfigured': True,
-                             'type': 'server'},
-                 '5.5.5.5': {'address': '5.5.5.5',
-                             'isconfigured': True,
-                             'type': 'server'}}
+        'peer': {'1.1.1.1': {'isconfigured': {'True': {'address': '1.1.1.1',
+                                                       'isconfigured': True,
+                                                       'type': 'server'}}},
+                 '2.2.2.2': {'isconfigured': {'True': {'address': '2.2.2.2',
+                                                       'isconfigured': True,
+                                                       'type': 'server'}}},
+                 '4.4.4.4': {'isconfigured': {'True': {'address': '4.4.4.4',
+                                                       'isconfigured': True,
+                                                       'type': 'server'}}},
+                 '5.5.5.5': {'isconfigured': {'True': {'address': '5.5.5.5',
+                                                       'isconfigured': True,
+                                                       'type': 'server'}}}}
     }
 
     golden_output_1 = {'execute.return_value': '''\
@@ -172,15 +172,15 @@ class test_show_ntp_peers(unittest.TestCase):
     }
 
     golden_parsed_output_2 = {
-        'peer': {'10.1.0.63': {'address': '10.1.0.63',
-                               'isconfigured': True,
-                               'type': 'server'},
-                 '10.1.0.65': {'address': '10.1.0.65',
-                               'isconfigured': True,
-                               'type': 'server'},
-                 '10.100.4.156': {'address': '10.100.4.156',
-                                  'isconfigured': True,
-                                  'type': 'peer'}}
+        'peer': {'10.1.0.63': {'isconfigured': {'True': {'address': '10.1.0.63',
+                                                         'isconfigured': True,
+                                                         'type': 'server'}}},
+                 '10.1.0.65': {'isconfigured': {'True': {'address': '10.1.0.65',
+                                                         'isconfigured': True,
+                                                         'type': 'server'}}},
+                 '10.100.4.156': {'isconfigured': {'True': {'address': '10.100.4.156',
+                                                            'isconfigured': True,
+                                                            'type': 'peer'}}}}
     }
 
     golden_output_2 = {'execute.return_value': '''\
