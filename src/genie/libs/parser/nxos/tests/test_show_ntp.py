@@ -92,6 +92,43 @@ class test_show_ntp_peer_status(unittest.TestCase):
                                                   'vrf': 'default'}}}}
     }
 
+    golden_parsed_output_3 = {
+        'clock_state': {'system_status': {'clock_state': 'unsynchronized'}},
+        'total_peers': 4,
+        'vrf': {'VRF1': {'peer': {'4.4.4.4': {'delay': 0.0,
+                                              'local': '0.0.0.0',
+                                              'mode': 'client',
+                                              'poll': 256,
+                                              'reach': 0,
+                                              'remote': '4.4.4.4',
+                                              'stratum': 16,
+                                              'vrf': 'VRF1'}}},
+                'default': {'peer': {'1.1.1.1': {'delay': 0.01311,
+                                                 'local': '0.0.0.0',
+                                                 'mode': 'client',
+                                                 'poll': 16,
+                                                 'reach': 377,
+                                                 'remote': '1.1.1.1',
+                                                 'stratum': 8,
+                                                 'vrf': 'default'},
+                                     '2.2.2.2': {'delay': 0.01062,
+                                                 'local': '0.0.0.0',
+                                                 'mode': 'client',
+                                                 'poll': 16,
+                                                 'reach': 377,
+                                                 'remote': '2.2.2.2',
+                                                 'stratum': 9,
+                                                 'vrf': 'default'},
+                                     '5.5.5.5': {'delay': 0.0,
+                                                 'local': '0.0.0.0',
+                                                 'mode': 'client',
+                                                 'poll': 64,
+                                                 'reach': 0,
+                                                 'remote': '5.5.5.5',
+                                                 'stratum': 16,
+                                                 'vrf': 'default'}}}}
+    }
+
     golden_output_1 = {'execute.return_value': '''
         Total peers : 4
         * - selected for sync, + -  peer mode(active), 
@@ -116,6 +153,19 @@ class test_show_ntp_peer_status(unittest.TestCase):
     '''
     }
 
+    golden_output_3 = {'execute.return_value': '''
+        Total peers : 4
+        * - selected for sync, + -  peer mode(active), 
+        - - peer mode(passive), = - polled in client mode 
+            remote                                 local                                   st   poll   reach delay   vrf
+        -----------------------------------------------------------------------------------------------------------------------
+        =1.1.1.1                                  0.0.0.0                                   8   16     377   0.01311 default
+        =4.4.4.4                                  0.0.0.0                                  16  256       0   0.00000 VRF1
+        =2.2.2.2                                  0.0.0.0                                   9   16     377   0.01062 default
+        =5.5.5.5                                  0.0.0.0                                  16   64       0   0.00000 default
+    '''
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowNtpPeerStatus(device=self.device)
@@ -135,6 +185,13 @@ class test_show_ntp_peer_status(unittest.TestCase):
         obj = ShowNtpPeerStatus(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowNtpPeerStatus(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 
 # ==============================================

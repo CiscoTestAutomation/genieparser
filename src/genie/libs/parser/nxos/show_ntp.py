@@ -46,9 +46,9 @@ class ShowNtpPeerStatusSchema(MetaParser):
         'clock_state': {
             'system_status': {
                 'clock_state': str,
-                'clock_stratum': int,
-                'associations_address': str,
-                'root_delay': float,
+                Optional('clock_stratum'): int,
+                Optional('associations_address'): str,
+                Optional('root_delay'): float,
             }
         }
     }
@@ -126,6 +126,11 @@ class ShowNtpPeerStatus(ShowNtpPeerStatusSchema):
                     clock_dict['clock_stratum'] = int(groups['st'])
                     clock_dict['associations_address'] = peer
                     clock_dict['root_delay'] = float(groups['delay'])
+
+        # check if has synchronized peers, if no create unsynchronized entry
+        if not ret_dict.get('clock_state'):
+            ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})\
+                .setdefault('clock_state', 'unsynchronized')
 
         return ret_dict
 
