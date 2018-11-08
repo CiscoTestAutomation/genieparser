@@ -7,5 +7,9 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
-                                ROUTING
+                                NTP
 --------------------------------------------------------------------------------
+* NXOS
+    * Add ShowNtpPeerStatus for 'show ntp peer-status'
+    * Add ShowNtpPeers for 'show ntp peers'
+
