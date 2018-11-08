@@ -85,7 +85,7 @@ class ShowNtpPeerStatus(ShowNtpPeerStatusSchema):
         # =127.127.1.0            10.100.100.1            8   64       0   0.00000
         p2 = re.compile(r'^(?P<mode_code>[\*\-\+\=]+)? *(?P<remote>[\w\.\:]+) +'
                          '(?P<local>[\w\.\:]+) +(?P<st>\d+) +'
-                         '(?P<poll>\d+) +(?P<reach>\d+) +(?P<delay>[\w\.]+)'
+                         '(?P<poll>\d+) +(?P<reach>\d+) +(?P<delay>[\d\.]+)'
                          '( *(?P<vrf>\S+))?$')
 
 
