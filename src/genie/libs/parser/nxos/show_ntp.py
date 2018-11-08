@@ -128,7 +128,7 @@ class ShowNtpPeerStatus(ShowNtpPeerStatusSchema):
                     clock_dict['root_delay'] = float(groups['delay'])
 
         # check if has synchronized peers, if no create unsynchronized entry
-        if not ret_dict.get('clock_state'):
+        if ret_dict and not ret_dict.get('clock_state'):
             ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})\
                 .setdefault('clock_state', 'unsynchronized')
 
