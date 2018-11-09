@@ -1821,10 +1821,11 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
                 ['admin_priv_vlan_trunk_normal_vlans'] = admin_priv_vlan_trunk_normal_vlans
                 continue
 
-            #Administrative private-vlan trunk private VLANs: none
+            # Administrative private-vlan trunk private VLANs: none
+            # Administrative private-vlan trunk private VLANs: none(0 none)
             p15 = re.compile(r'^\s*Administrative *private-vlan *trunk'
                              ' *private VLANs:'
-                             ' *(?P<admin_priv_vlan_trunk_private_vlans>[a-z]+)$')
+                             ' *(?P<admin_priv_vlan_trunk_private_vlans>[a-z]+)(?P<dummy>.*)?$')
             m = p15.match(line)
             if m:
                 admin_priv_vlan_trunk_private_vlans = m.groupdict()['admin_priv_vlan_trunk_private_vlans']
