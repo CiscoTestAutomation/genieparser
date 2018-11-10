@@ -115,7 +115,7 @@ class ShowVersion(ShowVersionSchema):
             p1 = re.compile(
                 r'^\s*[Cc]isco +IOS +[Ss]oftware.+, (?P<platform>.+) '
                  'Software +\((?P<image_id>.+)\).+[Vv]ersion +'
-                 '(?P<version>[a-zA-Z0-9\.\:]+) +')
+                 '(?P<version>\S+) +')
             m = p1.match(line)
             if m:
                 version = m.groupdict()['version']
@@ -138,7 +138,7 @@ class ShowVersion(ShowVersionSchema):
             # Cisco IOS Software [Fuji], Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Experimental Version 16.8.20170924:182909 [polaris_dev-/nobackup/mcpre/BLD-BLD_POLARIS_DEV_LATEST_20170924_191550 132]
 
             p1_1 = re.compile(
-                r'^\s*[Cc]isco +IOS +[Ss]oftware.+, (?P<platform>.+) '
+                r'^\s*[Cc]isco +IOS +[Ss]oftware(.+)?, +(?P<platform>.+) '
                  'Software +\((?P<image_id>.+)\).+( +Experimental)? +'
                  '[Vv]ersion +(?P<version>[a-zA-Z0-9\.\:]+) *,?.*')
             m = p1_1.match(line)
@@ -1369,12 +1369,12 @@ class ShowBootSchema(MetaParser):
               Optional('boot_mode'): str,
               Optional('ipxe_timeout'): int,
               Optional('active'): {              
-                  'configuration_register': str,
-                  'boot_variable': str,
+                  Optional('configuration_register'): str,
+                  Optional('boot_variable'): str,
               },
               Optional('standby'): {              
-                  'configuration_register': str,
-                  'boot_variable': str,
+                  Optional('configuration_register'): str,
+                  Optional('boot_variable'): str,
               },
     }
 

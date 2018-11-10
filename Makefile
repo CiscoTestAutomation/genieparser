@@ -5,25 +5,23 @@
 #                               Cisco Systems, Inc.                            #
 #                                                                              #
 ################################################################################
-#                           Genie Parser Makefile
+#                            genie.libs.parser Internal Makefile
 #
 # Author:
-#   Siming Yuan        (siyuan@cisco.com)    - CSG
-#   Jean-Benoit Aubin  (jeaubin@cisco.com)   - CSG
+#   pyats-support@cisco.com
 #
 # Support:
-#	python-core@cisco.com
+#   pyats-support@cisco.com
 #
 # Version:
-#   v2.1
+#   v3.0
 #
 # Date:
-#   April 2018
+#   November 2018
 #
 # About This File:
-#   This script will build Genie Parser into Python PyPI packages.
-#	Make sure all requirements are met before adding new package names to
-#	PACKAGES variable.
+#   This script will build the genie.libs.parser package for
+#   distribution in PyPI server
 #
 # Requirements:
 #	1. Module name is the same as package name.
@@ -31,184 +29,125 @@
 ################################################################################
 
 # Variables
-PKG_NAME      = genie/libs
-BUILD_ROOT    = $(shell pwd)/__build__
-OUTPUT_DIR    = $(BUILD_ROOT)/dist
-BUILD_CMD     = python setup.py bdist_wheel --dist-dir=$(OUTPUT_DIR)
+PKG_NAME      = genie.libs.parser
+BUILD_DIR     = $(shell pwd)/__build__
+DIST_DIR      = $(BUILD_DIR)/dist
 PROD_USER     = pyadm@pyats-ci
-PROD_PKGS     = /auto/pyats/packages/cisco-shared
-PROD_SCRIPTS  = /auto/pyats/bin
-TESTCMD       = ./tests/runAll --path tests/
-WATCHERS      = asg-genie-dev@cisco.com
-HEADER        = [Watchdog]
+PROD_PKGS     = /auto/pyats/packages/cisco-shared/genie/libs
+PYTHON        = python
+TESTCMD       = ./tests/runAll --path=./tests/
+BUILD_CMD     = $(PYTHON) setup.py bdist_wheel --dist-dir=$(DIST_DIR)
 PYPIREPO      = pypitest
 
 # Development pkg requirements
 DEPENDENCIES  = restview psutil Sphinx wheel asynctest
 DEPENDENCIES += setproctitle sphinxcontrib-napoleon sphinx-rtd-theme httplib2
-DEPENDENCIES += pip-tools Cython requests xmltodict
+DEPENDENCIES += pip-tools Cython requests
 
-# force cythonize if uploading to pypi
-ifeq ($(UPLOADPYPI), true)
-	DEVNET = true
-	CYTHONIZE = true
-endif
-
-ifeq ($(MAKECMDGOALS), devnet)
-	DEVNET = true
-	CYTHONIZE = true
-	INCLUDE_TESTS = false
-endif
-
-# build options
-ifeq ($(CYTHONIZE), true)
-	BUILD_CMD += --cythonize
-endif
-
-ifeq ($(INCLUDE_TESTS), true)
-	BUILD_CMD += --include-tests
-endif
-
-# build options
-ifeq ($(DEVNET), true)
-	BUILD_CMD += --devnet
-endif
-
-# add upload flag ONLY if it's a devnet build, cythonized and asked for upload
-ifeq ($(DEVNET)$(CYTHONIZE)$(UPLOADPYPI), truetruetrue)
-	BUILD_CMD += upload -r $(PYPIREPO)
-endif
-
-
-.PHONY: help docs distribute_docs clean check\
-	    develop undevelop distribute test package
+.PHONY: clean package distribute develop undevelop help devnet\
+        docs test install_build_deps uninstall_build_deps
 
 help:
 	@echo "Please use 'make <target>' where <target> is one of"
 	@echo ""
-	@echo "     --- common actions ---"
-	@echo ""
-	@echo "	check                check setup.py content"
-	@echo " clean                remove the build directory ($(BUILD_ROOT))"
-	@echo " help                 display this help"
-	@echo " test                 run all unittests in an efficient manner"
-	@echo " develop              set all package to development mode"
-	@echo " undevelop            unset the above development mode"
-	@echo ""
-	@echo "     --- build specific targets ---"
-	@echo ""
-	@echo " package              build Genie.parser - Genie Parser libraries"
-	@echo ""
-	@echo "     --- distributions to production environment ---"
-	@echo ""
-	@echo " distribute           distribute built pkgs to production server"
-	@echo ""
-	@echo "     --- redirects ---"
-	@echo " docs             create all documentation locally. This the same as"
-	@echo "                  running 'make docs' in ./docs/"
-	@echo " distribute_docs  release local documentation to website. This is"
-	@echo "                  the same as running 'make distribute' in ./docs/"
+	@echo "package               Build the package"
+	@echo "test                  Test the package"
+	@echo "distribute            Distribute the package to internal Cisco PyPi server"
+	@echo "clean                 Remove build artifacts"
+	@echo "develop               Build and install development package"
+	@echo "undevelop             Uninstall development package"
+	@echo "docs                  Build Sphinx documentation for this package"
+	@echo "devnet                Build DevNet package."
+	@echo "install_build_deps    install pyats-distutils"
+	@echo "uninstall_build_deps  remove pyats-distutils"
 	@echo ""
 	@echo "     --- build arguments ---"
 	@echo " DEVNET=true              build for devnet style (cythonized, no ut)"
-	@echo " CYTHONIZE=true           build cythonized package"
-	@echo " INCLUDE_TESTS=true       build include unittests in cythonized pkgs"
 
+devnet: package
+	@echo "Completed building DevNet packages"
+	@echo ""
+
+install_build_deps:
+	@echo "--------------------------------------------------------------------"
+	@echo "Installing cisco-distutils"
+	@pip install --index-url=http://pyats-pypi.cisco.com/simple \
+	             --trusted-host=pyats-pypi.cisco.com \
+	             cisco-distutils
+ 
+uninstall_build_deps:
+	@echo "--------------------------------------------------------------------"
+	@echo "Uninstalling pyats-distutils"
+	@pip uninstall cisco-distutils
+ 
 docs:
 	@echo ""
 	@echo "--------------------------------------------------------------------"
-	@echo "Redirecting make docs to ./docs"
-	@cd ./docs && make docs
+	@echo "No documentation for $(PKG_NAME)"
 	@echo ""
-	@echo "Done."
-	@echo ""
-
-distribute_docs:
-	@echo ""
-	@echo "--------------------------------------------------------------------"
-	@echo "Redirecting make distribute_html to ./docs"
-	@cd ./docs && make distribute
-
-clean:
+ 
+test:
+	@$(TESTCMD)
+ 
+package:
 	@echo ""
 	@echo "--------------------------------------------------------------------"
-	@echo "Removing make directory: $(BUILD_ROOT)"
-	@rm -rf $(BUILD_ROOT)
-	@python setup.py clean
-	@echo "Removing *.pyc *.c and __pycache__/ files"
-	@find . -type f -name "*.pyc" | xargs rm -vrf
-	@find . -type f -name "*.c" | xargs rm -vrf
-	@find . -type d -name "__pycache__" | xargs rm -vrf
+	@echo "Building $(PKG_NAME) distributable: $@"
 	@echo ""
-	@echo "Done."
+	
+	$(BUILD_CMD)
+	
 	@echo ""
-
+	@echo "Completed building: $@"
+	@echo ""
+ 
 develop:
 	@echo ""
 	@echo "--------------------------------------------------------------------"
-	@echo "Installing development dependencies"
+	@echo "Building and installing $(PKG_NAME) development distributable: $@"
+	@echo ""
+	
 	@pip install $(DEPENDENCIES)
+	
+	@$(PYTHON) setup.py develop --no-deps
+	
+	@pip install -e ".[dev]"
+	
 	@echo ""
-	@echo "--------------------------------------------------------------------"
-	@echo "Setting up development environment"
-	@python setup.py develop --no-deps
+	@echo "Completed building and installing: $@"
 	@echo ""
-	@echo "Done."
-	@echo ""
-
+ 
 undevelop:
 	@echo ""
 	@echo "--------------------------------------------------------------------"
-	@echo "Removing development environment"
-	@python setup.py develop --no-deps --uninstall
+	@echo "Uninstalling $(PKG_NAME) development distributable: $@"
+	@echo ""
+	
+	@$(PYTHON) setup.py develop --no-deps -q --uninstall
+	
+	@echo ""
+	@echo "Completed uninstalling: $@"
+	@echo ""
+ 
+clean:
+	@echo ""
+	@echo "--------------------------------------------------------------------"
+	@echo "Removing make directory: $(BUILD_DIR)"
+	@rm -rf $(BUILD_DIR) $(DIST_DIR)
+	@echo ""
+	@echo "Removing build artifacts ..."
+	@$(PYTHON) setup.py clean
 	@echo ""
 	@echo "Done."
 	@echo ""
-
+ 
 distribute:
 	@echo ""
 	@echo "--------------------------------------------------------------------"
 	@echo "Copying all distributable to $(PROD_PKGS)"
-	@test -d $(OUTPUT_DIR) || { echo "Nothing to distribute! Exiting..."; exit 1; }
-	@ssh -q $(PROD_USER) 'test -e $(PROD_PKGS)/$(PKG_NAME) || mkdir $(PROD_PKGS)/$(PKG_NAME)'
-	@scp $(OUTPUT_DIR)/* $(PROD_USER):$(PROD_PKGS)/$(PKG_NAME)/
+	@test -d $(DIST_DIR) || { echo "Nothing to distribute! Exiting..."; exit 1; }
+	@ssh -q $(PROD_USER) 'test -e $(PROD_PKGS)/ || mkdir $(PROD_PKGS)'
+	@scp $(DIST_DIR)/* $(PROD_USER):$(PROD_PKGS)/
 	@echo ""
 	@echo "Done."
-	@echo ""
-
-package:
-	@echo ""
-	@echo "--------------------------------------------------------------------"
-	@echo "Building Genie Parser Package"
-
-	mkdir -p $(OUTPUT_DIR)/
-	$(BUILD_CMD)
-
-	@echo "Completed building Genie Namespace Package"
-	@echo ""
-
-	@echo "--------------------------------------------------------------------"
-	@echo "Building pyATS distributable: $@"
-	@echo ""
-
-test:
-	@echo ""
-	@echo "--------------------------------------------------------------------"
-	@echo "Running all unit tests..."
-	@echo ""
-
-	@$(TESTCMD)
-
-	@echo "Completed unit testing"
-	@echo ""
-
-check:
-	@echo ""
-	@echo "--------------------------------------------------------------------"
-	@echo "Checking setup.py consistency..."
-	@echo ""
-
-	@python setup.py check
-
-	@echo "Done"
 	@echo ""
