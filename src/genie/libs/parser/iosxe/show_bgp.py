@@ -1894,9 +1894,8 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
 
                 if 'list_of_neighbors' not in parsed_dict:
                     parsed_dict['list_of_neighbors'] = []
-                    parsed_dict['list_of_neighbors'].append(neighbor_id)
-                else:
-                    parsed_dict['list_of_neighbors'].append(neighbor_id)
+                parsed_dict['list_of_neighbors'].append(neighbor_id)
+
                 if 'vrf' not in parsed_dict:
                     parsed_dict['vrf'] = {}
                 if vrf_name not in parsed_dict['vrf']:
@@ -1935,9 +1934,7 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
 
                 if 'list_of_neighbors' not in parsed_dict:
                     parsed_dict['list_of_neighbors'] = []
-                    parsed_dict['list_of_neighbors'].append(neighbor_id)
-                else:
-                    parsed_dict['list_of_neighbors'].append(neighbor_id)
+                parsed_dict['list_of_neighbors'].append(neighbor_id)
                 if 'vrf' not in parsed_dict:
                     parsed_dict['vrf'] = {}
                 if vrf_name not in parsed_dict['vrf']:
@@ -1979,9 +1976,7 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
 
                 if 'list_of_neighbors' not in parsed_dict:
                     parsed_dict['list_of_neighbors'] = []
-                    parsed_dict['list_of_neighbors'].append(neighbor_id)
-                else:
-                    parsed_dict['list_of_neighbors'].append(neighbor_id)
+                parsed_dict['list_of_neighbors'].append(neighbor_id)
                 if 'vrf' not in parsed_dict:
                     parsed_dict['vrf'] = {}
                 if vrf_name not in parsed_dict['vrf']:
