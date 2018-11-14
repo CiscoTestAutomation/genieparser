@@ -11,3 +11,9 @@
 --------------------------------------------------------------------------------
 * NXOS
     * Fix for ShowInterfaceSwitchport on different output for key admin_priv_vlan_trunk_private_vlans
+
+--------------------------------------------------------------------------------
+                                LAG
+--------------------------------------------------------------------------------
+* NXOS
+    * Fix for IOSXE ShowPagpNeighbor to replace '\t' to 0 or more spaces ' *'
