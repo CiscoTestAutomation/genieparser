@@ -3370,8 +3370,10 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
             line = line.rstrip()
 
             # BGP summary information for VRF VRF1, address family IPv4 Unicast
+            # BGP summary information for VRF core_vrf, address family IPv4 Unicast
+            # BGP summary information for VRF vrf-9100, address family IPv4 Unicast
             p1 = re.compile(r'^\s*BGP +summary +information +for +VRF'
-                             ' +(?P<vrf_name>[a-zA-Z0-9]+), +address +family'
+                             ' +(?P<vrf_name>\S+), +address +family'
                              ' +(?P<address_family>[a-zA-Z0-9\s\-\_]+)$')
             m = p1.match(line)
             if m:
