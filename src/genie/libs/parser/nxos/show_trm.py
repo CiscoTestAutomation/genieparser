@@ -24,11 +24,7 @@ class ShowRunningConfigTrmSchema(MetaParser):
     """Schema for show running-config | sec '^advertise evpn multicast'"""
 
     schema = {
-        'instance': {
-            Any(): {
-                Optional('advertise_evpn_multicast'): bool,
-            }
-        }
+             Optional('advertise_evpn_multicast'): bool,
     }
 
 
@@ -52,8 +48,7 @@ class ShowRunningConfigTrm(ShowRunningConfigTrmSchema):
 
             m = p1.match(line)
             if m:
-                advertise_dict = result_dict.setdefault('instance', {}).setdefault('default', {})
-                advertise_dict.update({'advertise_evpn_multicast': True})
+                result_dict.update({'advertise_evpn_multicast': True})
                 continue
 
         return result_dict

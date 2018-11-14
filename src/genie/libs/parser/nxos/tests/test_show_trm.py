@@ -20,11 +20,7 @@ class test_show_running_config_trm(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-        'instance': {
-            'default': {
-                'advertise_evpn_multicast': True,
-            }
-        },
+        'advertise_evpn_multicast': True,
     }
 
     golden_output = {'execute.return_value': '''
