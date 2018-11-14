@@ -29,6 +29,20 @@
     * Fix for IOSXE ShowPagpNeighbor to replace '\t' to 0 or more spaces ' *'
 
 --------------------------------------------------------------------------------
+                                TRM
+--------------------------------------------------------------------------------
+* NXOS
+    * Added below parsers :
+      * ShowFabricMulticastGlobals
+      * ShowFabricMulticastIpSaAdRoute
+      * ShowFabricMulticastIpL2Mroute
+      * ShowForwardingDistributionMulticastRoute
+      * ShowBgpIpMvpnRouteType
+      * ShowBgpIpMvpnSaadDetail
+      * ShowBgpL2vpnEvpn
+      * ShowBgpIpMvpn
+
+--------------------------------------------------------------------------------
                                 PLATFORM
 --------------------------------------------------------------------------------
 * IOS

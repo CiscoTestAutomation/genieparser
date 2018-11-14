@@ -9,7 +9,7 @@ from ats.topology import Device
 
 # Parser
 from genie.libs.parser.nxos.show_vrf import ShowVrf, ShowVrfInterface, \
-                                 ShowVrfDetail
+                                 ShowVrfDetail, ShowRunningConfigVrf
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
@@ -284,6 +284,86 @@ class test_show_vrf_detail(unittest.TestCase):
         obj = ShowVrfDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+
+# ===============================================================
+#  Unit test for 'show running-config vrf <vrf> | sec '^vrf'"
+# ==========================================================
+class test_show_running_config_vrf(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'vrf': {
+            'vni_10100': {
+                'vni': 10100,
+                'rd': 'auto',
+                'address_family': {
+                    'ipv4 unicast': {
+                        'route_target': {
+                            'auto': {
+                                'rt_type': 'both',
+                                 'protocol': {
+                                     'mvpn': {
+                                         'rt': 'auto',
+                                         'rt_type': 'both',
+                                         'rt_mvpn': True,
+                                     },
+                                     'evpn': {
+                                         'rt': 'auto',
+                                         'rt_type': 'both',
+                                         'rt_evpn': True,
+                                     }
+                                 }
+                            },
+                        }
+                    },
+                    'ipv6 unicast': {
+                        'route_target': {
+                            'auto': {
+                                'rt_type': 'both',
+                                'protocol': {
+                                    'evpn': {
+                                        'rt': 'auto',
+                                        'rt_type': 'both',
+                                        'rt_evpn': True,
+                                    }
+                                }
+                            },
+                        }
+                    }
+                }
+            }
+        },
+    }
+
+    golden_output = {'execute.return_value': '''
+R2# show running-config vrf vni_10100 | sec '^vrf'
+vrf context vni_10100
+  vni 10100
+  rd auto
+  address-family ipv4 unicast
+    route-target both auto
+    route-target both auto mvpn
+    route-target both auto evpn
+  address-family ipv6 unicast
+    route-target both auto
+    route-target both auto evpn
+        '''}
+
+    def test_show_running_config_vrf(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowRunningConfigVrf(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+
+    def test_show_vrf_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowRunningConfigVrf(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -2176,6 +2176,7 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                      Optional('route_refresh_old'): str,
                      Optional('vpnv4_unicast'): str,
                      Optional('vpnv6_unicast'): str,
+                     Optional('ipv4_mvpn'): str,
                      Optional('graceful_restart'): str,
                      Optional('enhanced_refresh'): str,
                      Optional('multisession'): str,
@@ -2644,6 +2645,15 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                         str(m.groupdict()['vpnv6_unicast'])
                 continue
 
+            # Address family IPv4 MVPN: advertised received
+            p24_1 = re.compile(r'^\s*Address +family +IPv4 +MVPN:'
+                             ' +(?P<ipv4_mvpn>[\w\s]+)$')
+            m = p24_1.match(line)
+            if m:
+                parsed_dict['neighbor'][neighbor_id] \
+                    ['bgp_negotiated_capabilities']['ipv4_mvpn'] = \
+                    str(m.groupdict()['ipv4_mvpn'])
+                continue
 
             # Graceful Restart capability: advertised received
             p25 = re.compile(r'^\s*Graceful +Restart +capability *:'
