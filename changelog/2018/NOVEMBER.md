@@ -1,3 +1,5 @@
+# V3.1.5
+
 | Module                  | Version       |
 | ------------------------|:-------------:|
 | ``genie.libs.parser``   | 3.1.5         |
@@ -72,6 +74,8 @@
     * Updated parsers:
         * ShowBgpVrfAllAllSummary
 
+# V3.1.4
+
 | Module                  | Version       |
 | ------------------------|:-------------:|
 | ``genie.libs.parser``   | 3.1.4         |
@@ -85,6 +89,7 @@
 
 
 
+# V3.1.3
 
 | Module                  | Version       |
 | ------------------------|:-------------:|
