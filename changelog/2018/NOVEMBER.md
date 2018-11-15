@@ -20,7 +20,7 @@
         * show ip interface
         * show ipv6 interface
         * show interfaces accounting
-        * show interfaces <interface> accounting
+        * show interfaces \<interface\> accounting
 
 --------------------------------------------------------------------------------
                                 LAG
