@@ -16,7 +16,7 @@
         * show interfaces
         * show ip interface brief
         * show ip interface brief | include Vlan
-        * show ip interface brief | include <WROD>
+        * show ip interface brief | include \<WORD\>
         * show ip interface
         * show ipv6 interface
         * show interfaces accounting
@@ -56,9 +56,9 @@
         * show inventory
         * show bootvar
         * show processes cpu sorted
-        * show processes cpu sorted <1min|5min|5sec>
-        * show processes cpu sorted | include <WORD>
-        * show processes cpu sorted <1min|5min|5sec> | include <WORD>
+        * show processes cpu sorted \<1min|5min|5sec\>
+        * show processes cpu sorted | include \<WORD\>
+        * show processes cpu sorted \<1min|5min|5sec> | include \<WORD\>
 
 * NXOS
     * Updated parsers:
