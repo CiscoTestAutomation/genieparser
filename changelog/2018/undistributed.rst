@@ -58,19 +58,19 @@
         * show processes cpu sorted <1min|5min|5sec> | include <WORD>
 
 * NXOS
-    * Updated below parsers:
+    * Updated parsers:
         * ShowInventory
 
 --------------------------------------------------------------------------------
                                 ROUTING
 --------------------------------------------------------------------------------
 * NXOS
-    * Updated below parsers:
+    * Updated parsers:
         * ShowIpRoute
 
 --------------------------------------------------------------------------------
                                 BGP
 --------------------------------------------------------------------------------
 * NXOS
-    * Updated below parsers:
+    * Updated parsers:
         * ShowBgpVrfAllAllSummary
