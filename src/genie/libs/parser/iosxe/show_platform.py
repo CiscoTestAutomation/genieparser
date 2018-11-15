@@ -140,7 +140,7 @@ class ShowVersion(ShowVersionSchema):
             p1_1 = re.compile(
                 r'^\s*[Cc]isco +IOS +[Ss]oftware(.+)?, +(?P<platform>.+) '
                  'Software +\((?P<image_id>.+)\).+( +Experimental)? +'
-                 '[Vv]ersion +(?P<version>[a-zA-Z0-9\.\:]+) *,?.*')
+                 '[Vv]ersion +(?P<version>[a-zA-Z0-9\.\:\(\)]+) *,?.*')
             m = p1_1.match(line)
             if m:
                 version = m.groupdict()['version']
@@ -180,8 +180,16 @@ class ShowVersion(ShowVersionSchema):
                 r'^\s*ROM\: +(?P<rom>.+)$')
             m = p2.match(line)
             if m:
-                version_dict['version']['rom'] = \
-                    m.groupdict()['rom']
+                rom = m.groupdict()['rom']
+                version_dict['version']['rom'] = rom                    
+
+                # ROM: Bootstrap program is IOSv
+                p2_1 = re.compile(
+                    r'^Bootstrap +program +is +(?P<os>.+)$')
+                m = p2_1.match(rom)
+                if m:
+                    version_dict['version']['os'] = \
+                        m.groupdict()['os']
                 continue
 
             # bootldr
@@ -272,8 +280,9 @@ class ShowVersion(ShowVersionSchema):
             # cisco WS-C3650-24PD (MIPS) processor (revision H0) with 829481K/6147K bytes of memory.
             # cisco CSR1000V (VXE) processor (revision VXE) with 1987991K/3075K bytes of memory.
             # cisco C1111-4P (1RU) processor with 1453955K/6147K bytes of memory. 
+            # Cisco IOSv (revision 1.0) with  with 435457K/87040K bytes of memory.
             p8 = re.compile(
-                r'^\s*cisco +(?P<chassis>[a-zA-Z0-9\-]+) +\((?P<processor_type>.+)\) +processor.* +with +(?P<main_mem>[0-9]+)[kK]\/[0-9]+[kK]')
+                r'^\s*(C|c)isco +(?P<chassis>[a-zA-Z0-9\-]+) +\((?P<processor_type>.+)\) +((processor.*)|with) +with +(?P<main_mem>[0-9]+)[kK]\/[0-9]+[kK]')
             m = p8.match(line)
             if m:
                 version_dict['version']['chassis'] \
@@ -291,6 +300,8 @@ class ShowVersion(ShowVersionSchema):
                     version_dict['version']['rtr_type'] = rtr_type = 'CSR1000V'
                 elif 'C11' in version_dict['version']['chassis']:
                     version_dict['version']['rtr_type'] = rtr_type = 'ISR'
+                else:
+                    version_dict['version']['rtr_type'] = rtr_type = version_dict['version']['chassis']
                 continue
 
             # chassis_sn

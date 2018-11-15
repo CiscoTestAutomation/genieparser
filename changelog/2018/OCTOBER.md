@@ -73,14 +73,14 @@
 --------------------------------------------------------------------------------
 
 * NXOS
-    * ShowFabricMulticastGlobals
-    * ShowFabricMulticastIpSaAdRoute
-    * ShowFabricMulticastIpL2Mroute
-    * ShowForwardingDistributionMulticastRoute
-    * ShowBgpIpMvpnRouteType
-    * ShowBgpIpMvpnSaadDetail
-    * ShowBgpL2vpnEvpn
-    * ShowBgpIpMvpn
+    - ShowFabricMulticastGlobals
+    - ShowFabricMulticastIpSaAdRoute
+    - ShowFabricMulticastIpL2Mroute
+    - ShowForwardingDistributionMulticastRoute
+    - ShowBgpIpMvpnRouteType
+    - ShowBgpIpMvpnSaadDetail
+    - ShowBgpL2vpnEvpn
+    - ShowBgpIpMvpn
 
 --------------------------------------------------------------------------------
                                 BGP

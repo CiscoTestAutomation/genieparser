@@ -345,8 +345,11 @@ class ShowIpRoute(ShowIpRouteSchema):
 
             # 1.1.1.1/32, ubest/mbest: 2/0
             # 3.3.3.3/32, ubest/mbest: 2/0, attached
+            # 11.0.0.0/24, ubest/mbest: 1/0 time, attached
+            # 90.77.77.1/32, ubest/mbest: 1/0 time
             p2 = re.compile(r'^\s*(?P<route>[\d\/\.]+)'
-                            ', +ubest/mbest: +(?P<ubest_mbest>[\d\/]+)(, +(?P<attached>[\w]+))?$')
+                            ', +ubest/mbest: +(?P<ubest_mbest>[\d\/]+)'
+                            '( +time)?(, +(?P<attached>[\w]+))?$')
             m = p2.match(line)
             if m:
                 active = True

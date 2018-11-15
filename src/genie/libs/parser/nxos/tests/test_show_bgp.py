@@ -7287,7 +7287,9 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                     'vpnv4_unicast': 'advertised '
                                      'received',
                     'vpnv6_unicast': 'advertised '
-                                     'received'},
+                                     'received',
+                    'ipv4_mvpn': 'advertised '
+                                      'received'},
                 'bgp_negotiated_keepalive_timers':
                     {'hold_time': 99,
                     'keepalive_interval': 33,
@@ -7529,6 +7531,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
           4-Byte AS capability: disabled
           Address family VPNv4 Unicast: advertised received
           Address family VPNv6 Unicast: advertised received
+          Address family IPv4 MVPN: advertised received
           Graceful Restart capability: advertised received
 
           Graceful Restart Parameters:
