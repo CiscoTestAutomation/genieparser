@@ -1650,6 +1650,7 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                  'neighbor':
                       {Any():
                           {Optional('remote_as'): int,
+                          Optional('local_as'): int,
                           Optional('link'): str,
                           Optional('bgp_version'): int,
                           Optional('router_id'): str,
@@ -1893,9 +1894,8 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
 
                 if 'list_of_neighbors' not in parsed_dict:
                     parsed_dict['list_of_neighbors'] = []
-                    parsed_dict['list_of_neighbors'].append(neighbor_id)
-                else:
-                    parsed_dict['list_of_neighbors'].append(neighbor_id)
+                parsed_dict['list_of_neighbors'].append(neighbor_id)
+
                 if 'vrf' not in parsed_dict:
                     parsed_dict['vrf'] = {}
                 if vrf_name not in parsed_dict['vrf']:
@@ -1934,9 +1934,7 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
 
                 if 'list_of_neighbors' not in parsed_dict:
                     parsed_dict['list_of_neighbors'] = []
-                    parsed_dict['list_of_neighbors'].append(neighbor_id)
-                else:
-                    parsed_dict['list_of_neighbors'].append(neighbor_id)
+                parsed_dict['list_of_neighbors'].append(neighbor_id)
                 if 'vrf' not in parsed_dict:
                     parsed_dict['vrf'] = {}
                 if vrf_name not in parsed_dict['vrf']:
@@ -1949,6 +1947,49 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                     parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] = {}
                     if remote_as is not None:
                         parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['remote_as'] = remote_as
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['link'] = link
+
+                if 'address_family' not in  parsed_dict['vrf']\
+                        [vrf_name]['neighbor'][neighbor_id]:
+                    parsed_dict['vrf'][vrf_name]['neighbor']\
+                        [neighbor_id]['address_family'] = {}
+
+                if af_name:
+                    parsed_dict['vrf'][vrf_name]['neighbor'] \
+                        [neighbor_id]['address_family'][af_name] = {}
+                continue
+
+            # IOS output
+            # BGP neighbor is 50.1.1.101,  remote AS 300,  local AS 101, external link
+            p2_3 = re.compile(r'^\s*BGP +neighbor +is +(?P<neghibor>[\w\.\:]+),'
+                              '( +vrf +(?P<vrf_name>[a-zA-Z0-9]+),)?'
+                              ' +remote +AS +(?P<remote_as>[0-9]+),'
+                              ' +local +AS +(?P<local_as>[0-9]+),'
+                              ' +(?P<link>[a-zA-Z]+) +link$')
+            m = p2_3.match(line)
+            if m:
+                neighbor_id = m.groupdict()['neghibor']
+                vrf_name = 'default' or m.groupdict()['vrf_name']
+                remote_as = int(m.groupdict()['remote_as'])
+                local_as = int(m.groupdict()['local_as'])
+                link = m.groupdict()['link']  # internal / external
+
+                if 'list_of_neighbors' not in parsed_dict:
+                    parsed_dict['list_of_neighbors'] = []
+                parsed_dict['list_of_neighbors'].append(neighbor_id)
+                if 'vrf' not in parsed_dict:
+                    parsed_dict['vrf'] = {}
+                if vrf_name not in parsed_dict['vrf']:
+                    parsed_dict['vrf'][vrf_name] = {}
+
+                if 'neighbor' not in parsed_dict['vrf'][vrf_name]:
+                    parsed_dict['vrf'][vrf_name]['neighbor'] = {}
+
+                if neighbor_id not in parsed_dict['vrf'][vrf_name]['neighbor']:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] = {}
+                    if remote_as is not None:
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['local_as'] = local_as
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['remote_as'] = remote_as
                     parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['link'] = link
 
                 if 'address_family' not in  parsed_dict['vrf']\
