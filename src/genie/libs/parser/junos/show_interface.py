@@ -84,6 +84,9 @@ class ShowInterfacesTerse(ShowInterfacesTerseSchema):
             line = line.replace('\t', '    ')
             line = line.strip()
 
+            if 'show interfaces terse' in line:
+                continue
+
 
             # fxp0                    up    up
             # em1.0                   up    up   inet     10.0.0.4/8
@@ -95,9 +98,8 @@ class ShowInterfacesTerse(ShowInterfacesTerseSchema):
                 intf_dict = ret_dict.setdefault(interface, {})
                 intf_dict.update({'admin_state': groups['admin_state'],
                                   'link_state': groups['link_state'],
-                                  'oper_status': groups['admin_state'],
-                                  'enabled': 'up' in groups['admin_state'] and \
-                                             'up' in groups['link_state']})
+                                  'oper_status': groups['link_state'],
+                                  'enabled': 'up' in groups['admin_state']})
                 if groups['protocol']:
                     protocol = groups['protocol']
                     pro_dict = intf_dict.setdefault('protocol', {}).setdefault(groups['protocol'], {})

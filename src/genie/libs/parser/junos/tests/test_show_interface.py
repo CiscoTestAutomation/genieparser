@@ -63,9 +63,9 @@ class test_show_interfaces_terse(unittest.TestCase):
                         'protocol': {'inet': {'10.0.2.1/24': {'local': '10.0.2.1/24'}},
                                      'multiservice': {}}},
          'ge-0/0/2': {'admin_state': 'up',
-                      'enabled': False,
+                      'enabled': True,
                       'link_state': 'down',
-                      'oper_status': 'up'},
+                      'oper_status': 'down'},
          'lc-0/0/0': {'admin_state': 'up',
                       'enabled': True,
                       'link_state': 'up',
@@ -117,11 +117,6 @@ class test_show_interfaces_terse(unittest.TestCase):
                              'link_state': 'up',
                              'oper_status': 'up',
                              'protocol': {'inet': {}}},
-         'root@junos_vmx1>': {'admin_state': 'show',
-                              'enabled': False,
-                              'link_state': 'interfaces',
-                              'oper_status': 'show',
-                              'protocol': {'terse': {}}}
     }
 
     golden_output1 = {'execute.return_value': '''
