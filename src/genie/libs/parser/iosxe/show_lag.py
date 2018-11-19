@@ -463,17 +463,19 @@ class ShowPagpNeighbor(ShowPagpNeighborSchema):
 
         result_dict = {}
         # Channel group 1 neighbors
+        p1 = re.compile(r'^Channel +group +(?P<channel_group>[\d]+) +neighbors$')
         #           Partner              Partner          Partner         Partner Group
         # Port      Name                 Device ID        Port       Age  Flags   Cap.
         # Gi0/1     iosvl2-2             5e02.4001.8000   Gi0/1       11s SC      10001
-        p1 = re.compile(r'^\s*Channel +group +(?P<channel_group>[\d]+) +neighbors$')
-        p2 = re.compile(r'^\s*(?P<interface>[\w\/]+) +(?P<partner_name>[\w\-\.]+)'
-                        ' +(?P<partner_id>[\w\.]+)[\t](?P<partner_port>[\w\/]+) +(?P<age>[\d]+)s +(?P<flags>[\w]+)'
-                        '[\t](?P<group_cap>[\w]+)$')
+        # Gi1/0/15    R5                   6c41.6ae4.7880   Gi1/0/1      5s  SC       A0001
+        p2 = re.compile(r'^(?P<interface>[\w\/\.\-]+) +(?P<partner_name>[\w\-\.]+)'
+                        ' +(?P<partner_id>[\w\.]+) *(?P<partner_port>[\w\/\.\-]+) +(?P<age>[\d]+)s +(?P<flags>[\w]+)'
+                        ' *(?P<group_cap>[\w]+)$')
 
         for line in out.splitlines():
             if line:
-                line = line.rstrip()
+                line = line.strip()                
+                line = line.replace("\t",'    ')
             else:
                 continue
 
