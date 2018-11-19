@@ -554,4 +554,3 @@ class test_show_processes_cpu_sorted_CPU(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
