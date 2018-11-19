@@ -249,6 +249,16 @@ class ShowVersion(ShowVersionSchema):
                     m.groupdict()['last_reload_reason']
                 continue
 
+            # last_reload_reason
+            # Last reset from power-on
+            p7_1 = re.compile(
+                r'^\s*[Ll]ast +reset +from +(?P<last_reload_reason>.+)$')
+            m = p7_1.match(line)
+            if m:
+                version_dict['version']['last_reload_reason'] = \
+                    m.groupdict()['last_reload_reason']
+                continue
+
             # license_type
             p8 = re.compile(
                 r'^\s*[Ll]icense +[Tt]ype\: +(?P<license_type>.+)$')
@@ -281,8 +291,9 @@ class ShowVersion(ShowVersionSchema):
             # cisco CSR1000V (VXE) processor (revision VXE) with 1987991K/3075K bytes of memory.
             # cisco C1111-4P (1RU) processor with 1453955K/6147K bytes of memory. 
             # Cisco IOSv (revision 1.0) with  with 435457K/87040K bytes of memory.
+            # cisco WS-C3750X-24P (PowerPC405) processor (revision W0) with 262144K bytes of memory.
             p8 = re.compile(
-                r'^\s*(C|c)isco +(?P<chassis>[a-zA-Z0-9\-]+) +\((?P<processor_type>.+)\) +((processor.*)|with) +with +(?P<main_mem>[0-9]+)[kK]\/[0-9]+[kK]')
+                r'^\s*(C|c)isco +(?P<chassis>[a-zA-Z0-9\-]+) +\((?P<processor_type>.+)\) +((processor.*)|with) +with +(?P<main_mem>[0-9]+)[kK](\/[0-9]+[kK])?')
             m = p8.match(line)
             if m:
                 version_dict['version']['chassis'] \
