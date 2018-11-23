@@ -13,6 +13,16 @@
     * Add ShowNtpStatus for 'show ntp status'
     * Add ShowConfigurationSystemNtpSet for 'show configuration system ntp | display set'
 
+* IOSXE
+    * Add ShowNtpAssociations for 'show ntp associations'
+    * Add ShowNtpStatus for 'show ntp status'
+    * Add ShowNtpConfig for 'show ntp config'
+
+* IOS
+    * Add ShowNtpAssociations for 'show ntp associations'
+    * Add ShowNtpStatus for 'show ntp status'
+    * Add ShowNtpConfig for 'show ntp config'
+
 --------------------------------------------------------------------------------
                                 INTERFACE
 --------------------------------------------------------------------------------
