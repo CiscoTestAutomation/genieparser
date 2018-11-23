@@ -164,18 +164,6 @@ class ShowNtpStatusSchema(MetaParser):
             }
         }
     }
-                # Junos Keys not found on IOSXE
-                # Optional('clock'): str,
-                # Optional('frequency'): float,
-                # Optional('number_of_events'): int,
-                # Optional('peer'): int,
-                # Optional('processor'): str,
-                # Optional('recent_event'): str,
-                # Optional('stability'): float,
-                # Optional('state'): int,
-                # Optional('synch_source'): str,
-                # Optional('system'): str,
-                # Optional('version'): str
 
 
 class ShowNtpStatus(ShowNtpStatusSchema):
