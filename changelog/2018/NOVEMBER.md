@@ -1,3 +1,99 @@
+# V3.1.6
+
+| Module                  | Version       |
+| ------------------------|:-------------:|
+| ``genie.libs.parser``   | 3.1.6         |
+
+--------------------------------------------------------------------------------
+                                VRF
+--------------------------------------------------------------------------------
+* IOS
+    * Add parser:
+        * ShowVrfDetail
+
+# V3.1.5
+
+| Module                  | Version       |
+| ------------------------|:-------------:|
+| ``genie.libs.parser``   | 3.1.5         |
+
+--------------------------------------------------------------------------------
+                                INTERFACE
+--------------------------------------------------------------------------------
+
+* NXOS
+    * Fix for ShowInterfaceSwitchport on different output for key admin_priv_vlan_trunk_private_vlans
+
+* IOS
+    * Added parsers for below commands:
+        * show interfaces
+        * show ip interface brief
+        * show ip interface brief | include Vlan
+        * show ip interface brief | include \<WORD\>
+        * show ip interface
+        * show ipv6 interface
+        * show interfaces accounting
+        * show interfaces \<interface\> accounting
+
+--------------------------------------------------------------------------------
+                                LAG
+--------------------------------------------------------------------------------
+
+* NXOS
+    * Fix for IOSXE ShowPagpNeighbor to replace '\t' to 0 or more spaces ' *'
+
+--------------------------------------------------------------------------------
+                                TRM
+--------------------------------------------------------------------------------
+
+* NXOS
+    * Added below parsers :
+      * ShowFabricMulticastGlobals
+      * ShowFabricMulticastIpSaAdRoute
+      * ShowFabricMulticastIpL2Mroute
+      * ShowForwardingDistributionMulticastRoute
+      * ShowBgpIpMvpnRouteType
+      * ShowBgpIpMvpnSaadDetail
+      * ShowBgpL2vpnEvpn
+      * ShowBgpIpMvpn
+
+--------------------------------------------------------------------------------
+                                PLATFORM
+--------------------------------------------------------------------------------
+
+* IOS
+    * Added parsers for below comands:
+        * show version
+        * dir
+        * show redundancy
+        * show inventory
+        * show bootvar
+        * show processes cpu sorted
+        * show processes cpu sorted \<1min|5min|5sec\>
+        * show processes cpu sorted | include \<WORD\>
+        * show processes cpu sorted \<1min|5min|5sec> | include \<WORD\>
+
+* NXOS
+    * Updated parsers:
+        * ShowInventory
+
+--------------------------------------------------------------------------------
+                                ROUTING
+--------------------------------------------------------------------------------
+
+* NXOS
+    * Updated parsers:
+        * ShowIpRoute
+
+--------------------------------------------------------------------------------
+                                BGP
+--------------------------------------------------------------------------------
+
+* NXOS
+    * Updated parsers:
+        * ShowBgpVrfAllAllSummary
+
+# V3.1.4
 
 | Module                  | Version       |
 | ------------------------|:-------------:|
@@ -12,6 +108,7 @@
 
 
 
+# V3.1.3
 
 | Module                  | Version       |
 | ------------------------|:-------------:|
@@ -28,14 +125,17 @@
 --------------------------------------------------------------------------------
                                 INTERFACE
 --------------------------------------------------------------------------------
+
 * IOSXE
     * remove duplicated ShowEtherchannelSummary parser from 
       iosxe show_interface.py, keep the one in shwo_lag.py, and combine two structures
+
 * IOSXR
     * fix parser schema for ShowInterfaceBrief to have key 'ethernet' as optional
 --------------------------------------------------------------------------------
                                 PLATFORM
 --------------------------------------------------------------------------------
+
 * IOSXE
     * fix regexp for 'show version' to support more output to get version information
 * IOSXR
@@ -44,6 +144,7 @@
 --------------------------------------------------------------------------------
                                 OSPF
 --------------------------------------------------------------------------------
+
 * IOSXR
     * fix regexp to support area output as non-digit id
 * NXOS
@@ -52,12 +153,14 @@
 --------------------------------------------------------------------------------
                                 IMGP
 --------------------------------------------------------------------------------
+
 * NXOS
     * Convert interface name to standard style (Loopback, Ethernet,etc.) for 
       ShowIpIgmpGroups
 --------------------------------------------------------------------------------
                                 MLD
 --------------------------------------------------------------------------------
+
 * NXOS
     * Convert interface name to standard style (Loopback, Ethernet,etc.) for 
       ShowIpv6MldGroups
