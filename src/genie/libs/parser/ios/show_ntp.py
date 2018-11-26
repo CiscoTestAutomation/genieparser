@@ -31,7 +31,7 @@ class ShowNtpAssociationsSchema(MetaParser):
                         Optional('refid'): str,
                         Optional('type'): str,
                         Optional('stratum'): int,
-                        Optional('receive_time'): int,
+                        Optional('receive_time'): str,
                         Optional('poll'): int,
                         Optional('reach'): int,
                         Optional('delay'): float,
@@ -81,9 +81,10 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
 
         #   address         ref clock       st   when   poll reach  delay  offset   disp
         # *~127.127.1.1     .LOCL.           0      6     16   377  0.000   0.000  1.204
+        # ~1.1.1.1         .INIT.          16      -   1024     0  0.000   0.000 15937.
         p1 = re.compile(r'^(?P<mode_code>[x\*\#\+\-\~]+)? *(?P<remote>[\w\.\:]+) +'
                          '(?P<refid>[\w\.]+) +(?P<stratum>\d+) +'
-                         '(?P<receive_time>\d+) +(?P<poll>\d+) +'
+                         '(?P<receive_time>[\d\-]+) +(?P<poll>\d+) +'
                          '(?P<reach>\d+) +(?P<delay>[\d\.]+) +'
                          '(?P<offset>[\d\.\-]+) +(?P<disp>[\d\.\-]+)$')
 
@@ -108,7 +109,7 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
                                   'type': local_mode,
                                   'mode': mode,
                                   'stratum': int(groups['stratum']),
-                                  'receive_time': int(groups['receive_time']),
+                                  'receive_time': str(groups['receive_time']),
                                   'poll': int(groups['poll']),
                                   'reach': int(groups['reach']),
                                   'delay': float(groups['delay']),
