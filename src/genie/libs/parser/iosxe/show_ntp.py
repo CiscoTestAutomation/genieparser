@@ -154,7 +154,7 @@ class ShowNtpStatusSchema(MetaParser):
                 Optional('refid'): str,
                 Optional('nom_freq'): float,
                 Optional('act_freq'): float,
-                Optional('precision'): str,
+                Optional('precision'): Or(int,str),
                 Optional('uptime'): str,
                 Optional('resolution'): int,
                 Optional('reftime'): str,
@@ -226,7 +226,10 @@ class ShowNtpStatus(ShowNtpStatusSchema):
                 clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
                 clock_dict['nom_freq'] = float(groups['nom_freq'])
                 clock_dict['act_freq'] = float(groups['act_freq'])
-                clock_dict['precision'] = groups['precision']
+                try:
+                    clock_dict['precision'] = int(groups['precision'])
+                except:
+                    clock_dict['precision'] = str(groups['precision'])
                 continue
 
             m = p3.match(line)
