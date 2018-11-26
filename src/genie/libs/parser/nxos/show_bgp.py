@@ -2941,7 +2941,8 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                 continue
 
             # Nexthop always set to local peering address, 0.0.0.0
-            p43 = re.compile(r'^\s*Nexthop +always +set +to +local +peering'
+            # Nexthop set to local peering address, 0.0.0.0
+            p43 = re.compile(r'\s*Nexthop(?: +always)? +set +to +local +peering'
                               ' +address, +(?P<ip>[\w\.\:]+)$')
             m = p43.match(line)
             if m:
@@ -7947,7 +7948,8 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
                 continue
 
             # Nexthop always set to local peering address, 0.0.0.0
-            p11 = re.compile(r'^Nexthop +always +set +to +local +'
+            # Nexthop set to local peering address, 0.0.0.0
+            p11 = re.compile(r'^Nexthop(?: +always)? +set +to +local +'
                               'peering +address, +(?P<local_nexthop>[\w\.\:]+)$')
             m = p11.match(line)
             if m:
