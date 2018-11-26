@@ -1737,6 +1737,26 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                 af_dict['local_router_id'] = local_router_id
                 continue
 
+            #                     20:47::21a:1ff:fe00:161/128
+            p3_4 = re.compile(r'^\s*(?P<next_hop>[a-zA-Z0-9\.\:\/\[\]\,]+)$')
+            m = p3_4.match(line)
+            if m:
+                # Get keys
+                next_hop = str(m.groupdict()['next_hop'])
+
+                if data_on_nextline:
+                    data_on_nextline =  False
+                else:
+                    index += 1
+
+                # Init dict
+                index_dict = af_dict.setdefault('prefixes', {}).setdefault(prefix, {})\
+                  .setdefault('index', {}).setdefault(index, {})
+
+                # Set keys
+                index_dict['next_hop'] = next_hop
+                continue
+
             # Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
             # Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist
             # Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath
@@ -1789,6 +1809,7 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                         af_dict['aggregate_address_as_set'] = True
                         af_dict['aggregate_address_summary_only'] = True
                         continue
+                continue
 
 
             #                     0.0.0.0               100      32768 i
@@ -2052,6 +2073,8 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                         af_dict['aggregate_address_as_set'] = True
                         af_dict['aggregate_address_summary_only'] = True
                         continue
+                continue
+
 
         # order the af prefixes index
         # return dict when parsed dictionary is empty
