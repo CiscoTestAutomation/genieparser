@@ -2089,6 +2089,12 @@ Fabric L2-Mroute: (*, 238.8.4.202/32)
 
         '''}
 
+    golden_output_1 = {'execute.return_value': '''
+     R2# show fabric multicast ipv4 l2-mroute vni all
+
+    EVPN C-Mcast Route Database for VNI: 10101
+    '''}
+
     def test_show_fabric_multicast_ip_l2_mroute_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -2101,5 +2107,13 @@ Fabric L2-Mroute: (*, 238.8.4.202/32)
         obj = ShowFabricMulticastIpL2Mroute(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(vni="all")
+
+    def test_show_fabric_multicast_ip_l2_mroute_empty_1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowFabricMulticastIpL2Mroute(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(vni="all")
+
+
 if __name__ == '__main__':
     unittest.main()
