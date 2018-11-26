@@ -1,10 +1,10 @@
 """show_ntp.py
 
-Junos parsers for the following show commands:
+IOSXE parsers for the following show commands:
 
     * show ntp associations
     * show ntp status
-    * show configuration system ntp | display set
+    * show ntp config
 
 """
 
@@ -61,19 +61,15 @@ class ShowNtpAssociationsSchema(MetaParser):
 class ShowNtpAssociations(ShowNtpAssociationsSchema):
     """Parser for show ntp associations"""
 
-    MODE_MAP = {'*': 'synchronized',
-                'o': 'synchronized',
+    # * sys.peer, # selected, + candidate, - outlyer, x falseticker, ~ configured
+    MODE_MAP = {'*': 'sys.peer',
+                '#': 'selected',
                 'x': 'falseticker',
-                '+': 'final selection set',
-                '-': 'clustering',
-                '=': 'client',
+                '+': 'candidate',
+                '-': 'outlyer',
+                '~': 'configured',
+                '*~': 'synchronized',
                 None: 'unsynchronized'}
-
-    TYPE_MAP = {'b': 'broadcast',
-                'l': 'local',
-                'm': 'multicast',
-                'u': 'unicast',
-                '-': 'active'}
 
     def cli(self):
 
@@ -83,17 +79,13 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
         # initial variables
         ret_dict = {}
 
-        # for attributes details please refer to 
-        # https://www.juniper.net/documentation/en_US/junos/topics/reference/command-summary/show-ntp-associations.html
-
-        # remote         refid           st t when poll reach   delay   offset  jitter
-        # ===============================================================================
-        # x10.2.2.2         171.68.38.65     2 -   84  128  271    1.470  -46.760  52.506
-        p1 = re.compile(r'^(?P<mode_code>[xo\*\-\+\=]+)? *(?P<remote>[\w\.\:]+) +'
-                         '(?P<refid>[\w\.]+) +(?P<stratum>\d+) +(?P<type>[blmu\-]+) +'
+        #   address         ref clock       st   when   poll reach  delay  offset   disp
+        # *~127.127.1.1     .LOCL.           0      6     16   377  0.000   0.000  1.204
+        p1 = re.compile(r'^(?P<mode_code>[x\*\#\+\-\~]+)? *(?P<remote>[\w\.\:]+) +'
+                         '(?P<refid>[\w\.]+) +(?P<stratum>\d+) +'
                          '(?P<receive_time>\d+) +(?P<poll>\d+) +'
                          '(?P<reach>\d+) +(?P<delay>[\d\.]+) +'
-                         '(?P<offset>[\d\.\-]+) +(?P<jitter>[\d\.\-]+)$')
+                         '(?P<offset>[\d\.\-]+) +(?P<disp>[\d\.\-]+)$')
 
 
         for line in out.splitlines():
@@ -106,7 +98,7 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
             if m:
                 groups = m.groupdict()
                 peer = groups['remote']
-                local_mode = self.TYPE_MAP.get(groups['type'])
+                local_mode = 'client'
                 mode = self.MODE_MAP.get(groups['mode_code'])
 
                 peer_dict = ret_dict.setdefault('peer', {}).setdefault(peer, {})\
@@ -121,10 +113,10 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
                                   'reach': int(groups['reach']),
                                   'delay': float(groups['delay']),
                                   'offset': float(groups['offset']),
-                                  'jitter': float(groups['jitter'])})
+                                  'jitter': float(groups['disp'])})
 
                 # ops clock_state structure
-                if 'sync' in mode:
+                if '*' in groups['mode_code']:
                     clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
                     clock_dict['clock_state'] = mode
                     clock_dict['clock_stratum'] = int(groups['stratum'])
@@ -152,49 +144,32 @@ class ShowNtpStatusSchema(MetaParser):
     schema = {
         'clock_state': {
             'system_status': {
-                Optional('ass_id'): int,
-                Optional('clock'): str,
-                Optional('frequency'): float,
-                Optional('jitter'): float,
-                Optional('leap_status'): str,
-                Optional('number_of_events'): int,
-                Optional('offset'): float,
-                Optional('peer'): int,
-                Optional('poll'): int,
-                Optional('precision'): float,
-                Optional('processor'): str,
-                Optional('recent_event'): str,
-                Optional('refid'): str,
-                Optional('reftime'): str,
-                Optional('rootdelay'): float,
-                Optional('rootdispersion'): float,
-                Optional('stability'): float,
-                Optional('state'): int,
                 'status': str,
                 Optional('stratum'): int,
-                Optional('synch_source'): str,
-                Optional('system'): str,
-                Optional('version'): str
+                Optional('refid'): str,
+                Optional('nom_freq'): float,
+                Optional('act_freq'): float,
+                Optional('precision'): str,
+                Optional('uptime'): str,
+                Optional('resolution'): int,
+                Optional('reftime'): str,
+                Optional('offset'): float,
+                Optional('rootdelay'): float,
+                Optional('rootdispersion'): float,
+                Optional('peerdispersion'): float,
+                Optional('leap_status'): str,
+                Optional('drift'): str,
+                Optional('poll'): int,
+                Optional('last_update'): str,
             }
         }
     }
+
 
 class ShowNtpStatus(ShowNtpStatusSchema):
     """Parser for: show ntp status"""
 
     def cli(self):
-
-        def _conver_val(value):
-            if not value:
-                return None
-
-            if value.isdigit():
-                return int(value)
-
-            try:
-                return float(value)
-            except Exception:
-                return value
 
         # excute command to get output
         out = self.device.execute('show ntp status')
@@ -202,26 +177,29 @@ class ShowNtpStatus(ShowNtpStatusSchema):
         # initial variables
         ret_dict = {}
 
-        # attributes details please refer to 
-        # https://www.juniper.net/documentation/en_US/junos/topics/reference/command-summary/show-ntp-status.html
+        # Clock is synchronized, stratum 1, reference is .LOCL.
+        p1 = re.compile(r'^Clock +is +(?P<clock_state>\w+), +stratum +(?P<stratum>\d+), +reference +is +(?P<refid>[\w\.]+)$')
 
-        # status=0644 leap_none, sync_ntp, 4 events, event_peer/strat_chg,
-        # assID=0 status=0544 leap_none, sync_local_proto, 4 events, event_peer/strat_chg,
-        p1 = re.compile(r'^(assID\=(?P<ass_id>\d+) *)?status\=(?P<status>\d+) *(?P<leap_status>\w+), +'
-                         '(?P<synch_source>\w+), +(?P<number_of_events>\d+) +events, +(?P<recent_event>\S+),$')
+        # nominal freq is 250.0000 Hz, actual freq is 250.0000 Hz, precision is 2**10
+        p2 = re.compile(r'^nominal +freq +is +(?P<nom_freq>[\d\.]+) +Hz, actual +freq +is +(?P<act_freq>[\d\.]+) +Hz, precision +is +(?P<precision>[\d\*]+)$')
 
-        # reftime=df981acf.bfa97435  Thu, Nov 15 2018 11:18:23.748, poll=6,
-        p2 = re.compile(r'^reftime\=(?P<reftime>[\w\s\,\.\:]+), +poll\=(?P<poll>\d+),$')
+        # ntp uptime is 1921500 (1/100 of seconds), resolution is 4000
+        p3 = re.compile(r'^ntp +uptime +is +(?P<uptime>[\d\s\w\/\(\)]+), +resolution +is +(?P<resolution>[\d]+)$')
 
-        # clock=df981ae8.eb6e7ee8  Thu, Nov 15 2018 11:18:48.919, state=4,
-        p3 = re.compile(r'^clock\=(?P<clock>[\w\s\,\.\:]+), +state\=(?P<state>\d+),$')
+        # reference time is DF9FFBA0.8B020DC8 (15:43:28.543 UTC Wed Nov 21 2018)
+        p4 = re.compile(r'^reference +time +is +(?P<reftime>[\w\s\.\:\(\)]+)$')
 
-        # version="ntpd 4.2.0-a Tue Dec 19 21:12:44  2017 (1)", processor="amd64",
-        # system="FreeBSDJNPR-11.0-20171206.f4cad52_buil", leap=00, stratum=2,
-        # precision=-23, rootdelay=1.434, rootdispersion=82.589, peer=22765,
-        # refid=171.68.38.65,
-        # offset=67.812, frequency=4.968, jitter=12.270, stability=0.890
-        p4 = re.compile(r'(?P<key>\w+)\=\"?(?P<value>[\w\.\:\s\(\)\-\@\/\_]+)\"?')
+        # clock offset is 0.0000 msec, root delay is 0.00 msec
+        p5 = re.compile(r'^clock +offset +is +(?P<offset>[\d\.]+) +msec, +root +delay +is +(?P<rootdelay>[\d\.]+) +msec$')
+
+        # root dispersion is 2.31 msec, peer dispersion is 1.20 msec
+        p6 = re.compile(r'^root +dispersion +is +(?P<rootdispersion>[\d\.]+) +msec, +peer +dispersion +is +(?P<peerdispersion>[\d\.]+) +msec$')
+
+        # loopfilter state is 'CTRL' (Normal Controlled Loop), drift is 0.000000000 s/s
+        p7 = re.compile(r'^loopfilter +state +is +(?P<leap_status>[\'\s\w\(\)]+), +drift +is +(?P<drift>[\d\.\s\w\/]+)$')
+
+        # system poll interval is 16, last update was 9 sec ago.
+        p8 = re.compile(r'^system +poll +interval +is +(?P<poll>\d+), +last +update +was +(?P<last_update>[\d\s\w]+).*$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -232,51 +210,76 @@ class ShowNtpStatus(ShowNtpStatusSchema):
             if m:
                 groups = m.groupdict()
                 clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
-                clock_dict['status'] = groups.pop('status')
-                for k, v in groups.items():
-                    v = _conver_val(v)
-                    if v:
-                        clock_dict[k] = v
+                clock_dict['status'] = groups['clock_state']
+                clock_dict['stratum'] = int(groups['stratum'])
+                clock_dict['refid'] = groups['refid']
                 continue
 
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
                 clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
-                for k, v in groups.items():
-                    v = _conver_val(v)
-                    if v:
-                        clock_dict[k] = v
+                clock_dict['nom_freq'] = float(groups['nom_freq'])
+                clock_dict['act_freq'] = float(groups['act_freq'])
+                clock_dict['precision'] = groups['precision']
                 continue
 
             m = p3.match(line)
             if m:
                 groups = m.groupdict()
                 clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
-                for k, v in groups.items():
-                    v = _conver_val(v)
-                    if v:
-                        clock_dict[k] = v
+                clock_dict['uptime'] = groups['uptime']
+                clock_dict['resolution'] = int(groups['resolution'])
                 continue
 
-            m = p4.findall(line)
+            m = p4.match(line)
             if m:
+                groups = m.groupdict()
                 clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
-                for k, v in m:                
-                    v = _conver_val(v)
-                    if v:
-                        clock_dict[k] = v
+                clock_dict['reftime'] = groups['reftime']
+                continue
+
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
+                clock_dict['offset'] = float(groups['offset'])
+                clock_dict['rootdelay'] = float(groups['rootdelay'])
+                continue
+
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
+                clock_dict['rootdispersion'] = float(groups['rootdispersion'])
+                clock_dict['peerdispersion'] = float(groups['peerdispersion'])
+                continue
+
+            m = p7.match(line)
+            if m:
+                groups = m.groupdict()
+                clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
+                clock_dict['leap_status'] = groups['leap_status']
+                clock_dict['drift'] = groups['drift']
+                continue
+
+            m = p8.match(line)
+            if m:
+                groups = m.groupdict()
+                clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
+                clock_dict['poll'] = int(groups['poll'])
+                clock_dict['last_update'] = groups['last_update']
                 continue
 
         return ret_dict
 
 
 # =========================================================
-# Parser for 'show configuration system ntp | display set '
+# Parser for 'show ntp config'
 # =========================================================
 
-class ShowConfigurationSystemNtpSetSchema(MetaParser):
-    """Schema for: show configuration system ntp | display set """
+class ShowNtpConfigSchema(MetaParser):
+    """Schema for: show ntp config"""
 
     schema = {
         'vrf': {
@@ -303,25 +306,23 @@ class ShowConfigurationSystemNtpSetSchema(MetaParser):
         }
     }
 
-class ShowConfigurationSystemNtpSet(ShowConfigurationSystemNtpSetSchema):
-    """Parser for: show configuration system ntp | display set """
+class ShowNtpConfig(ShowNtpConfigSchema):
+    """Parser for: show ntp config"""
 
     def cli(self):
 
         # excute command to get output
-        out = self.device.execute('show configuration system ntp | display set')
+        out = self.device.execute('show ntp config')
 
         # initial variables
         ret_dict = {}
 
-        # show configuration system ntp | display set 
-        # set system ntp peer 10.2.2.2
-        # set system ntp server 171.68.38.65 routing-instance mgmt_junos
-        # set system ntp server 171.68.38.66 routing-instance mgmt_junos
-        # set system ntp server 72.163.32.44 routing-instance mgmt_junos
+        # R1#show ntp config
+        # ntp server 1.1.1.1
+        # ntp server 2.2.2.2
+        # ntp server vrf VRF1 4.4.4.4
 
-        p1 = re.compile(r'^set +system +ntp +(?P<type>\w+) +(?P<address>[\w\.\:]+)'
-                         '( *routing-instance +(?P<vrf>\S+))?$')
+        p1 = re.compile(r'^ntp +(?P<type>\w+)( +vrf +(?P<vrf>[\d\w]+))? +(?P<address>[\w\.\:]+)$')
 
         for line in out.splitlines():
             line = line.strip()
