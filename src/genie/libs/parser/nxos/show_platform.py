@@ -371,9 +371,16 @@ class ShowInventory(ShowInventorySchema):
         cmd = 'show inventory'.format()
         out = self.device.execute(cmd)
         inventory_dict = {}
+
+        # NAME: "Chassis", DESCR: "NX-OSv Chassis"
+        p1 = re.compile(r'^\s*NAME: +\"(?P<name>[a-zA-Z\s]+)(?P<slot>[0-9]+)?\"\, +DESCR: +\"(?P<description>[\w\+\-\/\s\(\)]+)\"$')
+        
+        # PID: N9K-NXOSV , VID: , SN: 92XXRQ9UCZS
+        # PID: N9K-C9300-FAN2 , VID: V01 , SN: N/A
+        p2 = re.compile(r'^\s*PID: +(?P<pid>[a-zA-z0-9\-\.]+)? +\, +VID: +(?P<vid>[A-Z0-9\/]+)? +\, +SN: *(?P<serial_number>[A-Z0-9\/]+)?$')
+
         for line in out.splitlines():
             line = line.rstrip()
-            p1 = re.compile(r'^\s*NAME: +\"(?P<name>[a-zA-Z\s]+)(?P<slot>[0-9]+)?\"\, +DESCR: +\"(?P<description>[\w\+\-\/\s\(\)]+)\"$')
             m = p1.match(line)
             if m:
                 name = m.groupdict()['name']
@@ -391,7 +398,6 @@ class ShowInventory(ShowInventorySchema):
                 inventory_dict['name'][name]['slot'] = slot_number
                 continue
 
-            p2 = re.compile(r'^\s*PID: +(?P<pid>[a-zA-z0-9\-\.]+)? +\, +VID: +(?P<vid>[A-Z0-9\/]+) +\, +SN: *(?P<serial_number>[A-Z0-9\/]+)?$')
             m = p2.match(line)
             if m:
                 if m.groupdict()['pid']:

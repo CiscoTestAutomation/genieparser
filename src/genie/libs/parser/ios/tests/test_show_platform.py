@@ -97,6 +97,109 @@ class test_show_version(unittest.TestCase):
         Configuration register is 0x0'''
     }
 
+    golden_parsed_output_ios = {
+        'version': {'bootldr': 'C3750E Boot Loader (C3750X-HBOOT-M) Version '
+                            '15.2(3r)E, RELEASE SOFTWARE (fc1)',
+                    'chassis': 'WS-C3750X-24P',
+                    'chassis_sn': 'FDO2028F1WK',
+                    'curr_config_register': '0xF',
+                    'hostname': 'R5',
+                    'image_id': 'C3750E-UNIVERSALK9-M',
+                    'image_type': 'production image',
+                    'last_reload_reason': 'power-on',
+                    'license_level': 'ipservices',
+                    'license_type': 'Permanent',
+                    'main_mem': '262144',
+                    'mem_size': {'flash-simulated non-volatile configuration': '512'},
+                    'next_reload_license_level': 'ipservices',
+                    'number_of_intfs': {'Gigabit Ethernet': '28',
+                                        'Ten Gigabit Ethernet': '2',
+                                        'Virtual Ethernet': '2'},
+                    'os': 'C3750E boot loader',
+                    'platform': 'C3750E',
+                    'processor_type': 'PowerPC405',
+                    'rom': 'Bootstrap program is C3750E boot loader',
+                    'rtr_type': 'WS-C3750X-24P',
+                    'system_image': 'flash:c3750e-universalk9-mz',
+                    'system_restarted_at': '12:22:21 PDT Mon Sep 10 2018',
+                    'uptime': '9 weeks, 4 days, 2 hours, 3 minutes',
+                    'version': '12.2(55)SE8',
+                    'version_short': '12.2'
+        }
+    }
+
+    golden_output_ios = {'execute.return_value': '''\
+        Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(55)SE8, RELEASE SOFTWARE (fc2)
+        Technical Support: http://www.cisco.com/techsupport
+        Copyright (c) 1986-2013 by Cisco Systems, Inc.
+        Compiled Wed 26-Jun-13 09:56 by prod_rel_team
+        Image text-base: 0x00003000, data-base: 0x02800000
+
+        ROM: Bootstrap program is C3750E boot loader
+        BOOTLDR: C3750E Boot Loader (C3750X-HBOOT-M) Version 15.2(3r)E, RELEASE SOFTWARE (fc1)
+
+        R5 uptime is 9 weeks, 4 days, 2 hours, 3 minutes
+        System returned to ROM by power-on
+        System restarted at 12:22:21 PDT Mon Sep 10 2018
+        System image file is "flash:c3750e-universalk9-mz"
+
+
+        This product contains cryptographic features and is subject to United
+        States and local country laws governing import, export, transfer and
+        use. Delivery of Cisco cryptographic products does not imply
+        third-party authority to import, export, distribute or use encryption.
+        Importers, exporters, distributors and users are responsible for
+        compliance with U.S. and local country laws. By using this product you
+        agree to comply with applicable laws and regulations. If you are unable
+        to comply with U.S. and local laws, return this product immediately.
+
+        A summary of U.S. laws governing Cisco cryptographic products may be found at:
+        http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+
+        If you require further assistance please contact us by sending email to
+        export@cisco.com.
+
+        License Level: ipservices
+        License Type: Permanent
+        Next reload license Level: ipservices
+
+        cisco WS-C3750X-24P (PowerPC405) processor (revision W0) with 262144K bytes of memory.
+        Processor board ID FDO2028F1WK
+        Last reset from power-on
+        2 Virtual Ethernet interfaces
+        1 FastEthernet interface
+        28 Gigabit Ethernet interfaces
+        2 Ten Gigabit Ethernet interfaces
+        The password-recovery mechanism is enabled.
+
+        512K bytes of flash-simulated non-volatile configuration memory.
+        Base ethernet MAC Address       : 84:3D:C6:38:B9:80
+        Motherboard assembly number     : 73-15476-04
+        Motherboard serial number       : FDO202907UH
+        Model revision number           : W0
+        Motherboard revision number     : B0
+        Model number                    : WS-C3750X-24P-L
+        Daughterboard assembly number   : 800-32727-03
+        Daughterboard serial number     : FDO202823P8
+        System serial number            : FDO2028F1WK
+        Top Assembly Part Number        : 800-38990-01
+        Top Assembly Revision Number    : F0
+        Version ID                      : V07
+        CLEI Code Number                : CMMPP00DRB
+        Hardware Board Revision Number  : 0x05
+
+
+        Switch Ports Model              SW Version            SW Image                 
+        ------ ----- -----              ----------            ----------               
+        *    1 30    WS-C3750X-24P      12.2(55)SE8           C3750E-UNIVERSALK9-M     
+
+
+        Configuration register is 0xF
+
+    '''
+    }
+
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         version_obj = ShowVersion(device=self.dev1)
@@ -115,6 +218,13 @@ class test_show_version(unittest.TestCase):
         version_obj = ShowVersion(device=self.dev_iosv)
         parsed_output = version_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_iosv)
+
+    def test_golden_ios(self):
+        self.maxDiff = None
+        self.dev_iosv = Mock(**self.golden_output_ios)
+        version_obj = ShowVersion(device=self.dev_iosv)
+        parsed_output = version_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_ios)
 
 
 class test_dir(unittest.TestCase):
