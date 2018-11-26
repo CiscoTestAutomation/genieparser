@@ -43,7 +43,7 @@ class test_show_ntp_associations(unittest.TestCase):
                     'offset': 27.027,
                     'poll': 64,
                     'reach': 7,
-                    'receive_time': '25',
+                    'receive_time': 25,
                     'refid': '127.127.1.1',
                     'remote': '2.2.2.2',
                     'stratum': 3,

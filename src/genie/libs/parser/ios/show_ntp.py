@@ -13,7 +13,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or
 
 
 # ==============================================
@@ -31,7 +31,7 @@ class ShowNtpAssociationsSchema(MetaParser):
                         Optional('refid'): str,
                         Optional('type'): str,
                         Optional('stratum'): int,
-                        Optional('receive_time'): str,
+                        Optional('receive_time'): Or(str, int),
                         Optional('poll'): int,
                         Optional('reach'): int,
                         Optional('delay'): float,
@@ -101,6 +101,10 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
                 peer = groups['remote']
                 local_mode = 'client'
                 mode = self.MODE_MAP.get(groups['mode_code'])
+                try:
+                    receive_time = int(groups['receive_time'])
+                except:
+                    receive_time = str(groups['receive_time'])
 
                 peer_dict = ret_dict.setdefault('peer', {}).setdefault(peer, {})\
                     .setdefault('local_mode', {}).setdefault(local_mode, {})
@@ -109,7 +113,7 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
                                   'type': local_mode,
                                   'mode': mode,
                                   'stratum': int(groups['stratum']),
-                                  'receive_time': str(groups['receive_time']),
+                                  'receive_time': receive_time,
                                   'poll': int(groups['poll']),
                                   'reach': int(groups['reach']),
                                   'delay': float(groups['delay']),
