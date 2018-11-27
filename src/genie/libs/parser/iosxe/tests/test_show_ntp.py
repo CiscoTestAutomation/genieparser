@@ -23,33 +23,67 @@ class test_show_ntp_associations(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output_1 = {
-        'clock_state':
-            {'system_status':
-                {'associations_address': '127.127.1.1',
-                                         'associations_local_mode': 'client',
-                                         'clock_offset': 0.0,
-                                         'clock_refid': '.LOCL.',
-                                         'clock_state': 'synchronized',
-                                         'clock_stratum': 0,
-                                         'root_delay': 0.0}},
-        'peer': {
-            '127.127.1.1': {
-                'local_mode': {
-                    'client': {'delay': 0.0,
-                               'jitter': 1.204,
-                               'mode': 'synchronized',
-                               'offset': 0.0,
-                               'poll': 16,
-                               'reach': 377,
-                               'receive_time': 6,
-                               'refid': '.LOCL.',
-                               'remote': '127.127.1.1',
-                               'stratum': 0,
-                               'type': 'client'}
-                               }
-                            }
-                        }
-                    }
+    'clock_state':
+        {'system_status':
+            {'associations_address': '127.127.1.1',
+             'associations_local_mode': 'client',
+             'clock_offset': 0.0,
+             'clock_refid': '.LOCL.',
+             'clock_state': 'synchronized',
+             'clock_stratum': 0,
+             'root_delay': 0.0}
+            },
+    'peer':
+        {'1.1.1.1':
+            {'local_mode':
+                {'client':
+                    {'delay': 0.0,
+                    'jitter': 15937.0,
+                    'mode': 'configured',
+                    'offset': 0.0,
+                    'poll': 1024,
+                    'reach': 0,
+                    'receive_time': '-',
+                    'refid': '.INIT.',
+                    'remote': '1.1.1.1',
+                    'stratum': 16,
+                    'local_mode': 'client'}
+                }
+            },
+        '127.127.1.1':
+            {'local_mode':
+                {'client':
+                    {'delay': 0.0,
+                    'jitter': 1.204,
+                    'mode': 'synchronized',
+                    'offset': 0.0,
+                    'poll': 16,
+                    'reach': 377,
+                    'receive_time': 6,
+                    'refid': '.LOCL.',
+                    'remote': '127.127.1.1',
+                    'stratum': 0,
+                    'local_mode': 'client'}
+                }
+            },
+        '2.2.2.2':
+            {'local_mode':
+                {'client':
+                    {'delay': 0.0,
+                    'jitter': 15937.0,
+                    'mode': 'configured',
+                    'offset': 0.0,
+                    'poll': 1024,
+                    'reach': 0,
+                    'receive_time': '-',
+                    'refid': '.INIT.',
+                    'remote': '2.2.2.2',
+                    'stratum': 16,
+                    'local_mode': 'client'}
+                }
+            }
+        }
+    }
 
 
     golden_output_1 = {'execute.return_value': '''

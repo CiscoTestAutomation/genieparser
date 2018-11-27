@@ -13,7 +13,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or
 
 
 # ==============================================
@@ -29,9 +29,9 @@ class ShowNtpAssociationsSchema(MetaParser):
                     Any(): {
                         'remote': str,
                         Optional('refid'): str,
-                        Optional('type'): str,
+                        Optional('local_mode'): str,
                         Optional('stratum'): int,
-                        Optional('receive_time'): int,
+                        Optional('receive_time'): Or(str, int),
                         Optional('poll'): int,
                         Optional('reach'): int,
                         Optional('delay'): float,
@@ -81,9 +81,10 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
 
         #   address         ref clock       st   when   poll reach  delay  offset   disp
         # *~127.127.1.1     .LOCL.           0      6     16   377  0.000   0.000  1.204
+        # ~1.1.1.1         .INIT.          16      -   1024     0  0.000   0.000 15937.
         p1 = re.compile(r'^(?P<mode_code>[x\*\#\+\-\~]+)? *(?P<remote>[\w\.\:]+) +'
                          '(?P<refid>[\w\.]+) +(?P<stratum>\d+) +'
-                         '(?P<receive_time>\d+) +(?P<poll>\d+) +'
+                         '(?P<receive_time>[\d\-]+) +(?P<poll>\d+) +'
                          '(?P<reach>\d+) +(?P<delay>[\d\.]+) +'
                          '(?P<offset>[\d\.\-]+) +(?P<disp>[\d\.\-]+)$')
 
@@ -100,15 +101,19 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
                 peer = groups['remote']
                 local_mode = 'client'
                 mode = self.MODE_MAP.get(groups['mode_code'])
+                try:
+                    receive_time = int(groups['receive_time'])
+                except:
+                    receive_time = str(groups['receive_time'])
 
                 peer_dict = ret_dict.setdefault('peer', {}).setdefault(peer, {})\
                     .setdefault('local_mode', {}).setdefault(local_mode, {})
                 peer_dict.update({'remote': peer,
                                   'refid': groups['refid'],
-                                  'type': local_mode,
+                                  'local_mode': local_mode,
                                   'mode': mode,
                                   'stratum': int(groups['stratum']),
-                                  'receive_time': int(groups['receive_time']),
+                                  'receive_time': receive_time,
                                   'poll': int(groups['poll']),
                                   'reach': int(groups['reach']),
                                   'delay': float(groups['delay']),
@@ -149,7 +154,7 @@ class ShowNtpStatusSchema(MetaParser):
                 Optional('refid'): str,
                 Optional('nom_freq'): float,
                 Optional('act_freq'): float,
-                Optional('precision'): str,
+                Optional('precision'): Or(int,str),
                 Optional('uptime'): str,
                 Optional('resolution'): int,
                 Optional('reftime'): str,
@@ -221,7 +226,10 @@ class ShowNtpStatus(ShowNtpStatusSchema):
                 clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
                 clock_dict['nom_freq'] = float(groups['nom_freq'])
                 clock_dict['act_freq'] = float(groups['act_freq'])
-                clock_dict['precision'] = groups['precision']
+                try:
+                    clock_dict['precision'] = int(groups['precision'])
+                except:
+                    clock_dict['precision'] = str(groups['precision'])
                 continue
 
             m = p3.match(line)
