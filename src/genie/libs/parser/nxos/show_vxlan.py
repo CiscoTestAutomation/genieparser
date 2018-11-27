@@ -358,14 +358,13 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
             ' +admin: +(?P<multisite_bgw_if_admin_state>[\w]+), +oper: +(?P<multisite_bgw_if_oper_state>[\w]+)\)$')
         p22 = re.compile(r'^\s*Multisite +bgw\-if +oper +down +reason: +(?P<reason>[\w\.\s]+)$')
         # Multi-Site delay-restore time: 180 seconds
-        p23 = re.compile(r'^\s*Multisite delay\-restore time: +(?P<multisite_convergence_time>\d+) +seconds$')
+        p23 = re.compile(r'^\s*Multi(-S|s)ite +delay\-restore +time: +(?P<multisite_convergence_time>\d+) +seconds$')
         # Multi-Site delay-restore time left: 0 seconds
         p24 = re.compile(
             r'^\s*Multi(-S|s)ite +bgw\-if +oper +down +reason: +(?P<multisite_convergence_time_left>\d+) +seconds$')
 
         for nve in nve_list:
             out = self.device.execute('show nve interface {} detail'.format(nve))
-
             for line in out.splitlines():
                 if line:
                     line = line.rstrip()
@@ -1693,11 +1692,11 @@ class ShowNveVniIngressReplicationSchema(MetaParser):
             'vni': {
                 Any(): {
                     'vni': int,
-                     'repl_ip': {
+                     Optional('repl_ip'): {
                          Any(): {
-                            'repl_ip': str,
-                            'source': str,
-                            'up_time': str,
+                            Optional('repl_ip'): str,
+                            Optional('source'): str,
+                            Optional('up_time'): str,
                          }
                     }
                 }
@@ -1721,8 +1720,8 @@ class ShowNveVniIngressReplication(ShowNveVniIngressReplicationSchema):
         # --------- -------- ----------------- ------- -------
         # nve1      10101    7.7.7.7           BGP-IMET 1d02h
 
-        p1 = re.compile(r'^\s*(?P<nve_name>[\w]+) +(?P<vni>[\d]+) +(?P<replication_list>[\w\s\.]+)'
-                        ' +(?P<source>[\w\-]+) +(?P<uptime>[\w\:]+)$')
+        p1 = re.compile(r'^\s*(?P<nve_name>[\w]+) +(?P<vni>[\d]+)( +(?P<replication_list>[\w\.]+)'
+                        ' +(?P<source>[\w\-]+) +(?P<uptime>[\w\:]+))?$')
         for line in out.splitlines():
             if line:
                 line = line.rstrip()
@@ -1737,11 +1736,12 @@ class ShowNveVniIngressReplication(ShowNveVniIngressReplicationSchema):
                 vni = int(group['vni'])
                 nve_dict = result_dict.setdefault(nve_name,{}).setdefault('vni',{}).setdefault(vni,{})
                 nve_dict.update({'vni': vni})
-                repl_ip = group['replication_list'].strip()
-                repl_dict = nve_dict.setdefault('repl_ip', {}).setdefault(repl_ip, {})
-                repl_dict.update({'repl_ip': repl_ip})
-                repl_dict.update({'source': group['source'].lower()})
-                repl_dict.update({'up_time': group['uptime']})
+                if group['replication_list']:
+                    repl_ip = group['replication_list'].strip()
+                    repl_dict = nve_dict.setdefault('repl_ip', {}).setdefault(repl_ip, {})
+                    repl_dict.update({'repl_ip': repl_ip})
+                    repl_dict.update({'source': group['source'].lower()})
+                    repl_dict.update({'up_time': group['uptime']})
                 continue
 
         return result_dict
@@ -2006,7 +2006,7 @@ class ShowFabricMulticastIpL2MrouteSchema(MetaParser):
                 "vni": {
                     Any(): {
                         "vnid": str,
-                        "fabric_l2_mroutes": {
+                        Optional("fabric_l2_mroutes"): {
                             "gaddr": {
                                 Any(): {
                                     "saddr": {
@@ -2066,15 +2066,16 @@ class ShowFabricMulticastIpL2Mroute(ShowFabricMulticastIpL2MrouteSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                mroute_dict = result_dict.setdefault('multicast', {}).\
-                    setdefault('l2_mroute', {}).setdefault('vni', {}).\
-                    setdefault(group['vni'], {})
-                mroute_dict.update({'vnid': group['vni']})
+                vni = group['vni']
                 continue
 
             m = p2.match(line)
             if m:
                 group = m.groupdict()
+                mroute_dict = result_dict.setdefault('multicast', {}). \
+                    setdefault('l2_mroute', {}).setdefault('vni', {}). \
+                    setdefault(vni, {})
+                mroute_dict.update({'vnid': vni})
                 fabric_dict = mroute_dict.setdefault('fabric_l2_mroutes', {})
                 saddr = group['saddr']
                 gaddr = group['gaddr']
