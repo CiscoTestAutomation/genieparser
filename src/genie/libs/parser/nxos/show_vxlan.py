@@ -2006,7 +2006,7 @@ class ShowFabricMulticastIpL2MrouteSchema(MetaParser):
                 "vni": {
                     Any(): {
                         "vnid": str,
-                        "fabric_l2_mroutes": {
+                        Optional("fabric_l2_mroutes"): {
                             "gaddr": {
                                 Any(): {
                                     "saddr": {
@@ -2066,15 +2066,16 @@ class ShowFabricMulticastIpL2Mroute(ShowFabricMulticastIpL2MrouteSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                mroute_dict = result_dict.setdefault('multicast', {}).\
-                    setdefault('l2_mroute', {}).setdefault('vni', {}).\
-                    setdefault(group['vni'], {})
-                mroute_dict.update({'vnid': group['vni']})
+                vni = group['vni']
                 continue
 
             m = p2.match(line)
             if m:
                 group = m.groupdict()
+                mroute_dict = result_dict.setdefault('multicast', {}). \
+                    setdefault('l2_mroute', {}).setdefault('vni', {}). \
+                    setdefault(vni, {})
+                mroute_dict.update({'vnid': vni})
                 fabric_dict = mroute_dict.setdefault('fabric_l2_mroutes', {})
                 saddr = group['saddr']
                 gaddr = group['gaddr']
