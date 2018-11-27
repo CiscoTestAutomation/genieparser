@@ -2002,7 +2002,7 @@ class ShowFabricMulticastIpL2MrouteSchema(MetaParser):
 
     schema = {
         'multicast': {
-            Optional("l2_mroute"): {
+            "l2_mroute": {
                 "vni": {
                     Any(): {
                         "vnid": str,
