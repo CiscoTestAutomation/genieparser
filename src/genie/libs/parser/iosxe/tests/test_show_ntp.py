@@ -47,7 +47,7 @@ class test_show_ntp_associations(unittest.TestCase):
                     'refid': '.INIT.',
                     'remote': '1.1.1.1',
                     'stratum': 16,
-                    'type': 'client'}
+                    'local_mode': 'client'}
                 }
             },
         '127.127.1.1':
@@ -63,7 +63,7 @@ class test_show_ntp_associations(unittest.TestCase):
                     'refid': '.LOCL.',
                     'remote': '127.127.1.1',
                     'stratum': 0,
-                    'type': 'client'}
+                    'local_mode': 'client'}
                 }
             },
         '2.2.2.2':
@@ -79,7 +79,7 @@ class test_show_ntp_associations(unittest.TestCase):
                     'refid': '.INIT.',
                     'remote': '2.2.2.2',
                     'stratum': 16,
-                    'type': 'client'}
+                    'local_mode': 'client'}
                 }
             }
         }

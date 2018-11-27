@@ -47,7 +47,7 @@ class test_show_ntp_associations(unittest.TestCase):
                     'refid': '127.127.1.1',
                     'remote': '2.2.2.2',
                     'stratum': 3,
-                    'type': 'client'}
+                    'local_mode': 'client'}
                 }
             },
         '3.3.3.3':
@@ -63,7 +63,7 @@ class test_show_ntp_associations(unittest.TestCase):
                     'refid': '.STEP.',
                     'remote': '3.3.3.3',
                     'stratum': 16,
-                    'type': 'client'}
+                    'local_mode': 'client'}
                 }
             }
         }

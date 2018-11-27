@@ -29,7 +29,7 @@ class ShowNtpAssociationsSchema(MetaParser):
                     Any(): {
                         'remote': str,
                         Optional('refid'): str,
-                        Optional('type'): str,
+                        Optional('local_mode'): str,
                         Optional('stratum'): int,
                         Optional('receive_time'): Or(str, int),
                         Optional('poll'): int,
@@ -110,7 +110,7 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
                     .setdefault('local_mode', {}).setdefault(local_mode, {})
                 peer_dict.update({'remote': peer,
                                   'refid': groups['refid'],
-                                  'type': local_mode,
+                                  'local_mode': local_mode,
                                   'mode': mode,
                                   'stratum': int(groups['stratum']),
                                   'receive_time': receive_time,
