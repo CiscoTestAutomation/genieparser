@@ -29,3 +29,11 @@
 * Junos
     * Add ShowInterfacesTerse for 'show interfaces terse'
       and 'show interfaces terse | match "intf_name"'
+
+
+--------------------------------------------------------------------------------
+                                TRM
+--------------------------------------------------------------------------------
+* NXOS
+   * Update "fabric_l2_mroute" to be optional in ShowFabricMulticastIpL2MrouteSchema    
+
