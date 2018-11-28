@@ -121,7 +121,6 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
                                   'jitter': float(groups['disp'])})
 
                 # ops clock_state structure
-                # import pdb; pdb.set_trace()
                 if '*' in groups['mode_code']:
                     clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
                     clock_dict['clock_state'] = mode
