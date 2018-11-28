@@ -188,6 +188,9 @@ class ShowNtpStatus(ShowNtpStatusSchema):
         # Clock is synchronized, stratum 1, reference is .LOCL.
         p1 = re.compile(r'^Clock +is +(?P<clock_state>\w+), +stratum +(?P<stratum>\d+), +reference +is +(?P<refid>[\w\.]+)$')
 
+        # Clock is unsynchronized, stratum 16, no reference clock
+        p1_1 = re.compile(r'^Clock +is +(?P<clock_state>\w+), +stratum +(?P<stratum>\d+), +no +reference +clock$')
+
         # nominal freq is 250.0000 Hz, actual freq is 250.0000 Hz, precision is 2**10
         p2 = re.compile(r'^nominal +freq +is +(?P<nom_freq>[\d\.]+) +Hz, actual +freq +is +(?P<act_freq>[\d\.]+) +Hz, precision +is +(?P<precision>[\d\*]+)$')
 
@@ -221,6 +224,14 @@ class ShowNtpStatus(ShowNtpStatusSchema):
                 clock_dict['status'] = groups['clock_state']
                 clock_dict['stratum'] = int(groups['stratum'])
                 clock_dict['refid'] = groups['refid']
+                continue
+
+            m = p1_1.match(line)
+            if m:
+                groups = m.groupdict()
+                clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
+                clock_dict['status'] = groups['clock_state']
+                clock_dict['stratum'] = int(groups['stratum'])
                 continue
 
             m = p2.match(line)
