@@ -1505,6 +1505,41 @@ class test_show_nve_vni_ingress_replication(unittest.TestCase):
     nve1      10202    7.7.7.7           BGP-IMET 1d02h
         '''}
 
+    golden_parsed_output_empty_repl = {
+        'nve1': {
+            'vni': {
+                10101: {
+                    'vni': 10101,
+                },
+                10201: {
+                    'vni': 10201,
+                },
+                10202: {
+                    'vni': 10202,
+                    'repl_ip': {
+                        "7.7.7.7": {
+                            'repl_ip': "7.7.7.7",
+                            'up_time': "1d02h",
+                            'source': "bgp-imet",
+                        }
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output_empty_repl = {'execute.return_value': '''
+        R6# show nve vni ingress-replication
+        Interface VNI      Replication List  Source  Up Time
+        --------- -------- ----------------- ------- -------
+
+        nve1      10101
+
+        nve1      10201
+
+        nve1      10202    7.7.7.7           BGP-IMET 1d02h
+            '''}
+
     def test_show_nve_vni_ingress_replication_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -1517,6 +1552,13 @@ class test_show_nve_vni_ingress_replication(unittest.TestCase):
         obj = ShowNveVniIngressReplication(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+
+    def test_show_nve_vni_ingress_replication_golden_empty_repl(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_empty_repl)
+        obj = ShowNveVniIngressReplication(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_empty_repl)
 
 # =========================================================
 #  Unit test for 'show fabric multicast globals'
@@ -2089,6 +2131,12 @@ Fabric L2-Mroute: (*, 238.8.4.202/32)
 
         '''}
 
+    golden_output_1 = {'execute.return_value': '''
+     R2# show fabric multicast ipv4 l2-mroute vni all
+
+    EVPN C-Mcast Route Database for VNI: 10101
+    '''}
+
     def test_show_fabric_multicast_ip_l2_mroute_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -2101,5 +2149,13 @@ Fabric L2-Mroute: (*, 238.8.4.202/32)
         obj = ShowFabricMulticastIpL2Mroute(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(vni="all")
+
+    def test_show_fabric_multicast_ip_l2_mroute_empty_1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowFabricMulticastIpL2Mroute(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(vni="all")
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -7618,7 +7618,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
           Inbound soft reconfiguration allowed
           Community attribute sent to this neighbor
           Extended community attribute sent to this neighbor
-          Nexthop always set to local peering address, 0.0.0.0
+          Nexthop set to local peering address, 0.0.0.0
           Maximum prefixes allowed 300
           Allow my ASN 9 times
           ASN override is enabled
@@ -22829,7 +22829,7 @@ class test_show_bgp_peer_template_cmd_cli(unittest.TestCase):
           Inbound soft reconfiguration allowed(always)
           Community attribute sent to this neighbor
           Extended community attribute sent to this neighbor
-          Nexthop always set to local peering address, 0.0.0.0
+          Nexthop set to local peering address, 0.0.0.0
           Third-party Nexthop will not be computed.
           Maximum prefixes allowed 1000000
           Advertisement Interval 333 seconds, timer not running

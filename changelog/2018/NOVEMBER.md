@@ -1,4 +1,39 @@
-# V3.1.6
+| Module                  | Version       |
+| ------------------------|:-------------:|
+| ``genie.libs.parser``   | 3.1.7         |
+
+--------------------------------------------------------------------------------
+                                NTP
+--------------------------------------------------------------------------------
+* Junos
+    * Add ShowNtpAssociations for 'show ntp associations'
+    * Add ShowNtpStatus for 'show ntp status'
+    * Add ShowConfigurationSystemNtpSet for 'show configuration system ntp | display set'
+
+* IOSXE
+    * Add ShowNtpAssociations for 'show ntp associations'
+    * Add ShowNtpStatus for 'show ntp status'
+    * Add ShowNtpConfig for 'show ntp config'
+
+* IOS
+    * Add ShowNtpAssociations for 'show ntp associations'
+    * Add ShowNtpStatus for 'show ntp status'
+    * Add ShowNtpConfig for 'show ntp config'
+
+--------------------------------------------------------------------------------
+                                INTERFACE
+--------------------------------------------------------------------------------
+* Junos
+    * Add ShowInterfacesTerse for 'show interfaces terse'
+      and 'show interfaces terse | match "intf_name"'
+
+
+--------------------------------------------------------------------------------
+                                TRM
+--------------------------------------------------------------------------------
+* NXOS
+   * Update "fabric_l2_mroute" to be optional in ShowFabricMulticastIpL2MrouteSchema    
+
 
 | Module                  | Version       |
 | ------------------------|:-------------:|
@@ -11,7 +46,6 @@
     * Add parser:
         * ShowVrfDetail
 
-# V3.1.5
 
 | Module                  | Version       |
 | ------------------------|:-------------:|
