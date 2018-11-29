@@ -29,7 +29,7 @@ class test_show_ntp_associations(unittest.TestCase):
              'associations_local_mode': 'client',
              'clock_offset': 0.0,
              'clock_refid': '.LOCL.',
-             'clock_state': 'synchronized',
+             'clock_state': 'unsynchronized',
              'clock_stratum': 0,
              'root_delay': 0.0}
             },
@@ -111,7 +111,6 @@ class test_show_ntp_associations(unittest.TestCase):
         obj = ShowNtpAssociations(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
-
 
 # ==============================================
 # Unit test for 'show ntp status'
