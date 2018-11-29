@@ -29,7 +29,7 @@ class test_show_ntp_associations(unittest.TestCase):
              'associations_local_mode': 'client',
              'clock_offset': 27.027,
              'clock_refid': '127.127.1.1',
-             'clock_state': 'synchronized',
+             'clock_state': 'unsynchronized',
              'clock_stratum': 3,
              'root_delay': 5.61}
         },
@@ -79,6 +79,63 @@ class test_show_ntp_associations(unittest.TestCase):
     '''
     }
 
+    golden_parsed_output_2 = {
+        'clock_state': {
+            'system_status': {
+                'associations_address': '2.2.2.2',
+                'associations_local_mode': 'client',
+                'clock_offset': 27.027,
+                'clock_refid': '127.127.1.1',
+                'clock_state': 'unsynchronized',
+                'clock_stratum': 3,
+                'root_delay': 5.61}
+        },
+        'peer': {
+            '2.2.2.2': {
+                'local_mode': {
+                    'client': {
+                        'delay': 5.61,
+                        'jitter': 3.342,
+                        'local_mode': 'client',
+                        'mode': 'synchronized',
+                        'offset': 27.027,
+                        'poll': 64,
+                        'reach': 7,
+                        'receive_time': 25,
+                        'refid': '127.127.1.1',
+                        'remote': '2.2.2.2',
+                        'stratum': 3}
+                }
+            },
+            '3.3.3.3': {
+                'local_mode': {
+                    'client': {
+                        'delay': 0.0,
+                        'jitter': 15937.0,
+                        'local_mode': 'client',
+                        'mode': 'configured',
+                        'offset': 0.0,
+                        'poll': 512,
+                        'reach': 0,
+                        'receive_time': '-',
+                        'refid': '.STEP.',
+                        'remote': '3.3.3.3',
+                        'stratum': 16}
+                }
+            }
+        }
+    }
+
+    golden_output_2 = {'execute.return_value': '''
+        show ntp associations
+
+          address         ref clock       st   when   poll reach  delay  offset   disp
+         ~2.2.2.2         127.127.1.1      3     41     64     0  0.000   0.000 15937.
+         ~3.3.3.3         .INIT.          16      -     64     0  0.000   0.000 15937.
+         * sys.peer, # selected, + candidate, - outlyer, x falseticker, ~ configured
+    '''
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowNtpAssociations(device=self.device)
@@ -91,6 +148,13 @@ class test_show_ntp_associations(unittest.TestCase):
         obj = ShowNtpAssociations(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowNtpAssociations(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
 # ==============================================
@@ -137,6 +201,42 @@ class test_show_ntp_status(unittest.TestCase):
     '''
     }
 
+    golden_parsed_output_2 = {
+        'clock_state': {
+            'system_status': {
+                'act_freq': 1000.4923,
+                'last_update': '1301 sec ago',
+                'nom_freq': 1000.0003,
+                'offset': 0.0,
+                'peerdispersion': 0.0,
+                'poll': 64,
+                'precision': '2**13',
+                'reftime': 'DFA98D6B.F2F229A7 '
+                           '(16:55:55.949 EST Wed Nov '
+                           '28 2018)',
+                'resolution': 1000,
+                'rootdelay': 0.0,
+                'rootdispersion': 18.84,
+                'status': 'unsynchronized',
+                'stratum': 16,
+                'uptime': '1938800 (1/100 of seconds)'}
+        }
+    }
+
+    golden_output_2 = {'execute.return_value': '''\
+        show ntp status
+        Clock is unsynchronized, stratum 16, no reference clock
+        nominal freq is 1000.0003 Hz, actual freq is 1000.4923 Hz, precision is 2**13
+        ntp uptime is 1938800 (1/100 of seconds), resolution is 1000
+        reference time is DFA98D6B.F2F229A7 (16:55:55.949 EST Wed Nov 28 2018)
+        clock offset is 0.0000 msec, root delay is 0.00 msec
+        root dispersion is 18.84 msec, peer dispersion is 0.00 msec
+        loopfilter state is 'SPIK' (Spike), drift is -0.000491998 s/s
+        system poll interval is 64, last update was 1301 sec ago.
+        iosv-1
+    '''
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowNtpStatus(device=self.device)
@@ -148,6 +248,12 @@ class test_show_ntp_status(unittest.TestCase):
         obj = ShowNtpStatus(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowNtpStatus(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 
 # ===========================================================
@@ -162,6 +268,20 @@ class test_show_ntp_config(unittest.TestCase):
         'vrf': {
             'default': {
                 'address': {
+                    '2.2.2.2': {
+                        'isconfigured': {
+                            'True': {
+                                'address': '2.2.2.2',
+                                'isconfigured': True}
+                        },
+                        'type': {
+                            'server': {
+                                'address': '2.2.2.2',
+                                'source': 'Loopback0',
+                                'type': 'server',
+                                'vrf': 'default'}
+                        }
+                    },
                     '3.3.3.3': {
                         'isconfigured': {
                             'True': {
@@ -169,9 +289,10 @@ class test_show_ntp_config(unittest.TestCase):
                                 'isconfigured': True}
                         },
                         'type': {
-                            'server': {'address': '3.3.3.3',
-                                       'type': 'server',
-                                       'vrf': 'default'}
+                            'server': {
+                                'address': '3.3.3.3',
+                                'type': 'server',
+                                'vrf': 'default'}
                         }
                     }
                 }

@@ -130,6 +130,10 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
                     clock_dict['clock_offset'] = float(groups['offset'])
                     clock_dict['clock_refid'] = groups['refid']
                     clock_dict['associations_local_mode'] = local_mode
+                else:
+                    clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
+                    clock_dict['clock_state'] = 'unsynchronized'
+
 
         # check if has synchronized peers, if no create unsynchronized entry
         if ret_dict and not ret_dict.get('clock_state'):
@@ -185,6 +189,9 @@ class ShowNtpStatus(ShowNtpStatusSchema):
         # Clock is synchronized, stratum 1, reference is .LOCL.
         p1 = re.compile(r'^Clock +is +(?P<clock_state>\w+), +stratum +(?P<stratum>\d+), +reference +is +(?P<refid>[\w\.]+)$')
 
+        # Clock is unsynchronized, stratum 16, no reference clock
+        p1_1 = re.compile(r'^Clock +is +(?P<clock_state>\w+), +stratum +(?P<stratum>\d+), +no +reference +clock$')
+
         # nominal freq is 250.0000 Hz, actual freq is 250.0000 Hz, precision is 2**10
         p2 = re.compile(r'^nominal +freq +is +(?P<nom_freq>[\d\.]+) +Hz, actual +freq +is +(?P<act_freq>[\d\.]+) +Hz, precision +is +(?P<precision>[\d\*]+)$')
 
@@ -218,6 +225,14 @@ class ShowNtpStatus(ShowNtpStatusSchema):
                 clock_dict['status'] = groups['clock_state']
                 clock_dict['stratum'] = int(groups['stratum'])
                 clock_dict['refid'] = groups['refid']
+                continue
+
+            m = p1_1.match(line)
+            if m:
+                groups = m.groupdict()
+                clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
+                clock_dict['status'] = groups['clock_state']
+                clock_dict['stratum'] = int(groups['stratum'])
                 continue
 
             m = p2.match(line)
@@ -299,6 +314,7 @@ class ShowNtpConfigSchema(MetaParser):
                                 'address': str,
                                 'type': str,
                                 'vrf': str,
+                                Optional('source'): str,
                             }
                         },
                         'isconfigured': {
@@ -329,8 +345,10 @@ class ShowNtpConfig(ShowNtpConfigSchema):
         # ntp server 1.1.1.1
         # ntp server 2.2.2.2
         # ntp server vrf VRF1 4.4.4.4
+        # ntp server 2.2.2.2 source Loopback0
 
-        p1 = re.compile(r'^ntp +(?P<type>\w+)( +vrf +(?P<vrf>[\d\w]+))? +(?P<address>[\w\.\:]+)$')
+        p1 = re.compile(r"^ntp +(?P<type>\w+)( +vrf +(?P<vrf>[\d\w]+))? "
+            "+(?P<address>[\w\.\:]+)( +source +(?P<source_interface>[\w]+))?$")
 
         for line in out.splitlines():
             line = line.strip()
@@ -343,6 +361,7 @@ class ShowNtpConfig(ShowNtpConfigSchema):
                 vrf = groups['vrf'] or 'default'
                 ntp_type = groups['type']
                 address = groups['address']
+                source = groups['source_interface'] or ''
                 isconfigured = True
 
                 addr_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {})\
@@ -351,6 +370,8 @@ class ShowNtpConfig(ShowNtpConfigSchema):
                 addr_dict.setdefault('type', {}).setdefault(ntp_type, {}).update({'address': address,
                                                                                  'type': ntp_type,
                                                                                  'vrf': vrf})
+                if source:
+                    addr_dict['type'][ntp_type]['source']= source
 
                 addr_dict.setdefault('isconfigured', {}).\
                     setdefault(str(isconfigured), {}).update({'address': address,
