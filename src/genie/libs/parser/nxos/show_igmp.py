@@ -522,8 +522,10 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
             m = p4.match(line)
             if m:
                 ret_dict['vrfs'][vrf]['interface'][intf]['querier'] = m.groupdict()['querier']
-                ret_dict['vrfs'][vrf]['interface'][intf]['querier_version'] = int(m.groupdict()['version'])
-                ret_dict['vrfs'][vrf]['interface'][intf]['next_query_sent_in'] = m.groupdict()['in']
+                if m.groupdict()['version']:
+                    ret_dict['vrfs'][vrf]['interface'][intf]['querier_version'] = int(m.groupdict()['version'])
+                if m.groupdict()['in']:
+                    ret_dict['vrfs'][vrf]['interface'][intf]['next_query_sent_in'] = m.groupdict()['in']
                 continue
 
             # Active querier: 10.3.5.3, expires: 00:02:59, querier version: 2
