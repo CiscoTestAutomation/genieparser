@@ -4229,9 +4229,25 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
 
             # Loopback0
             # GigabitEthernet2
-            # OSPF_SL1
             # TenGigabitEthernet3/0/1
-            p1 = re.compile(r'^(?P<interface>(Lo.*|Gi.*|TenGi.*|.*(SL|VL).*))$')
+            # TwoGigabitEthernet
+            # FiveGigabitEthernet
+            # TwentyFiveGigE
+            # FortyGigabitEthernet
+            # HundredGigE
+            # OSPF_SL1
+            # OSPF_VL1
+            # --extra--
+            # Cellular
+            # FastEthernet
+            # LISP
+            # Port-channel
+            # Tunnel
+            # VirtualPortGroup
+            # Vlan
+            p1 = re.compile(r'^(?P<interface>(Lo.*|.*Gig.*|.*(SL|VL).*|'
+                             'Cellular.*|FastEthernet.*|LISP.*|Po.*|Tunnel.*|'
+                             'VirtualPortGroup.*|Vlan.*))$')
             m = p1.match(line)
             if m:
                 interface = str(m.groupdict()['interface'])
