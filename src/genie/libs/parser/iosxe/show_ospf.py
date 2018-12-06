@@ -4230,7 +4230,8 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
             # Loopback0
             # GigabitEthernet2
             # OSPF_SL1
-            p1 = re.compile(r'^(?P<interface>(Lo.*|Gi.*|.*(SL|VL).*))$')
+            # TenGigabitEthernet3/0/1
+            p1 = re.compile(r'^(?P<interface>(Lo.*|Gi.*|TenGi.*|.*(SL|VL).*))$')
             m = p1.match(line)
             if m:
                 interface = str(m.groupdict()['interface'])
@@ -4326,7 +4327,7 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
                              ' +through +LDP +autoconfig$')
             m = p3.match(line)
             if m:
-                if 'configured' in m.groupdict()['auto_config']:
+                if m.groupdict()['auto_config'] is 'configured':
                     intf_dict['autoconfig'] = True
                     mpls_ldp_dict['autoconfig'] = True
                 else:
@@ -4340,7 +4341,7 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
                               ' +(?P<igp_sync>(Not required|Required))$')
             m = p4.match(line)
             if m:
-                if 'Required' in m.groupdict()['igp_sync']:
+                if m.groupdict()['igp_sync'] is 'Required':
                     intf_dict['igp_sync'] = True
                     mpls_ldp_dict['igp_sync'] = True
                 else:
@@ -4352,10 +4353,10 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
             p5 = re.compile(r'^Holddown +timer +is (?P<val>(disabled|enabled))$')
             m = p5.match(line)
             if m:
-                if 'enabled' in m.groupdict()['val']:
-                    intf_dict['holddown_timer'] = False
-                else:
+                if m.groupdict()['val'] is 'enabled':
                     intf_dict['holddown_timer'] = True
+                else:
+                    intf_dict['holddown_timer'] = False
                     continue
 
             # Interface is up 
