@@ -3107,6 +3107,13 @@ class ShowIpOspfDatabaseParser(MetaParser):
                 age = int(m.groupdict()['age'])
                 continue
 
+            # LS age: MAXAGE(3601)
+            p3_2_1 = re.compile(r'^LS +age: +\w+\((?P<age>(\d+))\)$')
+            m = p3_2_1.match(line)
+            if m:
+                age = int(m.groupdict()['age'])
+                continue
+
             # Options: 0x20 (No TOS-capability, DC)
             # Options: (No TOS-capability, DC)
             p4 = re.compile(r'^Options:(?: +(?P<option>([a-zA-Z0-9]+)))?'
