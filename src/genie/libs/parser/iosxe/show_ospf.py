@@ -1342,9 +1342,11 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
             # Port-channel2.100 is administratively down, line protocol is down
             # OSPF_SL1 is up, line protocol is up 
             # OSPF_VL3 is up, line protocol is up 
+            # TenGigabitEthernet3/0/1 is up, line protocol is up (connected)
             p1 = re.compile(r'^(?P<interface>(\S+)) +is( +administratively)?'
                              ' +(?P<enable>(unknown|up|down)), +line +protocol'
-                             ' +is +(?P<line_protocol>(up|down))$')
+                             ' +is +(?P<line_protocol>(up|down))'
+                             '(?: +\(connected\))?$')
             m = p1.match(line)
             if m:
                 interface = str(m.groupdict()['interface'])
