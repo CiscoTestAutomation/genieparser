@@ -873,7 +873,7 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                     0           1         no          no            Base
               Enabled by interface config, including secondary ip addresses
               Loopback interface is treated as a stub Host
-            GigabitEthernet2 is up, line protocol is up 
+            GigabitEthernet2 is up, line protocol is up (connected)
               Internet Address 10.1.2.1/24, Interface ID 8, Area 0
               Attached via Interface Enable
               Process ID 1, Router ID 1.1.1.1, Network Type BROADCAST, Cost: 1
