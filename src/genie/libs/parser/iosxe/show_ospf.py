@@ -1927,6 +1927,12 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
             p28_2 = re.compile(r'^Cryptographic +authentication +enabled$')
             m = p28_2.match(line)
             if m:
+                if 'authentication' not in sub_dict:
+                    sub_dict['authentication'] = {}
+                if 'auth_trailer_key' not in sub_dict['authentication']:
+                    sub_dict['authentication']['auth_trailer_key'] = {}
+                sub_dict['authentication']['auth_trailer_key']\
+                    ['crypto_algorithm'] = 'md5'
                 continue
 
             # Youngest key id is 2
