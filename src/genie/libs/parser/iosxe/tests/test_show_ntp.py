@@ -29,7 +29,7 @@ class test_show_ntp_associations(unittest.TestCase):
              'associations_local_mode': 'client',
              'clock_offset': 0.0,
              'clock_refid': '.LOCL.',
-             'clock_state': 'unsynchronized',
+             'clock_state': 'synchronized',
              'clock_stratum': 0,
              'root_delay': 0.0}
             },
@@ -39,7 +39,7 @@ class test_show_ntp_associations(unittest.TestCase):
                 {'client':
                     {'delay': 0.0,
                     'jitter': 15937.0,
-                    'mode': 'configured',
+                    'mode': 'unsynchronized',
                     'offset': 0.0,
                     'poll': 1024,
                     'reach': 0,
@@ -47,6 +47,7 @@ class test_show_ntp_associations(unittest.TestCase):
                     'refid': '.INIT.',
                     'remote': '1.1.1.1',
                     'stratum': 16,
+                    'configured': True,
                     'local_mode': 'client'}
                 }
             },
@@ -63,6 +64,7 @@ class test_show_ntp_associations(unittest.TestCase):
                     'refid': '.LOCL.',
                     'remote': '127.127.1.1',
                     'stratum': 0,
+                    'configured': True,
                     'local_mode': 'client'}
                 }
             },
@@ -71,7 +73,7 @@ class test_show_ntp_associations(unittest.TestCase):
                 {'client':
                     {'delay': 0.0,
                     'jitter': 15937.0,
-                    'mode': 'configured',
+                    'mode': 'unsynchronized',
                     'offset': 0.0,
                     'poll': 1024,
                     'reach': 0,
@@ -79,6 +81,7 @@ class test_show_ntp_associations(unittest.TestCase):
                     'refid': '.INIT.',
                     'remote': '2.2.2.2',
                     'stratum': 16,
+                    'configured': True,
                     'local_mode': 'client'}
                 }
             }
