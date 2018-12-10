@@ -151,7 +151,64 @@ class test_show_arp_traffic_detail(unittest.TestCase):
 		device = Device(name='aDevice')
 		empty_output = {'execute.return_value': ''}
 		
-		golden_parsed_output = {}
+		golden_parsed_output = {
+			'cache': {
+				'0/0/CPU0': {
+					'arp_cache_alias': '0',
+                    'arp_cache_dhcp': '0',
+                    'arp_cache_dynamic': '2',
+                    'arp_cache_interface': '2',
+                    'arp_cache_standby': '0',
+                    'arp_cache_static': '0',
+                    'ip_packet_drop_count': '0',
+                    'total_arp_entries': '4',
+                    'total_arp_idb': '2'},
+           		'0/RP0/CPU0': {
+           			'arp_cache_alias': '0',
+                    'arp_cache_dhcp': '0',
+                    'arp_cache_dynamic': '0',
+                    'arp_cache_interface': '0',
+                    'arp_cache_standby': '0',
+                    'arp_cache_static': '0',
+                    'ip_packet_drop_count': '0',
+                    'total_arp_entries': '0',
+                    'total_arp_idb': '0'}
+            },
+ 			'statistics': {
+ 				'0/0/CPU0': {
+ 					'in_replies_pkts': '8',
+                    'in_requests_pkts': '108',
+                    'no_buffers_errors': '0',
+                    'out_gratuitous_pkts': '2',
+                    'out_local_proxy': '0',
+                    'out_of_memory_errors': '0',
+                    'out_of_sunbet_errors': '0',
+                    'out_proxy': '0',
+                    'out_replies_pkts': '108',
+                    'out_requests_pkts': '8',
+                    'resolve_dropped_requests': '0',
+                    'resolve_rcvd_requests': '0',
+                    'subscriber_intf_gratuitous': '0',
+                    'subscriber_intf_replies': '0',
+                    'subscriber_intf_requests': '0'},
+                '0/RP0/CPU0': {
+                	'in_replies_pkts': '0',
+                    'in_requests_pkts': '0',
+                    'no_buffers_errors': '0',
+                    'out_gratuitous_pkts': '0',
+                    'out_local_proxy': '0',
+                    'out_of_memory_errors': '0',
+                    'out_of_sunbet_errors': '0',
+                    'out_proxy': '0',
+                    'out_replies_pkts': '0',
+                    'out_requests_pkts': '0',
+                    'resolve_dropped_requests': '0',
+                    'resolve_rcvd_requests': '0',
+                    'subscriber_intf_gratuitous': '0',
+                    'subscriber_intf_replies': '0',
+                    'subscriber_intf_requests': '0'}
+            }
+        }
 
 		golden_output = {'execute.return_value': '''\
 			RP/0/RP0/CPU0:R2_xrv9000#show arp traffic detail 
@@ -213,7 +270,6 @@ class test_show_arp_traffic_detail(unittest.TestCase):
 				self.device = Mock(**self.golden_output)
 				obj = ShowArpTrafficDetail(device=self.device)
 				parsed_output = obj.parse()
-				import pdb; pdb.set_trace()
 				self.assertEqual(parsed_output,self.golden_parsed_output)
 
 if __name__ == '__main__':
