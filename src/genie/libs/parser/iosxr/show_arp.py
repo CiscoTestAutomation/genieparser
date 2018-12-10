@@ -96,35 +96,35 @@ class ShowArpTrafficDetailSchema(MetaParser):
     schema = {
         'statistics':
             {Any():
-                {'in_requests_pkts': str,
-                 'in_replies_pkts': str,
-                 'out_requests_pkts': str,
-                 'out_replies_pkts': str,
-                 'out_gratuitous_pkts': str,
-                 'out_proxy': str,
-                 'out_local_proxy': str,
-                 'subscriber_intf_requests': str,
-                 'subscriber_intf_replies': str,
-                 'subscriber_intf_gratuitous': str,
-                 'resolve_rcvd_requests': str,
-                 'resolve_dropped_requests': str,
-                 'out_of_memory_errors': str,
-                 'no_buffers_errors': str,
-                 'out_of_sunbet_errors': str,
+                {'in_requests_pkts': int,
+                 'in_replies_pkts': int,
+                 'out_requests_pkts': int,
+                 'out_replies_pkts': int,
+                 'out_gratuitous_pkts': int,
+                 'out_proxy': int,
+                 'out_local_proxy': int,
+                 'subscriber_intf_requests': int,
+                 'subscriber_intf_replies': int,
+                 'subscriber_intf_gratuitous': int,
+                 'resolve_rcvd_requests': int,
+                 'resolve_dropped_requests': int,
+                 'out_of_memory_errors': int,
+                 'no_buffers_errors': int,
+                 'out_of_sunbet_errors': int,
             }
         },
         'cache':
             {Any():
-                {'total_arp_entries': str,
-                 'arp_cache_dynamic': str,
-                 'arp_cache_interface': str,
-                 'arp_cache_standby': str,
-                 'arp_cache_alias': str,
-                 'arp_cache_static': str,
-                 'arp_cache_dhcp': str,
-                 'arp_cache_dhcp': str,
-                 'ip_packet_drop_count': str,
-                 'total_arp_idb': str,
+                {'total_arp_entries': int,
+                 'arp_cache_dynamic': int,
+                 'arp_cache_interface': int,
+                 'arp_cache_standby': int,
+                 'arp_cache_alias': int,
+                 'arp_cache_static': int,
+                 'arp_cache_dhcp': int,
+                 'arp_cache_dhcp': int,
+                 'ip_packet_drop_count': int,
+                 'total_arp_idb': int,
             }
         }
     }
@@ -225,42 +225,42 @@ class ShowArpTrafficDetail(ShowArpTrafficDetailSchema):
             if m:
                 groups = m.groupdict()
                 final_dict.update({k: \
-                    str(v) for k, v in groups.items()})
+                    int(v) for k, v in groups.items()})
                 continue
 
             m = p4.match(line)
             if m:
                 groups = m.groupdict()
                 final_dict.update({k: \
-                    str(v) for k, v in groups.items()})
+                    int(v) for k, v in groups.items()})
                 continue
 
             m = p5.match(line)
             if m:
                 groups = m.groupdict()
                 final_dict.update({k: \
-                    str(v) for k, v in groups.items()})
+                    int(v) for k, v in groups.items()})
                 continue
 
             m = p6.match(line)
             if m:
                 groups = m.groupdict()
                 final_dict.update({k: \
-                    str(v) for k, v in groups.items()})
+                    int(v) for k, v in groups.items()})
                 continue
 
             m = p7.match(line)
             if m:
                 groups = m.groupdict()
                 final_dict.update({k: \
-                    str(v) for k, v in groups.items()})
+                    int(v) for k, v in groups.items()})
                 continue
 
             m = p8.match(line)
             if m:
                 groups = m.groupdict()
                 final_dict.update({k: \
-                    str(v) for k, v in groups.items()})
+                    int(v) for k, v in groups.items()})
                 continue
 
             m = p9.match(line)
@@ -273,35 +273,35 @@ class ShowArpTrafficDetail(ShowArpTrafficDetailSchema):
             if m:
                 groups = m.groupdict()
                 final_dict.update({k: \
-                    str(v) for k, v in groups.items()})
+                    int(v) for k, v in groups.items()})
                 continue
 
             m = p11.match(line)
             if m:
                 groups = m.groupdict()
                 final_dict.update({k: \
-                    str(v) for k, v in groups.items()})
+                    int(v) for k, v in groups.items()})
                 continue
 
             m = p12.match(line)
             if m:
                 groups = m.groupdict()
                 final_dict.update({k: \
-                    str(v) for k, v in groups.items()})
+                    int(v) for k, v in groups.items()})
                 continue
 
             m = p13.match(line)
             if m:
                 groups = m.groupdict()
                 final_dict['ip_packet_drop_count'] = \
-                    groups['ip_packet_drop_count']
+                    int(groups['ip_packet_drop_count'])
                 continue
 
             m = p14.match(line)
             if m:
                 groups = m.groupdict()
                 final_dict.update({k: \
-                    str(v) for k, v in groups.items()})
+                    int(v) for k, v in groups.items()})
                 continue
 
         return ret_dict
