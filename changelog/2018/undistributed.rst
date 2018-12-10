@@ -8,3 +8,10 @@
 --------------------------------------------------------------------------------
                                 NTP
 --------------------------------------------------------------------------------
+* Updated parsers:
+  * IOS
+     * ShowNtpAssociations
+  * IOSXE
+     * ShowNtpAssociations
+  * JUNOS
+     * ShowNtpAssociations
