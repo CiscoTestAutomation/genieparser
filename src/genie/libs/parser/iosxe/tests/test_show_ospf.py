@@ -873,7 +873,7 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                     0           1         no          no            Base
               Enabled by interface config, including secondary ip addresses
               Loopback interface is treated as a stub Host
-            GigabitEthernet2 is up, line protocol is up 
+            GigabitEthernet2 is up, line protocol is up (connected)
               Internet Address 10.1.2.1/24, Interface ID 8, Area 0
               Attached via Interface Enable
               Process ID 1, Router ID 1.1.1.1, Network Type BROADCAST, Cost: 1
@@ -4683,22 +4683,22 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                             {'GigabitEthernet3': 
                                                 {'mpls': 
                                                     {'ldp': 
-                                                        {'autoconfig': True,
+                                                        {'autoconfig': False,
                                                         'autoconfig_area_id': '0.0.0.1',
-                                                        'holddown_timer': True,
+                                                        'holddown_timer': False,
                                                         'igp_sync': False,
                                                         'state': 'up'}}},
                                             'OSPF_SL1': 
                                                 {'mpls': 
                                                     {'ldp': 
-                                                        {'autoconfig': True,
+                                                        {'autoconfig': False,
                                                         'autoconfig_area_id': '0.0.0.1',
-                                                        'holddown_timer': True,
+                                                        'holddown_timer': False,
                                                         'igp_sync': False,
                                                         'state': 'up'}}}}}},
                                 'mpls': 
                                     {'ldp': 
-                                        {'autoconfig': True,
+                                        {'autoconfig': False,
                                         'autoconfig_area_id': '0.0.0.1',
                                         'igp_sync': False}}}}}}},
             'default': 
@@ -4712,30 +4712,38 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                             {'GigabitEthernet1': 
                                                 {'mpls': 
                                                     {'ldp': 
-                                                        {'autoconfig': True,
+                                                        {'autoconfig': False,
                                                         'autoconfig_area_id': '0.0.0.0',
-                                                        'holddown_timer': True,
+                                                        'holddown_timer': False,
                                                         'igp_sync': False,
                                                         'state': 'up'}}},
                                             'GigabitEthernet2': 
                                                 {'mpls': 
                                                     {'ldp': 
-                                                        {'autoconfig': True,
+                                                        {'autoconfig': False,
                                                         'autoconfig_area_id': '0.0.0.0',
-                                                        'holddown_timer': True,
+                                                        'holddown_timer': False,
                                                         'igp_sync': False,
                                                         'state': 'up'}}},
+                                            'TenGigabitEthernet3/0/1': 
+                                                {'mpls': 
+                                                    {'ldp': 
+                                                        {'autoconfig': False,
+                                                        'autoconfig_area_id': '0.0.0.0',
+                                                        'holddown_timer': False,
+                                                        'igp_sync': False,
+                                                        'state': 'down'}}},
                                             'Loopback1': 
                                                 {'mpls': 
                                                     {'ldp': 
-                                                        {'autoconfig': True,
+                                                        {'autoconfig': False,
                                                         'autoconfig_area_id': '0.0.0.0',
-                                                        'holddown_timer': True,
+                                                        'holddown_timer': False,
                                                         'igp_sync': False,
                                                         'state': 'up'}}}}}},
                                 'mpls': 
                                     {'ldp': 
-                                        {'autoconfig': True,
+                                        {'autoconfig': False,
                                         'autoconfig_area_id': '0.0.0.0',
                                         'igp_sync': False}}}}}}}}}
 
@@ -4771,6 +4779,12 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
           LDP-IGP Synchronization : Not required
           Holddown timer is disabled
           Interface is up 
+        TenGigabitEthernet3/0/1
+          Process ID 1, Area 0
+          LDP is not configured through LDP autoconfig
+          LDP-IGP Synchronization : Not required
+          Holddown timer is disabled
+          Interface is down
         '''}
 
     def test_show_ip_ospf_mpls_ldp_interface_full1(self):

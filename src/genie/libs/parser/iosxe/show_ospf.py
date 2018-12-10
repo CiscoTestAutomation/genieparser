@@ -1342,9 +1342,11 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
             # Port-channel2.100 is administratively down, line protocol is down
             # OSPF_SL1 is up, line protocol is up 
             # OSPF_VL3 is up, line protocol is up 
+            # TenGigabitEthernet3/0/1 is up, line protocol is up (connected)
             p1 = re.compile(r'^(?P<interface>(\S+)) +is( +administratively)?'
                              ' +(?P<enable>(unknown|up|down)), +line +protocol'
-                             ' +is +(?P<line_protocol>(up|down))$')
+                             ' +is +(?P<line_protocol>(up|down))'
+                             '(?: +\(connected\))?$')
             m = p1.match(line)
             if m:
                 interface = str(m.groupdict()['interface'])
@@ -1925,6 +1927,12 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
             p28_2 = re.compile(r'^Cryptographic +authentication +enabled$')
             m = p28_2.match(line)
             if m:
+                if 'authentication' not in sub_dict:
+                    sub_dict['authentication'] = {}
+                if 'auth_trailer_key' not in sub_dict['authentication']:
+                    sub_dict['authentication']['auth_trailer_key'] = {}
+                sub_dict['authentication']['auth_trailer_key']\
+                    ['crypto_algorithm'] = 'md5'
                 continue
 
             # Youngest key id is 2
@@ -4229,8 +4237,25 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
 
             # Loopback0
             # GigabitEthernet2
+            # TenGigabitEthernet3/0/1
+            # TwoGigabitEthernet
+            # FiveGigabitEthernet
+            # TwentyFiveGigE
+            # FortyGigabitEthernet
+            # HundredGigE
             # OSPF_SL1
-            p1 = re.compile(r'^(?P<interface>(Lo.*|Gi.*|.*(SL|VL).*))$')
+            # OSPF_VL1
+            # --extra--
+            # Cellular
+            # FastEthernet
+            # LISP
+            # Port-channel
+            # Tunnel
+            # VirtualPortGroup
+            # Vlan
+            p1 = re.compile(r'^(?P<interface>(Lo.*|.*Gig.*|.*(SL|VL).*|'
+                             'Cellular.*|FastEthernet.*|LISP.*|Po.*|Tunnel.*|'
+                             'VirtualPortGroup.*|Vlan.*))$')
             m = p1.match(line)
             if m:
                 interface = str(m.groupdict()['interface'])
@@ -4326,7 +4351,7 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
                              ' +through +LDP +autoconfig$')
             m = p3.match(line)
             if m:
-                if 'configured' in m.groupdict()['auto_config']:
+                if m.groupdict()['auto_config'] is 'configured':
                     intf_dict['autoconfig'] = True
                     mpls_ldp_dict['autoconfig'] = True
                 else:
@@ -4340,7 +4365,7 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
                               ' +(?P<igp_sync>(Not required|Required))$')
             m = p4.match(line)
             if m:
-                if 'Required' in m.groupdict()['igp_sync']:
+                if m.groupdict()['igp_sync'] is 'Required':
                     intf_dict['igp_sync'] = True
                     mpls_ldp_dict['igp_sync'] = True
                 else:
@@ -4352,10 +4377,10 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
             p5 = re.compile(r'^Holddown +timer +is (?P<val>(disabled|enabled))$')
             m = p5.match(line)
             if m:
-                if 'enabled' in m.groupdict()['val']:
-                    intf_dict['holddown_timer'] = False
-                else:
+                if m.groupdict()['val'] is 'enabled':
                     intf_dict['holddown_timer'] = True
+                else:
+                    intf_dict['holddown_timer'] = False
                     continue
 
             # Interface is up 
