@@ -1,4 +1,4 @@
-''' show_archive.py
+''' show_arp.py
 
 IOSXR parsers for the following show commands:
     * show arp detail
