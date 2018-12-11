@@ -106,8 +106,8 @@ class ShowArpTrafficDetailSchema(MetaParser):
     """ Schema for show arp traffic detail """
 
     schema = {
-        'statistics':
-            {Any():
+        Any():
+            {'statistics':
                 {'in_requests_pkts': int,
                  'in_replies_pkts': int,
                  'out_requests_pkts': int,
@@ -123,23 +123,21 @@ class ShowArpTrafficDetailSchema(MetaParser):
                  'out_of_memory_errors': int,
                  'no_buffers_errors': int,
                  'out_of_sunbet_errors': int,
-            }
-        },
-        'cache':
-            {Any():
+                },
+            'cache':
                 {'total_arp_entries': int,
-                 'arp_cache_dynamic': int,
-                 'arp_cache_interface': int,
-                 'arp_cache_standby': int,
-                 'arp_cache_alias': int,
-                 'arp_cache_static': int,
-                 'arp_cache_dhcp': int,
-                 'arp_cache_dhcp': int,
+                 'dynamic': int,
+                 'interface': int,
+                 'standby': int,
+                 'alias': int,
+                 'static': int,
+                 'dhcp': int,
+                 'dhcp': int,
                  'ip_packet_drop_count': int,
                  'total_arp_idb': int,
+                }
             }
         }
-    }
 
 
 # =======================================
@@ -195,14 +193,14 @@ class ShowArpTrafficDetail(ShowArpTrafficDetailSchema):
             ' +(?P<total_arp_entries>\w+)$')
 
         # Dynamic: 2, Interface: 2, Standby: 0
-        p11 = re.compile(r'^Dynamic: +(?P<arp_cache_dynamic>\w+),'
-            ' +Interface: +(?P<arp_cache_interface>\w+),'
-            ' +Standby: +(?P<arp_cache_standby>\w+)$')
+        p11 = re.compile(r'^Dynamic: +(?P<dynamic>\w+),'
+            ' +Interface: +(?P<interface>\w+),'
+            ' +Standby: +(?P<standby>\w+)$')
 
         # Alias: 0,   Static: 0,    DHCP: 0
-        p12 = re.compile(r'^Alias: +(?P<arp_cache_alias>\w+),'
-            ' +Static: +(?P<arp_cache_static>\w+),'
-            ' +DHCP: +(?P<arp_cache_dhcp>\w+)$')
+        p12 = re.compile(r'^Alias: +(?P<alias>\w+),'
+            ' +Static: +(?P<static>\w+),'
+            ' +DHCP: +(?P<dhcp>\w+)$')
 
         # IP Packet drop count for node 0/0/CPU0: 0
         p13 = re.compile(r'^IP +Packet +drop +count +for +node'
@@ -229,8 +227,8 @@ class ShowArpTrafficDetail(ShowArpTrafficDetailSchema):
 
             m = p2.match(line)
             if m:
-                final_dict = ret_dict.setdefault('statistics', {}).setdefault(
-                    rack_slot_module, {})
+                final_dict = ret_dict.setdefault(
+                    rack_slot_module, {}).setdefault('statistics', {})
                 continue
 
             m = p3.match(line)
@@ -277,8 +275,7 @@ class ShowArpTrafficDetail(ShowArpTrafficDetailSchema):
 
             m = p9.match(line)
             if m:
-                final_dict = ret_dict.setdefault('cache', {}).setdefault(
-                    rack_slot_module, {})
+                final_dict = ret_dict[rack_slot_module].setdefault('cache', {})
                 continue
 
             m = p10.match(line)
