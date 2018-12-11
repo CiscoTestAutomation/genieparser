@@ -6,5 +6,24 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
-                                NTP
+                                ARP
 --------------------------------------------------------------------------------
+
+* NXOS
+    * Add ShowIpArpDetailVrfAll for 'show ip arp detail vrf all'
+    * Add ShowIpArpSummaryVrfAll for 'show ip arp summary vrf all'
+    * Add ShowIpArpstatisticsVrfAll for 'show ip arp statistics vrf all'
+
+* IOSXE
+    * Add ShowArp for
+    	* 'show arp <WORD>'
+    	* 'show arp vrf <vrf>' 
+    	* 'show arp vrf <vrf> <WORD>'
+    * Add ShowIpArpSummary for 'show ip arp summary'
+    * Add ShowIpTraffic for 'show ip traffic'
+
+* IOSXR
+    * Add ShowArpDetail for
+    	* 'show arp detail'
+    	* 'show arp vrf <WORD> detail'
+    * Add ShowArpTrafficDetail for 'show arp traffic detail'
