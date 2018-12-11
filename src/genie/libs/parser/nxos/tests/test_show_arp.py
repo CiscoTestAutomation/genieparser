@@ -32,7 +32,8 @@ class test_show_ip_arp_detail_vrf_all(unittest.TestCase):
 							'age': '-',
                             'ip': '10.1.3.5',
                             'link_layer_address': 'aaaa.bbbb.cccc',
-                            'origin': 'static'}
+                            'origin': 'static',
+                            'physical_interface': 'Ethernet1/1'}
                     }
                 }
             },
@@ -43,7 +44,8 @@ class test_show_ip_arp_detail_vrf_all(unittest.TestCase):
             				'age': '00:01:53',
                            	'ip': '201.0.1.2',
                            	'link_layer_address': '000c.292a.1eaf',
-                           	'origin': 'dynamic'}
+                           	'origin': 'dynamic',
+                           	'physical_interface': 'Ethernet1/1.1'}
                     }
                 }
             },
@@ -54,7 +56,8 @@ class test_show_ip_arp_detail_vrf_all(unittest.TestCase):
             				'age': '00:00:47',
                            	'ip': '201.1.1.2',
                            	'link_layer_address': '000c.292a.1eaf',
-                           	'origin': 'dynamic'}
+                           	'origin': 'dynamic',
+                           	'physical_interface': 'Ethernet1/1.2'}
                     }
                 }
             },
@@ -65,7 +68,8 @@ class test_show_ip_arp_detail_vrf_all(unittest.TestCase):
             				'age': '00:08:42',
                            	'ip': '201.4.1.2',
                            	'link_layer_address': '000c.292a.1eaf',
-                           	'origin': 'dynamic'}
+                           	'origin': 'dynamic',
+                           	'physical_interface': 'Ethernet1/1.4'}
                     }
                 }
             },
@@ -76,7 +80,8 @@ class test_show_ip_arp_detail_vrf_all(unittest.TestCase):
             				'age': '00:18:24',
                            	'ip': '201.0.2.2',
                            	'link_layer_address': '000c.2904.5840',
-                           	'origin': 'dynamic'}
+                           	'origin': 'dynamic',
+                           	'physical_interface': 'Ethernet1/2.1'}
                     }
                 }
             },
@@ -87,7 +92,8 @@ class test_show_ip_arp_detail_vrf_all(unittest.TestCase):
             				'age': '00:05:21',
                            	'ip': '201.1.2.2',
                            	'link_layer_address': '000c.2904.5840',
-                           	'origin': 'dynamic'}
+                           	'origin': 'dynamic',
+                           	'physical_interface': 'Ethernet1/2.2'}
                     }
                 }
             },
@@ -98,7 +104,8 @@ class test_show_ip_arp_detail_vrf_all(unittest.TestCase):
             				'age': '00:10:51',
                            	'ip': '201.4.2.2',
                            	'link_layer_address': '000c.2904.5840',
-                           	'origin': 'dynamic'}
+                           	'origin': 'dynamic',
+                           	'physical_interface': 'Ethernet1/2.4'}
                     }
                 }
             },
@@ -109,7 +116,8 @@ class test_show_ip_arp_detail_vrf_all(unittest.TestCase):
             				'age': '00:01:28',
                           	'ip': '50.1.1.101',
                           	'link_layer_address': '0000.71c7.6e61',
-                          	'origin': 'dynamic'}
+                          	'origin': 'dynamic',
+                          	'physical_interface': 'Ethernet1/4.100'}
                     }
                 }
             },
@@ -120,7 +128,8 @@ class test_show_ip_arp_detail_vrf_all(unittest.TestCase):
             				'age': '00:01:28',
                           	'ip': '50.2.1.101',
                           	'link_layer_address': '0000.71c7.75c1',
-                          	'origin': 'dynamic'}
+                          	'origin': 'dynamic',
+                          	'physical_interface': 'Ethernet1/4.101'}
                     }
                 }
             },
@@ -131,7 +140,8 @@ class test_show_ip_arp_detail_vrf_all(unittest.TestCase):
             				'age': '00:01:28',
                           	'ip': '55.1.1.101',
                           	'link_layer_address': '0000.0068.ce6f',
-                          	'origin': 'dynamic'}
+                          	'origin': 'dynamic',
+                          	'physical_interface': 'Ethernet1/4.200'}
                     }
                 }
             },
@@ -142,17 +152,20 @@ class test_show_ip_arp_detail_vrf_all(unittest.TestCase):
             				'age': '00:17:15',
                           	'ip': '10.1.7.1',
                           	'link_layer_address': '0012.7f57.ac80',
-                          	'origin': 'dynamic'},
+                          	'origin': 'dynamic',
+                          	'physical_interface': 'mgmt0'},
                      	'10.1.7.250': {
                      		'age': '00:14:24',
                             'ip': '10.1.7.250',
                             'link_layer_address': '0050.5682.7915',
-                            'origin': 'dynamic'},
+                            'origin': 'dynamic',
+                            'physical_interface': 'mgmt0'},
                      	'10.1.7.253': {
                      		'age': '00:10:22',
                             'ip': '10.1.7.253',
                             'link_layer_address': '0050.56a4.a9fc',
-                            'origin': 'dynamic'}
+                            'origin': 'dynamic',
+                            'physical_interface': 'mgmt0'}
                     }
                 }
             }
@@ -217,7 +230,7 @@ class test_show_ip_arp_summary_vrf_all(unittest.TestCase):
 		'unknown': '0'}
 
 	golden_output = {'execute.return_value': '''
-		N95_1# show ip arp summary vrf all
+		N95_1# show ip arp summary
 
 		IP ARP Table - Adjacency Summary
 
@@ -228,6 +241,23 @@ class test_show_ip_arp_summary_vrf_all(unittest.TestCase):
 	'''
 	}
 
+	golden_parsed_output_1 = {
+		'incomplete': '0 (Throttled : 0)',
+		'resolved': '12',
+		'total': '12',
+		'unknown': '0'}
+
+	golden_output_1 = {'execute.return_value': '''
+		N95_1# show ip arp summary vrf all
+
+		IP ARP Table - Adjacency Summary
+
+		  Resolved   : 12
+		  Incomplete : 0 (Throttled : 0)
+		  Unknown    : 0
+		  Total      : 12
+	'''
+	}
 
 	def test_empty(self):
 		self.device = Mock(**self.empty_output)
@@ -242,6 +272,13 @@ class test_show_ip_arp_summary_vrf_all(unittest.TestCase):
 		parsed_output = obj.parse()
 		self.assertEqual(parsed_output, self.golden_parsed_output)
 
+	def test_golden_1(self):
+		self.maxDiff = None
+		self.device = Mock(**self.golden_output_1)
+		obj = ShowIpArpSummaryVrfAll(device=self.device)
+		parsed_output = obj.parse(vrf='all')
+		self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
 #=========================================================
 # Unit test for show ip arp statistics vrf all
 #=========================================================
@@ -252,81 +289,87 @@ class test_show_ip_arp_statistics_vrf_all(unittest.TestCase):
 
 	golden_parsed_output = {
 		'statistics': {
-			'adjacency_adds': 43,
-			'adjacency_deletes': 12,
-			'adjacency_timeouts': 12,
-			'failed_due_to_limits': 0,
-			'in_anycast_proxy_arp': 0,
-			'in_appeared_on_a_wrong_interface': 0,
-			'in_arp_refresh_requests_received_from_clients': 0,
-			'in_arp_refresh_skipped_over_core_and_flooded': 0,
-			'in_client_enqueue_failed': 0,
-			'in_context_not_created': 0,
-			'in_dest_not_reachable_for_proxy_arp': 0,
-			'in_dest_unreachable_for_enhanced_proxy': 0,
-			'in_destnination_is_our_own_ip': 26,
-			'in_destnination_on_l2_port_tracked': 0,
-			'in_directed_broadcast_source': 0,
-			'in_dropped_server_port': 0,
-			'in_dropping_due_to_tunneling_failures': 0,
-			'in_drops': 28218,
-			'in_enhanced_proxy_arp': 0,
-			'in_fastpath': 0,
-			'in_glean_requests_recv_count': 71,
-			'in_grat_arp_received_on_proxy': 0,
-			'in_incorrect_length': 0,
-			'in_invalid_context': 0,
-			'in_invalid_destination_ip_address': 0,
-			'in_invalid_hardwaretype': 0,
-			'in_invalid_ifindex': 0,
-			'in_invalid_layer2_address_length': 0,
-			'in_invalid_layer3_address_length': 0,
-			'in_invalid_local_proxy_arp': 0,
-			'in_invalid_protocol_packet': 0,
-			'in_invalid_proxy_arp': 0,
-			'in_invalid_source_ip_address': 28,
-			'in_invalid_source_mac_address': 0,
-			'in_invalid_src_ip': 0,
-			'in_l2_packet_on_untrusted_l2_port': 0,
-			'in_l2_port_track_proxy_arp': 0,
-			'in_l2_replies': 0,
-			'in_l2_requests': 0,
-			'in_l2fm_query_failed_for_a_l2address': 0,
-			'in_local_proxy_arp': 0,
-			'in_mbuf_operation_failed': 0,
-			'in_no_mem_to_create_per_intf_structure': 0,
-			'in_non_active_fhrp_dest_ip': 0,
-			'in_non_local_destination_ip_address': 20421,
-			'in_null_source_ip': 0,
-			'in_null_source_mac': 0,
-			'in_number_of_signals_received_from_l2rib': 0,
-			'in_packet_with_vip_on_standby_fhrp': 0,
-			'in_proxy_arp': 0,
-			'in_received_before_arp_initialization': 0,
-			'in_replies_pkts': 998,
-			'in_requests_came_for_exising_entries': 15,
-			'in_requests_came_on_a_l2_interface': 0,
-			'in_requests_pkts': 2102,
-			'in_snooped': 0,
-			'in_source_address_mismatch_with_subnet': 0,
-			'in_source_mac_address_is_our_own': 0,
-			'in_total': 3158,
-			'in_tunneled_pkts': 0,
-			'in_unattached_ip': 0,
-			'in_vip_is_not_active': 0,
-			'out_adjacency_couldnt_be_added': 0,
-			'out_context_not_created': 0,
-			'out_drops': 0,
-			'out_gratuitous_pkts': 58,
-			'out_invalid_context': 0,
-			'out_invalid_dest_ip': 0,
-			'out_l2_replies': 0,
-			'out_l2_requests': 0,
-			'out_replies_pkts': 6582,
-			'out_requests_pkts': 22632,
-			'out_total': 0,
-			'out_tunneled_pkts': 0}
-	}
+			'adjacency': {
+				'adjacency_adds': 43,
+              	'adjacency_deletes': 12,
+              	'adjacency_timeouts': 12,
+              	'failed_due_to_limits': 0},
+            'received': {
+            	'anycast_proxy_arp': 0,
+                'dropped': 28218,
+                'dropped_server_port': 0,
+                'drops_details': {
+                	'appeared_on_a_wrong_interface': 0,
+                   	'arp_refresh_requests_received_from_clients': 0,
+                  	'context_not_created': 0,
+                   	'directed_broadcast_source': 0,
+                   	'dropping_due_to_tunneling_failures': 0,
+                   	'glean_requests_recv_count': 71,
+                   	'grat_arp_received_on_proxy': 0,
+                   	'incorrect_length': 0,
+                   	'invalid_context': 0,
+                   	'invalid_destination_ip_address': 0,
+                   	'invalid_hardwaretype': 0,
+                   	'invalid_layer2_address_length': 0,
+                   	'invalid_layer3_address_length': 0,
+                   	'invalid_protocol_packet': 0,
+                   	'invalid_source_ip_address': 28,
+                   	'invalid_source_mac_address': 0,
+                   	'l2_packet_on_untrusted_l2_port': 0,
+                   	'l2fm_query_failed_for_a_l2address': 0,
+                   	'no_mem_to_create_per_intf_structure': 0,
+                   	'non_active_fhrp_dest_ip': 0,
+                   	'non_local_destination_ip_address': 20421,
+                   	'number_of_signals_received_from_l2rib': 0,
+                   	'packet_with_vip_on_standby_fhrp': 0,
+                   	'received_before_arp_initialization': 0,
+                   	'requests_came_for_exising_entries': 15,
+                   	'requests_came_on_a_l2_interface': 0,
+                   	'source_address_mismatch_with_subnet': 0,
+                   	'source_mac_address_is_our_own': 0},
+                'enhanced_proxy_arp': 0,
+                'fastpath': 0,
+                'l2_port_track_proxy_arp': 0,
+                'l2_replies': 0,
+                'l2_requests': 0,
+                'local_proxy_arp': 0,
+                'proxy_arp': 0,
+                'replies': 6582,
+                'requests': 22632,
+                'snooped': 0,
+                'total': 0,
+                'tunneled': 0},
+            'sent': {
+            	'dropped': 0,
+                'drops_details': {
+                	'adjacency_couldnt_be_added': 0,
+                   	'arp_refresh_skipped_over_core_and_flooded': 0,
+                   	'client_enqueue_failed': 0,
+                   	'context_not_created': 0,
+                   	'dest_not_reachable_for_proxy_arp': 0,
+                   	'dest_unreachable_for_enhanced_proxy': 0,
+                   	'destnination_is_our_own_ip': 26,
+                   	'destnination_on_l2_port_tracked': 0,
+                   	'invalid_context': 0,
+                   	'invalid_dest_ip': 0,
+                   	'invalid_ifindex': 0,
+                   	'invalid_local_proxy_arp': 0,
+                   	'invalid_proxy_arp': 0,
+                   	'invalid_src_ip': 0,
+                   	'mbuf_operation_failed': 0,
+                   	'null_source_ip': 0,
+                   	'null_source_mac': 0,
+                   	'unattached_ip': 0,
+                   	'vip_is_not_active': 0},
+                'gratuitous': 58,
+                'l2_replies': 0,
+                'l2_requests': 0,
+                'replies': 998,
+                'requests': 2102,
+                'total': 3158,
+                'tunneled': 0}
+        }
+    }
 
 	golden_output = {'execute.return_value': '''
 		N95_1# show ip arp statistics vrf all

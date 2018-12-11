@@ -67,6 +67,8 @@ class ShowIpArpDetailVrfAllSchema(MetaParser):
 							'link_layer_address': str,
 							'origin': str,
 							'age': str,
+							'physical_interface': str,
+							Optional('flag'): str,
 						},
 					}
 				}
@@ -120,10 +122,16 @@ class ShowIpArpDetailVrfAll(ShowIpArpDetailVrfAllSchema):
 				final_dict['ip'] = address
 				final_dict['link_layer_address'] = group['mac']
 				final_dict['age'] = group['age']
+				final_dict['physical_interface'] = group['physical_interface']
 				if group['age'] == '-':
 					final_dict['origin'] = 'static'
 				else:
 					final_dict['origin'] = 'dynamic'
+
+				flag = self.FLAG_MAP.get(group['flag'])
+
+				if flag:
+					final_dict['flag'] = flag
 
 				continue
 
@@ -151,10 +159,15 @@ class ShowIpArpSummaryVrfAll(ShowIpArpSummaryVrfAllSchema):
 		parser class - implements detail parsing mechanisms for cli,xml and yang output.
 	"""
 
-	def cli(self):
+	def cli(self, vrf=None):
+
+		if vrf:
+			cmd = 'show ip arp summary vrf {}'.format(vrf)
+		else:
+			cmd = 'show ip arp summary'
 
 		# excute command to get output
-		out = self.device.execute('show ip arp summary vrf all')
+		out = self.device.execute(cmd)
 
 		# initial variables
 		ret_dict = {}
@@ -205,84 +218,92 @@ class ShowIpArpstatisticsVrfAllSchema(MetaParser):
 	"""Schema for show ip arp statistics vrf all"""
 
 	schema = {
-		'statistics':
-			{'in_total': int,
-			 'out_total': int,
-			 'in_replies_pkts': int,
-			 'out_replies_pkts': int,
-			 'in_requests_pkts': int,
-			 'out_requests_pkts': int,
-			 'in_l2_requests': int,
-			 'out_l2_requests': int,
-			 'in_l2_replies': int,
-			 'out_l2_replies': int,
-			 Optional('in_gratuitous_pkts'): int,
-			 'out_gratuitous_pkts': int,
-			 'in_drops': int,
-			 'out_drops': int,
-			 'in_tunneled_pkts': int,
-			 'out_tunneled_pkts': int,
-			 'in_proxy_arp': int,
-			 'in_local_proxy_arp': int,
-			 'in_enhanced_proxy_arp': int,
-			 'in_anycast_proxy_arp': int,
-			 'in_l2_port_track_proxy_arp': int,
-			 'in_fastpath': int,
-			 'in_snooped': int,
-			 'in_dropped_server_port': int,
-			 'in_mbuf_operation_failed': int,
-			 'in_context_not_created': int,
-			 'out_context_not_created': int,
-			 'in_invalid_context': int,
-			 'out_invalid_context': int,
-			 'in_invalid_ifindex': int,
-			 'in_invalid_src_ip': int,
-			 'out_invalid_dest_ip': int,
-			 'in_destnination_is_our_own_ip': int,
-			 'in_unattached_ip': int,
-			 'out_adjacency_couldnt_be_added': int,
-			 'in_null_source_ip': int,
-			 'in_null_source_mac': int,
-			 'in_client_enqueue_failed': int,
-			 'in_dest_not_reachable_for_proxy_arp': int,
-			 'in_dest_unreachable_for_enhanced_proxy': int,
-			 'in_destnination_on_l2_port_tracked': int,
-			 'in_invalid_local_proxy_arp': int,
-			 'in_invalid_proxy_arp': int,
-			 'in_vip_is_not_active': int,
-			 'in_arp_refresh_skipped_over_core_and_flooded': int,
-			 'in_appeared_on_a_wrong_interface': int,
-			 'in_incorrect_length': int,
-			 'in_invalid_protocol_packet': int,
-			 'in_invalid_hardwaretype': int,
-			 'in_invalid_context': int,
-			 'in_invalid_layer2_address_length': int,
-			 'in_invalid_source_ip_address': int,
-			 'in_no_mem_to_create_per_intf_structure': int,
-			 'in_invalid_layer3_address_length': int,
-			 'in_source_address_mismatch_with_subnet': int,
-			 'in_directed_broadcast_source': int,
-			 'in_invalid_destination_ip_address': int,
-			 'in_non_local_destination_ip_address': int,
-			 'in_invalid_source_mac_address': int,
-			 'in_source_mac_address_is_our_own': int,
-			 'in_received_before_arp_initialization': int,
-			 'in_l2_packet_on_untrusted_l2_port': int,
-			 'in_packet_with_vip_on_standby_fhrp': int,
-			 'in_requests_came_for_exising_entries': int,
-			 'in_requests_came_on_a_l2_interface': int,
-			 'in_l2fm_query_failed_for_a_l2address': int,
-			 'in_dropping_due_to_tunneling_failures': int,
-			 'in_glean_requests_recv_count': int,
-			 'in_arp_refresh_requests_received_from_clients': int,
-			 'in_number_of_signals_received_from_l2rib': int,
-			 'adjacency_adds': int,
-			 'adjacency_deletes': int,
-			 'adjacency_timeouts': int,
-			 'failed_due_to_limits': int,
-			 'in_non_active_fhrp_dest_ip': int,
-			 'in_grat_arp_received_on_proxy': int,
-			 }
+		'statistics': {
+			'sent':{
+				'total': int,
+				'requests': int,
+				'replies': int,
+				'l2_requests': int,
+				'l2_replies': int,
+				'gratuitous': int,
+				'tunneled': int,
+				'dropped': int,
+				'drops_details': {
+					'mbuf_operation_failed': int,
+					'context_not_created': int,
+					'invalid_context': int,
+					'invalid_ifindex': int,
+					'invalid_src_ip': int,
+					'invalid_dest_ip': int,
+					'destnination_is_our_own_ip': int,
+					'unattached_ip': int,
+					'adjacency_couldnt_be_added': int,
+					'null_source_ip': int,
+					'null_source_mac': int,
+					'client_enqueue_failed': int,
+					'dest_not_reachable_for_proxy_arp': int,
+					'dest_unreachable_for_enhanced_proxy': int,
+					'destnination_on_l2_port_tracked': int,
+					'invalid_local_proxy_arp': int,
+					'invalid_proxy_arp': int,
+					'vip_is_not_active': int,
+					'arp_refresh_skipped_over_core_and_flooded': int,
+				}
+			},
+			'received':{
+				'total': int,
+				'requests': int,
+				'replies': int,
+				'l2_requests': int,
+				'l2_replies': int,
+				'proxy_arp': int,
+				'local_proxy_arp': int,
+				'enhanced_proxy_arp': int,
+				'anycast_proxy_arp': int,
+				'l2_port_track_proxy_arp': int,
+				'tunneled': int,
+				'fastpath': int,
+				'snooped': int,
+				'dropped': int,
+				'dropped_server_port': int,
+				'drops_details': {
+					'context_not_created': int,
+					'invalid_context': int,
+					'invalid_hardwaretype': int,
+					'invalid_layer2_address_length': int,
+					'invalid_source_ip_address': int,
+					'no_mem_to_create_per_intf_structure': int,
+					'invalid_layer3_address_length': int,
+					'source_address_mismatch_with_subnet': int,
+					'directed_broadcast_source': int,
+					'invalid_destination_ip_address': int,
+					'non_local_destination_ip_address': int,
+					'invalid_source_mac_address': int,
+					'source_mac_address_is_our_own': int,
+					'received_before_arp_initialization': int,
+					'l2_packet_on_untrusted_l2_port': int,
+					'packet_with_vip_on_standby_fhrp': int,
+					'requests_came_for_exising_entries': int,
+					'requests_came_on_a_l2_interface': int,
+					'l2fm_query_failed_for_a_l2address': int,
+					'dropping_due_to_tunneling_failures': int,
+					'glean_requests_recv_count': int,
+					'arp_refresh_requests_received_from_clients': int,
+					'number_of_signals_received_from_l2rib': int,
+					'non_active_fhrp_dest_ip': int,
+					'grat_arp_received_on_proxy': int,
+					'invalid_protocol_packet': int,
+					'appeared_on_a_wrong_interface': int,
+					'incorrect_length': int,
+				}
+			},
+			'adjacency':{
+				'adjacency_adds': int,
+				'adjacency_deletes': int,
+				'adjacency_timeouts': int,
+				'failed_due_to_limits': int,
+				}
+			}
 		}
 
 # ===========================================
@@ -294,37 +315,45 @@ class ShowIpArpstatisticsVrfAll(ShowIpArpstatisticsVrfAllSchema):
 		parser class - implements detail parsing mechanisms for cli,xml and yang output.
 	"""
 
-	def cli(self):
+	def cli(self, vrf=None):
+
+		if vrf:
+			cmd = 'show ip arp statistics vrf {}'.format(vrf)
+		else:
+			cmd = 'show ip arp statistics'
 
 		# excute command to get output
-		out = self.device.execute('show ip arp statistics vrf all')
+		out = self.device.execute(cmd)
 
 		# initial variables
 		ret_dict = {}
+		direction = ''
 		prefix = ''
 		key = ''
 
 		#  Sent:
+		p1 = re.compile(r'^\s*Sent:$')
+
 		#  Received:
-		p1 = re.compile(r'^\s*(?P<direction>[Sent|Received]+):$')
+		p1_1 = re.compile(r'^\s*Received:$')
 
 		# Total 0, Requests 22632, Replies 6582, Requests on L2 0, Replies on L2 0,
 		p2 = re.compile(r'^\s*Total +(?P<total>[\w]+), +Requests '
-			'+(?P<requests_pkts>[\w]+), +Replies +(?P<replies_pkts>[\w]+), '
+			'+(?P<requests>[\w]+), +Replies +(?P<replies>[\w]+), '
 			'+Requests +on +L2 +(?P<l2_requests>[\w]+), +Replies +on +L2 '
 			'+(?P<l2_replies>[\w]+)(,)?$')
 
 		# Gratuitous 58, Tunneled 0, Dropped 0
-		p3 = re.compile(r'^\s*Gratuitous +(?P<gratuitous_pkts>[\w]+), +Tunneled '
-			'+(?P<tunneled_pkts>[\w]+), +Dropped +(?P<drops>[\w]+)$')
+		p3 = re.compile(r'^\s*Gratuitous +(?P<gratuitous>[\w]+), +Tunneled '
+			'+(?P<tunneled>[\w]+), +Dropped +(?P<dropped>[\w]+)$')
 
 		# Proxy arp 0, Local-Proxy arp 0,  Enhanced Proxy arp 0, Anycast proxy Proxy arp 0,  L2 Port-track Proxy arp 0,  Tunneled 0, Fastpath 0, Snooped 0, Dropped 28218  on Server Port 0 
 		p4 = re.compile(r'^\s*Proxy +arp +(?P<proxy_arp>[\w]+), +Local-Proxy +arp '
 			'+(?P<local_proxy_arp>[\w]+), +Enhanced +Proxy +arp +(?P<enhanced_proxy_arp>[\w]+), '
 			'+Anycast +proxy +Proxy +arp +(?P<anycast_proxy_arp>[\w]+), +L2 +Port-track +Proxy +arp '
 			'+(?P<l2_port_track_proxy_arp>[\w]+),'
-			' +Tunneled +(?P<tunneled_pkts>[\w]+), +Fastpath +(?P<fastpath>[\w]+),'
-			' +Snooped +(?P<snooped>[\w]+), +Dropped +(?P<drops>[\w]+)'
+			' +Tunneled +(?P<tunneled>[\w]+), +Fastpath +(?P<fastpath>[\w]+),'
+			' +Snooped +(?P<snooped>[\w]+), +Dropped +(?P<dropped>[\w]+)'
 			' +on +Server +Port +(?P<dropped_server_port>[\w]+)$')
 
 		# MBUF operation failed               : 0
@@ -343,7 +372,7 @@ class ShowIpArpstatisticsVrfAll(ShowIpArpstatisticsVrfAllSchema):
 		p9 = re.compile(r'^\s*Invalid +SRC +IP +: +(?P<invalid_src_ip>[\d]+)$')
 
 		# Invalid DEST IP                     : 0
-		p10 = re.compile(r'^\s*Invalid +DEST +IP +: +(?P<out_invalid_dest_ip>[\d]+)$')
+		p10 = re.compile(r'^\s*Invalid +DEST +IP +: +(?P<invalid_dest_ip>[\d]+)$')
 
 		# Destination is our own IP           :  26
 		p11 = re.compile(r'^\s*Destination +is +our +own +IP +: +(?P<destnination_is_our_own_ip>[\d]+)$')
@@ -395,6 +424,9 @@ class ShowIpArpstatisticsVrfAll(ShowIpArpstatisticsVrfAllSchema):
 
 		# Invalid Hardware type                  : 0
 		p27 = re.compile(r'^\s*Invalid +Hardware +type +: +(?P<invalid_hardwaretype>[\d]+)$')
+
+		# ARP adjacency statistics
+		p27_1 = re.compile(r'^\s*ARP adjacency statistics$')
 
 		# Invalid layer 2 address length      : 0
 		p30 = re.compile(r'^\s*Invalid +layer +2 +address +length +: +(?P<invalid_layer2_address_length>[\d]+)$')
@@ -482,22 +514,26 @@ class ShowIpArpstatisticsVrfAll(ShowIpArpstatisticsVrfAllSchema):
 
 			m = p1.match(line)
 			if m:
-				direction = m.groupdict()['direction']
-				if direction == 'Sent':
-					prefix = 'in'
-				else:
-					prefix = 'out'
+				ret_dict.setdefault('statistics', {}).setdefault('sent', {})
+				direction = 'sent'
+				continue
 
-				if 'statistics' not in ret_dict:
-					ret_dict.setdefault('statistics', {})
+			m = p1_1.match(line)
+			if m:
+				ret_dict['statistics'].setdefault('received', {})
+				direction = 'received'
+				continue
 
+			m = p27_1.match(line)
+			if m:
+				ret_dict['statistics'].setdefault('adjacency', {})
 				continue
 
 			m = p2.match(line)
 			if m:
 				groups = m.groupdict()
-				# total, requests, replies, reqs_l2, replies_l2
-				ret_dict['statistics'].update({'{}_{}'.format(prefix, k): \
+				# total, requests, replies, l2_requests, l2_replies
+				ret_dict['statistics'][direction].update({k: \
 					int(v) for k, v in groups.items()})
 				continue
 
@@ -505,7 +541,7 @@ class ShowIpArpstatisticsVrfAll(ShowIpArpstatisticsVrfAllSchema):
 			if m:
 				groups = m.groupdict()
 				# gratuitous, tunneled, dropped
-				ret_dict['statistics'].update({'out_{}'.format(k): \
+				ret_dict['statistics']['sent'].update({k: \
 					int(v) for k, v in groups.items()})
 				continue
 
@@ -515,222 +551,248 @@ class ShowIpArpstatisticsVrfAll(ShowIpArpstatisticsVrfAllSchema):
 				# proxy_arp, local_proxy_arp, enhanced_proxy_arp, anycast_proxy_arp
 				# l2_port_track_proxy_arp, tunneled, fastpath, snooped, dropped
 				# dropped_server_port
-				ret_dict['statistics'].update({'in_{}'.format(k): \
+				ret_dict['statistics']['received'].update({k: \
 					int(v) for k, v in groups.items()})
 				continue
 
 			m = p5.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['{}_mbuf_operation_failed'.format(
-					prefix)] = int(groups['mbuf_operation_failed'])
+				ret_dict['statistics']['sent'].setdefault('drops_details', {})
+				ret_dict['statistics']['sent']['drops_details']\
+					['mbuf_operation_failed'] = int(
+						groups['mbuf_operation_failed'])
 				continue
 
 			m = p6.match(line)
-			if m:
+			if m and direction=='sent':
 				groups = m.groupdict()
-				ret_dict['statistics']['{}_context_not_created'.format(
-					prefix)] = int(groups['context_not_created'])
+				ret_dict['statistics']['sent']['drops_details']\
+					['context_not_created'] = int(groups['context_not_created'])
+				continue
+			elif m:
+				groups = m.groupdict()
+				ret_dict['statistics']['received']['drops_details']\
+					['context_not_created'] = int(groups['context_not_created'])
 				continue
 
 			m = p7.match(line)
-			if m:
+			if m and direction=='sent':
 				groups = m.groupdict()
-				ret_dict['statistics']['{}_invalid_context'.format(prefix)] = \
-					int(groups['invalid_context'])
+				ret_dict['statistics']['sent']['drops_details']\
+					['invalid_context'] = int(groups['invalid_context'])
+				continue
+			elif m:
+				groups = m.groupdict()
+				ret_dict['statistics']['received']['drops_details']\
+					['invalid_context'] = int(groups['invalid_context'])
 				continue
 
 			m = p8.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['{}_invalid_ifindex'.format(prefix)] = \
-					int(groups['invalid_ifindex'])
+				ret_dict['statistics']['sent']['drops_details']\
+					['invalid_ifindex'] = int(groups['invalid_ifindex'])
 				continue
 
 			m = p9.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['{}_invalid_src_ip'.format(prefix)] = \
-					int(groups['invalid_src_ip'])
+				ret_dict['statistics']['sent']['drops_details']\
+					['invalid_src_ip'] = int(groups['invalid_src_ip'])
 				continue
 
 			m = p10.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['out_invalid_dest_ip'] = \
-					int(groups['out_invalid_dest_ip'])
+				ret_dict['statistics']['sent']['drops_details']\
+					['invalid_dest_ip'] = int(groups['invalid_dest_ip'])
 				continue
 
 			m = p11.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['{}_destnination_is_our_own_ip'.\
-					format(prefix)] = int(groups['destnination_is_our_own_ip'])
+				ret_dict['statistics']['sent']['drops_details']\
+					['destnination_is_our_own_ip'] = int(
+						groups['destnination_is_our_own_ip'])
 				continue
 
 			m = p12.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['{}_unattached_ip'.format(prefix)] = \
-					int(groups['unattached_ip'])
+				ret_dict['statistics']['sent']['drops_details']\
+					['unattached_ip'] = int(groups['unattached_ip'])
 				continue
 
 			m = p13.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['out_adjacency_couldnt_be_added'] = int(
-					groups['adjacency_couldnt_be_added'])
+				ret_dict['statistics']['sent']['drops_details']\
+					['adjacency_couldnt_be_added'] = int(
+						groups['adjacency_couldnt_be_added'])
 				continue
 
 			m = p14.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['{}_null_source_ip'.format(prefix)] = \
-					int(groups['null_source_ip'])
+				ret_dict['statistics']['sent']['drops_details']\
+					['null_source_ip'] = int(groups['null_source_ip'])
 				continue
 
 			m = p15.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['{}_null_source_mac'.format(prefix)] = \
-					int(groups['null_source_mac'])
+				ret_dict['statistics']['sent']['drops_details']\
+					['null_source_mac'] = int(groups['null_source_mac'])
 				continue
 
 			m = p16.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['{}_client_enqueue_failed'.format(
-					prefix)] = int(groups['client_enqueue_failed'])
+				ret_dict['statistics']['sent']['drops_details']\
+					['client_enqueue_failed'] = int(
+						groups['client_enqueue_failed'])
 				continue
 
 			m = p17.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['{}_dest_not_reachable_for_proxy_arp'.\
-					format(prefix)] = int(
+				ret_dict['statistics']['sent']['drops_details']\
+					['dest_not_reachable_for_proxy_arp'] = int(
 						groups['dest_not_reachable_for_proxy_arp'])
 				continue
 
 			m = p18.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['{}_dest_unreachable_for_enhanced_proxy'.\
-					format(prefix)] = int(
+				ret_dict['statistics']['sent']['drops_details']\
+					['dest_unreachable_for_enhanced_proxy'] = int(
 						groups['dest_unreachable_for_enhanced_proxy'])
 				continue
 
 			m = p19.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['{}_destnination_on_l2_port_tracked'.\
-					format(prefix)] = int(
+				ret_dict['statistics']['sent']['drops_details']\
+					['destnination_on_l2_port_tracked'] = int(
 						groups['destnination_on_l2_port_tracked'])
 				continue
 
 			m = p20.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['{}_invalid_local_proxy_arp'.format(
-					prefix)] = int(groups['invalid_local_proxy_arp'])
+				ret_dict['statistics']['sent']['drops_details']\
+					['invalid_local_proxy_arp'] = int(
+						groups['invalid_local_proxy_arp'])
 				continue
 
 			m = p21.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['{}_invalid_proxy_arp'.format(
-					prefix)] = int(groups['invalid_proxy_arp'])
+				ret_dict['statistics']['sent']['drops_details']\
+					['invalid_proxy_arp'] = int(groups['invalid_proxy_arp'])
 				continue
 
 			m = p22.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['{}_vip_is_not_active'.format(
-					prefix)] = int(groups['vip_is_not_active'])
+				ret_dict['statistics']['sent']['drops_details']\
+					['vip_is_not_active'] = int(groups['vip_is_not_active'])
 				continue
 
 			m = p23.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']\
-					['{}_arp_refresh_skipped_over_core_and_flooded'.format(
-						prefix)] = int(
+				ret_dict['statistics']['sent']['drops_details']\
+					['arp_refresh_skipped_over_core_and_flooded'] = int(
 						groups['arp_refresh_skipped_over_core_and_flooded'])
 				continue
 
 			m = p24.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['in_appeared_on_a_wrong_interface'] = \
-					int(groups['appeared_on_a_wrong_interface'])
+				ret_dict['statistics']['received'].setdefault('drops_details', {})
+				ret_dict['statistics']['received']['drops_details']\
+					['appeared_on_a_wrong_interface'] = int(
+						groups['appeared_on_a_wrong_interface'])
 				continue
 
 			m = p25.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['in_incorrect_length'] = \
-					int(groups['incorrect_length'])
+				ret_dict['statistics']['received']['drops_details']\
+					['incorrect_length'] = int(groups['incorrect_length'])
 				continue
 
 			m = p26.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['in_invalid_protocol_packet'] = int(
+				ret_dict['statistics']['received']['drops_details']\
+					['invalid_protocol_packet'] = int(
 					groups['invalid_protocol_packet'])
 				continue
 
 			m = p27.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['in_invalid_hardwaretype'] = int(
-					groups['invalid_hardwaretype'])
+				ret_dict['statistics']['received']['drops_details']\
+					['invalid_hardwaretype'] = int(
+						groups['invalid_hardwaretype'])
 				continue
 
 			m = p30.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['in_invalid_layer2_address_length'] = \
+				ret_dict['statistics']['received']['drops_details']\
+					['invalid_layer2_address_length'] = \
 					int(groups['invalid_layer2_address_length'])
 				continue
 
 			m = p31.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['in_invalid_source_ip_address'] = int(
+				ret_dict['statistics']['received']['drops_details']\
+					['invalid_source_ip_address'] = int(
 					groups['invalid_source_ip_address'])
 				continue
 
 			m = p32.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['in_no_mem_to_create_per_intf_structure'] = \
+				ret_dict['statistics']['received']['drops_details']\
+					['no_mem_to_create_per_intf_structure'] = \
 					int(groups['no_mem_to_create_per_intf_structure'])
 				continue
 
 			m = p33.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['in_invalid_layer3_address_length'] = \
+				ret_dict['statistics']['received']['drops_details']\
+					['invalid_layer3_address_length'] = \
 					int(groups['invalid_layer3_address_length'])
 				continue
 
 			m = p34.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['in_source_address_mismatch_with_subnet'] = \
+				ret_dict['statistics']['received']['drops_details']\
+					['source_address_mismatch_with_subnet'] = \
 					int(groups['source_address_mismatch_with_subnet'])
 				continue
 
 			m = p35.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['in_directed_broadcast_source'] = int(
+				ret_dict['statistics']['received']['drops_details']\
+					['directed_broadcast_source'] = int(
 					groups['directed_broadcast_source'])
 				continue
 
 			m = p36.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['in_invalid_destination_ip_address'] = \
+				ret_dict['statistics']['received']['drops_details']\
+					['invalid_destination_ip_address'] = \
 					int(groups['invalid_destination_ip_address'])
 				continue
 
@@ -738,110 +800,119 @@ class ShowIpArpstatisticsVrfAll(ShowIpArpstatisticsVrfAllSchema):
 			if m:
 				groups = m.groupdict()
 
-				ret_dict['statistics']['in_non_local_destination_ip_address'] = \
+				ret_dict['statistics']['received']['drops_details']\
+					['non_local_destination_ip_address'] = \
 					int(groups['non_local_destination_ip_address'])
 				continue
 
 			m = p38.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['in_invalid_source_mac_address'] = int(
+				ret_dict['statistics']['received']['drops_details']\
+					['invalid_source_mac_address'] = int(
 					groups['invalid_source_mac_address'])
 				continue
 
 			m = p39.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['in_source_mac_address_is_our_own'] = int(
+				ret_dict['statistics']['received']['drops_details']\
+					['source_mac_address_is_our_own'] = int(
 					groups['source_mac_address_is_our_own'])
 				continue
 
 			m = p40.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['in_received_before_arp_initialization'] = \
+				ret_dict['statistics']['received']['drops_details']\
+					['received_before_arp_initialization'] = \
 					int(groups['received_before_arp_initialization'])
 				continue
 
 			m = p41.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['in_l2_packet_on_untrusted_l2_port'] = \
+				ret_dict['statistics']['received']['drops_details']\
+					['l2_packet_on_untrusted_l2_port'] = \
 					int(groups['l2_packet_on_untrusted_l2_port'])
 				continue
 
 			m = p42.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['in_packet_with_vip_on_standby_fhrp'] = \
+				ret_dict['statistics']['received']['drops_details']\
+					['packet_with_vip_on_standby_fhrp'] = \
 					int(groups['packet_with_vip_on_standby_fhrp'])
 				continue
 
 			m = p43.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['in_requests_came_for_exising_entries'] = \
+				ret_dict['statistics']['received']['drops_details']\
+					['requests_came_for_exising_entries'] = \
 					int(groups['requests_came_for_exising_entries'])
 				continue
 
 			m = p44.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['in_requests_came_on_a_l2_interface'] = \
+				ret_dict['statistics']['received']['drops_details']\
+					['requests_came_on_a_l2_interface'] = \
 					int(groups['requests_came_on_a_l2_interface'])
 				continue
 
 			m = p45.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['in_l2fm_query_failed_for_a_l2address'] \
+				ret_dict['statistics']['received']['drops_details']\
+					['l2fm_query_failed_for_a_l2address'] \
 					= int(groups['l2fm_query_failed_for_a_l2address'])
 				continue
 
 			m = p46.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['in_dropping_due_to_tunneling_failures'] = \
+				ret_dict['statistics']['received']['drops_details']\
+					['dropping_due_to_tunneling_failures'] = \
 					int(groups['dropping_due_to_tunneling_failures'])
 				continue
 
 			m = p47.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['in_glean_requests_recv_count'] = int(
+				ret_dict['statistics']['received']['drops_details']\
+					['glean_requests_recv_count'] = int(
 					groups['glean_requests_recv_count'])
 				continue
 
 			m = p48.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']\
-					['in_arp_refresh_requests_received_from_clients'] = int(
+				ret_dict['statistics']['received']['drops_details']\
+					['arp_refresh_requests_received_from_clients'] = int(
 						groups['arp_refresh_requests_received_from_clients'])
 				continue
 
 			m = p49.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']\
-					['in_number_of_signals_received_from_l2rib'] = int(
+				ret_dict['statistics']['received']['drops_details']\
+					['number_of_signals_received_from_l2rib'] = int(
 						groups['number_of_signals_received_from_l2rib'])
 				continue
 
 			m = p50.match(line)
 			if m:
 				groups = m.groupdict()
-				if 'statistics' not in ret_dict:
-					ret_dict.setdefault('statistics', {})
 				# adjacency_adds, adjacency_deletes, adjacency_timeouts
-				ret_dict['statistics'].update({k: int(v) \
+				ret_dict['statistics']['adjacency'].update({k: int(v) \
 					for k, v in groups.items()})
 				continue
 
 			m = p51.match(line)
 			if m:
 				groups = m.groupdict()
-				ret_dict['statistics']['failed_due_to_limits'] = \
+				ret_dict['statistics']['adjacency']['failed_due_to_limits'] = \
 					int(groups['failed_due_to_limits'])
 				continue
 
@@ -857,7 +928,7 @@ class ShowIpArpstatisticsVrfAll(ShowIpArpstatisticsVrfAllSchema):
 
 			m = p54.match(line)
 			if m and key:
-				ret_dict['statistics']['in_{}'.format(key)] = \
+				ret_dict['statistics']['received']['drops_details'][key] = \
 					int(m.groupdict()['statistic_number'])
 				key = ''
 				continue
