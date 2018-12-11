@@ -6,12 +6,12 @@ from unittest.mock import Mock
 from ats.topology import Device
 
 # Metaparset
-from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
-																			 SchemaMissingKeyError
+from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
+                                             SchemaMissingKeyError
 
 # Parser
-from genie.libs.parser.iosxe.show_arp import ShowArp, ShowIpArpSummary, \
-																						 ShowIpTraffic
+from genie.libs.parser.iosxe.show_arp import ShowArp, ShowIpArpSummary,\
+                                             ShowIpTraffic
 
 
 # ============================================
