@@ -8,7 +8,8 @@ from ats.topology import Device
 from ats.topology import loader
 
 # Metaparser
-from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
+from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
+                                             SchemaMissingKeyError
 
 # iosxe show_ospf
 from genie.libs.parser.iosxe.show_ospf import ShowIpOspf,\
@@ -873,7 +874,7 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                     0           1         no          no            Base
               Enabled by interface config, including secondary ip addresses
               Loopback interface is treated as a stub Host
-            GigabitEthernet2 is up, line protocol is up 
+            GigabitEthernet2 is up, line protocol is up (connected)
               Internet Address 10.1.2.1/24, Interface ID 8, Area 0
               Attached via Interface Enable
               Process ID 1, Router ID 1.1.1.1, Network Type BROADCAST, Cost: 1
@@ -1376,6 +1377,136 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
                                                             'nbr_retrans_qlen': 0,
                                                             'total_retransmission': 3}}}}}}}}}}}}}}
 
+    golden_parsed_output3 = {
+        'vrf': 
+            {'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'1668': 
+                                {'areas': 
+                                    {'0.0.0.0': 
+                                        {'interfaces': 
+                                            {'TenGigabitEthernet3/1/1': 
+                                                {'neighbors': 
+                                                    {'20.51.55.33': 
+                                                        {'address': '20.51.55.33',
+                                                        'bdr_ip_addr': '0.0.0.0',
+                                                        'dead_timer': '00:00:03',
+                                                        'dr_ip_addr': '20.51.55.38',
+                                                        'first': '0x0(0)/0x625F62BC(13775196)',
+                                                        'hello_options': '0x2',
+                                                        'index': '2/2,',
+                                                        'interface': 'TenGigabitEthernet3/1/1',
+                                                        'neighbor_router_id': '20.51.55.33',
+                                                        'next': '0x0(0)/0x625F62BC(13775196)',
+                                                        'priority': 0,
+                                                        'state': 'full',
+                                                        'statistics': {'last_retrans_max_scan_length': 2,
+                                                                     'last_retrans_max_scan_time_msec': 4,
+                                                                     'last_retrans_scan_length': 0,
+                                                                     'last_retrans_scan_time_msec': 0,
+                                                                     'nbr_event_count': 12,
+                                                                     'nbr_retrans_qlen': 3,
+                                                                     'total_retransmission': 5},
+                                                        'uptime': '3d21h'}}},
+                                            'TenGigabitEthernet3/1/2': 
+                                                {'neighbors': 
+                                                    {'20.51.55.41': 
+                                                        {'address': '20.51.55.41',
+                                                        'bdr_ip_addr': '0.0.0.0',
+                                                        'dead_timer': '00:00:03',
+                                                        'dr_ip_addr': '20.51.55.46',
+                                                        'first': '0x0(0)/0x0(0)',
+                                                        'hello_options': '0x2',
+                                                        'index': '1/1,',
+                                                        'interface': 'TenGigabitEthernet3/1/2',
+                                                        'neighbor_router_id': '20.51.55.41',
+                                                        'next': '0x0(0)/0x0(0)',
+                                                        'priority': 0,
+                                                        'state': 'full',
+                                                        'statistics': {'last_retrans_max_scan_length': 1,
+                                                                     'last_retrans_max_scan_time_msec': 0,
+                                                                     'last_retrans_scan_length': 0,
+                                                                     'last_retrans_scan_time_msec': 0,
+                                                                     'nbr_event_count': 22,
+                                                                     'nbr_retrans_qlen': 0,
+                                                                     'total_retransmission': 1},
+                                                        'uptime': '3d00h'}}},
+                                            'TenGigabitEthernet3/1/5': 
+                                                {'neighbors': 
+                                                    {'20.51.55.49': 
+                                                        {'address': '20.51.55.49',
+                                                        'bdr_ip_addr': '0.0.0.0',
+                                                        'dead_timer': '00:00:03',
+                                                        'dr_ip_addr': '20.51.55.54',
+                                                        'first': '0x0(0)/0x625F6304(13775194)',
+                                                        'hello_options': '0x2',
+                                                        'index': '3/3,',
+                                                        'interface': 'TenGigabitEthernet3/1/5',
+                                                        'neighbor_router_id': '20.51.55.49',
+                                                        'next': '0x0(0)/0x625F6304(13775194)',
+                                                        'priority': 0,
+                                                        'state': 'full',
+                                                        'statistics': {'last_retrans_max_scan_length': 3,
+                                                                     'last_retrans_max_scan_time_msec': 4,
+                                                                     'last_retrans_scan_length': 0,
+                                                                     'last_retrans_scan_time_msec': 0,
+                                                                     'nbr_event_count': 12,
+                                                                     'nbr_retrans_qlen': 5,
+                                                                     'total_retransmission': 6},
+                                                        'uptime': '3d00h'}}}}}}},
+                            '1666': 
+                                {'areas': 
+                                    {'0.0.6.130': 
+                                        {'interfaces': 
+                                            {'TenGigabitEthernet3/1/3': 
+                                                {'neighbors': 
+                                                    {'20.51.55.21': 
+                                                        {'address': '20.51.55.21',
+                                                        'bdr_ip_addr': '0.0.0.0',
+                                                        'dead_timer': '00:00:03',
+                                                        'dr_ip_addr': '20.51.55.26',
+                                                        'first': '0x0(0)/0x0(0)',
+                                                        'hello_options': '0x2',
+                                                        'index': '1/1,',
+                                                        'interface': 'TenGigabitEthernet3/1/3',
+                                                        'neighbor_router_id': '20.51.55.21',
+                                                        'next': '0x0(0)/0x0(0)',
+                                                        'priority': 0,
+                                                        'state': 'full',
+                                                        'statistics': {'last_retrans_max_scan_length': 0,
+                                                                      'last_retrans_max_scan_time_msec': 0,
+                                                                      'last_retrans_scan_length': 0,
+                                                                      'last_retrans_scan_time_msec': 0,
+                                                                      'nbr_event_count': 12,
+                                                                      'nbr_retrans_qlen': 0,
+                                                                      'total_retransmission': 0},
+                                                        'uptime': '3d00h'}}},
+                                            'TenGigabitEthernet3/1/4': 
+                                                {'neighbors': 
+                                                    {'20.51.55.93': 
+                                                        {'address': '20.51.55.93',
+                                                        'bdr_ip_addr': '0.0.0.0',
+                                                        'dead_timer': '00:00:03',
+                                                        'dr_ip_addr': '20.51.55.98',
+                                                        'first': '0x0(0)/0x0(0)',
+                                                        'hello_options': '0x2',
+                                                        'index': '2/2,',
+                                                        'interface': 'TenGigabitEthernet3/1/4',
+                                                        'neighbor_router_id': '20.51.55.93',
+                                                        'next': '0x0(0)/0x0(0)',
+                                                        'priority': 0,
+                                                        'state': 'full',
+                                                        'statistics': {'last_retrans_max_scan_length': 0,
+                                                                      'last_retrans_max_scan_time_msec': 0,
+                                                                      'last_retrans_scan_length': 0,
+                                                                      'last_retrans_scan_time_msec': 0,
+                                                                      'nbr_event_count': 18,
+                                                                      'nbr_retrans_qlen': 0,
+                                                                      'total_retransmission': 0},
+                                                        'uptime': '3d00h'}}}}}}}}}}}}}
+
     def test_show_ip_ospf_neighbor_detail_full1(self):
         
         self.maxDiff = None
@@ -1770,6 +1901,243 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
         obj = ShowIpOspfNeighborDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_show_ip_ospf_neighbor_detail_full3(self):
+
+        self.maxDiff = None
+
+        def mapper(key):
+            return self.outputs[key]
+
+        raw1 = '''\
+            nhq-choke-VSS#sh ip ospf neighbor detail
+            Neighbor 20.51.55.49, interface address 20.51.55.49
+                In the area 0 via interface TenGigabitEthernet3/1/5
+                Neighbor priority is 0, State is FULL, 12 state changes
+                DR is 20.51.55.54 BDR is 0.0.0.0
+                Options is 0x2 in Hello (E-bit)
+                Options is 0x2 in DBD (E-bit)
+                Dead timer due in 00:00:03
+                Neighbor is up for 3d00h
+                Index 3/3, retransmission queue length 5, number of retransmission 6
+                First 0x0(0)/0x625F6304(13775194) Next 0x0(0)/0x625F6304(13775194)
+                Last retransmission scan length is 0, maximum is 3
+                Last retransmission scan time is 0 msec, maximum is 4 msec
+                Link State retransmission due in 2344 msec
+            Neighbor 20.51.55.41, interface address 20.51.55.41
+                In the area 0 via interface TenGigabitEthernet3/1/2
+                Neighbor priority is 0, State is FULL, 22 state changes
+                DR is 20.51.55.46 BDR is 0.0.0.0
+                Options is 0x2 in Hello (E-bit)
+                Options is 0x2 in DBD (E-bit)
+                Dead timer due in 00:00:03
+                Neighbor is up for 3d00h
+                Index 1/1, retransmission queue length 0, number of retransmission 1
+                First 0x0(0)/0x0(0) Next 0x0(0)/0x0(0)
+                Last retransmission scan length is 0, maximum is 1
+                Last retransmission scan time is 0 msec, maximum is 0 msec
+            Neighbor 20.51.55.33, interface address 20.51.55.33
+                In the area 0 via interface TenGigabitEthernet3/1/1
+                Neighbor priority is 0, State is FULL, 12 state changes
+                DR is 20.51.55.38 BDR is 0.0.0.0
+                Options is 0x2 in Hello (E-bit)
+                Options is 0x2 in DBD (E-bit)
+                Dead timer due in 00:00:03
+                Neighbor is up for 3d21h
+                Index 2/2, retransmission queue length 3, number of retransmission 5
+                First 0x0(0)/0x625F62BC(13775196) Next 0x0(0)/0x625F62BC(13775196)
+                Last retransmission scan length is 0, maximum is 2
+                Last retransmission scan time is 0 msec, maximum is 4 msec
+                Link State retransmission due in 4356 msec
+            Neighbor 20.51.55.93, interface address 20.51.55.93
+                In the area 1666 via interface TenGigabitEthernet3/1/4
+                Neighbor priority is 0, State is FULL, 18 state changes
+                DR is 20.51.55.98 BDR is 0.0.0.0
+                Options is 0x2 in Hello (E-bit)
+                Options is 0x2 in DBD (E-bit)
+                Dead timer due in 00:00:03
+                Neighbor is up for 3d00h
+                Index 2/2, retransmission queue length 0, number of retransmission 0
+                First 0x0(0)/0x0(0) Next 0x0(0)/0x0(0)
+                Last retransmission scan length is 0, maximum is 0
+                Last retransmission scan time is 0 msec, maximum is 0 msec
+            Neighbor 20.51.55.21, interface address 20.51.55.21
+                In the area 1666 via interface TenGigabitEthernet3/1/3
+                Neighbor priority is 0, State is FULL, 12 state changes
+                DR is 20.51.55.26 BDR is 0.0.0.0
+                Options is 0x2 in Hello (E-bit)
+                Options is 0x2 in DBD (E-bit)
+                Dead timer due in 00:00:03
+                Neighbor is up for 3d00h
+                Index 1/1, retransmission queue length 0, number of retransmission 0
+                First 0x0(0)/0x0(0) Next 0x0(0)/0x0(0)
+                Last retransmission scan length is 0, maximum is 0
+                Last retransmission scan time is 0 msec, maximum is 0 msec
+            '''
+
+        raw2_1 = '''\
+            nhq-choke-VSS#show ip ospf interface | section TenGigabitEthernet3/1/1
+            TenGigabitEthernet3/1/1 is up, line protocol is up (connected) 
+              Internet Address 20.51.55.38/29, Area 0, Attached via Interface Enable
+              Process ID 1668, Router ID 20.46.52.10, Network Type BROADCAST, Cost: 1
+              Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                    0           1         no          no            Base
+              Enabled by interface config, including secondary ip addresses
+              Transmit Delay is 1 sec, State DR, Priority 1
+              Designated Router (ID) 20.46.52.10, Interface address 20.51.55.38
+              No backup designated router on this network
+              Timer intervals configured, Hello 1, Dead 4, Wait 4, Retransmit 5
+                oob-resync timeout 40
+                Hello due in 00:00:00
+              Supports Link-local Signaling (LLS)
+              Cisco NSF helper support enabled
+              IETF NSF helper support enabled
+              Index 1/1, flood queue length 0
+              Next 0x0(0)/0x0(0)
+              Last flood scan length is 2, maximum is 40
+              Last flood scan time is 0 msec, maximum is 4 msec
+              Neighbor Count is 1, Adjacent neighbor count is 1 
+                Adjacent with neighbor 20.51.55.33
+              Suppress hello for 0 neighbor(s)
+              Cryptographic authentication enabled
+                Youngest key id is 1
+            '''
+
+        raw2_2 = '''\
+            nhq-choke-VSS#show ip ospf interface | section TenGigabitEthernet3/1/2
+            TenGigabitEthernet3/1/2 is up, line protocol is up (connected) 
+              Internet Address 20.51.55.46/29, Area 0, Attached via Interface Enable
+              Process ID 1668, Router ID 20.46.52.10, Network Type BROADCAST, Cost: 1
+              Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                    0           1         no          no            Base
+              Enabled by interface config, including secondary ip addresses
+              Transmit Delay is 1 sec, State DR, Priority 1
+              Designated Router (ID) 20.46.52.10, Interface address 20.51.55.46
+              No backup designated router on this network
+              Timer intervals configured, Hello 1, Dead 4, Wait 4, Retransmit 5
+                oob-resync timeout 40
+                Hello due in 00:00:00
+              Supports Link-local Signaling (LLS)
+              Cisco NSF helper support enabled
+              IETF NSF helper support enabled
+              Index 2/2, flood queue length 0
+              Next 0x0(0)/0x0(0)
+              Last flood scan length is 2, maximum is 40
+              Last flood scan time is 0 msec, maximum is 4 msec
+              Neighbor Count is 1, Adjacent neighbor count is 1 
+                Adjacent with neighbor 20.51.55.41
+              Suppress hello for 0 neighbor(s)
+              Cryptographic authentication enabled
+                Youngest key id is 1
+            '''
+
+        raw2_3 = '''\
+            nhq-choke-VSS#show ip ospf interface | section TenGigabitEthernet3/1/3
+            TenGigabitEthernet3/1/3 is up, line protocol is up (connected) 
+              Internet Address 20.51.55.26/29, Area 1666, Attached via Interface Enable
+              Process ID 1666, Router ID 20.55.21.9, Network Type BROADCAST, Cost: 1000
+              Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                    0           1000      no          no            Base
+              Enabled by interface config, including secondary ip addresses
+              Transmit Delay is 1 sec, State DR, Priority 1
+              Designated Router (ID) 20.55.21.9, Interface address 20.51.55.26
+              No backup designated router on this network
+              Timer intervals configured, Hello 1, Dead 4, Wait 4, Retransmit 5
+                oob-resync timeout 40
+                Hello due in 00:00:00
+              Supports Link-local Signaling (LLS)
+              Cisco NSF helper support enabled
+              IETF NSF helper support enabled
+              Index 2/2, flood queue length 0
+              Next 0x0(0)/0x0(0)
+              Last flood scan length is 1, maximum is 3
+              Last flood scan time is 0 msec, maximum is 4 msec
+              Neighbor Count is 1, Adjacent neighbor count is 1 
+                Adjacent with neighbor 20.51.55.21
+              Suppress hello for 0 neighbor(s)
+            '''
+
+        raw2_4 = '''\
+            nhq-choke-VSS#show ip ospf interface | section TenGigabitEthernet3/1/4
+            TenGigabitEthernet3/1/4 is up, line protocol is up (connected) 
+              Internet Address 20.51.55.98/29, Area 1666, Attached via Interface Enable
+              Process ID 1666, Router ID 20.55.21.9, Network Type BROADCAST, Cost: 1
+              Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                    0           1         no          no            Base
+              Enabled by interface config, including secondary ip addresses
+              Transmit Delay is 1 sec, State DR, Priority 1
+              Designated Router (ID) 20.55.21.9, Interface address 20.51.55.98
+              No backup designated router on this network
+              Timer intervals configured, Hello 1, Dead 4, Wait 4, Retransmit 5
+                oob-resync timeout 40
+                Hello due in 00:00:00
+              Supports Link-local Signaling (LLS)
+              Cisco NSF helper support enabled
+              IETF NSF helper support enabled
+              Index 3/3, flood queue length 0
+              Next 0x0(0)/0x0(0)
+              Last flood scan length is 1, maximum is 3
+              Last flood scan time is 0 msec, maximum is 4 msec
+              Neighbor Count is 1, Adjacent neighbor count is 1 
+                Adjacent with neighbor 20.51.55.93
+              Suppress hello for 0 neighbor(s)
+            '''
+
+        raw2_5 = '''\
+            nhq-choke-VSS#show ip ospf interface | section TenGigabitEthernet3/1/5
+            TenGigabitEthernet3/1/5 is up, line protocol is up (connected) 
+              Internet Address 20.51.55.54/29, Area 0, Attached via Interface Enable
+              Process ID 1668, Router ID 20.46.52.10, Network Type BROADCAST, Cost: 100
+              Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                    0           100       no          no            Base
+              Enabled by interface config, including secondary ip addresses
+              Transmit Delay is 1 sec, State DR, Priority 1
+              Designated Router (ID) 20.46.52.10, Interface address 20.51.55.54
+              No backup designated router on this network
+              Timer intervals configured, Hello 1, Dead 4, Wait 4, Retransmit 5
+                oob-resync timeout 40
+                Hello due in 00:00:00
+              Supports Link-local Signaling (LLS)
+              Cisco NSF helper support enabled
+              IETF NSF helper support enabled
+              Index 3/3, flood queue length 0
+              Next 0x0(0)/0x0(0)
+              Last flood scan length is 2, maximum is 40
+              Last flood scan time is 0 msec, maximum is 4 msec
+              Neighbor Count is 1, Adjacent neighbor count is 1 
+                Adjacent with neighbor 20.51.55.49
+              Suppress hello for 0 neighbor(s)
+              Cryptographic authentication enabled
+                Youngest key id is 1
+            '''
+
+        raw3_1 = '''\
+            R1_ospf_xe#show running-config | section router ospf 1666
+            router ospf 1666
+            '''
+
+        raw3_2 = '''\
+            R1_ospf_xe#show running-config | section router ospf 1668
+            router ospf 1668
+              router-id 20.46.52.10
+            '''
+
+        self.outputs = {}
+        self.outputs['show ip ospf neighbor detail'] = raw1
+        self.outputs['show ip ospf interface | section TenGigabitEthernet3/1/1'] = raw2_1
+        self.outputs['show ip ospf interface | section TenGigabitEthernet3/1/2'] = raw2_2
+        self.outputs['show ip ospf interface | section TenGigabitEthernet3/1/3'] = raw2_3
+        self.outputs['show ip ospf interface | section TenGigabitEthernet3/1/4'] = raw2_4
+        self.outputs['show ip ospf interface | section TenGigabitEthernet3/1/5'] = raw2_5
+
+        self.outputs['show running-config | section router ospf 1666'] = raw3_1
+        self.outputs['show running-config | section router ospf 1668'] = raw3_2
+
+        self.device.execute = Mock()
+        self.device.execute.side_effect = mapper
+        obj = ShowIpOspfNeighborDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
     def test_show_ip_ospf_neighbor_detail_empty(self):
         self.maxDiff = None
@@ -4683,22 +5051,22 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                             {'GigabitEthernet3': 
                                                 {'mpls': 
                                                     {'ldp': 
-                                                        {'autoconfig': True,
+                                                        {'autoconfig': False,
                                                         'autoconfig_area_id': '0.0.0.1',
-                                                        'holddown_timer': True,
+                                                        'holddown_timer': False,
                                                         'igp_sync': False,
                                                         'state': 'up'}}},
                                             'OSPF_SL1': 
                                                 {'mpls': 
                                                     {'ldp': 
-                                                        {'autoconfig': True,
+                                                        {'autoconfig': False,
                                                         'autoconfig_area_id': '0.0.0.1',
-                                                        'holddown_timer': True,
+                                                        'holddown_timer': False,
                                                         'igp_sync': False,
                                                         'state': 'up'}}}}}},
                                 'mpls': 
                                     {'ldp': 
-                                        {'autoconfig': True,
+                                        {'autoconfig': False,
                                         'autoconfig_area_id': '0.0.0.1',
                                         'igp_sync': False}}}}}}},
             'default': 
@@ -4712,30 +5080,38 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                             {'GigabitEthernet1': 
                                                 {'mpls': 
                                                     {'ldp': 
-                                                        {'autoconfig': True,
+                                                        {'autoconfig': False,
                                                         'autoconfig_area_id': '0.0.0.0',
-                                                        'holddown_timer': True,
+                                                        'holddown_timer': False,
                                                         'igp_sync': False,
                                                         'state': 'up'}}},
                                             'GigabitEthernet2': 
                                                 {'mpls': 
                                                     {'ldp': 
-                                                        {'autoconfig': True,
+                                                        {'autoconfig': False,
                                                         'autoconfig_area_id': '0.0.0.0',
-                                                        'holddown_timer': True,
+                                                        'holddown_timer': False,
                                                         'igp_sync': False,
                                                         'state': 'up'}}},
+                                            'TenGigabitEthernet3/0/1': 
+                                                {'mpls': 
+                                                    {'ldp': 
+                                                        {'autoconfig': False,
+                                                        'autoconfig_area_id': '0.0.0.0',
+                                                        'holddown_timer': False,
+                                                        'igp_sync': False,
+                                                        'state': 'down'}}},
                                             'Loopback1': 
                                                 {'mpls': 
                                                     {'ldp': 
-                                                        {'autoconfig': True,
+                                                        {'autoconfig': False,
                                                         'autoconfig_area_id': '0.0.0.0',
-                                                        'holddown_timer': True,
+                                                        'holddown_timer': False,
                                                         'igp_sync': False,
                                                         'state': 'up'}}}}}},
                                 'mpls': 
                                     {'ldp': 
-                                        {'autoconfig': True,
+                                        {'autoconfig': False,
                                         'autoconfig_area_id': '0.0.0.0',
                                         'igp_sync': False}}}}}}}}}
 
@@ -4771,6 +5147,12 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
           LDP-IGP Synchronization : Not required
           Holddown timer is disabled
           Interface is up 
+        TenGigabitEthernet3/0/1
+          Process ID 1, Area 0
+          LDP is not configured through LDP autoconfig
+          LDP-IGP Synchronization : Not required
+          Holddown timer is disabled
+          Interface is down
         '''}
 
     def test_show_ip_ospf_mpls_ldp_interface_full1(self):
