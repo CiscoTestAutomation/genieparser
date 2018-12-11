@@ -23,31 +23,41 @@ class test_show_arp(unittest.TestCase):
 		empty_output = {'execute.return_value': ''}
 		
 		golden_parsed_output = {
-				"address": {
-						"201.0.12.2": {
-							 "type": "ARPA",
-							 "mac": "3820.5672.fc51",
-							 "age": "29",
-							 "protocol": "Internet",
-							 "address": "201.0.12.2",
-							 "interface": "Vlan100"
-						},
-						"201.0.12.1": {
-							 "type": "ARPA",
-							 "protocol": "Internet",
-							 "address": "201.0.12.1",
-							 "mac": "58bf.eab6.2f51",
-							 "interface": "Vlan100"
-						},
-						"201.0.14.1": {
-							 "type": "ARPA",
-							 "protocol": "Internet",
-							 "address": "201.0.14.1",
-							 "mac": "58bf.eab6.2f62",
-							 "interface": "Vlan200"
-						}
-				}
-		}
+			'interfaces': {
+				'Vlan100': {
+					'ipv4': {
+						'neighbors': {
+							'201.0.12.1': {
+								'age': '-',
+                              	'ip': '201.0.12.1',
+                             	'link_layer_address': '58bf.eab6.2f51',
+                              	'origin': 'static',
+                              	'protocol': 'Internet',
+                              	'type': 'ARPA'},
+               				'201.0.12.2': {'age': '29',
+                              	'ip': '201.0.12.2',
+                              	'link_layer_address': '3820.5672.fc51',
+                              	'origin': 'dynamic',
+                              	'protocol': 'Internet',
+                              	'type': 'ARPA'}
+                        }
+                    }
+                },
+                'Vlan200': {
+                	'ipv4': {
+                		'neighbors': {
+                			'201.0.14.1': {
+                				'age': '-',
+                              	'ip': '201.0.14.1',
+                              	'link_layer_address': '58bf.eab6.2f62',
+                              	'origin': 'static',
+                              	'protocol': 'Internet',
+                              	'type': 'ARPA'}
+                        }
+                    }
+                }
+            }
+        }
 
 		golden_output = {'execute.return_value': '''\
 				Protocol  Address          Age (min)  Hardware Addr   Type   Interface
@@ -57,40 +67,43 @@ class test_show_arp(unittest.TestCase):
 		'''}
 		
 		golden_parsed_output_1 = {
-				"address": {
-						"10.1.18.1": {
-							 "type": "ARPA",
-							 "mac": "0012.7f57.ac80",
-							 "age": "45",
-							 "protocol": "Internet",
-							 "address": "10.1.18.1",
-							 "interface": "GigabitEthernet0/0"
-						},
-						"10.1.18.122": {
-							 "type": "ARPA",
-							 "protocol": "Internet",
-							 "address": "10.1.18.122",
-							 "mac": "58bf.eab6.2f00",
-							 "interface": "GigabitEthernet0/0"
-						},
-						"10.1.18.13": {
-							 "type": "ARPA",
-							 "mac": "00b0.c215.441d",
-							 "age": "142",
-							 "protocol": "Internet",
-							 "address": "10.1.18.13",
-							 "interface": "GigabitEthernet0/0"
-						},
-						"10.1.18.254": {
-							 "type": "ARPA",
-							 "mac": "5cf3.fc25.ab76",
-							 "age": "247",
-							 "protocol": "Internet",
-							 "address": "10.1.18.254",
-							 "interface": "GigabitEthernet0/0"
-						}
-				}
-		}
+			'interfaces': {
+				'GigabitEthernet0/0': {
+					'ipv4': {
+						'neighbors': {
+							'10.1.18.1': {
+								'age': '45',
+                                'ip': '10.1.18.1',
+                                'link_layer_address': '0012.7f57.ac80',
+                                'origin': 'dynamic',
+                                'protocol': 'Internet',
+                                'type': 'ARPA'},
+		                  	'10.1.18.122': {
+		                  		'age': '-',
+                              	'ip': '10.1.18.122',
+                              	'link_layer_address': '58bf.eab6.2f00',
+                              	'origin': 'static',
+                              	'protocol': 'Internet',
+                              	'type': 'ARPA'},
+		                  	'10.1.18.13': {
+		                  		'age': '142',
+                             	'ip': '10.1.18.13',
+                             	'link_layer_address': '00b0.c215.441d',
+                             	'origin': 'dynamic',
+                             	'protocol': 'Internet',
+                             	'type': 'ARPA'},
+		                  	'10.1.18.254': {
+		                  		'age': '247',
+                              	'ip': '10.1.18.254',
+                              	'link_layer_address': '5cf3.fc25.ab76',
+                              	'origin': 'dynamic',
+                              	'protocol': 'Internet',
+                              	'type': 'ARPA'}
+                        }
+                    }
+                }
+            }
+        }
 
 		golden_output_1 = {'execute.return_value': '''\
 				Protocol  Address          Age (min)  Hardware Addr   Type   Interface

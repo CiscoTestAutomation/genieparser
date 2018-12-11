@@ -33,17 +33,24 @@ class ShowArpSchema(MetaParser):
     """
 
     schema = {
-        'address': {        
+        'interfaces': {
             Any(): {
-                'address': str,
-                'protocol': str,
-                Optional('age'): str,
-                'mac': str,
-                'type': str,
-                'interface': str
+                'ipv4': {
+                    'neighbors': {     
+                        Any(): {
+                            'ip': str,
+                            'link_layer_address': str,
+                            'origin': str,
+                            'age': str,
+                            'type': str,
+                            'protocol': str
+                        },
+                    }
+                }
             },
         }
     }
+
 
 class ShowArp(ShowArpSchema):
     """ Parser for show arp
@@ -75,9 +82,21 @@ class ShowArp(ShowArpSchema):
             if m:
                 group = m.groupdict()
                 address = group['address']
-                addr_dict = ret_dict.setdefault('address', {}).setdefault(address, {})
-                addr_dict['interface'] = Common.convert_intf_name(group.pop('interface'))
-                addr_dict.update({k:v for k,v in group.items() if v != '-'})
+                interface = group['interface']
+                final_dict = ret_dict.setdefault('interfaces', {}).setdefault(
+                    interface, {}).setdefault('ipv4', {}).setdefault(
+                    'neighbors', {}).setdefault(address, {})
+                
+                final_dict['ip'] = address
+                final_dict['link_layer_address'] = group['mac']
+                final_dict['age'] = group['age']
+                if group['age'] == '-':
+                    final_dict['origin'] = 'static'
+                else:
+                    final_dict['origin'] = 'dynamic'
+
+                final_dict['type'] = group['type']
+                final_dict['protocol'] = group['protocol']
                 continue
 
         return ret_dict
