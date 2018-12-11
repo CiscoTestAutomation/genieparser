@@ -173,7 +173,7 @@ class test_show_ip_traffic(unittest.TestCase):
 		empty_output = {'execute.return_value': ''}
 
 		golden_parsed_output = {
-			'arp': {
+			'arp_statistics': {
 				'arp_drops_input_full': 0,
 				'arp_in_other': 0,
 				'arp_in_replies': 764,

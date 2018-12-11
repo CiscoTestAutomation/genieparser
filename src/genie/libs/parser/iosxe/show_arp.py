@@ -151,7 +151,7 @@ class ShowIpTrafficSchema(MetaParser):
     """Schema for show ip traffic"""
 
     schema = {
-        'arp': {
+        'arp_statistics': {
             'arp_in_requests': int,
             'arp_in_replies': int,
             'arp_in_reverse': int,
@@ -651,27 +651,27 @@ class ShowIpTraffic(ShowIpTrafficSchema):
 
             m = p1.match(line)
             if m:
-                ret_dict.setdefault('arp', {})
+                ret_dict.setdefault('arp_statistics', {})
                 continue
 
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
-                ret_dict['arp'].update({k: \
+                ret_dict['arp_statistics'].update({k: \
                     int(v) for k, v in groups.items()})
                 continue
 
             m = p3.match(line)
             if m:
                 groups = m.groupdict()
-                ret_dict['arp'].update({k: \
+                ret_dict['arp_statistics'].update({k: \
                     int(v) for k, v in groups.items()})
                 continue
 
             m = p4.match(line)
             if m:
                 groups = m.groupdict()
-                ret_dict['arp']['arp_drops_input_full'] = int(
+                ret_dict['arp_statistics']['arp_drops_input_full'] = int(
                     groups['arp_drops'])
                 continue
 
