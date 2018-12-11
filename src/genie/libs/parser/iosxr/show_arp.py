@@ -27,18 +27,22 @@ class ShowArpDetailSchema(MetaParser):
     """
 
     schema = {
-        'global_static_table':
-            {Any():
-                {'ip_address': str,
-                 'mac_address': str,
-                 'interface': str,
-                 'encap_type': str,
-                 'age': str,
-                 'state': str,
-                 'flag': str}
+        'interfaces': {
+            Any(): {
+                'ipv4': {
+                    'neighbors': {     
+                        Any(): {
+                            'ip': str,
+                            'link_layer_address': str,
+                            'origin': str,
+                            'age': str,
+                            'type': str,
+                        },
+                    }
+                }
             },
         }
-
+    }
 
 # =======================================
 # Parser for 'show arp detail'
@@ -63,7 +67,7 @@ class ShowArpDetail(ShowArpDetailSchema):
         # 10.1.2.2        -          fa16.3ee4.1462  Interface  Unknown ARPA GigabitEthernet0/0/0/0
         p1 = re.compile(r'^(?P<ip_address>[\w\.]+) +(?P<age>[\w\:\-]+)'
             ' +(?P<mac_address>[\w\.]+) +(?P<state>\w+) +(?P<flag>\w+)'
-            ' +(?P<encap_type>[\w\.]+) +(?P<interface>[\w\.\/]+)$')
+            ' +(?P<type>[\w\.]+) +(?P<interface>[\w\.\/]+)$')
 
         # initial variables
         ret_dict = {}
@@ -75,14 +79,22 @@ class ShowArpDetail(ShowArpDetailSchema):
 
             m = p1.match(line)
             if m:
-                groups = m.groupdict()
-                address = groups['ip_address']
-                final_dict = ret_dict.setdefault('global_static_table', {}).\
-                  setdefault(address, {})
+                group = m.groupdict()
+                address = group['ip_address']
+                interface = group['interface']
+                final_dict = ret_dict.setdefault('interfaces', {}).setdefault(
+                    interface, {}).setdefault('ipv4', {}).setdefault(
+                    'neighbors', {}).setdefault(address, {})
+                
+                final_dict['ip'] = address
+                final_dict['link_layer_address'] = group['mac_address']
+                final_dict['age'] = group['age']
+                if group['age'] == '-':
+                    final_dict['origin'] = 'static'
+                else:
+                    final_dict['origin'] = 'dynamic'
 
-                final_dict.update({k: \
-                    str(v) for k, v in groups.items()})
-
+                final_dict['type'] = group['type']
                 continue
 
         return ret_dict
