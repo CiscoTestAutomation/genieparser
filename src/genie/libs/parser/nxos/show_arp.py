@@ -58,16 +58,21 @@ class ShowIpArpDetailVrfAllSchema(MetaParser):
 	"""Schema for show ip arp detail vrf all"""
 
 	schema = {
-		'global_static_table':
-			{Any():
-				{'ip_address': str,
-				 'mac_address': str,
-				 'interface': str,
-				 'physical_interface': str,
-				 'age': str,
-				 Optional('flag'): str}
+		'interfaces': {
+			Any(): {
+				'ipv4': {
+					'neighbors': {     
+						Any(): {
+							'ip': str,
+							'link_layer_address': str,
+							'origin': str,
+							'age': str,
+						},
+					}
+				}
 			},
 		}
+	}
 
 # =======================================
 # Parser for 'show ip arp detail vrf all'
@@ -93,6 +98,7 @@ class ShowIpArpDetailVrfAll(ShowIpArpDetailVrfAllSchema):
 		# initial variables
 		ret_dict = {}
 
+		# 10.1.7.1        00:17:15  0012.7f57.ac80  mgmt0            mgmt0
 		p1 = re.compile(r'^(?P<address>[\d\.]+) +(?P<age>[\d+\-\:]+) '
 		  '+(?P<mac>[\w\.]+) +(?P<interface>[\w\/\.]+) '
 		  '+(?P<physical_interface>[\w\/\.]+)( +(?P<flag>[\*\w\+\#]+))?$')
@@ -104,20 +110,20 @@ class ShowIpArpDetailVrfAll(ShowIpArpDetailVrfAllSchema):
 
 			m = p1.match(line)
 			if m:
-				groups = m.groupdict()
-				address = groups['address']
-				final_dict = ret_dict.setdefault('global_static_table', {}).\
-				  setdefault(address, {})
-				final_dict['ip_address'] = address
-				final_dict['mac_address'] = groups['mac']
-				final_dict['age'] = groups['age']
-				final_dict['interface'] = groups['interface']
-				final_dict['physical_interface'] = groups['physical_interface']
-
-				flag = self.FLAG_MAP.get(groups['flag'])
-
-				if flag:
-					final_dict['flag'] = flag
+				group = m.groupdict()
+				address = group['address']
+				interface = group['interface']
+				final_dict = ret_dict.setdefault('interfaces', {}).setdefault(
+					interface, {}).setdefault('ipv4', {}).setdefault(
+					'neighbors', {}).setdefault(address, {})
+				
+				final_dict['ip'] = address
+				final_dict['link_layer_address'] = group['mac']
+				final_dict['age'] = group['age']
+				if group['age'] == '-':
+					final_dict['origin'] = 'static'
+				else:
+					final_dict['origin'] = 'dynamic'
 
 				continue
 

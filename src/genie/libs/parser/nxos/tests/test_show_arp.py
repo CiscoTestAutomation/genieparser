@@ -23,72 +23,141 @@ class test_show_ip_arp_detail_vrf_all(unittest.TestCase):
 	device = Device(name='aDevice')
 	empty_output = {'execute.return_value': ''}
 
-	golden_parsed_output = {'global_static_table': {'10.1.3.5': {'age': '-',
-									  'interface': 'Ethernet1/1',
-									  'ip_address': '10.1.3.5',
-									  'mac_address': 'aaaa.bbbb.cccc',
-									  'physical_interface': 'Ethernet1/1'},
-						 '10.1.7.1': {'age': '00:17:15',
-									  'interface': 'mgmt0',
-									  'ip_address': '10.1.7.1',
-									  'mac_address': '0012.7f57.ac80',
-									  'physical_interface': 'mgmt0'},
-						 '10.1.7.250': {'age': '00:14:24',
-										'interface': 'mgmt0',
-										'ip_address': '10.1.7.250',
-										'mac_address': '0050.5682.7915',
-										'physical_interface': 'mgmt0'},
-						 '10.1.7.253': {'age': '00:10:22',
-										'interface': 'mgmt0',
-										'ip_address': '10.1.7.253',
-										'mac_address': '0050.56a4.a9fc',
-										'physical_interface': 'mgmt0'},
-						 '201.0.1.2': {'age': '00:01:53',
-									   'interface': 'Ethernet1/1.1',
-									   'ip_address': '201.0.1.2',
-									   'mac_address': '000c.292a.1eaf',
-									   'physical_interface': 'Ethernet1/1.1'},
-						 '201.0.2.2': {'age': '00:18:24',
-									   'interface': 'Ethernet1/2.1',
-									   'ip_address': '201.0.2.2',
-									   'mac_address': '000c.2904.5840',
-									   'physical_interface': 'Ethernet1/2.1'},
-						 '201.1.1.2': {'age': '00:00:47',
-									   'interface': 'Ethernet1/1.2',
-									   'ip_address': '201.1.1.2',
-									   'mac_address': '000c.292a.1eaf',
-									   'physical_interface': 'Ethernet1/1.2'},
-						 '201.1.2.2': {'age': '00:05:21',
-									   'interface': 'Ethernet1/2.2',
-									   'ip_address': '201.1.2.2',
-									   'mac_address': '000c.2904.5840',
-									   'physical_interface': 'Ethernet1/2.2'},
-						 '201.4.1.2': {'age': '00:08:42',
-									   'interface': 'Ethernet1/1.4',
-									   'ip_address': '201.4.1.2',
-									   'mac_address': '000c.292a.1eaf',
-									   'physical_interface': 'Ethernet1/1.4'},
-						 '201.4.2.2': {'age': '00:10:51',
-									   'interface': 'Ethernet1/2.4',
-									   'ip_address': '201.4.2.2',
-									   'mac_address': '000c.2904.5840',
-									   'physical_interface': 'Ethernet1/2.4'},
-						 '50.1.1.101': {'age': '00:01:28',
-										'interface': 'Ethernet1/4.100',
-										'ip_address': '50.1.1.101',
-										'mac_address': '0000.71c7.6e61',
-										'physical_interface': 'Ethernet1/4.100'},
-						 '50.2.1.101': {'age': '00:01:28',
-										'interface': 'Ethernet1/4.101',
-										'ip_address': '50.2.1.101',
-										'mac_address': '0000.71c7.75c1',
-										'physical_interface': 'Ethernet1/4.101'},
-						 '55.1.1.101': {'age': '00:01:28',
-										'interface': 'Ethernet1/4.200',
-										'ip_address': '55.1.1.101',
-										'mac_address': '0000.0068.ce6f',
-										'physical_interface': 'Ethernet1/4.200'}}
-	}
+	golden_parsed_output = {
+		'interfaces': {
+			'Ethernet1/1': {
+				'ipv4': {
+					'neighbors': {
+						'10.1.3.5': {
+							'age': '-',
+                            'ip': '10.1.3.5',
+                            'link_layer_address': 'aaaa.bbbb.cccc',
+                            'origin': 'static'}
+                    }
+                }
+            },
+            'Ethernet1/1.1': {
+            	'ipv4': {
+            		'neighbors': {
+            			'201.0.1.2': {
+            				'age': '00:01:53',
+                           	'ip': '201.0.1.2',
+                           	'link_layer_address': '000c.292a.1eaf',
+                           	'origin': 'dynamic'}
+                    }
+                }
+            },
+            'Ethernet1/1.2': {
+            	'ipv4': {
+            		'neighbors': {
+            			'201.1.1.2': {
+            				'age': '00:00:47',
+                           	'ip': '201.1.1.2',
+                           	'link_layer_address': '000c.292a.1eaf',
+                           	'origin': 'dynamic'}
+                    }
+                }
+            },
+            'Ethernet1/1.4': {
+            	'ipv4': {
+            		'neighbors': {
+            			'201.4.1.2': {
+            				'age': '00:08:42',
+                           	'ip': '201.4.1.2',
+                           	'link_layer_address': '000c.292a.1eaf',
+                           	'origin': 'dynamic'}
+                    }
+                }
+            },
+            'Ethernet1/2.1': {
+            	'ipv4': {
+            		'neighbors': {
+            			'201.0.2.2': {
+            				'age': '00:18:24',
+                           	'ip': '201.0.2.2',
+                           	'link_layer_address': '000c.2904.5840',
+                           	'origin': 'dynamic'}
+                    }
+                }
+            },
+            'Ethernet1/2.2': {
+            	'ipv4': {
+            		'neighbors': {
+            			'201.1.2.2': {
+            				'age': '00:05:21',
+                           	'ip': '201.1.2.2',
+                           	'link_layer_address': '000c.2904.5840',
+                           	'origin': 'dynamic'}
+                    }
+                }
+            },
+            'Ethernet1/2.4': {
+            	'ipv4': {
+            		'neighbors': {
+            			'201.4.2.2': {
+            				'age': '00:10:51',
+                           	'ip': '201.4.2.2',
+                           	'link_layer_address': '000c.2904.5840',
+                           	'origin': 'dynamic'}
+                    }
+                }
+            },
+            'Ethernet1/4.100': {
+            	'ipv4': {
+            		'neighbors': {
+            			'50.1.1.101': {
+            				'age': '00:01:28',
+                          	'ip': '50.1.1.101',
+                          	'link_layer_address': '0000.71c7.6e61',
+                          	'origin': 'dynamic'}
+                    }
+                }
+            },
+            'Ethernet1/4.101': {
+            	'ipv4': {
+            		'neighbors': {
+            			'50.2.1.101': {
+            				'age': '00:01:28',
+                          	'ip': '50.2.1.101',
+                          	'link_layer_address': '0000.71c7.75c1',
+                          	'origin': 'dynamic'}
+                    }
+                }
+            },
+            'Ethernet1/4.200': {
+            	'ipv4': {
+            		'neighbors': {
+            			'55.1.1.101': {
+            				'age': '00:01:28',
+                          	'ip': '55.1.1.101',
+                          	'link_layer_address': '0000.0068.ce6f',
+                          	'origin': 'dynamic'}
+                    }
+                }
+            },
+            'mgmt0': {
+            	'ipv4': {
+            		'neighbors': {
+            			'10.1.7.1': {
+            				'age': '00:17:15',
+                          	'ip': '10.1.7.1',
+                          	'link_layer_address': '0012.7f57.ac80',
+                          	'origin': 'dynamic'},
+                     	'10.1.7.250': {
+                     		'age': '00:14:24',
+                            'ip': '10.1.7.250',
+                            'link_layer_address': '0050.5682.7915',
+                            'origin': 'dynamic'},
+                     	'10.1.7.253': {
+                     		'age': '00:10:22',
+                            'ip': '10.1.7.253',
+                            'link_layer_address': '0050.56a4.a9fc',
+                            'origin': 'dynamic'}
+                    }
+                }
+            }
+        }
+    }
 
 	golden_output = {'execute.return_value': '''
 		N95_1# show ip arp detail vrf all 
