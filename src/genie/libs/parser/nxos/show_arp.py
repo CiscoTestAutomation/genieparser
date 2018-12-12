@@ -92,10 +92,15 @@ class ShowIpArpDetailVrfAll(ShowIpArpDetailVrfAllSchema):
 				'PS': 'Added via L2RIB, Peer Sync',
 				'RO': 'Re-Originated Peer Sync Entry'}
 
-	def cli(self):
+	def cli(self, vrf=None):
+
+		if vrf:
+			cmd = 'show ip arp detail vrf {}'.format(vrf)
+		else:
+			cmd = 'show ip arp detail'
 
 		# excute command to get output
-		out = self.device.execute('show ip arp detail vrf all')
+		out = self.device.execute(cmd)
 
 		# initial variables
 		ret_dict = {}
