@@ -24,7 +24,7 @@ from genie.libs.parser.iosxe.show_arp import \
     ShowIpTraffic as ShowIpTraffic_iosxe
 
 
-class ShowArp(ShowArp_iosxe):
+class ShowIpArp(ShowArp_iosxe):
     """ Parser for show arp
                   show ip arp <WROD>
                   show ip arp vrf <vrf>

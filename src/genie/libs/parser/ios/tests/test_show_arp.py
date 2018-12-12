@@ -10,7 +10,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                              SchemaMissingKeyError
 
 # Parser
-from genie.libs.parser.ios.show_arp import ShowArp, ShowIpArpSummary,\
+from genie.libs.parser.ios.show_arp import ShowIpArp, ShowIpArpSummary,\
                                            ShowIpTraffic
 
 
@@ -110,19 +110,19 @@ class test_show_ip_arp(unittest.TestCase):
 
 		def test_empty(self):
 				self.device1 = Mock(**self.empty_output)
-				obj = ShowArp(device=self.device1)
+				obj = ShowIpArp(device=self.device1)
 				with self.assertRaises(SchemaEmptyParserError):
 						parsed_output = obj.parse()
 
 		def test_golden(self):
 				self.device = Mock(**self.golden_output)
-				obj = ShowArp(device=self.device)
+				obj = ShowIpArp(device=self.device)
 				parsed_output = obj.parse()
 				self.assertEqual(parsed_output,self.golden_parsed_output)
 
 		def test_golden_1(self):
 				self.device = Mock(**self.golden_output_1)
-				obj = ShowArp(device=self.device)
+				obj = ShowIpArp(device=self.device)
 				parsed_output = obj.parse(vrf='Mgmt-vrf',
 					intf_or_ip='FastEthernet0')
 				self.assertEqual(parsed_output,self.golden_parsed_output_1)

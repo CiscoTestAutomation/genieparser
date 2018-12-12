@@ -27,3 +27,11 @@
     	* 'show arp detail'
     	* 'show arp vrf <WORD> detail'
     * Add ShowArpTrafficDetail for 'show arp traffic detail'
+
+* IOS
+    * Add ShowIpArp for
+        * 'show ip arp <WORD>'
+        * 'show ip arp vrf <vrf>' 
+        * 'show ip arp vrf <vrf> <WORD>'
+    * Add ShowIpArpSummary for 'show ip arp summary'
+    * Add ShowIpTraffic for 'show ip traffic'
