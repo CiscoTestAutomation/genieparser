@@ -149,10 +149,11 @@ class ShowIpArpSummaryVrfAllSchema(MetaParser):
 	"""Schema for show ip arp summary vrf all"""
 
 	schema = {
-		'resolved': str,
-		'incomplete': str,
-		'unknown': str,
-		'total': str,
+		'resolved': int,
+		'incomplete': int,
+		'throttled': int,
+		'unknown': int,
+		'total': int,
 	  }
 
 # ========================================
@@ -181,7 +182,8 @@ class ShowIpArpSummaryVrfAll(ShowIpArpSummaryVrfAllSchema):
 		p1 = re.compile(r'^\s*Resolved +: +(?P<resolved>[\d]+)$')
 
 		# Incomplete : 0 (Throttled : 0)
-		p2 = re.compile(r'^\s*Incomplete +: +(?P<incomplete>[\w\(\)\:\s]+)$')
+		p2 = re.compile(r'^\s*Incomplete +: +(?P<incomplete>\w+)'
+			' +\(Throttled +: +(?P<throttled>\w+)\)$')
 
 		# Unknown    : 0
 		p3 = re.compile(r'^\s*Unknown +: +(?P<unknown>[\d]+)$')
@@ -196,22 +198,23 @@ class ShowIpArpSummaryVrfAll(ShowIpArpSummaryVrfAllSchema):
 
 			m = p1.match(line)
 			if m:
-				ret_dict['resolved'] = m.groupdict()['resolved']
+				ret_dict['resolved'] = int(m.groupdict()['resolved'])
 				continue
 
 			m = p2.match(line)
 			if m:
-				ret_dict['incomplete'] = m.groupdict()['incomplete']
+				ret_dict['incomplete'] = int(m.groupdict()['incomplete'])
+				ret_dict['throttled'] = int(m.groupdict()['throttled'])
 				continue
 
 			m = p3.match(line)
 			if m:
-				ret_dict['unknown'] = m.groupdict()['unknown']
+				ret_dict['unknown'] = int(m.groupdict()['unknown'])
 				continue
 
 			m = p4.match(line)
 			if m:
-				ret_dict['total'] = m.groupdict()['total']
+				ret_dict['total'] = int(m.groupdict()['total'])
 				continue
 
 		return ret_dict
