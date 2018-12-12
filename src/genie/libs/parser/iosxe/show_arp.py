@@ -1,4 +1,4 @@
-''' show_archive.py
+''' show_arp.py
 
 IOSXE parsers for the following show commands:
     * show arp
@@ -58,14 +58,16 @@ class ShowArp(ShowArpSchema):
                   show arp vrf <vrf>
                   show arp vrf <vrf> <WROD> """
 
-    def cli(self, vrf='', intf_or_ip=''):
+    def cli(self, vrf='', intf_or_ip='', cmd=None):
 
         # excute command to get output
-        cmd = 'show arp'
-        if vrf:
-            cmd += 'vrf ' + vrf
-        if intf_or_ip:
-            cmd += ' ' + intf_or_ip
+        if not cmd:
+            cmd = 'show arp'
+            if vrf:
+                cmd += 'vrf ' + vrf
+            if intf_or_ip:
+                cmd += ' ' + intf_or_ip
+
         out = self.device.execute(cmd)
 
         # initial regexp pattern
@@ -186,14 +188,14 @@ class ShowIpTrafficSchema(MetaParser):
             'ip_opts_cipso': int,
             'ip_opts_ump': int,
             'ip_opts_other': int,
-            'ip_opts_ignored': int,
+            Optional('ip_opts_ignored'): int,
             'ip_frags_reassembled': int,
             'ip_frags_timeouts': int,
             'ip_frags_no_reassembled': int,
             'ip_frags_fragmented': int,
-            'ip_frags_fragments': int,
+            Optional('ip_frags_fragments'): int,
             'ip_frags_no_fragmented': int,
-            'ip_frags_invalid_hole': int,
+            Optional('ip_frags_invalid_hole'): int,
             'ip_bcast_received': int,
             'ip_bcast_sent': int,
             'ip_mcast_received': int,
@@ -206,7 +208,7 @@ class ShowIpTrafficSchema(MetaParser):
             'ip_drop_no_route': int,
             'ip_drop_unicast_rpf': int,
             'ip_drop_forced_drop': int,
-            'ip_drop_unsupp_address': int,
+            Optional('ip_drop_unsupp_address'): int,
             'ip_drop_opts_denied': int,
             'ip_drop_src_ip': int,
         },
@@ -222,13 +224,13 @@ class ShowIpTrafficSchema(MetaParser):
             'icmp_received_quench': int,
             'icmp_received_parameter': int,
             'icmp_received_timestamp': int,
-            'icmp_received_timestamp_replies': int,
+            Optional('icmp_received_timestamp_replies'): int,
             'icmp_received_info_request': int,
             'icmp_received_other': int,
             'icmp_received_irdp_solicitations': int,
             'icmp_received_irdp_advertisements': int,
-            'icmp_received_time_exceeded': int,
-            'icmp_received_info_replies': int,
+            Optional('icmp_received_time_exceeded'): int,
+            Optional('icmp_received_info_replies'): int,
             'icmp_sent_redirects': int,
             'icmp_sent_unreachable': int,
             'icmp_sent_echo': int,
@@ -237,9 +239,9 @@ class ShowIpTrafficSchema(MetaParser):
             'icmp_sent_mask_replies': int,
             'icmp_sent_quench': int,
             'icmp_sent_timestamp': int,
-            'icmp_sent_timestamp_replies': int,
-            'icmp_sent_info_reply': int,
-            'icmp_sent_time_exceeded': int,
+            Optional('icmp_sent_timestamp_replies'): int,
+            Optional('icmp_sent_info_reply'): int,
+            Optional('icmp_sent_time_exceeded'): int,
             'icmp_sent_parameter_problem': int,
             'icmp_sent_irdp_solicitations': int,
             'icmp_sent_irdp_advertisements': int,
@@ -248,12 +250,12 @@ class ShowIpTrafficSchema(MetaParser):
             'udp_received_total': int,
             'udp_received_udp_checksum_errors': int,
             'udp_received_no_port': int,
-            'udp_received_finput': int,
+            Optional('udp_received_finput'): int,
             'udp_sent_total': int,
             'udp_sent_fwd_broadcasts': int,
         },
         'ospf_statistics': {
-            'ospf_traffic_cntrs_clear': str,
+            Optional('ospf_traffic_cntrs_clear'): str,
             'ospf_received_total': int,
             'ospf_received_checksum_errors': int,
             'ospf_received_hello': int,
@@ -282,7 +284,7 @@ class ShowIpTrafficSchema(MetaParser):
             'pimv2_grafts': str,
             'pimv2_bootstraps': str,
             'pimv2_candidate_rp_advs': str,
-            'pimv2_queue_drops': int,
+            Optional('pimv2_queue_drops'): int,
             'pimv2_state_refresh': str,
         },
         'igmp_statistics': {
@@ -294,7 +296,7 @@ class ShowIpTrafficSchema(MetaParser):
             'igmp_host_leaves': str,
             'igmp_dvmrp': str,
             'igmp_pim': str,
-            'igmp_queue_drops': int,
+            Optional('igmp_queue_drops'): int,
         },
         'tcp_statistics': {
             'tcp_received_total': int,
@@ -396,8 +398,8 @@ class ShowIpTraffic(ShowIpTrafficSchema):
             '+(?P<ip_opts_cipso>\d+) +cipso, +(?P<ip_opts_ump>\d+) +ump$')
 
         # 0 other, 0 ignored
-        p13 = re.compile(r'^(?P<ip_opts_other>\d+) +other,'
-            ' +(?P<ip_opts_ignored>\d+) +ignored$')
+        p13 = re.compile(r'^(?P<ip_opts_other>\d+) +other'
+            '(, +(?P<ip_opts_ignored>\d+) +ignored)?$')
 
         # Frags: 0 reassembled, 0 timeouts, 0 couldn't reassemble
         p14 = re.compile(r'^Frags: +(?P<ip_frags_reassembled>\d+) +reassembled,'
@@ -406,9 +408,10 @@ class ShowIpTraffic(ShowIpTrafficSchema):
             ' +couldn\'t +reassemble$')
 
         # 1 fragmented, 5 fragments, 0 couldn't fragment
+        # 0 fragmented, 0 couldn't fragment
         p15 = re.compile(r'^(?P<ip_frags_fragmented>\d+) +fragmented,'
-            ' +(?P<ip_frags_fragments>\d+)'
-            ' +fragments, +(?P<ip_frags_no_fragmented>\d+)'
+            '( +(?P<ip_frags_fragments>\d+) +fragments,)?'
+            ' +(?P<ip_frags_no_fragmented>\d+)'
             ' +couldn\'t +fragment$')
 
         # 0 invalid hole
@@ -432,10 +435,11 @@ class ShowIpTraffic(ShowIpTrafficSchema):
             ' +unresolved, +(?P<ip_drop_no_adj>\d+) +no +adjacency$')
 
         # 19 no route, 0 unicast RPF, 0 forced drop, 0 unsupported-addr
+        # 0 no route, 0 unicast RPF, 0 forced drop
         p21 = re.compile(r'^(?P<ip_drop_no_route>\d+) +no +route,'
             ' +(?P<ip_drop_unicast_rpf>\d+)'
-            ' +unicast +RPF, +(?P<ip_drop_forced_drop>\d+) +forced +drop, '
-            '+(?P<ip_drop_unsupp_address>\d+) +unsupported-addr$')
+            ' +unicast +RPF, +(?P<ip_drop_forced_drop>\d+) +forced +drop'
+            '(, +(?P<ip_drop_unsupp_address>\d+) +unsupported-addr)?$')
 
         # 0 options denied, 0 source IP address zero
         p22 = re.compile(r'^(?P<ip_drop_opts_denied>\d+) +options +denied,'
@@ -451,6 +455,7 @@ class ShowIpTraffic(ShowIpTrafficSchema):
             '+(?P<icmp_received_unreachable>\d+) +unreachable$')
 
         # 284 echo, 9 echo reply, 0 mask requests, 0 mask replies, 0 quench
+        # 43838 echo, 713 echo reply, 0 mask requests, 0 mask replies, 0 quench
         p25 = re.compile(r'^(?P<icmp_received_echo>\d+) +echo,'
             ' +(?P<icmp_received_echo_reply>\d+)'
             ' +echo +reply, +(?P<icmp_received_mask_requests>\d+) +mask'
@@ -458,10 +463,11 @@ class ShowIpTraffic(ShowIpTrafficSchema):
             '+(?P<icmp_received_quench>\d+) +quench$')
 
         # 0 parameter, 0 timestamp, 0 timestamp replies, 0 info request, 0 other
+        # 0 parameter, 0 timestamp, 0 info request, 0 other
         p26 = re.compile(r'^(?P<icmp_received_parameter>\d+) +parameter,'
             ' +(?P<icmp_received_timestamp>\d+)'
-            ' +timestamp, +(?P<icmp_received_timestamp_replies>\d+) +timestamp'
-            ' +replies, +(?P<icmp_received_info_request>\d+) +info +request,'
+            ' +timestamp(, +(?P<icmp_received_timestamp_replies>\d+) +timestamp'
+            ' +replies)?, +(?P<icmp_received_info_request>\d+) +info +request,'
             ' +(?P<icmp_received_other>\d+) +other$')
 
         # 0 irdp solicitations, 0 irdp advertisements
@@ -481,11 +487,12 @@ class ShowIpTraffic(ShowIpTrafficSchema):
             '+echo +reply$')
 
         # 0 mask requests, 0 mask replies, 0 quench, 0 timestamp, 0 timestamp replies
+        # 0 mask requests, 0 mask replies, 0 quench, 0 timestamp
         p30 = re.compile(r'^(?P<icmp_sent_mask_requests>\d+) +mask +requests, '
             '+(?P<icmp_sent_mask_replies>\d+)'
             ' +mask +replies, +(?P<icmp_sent_quench>\d+) +quench, '
-            '+(?P<icmp_sent_timestamp>\d+) +timestamp, '
-            '+(?P<icmp_sent_timestamp_replies>\d+) +timestamp +replies$')
+            '+(?P<icmp_sent_timestamp>\d+) +timestamp'
+            '(, +(?P<icmp_sent_timestamp_replies>\d+) +timestamp +replies)?$')
 
         # 0 info reply, 0 time exceeded, 0 parameter problem
         p31 = re.compile(r'^(?P<icmp_sent_info_reply>\d+) +info +reply, '
@@ -501,10 +508,11 @@ class ShowIpTraffic(ShowIpTrafficSchema):
         p33 = re.compile(r'^UDP +statistics:')
 
         # Rcvd: 62515 total, 0 checksum errors, 15906 no port 0 finput
+        # Rcvd: 682217 total, 0 checksum errors, 289579 no port
         p34 = re.compile(r'^Rcvd: +(?P<udp_received_total>\d+) +total,'
             ' +(?P<udp_received_udp_checksum_errors>\d+) +checksum +errors,'
-            ' +(?P<udp_received_no_port>\d+) +no port +(?P<udp_received_finput>\d+) '
-            '+finput$')
+            ' +(?P<udp_received_no_port>\d+) +no port( +(?P<udp_received_finput>\d+) '
+            '+finput)?$')
 
         # Sent: 41486 total, 0 forwarded broadcasts
         p35 = re.compile(r'^Sent: +(?P<udp_sent_total>\d+) +total, '
@@ -602,7 +610,7 @@ class ShowIpTraffic(ShowIpTrafficSchema):
 
         # Rcvd: 15396 total, 0 checksum errors, 0 no port
         p57 = re.compile(r'^Rcvd: +(?P<tcp_received_total>\d+) +total,'
-            ' +(?P<tcp_received_checksum_errors>\d+) +checksum errors,'
+            ' +(?P<tcp_received_checksum_errors>\d+) +checksum +errors,'
             ' +(?P<tcp_received_no_port>\d+) +no +port$')
 
         # Sent: 19552 total
@@ -645,6 +653,7 @@ class ShowIpTraffic(ShowIpTrafficSchema):
         # initial variables
         ret_dict = {}
         category = ''
+        location = ''
 
         for line in out.splitlines():
             line = line.strip()
@@ -733,7 +742,7 @@ class ShowIpTraffic(ShowIpTrafficSchema):
             if m:
                 groups = m.groupdict()
                 ret_dict['ip_statistics'].update({k: \
-                    int(v) for k, v in groups.items()})
+                    int(v) for k, v in groups.items() if v})
                 continue
 
             m = p14.match(line)
@@ -747,7 +756,7 @@ class ShowIpTraffic(ShowIpTrafficSchema):
             if m:
                 groups = m.groupdict()
                 ret_dict['ip_statistics'].update({k: \
-                    int(v) for k, v in groups.items()})
+                    int(v) for k, v in groups.items() if v})
                 continue
 
             m = p16.match(line)
@@ -789,7 +798,7 @@ class ShowIpTraffic(ShowIpTrafficSchema):
             if m:
                 groups = m.groupdict()
                 ret_dict['ip_statistics'].update({k: \
-                    int(v) for k, v in groups.items()})
+                    int(v) for k, v in groups.items() if v})
                 continue
 
             m = p22.match(line)
@@ -824,7 +833,7 @@ class ShowIpTraffic(ShowIpTrafficSchema):
             if m:
                 groups = m.groupdict()
                 ret_dict['icmp_statistics'].update({k: \
-                    int(v) for k, v in groups.items()})
+                    int(v) for k, v in groups.items() if v})
                 continue
 
             m = p27.match(line)
@@ -853,7 +862,7 @@ class ShowIpTraffic(ShowIpTrafficSchema):
             if m:
                 groups = m.groupdict()
                 ret_dict['icmp_statistics'].update({k: \
-                    int(v) for k, v in groups.items()})
+                    int(v) for k, v in groups.items() if v})
                 continue
 
             m = p31.match(line)
@@ -873,13 +882,14 @@ class ShowIpTraffic(ShowIpTrafficSchema):
             m = p33.match(line)
             if m:
                 ret_dict.setdefault('udp_statistics', {})
+                location = 'udp_statistics'
                 continue
 
             m = p34.match(line)
-            if m:
+            if m and location == 'udp_statistics':
                 groups = m.groupdict()
                 ret_dict['udp_statistics'].update({k: \
-                    int(v) for k, v in groups.items()})
+                    int(v) for k, v in groups.items() if v})
                 continue
 
             m = p35.match(line)
@@ -887,17 +897,18 @@ class ShowIpTraffic(ShowIpTrafficSchema):
                 groups = m.groupdict()
                 ret_dict['udp_statistics'].update({k: \
                     int(v) for k, v in groups.items()})
+                location = ''
                 continue
 
             m = p36.match(line)
             if m:
                 ret_dict.setdefault('ospf_statistics', {})
-                category = ''
+                category = 'rcvd'
+                location = 'ospf_statistics'
                 continue
 
             m = p37.match(line)
             if m:
-                category = 'rcvd'
                 groups = m.groupdict()
                 ret_dict['ospf_statistics'].update({k: \
                     str(v) for k, v in groups.items()})
@@ -925,7 +936,7 @@ class ShowIpTraffic(ShowIpTrafficSchema):
                 continue
 
             m = p41.match(line)
-            if m and 'tcp_statistics' not in ret_dict:
+            if m and location == 'ospf_statistics':
                 category = 'sent'
                 groups = m.groupdict()
                 ret_dict['ospf_statistics'].update({k: \
@@ -1041,10 +1052,11 @@ class ShowIpTraffic(ShowIpTrafficSchema):
             m = p56.match(line)
             if m:
                 ret_dict.setdefault('tcp_statistics', {})
+                location = 'tcp_statistics'
                 continue
 
             m = p57.match(line)
-            if m:
+            if m and location == 'tcp_statistics':
                 groups = m.groupdict()
                 ret_dict['tcp_statistics'].update({k: \
                     int(v) for k, v in groups.items()})
