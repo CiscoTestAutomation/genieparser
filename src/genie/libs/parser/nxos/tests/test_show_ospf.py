@@ -438,6 +438,45 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
+    golden_output1 = {'execute.return_value': '''
+        loopback0 - Process ID 1 VRF default, area 0.0.0.0
+            LDP Autoconfig not enabled
+            LDP Sync not enabled, not required
+            State LOOPBACK, Network type LOOPBACK
+        Ethernet2/2 - Process ID 1 VRF default, area 0.0.0.0
+            LDP Autoconfig not enabled
+            LDP Sync not enabled, not required
+            State BDR, Network type BROADCAST
+        Ethernet2/3 - Process ID 1 VRF default, area 0.0.0.0
+            LDP Autoconfig not enabled
+            LDP Sync not enabled, not required
+            State BDR, Network type BROADCAST
+        Ethernet2/4 - Process ID 1 VRF default, area 0.0.0.0
+            LDP Autoconfig not enabled
+            LDP Sync not enabled, not required
+            State BDR, Network type BROADCAST
+        Ethernet2/1 - Process ID 1 VRF VRF1, area 0.0.0.1
+            LDP Autoconfig not enabled
+            LDP Sync not enabled, not required
+            State BDR, Network type BROADCAST
+        SL1-0.0.0.0-22.22.22.22-11.11.11.11 - Process ID 1 VRF VRF1, area 0.0.0.1
+            LDP Autoconfig not enabled
+            LDP Sync not enabled, not required
+            State P2P, Network type P2P
+        SL2-0.0.0.0-22.22.22.22-33.33.33.33 - Process ID 1 VRF VRF1, area 0.0.0.1
+            LDP Autoconfig not enabled
+            LDP Sync not enabled, not required
+            State P2P, Network type P2P
+        port-channel4001 - Process ID 1 VRF VRF2, area 0.0.1.1
+            LDP Autoconfig is enabled
+            LDP Sync not enabled, not required
+            State P2P, Network type P2P
+        port-channel4002 - Process ID 1 VRF VRF2, area 0.0.1.1
+            LDP Autoconfig is enabled
+            LDP Sync not enabled, not required
+            State P2P, Network type P2P
+        '''}
+
     golden_parsed_output1 = {
         'vrf': 
             {'VRF1': 
@@ -586,43 +625,31 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                 }}}}}}}
              }}
 
-    golden_output1 = {'execute.return_value': '''
-        loopback0 - Process ID 1 VRF default, area 0.0.0.0
+    golden_output2 = {'execute.return_value': '''
+        Ethernet4/1 - Process ID UNDERLAY VRF default, area 0.0.0.0
+            LDP Autoconfig not enabled
+            LDP Sync not enabled, not required
+            State DOWN, Network type BROADCAST
+        Ethernet4/10 - Process ID UNDERLAY VRF default, area 0.0.0.0
+            LDP Autoconfig not enabled
+            LDP Sync not enabled, not required
+            State DOWN, Network type BROADCAST
+        loopback1 - Process ID UNDERLAY VRF default, area 0.0.0.0
             LDP Autoconfig not enabled
             LDP Sync not enabled, not required
             State LOOPBACK, Network type LOOPBACK
-        Ethernet2/2 - Process ID 1 VRF default, area 0.0.0.0
+        loopback2 - Process ID UNDERLAY VRF default, area 0.0.0.0
             LDP Autoconfig not enabled
             LDP Sync not enabled, not required
-            State BDR, Network type BROADCAST
-        Ethernet2/3 - Process ID 1 VRF default, area 0.0.0.0
+            State LOOPBACK, Network type LOOPBACK
+        loopback3 - Process ID UNDERLAY VRF default, area 0.0.0.0
             LDP Autoconfig not enabled
             LDP Sync not enabled, not required
-            State BDR, Network type BROADCAST
-        Ethernet2/4 - Process ID 1 VRF default, area 0.0.0.0
+            State LOOPBACK, Network type LOOPBACK
+        loopback4 - Process ID UNDERLAY VRF default, area 0.0.0.0
             LDP Autoconfig not enabled
             LDP Sync not enabled, not required
-            State BDR, Network type BROADCAST
-        Ethernet2/1 - Process ID 1 VRF VRF1, area 0.0.0.1
-            LDP Autoconfig not enabled
-            LDP Sync not enabled, not required
-            State BDR, Network type BROADCAST
-        SL1-0.0.0.0-22.22.22.22-11.11.11.11 - Process ID 1 VRF VRF1, area 0.0.0.1
-            LDP Autoconfig not enabled
-            LDP Sync not enabled, not required
-            State P2P, Network type P2P
-        SL2-0.0.0.0-22.22.22.22-33.33.33.33 - Process ID 1 VRF VRF1, area 0.0.0.1
-            LDP Autoconfig not enabled
-            LDP Sync not enabled, not required
-            State P2P, Network type P2P
-        port-channel4001 - Process ID 1 VRF VRF2, area 0.0.1.1
-            LDP Autoconfig is enabled
-            LDP Sync not enabled, not required
-            State P2P, Network type P2P
-        port-channel4002 - Process ID 1 VRF VRF2, area 0.0.1.1
-            LDP Autoconfig is enabled
-            LDP Sync not enabled, not required
-            State P2P, Network type P2P
+            State LOOPBACK, Network type LOOPBACK
         '''}
 
     golden_parsed_output2 = {
@@ -708,33 +735,6 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                 'name': 'loopback4',
                                                 'state': 'loopback'}}}}}}}}}}}
 
-    golden_output2 = {'execute.return_value': '''
-        Ethernet4/1 - Process ID UNDERLAY VRF default, area 0.0.0.0
-            LDP Autoconfig not enabled
-            LDP Sync not enabled, not required
-            State DOWN, Network type BROADCAST
-        Ethernet4/10 - Process ID UNDERLAY VRF default, area 0.0.0.0
-            LDP Autoconfig not enabled
-            LDP Sync not enabled, not required
-            State DOWN, Network type BROADCAST
-        loopback1 - Process ID UNDERLAY VRF default, area 0.0.0.0
-            LDP Autoconfig not enabled
-            LDP Sync not enabled, not required
-            State LOOPBACK, Network type LOOPBACK
-        loopback2 - Process ID UNDERLAY VRF default, area 0.0.0.0
-            LDP Autoconfig not enabled
-            LDP Sync not enabled, not required
-            State LOOPBACK, Network type LOOPBACK
-        loopback3 - Process ID UNDERLAY VRF default, area 0.0.0.0
-            LDP Autoconfig not enabled
-            LDP Sync not enabled, not required
-            State LOOPBACK, Network type LOOPBACK
-        loopback4 - Process ID UNDERLAY VRF default, area 0.0.0.0
-            LDP Autoconfig not enabled
-            LDP Sync not enabled, not required
-            State LOOPBACK, Network type LOOPBACK
-        '''}
-
     golden_output3 = {'execute.return_value': '''
         port-channel4001 - Process ID 1 VRF VRF2, area 0.0.1.1
             LDP Autoconfig is enabled
@@ -744,7 +744,8 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
             LDP Autoconfig is enabled
             LDP Sync is enabled, is required and is achieved
             State P2P, Network type P2P
-    '''}
+        '''}
+
     golden_parsed_output3 = {
         'vrf':{
             'VRF2':
@@ -786,18 +787,19 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                                    'achieved': True}},
                                                          'name': 'port-channel4002',
                                                          'state': 'point_to_point'}}
-                                               }}}}}}}
-    }}
+                                               }}}}}}}}}
+
     golden_output4 = {'execute.return_value': '''
-            port-channel4001 - Process ID 1 VRF VRF1, area 0.0.1.1
-                LDP Autoconfig is enabled
-                LDP Sync is enabled, is required and not achieved
-                State P2P, Network type P2P
-            port-channel4002 - Process ID 1 VRF VRF1, area 0.0.1.1
-                LDP Autoconfig is enabled
-                LDP Sync is enabled, is required and not achieved
-                State P2P, Network type P2P
+        port-channel4001 - Process ID 1 VRF VRF1, area 0.0.1.1
+            LDP Autoconfig is enabled
+            LDP Sync is enabled, is required and not achieved
+            State P2P, Network type P2P
+        port-channel4002 - Process ID 1 VRF VRF1, area 0.0.1.1
+            LDP Autoconfig is enabled
+            LDP Sync is enabled, is required and not achieved
+            State P2P, Network type P2P
         '''}
+
     golden_parsed_output4 = {
         'vrf': {
             'VRF1':
@@ -841,6 +843,92 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                          'state': 'point_to_point'}}
                                                }}}}}}}
         }}
+
+    golden_output5 = {'execute.return_value': '''
+        show ip ospf mpls ldp interface vrf all
+        loopback0 - Process ID 1 VRF default, area 0.0.0.0
+            LDP Autoconfig is enabled
+            LDP Sync is enabled, not required
+            State LOOPBACK, Network type LOOPBACK
+        port-channel1 - Process ID 1 VRF default, area 0.0.0.0
+            LDP Autoconfig is enabled
+            LDP Sync is enabled, is required and not achieved
+            State DOWN, Network type P2P
+        port-channel5 - Process ID 1 VRF default, area 0.0.0.0
+            LDP Autoconfig is enabled
+            LDP Sync is enabled, is required and is achieved
+            State P2P, Network type P2P
+        port-channel4001 - Process ID 1 VRF default, area 0.0.0.0
+            LDP Autoconfig is enabled
+            LDP Sync is enabled, is required and is achieved
+            State P2P, Network type P2P
+        '''}
+
+    golden_parsed_output5 = {
+        'vrf': 
+            {'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'1': 
+                                {'areas': 
+                                    {'0.0.0.0': 
+                                        {'interfaces': 
+                                            {'loopback0': 
+                                                {'area': '0.0.0.0',
+                                                'interface_type': 'loopback',
+                                                'mpls': 
+                                                    {'ldp': 
+                                                        {'autoconfig': True,
+                                                        'autoconfig_area_id': '0.0.0.0',
+                                                        'igp_sync': True,
+                                                        'required': False}},
+                                                'name': 'loopback0',
+                                                'state': 'loopback'},
+                                            'port-channel1': 
+                                                {'area': '0.0.0.0',
+                                                'interface_type': 'point_to_point',
+                                                'mpls': 
+                                                    {'ldp': 
+                                                        {'achieved': False,
+                                                        'autoconfig': True,
+                                                        'autoconfig_area_id': '0.0.0.0',
+                                                        'igp_sync': True,
+                                                        'required': True}},
+                                                'name': 'port-channel1',
+                                                'state': 'down'},
+                                            'port-channel4001': 
+                                                {'area': '0.0.0.0',
+                                                'interface_type': 'point_to_point',
+                                                'mpls': 
+                                                    {'ldp': 
+                                                        {'achieved': True,
+                                                        'autoconfig': True,
+                                                        'autoconfig_area_id': '0.0.0.0',
+                                                        'igp_sync': True,
+                                                        'required': True}},
+                                                  'name': 'port-channel4001',
+                                                  'state': 'point_to_point'},
+                                            'port-channel5': 
+                                                {'area': '0.0.0.0',
+                                                'interface_type': 'point_to_point',
+                                                'mpls': 
+                                                    {'ldp': 
+                                                        {'achieved': True,
+                                                        'autoconfig': True,
+                                                        'autoconfig_area_id': '0.0.0.0',
+                                                        'igp_sync': True,
+                                                        'required': True}},
+                                                'name': 'port-channel5',
+                                                'state': 'point_to_point'}},
+                                                'mpls': 
+                                                    {'ldp': 
+                                                        {'achieved': True,
+                                                        'autoconfig': True,
+                                                        'autoconfig_area_id': '0.0.0.0',
+                                                        'igp_sync': True,
+                                                        'required': True}}}}}}}}}}}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpOspfMplsLdpInterface(device=self.device)
@@ -874,6 +962,15 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
         obj = ShowIpOspfMplsLdpInterface(device=self.device)
         parsed_output = obj.parse(vrf="VRF1")
         self.assertEqual(parsed_output, self.golden_parsed_output4)
+
+    def test_show_ip_ospf_mpls_ldp_interface_vrf_all2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output5)
+        obj = ShowIpOspfMplsLdpInterface(device=self.device)
+        parsed_output = obj.parse(vrf="all")
+        self.assertEqual(parsed_output, self.golden_parsed_output5)
+
+
 # ===================================================
 #  Unit test for 'show ip ospf virtual-links vrf all'
 # ===================================================
