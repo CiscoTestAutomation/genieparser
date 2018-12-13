@@ -264,11 +264,15 @@ class ShowNtpStatus(ShowNtpStatusSchema):
             m = p4.findall(line)
             if m:
                 clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
-                for k, v in m:                
-                    v = _conver_val(v)
-                    if v:
+                for k, v in m:
+                    if k == 'leap':
                         clock_dict[k] = v
-                continue
+                        continue
+                    else:
+                        v = _conver_val(v)
+                        if v is not None:
+                            clock_dict[k] = v
+                            continue
 
         return ret_dict
 

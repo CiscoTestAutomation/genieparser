@@ -134,6 +134,7 @@ class test_show_ntp_status(unittest.TestCase):
                                           'state': 4,
                                           'status': '0644',
                                           'stratum': 2,
+                                          'leap': '00',
                                           'synch_source': 'sync_ntp',
                                           'system': 'FreeBSDJNPR-11.0-20171206.f4cad52_buil',
                                           'version': 'ntpd 4.2.0-a Tue Dec 19 '
