@@ -9993,7 +9993,7 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
         p7 = re.compile(r'^\s*Advertised path-id +(?P<path_id>[\d]+)$')
         p8 = re.compile(r'^\s*Path type: +(?P<path_type>[\w\s\(\)]+), +(?P<pathtypes>[\S\s\,\:\/]+)?$')
         p9 = re.compile(r'^\s*AS-Path: +(?P<as_path>[\w]+)(, +path locally originated)?(, +path sourced +(?P<internal_external>[\w]+) to AS)?$')
-        p10 = re.compile(r'^\s*(?P<ipnexthop>[\d\.]+) +\(metric +(?P<nexthopmetric>[\d]+)\) +from +(?P<neighbor>[\d\.]+)'
+        p10 = re.compile(r'^\s*(?P<ipnexthop>[\d\.]+) +\((?:inaccessible, +)?metric +(?P<nexthopmetric>[\d]+)\) +from +(?P<neighbor>[\d\.]+)'
                          ' +\((?P<neighborid>[\d\.]+)\)$')
         p11 = re.compile(r'^\s*Origin +(?P<origin>[\w]+), +(MED +(?P<med>[\w\s]+),)? +localpref +(?P<localpref>[\d]+),'
                          ' +weight +(?P<weight>[\d]+)$')
