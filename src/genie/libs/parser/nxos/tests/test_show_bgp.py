@@ -27415,6 +27415,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
                                                         'localpref': 100,
                                                         'neighbor': '0.0.0.0',
                                                         'neighborid': '6.6.6.6',
+                                                        'inaccessible': True,
                                                         'nexthopmetric': 4294967295,
                                                         'origin': 'igp',
                                                         'pathbest': False,
