@@ -35,3 +35,18 @@
         * 'show ip arp vrf <vrf> <WORD>'
     * Add ShowIpArpSummary for 'show ip arp summary'
     * Add ShowIpTraffic for 'show ip traffic'
+
+--------------------------------------------------------------------------------
+                                NTP
+--------------------------------------------------------------------------------
+
+* IOS
+  * Updated parsers:
+     * ShowNtpAssociations
+* IOSXE
+  * Updated parsers:
+     * ShowNtpAssociations
+* JUNOS
+  * Updated parsers:
+     * ShowNtpAssociations
+
