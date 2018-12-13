@@ -27366,13 +27366,103 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
             }
         }
 
-    def test_show_l2route_route_type_4(self):
+    golden_output_5 = {'execute.return_value': '''
+        show bgp l2vpn evpn route-type 4
+        BGP routing table information for VRF default, address family L2VPN EVPN
+        Route Distinguisher: 6.6.6.6:27001   (ES [0300.0000.01b2.0700.0309 0])
+        BGP routing table entry for [4]:[0300.0000.01b2.0700.0309]:[32]:[6.6.6.6]/136, version 2018
+        Paths: (1 available, best #0)
+        Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn, is not in HW
+        Multipath: iBGP
+          Path type: local, path is invalid(rnh not resolved), no labeled nexthop
+          AS-Path: NONE, path locally originated
+            6.6.6.6 (inaccessible, metric 4294967295) from 0.0.0.0 (6.6.6.6)
+              Origin IGP, MED not set, localpref 100, weight 32768
+              Extcommunity: ENCAP:8 RT:0000.0001.b207
+        Route Distinguisher: 7.7.7.7:27001
+        BGP routing table entry for [4]:[0300.0000.0364.0e00.0309]:[32]:[7.7.7.7]/136, version 438
+        Paths: (1 available, best #1)
+        Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn, is not in HW
+        Multipath: iBGP
+          Advertised path-id 1
+          Path type: external, path is valid, is best path, no labeled nexthop
+          AS-Path: 200 , path sourced external to AS
+            7.7.7.7 (metric 20) from 20.6.7.7 (7.7.7.7)
+              Origin IGP, MED not set, localpref 100, weight 0
+              Extcommunity: ENCAP:8 RT:0000.0003.640e
+          Path-id 1 not advertised to any peer
+        '''}
+
+    golden_parsed_output_5 = {
+        'instance': 
+            {'default': 
+                {'vrf': 
+                    {'default': 
+                        {'address_family': 
+                            {'l2vpn evpn': 
+                                {'rd': 
+                                    {'6.6.6.6:27001': 
+                                        {'prefix': 
+                                            {'[4]:[0300.0000.01b2.0700.0309]:[32]:[6.6.6.6]/136': 
+                                                {'bestpathnr': 0,
+                                                'mpath': 'ibgp',
+                                                'nonipprefix': '[4]:[0300.0000.01b2.0700.0309]:[32]:[6.6.6.6]/136',
+                                                'on_xmitlist': True,
+                                                'path': 
+                                                    {1: 
+                                                        {'extcommunity': ['ENCAP:8', 'RT:0000.0001.b207'],
+                                                        'ipnexthop': '6.6.6.6',
+                                                        'localpref': 100,
+                                                        'neighbor': '0.0.0.0',
+                                                        'neighborid': '6.6.6.6',
+                                                        'inaccessible': True,
+                                                        'nexthopmetric': 4294967295,
+                                                        'origin': 'igp',
+                                                        'pathbest': False,
+                                                        'pathnolabeledrnh': True,
+                                                        'pathnr': 0,
+                                                        'pathvalid': False,
+                                                        'weight': 32768}},
+                                                'prefixversion': 2018,
+                                                'totalpaths': 1}},
+                                        'rd': '6.6.6.6:27001'},
+                                    '7.7.7.7:27001': 
+                                        {'prefix': 
+                                            {'[4]:[0300.0000.0364.0e00.0309]:[32]:[7.7.7.7]/136': 
+                                                {'bestpathnr': 1,
+                                                'mpath': 'ibgp',
+                                                'nonipprefix': '[4]:[0300.0000.0364.0e00.0309]:[32]:[7.7.7.7]/136',
+                                                'on_xmitlist': True,
+                                                'path': {1: {'extcommunity': ['ENCAP:8',
+                                                                            'RT:0000.0003.640e'],
+                                                           'ipnexthop': '7.7.7.7',
+                                                           'localpref': 100,
+                                                           'neighbor': '20.6.7.7',
+                                                           'neighborid': '7.7.7.7',
+                                                           'nexthopmetric': 20,
+                                                           'origin': 'igp',
+                                                           'pathbest': True,
+                                                           'pathnolabeledrnh': True,
+                                                           'pathnr': 0,
+                                                           'pathvalid': True,
+                                                           'weight': 0}},
+                                                'prefixversion': 438,
+                                                'totalpaths': 1}},
+                                        'rd': '7.7.7.7:27001'}}}}}}}}}
+
+    def test_show_l2route_route_type_4_1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowBgpL2vpnEvpnRouteType(device=self.device)
         parsed_output = obj.parse(route_type=4)
-
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_l2route_route_type_4_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_5)
+        obj = ShowBgpL2vpnEvpnRouteType(device=self.device)
+        parsed_output = obj.parse(route_type=4)
+        self.assertEqual(parsed_output, self.golden_parsed_output_5)
 
     def test_show_l2route_route_type_3(self):
         self.maxDiff = None

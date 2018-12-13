@@ -9919,6 +9919,7 @@ class ShowBgpL2vpnEvpnRouteTypeSchema(MetaParser):
                                                         'nexthopmetric': int,
                                                         'neighbor': str,
                                                         'neighborid': str,
+                                                        Optional('inaccessible'): bool,
                                                         'origin': str,
                                                         'localpref': int,
                                                         'weight': int,
@@ -9993,7 +9994,7 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
         p7 = re.compile(r'^\s*Advertised path-id +(?P<path_id>[\d]+)$')
         p8 = re.compile(r'^\s*Path type: +(?P<path_type>[\w\s\(\)]+), +(?P<pathtypes>[\S\s\,\:\/]+)?$')
         p9 = re.compile(r'^\s*AS-Path: +(?P<as_path>[\w]+)(, +path locally originated)?(, +path sourced +(?P<internal_external>[\w]+) to AS)?$')
-        p10 = re.compile(r'^\s*(?P<ipnexthop>[\d\.]+) +\(metric +(?P<nexthopmetric>[\d]+)\) +from +(?P<neighbor>[\d\.]+)'
+        p10 = re.compile(r'^\s*(?P<ipnexthop>[\d\.]+) +\((?:(?P<inaccessible>(inaccessible)), +)?metric +(?P<nexthopmetric>[\d]+)\) +from +(?P<neighbor>[\d\.]+)'
                          ' +\((?P<neighborid>[\d\.]+)\)$')
         p11 = re.compile(r'^\s*Origin +(?P<origin>[\w]+), +(MED +(?P<med>[\w\s]+),)? +localpref +(?P<localpref>[\d]+),'
                          ' +weight +(?P<weight>[\d]+)$')
@@ -10099,9 +10100,12 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
             m = p10.match(line)
             if m:
                 group = m.groupdict()
-                path_dict.update({k:v for k,v in group.items()})
-                path_dict.update({'nexthopmetric': int(group.pop('nexthopmetric'))})
-
+                path_dict['ipnexthop'] = group['ipnexthop']
+                path_dict['nexthopmetric'] = int(group['nexthopmetric'])
+                path_dict['neighbor'] = group['neighbor']
+                path_dict['neighborid'] = group['neighborid']
+                if group['inaccessible']:
+                    path_dict['inaccessible'] = True
                 continue
 
             m = p11.match(line)
