@@ -405,6 +405,119 @@ class test_show_ip_ospf(unittest.TestCase):
             Number of LSAs: 1, checksum sum 0x9ccb
         '''}
 
+    golden_parsed_output_2 = {
+        'vrf': 
+            {'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'1': 
+                                {'areas': 
+                                    {'0.0.0.0': 
+                                        {'area_id': '0.0.0.0',
+                                        'area_type': 'normal',
+                                        'existed': '2d05h',
+                                        'numbers': {'active_interfaces': 3,
+                                                  'interfaces': 4,
+                                                  'loopback_interfaces': 1,
+                                                  'passive_interfaces': 0},
+                                        'statistics': {'area_scope_lsa_cksum_sum': '35',
+                                                     'area_scope_lsa_count': 35,
+                                                     'spf_last_run_time': 0.002091,
+                                                     'spf_runs_count': 64}}},
+                                'auto_cost': 
+                                    {'bandwidth_unit': 'mbps',
+                                    'enable': False,
+                                    'reference_bandwidth': 40000},
+                                'discard_route_external': True,
+                                'discard_route_internal': True,
+                                'enable': True,
+                                'graceful_restart': 
+                                    {'ietf': 
+                                        {'enable': True,
+                                        'exist_status': 'none',
+                                        'restart_interval': 60,
+                                        'state': 'Inactive',
+                                        'type': 'ietf'}},
+                                'instance': 1,
+                                'nsr': 
+                                    {'enable': True},
+                                'numbers': 
+                                    {'active_areas': 
+                                        {'normal': 1,
+                                        'nssa': 0,
+                                        'stub': 0,
+                                        'total': 1},
+                                    'areas': 
+                                        {'normal': 1,
+                                        'nssa': 0,
+                                        'stub': 0,
+                                        'total': 1}},
+                                'opaque_lsa_enable': True,
+                                'preference': 
+                                    {'single_value': 
+                                        {'all': 110}},
+                                'router_id': '1.0.0.105',
+                                'single_tos_routes_enable': True,
+                                'spf_control': 
+                                    {'paths': 8,
+                                    'throttle': 
+                                        {'lsa': 
+                                            {'group_pacing': 10,
+                                            'hold': 50,
+                                            'maximum': 500,
+                                            'minimum': 50,
+                                            'numbers': 
+                                                {'external_lsas': 
+                                                    {'checksum': '0',
+                                                    'total': 0},
+                                                'opaque_as_lsas': 
+                                                    {'checksum': '0',
+                                                    'total': 0}},
+                                            'start': 20},
+                                        'spf': 
+                                            {'hold': 50,
+                                            'maximum': 500,
+                                            'start': 20}}}}}}}}}}
+
+    golden_output_2 = {'execute.return_value': '''
+        show ip ospf vrf all
+        Routing Process 1 with ID 1.0.0.105 VRF default
+        Routing Process Instance Number 1
+        Stateful High Availability enabled
+        Graceful-restart is configured
+        Grace period: 60 state: Inactive 
+        Last graceful restart exit status: None
+        Supports only single TOS(TOS0) routes
+        Supports opaque LSA
+        Administrative distance 110
+        Reference Bandwidth is 40000 Mbps
+        SPF throttling delay time of 20.000 msecs,
+        SPF throttling hold time of 50.000 msecs, 
+        SPF throttling maximum wait time of 500.000 msecs
+        LSA throttling start time of 20.000 msecs,
+        LSA throttling hold interval of 50.000 msecs, 
+        LSA throttling maximum wait time of 500.000 msecs
+        Minimum LSA arrival 50.000 msec
+        LSA group pacing timer 10 secs
+        Maximum paths to destination 8
+        Number of external LSAs 0, checksum sum 0
+        Number of opaque AS LSAs 0, checksum sum 0
+        Number of areas is 1, 1 normal, 0 stub, 0 nssa
+        Number of active areas is 1, 1 normal, 0 stub, 0 nssa
+        Install discard route for summarized external routes.
+        Install discard route for summarized internal routes.
+        Area BACKBONE(0.0.0.0) 
+            Area has existed for 2d05h
+            Interfaces in this area: 4 Active interfaces: 3
+            Passive interfaces: 0  Loopback interfaces: 1
+            Message-digest authentication
+            SPF calculation has run 64 times
+             Last SPF ran for 0.002091s
+            Area ranges are
+            Number of LSAs: 35, checksum sum 0x13a425
+        '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpOspf(device=self.device)
@@ -418,12 +531,19 @@ class test_show_ip_ospf(unittest.TestCase):
         parsed_output = obj.parse(vrf='all')
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
-    def test_default_vrf(self):
+    def test_default_vrf1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
         obj = ShowIpOspf(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_default_vrf2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowIpOspf(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
 # ========================================================

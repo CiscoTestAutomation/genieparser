@@ -38,7 +38,7 @@ from genie.libs.parser.utils.common import Common
 # ======================================
 class ShowIpOspfSchema(MetaParser):
     """Schema for:
-        show ip ospfs
+        show ip ospf
         show ip ospf vrf <vrf>"""
 
     schema = {
