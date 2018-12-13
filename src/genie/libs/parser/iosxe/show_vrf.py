@@ -26,6 +26,7 @@ class ShowVrfDetailSchema(MetaParser):
                  Optional('route_distinguisher'): str,
                  Optional('vpn_id'): str,
                  Optional('interfaces'):  list,
+                 Optional('interface'):  {Any(): {'vrf': str}},
                  Optional('flags'):  str,
                  Optional('address_family'): {
                     Any(): {
@@ -134,6 +135,8 @@ class ShowVrfDetail(ShowVrfDetailSchema):
                 intfs = m.groupdict()['intf'].split()
                 intf_list = [Common.convert_intf_name(item) for item in intfs]
                 vrf_dict[vrf]['interfaces'] = intf_list
+                intf_dict = vrf_dict[vrf].setdefault('interface', {})
+                [intf_dict.setdefault(intf, {}).update({'vrf':vrf}) for intf in intf_list]
                 intf_conf = False
                 continue
 
