@@ -29,39 +29,39 @@ class test_show_arp_detail(unittest.TestCase):
 						'neighbors': {
 							'10.1.2.1': {
 								'age': '02:55:43',
-                               	'ip': '10.1.2.1',
-                               	'link_layer_address': 'fa16.3e4c.b963',
-                               	'origin': 'dynamic',
-                               	'type': 'ARPA'},
-                          	'10.1.2.2': {
-                          		'age': '-',
-                               	'ip': '10.1.2.2',
-                               	'link_layer_address': 'fa16.3ee4.1462',
-                               	'origin': 'static',
-                               	'type': 'ARPA'}
-                        }
-                   	}
-                },
-                'GigabitEthernet0/0/0/1': {
-                	'ipv4': {
-                		'neighbors': {
-                			'10.2.3.2': {
-                				'age': '-',
-                               	'ip': '10.2.3.2',
-                               	'link_layer_address': 'fa16.3e8f.3468',
-                               	'origin': 'static',
-                               	'type': 'ARPA'},
-                            '10.2.3.3': {
-                            	'age': '00:13:12',
-                               	'ip': '10.2.3.3',
-                               	'link_layer_address': '5e00.8002.0007',
-                               	'origin': 'dynamic',
-                               	'type': 'ARPA'}
-                        }
-                    }
-                }
-            }
-        }
+								'ip': '10.1.2.1',
+								'link_layer_address': 'fa16.3e4c.b963',
+								'origin': 'dynamic',
+								'type': 'ARPA'},
+							'10.1.2.2': {
+								'age': '-',
+								'ip': '10.1.2.2',
+								'link_layer_address': 'fa16.3ee4.1462',
+								'origin': 'static',
+								'type': 'ARPA'}
+						}
+					}
+				},
+				'GigabitEthernet0/0/0/1': {
+					'ipv4': {
+						'neighbors': {
+							'10.2.3.2': {
+								'age': '-',
+								'ip': '10.2.3.2',
+								'link_layer_address': 'fa16.3e8f.3468',
+								'origin': 'static',
+								'type': 'ARPA'},
+							'10.2.3.3': {
+								'age': '00:13:12',
+								'ip': '10.2.3.3',
+								'link_layer_address': '5e00.8002.0007',
+								'origin': 'dynamic',
+								'type': 'ARPA'}
+						}
+					}
+				}
+			}
+		}
 
 		golden_output = {'execute.return_value': '''\
 			RP/0/RP0/CPU0:R2_xrv9000#show arp detail
@@ -85,38 +85,38 @@ class test_show_arp_detail(unittest.TestCase):
 						'neighbors': {
 							'10.1.2.1': {
 								'age': '02:56:20',
-                               	'ip': '10.1.2.1',
-                               	'link_layer_address': 'fa16.3e4c.b963',
-                               	'origin': 'dynamic',
-                               	'type': 'ARPA'},
-                          	'10.1.2.2': {
-                          		'age': '-',
-                               	'ip': '10.1.2.2',
-                               	'link_layer_address': 'fa16.3ee4.1462',
-                               	'origin': 'static',
-                               	'type': 'ARPA'}
-                        }
-                    }
-                },
-                'GigabitEthernet0/0/0/1': {
-                	'ipv4': {
-                		'neighbors': {
-                			'10.2.3.2': {
-                				'age': '-',
-                               	'ip': '10.2.3.2',
-                               	'link_layer_address': 'fa16.3e8f.3468',
-                               	'origin': 'static',
-                               	'type': 'ARPA'},
-                  			'10.2.3.3': {'age': '00:13:49',
-                               	'ip': '10.2.3.3',
-                               	'link_layer_address': '5e00.8002.0007',
-                               	'origin': 'dynamic',
-                               	'type': 'ARPA'}
-                        }
-                    }
-                }
-            }
-        }
+								'ip': '10.1.2.1',
+								'link_layer_address': 'fa16.3e4c.b963',
+								'origin': 'dynamic',
+								'type': 'ARPA'},
+							'10.1.2.2': {
+								'age': '-',
+								'ip': '10.1.2.2',
+								'link_layer_address': 'fa16.3ee4.1462',
+								'origin': 'static',
+								'type': 'ARPA'}
+						}
+					}
+				},
+				'GigabitEthernet0/0/0/1': {
+					'ipv4': {
+						'neighbors': {
+							'10.2.3.2': {
+								'age': '-',
+								'ip': '10.2.3.2',
+								'link_layer_address': 'fa16.3e8f.3468',
+								'origin': 'static',
+								'type': 'ARPA'},
+							'10.2.3.3': {'age': '00:13:49',
+								'ip': '10.2.3.3',
+								'link_layer_address': '5e00.8002.0007',
+								'origin': 'dynamic',
+								'type': 'ARPA'}
+						}
+					}
+				}
+			}
+		}
 
 		golden_output_1 = {'execute.return_value': '''\
 			RP/0/RP0/CPU0:R2_xrv9000#show arp vrf default detail
@@ -162,59 +162,59 @@ class test_show_arp_traffic_detail(unittest.TestCase):
 			'0/0/CPU0': {
 				'cache': {
 					'alias': 0,
-                    'dhcp': 0,
-                    'dynamic': 2,
-                    'interface': 2,
-                    'ip_packet_drop_count': 0,
-                    'standby': 0,
-                    'static': 0,
-                    'total_arp_entries': 4,
-                    'total_arp_idb': 2},
-              	'statistics': {
-              		'in_replies_pkts': 8,
-                    'in_requests_pkts': 108,
-                    'no_buffers_errors': 0,
-                    'out_gratuitous_pkts': 2,
-                    'out_local_proxy': 0,
-                    'out_of_memory_errors': 0,
-                    'out_of_sunbet_errors': 0,
-                    'out_proxy': 0,
-                    'out_replies_pkts': 108,
-                    'out_requests_pkts': 8,
-                    'resolve_dropped_requests': 0,
-                    'resolve_rcvd_requests': 0,
-                    'subscriber_intf_gratuitous': 0,
-                    'subscriber_intf_replies': 0,
-                    'subscriber_intf_requests': 0}},
- 			'0/RP0/CPU0': {
- 				'cache': {
- 					'alias': 0,
-                  	'dhcp': 0,
-                  	'dynamic': 0,
-                  	'interface': 0,
-                  	'ip_packet_drop_count': 0,
-                  	'standby': 0,
-                  	'static': 0,
-                  	'total_arp_entries': 0,
-                  	'total_arp_idb': 0},
-                'statistics': {
-                	'in_replies_pkts': 0,
-                   	'in_requests_pkts': 0,
-                   	'no_buffers_errors': 0,
-                   	'out_gratuitous_pkts': 0,
-                   	'out_local_proxy': 0,
-                   	'out_of_memory_errors': 0,
-                   	'out_of_sunbet_errors': 0,
-                   	'out_proxy': 0,
-                   	'out_replies_pkts': 0,
-                   	'out_requests_pkts': 0,
-                   	'resolve_dropped_requests': 0,
-                   	'resolve_rcvd_requests': 0,
-                   	'subscriber_intf_gratuitous': 0,
-                   	'subscriber_intf_replies': 0,
-                   	'subscriber_intf_requests': 0}
-            }
-        }
+					'dhcp': 0,
+					'dynamic': 2,
+					'interface': 2,
+					'ip_packet_drop_count': 0,
+					'standby': 0,
+					'static': 0,
+					'total_arp_entries': 4,
+					'total_arp_idb': 2},
+				'statistics': {
+					'in_replies_pkts': 8,
+					'in_requests_pkts': 108,
+					'no_buffers_errors': 0,
+					'out_gratuitous_pkts': 2,
+					'out_local_proxy': 0,
+					'out_of_memory_errors': 0,
+					'out_of_subnet_errors': 0,
+					'out_proxy': 0,
+					'out_replies_pkts': 108,
+					'out_requests_pkts': 8,
+					'resolve_dropped_requests': 0,
+					'resolve_rcvd_requests': 0,
+					'subscriber_intf_gratuitous': 0,
+					'subscriber_intf_replies': 0,
+					'subscriber_intf_requests': 0}},
+			'0/RP0/CPU0': {
+				'cache': {
+					'alias': 0,
+					'dhcp': 0,
+					'dynamic': 0,
+					'interface': 0,
+					'ip_packet_drop_count': 0,
+					'standby': 0,
+					'static': 0,
+					'total_arp_entries': 0,
+					'total_arp_idb': 0},
+				'statistics': {
+					'in_replies_pkts': 0,
+					'in_requests_pkts': 0,
+					'no_buffers_errors': 0,
+					'out_gratuitous_pkts': 0,
+					'out_local_proxy': 0,
+					'out_of_memory_errors': 0,
+					'out_of_subnet_errors': 0,
+					'out_proxy': 0,
+					'out_replies_pkts': 0,
+					'out_requests_pkts': 0,
+					'resolve_dropped_requests': 0,
+					'resolve_rcvd_requests': 0,
+					'subscriber_intf_gratuitous': 0,
+					'subscriber_intf_replies': 0,
+					'subscriber_intf_requests': 0}
+			}
+		}
 
 		golden_output = {'execute.return_value': '''\
 			RP/0/RP0/CPU0:R2_xrv9000#show arp traffic detail 
@@ -231,7 +231,7 @@ class test_show_arp_traffic_detail(unittest.TestCase):
 					 0 requests recv, 0 replies sent, 0 gratuitous replies sent
 			  Resolve requests rcvd: 0
 			  Resolve requests dropped: 0
-			  Errors: 0 out of memory, 0 no buffers, 0 out of sunbet
+			  Errors: 0 out of memory, 0 no buffers, 0 out of subnet
 
 			ARP cache:
 			  Total ARP entries in cache: 4
@@ -254,7 +254,7 @@ class test_show_arp_traffic_detail(unittest.TestCase):
 					 0 requests recv, 0 replies sent, 0 gratuitous replies sent
 			  Resolve requests rcvd: 0
 			  Resolve requests dropped: 0
-			  Errors: 0 out of memory, 0 no buffers, 0 out of sunbet
+			  Errors: 0 out of memory, 0 no buffers, 0 out of subnet
 
 			ARP cache:
 			  Total ARP entries in cache: 0

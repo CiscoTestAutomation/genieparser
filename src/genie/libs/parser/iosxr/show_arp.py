@@ -122,7 +122,7 @@ class ShowArpTrafficDetailSchema(MetaParser):
                  'resolve_dropped_requests': int,
                  'out_of_memory_errors': int,
                  'no_buffers_errors': int,
-                 'out_of_sunbet_errors': int,
+                 'out_of_subnet_errors': int,
                 },
             'cache':
                 {'total_arp_entries': int,
@@ -179,11 +179,11 @@ class ShowArpTrafficDetail(ShowArpTrafficDetailSchema):
         p7 = re.compile(r'^Resolve +requests +dropped:'
             ' +(?P<resolve_dropped_requests>\w+)$')
 
-        # Errors: 0 out of memory, 0 no buffers, 0 out of sunbet
+        # Errors: 0 out of memory, 0 no buffers, 0 out of subnet
         p8 = re.compile(r'^Errors:'
             ' +(?P<out_of_memory_errors>\w+) +out +of +memory,'
             ' +(?P<no_buffers_errors>\w+) +no +buffers,'
-            ' +(?P<out_of_sunbet_errors>\w+) +out +of +sunbet$')
+            ' +(?P<out_of_subnet_errors>\w+) +out +of +subnet$')
 
         # ARP cache:
         p9 = re.compile(r'^ARP +cache:$')
