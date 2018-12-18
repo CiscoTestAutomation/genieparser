@@ -255,7 +255,7 @@ class ShowIpArpstatisticsVrfAllSchema(MetaParser):
 					'invalid_local_proxy_arp': int,
 					'invalid_proxy_arp': int,
 					'vip_is_not_active': int,
-					'arp_refresh_skipped_over_core_and_flooded': int,
+					Optional('arp_refresh_skipped_over_core_and_flooded'): int,
 				}
 			},
 			'received':{
@@ -295,9 +295,9 @@ class ShowIpArpstatisticsVrfAllSchema(MetaParser):
 					'requests_came_on_a_l2_interface': int,
 					'l2fm_query_failed_for_a_l2address': int,
 					'dropping_due_to_tunneling_failures': int,
-					'glean_requests_recv_count': int,
-					'arp_refresh_requests_received_from_clients': int,
-					'number_of_signals_received_from_l2rib': int,
+					Optional('glean_requests_recv_count'): int,
+					Optional('arp_refresh_requests_received_from_clients'): int,
+					Optional('number_of_signals_received_from_l2rib'): int,
 					'non_active_fhrp_dest_ip': int,
 					'grat_arp_received_on_proxy': int,
 					'invalid_protocol_packet': int,
@@ -309,7 +309,7 @@ class ShowIpArpstatisticsVrfAllSchema(MetaParser):
 				'adjacency_adds': int,
 				'adjacency_deletes': int,
 				'adjacency_timeouts': int,
-				'failed_due_to_limits': int,
+				Optional('failed_due_to_limits'): int,
 				}
 			}
 		}
@@ -361,7 +361,7 @@ class ShowIpArpstatisticsVrfAll(ShowIpArpstatisticsVrfAllSchema):
 			'+Anycast +proxy +Proxy +arp +(?P<anycast_proxy_arp>[\w]+), +L2 +Port-track +Proxy +arp '
 			'+(?P<l2_port_track_proxy_arp>[\w]+),'
 			' +Tunneled +(?P<tunneled>[\w]+), +Fastpath +(?P<fastpath>[\w]+),'
-			' +Snooped +(?P<snooped>[\w]+), +Dropped +(?P<dropped>[\w]+)'
+			' +Snooped +(?P<snooped>[\w]+), +Dropped +(?P<dropped>[\w]+)(,)?'
 			' +on +Server +Port +(?P<dropped_server_port>[\w]+)$')
 
 		# MBUF operation failed               : 0
@@ -403,8 +403,9 @@ class ShowIpArpstatisticsVrfAll(ShowIpArpstatisticsVrfAllSchema):
 		# Dest. not reachable for proxy arp   :  0
 		p17 = re.compile(r'^\s*Dest. +not +reachable +for +proxy +arp +: +(?P<dest_not_reachable_for_proxy_arp>[\d]+)$')
 
+		# Dest. unreachable for enhanced proxy:  0
 		# Dest. unreachable for enhanced proxy :  0
-		p18 = re.compile(r'^\s*Dest. +unreachable +for +enhanced +proxy +: +(?P<dest_unreachable_for_enhanced_proxy>[\d]+)$')
+		p18 = re.compile(r'^\s*Dest. +unreachable +for +enhanced +proxy( +)?: +(?P<dest_unreachable_for_enhanced_proxy>[\d]+)$')
 
 		# Dest. on L2 port being tracked      :  0
 		p19 = re.compile(r'^\s*Dest. +on +L2 +port +being +tracked +: +(?P<destnination_on_l2_port_tracked>[\d]+)$')
@@ -482,7 +483,8 @@ class ShowIpArpstatisticsVrfAll(ShowIpArpstatisticsVrfAllSchema):
 		p43 = re.compile(r'^\s*Requests +came +for +exising +entries +: +(?P<requests_came_for_exising_entries>[\d]+)$')
 
 		# Requests came on a L2 interface     : 0
-		p44 = re.compile(r'^\s*Requests +came +on +a +L2 +interface +: +(?P<requests_came_on_a_l2_interface>[\d]+)$')
+		# Requests came on a l2 interface     : 0
+		p44 = re.compile(r'^\s*Requests +came +on +a +(l|L)2 +interface +: +(?P<requests_came_on_a_l2_interface>[\d]+)$')
 
 		# L2FM query failed for a L2 Address  : 0
 		p45 = re.compile(r'^\s*L2FM +query +failed +for +a +L2 +Address +: +(?P<l2fm_query_failed_for_a_l2address>[\d]+)$')
