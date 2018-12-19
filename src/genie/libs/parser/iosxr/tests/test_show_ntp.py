@@ -410,25 +410,25 @@ class test_show_ntp_associations(unittest.TestCase):
     '''
     }
 
-    # def test_empty(self):
-    #     self.device = Mock(**self.empty_output)
-    #     obj = ShowNtpAssociations(device=self.device)
-    #     with self.assertRaises(SchemaEmptyParserError):
-    #         parsed_output = obj.parse()
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowNtpAssociations(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
 
-    # def test_golden(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.golden_output)
-    #     obj = ShowNtpAssociations(device=self.device)
-    #     parsed_output = obj.parse()
-    #     self.assertEqual(parsed_output, self.golden_parsed_output)
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowNtpAssociations(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
-    # def test_golden_1(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.golden_output_1)
-    #     obj = ShowNtpAssociations(device=self.device)
-    #     parsed_output = obj.parse()
-    #     self.assertEqual(parsed_output, self.golden_parsed_output_1)
+    def test_golden_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowNtpAssociations(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
     def test_golden_2(self):
         self.maxDiff = None
@@ -437,142 +437,142 @@ class test_show_ntp_associations(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
-# # ==============================================
-# # Unit test for 'show ntp status'
-# # ==============================================
-# class test_show_ntp_status(unittest.TestCase):
+# ==============================================
+# Unit test for 'show ntp status'
+# ==============================================
+class test_show_ntp_status(unittest.TestCase):
     
-#     device = Device(name='aDevice')
-#     empty_output = {'execute.return_value': ''}
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
     
-#     golden_parsed_output = {
-#         'clock_state': {
-#             'system_status': {
-#                 'act_freq': 1000.2725,
-#                 'drift': '-0.0002724105 s/s',
-#                 'last_update': '66 sec ago',
-#                 'leap_status': "'CTRL' (Normal "
-#                                 'Controlled Loop)',
-#                 'nom_freq': 1000.0,
-#                 'offset': -1.738,
-#                 'peerdispersion': 0.09,
-#                 'poll': 64,
-#                 'precision': '2**24',
-#                 'refid': '192.168.128.5',
-#                 'reftime': 'CC95463C.9B964367 '
-#                            '(11:21:48.607 JST Tue Oct  '
-#                            '7 2008)',
-#                 'rootdelay': 186.05,
-#                 'rootdispersion': 53.86,
-#                 'status': 'synchronized',
-#                 'stratum': 3}
-#         }
-#     }
+    golden_parsed_output = {
+        'clock_state': {
+            'system_status': {
+                'act_freq': 1000.2725,
+                'drift': '-0.0002724105 s/s',
+                'last_update': '66 sec ago',
+                'leap_status': "'CTRL' (Normal "
+                                'Controlled Loop)',
+                'nom_freq': 1000.0,
+                'offset': -1.738,
+                'peerdispersion': 0.09,
+                'poll': 64,
+                'precision': '2**24',
+                'refid': '192.168.128.5',
+                'reftime': 'CC95463C.9B964367 '
+                           '(11:21:48.607 JST Tue Oct  '
+                           '7 2008)',
+                'rootdelay': 186.05,
+                'rootdispersion': 53.86,
+                'status': 'synchronized',
+                'stratum': 3}
+        }
+    }
 
-#     golden_output = {'execute.return_value': '''\
-#         RP/0/RP0/CPU0:router# show ntp status 
+    golden_output = {'execute.return_value': '''\
+        RP/0/RP0/CPU0:router# show ntp status 
           
-#         Tue Oct  7 11:22:54.023 JST 
+        Tue Oct  7 11:22:54.023 JST 
           
-#         Clock is synchronized, stratum 3, reference is 192.168.128.5
-#         nominal freq is 1000.0000 Hz, actual freq is 1000.2725 Hz, precision is 2**24
-#         reference time is CC95463C.9B964367 (11:21:48.607 JST Tue Oct  7 2008)
-#         clock offset is -1.738 msec, root delay is 186.050 msec
-#         root dispersion is 53.86 msec, peer dispersion is 0.09 msec
-#         loopfilter state is 'CTRL' (Normal Controlled Loop), drift is -0.0002724105 s/s
-#         system poll interval is 64, last update was 66 sec ago
-#     '''
-#     }
+        Clock is synchronized, stratum 3, reference is 192.168.128.5
+        nominal freq is 1000.0000 Hz, actual freq is 1000.2725 Hz, precision is 2**24
+        reference time is CC95463C.9B964367 (11:21:48.607 JST Tue Oct  7 2008)
+        clock offset is -1.738 msec, root delay is 186.050 msec
+        root dispersion is 53.86 msec, peer dispersion is 0.09 msec
+        loopfilter state is 'CTRL' (Normal Controlled Loop), drift is -0.0002724105 s/s
+        system poll interval is 64, last update was 66 sec ago
+    '''
+    }
 
-#     golden_parsed_output_1 = {
-#         'clock_state': {
-#             'system_status': {
-#                 'act_freq': 999.9988,
-#                 'nom_freq': 1000.0,
-#                 'offset': 66.3685,
-#                 'peerdispersion': 3.38,
-#                 'precision': '2**26',
-#                 'refid': '172.19.69.1',
-#                 'reftime': 'C54C131B.9EECF6CA '
-#                            '(07:26:19.620 UTC Mon Nov '
-#                            '24 2008)',
-#                 'rootdelay': 7.8,
-#                 'rootdispersion': 950.04,
-#                 'status': 'synchronized',
-#                 'stratum': 4}
-#         }
-#     }
+    golden_parsed_output_1 = {
+        'clock_state': {
+            'system_status': {
+                'act_freq': 999.9988,
+                'nom_freq': 1000.0,
+                'offset': 66.3685,
+                'peerdispersion': 3.38,
+                'precision': '2**26',
+                'refid': '172.19.69.1',
+                'reftime': 'C54C131B.9EECF6CA '
+                           '(07:26:19.620 UTC Mon Nov '
+                           '24 2008)',
+                'rootdelay': 7.8,
+                'rootdispersion': 950.04,
+                'status': 'synchronized',
+                'stratum': 4}
+        }
+    }
 
-#     golden_output_1 = {'execute.return_value': '''\
-#         RP/0/RP0/CPU0:router# show ntp status
+    golden_output_1 = {'execute.return_value': '''\
+        RP/0/RP0/CPU0:router# show ntp status
 
-#         Clock is synchronized, stratum 4, reference is 172.19.69.1
-#         nominal freq is 1000.0000 Hz, actual freq is 999.9988 Hz, precision is 2**26
-#         reference time is C54C131B.9EECF6CA (07:26:19.620 UTC Mon Nov 24 2008)
-#         clock offset is 66.3685 msec, root delay is 7.80 msec
-#         root dispersion is 950.04 msec, peer dispersion is 3.38 msec
-#     '''
-#     }
+        Clock is synchronized, stratum 4, reference is 172.19.69.1
+        nominal freq is 1000.0000 Hz, actual freq is 999.9988 Hz, precision is 2**26
+        reference time is C54C131B.9EECF6CA (07:26:19.620 UTC Mon Nov 24 2008)
+        clock offset is 66.3685 msec, root delay is 7.80 msec
+        root dispersion is 950.04 msec, peer dispersion is 3.38 msec
+    '''
+    }
 
-#     golden_parsed_output_2 = {
-#         'clock_state': {
-#             'system_status': {
-#                 'act_freq': 1000000000.0,
-#                 'drift': '0.0000000000 s/s',
-#                 'last_update': 'never updated',
-#                 'leap_status': "'NSET' (Never set)",
-#                 'nom_freq': 1000000000.0,
-#                 'offset': 0.0,
-#                 'peerdispersion': 0.0,
-#                 'poll': 64,
-#                 'precision': '2**23',
-#                 'reftime': '00000000.00000000 '
-#                            '(00:00:00.000 UTC Thu Jan  '
-#                            '1 1970)',
-#                 'rootdelay': 0.0,
-#                 'rootdispersion': 101.71,
-#                 'status': 'unsynchronized',
-#                 'stratum': 16}
-#         }
-#     }
+    golden_parsed_output_2 = {
+        'clock_state': {
+            'system_status': {
+                'act_freq': 1000000000.0,
+                'drift': '0.0000000000 s/s',
+                'last_update': 'never updated',
+                'leap_status': "'NSET' (Never set)",
+                'nom_freq': 1000000000.0,
+                'offset': 0.0,
+                'peerdispersion': 0.0,
+                'poll': 64,
+                'precision': '2**23',
+                'reftime': '00000000.00000000 '
+                           '(00:00:00.000 UTC Thu Jan  '
+                           '1 1970)',
+                'rootdelay': 0.0,
+                'rootdispersion': 101.71,
+                'status': 'unsynchronized',
+                'stratum': 16}
+        }
+    }
 
-#     golden_output_2 = {'execute.return_value': '''\
-#         RP/0/RP0/CPU0:iosxrv9000-1#show ntp status
-#         Mon Nov  5 23:23:09.761 UTC
+    golden_output_2 = {'execute.return_value': '''\
+        RP/0/RP0/CPU0:iosxrv9000-1#show ntp status
+        Mon Nov  5 23:23:09.761 UTC
 
-#         Clock is unsynchronized, stratum 16, no reference clock
-#         nominal freq is 1000000000.0000 Hz, actual freq is 1000000000.0000 Hz, precision is 2**23
-#         reference time is 00000000.00000000 (00:00:00.000 UTC Thu Jan  1 1970)
-#         clock offset is 0.000 msec, root delay is 0.000 msec
-#         root dispersion is 101.71 msec, peer dispersion is 0.00 msec
-#         loopfilter state is 'NSET' (Never set), drift is 0.0000000000 s/s
-#         system poll interval is 64, never updated
-#     '''
-#     }
+        Clock is unsynchronized, stratum 16, no reference clock
+        nominal freq is 1000000000.0000 Hz, actual freq is 1000000000.0000 Hz, precision is 2**23
+        reference time is 00000000.00000000 (00:00:00.000 UTC Thu Jan  1 1970)
+        clock offset is 0.000 msec, root delay is 0.000 msec
+        root dispersion is 101.71 msec, peer dispersion is 0.00 msec
+        loopfilter state is 'NSET' (Never set), drift is 0.0000000000 s/s
+        system poll interval is 64, never updated
+    '''
+    }
 
-#     def test_empty(self):
-#         self.device = Mock(**self.empty_output)
-#         obj = ShowNtpStatus(device=self.device)
-#         with self.assertRaises(SchemaEmptyParserError):
-#             parsed_output = obj.parse()
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowNtpStatus(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
 
-#     def test_golden(self):
-#         self.device = Mock(**self.golden_output)
-#         obj = ShowNtpStatus(device=self.device)
-#         parsed_output = obj.parse()
-#         self.assertEqual(parsed_output,self.golden_parsed_output)
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowNtpStatus(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
-#     def test_golden_1(self):
-#         self.device = Mock(**self.golden_output_1)
-#         obj = ShowNtpStatus(device=self.device)
-#         parsed_output = obj.parse()
-#         self.assertEqual(parsed_output,self.golden_parsed_output_1)
+    def test_golden_1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowNtpStatus(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
-#     def test_golden_2(self):
-#         self.device = Mock(**self.golden_output_2)
-#         obj = ShowNtpStatus(device=self.device)
-#         parsed_output = obj.parse()
-#         self.assertEqual(parsed_output,self.golden_parsed_output_2)
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowNtpStatus(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 
 if __name__ == '__main__':
