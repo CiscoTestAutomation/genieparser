@@ -166,7 +166,7 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
 						clock_dict['clock_offset'] = float(groups['offset'])
 						clock_dict['clock_refid'] = groups['refid']
 						clock_dict['associations_local_mode'] = local_mode
-					else:
+					elif 'clock_state' not in ret_dict:
 						clock_dict = ret_dict.setdefault(
 							'clock_state', {}).setdefault('system_status', {})
 						clock_dict['clock_state'] = 'unsynchronized'
@@ -279,7 +279,7 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
 						clock_dict['clock_offset'] = float(groups['offset'])
 						clock_dict['clock_refid'] = groups['refid']
 						clock_dict['associations_local_mode'] = local_mode
-					else:
+					elif 'clock_state' not in ret_dict:
 						clock_dict = ret_dict.setdefault('clock_state', {}).\
 							setdefault('system_status', {})
 						clock_dict['clock_state'] = 'unsynchronized'
