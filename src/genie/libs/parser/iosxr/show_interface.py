@@ -675,8 +675,9 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
                 continue
 
             # MTU 1500 bytes, BW 0 Kbit (Max: 1000000 Kbit)
+            # MTU 6000 bytes, BW 20000000 Kbit (Max: 20000000 Kbit)
             p5 = re.compile(r'^\s*MTU +(?P<mtu>[0-9]+) +bytes, +BW'
-                             ' +(?P<bandwidth>[0-9]+) +Kbit(?: *\(Max: +1000000'
+                             ' +(?P<bandwidth>[0-9]+) +Kbit(?: *\(Max: +\d+'
                              ' +Kbit\))?$')
             m = p5.match(line)
             if m:
@@ -1088,6 +1089,7 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
                               ' +total +output +drops$')
             m = p16.match(line)
             if m:
+                interface_detail_dict[interface].setdefault('counters', {})
                 interface_detail_dict[interface]['counters']\
                 ['out_pkts'] = int(m.groupdict()['out_pkts'])
                 interface_detail_dict[interface]['counters']\
@@ -1095,7 +1097,7 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
                 interface_detail_dict[interface]['counters']\
                 ['out_discards'] = int(m.groupdict()['out_discards'])
                 continue
-
+    
             # Output 0 broadcast packets, 0 multicast packets
             p17 = re.compile(r'^\s*Output +(?P<out_broadcast_pkts>[0-9]+)'
                               ' +broadcast +packets, +(?P<out_multicast_pkts>[0-9]+)'
