@@ -183,7 +183,7 @@ class ShowArpTrafficDetail(ShowArpTrafficDetailSchema):
         p8 = re.compile(r'^Errors:'
             ' +(?P<out_of_memory_errors>\w+) +out +of +memory,'
             ' +(?P<no_buffers_errors>\w+) +no +buffers,'
-            ' +(?P<out_of_subnet_errors>\w+) +out +of +subnet$')
+            ' +(?P<out_of_subnet_errors>\w+) +out +of +(subnet|sunbet)$')
 
         # ARP cache:
         p9 = re.compile(r'^ARP +cache:$')

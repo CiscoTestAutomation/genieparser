@@ -210,7 +210,7 @@ class ShowIpTrafficSchema(MetaParser):
             'ip_drop_forced_drop': int,
             Optional('ip_drop_unsupp_address'): int,
             'ip_drop_opts_denied': int,
-            'ip_drop_src_ip': int,
+            Optional('ip_drop_src_ip'): int,
         },
         'icmp_statistics': {
             'icmp_received_format_errors': int,
@@ -442,8 +442,8 @@ class ShowIpTraffic(ShowIpTrafficSchema):
             '(, +(?P<ip_drop_unsupp_address>\d+) +unsupported-addr)?$')
 
         # 0 options denied, 0 source IP address zero
-        p22 = re.compile(r'^(?P<ip_drop_opts_denied>\d+) +options +denied,'
-            ' +(?P<ip_drop_src_ip>\d+) +source +IP +address +zero$')
+        p22 = re.compile(r'^(?P<ip_drop_opts_denied>\d+) +options +denied(,'
+            ' +(?P<ip_drop_src_ip>\d+) +source +IP +address +zero)?$')
 
         # ICMP statistics:
         p23 = re.compile(r'^ICMP +statistics:')
@@ -805,7 +805,7 @@ class ShowIpTraffic(ShowIpTrafficSchema):
             if m:
                 groups = m.groupdict()
                 ret_dict['ip_statistics'].update({k: \
-                    int(v) for k, v in groups.items()})
+                    int(v) for k, v in groups.items() if v})
                 continue
 
             m = p23.match(line)

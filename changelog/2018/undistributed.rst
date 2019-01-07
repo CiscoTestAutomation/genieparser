@@ -52,3 +52,19 @@
 * IOSXR
     * Add ShowNtpAssociations for 'show ntp associations'
     * Add ShowNtpStatus for 'show ntp status'
+
+--------------------------------------------------------------------------------
+                                Interface
+--------------------------------------------------------------------------------
+
+* IOSXR
+  * Updated parsers:
+    * ShowInterfacesDetail
+
+--------------------------------------------------------------------------------
+                                PIM
+--------------------------------------------------------------------------------
+
+* NXOS
+  * Updated parsers:
+    * ShowIpv6PimNeighbor
