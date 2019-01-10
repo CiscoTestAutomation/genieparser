@@ -50,7 +50,7 @@ class ShowHsrpSummarySchema(MetaParser):
 # ==============================
 class ShowHsrpSummary(ShowHsrpSummarySchema):
 
-    ''' Schema for "'show hsrp summary" '''
+    ''' Schema for 'show hsrp summary' '''
 
     def cli(self):
 
@@ -184,7 +184,7 @@ class ShowHsrpSummary(ShowHsrpSummarySchema):
 # ===========================
 class ShowHsrpAllSchema(MetaParser):
 
-    ''' Schema for "'show hsrp all" '''
+    ''' Schema for 'show hsrp all' '''
 
     schema = {
         Any():
