@@ -92,8 +92,8 @@ class test_show_hsrp_all(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     
-    golden_parsed_output_1 = \
-        {'Ethernet4/1':
+    golden_parsed_output_1 = {
+        'Ethernet4/1':
             {'address_family':
                 {'ipv4':
                     {'version':
@@ -147,8 +147,8 @@ class test_show_hsrp_all(unittest.TestCase):
           IP redundancy name is hsrp-Eth4/1-0 (default)
         '''}
 
-    golden_parsed_output_2 = \
-        {'Ethernet1/3':
+    golden_parsed_output_2 = {
+        'Ethernet1/3':
             {'address_family':
                 {'ipv4':
                     {'version':
@@ -304,7 +304,7 @@ class test_show_hsrp_all(unittest.TestCase):
       '''}
 
     golden_parsed_output_3 = {
-      'Ethernet1/3': 
+        'Ethernet1/3': 
         {'address_family': 
           {'ipv4': 
             {'version': 
