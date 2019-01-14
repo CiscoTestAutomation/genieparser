@@ -74,13 +74,19 @@ class ShowIpIgmpSnoopingSchema(MetaParser):
 # ==============================================
 class ShowIpIgmpSnooping(ShowIpIgmpSnoopingSchema):
     """Parser for show ip igmp snooping"""
-    def cli(self, vlan=''):
-        if vlan:
-            cmd = 'show ip igmp snooping vlan {}'.format(vlan)
-        else:
-            cmd = 'show ip igmp snooping'
 
-        out = self.device.execute(cmd)
+    cli_command = ['show ip igmp snooping vlan {vlan}', 'show ip igmp snooping']
+
+    def cli(self, vlan='', output=None):
+        if vlan:
+            cmd = self.cli_command[0].format(vlan=vlan)
+        else:
+            cmd = self.cli_command[1]
+
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         # initial variables
         ret_dict = {}
@@ -457,11 +463,20 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
             show ip igmp interface vrf all
             show ip igmp interface vrf <vrf>"""
 
-    def cli(self, vrf=''):
+    cli_command = ['show ip igmp interface vrf {vrf}', 'show ip igmp interface']
+
+    def cli(self, vrf='', output=None):
 
         # excute command to get output
-        out = self.device.execute('show ip igmp interface' if not vrf else
-                                  'show ip igmp interface vrf {}'.format(vrf))
+        if vrf:
+            cmd = self.cli_command[0].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[1]
+
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         # initial variables
         ret_dict = {}
@@ -864,11 +879,20 @@ class ShowIpIgmpGroups(ShowIpIgmpGroupsSchema):
         show ip igmp groups vrf all
         show ip igmp groups vrf <vrf>"""
 
-    def cli(self, vrf=''):
+    cli_command = ['show ip igmp groups vrf {vrf}', 'show ip igmp groups']
+
+    def cli(self, vrf='', output=None):
+
+        if vrf:
+            cmd = self.cli_command[0].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[1]
 
         # excute command to get output
-        out = self.device.execute('show ip igmp groups' if not vrf else
-                                  'show ip igmp groups vrf {}'.format(vrf))
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         # initial variables
         ret_dict = {}
@@ -1005,11 +1029,20 @@ class ShowIpIgmpLocalGroups(ShowIpIgmpLocalGroupsSchema):
         show ip igmp local-groups vrf all
         show ip igmp local-groups vrf <vrf>"""
 
-    def cli(self, vrf=''):
+    cli_command = ['show ip igmp local-groups vrf {vrf}', 'show ip igmp local-groups']
+
+    def cli(self, vrf='', output=None):
+
+        if vrf:
+            cmd = self.cli_command[0].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[1]
 
         # excute command to get output
-        out = self.device.execute('show ip igmp local-groups' if not vrf else
-                                  'show ip igmp local-groups vrf {}'.format(vrf))
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         # initial variables
         ret_dict = {}

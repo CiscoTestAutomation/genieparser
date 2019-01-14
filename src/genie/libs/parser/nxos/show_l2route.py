@@ -44,11 +44,13 @@ class ShowL2routeEvpnMacSchema(MetaParser):
 class ShowL2routeEvpnMac(ShowL2routeEvpnMacSchema):
     """Parser for show l2route evpn mac all"""
 
-    def cli(self):
+    cli_command = 'show l2route evpn mac all'
 
-        cmd = 'show l2route evpn mac all'
-
-        out = self.device.execute(cmd)
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         ret_dict = {}
 
@@ -113,10 +115,17 @@ class ShowL2routeEvpnMacEviSchema(MetaParser):
 class ShowL2routeEvpnMacEvi(ShowL2routeEvpnMacEviSchema):
     """Parser for show l2route evpn mac evi <WORD> mac <WORD>"""
 
-    def cli(self, evi, mac):
+    cli_command = 'show l2route evpn mac evi {evi} mac {mac}'
 
-        cmd = 'show l2route evpn mac evi {k} mac {l}'.format(k=evi, l=mac)
-        out = self.device.execute(cmd)
+    def cli(self, evi, mac, output=None):
+        cmd = ""
+        if evi and mac:
+            cmd = self.cli_command.format(evi=evi, mac=mac)
+
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         ret_dict = {}
 

@@ -34,9 +34,13 @@ class ShowFeatureSchema(MetaParser):
 
 class ShowFeature(ShowFeatureSchema):
     """Parser for show feature"""
+    cli_command = 'show feature'
 
-    def cli(self, cmd='show feature'):
-        out = self.device.execute(cmd)
+    def cli(self, cmd= cli_command, output=None):
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
         f_dict = {}
 
         for line in out.splitlines():
@@ -73,9 +77,8 @@ class ShowFeature(ShowFeatureSchema):
 class ShowFeatureSet(ShowFeature):
     """Parser for show feature-set"""
     pass
-
+    cli_command = 'show feature-set'
     def cli(self):
-        cmd = 'show feature-set'
-        return super().cli(cmd)
+        return super().cli(self.cli_command)
 
 # vim: ft=python et sw=4

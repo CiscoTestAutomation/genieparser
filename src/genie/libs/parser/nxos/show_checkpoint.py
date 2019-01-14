@@ -29,10 +29,14 @@ class ShowCheckpointSummarySchema(MetaParser):
 
 class ShowCheckpointSummary(ShowCheckpointSummarySchema):
     """Parser for show checkpoint summary"""
+    cli_command = 'show checkpoint summary'
 
-    def cli(self):
-        cmd = 'show checkpoint summary'
-        out = self.device.execute(cmd)
+    def cli(self, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         ck_dict = {}
 
         for line in out.splitlines():

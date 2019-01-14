@@ -63,11 +63,19 @@ class ShowIpv6NeighborDetail(ShowIpv6NeighborDetailSchema):
         show ipv6 neighbor detail vrf all
         show ipv6 neighbor detail vrf <vrf>"""
 
-    def cli(self, vrf=""):
-        if not vrf:
-            out = self.device.execute('show ipv6 neighbor detail')
+    cli_command = ['show ipv6 neighbor detail vrf {vrf}','show ipv6 neighbor detail']
+
+    def cli(self, vrf="",output=None):
+        if vrf:
+            cmd = self.cli_command[0].format(vrf=vrf)
         else:
-            out = self.device.execute('show ipv6 neighbor detail vrf {}'.format(vrf))
+            cmd = self.cli_command[1]
+
+            # excute command to get output
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         result_dict = {}
         interface = ""
@@ -222,11 +230,19 @@ class ShowIpv6NdInterface(ShowIpv6NdInterfaceSchema):
         show ipv6 nd interface vrf all
         show ipv6 nd interface vrf <vrf>"""
 
-    def cli(self, vrf=""):
-        if not vrf:
-            out = self.device.execute('show ipv6 nd interface')
+    cli_command = ['show ipv6 nd interface vrf {vrf}','show ipv6 nd interface']
+
+    def cli(self, vrf="",output=None):
+        if vrf:
+            cmd = self.cli_command[0].format(vrf=vrf)
         else:
-            out = self.device.execute('show ipv6 nd interface vrf {}'.format(vrf))
+            cmd = self.cli_command[1]
+
+        # excute command to get output
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         result_dict = {}
 
@@ -511,11 +527,19 @@ class ShowIpv6IcmpNeighborDetail(ShowIpv6IcmpNeighborDetailSchema):
         show ipv6 icmp neighbor detail vrf all
         show ipv6 icmp neighbor detail vrf <vrf>"""
 
-    def cli(self, vrf=""):
-        if not vrf:
-            out = self.device.execute('show ipv6 icmp neighbor detail')
+    cli_command = ['show ipv6 icmp neighbor detail vrf {vrf}','show ipv6 icmp neighbor detail']
+
+    def cli(self, vrf="", output=None):
+        if vrf:
+            cmd = self.cli_command[0].format(vrf=vrf)
         else:
-            out = self.device.execute('show ipv6 icmp neighbor detail vrf {}'.format(vrf))
+            cmd = self.cli_command[1]
+
+        # excute command to get output
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         result_dict = {}
 
@@ -613,11 +637,19 @@ class ShowIpv6Routers(ShowIpv6RoutersSchema):
         show ipv6 routers vrf all
         show ipv6 routers vrf <vrf>"""
 
-    def cli(self, vrf=""):
-        if not vrf:
-            out = self.device.execute('show ipv6 routers')
+    cli_command = ['show ipv6 routers vrf {vrf}','show ipv6 routers']
+
+    def cli(self, vrf="", output=None):
+        if vrf:
+            cmd = self.cli_command[0].format(vrf=vrf)
         else:
-            out = self.device.execute('show ipv6 routers vrf {}'.format(vrf))
+            cmd = self.cli_command[1]
+
+        # excute command to get output
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         result_dict = {}
 

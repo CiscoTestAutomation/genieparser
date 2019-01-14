@@ -107,11 +107,19 @@ class ShowIpv6MldInterface(ShowIpv6MldInterfaceSchema):
         show ipv6 mld interface vrf all
         show ipv6 mld interface vrf <vrf>"""
 
-    def cli(self, vrf=''):
+    cli_command = ['show ipv6 mld interface vrf {vrf}', 'show ipv6 mld interface']
+
+    def cli(self, vrf='', output=None):
+        if vrf:
+            cmd = self.cli_command[0].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[1]
 
         # excute command to get output
-        out = self.device.execute('show ipv6 mld interface' if not vrf else
-                                  'show ipv6 mld interface vrf {}'.format(vrf))
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         # initial variables
         ret_dict = {}
@@ -461,12 +469,19 @@ class ShowIpv6MldGroups(ShowIpv6MldGroupsSchema):
         show ipv6 mld groups
         show ipv6 mld groups vrf all
         show ipv6 mld groups vrf <vrf>"""
+    cli_command = ['show ipv6 mld groups vrf {vrf}', 'show ipv6 mld groups']
 
-    def cli(self, vrf=''):
+    def cli(self, vrf='', output=None):
+        if vrf:
+            cmd = self.cli_command[0].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[1]
 
         # excute command to get output
-        out = self.device.execute('show ipv6 mld groups' if not vrf else
-                                  'show ipv6 mld groups vrf {}'.format(vrf))
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         # initial variables
         ret_dict = {}
@@ -592,12 +607,19 @@ class ShowIpv6MldLocalGroups(ShowIpv6MldLocalGroupsSchema):
         show ipv6 mld local-groups
         show ipv6 mld local-groups vrf all
         show ipv6 mld local-groups vrf <vrf>"""
+    cli_command = ['show ipv6 mld local-groups vrf {vrf}','show ipv6 mld local-groups']
 
-    def cli(self, vrf=''):
+    def cli(self, vrf='', output=None):
+        if vrf:
+            cmd = self.cli_command[0].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[1]
 
         # excute command to get output
-        out = self.device.execute('show ipv6 mld local-groups' if not vrf else
-                                  'show ipv6 mld local-groups vrf {}'.format(vrf))
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         # initial variables
         ret_dict = {}

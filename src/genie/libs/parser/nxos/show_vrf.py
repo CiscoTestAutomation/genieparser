@@ -35,10 +35,15 @@ class ShowVrfSchema(MetaParser):
 class ShowVrf(ShowVrfSchema):
     """Parser for show vrf"""
 
-    def cli(self):
-        cmd = 'show vrf'
-        out = self.device.execute(cmd)
-        
+    cli_command = 'show vrf'
+
+    def cli(self, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         # Init vars
         vrf_dict = {}
 
@@ -81,9 +86,14 @@ class ShowVrfInterfaceSchema(MetaParser):
 class ShowVrfInterface(ShowVrfInterfaceSchema):
     """Parser for show vrf Interface"""
 
-    def cli(self):
-        cmd = 'show vrf interface'
-        out = self.device.execute(cmd)
+    cli_command = 'show vrf interface'
+
+    def cli(self, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         
         # Init vars
         vrf_interface_dict = {}
@@ -141,9 +151,13 @@ class ShowVrfDetailSchema(MetaParser):
 class ShowVrfDetail(ShowVrfDetailSchema):
     """Parser for show vrf <vrf> detail"""
 
-    def cli(self, vrf='all'):
-        cmd = 'show vrf {} detail'.format(vrf)
-        out = self.device.execute(cmd)
+    cli_command = 'show vrf {vrf} detail'
+
+    def cli(self, vrf='all',output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(vrf=vrf))
+        else:
+            out = output
         
         # Init vars
         vrf_dict = {}

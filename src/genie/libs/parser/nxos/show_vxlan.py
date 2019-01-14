@@ -54,8 +54,14 @@ class ShowNvePeers(ShowNvePeersSchema):
     """Parser for :
        show nve peers"""
 
-    def cli(self):
-        out = self.device.execute('show nve peers')
+    cli_command = 'show nve peers'
+
+    def cli(self, output=None):
+        # excute command to get output
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         result_dict = {}
         # Interface Peer-IP          State LearnType Uptime   Router-Mac
@@ -116,8 +122,14 @@ class ShowNveVniSummary(ShowNveVniSummarySchema):
     """Parser for :
        show nve vni summary"""
 
-    def cli(self):
-        out = self.device.execute('show nve vni summary')
+    cli_command = 'show nve vni summary'
+
+    def cli(self, output=None):
+        # excute command to get output
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         result_dict = {}
         # Total CP VNIs: 21    [Up: 21, Down: 0]
@@ -176,8 +188,14 @@ class ShowNveVni(ShowNveVniSchema):
     """parser for:
         show nve vni"""
 
-    def cli(self):
-        out = self.device.execute('show nve vni')
+    cli_command = 'show nve vni'
+
+    def cli(self, output=None):
+        # excute command to get output
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         result_dict = {}
 
@@ -234,9 +252,15 @@ class ShowNveInterfaceSchema(MetaParser):
 class ShowNveInterface(ShowNveInterfaceSchema):
     """Parser for show interface | i nve"""
 
-    def cli(self):
-        cmd = 'show interface | i nve'
-        out = self.device.execute(cmd)
+    cli_command = 'show interface | i nve'
+
+    def cli(self, output=None):
+        # excute command to get output
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         # Init vars
         result_dict = {}
         # nve1 is down (other)
@@ -581,8 +605,14 @@ class ShowNveMultisiteDciLinks(ShowNveMultisiteDciLinksSchema):
     """parser for:
         show nve multisite dci-links"""
 
-    def cli(self):
-        out = self.device.execute('show nve multisite dci-links')
+    cli_command = 'show nve multisite dci-links'
+
+    def cli(self, output=None):
+        # excute command to get output
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         result_dict = {}
         # Interface      State
@@ -634,8 +664,14 @@ class ShowNveMultisiteFabricLinks(ShowNveMultisiteFabricLinksSchema):
     """parser for:
         show nve multisite fabric-links"""
 
-    def cli(self):
-        out = self.device.execute('show nve multisite fabric-links')
+    cli_command = 'show nve multisite fabric-links'
+
+    def cli(self, output=None):
+        # excute command to get output
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # Interface      State
         # ---------      -----
@@ -711,8 +747,15 @@ class ShowNveEthernetSegment(ShowNveEthernetSegmentSchema):
     """parser for:
         show nve ethernet-segment"""
 
-    def cli(self):
-        out = self.device.execute('show nve ethernet-segment')
+    cli_command = 'show nve ethernet-segment'
+
+    def cli(self, output=None):
+        # excute command to get output
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         df_vlans = ""
         result_dict = {}
 
@@ -933,8 +976,14 @@ class ShowL2routeEvpnEternetSegmentAll(ShowL2routeEvpnEternetSegmentAllSchema):
     """parser for:
         show l2route evpn ethernet-segment all"""
 
-    def cli(self):
-        out = self.device.execute('show l2route evpn ethernet-segment all')
+    cli_command = 'show l2route evpn ethernet-segment all'
+
+    def cli(self, output=None):
+        # excute command to get output
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         result_dict = {}
         index = 1
@@ -1009,8 +1058,14 @@ class ShowL2routeTopologyDetail(ShowL2routeTopologyDetailSchema):
     """parser for:
         show l2route topology detail"""
 
-    def cli(self):
-        out = self.device.execute('show l2route topology detail')
+    cli_command = 'show l2route topology detail'
+
+    def cli(self, output=None):
+        # excute command to get output
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         result_dict = {}
         # Topology ID   Topology Name   Attributes
@@ -1127,8 +1182,14 @@ class ShowL2routeMacAllDetail(ShowL2routeMacAllDetailSchema):
     """parser for:
         show l2route mac all detail"""
 
-    def cli(self):
-        out = self.device.execute('show l2route mac all detail')
+    cli_command = 'show l2route mac all detail'
+
+    def cli(self, output=None):
+        # excute command to get output
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         result_dict = {}
         # Topology    Mac Address    Prod   Flags         Seq No     Next-Hops
@@ -1238,8 +1299,14 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
     """parser for:
         show l2route mac-ip all detail"""
 
-    def cli(self):
-        out = self.device.execute('show l2route mac-ip all detail')
+    cli_command = 'show l2route mac-ip all detail'
+
+    def cli(self, output=None):
+        # excute command to get output
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         result_dict = {}
         # Topology    Mac Address    Prod   Flags         Seq No     Host IP         Next-Hops
@@ -1357,8 +1424,14 @@ class ShowL2routeSummary(ShowL2routeSummarySchema):
     """parser for:
         show l2route summary"""
 
-    def cli(self):
-        out = self.device.execute('show l2route summary')
+    cli_command = 'show l2route summary'
+
+    def cli(self, output=None):
+        # excute command to get output
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         result_dict = {}
         # L2ROUTE Summary
@@ -1456,8 +1529,14 @@ class ShowL2routeFlAll(ShowL2routeFlAllSchema):
     """parser for:
         show l2route fl all"""
 
-    def cli(self):
-        out = self.device.execute('show l2route fl all')
+    cli_command = 'show l2route fl all'
+
+    def cli(self, output=None):
+        # excute command to get output
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         result_dict = {}
         index = 0
@@ -1542,8 +1621,14 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
     """parser for:
         show running-config nv overlay"""
 
-    def cli(self):
-        out = self.device.execute('show running-config nv overlay')
+    cli_command = 'show running-config nv overlay'
+
+    def cli(self, output=None):
+        # excute command to get output
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         result_dict = {}
         # feature nv overlay
@@ -1711,8 +1796,14 @@ class ShowNveVniIngressReplication(ShowNveVniIngressReplicationSchema):
     """parser for:
         show nve vni Ingress-replication"""
 
-    def cli(self):
-        out = self.device.execute('show nve vni ingress-replication')
+    cli_command = 'show nve vni ingress-replication'
+
+    def cli(self, output=None):
+        # excute command to get output
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         result_dict = {}
 
@@ -1776,8 +1867,14 @@ class ShowFabricMulticastGlobals(ShowFabricMulticastGlobalsSchema):
     """parser for:
         show fabric multicast globals"""
 
-    def cli(self):
-        out = self.device.execute('show fabric multicast globals')
+    cli_command = 'show fabric multicast globals'
+
+    def cli(self, output=None):
+        # excute command to get output
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         result_dict = {}
 
@@ -1926,12 +2023,19 @@ class ShowFabricMulticastIpSaAdRoute(ShowFabricMulticastIpSaAdRouteSchema):
         show fabric multicast ipv4 sa-ad-route vrf <vrf>
         show fabric multicast ipv4 sa-ad-route vrf all"""
 
-    def cli(self,vrf=""):
+    cli_command = ['show fabric multicast ipv4 sa-ad-route vrf {vrf}','show fabric multicast ipv4 sa-ad-route']
+
+    def cli(self,vrf="",output=None):
         if vrf:
-            out = self.device.execute('show fabric multicast ipv4 sa-ad-route vrf {}'.format(vrf))
+            cmd = self.cli_command[0].format(vrf=vrf)
         else:
             vrf = "default"
-            out = self.device.execute('show fabric multicast ipv4 sa-ad-route')
+            cmd = self.cli_command[1]
+
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         result_dict = {}
         # VRF "default" MVPN SA AD Route Database VNI: 0
@@ -2037,11 +2141,18 @@ class ShowFabricMulticastIpL2Mroute(ShowFabricMulticastIpL2MrouteSchema):
         show fabric multicast ipv4 l2-mroute vni <vni>
         show fabric multicast ipv4 l2-mroute vni all"""
 
-    def cli(self, vni=""):
+    cli_command = ['show fabric multicast ipv4 l2-mroute vni {vni}','show fabric multicast ipv4 l2-mroute vni all']
+
+    def cli(self, vni="",output=None):
         if vni:
-            out = self.device.execute('show fabric multicast ipv4 l2-mroute vni {}'.format(vni))
+            cmd = self.cli_command[0].format(vni=vni)
         else:
-            out = self.device.execute('show fabric multicast ipv4 l2-mroute vni all')
+            cmd = self.cli_command[1]
+
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         result_dict = {}
         # EVPN C-Mcast Route Database for VNI: 10101

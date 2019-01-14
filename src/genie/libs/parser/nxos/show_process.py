@@ -42,10 +42,19 @@ class ShowProcessesSchema(MetaParser):
 class ShowProcesses(ShowProcessesSchema):
     """Parser for show processes <process>"""
 
-    def cli(self, process=''):
-        cmd = 'show processes' if not process else \
-              'show processes | include {}'.format(process)
-        out = self.device.execute(cmd)
+    cli_command = ['show processes | include {process}','show processes']
+
+    def cli(self, process='',output=None):
+        if process:
+            cmd = self.cli_command[0].format(process=process)
+        else:
+            cmd = self.cli_command[1]
+
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
         ret_dict = {}
         sub_dict = {}
 

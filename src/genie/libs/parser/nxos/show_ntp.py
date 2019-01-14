@@ -65,10 +65,14 @@ class ShowNtpPeerStatus(ShowNtpPeerStatusSchema):
                 '=': 'client',
                 None: 'unsynchronized'}
 
-    def cli(self):
+    cli_command = 'show ntp peer-status'
 
-        # execute command to get output
-        out = self.device.execute('show ntp peer-status')
+    def cli(self, output=None):
+        # excute command to get output
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # initial variables
         ret_dict = {}
@@ -159,10 +163,14 @@ class ShowNtpPeersSchema(MetaParser):
 class ShowNtpPeers(ShowNtpPeersSchema):
     """Parser for: show ntp peers"""
 
-    def cli(self):
+    cli_command = 'show ntp peers'
 
+    def cli(self, output=None):
         # excute command to get output
-        out = self.device.execute('show ntp peers')
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # initial variables
         ret_dict = {}

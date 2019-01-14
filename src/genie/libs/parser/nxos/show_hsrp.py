@@ -59,10 +59,14 @@ class ShowHsrpSummarySchema(MetaParser):
 
 class ShowHsrpSummary(ShowHsrpSummarySchema):
     """Parser for show hsrp summary"""
-    def cli(self):
-        cmd = 'show hsrp summary'
-        out = self.device.execute(cmd)
-        
+    cli_command = 'show hsrp summary'
+
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         # Init vars
         hsrp_summary = {}
         
@@ -800,9 +804,14 @@ class ShowHsrpDelaySchema(MetaParser):
 
 class ShowHsrpDelay(ShowHsrpDelaySchema):
     """Parser for show hsrp delay"""
-    def cli(self):
-        cmd = 'show hsrp delay'
-        out = self.device.execute(cmd)
+
+    cli_command = 'show hsrp delay'
+
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # Init vars
         hsrp_delay_dict = {}

@@ -34,14 +34,18 @@ class ShowRunningConfigTrmSchema(MetaParser):
 class ShowRunningConfigTrm(ShowRunningConfigTrmSchema):
     """Parser for show running-config | sec '^advertise evpn multicast'"""
 
-    def cli(self):
+    cli_command = "show running-config | sec '^advertise evpn multicast'"
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         result_dict = {}
 
         # advertise evpn multicast
         p1 = re.compile(r'^advertise +evpn +multicast$')
-
-        cmd = "show running-config | sec '^advertise evpn multicast'"
-        out = self.device.execute(cmd)
 
         for line in out.splitlines():
             line = line.strip()
