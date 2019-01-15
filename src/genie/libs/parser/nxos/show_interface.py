@@ -2633,11 +2633,10 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
     def cli(self, intf, output=None):
 
         cmd = ""
-        if intf:
-            cmd = self.cli_command.format(intf=intf)
-
         if output is None:
-            out = self.device.execute(cmd)
+            if intf:
+                cmd = self.cli_command.format(intf=intf)
+                out = self.device.execute(cmd)
         else:
             out = output
 
@@ -2776,11 +2775,10 @@ class ShowNveInterface(ShowNveInterfaceSchema):
 
     def cli(self, intf, output=None):
         cmd = ""
-        if intf:
-            cmd = self.cli_command.format(intf=intf)
-
         if output is None:
-            out = self.device.execute(cmd)
+            if intf:
+                cmd = self.cli_command.format(intf=intf)
+                out = self.device.execute(cmd)
         else:
             out = output
 
@@ -2894,12 +2892,11 @@ class ShowIpInterfaceBriefVrfAll(ShowIpInterfaceBriefVrfAllSchema):
         typically contains 3 steps: exe
         cuting, transforming, returning
         '''
-        if ip:
-            cmd = self.cli_command[0].format(ip=ip)
-        else:
-            cmd = self.cli_command[1]
-
         if output is None:
+            if ip:
+                cmd = self.cli_command[0].format(ip=ip)
+            else:
+                cmd = self.cli_command[1]
             out = self.device.execute(cmd)
         else:
             out = output

@@ -1032,14 +1032,11 @@ class ShowIpIgmpLocalGroups(ShowIpIgmpLocalGroupsSchema):
     cli_command = ['show ip igmp local-groups vrf {vrf}', 'show ip igmp local-groups']
 
     def cli(self, vrf='', output=None):
-
-        if vrf:
-            cmd = self.cli_command[0].format(vrf=vrf)
-        else:
-            cmd = self.cli_command[1]
-
-        # excute command to get output
         if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
             out = self.device.execute(cmd)
         else:
             out = output

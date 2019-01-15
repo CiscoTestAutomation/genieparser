@@ -176,14 +176,11 @@ class ShowIpArpSummaryVrfAll(ShowIpArpSummaryVrfAllSchema):
 	cli_command = ['show ip arp summary vrf {vrf}', 'show ip arp summary']
 
 	def cli(self, vrf=None, output=None):
-
-		if vrf:
-			cmd = self.cli_command[0].format(vrf=vrf)
-		else:
-			cmd = self.cli_command[1]
-
-		# excute command to get output
 		if output is None:
+			if vrf:
+				cmd = self.cli_command[0].format(vrf=vrf)
+			else:
+				cmd = self.cli_command[1]
 			out = self.device.execute(cmd)
 		else:
 			out = output
@@ -338,14 +335,11 @@ class ShowIpArpstatisticsVrfAll(ShowIpArpstatisticsVrfAllSchema):
 	cli_command = ['show ip arp statistics vrf {vrf}', 'show ip arp statistics']
 
 	def cli(self, vrf=None, output=None):
-
-		if vrf:
-			cmd = self.cli_command[0].format(vrf=vrf)
-		else:
-			cmd = self.cli_command[1]
-
-		# excute command to get output
 		if output is None:
+			if vrf:
+				cmd = self.cli_command[0].format(vrf=vrf)
+			else:
+				cmd = self.cli_command[1]
 			out = self.device.execute(cmd)
 		else:
 			out = output

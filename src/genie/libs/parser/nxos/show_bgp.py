@@ -3177,10 +3177,9 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
     cli_command = 'show bgp vrf all all nexthop-database'
 
     def cli(self, cmd = "", output=None):
-        if not cmd:
-            cmd= self.cli_command
-
         if output is None:
+            if not cmd:
+                cmd= self.cli_command
             out = self.device.execute(cmd)
         else:
             out = output
@@ -8943,24 +8942,29 @@ class ShowBgpPolicyStatisticsDampening(ShowBgpPolicyStatisticsParser):
     """Parser for:
         show bgp [vrf <vrf>] <address_family> policy statistics dampening
         parser class implements detail parsing mechanisms for cli,xml output"""
-    
-    def cli(self, address_family, vrf=''):
-        if vrf:
-            cmd = 'show bgp vrf {vrf} {af} policy statistics dampening'\
-                  .format(vrf=vrf, af=address_family)
-        else:
-            cmd = 'show bgp {af} policy statistics dampening'\
-                  .format(af=address_family)
-        return super().cli(cmd)
+    cli_command = ['show bgp vrf {vrf} {af} policy statistics dampening','show bgp {af} policy statistics dampening']
+    xml_command = ['show bgp vrf {vrf} {af} policy statistics dampening','show bgp {af} policy statistics dampening']
 
-    def xml(self, address_family, vrf=''):
-        if vrf:
-            cmd = 'show bgp vrf {vrf} {af} policy statistics dampening'\
-                  .format(vrf=vrf, af=address_family)
+    def cli(self, address_family, vrf='',output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf, af=address_family)
+            else:
+                cmd = self.cli_command[0].format(af=address_family)
         else:
-            cmd = 'show bgp {af} policy statistics dampening'\
-                  .format(af=address_family)
-        return super().xml(cmd)
+            cmd = ""
+        return super().cli(cmd=cmd,output=output)
+
+    def xml(self, address_family, vrf='',output=None):
+        if output is None:
+            if vrf:
+                cmd = self.xml_command[0].format(vrf=vrf, af=address_family)
+            else:
+                cmd = self.xml_command[1].format(vrf=vrf, af=address_family)
+        else:
+            cmd = ""
+
+        return super().xml(cmd=cmd,output=output)
 
 
 # =========================================
@@ -9011,12 +9015,11 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
     xml_command = ['show bgp sessions vrf {vrf} | xml','show bgp sessions | xml']
 
     def cli(self, vrf='',output=None):
-        if vrf:
-            cmd = self.cli_command[0].format(vrf=vrf)
-        else:
-             cmd = self.cli_command[1]
-
         if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                 cmd = self.cli_command[1]
             out = self.device.execute(cmd)
         else:
             out = output
@@ -9135,14 +9138,14 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
         return ret_dict
 
     def xml(self, vrf='',output=None):
-        if vrf:
-            cmd = self.xml_command[0].format(vrf=vrf)
-            cli_cmd = self.cli_command[0].format(vrf=vrf)
-        else:
-            cmd = self.xml_command[1]
-            cli_cmd = self.cli_command[1]
-
         if output is None:
+            if vrf:
+                cmd = self.xml_command[0].format(vrf=vrf)
+                cli_cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.xml_command[1]
+                cli_cmd = self.cli_command[1]
+
             out = self.device.execute(cmd)
         else:
             out = output
@@ -9410,12 +9413,13 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
         assert address_family in ['ipv4 unicast', 'ipv4 multicast',
                                   'ipv6 unicast', 'ipv6 multicast',
                                   'vpnv4 unicast', 'vpnv6 unicast']
-        if vrf:
-            cmd = self.cli_command[0].format(af=address_family,vrf=vrf)
-        else:
-             cmd = self.cli_command[1].format(af=address_family)
+
 
         if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(af=address_family, vrf=vrf)
+            else:
+                cmd = self.cli_command[1].format(af=address_family)
             out = self.device.execute(cmd)
         else:
             out = output
@@ -9590,12 +9594,13 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
                                   'ipv6 unicast', 'ipv6 multicast',
                                   'vpnv4 unicast', 'vpnv6 unicast']
 
-        if vrf:
-            cmd = self.xml_command[0].format(af=address_family, vrf=vrf)
-            cli_cmd = self.cli_command[0].format(af=address_family, vrf=vrf)
-        else:
-            cmd = self.xml_command[1].format(af=address_family)
-            cli_cmd = self.cli_command[0].format(af=address_family)
+        if output is None:
+            if vrf:
+                cmd = self.xml_command[0].format(af=address_family, vrf=vrf)
+                cli_cmd = self.cli_command[0].format(af=address_family, vrf=vrf)
+            else:
+                cmd = self.xml_command[1].format(af=address_family)
+                cli_cmd = self.cli_command[0].format(af=address_family)
 
         if output is None:
             out = self.device.execute(cmd)
@@ -10929,15 +10934,14 @@ class ShowBgpL2vpnEvpnWord(ShowBgpL2vpnEvpnWordSchema):
     cli_command = ['show bgp l2vpn evpn {k} | grep -b {n} -a {l} "best path"','show bgp l2vpn evpn {k} | be "best path, in rib" n {l}']
 
     def cli(self, mac, count1, count2=None,output=None):
-        if mac and count1:
-            if count2:
-                cmd = self.cli_command[0].format(k=mac, n=count1, l=count2)
-            else:
-                cmd = self.cli_command[1].format(k=mac, l=count1)
-        else:
-            cmd = ""
-
         if output is None:
+            if mac and count1:
+                if count2:
+                    cmd = self.cli_command[0].format(k=mac, n=count1, l=count2)
+                else:
+                    cmd = self.cli_command[1].format(k=mac, l=count1)
+            else:
+                cmd = ""
             out = self.device.execute(cmd)
         else:
             out = output
@@ -11043,16 +11047,15 @@ class ShowBgpIpMvpnRouteType(ShowBgpIpMvpnRouteTypeSchema):
                    'show bgp ipv4 mvpn']
 
     def cli(self, route_type="",vrf="",cmd="",output=None):
-        if cmd is None:
-            if vrf and route_type:
-                cmd = self.cli_command[0].format(route_type=route_type,vrf=vrf)
-            elif route_type and not vrf:
-                vrf = 'default'
-                cmd = self.cli_command[1].format(route_type=route_type)
-            elif not route_type and not vrf:
-                cmd = self.cli_command[2]
-
         if output is None:
+            if cmd is None:
+                if vrf and route_type:
+                    cmd = self.cli_command[0].format(route_type=route_type,vrf=vrf)
+                elif route_type and not vrf:
+                    vrf = 'default'
+                    cmd = self.cli_command[1].format(route_type=route_type)
+                elif not route_type and not vrf:
+                    cmd = self.cli_command[2]
             out = self.device.execute(cmd)
         else:
             out = output
@@ -11279,13 +11282,12 @@ class ShowBgpIpMvpnSaadDetail(ShowBgpIpMvpnSaadDetailSchema):
     cli_command = ['show bgp ipv4 mvpn sa-ad detail vrf {vrf}','show bgp ipv4 mvpn sa-ad detail']
 
     def cli(self,vrf="",output=None):
-        if vrf:
-            cmd = self.cli_command[0].format(vrf=vrf)
-        else:
-            cmd = self.cli_command[1]
-
         if output is None:
-            out = out = self.device.execute(cmd)
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -11523,11 +11525,13 @@ class ShowBgpL2vpnEvpn(ShowBgpIpMvpnRouteType):
     cli_command = ['show bgp l2vpn evpn vrf {vrf}','show bgp l2vpn evpn']
 
     def cli(self, vrf="",output=None):
-        if vrf:
-            cmd = self.cli_command[0].format(vrf=vrf)
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
         else:
-            cmd = self.cli_command[1]
-
+             cmd = ""
         return super().cli(cmd=cmd,output=output)
 
 
@@ -11541,6 +11545,9 @@ class ShowBgpIpMvpn(ShowBgpIpMvpnRouteType):
     cli_command = 'show bgp ipv4 mvpn'
 
     def cli(self,output=None):
-        cmd = self.cli_command
+        if output is None:
+            cmd = self.cli_command
+        else:
+            cmd = ""
 
         return super().cli(cmd=cmd,output=output)
