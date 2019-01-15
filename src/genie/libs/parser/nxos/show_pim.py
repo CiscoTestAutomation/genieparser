@@ -1319,8 +1319,8 @@ class ShowIpv6PimRp(ShowPimRp):
         show ipv6 pim rp
         show ipv6 pim rp vrf <vrf>"""
 
-    def cli(self, vrf=''):
-        return super().cli(af='ipv6', vrf=vrf)
+    def cli(self, vrf='',output=None):
+        return super().cli(af='ipv6', vrf=vrf, output=output)
 
 # ==========================================================
 #  parser for 'show ip pim rp [vrf <vrf>]'
@@ -1330,8 +1330,8 @@ class ShowIpPimRp(ShowPimRp):
         show ip pim rp
         show ip pim rp vrf <vrf>"""
 
-    def cli(self, vrf=''):
-        return super().cli(af='ip', vrf=vrf)
+    def cli(self, vrf='',output=None):
+        return super().cli(af='ip', vrf=vrf, output=output)
 
 
 # ==============================================
@@ -1382,14 +1382,19 @@ class ShowIpv6PimDf(ShowIpv6PimDfSchema):
         show ipv6 pim df
         show ipv6 pim df vrf <vrf>"""
 
-    def cli(self, vrf=""):
+    cli_command = ['show ipv6 pim df vrf {vrf}', 'show ipv6 pim df']
 
+    def cli(self, vrf='', output=None):
         if vrf:
-            cmd = 'show ipv6 pim df vrf {}'.format(vrf)
+            cmd = self.cli_command[0].format(vrf=vrf)
         else:
-            cmd = 'show ipv6 pim df'
+            cmd = self.cli_command[1]
 
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
         af_name = 'ipv6'
         # Init dictionary
         parsed_dict = dict()
