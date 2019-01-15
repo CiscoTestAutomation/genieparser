@@ -75,10 +75,13 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
                 'u': 'unicast',
                 '-': 'active'}
 
-    def cli(self):
+    cli_command = 'show ntp associations'
 
-        # execute command to get output
-        out = self.device.execute('show ntp associations')
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # initial variables
         ret_dict = {}
@@ -184,7 +187,8 @@ class ShowNtpStatusSchema(MetaParser):
 class ShowNtpStatus(ShowNtpStatusSchema):
     """Parser for: show ntp status"""
 
-    def cli(self):
+    cli_command = 'show ntp status'
+    def cli(self,output=None):
 
         def _conver_val(value):
             if not value:
@@ -199,7 +203,10 @@ class ShowNtpStatus(ShowNtpStatusSchema):
                 return value
 
         # excute command to get output
-        out = self.device.execute('show ntp status')
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # initial variables
         ret_dict = {}
@@ -312,10 +319,13 @@ class ShowConfigurationSystemNtpSetSchema(MetaParser):
 class ShowConfigurationSystemNtpSet(ShowConfigurationSystemNtpSetSchema):
     """Parser for: show configuration system ntp | display set """
 
-    def cli(self):
+    cli_command = 'show configuration system ntp | display set'
 
-        # excute command to get output
-        out = self.device.execute('show configuration system ntp | display set')
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # initial variables
         ret_dict = {}
