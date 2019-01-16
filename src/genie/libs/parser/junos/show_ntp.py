@@ -90,7 +90,7 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
         # ===============================================================================
         # x10.2.2.2         171.68.38.65     2 -   84  128  271    1.470  -46.760  52.506
         p1 = re.compile(r'^(?P<mode_code>[xo\*\-\+\=]+)? *(?P<remote>[\w\.\:]+) +'
-                         '(?P<refid>[\w\.]+) +(?P<stratum>\d+) +(?P<type>[blmu\-]+) +'
+                         '(?P<refid>[\S]+) +(?P<stratum>\d+) +(?P<type>[blmu\-]+) +'
                          '(?P<receive_time>\d+) +(?P<poll>\d+) +'
                          '(?P<reach>\d+) +(?P<delay>[\d\.]+) +'
                          '(?P<offset>[\d\.\-]+) +(?P<jitter>[\d\.\-]+)$')
@@ -102,6 +102,7 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
                 continue
 
             # *171.68.38.65     .GNSS.           1 -   59   64  377    1.436   73.819  10.905
+            # *1.1.1.1         LOCAL(1)         8 -    7   64   37   15.887  -368.01 772.797
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
@@ -174,7 +175,8 @@ class ShowNtpStatusSchema(MetaParser):
                 Optional('stratum'): int,
                 Optional('synch_source'): str,
                 Optional('system'): str,
-                Optional('version'): str
+                Optional('version'): str,
+                Optional('leap'): str,
             }
         }
     }
@@ -262,11 +264,15 @@ class ShowNtpStatus(ShowNtpStatusSchema):
             m = p4.findall(line)
             if m:
                 clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
-                for k, v in m:                
-                    v = _conver_val(v)
-                    if v:
+                for k, v in m:
+                    if k == 'leap':
                         clock_dict[k] = v
-                continue
+                        continue
+                    else:
+                        v = _conver_val(v)
+                        if v is not None:
+                            clock_dict[k] = v
+                            continue
 
         return ret_dict
 

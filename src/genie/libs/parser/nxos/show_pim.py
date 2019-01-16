@@ -2020,10 +2020,10 @@ class ShowIpv6PimNeighbor(ShowIpv6PimNeighborSchema):
         secondary_address = []
 
         for line in output.splitlines():
-            line = line.rstrip()
+            line = line.strip()
 
             # PIM Neighbor Status for VRF "VRF1"
-            p1 = re.compile(r'^\s*PIM6 +Neighbor +Status +for +VRF +\"(?P<vrf_name>[\S]+)\"$')
+            p1 = re.compile(r'^PIM6 +Neighbor +Status +for +VRF +\"(?P<vrf_name>[\S]+)\"$')
             m = p1.match(line)
             if m:
                 vrf_name = m.groupdict()['vrf_name']
@@ -2031,51 +2031,10 @@ class ShowIpv6PimNeighbor(ShowIpv6PimNeighborSchema):
                 secondary_address = []
                 continue
 
-            #  Secondary addresses:
-            p3 = re.compile(r'^\s*Secondary +addresses:$')
-            m = p3.match(line)
-            if m:
-                second_address_flag = True
-                continue
-
-            #    2001:db8:11:33::33
-            p4 = re.compile(r'^\s*(?P<space>\s{4})(?P<secondary_address>[\S]+)$')
-            m = p4.match(line)
-            if m:
-                secondary_address.append(m.groupdict()['secondary_address'])
-                if intf_name and vrf_name:
-                    if 'vrf' not in parsed_output:
-                        parsed_output['vrf'] = {}
-                    if vrf_name not in parsed_output['vrf']:
-                        parsed_output['vrf'][vrf_name] = {}
-
-                    if 'interfaces' not in parsed_output['vrf'][vrf_name]:
-                        parsed_output['vrf'][vrf_name]['interfaces'] = {}
-                    if intf_name not in parsed_output['vrf'][vrf_name]['interfaces']:
-                        parsed_output['vrf'][vrf_name]['interfaces'][intf_name] = {}
-
-                    if 'address_family' not in parsed_output['vrf'][vrf_name]['interfaces'][intf_name]:
-                        parsed_output['vrf'][vrf_name]['interfaces'][intf_name]['address_family'] = {}
-                    if af_name not in parsed_output['vrf'][vrf_name]['interfaces']\
-                            [intf_name]['address_family']:
-                        parsed_output['vrf'][vrf_name]['interfaces'][intf_name]\
-                            ['address_family'][af_name] = {}
-
-                    if 'neighbors' not in parsed_output['vrf'][vrf_name]['interfaces']\
-                            [intf_name]['address_family'][af_name]:
-                        parsed_output['vrf'][vrf_name]['interfaces'] \
-                            [intf_name]['address_family'][af_name]['neighbors'] = {}
-
-                    parsed_output['vrf'][vrf_name]['interfaces'] \
-                        [intf_name]['address_family'][af_name]['neighbors'] \
-                        ['secondary_address'] = secondary_address
-
-                continue
-
             # Neighbor Address              Interface   Uptime    Expires   DR   Bidir-  BFD
             #                                                               Pri  Capable State
             # fe80::5054:ff:fe5b:aa80       Eth2/2      07:31:36  00:01:28  1    yes     n/a
-            p2 = re.compile(r'^\s*(?P<neighbor>[\S]+)'
+            p2 = re.compile(r'^(?P<neighbor>[\S]+)'
                             ' +(?P<intf_name>[\S]+)'
                             ' +(?P<up_time>[\S]+)'
                             ' +(?P<expires>[\S]+)'
@@ -2084,6 +2043,7 @@ class ShowIpv6PimNeighbor(ShowIpv6PimNeighborSchema):
                             ' +(?P<bfd_state>[\S]+)$')
             m = p2.match(line)
             if m:
+                second_address_flag = False
                 neighbor = m.groupdict()['neighbor']
                 intf_name = Common.convert_intf_name(m.groupdict()['intf_name'])
                 up_time = m.groupdict()['up_time']
@@ -2091,7 +2051,6 @@ class ShowIpv6PimNeighbor(ShowIpv6PimNeighborSchema):
                 dr_priority = int(m.groupdict()['dr_priority'])
                 bidir_capable = True if m.groupdict()['bidir_capable'].lower() == 'yes' else False
                 bfd_state = m.groupdict()['bfd_state']
-
 
                 if intf_name and vrf_name:
                     if 'vrf' not in parsed_output:
@@ -2136,7 +2095,46 @@ class ShowIpv6PimNeighbor(ShowIpv6PimNeighborSchema):
                     parsed_output['vrf'][vrf_name]['interfaces'] \
                         [intf_name]['address_family'][af_name]['neighbors'][neighbor]\
                         ['bidir_capable'] = bidir_capable
+                    continue
 
+            #  Secondary addresses:
+            p3 = re.compile(r'^Secondary +addresses:$')
+            m = p3.match(line)
+            if m:
+                second_address_flag = True
+                continue
+
+            #    2001:db8:11:33::33
+            p4 = re.compile(r'^(?P<secondary_address>([a-zA-Z0-9\.\:]+))$')
+            m = p4.match(line)
+            if second_address_flag and m:
+                secondary_address.append(m.groupdict()['secondary_address'])
+                if intf_name and vrf_name:
+                    if 'vrf' not in parsed_output:
+                        parsed_output['vrf'] = {}
+                    if vrf_name not in parsed_output['vrf']:
+                        parsed_output['vrf'][vrf_name] = {}
+
+                    if 'interfaces' not in parsed_output['vrf'][vrf_name]:
+                        parsed_output['vrf'][vrf_name]['interfaces'] = {}
+                    if intf_name not in parsed_output['vrf'][vrf_name]['interfaces']:
+                        parsed_output['vrf'][vrf_name]['interfaces'][intf_name] = {}
+
+                    if 'address_family' not in parsed_output['vrf'][vrf_name]['interfaces'][intf_name]:
+                        parsed_output['vrf'][vrf_name]['interfaces'][intf_name]['address_family'] = {}
+                    if af_name not in parsed_output['vrf'][vrf_name]['interfaces']\
+                            [intf_name]['address_family']:
+                        parsed_output['vrf'][vrf_name]['interfaces'][intf_name]\
+                            ['address_family'][af_name] = {}
+
+                    if 'neighbors' not in parsed_output['vrf'][vrf_name]['interfaces']\
+                            [intf_name]['address_family'][af_name]:
+                        parsed_output['vrf'][vrf_name]['interfaces'] \
+                            [intf_name]['address_family'][af_name]['neighbors'] = {}
+
+                    parsed_output['vrf'][vrf_name]['interfaces'] \
+                        [intf_name]['address_family'][af_name]['neighbors'] \
+                        ['secondary_address'] = secondary_address
                 continue
 
         return parsed_output
