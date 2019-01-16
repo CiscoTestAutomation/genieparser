@@ -1,0 +1,8 @@
+root_directories:
+  parser_genie_parser:
+     root: 'genie.libs.parser'
+     mod_name: 'parser'
+     url:
+         link: 'https://github.com/CiscoTestAutomation/genieparser/tree/{branch}/'
+         branch: 'master'
+         style: 'github'
