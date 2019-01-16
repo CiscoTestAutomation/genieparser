@@ -36,6 +36,8 @@ class test_show_vrf_detail(unittest.TestCase):
                                                       'vrf_label': {'allocation_mode': 'per-prefix'}}},
                   'flags': '0x180C',
                   'interfaces': ['Loopback1', 'GigabitEthernet0/4.200'],
+                  'interface': {'Loopback1': {'vrf': 'VRF1'},
+                                'GigabitEthernet0/4.200': {'vrf': 'VRF1'}},
                   'route_distinguisher': '100:1',
                   'vrf_id': 1},
          'VRF2': {'address_family': {'ipv4 unicast': {'flags': '0x0',

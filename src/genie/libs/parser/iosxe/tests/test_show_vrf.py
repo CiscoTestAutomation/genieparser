@@ -29,6 +29,9 @@ class test_show_vrf_detail(unittest.TestCase):
               "interfaces": [
                    "GigabitEthernet0/0"
               ],
+              "interface": {
+                   "GigabitEthernet0/0": {'vrf': 'Mgmt-vrf'}
+              },
               "address_family": {
                    "ipv4 unicast": {
                         "table_id": "0x1",
@@ -51,6 +54,9 @@ class test_show_vrf_detail(unittest.TestCase):
               "interfaces": [
                    "GigabitEthernet0/0"
               ],
+              "interface": {
+                   "GigabitEthernet0/0": {'vrf': 'VRF1'}
+              },
               "address_family": {
                    "ipv4 unicast": {
                         "export_to_global": {

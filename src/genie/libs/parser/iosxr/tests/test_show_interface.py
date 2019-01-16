@@ -269,6 +269,22 @@ class test_show_interface(unittest.TestCase):
                        'rxload': 'unknown',
                        'txload': 'unknown',
                        'types': 'management ethernet'},
+'Loopback0': {'bandwidth': 0,
+              'description': 'loopback0 BGP test',
+              'enabled': True,
+              'encapsulations': {'encapsulation': 'loopback'},
+              'interface_state': 1,
+              'ipv4': {'10.255.20.81/32': {'ip': '10.255.20.81',
+                                           'prefix_length': '32'}},
+              'last_input': 'Unknown',
+              'last_link_flapped': '13:45:11',
+              'last_output': 'Unknown',
+              'line_protocol': 'up',
+              'mtu': 1500,
+              'oper_status': 'up',
+              'reliability': 'Unknown',
+              'rxload': 'unknown',
+              'txload': 'unknown'},
  'Null0': {'bandwidth': 0,
            'counters': {'in_broadcast_pkts': 0,
                         'in_discards': 0,
@@ -434,6 +450,20 @@ class test_show_interface(unittest.TestCase):
          0 output errors, 0 underruns, 0 applique, 0 resets
          0 output buffer failures, 0 output buffers swapped out
          1 carrier transitions
+
+    Loopback0 is up, line protocol is up 
+      Interface state transitions: 1
+      Hardware is Loopback interface(s)
+      Description: loopback0 BGP test
+      Internet address is 10.255.20.81/32
+      MTU 1500 bytes, BW 0 Kbit
+         reliability Unknown, txload Unknown, rxload Unknown
+      Encapsulation Loopback,  loopback not set,
+      Last link flapped 13:45:11
+      Last input Unknown, output Unknown
+      Last clearing of "show interface" counters Unknown
+      Input/output data rate is disabled.
+    
     '''}
 
     def test_empty(self):
