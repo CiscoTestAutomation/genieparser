@@ -69,6 +69,8 @@ class CreateApiDoc(object):
             self.output[cli] = {}
 
         output = self.output[cli]
+        output['module_name'] = mod.__name__.rsplit('.', 1)[-1]
+        output['class'] = parser.__name__
         for token in tokens:
             if token not in output:
                 output[token] = {}
