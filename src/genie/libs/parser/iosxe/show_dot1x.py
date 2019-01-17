@@ -83,11 +83,13 @@ class ShowDot1xAllDetailSchema(MetaParser):
 class ShowDot1xAllDetail(ShowDot1xAllDetailSchema):
     """Parser for show dot1x all details"""
 
-    CMD = 'show dot1x all details'
+    cli_command = 'show dot1x all details'
 
-    def cli(self):
-         # get output from device
-        out = self.device.execute(self.CMD)
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # initial return dictionary
         ret_dict = {}
@@ -264,7 +266,7 @@ class ShowDot1xSchema(MetaParser):
 class ShowDot1x(ShowDot1xAllDetail, ShowDot1xSchema):
     """Parser for show dot1x"""
 
-    CMD = 'show dot1x'
+    cli_command = 'show dot1x'
 
 
 # ======================================
@@ -302,10 +304,13 @@ class ShowDot1xAllStatisticsSchema(MetaParser):
 class ShowDot1xAllStatistics(ShowDot1xAllStatisticsSchema):
     """Parser for show dot1x all statistics"""
 
-    def cli(self):
-         # get output from device
-        out = self.device.execute('show dot1x all statistics')
+    cli_command = 'show dot1x all statistics'
 
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         # initial return dictionary
         ret_dict = {}
 
@@ -371,9 +376,14 @@ class ShowDot1xAllSummarySchema(MetaParser):
 class ShowDot1xAllSummary(ShowDot1xAllSummarySchema):
     """Parser for show dot1x all summary"""
 
-    def cli(self):
-         # get output from device
-        out = self.device.execute('show dot1x all summary')
+    cli_command= 'show dot1x all summary'
+
+    def cli(self,output=None):
+        if output is None:
+            # get output from device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # initial return dictionary
         ret_dict = {}
@@ -440,9 +450,14 @@ class ShowDot1xAllCountSchema(MetaParser):
 class ShowDot1xAllCount(ShowDot1xAllCountSchema):
     """Parser for show dot1x all count"""
 
-    def cli(self):
-         # get output from device
-        out = self.device.execute('show dot1x all count')
+    cli_command = 'show dot1x all count'
+
+    def cli(self,output=None):
+        if output is None:
+            # get output from device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # initial return dictionary
         ret_dict = {}

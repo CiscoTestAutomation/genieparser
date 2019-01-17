@@ -62,15 +62,18 @@ class ShowIpv6MldInterface(ShowIpv6MldInterfaceSchema):
         show ipv6 mld interface
         show ipv6 mld vrf <vrf> interface"""
 
-    def cli(self, vrf=''):
+    cli_command = ['show ipv6 mld vrf {vrf} interface','show ipv6 mld interface']
 
-        cmd = 'show ipv6 mld interface' if not vrf else \
-              'show ipv6 mld vrf {} interface'.format(vrf)
-
-        vrf = 'default' if not vrf else vrf
-
-        # excute command to get output
-        out = self.device.execute(cmd)
+    def cli(self, vrf='',output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                vrf = 'default'
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         # initial variables
         ret_dict = {}
@@ -272,15 +275,18 @@ class ShowIpv6MldGroupsDetail(ShowIpv6MldGroupsDetailSchema):
         show ipv6 mld groups detail
         show ipv6 mld vrf <vrf> groups detail"""
 
-    def cli(self, vrf=''):
+    cli_command = ['show ipv6 mld vrf {vrf} groups detail', 'show ipv6 mld groups detail']
 
-        cmd = 'show ipv6 mld groups detail' if not vrf else \
-              'show ipv6 mld vrf {} groups detail'.format(vrf)
-
-        vrf = 'default' if not vrf else vrf
-
-        # excute command to get output
-        out = self.device.execute(cmd)
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                vrf = 'default'
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         # initial variables
         ret_dict = {}
@@ -447,15 +453,18 @@ class ShowIpv6MldSsmMap(ShowIpv6MldSsmMapSchema):
         show ipv6 mld ssm-map <group_address>
         show ipv6 mld vrf <vrf> ssm-map <group_address>"""
 
-    def cli(self, group, vrf=''):
+    cli_command = ['show ipv6 mld vrf {vrf} ssm-map {group}', 'show ipv6 mld ssm-map {group}']
 
-        cmd = 'show ipv6 mld ssm-map {group}'.format(group=group) if not vrf else \
-              'show ipv6 mld vrf {vrf} ssm-map {group}'.format(vrf=vrf, group=group)
-
-        vrf = 'default' if not vrf else vrf
-
-        # excute command to get output
-        out = self.device.execute(cmd)
+    def cli(self, group, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf, group=group)
+            else:
+                vrf = 'default'
+                cmd = self.cli_command[1].format(group=group)
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         # initial variables
         ret_dict = {}

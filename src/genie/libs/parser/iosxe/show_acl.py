@@ -217,9 +217,14 @@ class ShowAccessLists(ShowAccessListsSchema):
        'xdmcp':          177
     }
 
-    def cli(self):
-         # get output from device
-        out = self.device.execute('show access-lists')
+    cli_command = 'show access-lists'
+
+    def cli(self,output=None):
+        if output is None:
+            # get output from device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # initial return dictionary
         ret_dict = {}

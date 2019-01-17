@@ -193,10 +193,13 @@ class ShowIpOspf(ShowIpOspfSchema):
 
     ''' Parser for "show ip ospf" '''
 
-    def cli(self):
+    cli_command = 'show ip ospf'
 
-        # Execute command on device
-        out = self.device.execute('show ip ospf')
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # Init vars
         ret_dict = {}
@@ -1322,10 +1325,10 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
 
     ''' Parser for "show ip ospf interface" '''
 
-    def cli(self):
+    cli_command = 'show ip ospf interface'
 
-        # Execute command on device
-        out = self.device.execute('show ip ospf interface')
+    def cli(self):
+        out = self.device.execute(self.cli_command)
 
         # Init vars
         ret_dict = {}
@@ -1976,12 +1979,14 @@ class ShowIpOspfLinksParser(MetaParser):
 
     ''' Parser for "show ip ospf <WORD>-links" '''
 
-    def cli(self, cmd, link_type):
+    def cli(self, cmd, link_type,output=None):
 
         assert link_type in ['virtual_links', 'sham_links']
 
-        # Execute command on device
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
         
         # Init vars
         ret_dict = {}
@@ -2424,11 +2429,10 @@ class ShowIpOspfShamLinksSchema(MetaParser):
 class ShowIpOspfShamLinks(ShowIpOspfShamLinksSchema, ShowIpOspfLinksParser):
 
     ''' Parser for 'show ip ospf sham-links' '''
+    cli_command = 'show ip ospf sham-links'
+    def cli(self,output=None):
 
-    def cli(self):
-        
-        cmd = 'show ip ospf sham-links'
-        return super().cli(cmd=cmd, link_type='sham_links')
+        return super().cli(cmd=self.cli_command, link_type='sham_links',output=output)
 
 
 # =======================================
@@ -2504,10 +2508,10 @@ class ShowIpOspfVirtualLinks(ShowIpOspfVirtualLinksSchema, ShowIpOspfLinksParser
 
     ''' Parser for 'show ip ospf virtual-links' '''
 
-    def cli(self):
-        
-        cmd = 'show ip ospf virtual-links'
-        return super().cli(cmd=cmd, link_type='virtual_links')
+    cli_command = 'show ip ospf virtual-links'
+    def cli(self,output=None):
+
+        return super().cli(cmd=self.cli_command, link_type='virtual_links',output=output)
 
 
 # =========================================
@@ -2640,10 +2644,14 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
 
     ''' Parser for "show ip ospf neighbor detail" '''
 
-    def cli(self):
+    cli_command = 'show ip ospf neighbor detail'
 
-        # Execute command on device
-        out = self.device.execute('show ip ospf neighbor detail')
+    def cli(self,output=None):
+        if output is None:
+            # Execute command on device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # Init vars
         ret_dict = {}
@@ -2989,14 +2997,17 @@ class ShowIpOspfDatabaseParser(MetaParser):
 
     ''' Parser for "show ip ospf database <WORD>" '''
 
-    def cli(self, cmd, db_type):
+    def cli(self, cmd, db_type,output=None):
 
         assert db_type in ['external', 'network', 'summary', 'router',
                            'opaque']
 
-        # Execute command on device
-        out = self.device.execute(cmd)
-        
+        if output is None:
+            # Execute command on device
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
         # Init vars
         ret_dict = {}
         af = 'ipv4'
@@ -3815,12 +3826,11 @@ class ShowIpOspfDatabaseRouter(ShowIpOspfDatabaseRouterSchema, ShowIpOspfDatabas
 
     ''' Parser for "show ip ospf database router" '''
 
-    def cli(self):
+    cli_command = 'show ip ospf database router'
 
-        # Build command
-        cmd = 'show ip ospf database router'
+    def cli(self,output=None):
 
-        return super().cli(cmd=cmd, db_type='router')
+        return super().cli(cmd=self.cli_command, db_type='router',output=output)
 
 
 # ===========================================
@@ -3897,12 +3907,10 @@ class ShowIpOspfDatabaseExternal(ShowIpOspfDatabaseExternalSchema, ShowIpOspfDat
 
     ''' Parser for "show ip ospf database external" '''
 
-    def cli(self):
+    cli_command = 'show ip ospf database external'
+    def cli(self,output=None):
 
-        # Build command
-        cmd = 'show ip ospf database external'
-
-        return super().cli(cmd=cmd, db_type='external')
+        return super().cli(cmd=self.cli_command, db_type='external',output=output)
 
 
 # ==========================================
@@ -3973,13 +3981,11 @@ class ShowIpOspfDatabaseNetworkSchema(MetaParser):
 class ShowIpOspfDatabaseNetwork(ShowIpOspfDatabaseNetworkSchema, ShowIpOspfDatabaseParser):
 
     ''' Parser for "show ip ospf database network" '''
+    cli_command = 'show ip ospf database network'
 
-    def cli(self):
+    def cli(self,output=None):
 
-        # Build command
-        cmd = 'show ip ospf database network'
-
-        return super().cli(cmd=cmd, db_type='network')
+        return super().cli(cmd=self.cli_command, db_type='network',output=output)
 
 # ==========================================
 # Schema for 'show ip ospf database summary'
@@ -4051,13 +4057,11 @@ class ShowIpOspfDatabaseSummarySchema(MetaParser):
 class ShowIpOspfDatabaseSummary(ShowIpOspfDatabaseSummarySchema, ShowIpOspfDatabaseParser):
 
     ''' Parser for "show ip ospf database summary" '''
+    cli_command = 'show ip ospf database summary'
 
-    def cli(self):
+    def cli(self,output=None):
 
-        # Build command
-        cmd = 'show ip ospf database summary'
-
-        return super().cli(cmd=cmd, db_type='summary')
+        return super().cli(cmd=self.cli_command, db_type='summary',output=output)
 
 
 # ==============================================
@@ -4163,12 +4167,10 @@ class ShowIpOspfDatabaseOpaqueArea(ShowIpOspfDatabaseOpaqueAreaSchema, ShowIpOsp
 
     ''' Parser for "show ip ospf database opaque-area" '''
 
-    def cli(self):
+    cli_command = 'show ip ospf database opaque-area'
 
-        # Build command
-        cmd = 'show ip ospf database opaque-area'
-
-        return super().cli(cmd=cmd, db_type='opaque')
+    def cli(self,output=None):
+        return super().cli(cmd=self.cli_command, db_type='opaque',output=output)
 
 
 # ============================================
@@ -4222,11 +4224,14 @@ class ShowIpOspfMplsLdpInterfaceSchema(MetaParser):
 class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
 
     ''' Parser for "show ip ospf mpls ldp interface" '''
+    cli_command = 'show ip ospf mpls ldp interface'
 
-    def cli(self):
-
-        # Execute command on device
-        out = self.device.execute('show ip ospf mpls ldp interface')
+    def cli(self,output=None):
+        if output is None:
+            # Execute command on device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # Init vars
         ret_dict = {}
@@ -4462,10 +4467,14 @@ class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
 
     ''' Parser for "show ip ospf mpls traffic-eng link" '''
 
-    def cli(self):
+    cli_command = 'show ip ospf mpls traffic-eng link'
 
-        # Execute command on device
-        out = self.device.execute('show ip ospf mpls traffic-eng link')
+    def cli(self,output=None):
+        if output is None:
+            # Execute command on device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # Init vars
         ret_dict = {}

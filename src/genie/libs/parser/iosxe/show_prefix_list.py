@@ -51,14 +51,19 @@ class ShowIpPrefixListDetail(ShowIpPrefixListDetailSchema):
         show ip prefix-list detail
         show ipv6 prefix-list detail"""
 
-    def cli(self, af='ip'):
+    cli_command = 'show {af} prefix-list detail'
 
+    def cli(self, af='ip',output=None):
         # ip should be ip or ipv6
         assert af in ['ip', 'ipv6']
-
         # excute command to get output
         protocol = 'ipv4' if af == 'ip' else af
-        out = self.device.execute('show {} prefix-list detail'.format(af))
+
+        if output is None:
+            # get output from device
+            out = self.device.execute(self.cli_command.format(af=af))
+        else:
+            out = output
 
         # initial variables
         ret_dict = {}
@@ -162,6 +167,6 @@ class ShowIpPrefixListDetail(ShowIpPrefixListDetailSchema):
 # ===========================================
 class ShowIpv6PrefixListDetail(ShowIpPrefixListDetail):
     """Parser for show ipv6 prefix-list detail"""
-    def cli(self):
-        return super().cli(af='ipv6')
+    def cli(self,output=None):
+        return super().cli(af='ipv6',output=output)
 

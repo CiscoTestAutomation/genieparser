@@ -35,11 +35,14 @@ class ShowArchive(ShowArchiveSchema):
     """ Parser for show archive """
 
     # Parser for 'show archive'
+    cli_command = 'show archive'
 
-    def cli(self):
-
-        # excute command to get output
-        out = self.device.execute('show archive')
+    def cli(self,output=None):
+        if output is None:
+            # excute command to get output
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # initial variables
         ret_dict = {}

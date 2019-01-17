@@ -57,13 +57,17 @@ class ShowIpStaticRoute(ShowIpStaticRouteSchema):
        show ip static route
        show ip static route vrf <vrf>
     """
+    cli_command = ['show ip static route vrf {vrf}','show ip static route']
 
-    def cli(self, vrf=""):
-        if vrf:
-            cmd = 'show ip static route vrf {}'.format(vrf)
+    def cli(self, vrf="",output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
         else:
-            cmd = 'show ip static route'
-        out = self.device.execute(cmd)
+            out = output
 
         af = 'ipv4'
         vrf = route = next_hop = ""
@@ -236,12 +240,17 @@ class ShowIpv6StaticDetail(ShowIpv6StaticDetailSchema):
        show ipv6 static vrf <vrf> detail
     """
 
-    def cli(self, vrf=""):
-        if vrf:
-            cmd = 'show ipv6 static vrf {} detail'.format(vrf)
+    cli_command = ['show ipv6 static vrf {vrf} detail', 'show ipv6 static detail']
+
+    def cli(self, vrf="", output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
         else:
-            cmd = 'show ipv6 static detail'
-        out = self.device.execute(cmd)
+            out = output
 
         af = 'ipv6'
         resolved_interface = False

@@ -52,9 +52,14 @@ class ShowMacAddressTableSchema(MetaParser):
 class ShowMacAddressTable(ShowMacAddressTableSchema):
     """Parser for show mac address-table"""
 
-    def cli(self):
-         # get output from device
-        out = self.device.execute('show mac address-table')
+    cli_command = 'show mac address-table'
+
+    def cli(self,output=None):
+        if output is None:
+            # get output from device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # initial return dictionary
         ret_dict = {}
@@ -120,9 +125,14 @@ class ShowMacAddressTableAgingTimeSchema(MetaParser):
 class ShowMacAddressTableAgingTime(ShowMacAddressTableAgingTimeSchema):
     """Parser for show mac address-table aging-time"""
 
-    def cli(self):
-         # get output from device
-        out = self.device.execute('show mac address-table aging-time')
+    cli_command = 'show mac address-table aging-time'
+
+    def cli(self,output=None):
+        if output is None:
+            # get output from device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # initial return dictionary
         ret_dict = {}
@@ -170,10 +180,14 @@ class ShowMacAddressTableLearningSchema(MetaParser):
 class ShowMacAddressTableLearning(ShowMacAddressTableLearningSchema):
     """Parser for show mac address-table learning"""
 
-    def cli(self):
-         # get output from device
-        out = self.device.execute('show mac address-table learning')
+    cli_command = 'show mac address-table learning'
 
+    def cli(self,output=None):
+        if output is None:
+            # get output from device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         # initial return dictionary
         ret_dict = {}
 

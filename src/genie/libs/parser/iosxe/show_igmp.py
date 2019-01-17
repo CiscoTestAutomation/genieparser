@@ -81,15 +81,20 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
     Parser for 'show ip igmp interface'
     Parser for 'show ip igmp vrf <WORD> interface'
     """
-    def cli(self, vrf=''):
+    cli_command = ['show ip igmp vrf {vrf} interface','show ip igmp interface']
 
-        cmd = 'show ip igmp interface' if not vrf else \
-              'show ip igmp vrf {} interface'.format(vrf)
+    def cli(self, vrf='',output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         vrf = 'default' if not vrf else vrf
-
-        # excute command to get output
-        out = self.device.execute(cmd)
 
         # initial variables
         ret_dict = {}
@@ -412,15 +417,19 @@ class ShowIpIgmpGroupsDetail(ShowIpIgmpGroupsDetailSchema):
                 pass
         return ret_dict
 
-    def cli(self, vrf=''):
+    cli_command = ['show ip igmp vrf {vrf} groups detail', 'show ip igmp groups detail']
 
-        cmd = 'show ip igmp groups detail' if not vrf else \
-              'show ip igmp vrf {} groups detail'.format(vrf)
+    def cli(self, vrf='',output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                vrf = 'default'
+                cmd = self.cli_command[1]
 
-        vrf = 'default' if not vrf else vrf
-
-        # excute command to get output
-        out = self.device.execute(cmd)
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         # initial variables
         ret_dict = {}
@@ -633,16 +642,19 @@ class ShowIpIgmpSsmMapping(ShowIpIgmpSsmMappingSchema):
     Parser for 'show ip igmp ssm-mapping <WROD>'
     parser for 'show ip igmp vrf <WORD> ssm-mapping <WORD>'
     """
+    cli_command = ['show ip igmp vrf {vrf} ssm-mapping {group}', 'show ip igmp ssm-mapping {group}']
 
-    def cli(self, group, vrf=''):
+    def cli(self, group, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf,group=group)
+            else:
+                vrf = 'default'
+                cmd = self.cli_command[1].format(group=group)
 
-        cmd = 'show ip igmp ssm-mapping {group}'.format(group=group) if not vrf else \
-              'show ip igmp vrf {vrf} ssm-mapping {group}'.format(vrf=vrf, group=group)
-
-        vrf = 'default' if not vrf else vrf
-
-        # excute command to get output
-        out = self.device.execute(cmd)
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         # initial variables
         ret_dict = {}

@@ -3408,6 +3408,7 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
     """Parser for show bgp vrf <WORD> all summary"""
 
     cli_command = 'show bgp vrf {vrf} all summary'
+    xml_command = 'show bgp vrf {vrf} all summary | xml'
 
     def cli(self, vrf='all',output=None):
         if output is None:
@@ -3699,9 +3700,7 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
 
     def xml(self, vrf='all'):
 
-        cmd = 'show bgp vrf {} all summary'.format(vrf)
-
-        out = self.device.execute(cmd + ' | xml')
+        out = self.device.execute(self.xml_command.format(vrf=vrf))
 
         etree_dict = {}
 
@@ -3721,7 +3720,7 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
 
         # compare cli command
         Common.compose_compare_command(root=root, namespace=namespace,
-                                       expect_command=cmd)
+                                       expect_command=self.cli_command.format(vrf=vrf))
 
         # find Vrf root
         root = Common.retrieve_xml_child(root=root, key='TABLE_vrf')
@@ -4177,12 +4176,8 @@ class ShowBgpVrfAllAllDampeningParameters(ShowBgpVrfAllAllDampeningParametersSch
                 continue
         return bgp_dict
 
-    def xml(self, vrf='all',output=None):
-        if output is None:
-            out = self.device.execute(self.xml_command.format(vrf=vrf))
-        else:
-            out = output
-
+    def xml(self, vrf='all'):
+        out = self.device.execute(self.xml_command.format(vrf=vrf))
         etree_dict = {}
 
         # Remove junk characters returned by the device
@@ -7339,11 +7334,8 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
         return ret_dict
 
 
-    def xml(self,output=None):
-        if output is None:
-            out = self.device.execute(self.xml_command)
-        else:
-            out = output
+    def xml(self):
+        out = self.device.execute(self.xml_command)
 
         etree_dict = {}
         sub_dict = {}
@@ -7363,7 +7355,7 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
 
         # compare cli command
         Common.compose_compare_command(root=root, namespace=namespace,
-                                expect_command='show bgp all dampening flap-statistics')
+                                expect_command=self.cli_command)
 
         # top table root
         vrf_root = Common.retrieve_xml_child(root=root, key='TABLE_vrf')
@@ -7575,11 +7567,8 @@ class ShowBgpAllNexthopDatabase(ShowBgpVrfAllAllNextHopDatabase):
     def cli(self,output=None):
         return super().cli(cmd=self.cli_command,output=output)
 
-    def xml(self,output=None):
-        if output is None:
-            out = self.device.execute(self.xml_command)
-        else:
-            out = output
+    def xml(self):
+        out = self.device.execute(self.xml_command)
 
         etree_dict = {}
         sub_dict = {}
@@ -7599,7 +7588,7 @@ class ShowBgpAllNexthopDatabase(ShowBgpVrfAllAllNextHopDatabase):
 
         # compare cli command
         Common.compose_compare_command(root=root, namespace=namespace,
-                                expect_command='show bgp all nexthop-database')
+                                expect_command=self.cli_command)
 
         # top table root
         vrf_root = Common.retrieve_xml_child(root=root, key='TABLE_nhvrf')
@@ -8174,11 +8163,8 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
         return ret_dict
 
 
-    def xml(self,output=None):
-        if output is None:
-            out = self.device.execute(self.xml_command)
-        else:
-            out = output
+    def xml(self):
+        out = self.device.execute(self.xml_command)
 
         etree_dict = {}
         sub_dict = {}
@@ -8198,7 +8184,7 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
 
         # compare cli command
         Common.compose_compare_command(root=root, namespace=namespace,
-                                expect_command='show bgp peer-template')
+                                expect_command=self.cli_command)
 
         # top table root
         root = Common.retrieve_xml_child(root=root, key='TABLE_neighbor')
@@ -8707,11 +8693,8 @@ class ShowBgpPolicyStatisticsParser(ShowBgpPolicyStatisticsSchema):
         return ret_dict
 
 
-    def xml(self, cmd,output=None):
-        if output is None:
-            out = self.device.execute('{cmd} | xml'.format(cmd=cmd))
-        else:
-            out = output
+    def xml(self, cmd):
+        out = self.device.execute('{cmd} | xml'.format(cmd=cmd))
 
         etree_dict = {}
         neighbor = None
@@ -8875,33 +8858,31 @@ class ShowBgpPolicyStatisticsRedistribute(ShowBgpPolicyStatisticsParser):
         show bgp [vrf <vrf>] <address_family> policy statistics redistribute
         parser class implements detail parsing mechanisms for cli,xml output"""
 
-    cli_command = ['show bgp vrf {vrf} {af} policy statistics redistribute',\
-                   'show bgp {af} policy statistics redistribute']
+    cli_command = ['show bgp vrf {vrf} {address_family} policy statistics redistribute',\
+                   'show bgp {address_family} policy statistics redistribute']
 
-    xml_command = ['show bgp vrf {vrf} {af} policy statistics redistribute', \
-                   'show bgp {af} policy statistics redistribute']
-
+    xml_command = ['show bgp vrf {vrf} {address_family} policy statistics redistribute', \
+                   'show bgp {address_family} policy statistics redistribute']
     def cli(self, address_family, vrf='',output=None):
         if output is None:
             if vrf:
-                cmd = self.cli_command[0].format(vrf=vrf, af=address_family)
+                cmd = self.cli_command[0].format(vrf=vrf, address_family=address_family)
             else:
-                cmd = self.cli_command[1].format(af=address_family)
+                cmd = self.cli_command[1].format(address_family=address_family)
         else:
             cmd = ""
 
         return super().cli(cmd=cmd, output=output)
 
-    def xml(self, address_family, vrf='',output=None):
-        if output is None:
-            if vrf:
-                cmd = self.xml_command[0].format(vrf=vrf, af=address_family)
-            else:
-                cmd = self.xml_command[1].format(af=address_family)
-        else:
-            cmd = ""
+    def xml(self, address_family, vrf=''):
 
-        return super().xml(cmd=cmd, output=output)
+        if vrf:
+            cmd = self.xml_command[0].format(vrf=vrf, address_family=address_family)
+        else:
+            cmd = self.xml_command[1].format(address_family=address_family)
+
+
+        return super().xml(cmd=cmd)
 
 # ==================================================================================
 # Parser for 'show bgp vrf <vrf> <address_family> policy statistics neighbor <WORD>'
@@ -8911,29 +8892,28 @@ class ShowBgpPolicyStatisticsNeighbor(ShowBgpPolicyStatisticsParser):
         show bgp [vrf <vrf>] <address_family> policy statistics neighbor <neighbor>
         parser class implements detail parsing mechanisms for cli,xml output"""
 
-    cli_command = ['show bgp vrf {vrf} {af} policy statistics neighbor {nei}', \
-                   'show bgp {af} policy statistics neighbor {nei}']
+    cli_command = ['show bgp vrf {vrf} {address_family} policy statistics neighbor {neighbor}', \
+                   'show bgp {address_family} policy statistics neighbor {neighbor}']
 
-    xml_command = ['show bgp vrf {vrf} {af} policy statistics neighbor {nei}', \
-                   'show bgp {af} policy statistics neighbor {nei}']
+    xml_command = ['show bgp vrf {vrf} {address_family} policy statistics neighbor {neighbor}', \
+                   'show bgp {address_family} policy statistics neighbor {neighbor}']
 
     def cli(self, address_family, neighbor, vrf='', output=None):
         if output is None:
             if vrf:
-                cmd = self.cli_command[0].format(vrf=vrf, af=address_family, nei=neighbor)
+                cmd = self.cli_command[0].format(vrf=vrf, address_family=address_family, neighbor=neighbor)
             else:
-                cmd = self.cli_command[1].format(af=address_family, nei=neighbor)
+                cmd = self.cli_command[1].format(address_family=address_family, neighbor=neighbor)
 
         return super().cli(cmd=cmd,output=output)
 
-    def xml(self, address_family, neighbor, vrf='',output=None):
-        if output is None:
-            if vrf:
-                cmd = self.xml_command[0].format(vrf=vrf, af=address_family, nei=neighbor)
-            else:
-                cmd = self.xml_command[1].format(af=address_family, nei=neighbor)
+    def xml(self, address_family, neighbor, vrf=''):
+        if vrf:
+            cmd = self.xml_command[0].format(vrf=vrf, address_family=address_family, neighbor=neighbor)
+        else:
+            cmd = self.xml_command[1].format(address_family=address_family, neighbor=neighbor)
 
-        return super().xml(cmd=cmd,output=output)
+        return super().xml(cmd=cmd)
 
 # ============================================================================
 # Parser for 'show bgp vrf <vrf> <address_family> policy statistics dampening'
@@ -8942,29 +8922,27 @@ class ShowBgpPolicyStatisticsDampening(ShowBgpPolicyStatisticsParser):
     """Parser for:
         show bgp [vrf <vrf>] <address_family> policy statistics dampening
         parser class implements detail parsing mechanisms for cli,xml output"""
-    cli_command = ['show bgp vrf {vrf} {af} policy statistics dampening','show bgp {af} policy statistics dampening']
-    xml_command = ['show bgp vrf {vrf} {af} policy statistics dampening','show bgp {af} policy statistics dampening']
+    cli_command = ['show bgp vrf {vrf} {address_family} policy statistics dampening','show bgp {address_family} policy statistics dampening']
+    xml_command = ['show bgp vrf {vrf} {address_family} policy statistics dampening','show bgp {address_family} policy statistics dampening']
 
     def cli(self, address_family, vrf='',output=None):
         if output is None:
             if vrf:
-                cmd = self.cli_command[0].format(vrf=vrf, af=address_family)
+                cmd = self.cli_command[0].format(vrf=vrf, address_family=address_family)
             else:
-                cmd = self.cli_command[0].format(af=address_family)
+                cmd = self.cli_command[1].format(address_family=address_family)
         else:
             cmd = ""
         return super().cli(cmd=cmd,output=output)
 
-    def xml(self, address_family, vrf='',output=None):
-        if output is None:
-            if vrf:
-                cmd = self.xml_command[0].format(vrf=vrf, af=address_family)
-            else:
-                cmd = self.xml_command[1].format(vrf=vrf, af=address_family)
-        else:
-            cmd = ""
+    def xml(self, address_family, vrf=''):
 
-        return super().xml(cmd=cmd,output=output)
+        if vrf:
+            cmd = self.xml_command[0].format(vrf=vrf, address_family=address_family)
+        else:
+            cmd = self.xml_command[1].format(vrf=vrf, address_family=address_family)
+
+        return super().xml(cmd=cmd)
 
 
 # =========================================
@@ -9137,18 +9115,15 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
 
         return ret_dict
 
-    def xml(self, vrf='',output=None):
-        if output is None:
-            if vrf:
-                cmd = self.xml_command[0].format(vrf=vrf)
-                cli_cmd = self.cli_command[0].format(vrf=vrf)
-            else:
-                cmd = self.xml_command[1]
-                cli_cmd = self.cli_command[1]
-
-            out = self.device.execute(cmd)
+    def xml(self, vrf=''):
+        if vrf:
+            cmd = self.xml_command[0].format(vrf=vrf)
+            cli_cmd = self.cli_command[0].format(vrf=vrf)
         else:
-            out = output
+            cmd = self.xml_command[1]
+            cli_cmd = self.cli_command[1]
+
+        out = self.device.execute(cmd)
 
         etree_dict = {}
 
@@ -9406,8 +9381,8 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
     """Parser for:
         show bgp <address_family> labels [vrf <WROD>]"""
 
-    cli_command = ['show bgp {af} labels vrf {vrf}','show bgp {af} labels']
-    xml_command = ['show bgp {af} labels vrf {vrf} | xml','show bgp {af} labels | xml']
+    cli_command = ['show bgp {address_family} labels vrf {vrf}','show bgp {address_family} labels']
+    xml_command = ['show bgp {address_family} labels vrf {vrf} | xml','show bgp {address_family} labels | xml']
 
     def cli(self, address_family, vrf='',output=None):
         assert address_family in ['ipv4 unicast', 'ipv4 multicast',
@@ -9417,9 +9392,9 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
 
         if output is None:
             if vrf:
-                cmd = self.cli_command[0].format(af=address_family, vrf=vrf)
+                cmd = self.cli_command[0].format(address_family=address_family, vrf=vrf)
             else:
-                cmd = self.cli_command[1].format(af=address_family)
+                cmd = self.cli_command[1].format(address_family=address_family)
             out = self.device.execute(cmd)
         else:
             out = output
@@ -9589,23 +9564,20 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
 
         return ret_dict
 
-    def xml(self, address_family, vrf='',output=None):
+    def xml(self, address_family, vrf=''):
         assert address_family in ['ipv4 unicast', 'ipv4 multicast',
                                   'ipv6 unicast', 'ipv6 multicast',
                                   'vpnv4 unicast', 'vpnv6 unicast']
 
-        if output is None:
-            if vrf:
-                cmd = self.xml_command[0].format(af=address_family, vrf=vrf)
-                cli_cmd = self.cli_command[0].format(af=address_family, vrf=vrf)
-            else:
-                cmd = self.xml_command[1].format(af=address_family)
-                cli_cmd = self.cli_command[0].format(af=address_family)
 
-        if output is None:
-            out = self.device.execute(cmd)
+        if vrf:
+            cmd = self.xml_command[0].format(address_family=address_family, vrf=vrf)
+            cli_cmd = self.cli_command[0].format(address_family=address_family, vrf=vrf)
         else:
-            out = output
+            cmd = self.xml_command[1].format(address_family=address_family)
+            cli_cmd = self.cli_command[0].format(address_family=address_family)
+
+        out = self.device.execute(cmd)
 
         etree_dict = {}
 
@@ -10931,15 +10903,15 @@ class ShowBgpL2vpnEvpnWord(ShowBgpL2vpnEvpnWordSchema):
     """Parser for show bgp l2vpn evpn <WORD> | be "best path, in rib" n <WORD>"""
     """Parser for show bgp l2vpn evpn <WORD> | grep -b <WORD> -a <WORD> "best path"""
 
-    cli_command = ['show bgp l2vpn evpn {k} | grep -b {n} -a {l} "best path"','show bgp l2vpn evpn {k} | be "best path, in rib" n {l}']
+    cli_command = ['show bgp l2vpn evpn {mac} | grep -b {count1} -a {count2} "best path"','show bgp l2vpn evpn {mac} | be "best path, in rib" n {count2}']
 
     def cli(self, mac, count1, count2=None,output=None):
         if output is None:
             if mac and count1:
                 if count2:
-                    cmd = self.cli_command[0].format(k=mac, n=count1, l=count2)
+                    cmd = self.cli_command[0].format(mac=mac, count1=count1, count2=count2)
                 else:
-                    cmd = self.cli_command[1].format(k=mac, l=count1)
+                    cmd = self.cli_command[1].format(mac=mac, count2=count1)
             else:
                 cmd = ""
             out = self.device.execute(cmd)
