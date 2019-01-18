@@ -29,14 +29,13 @@ class ShowIpArp(ShowArp_iosxe):
                   show ip arp <WROD>
                   show ip arp vrf <vrf>
                   show ip arp vrf <vrf> <WROD> """
-
-    def cli(self, vrf='', intf_or_ip=''):
-        cmd = 'show ip arp'
+    cli_command = 'show ip arp'
+    def cli(self, vrf='', intf_or_ip='',output=None):
         if vrf:
-            cmd += 'vrf ' + vrf
+            self.cli_command += 'vrf ' + vrf
         if intf_or_ip:
-            cmd += ' ' + intf_or_ip
-        ret_dict = super().cli(self, cmd=cmd)
+            self.cli_command += ' ' + intf_or_ip
+        ret_dict = super().cli(self, cmd=self.cli_command)
 
         return ret_dict
 
