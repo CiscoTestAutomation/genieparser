@@ -85,9 +85,14 @@ class ShowBgpInstances(ShowBgpInstancesSchema):
 
     """Parser for show bgp instances"""
 
-    def cli(self):
+    cli_command = 'show bgp instances'
 
-        out = self.device.execute('show bgp instances')
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         ret_dict = {}
 
         for line in out.splitlines():
@@ -179,9 +184,14 @@ class ShowPlacementProgramAll(ShowPlacementProgramAllSchema):
 
     """Parser for show placement program all"""
 
-    def cli(self):
+    cli_command = 'show placement program all'
 
-        out = self.device.execute('show placement program all')
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         ret_dict = {}
 
         for line in out.splitlines():
@@ -283,14 +293,19 @@ class ShowBgpInstanceAfGroupConfigurationSchema(MetaParser):
 class ShowBgpInstanceAfGroupConfiguration(ShowBgpInstanceAfGroupConfigurationSchema):
     """Parser for show bgp instance af-group configuration"""
 
-    def cli(self):
+    cli_command = 'show run formal | i af-group'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         ret_dict = {}
 
-        cmd = 'show run formal | i af-group'
-        conf = self.device.execute(cmd)
+        cmd = ''
 
-        for line1 in conf.splitlines():
+        for line1 in out.splitlines():
             line1 = line1.strip()
 
             # router bgp 100 af-group af_group address-family ipv4 unicast
@@ -582,14 +597,19 @@ class ShowBgpInstanceSessionGroupConfiguration(ShowBgpInstanceSessionGroupConfig
 
     """Parser for show bgp instance session-group configuration"""
 
-    def cli(self):
+    cli_command = 'show run formal | i session-group'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         ret_dict = {}
 
-        cmd = 'show run formal | i session-group'
-        conf = self.device.execute(cmd)
+        cmd = ''
 
-        for line1 in conf.splitlines():
+        for line1 in out.splitlines():
             line1 = line1.strip()
 
             # router bgp 100 session-group SG
@@ -970,14 +990,21 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
         show bgp instance all vrf all ipv4 unicast process detail
         show bgp instance all vrf all ipv6 unicast process detail
         parser class - implements detail parsing mechanisms for cli, yang output.
+        If there is output args in cli ,need to have below key(s) that are mandatory and used in this parser.
+
+        - vrf_type
+
     """
+    cli_command = 'show bgp instance all {vrf_type} all {af_type} process detail'
 
-    def cli(self, vrf_type, af_type=''):
-
+    def cli(self, vrf_type, af_type='',output=None):
         assert vrf_type in ['all', 'vrf']
         assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
 
-        out = self.device.execute('show bgp instance all {vrf_type} all {af_type} process detail'.format(vrf_type=vrf_type, af_type=af_type))
+        if output is None:
+            out = self.device.execute(self.cli_command.format(vrf_type=vrf_type, af_type=af_type))
+        else:
+            out = output
 
         # Init dict
         ret_dict = {}
@@ -2149,15 +2176,21 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
         show bgp instance all vrf all neighbors detail
         show bgp instance all vrf all ipv4 unicast neighbors detail
         show bgp instance all vrf all ipv6 unicast neighbors detail
-    """
+        For checking any output with the parser ,below mandatory keys have to be in cli command.
 
-    def cli(self, vrf_type, af_type=''):
+        - vrf_type
+    """
+    cli_command = 'show bgp instance all {vrf_type} all {af_type} neighbors detail'
+
+    def cli(self, vrf_type, af_type='', output=None):
 
         assert vrf_type in ['all', 'vrf']
         assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
 
-        out = self.device.execute('show bgp instance all {vrf_type} all {af_type} neighbors detail'.format(vrf_type=vrf_type, af_type=af_type))
-
+        if output is None:
+            out = self.device.execute(self.cli_command.format(vrf_type=vrf_type, af_type=af_type))
+        else:
+            out = output
         # Init variables
         ret_dict = {}
 
@@ -3115,17 +3148,22 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
         show bgp instance all vrf all neighbors <neighbor> received routes
         show bgp instance all vrf all ipv4 unicast neighbors <neighbor> received routes
         show bgp instance all vrf all ipv6 unicast neighbors <neighbor> received routes
-    """
+        For checking any output with the parser ,below mandatory keys have to be in cli command.
 
-    def cli(self, neighbor, vrf_type, af_type='', route_type='received routes'):
+        - vrf_type
+    """
+    cli_command = 'show bgp instance all {vrf_type} all {af_type} neighbors {neighbor} {route}'
+
+    def cli(self, neighbor, vrf_type, af_type='', route_type='received routes', output=None):
 
         assert vrf_type in ['all', 'vrf']
         assert route_type in ['received routes', 'routes']
         assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
 
-        cmd = 'show bgp instance all {vrf_type} all {af_type} neighbors {neighbor} {route}'\
-              .format(neighbor=neighbor, vrf_type=vrf_type, af_type=af_type, route=route_type)
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(self.cli_command.format(neighbor=neighbor, vrf_type=vrf_type, af_type=af_type, route=route_type))
+        else:
+            out = output
 
         # Init vars
         ret_dict = {}
@@ -3620,16 +3658,21 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
         show bgp instance all vrf all neighbors <neighbor> advertised-routes
         show bgp instance all vrf all ipv4 unicast neighbors <neighbor> advertised-routes
         show bgp instance all vrf all ipv6 unicast neighbors <neighbor> advertised-routes
-    """
+        For checking any output with the parser ,below mandatory keys have to be in cli command.
 
-    def cli(self, neighbor, vrf_type, af_type=''):
-        
+        - vrf_type
+    """
+    cli_command = 'show bgp instance all {vrf_type} all {af_type} neighbors {neighbor} advertised-routes'
+
+    def cli(self, neighbor, vrf_type, af_type='', output=None):
+
         assert vrf_type in ['all', 'vrf']
         assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
-        
-        cmd = 'show bgp instance all {vrf_type} all {af_type} neighbors {neighbor} advertised-routes'\
-              .format(neighbor=neighbor, af_type=af_type, vrf_type=vrf_type)
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(self.cli_command. \
+                                      format(neighbor=neighbor, af_type=af_type, vrf_type=vrf_type))
+        else:
+            out = output
 
         ret_dict = {}
         address_family = None
@@ -3845,11 +3888,14 @@ class ShowBgpInstanceNeighborsRoutes(ShowBgpInstanceNeighborsRoutesSchema):
         show bgp instance all vrf all neighbors <WORD> routes
         show bgp instance all vrf all ipv4 unicast neighbors <WORD> routes
         show bgp instance all vrf all ipv6 unicast neighbors <WORD> routes
-    """
+        For checking any output with the parser ,below mandatory keys have to be in cli command.
 
-    def cli(self, neighbor, vrf_type, af_type=''):
+        - vrf_type
+    """
+    cli_command = 'show bgp instance all {vrf_type} all {af_type} neighbors {neighbor} {route}'
+    def cli(self, neighbor, vrf_type, af_type='',output=None):
         return ShowBgpInstanceNeighborsReceivedRoutes.cli(
-            self, neighbor=neighbor, vrf_type=vrf_type, af_type=af_type, route_type='routes')
+            self, neighbor=neighbor, vrf_type=vrf_type, af_type=af_type, route_type='routes',output=output)
 
 
 # ====================================================
@@ -3933,14 +3979,21 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
         show bgp instance all vrf all summary
         show bgp instance all vrf all ipv4 unicast summary
         show bgp instance all vrf all ipv6 unicast summary
-    """
+        For checking any output with the parser ,below mandatory keys have to be in cli command.
 
-    def cli(self, vrf_type, af_type=''):
+        - vrf_type
+    """
+    cli_command = 'show bgp instance all {vrf_type} all {af_type} summary'
+
+    def cli(self, vrf_type, af_type='',output=None):
 
         assert vrf_type in ['all', 'vrf']
         assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
-        cmd = 'show bgp instance all {vrf_type} all {af_type} summary'.format(vrf_type=vrf_type, af_type=af_type)
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(self.cli_command. \
+                                          format(af_type=af_type, vrf_type=vrf_type))
+        else:
+            out = output
 
         # Init vars
         bgp_instance_summary_dict = {}
@@ -4311,15 +4364,21 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
         show bgp instance all vrf all
         show bgp instance all vrf all ipv4 unicast
         show bgp instance all vrf all ipv6 unicast
-    """
+        For checking any output with the parser ,below mandatory keys have to be in cli command.
 
-    def cli(self, vrf_type, af_type=''):
+        - vrf_type
+
+    """
+    cli_command = 'show bgp instance all {vrf_type} all {af_type}'
+
+    def cli(self, vrf_type, af_type='',output=None):
 
         assert vrf_type in ['all', 'vrf']
         assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
-
-        cmd = 'show bgp instance all {vrf_type} all {af_type}'.format(vrf_type=vrf_type, af_type=af_type)
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(self.cli_command.format(vrf_type=vrf_type, af_type=af_type))
+        else:
+            out = output
 
         bgp_instance_all_all_dict = {}
 
@@ -4674,16 +4733,13 @@ class ShowBgpSessions(MetaParser):
     """Parser for show bgp sessions"""
 
     # TODO schema
-
+    cli_command = 'show bgp sessions'
     def cli(self):
         """parsing mechanism: cli
         """
-
-        cmd = 'show bgp sessions'
-
         tcl_package_require_caas_parsers()
         kl = tcl_invoke_caas_abstract_parser(
-            device=self.device, exec=cmd)
+            device=self.device, exec=self.cli_command)
 
         return kl
 
@@ -4696,14 +4752,14 @@ class ShowBgpVrfDbVrfAll(MetaParser):
     """Parser for show bgp vrf-db vrf all"""
 
     # TODO schema
-
-    def cli(self):
+    cli_command = 'show bgp vrf-db vrf all'
+    def cli(self,output=None):
         """ parsing mechanism: cli
         """
-
-        cmd = 'show bgp vrf-db vrf all'
-
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         result = {
             'entries': [],
@@ -4774,24 +4830,28 @@ class ShowBgpL2vpnEvpn(MetaParser):
         self.route_type = route_type
         super().__init__(**kwargs)
 
-    def cli(self):
+    cli_command = 'show bgp l2vpn evpn'
+    def cli(self,output=None):
         """ parsing mechanism: cli
         """
-
         is_detail = False
-        cmd = 'show bgp l2vpn evpn'
-        if self.rd is not None:
-            cmd += ' rd {}'.format(self.rd)
-        if self.prefix is not None:
-            cmd += ' {}'.format(self.prefix)
-            is_detail = True
-        if self.route_type is not None:
-            cmd += ' route-type {}'.format(self.route_type)
+        if output is None:
+            cmd = 'show bgp l2vpn evpn'
+            if self.rd is not None:
+                cmd += ' rd {}'.format(self.rd)
+            if self.prefix is not None:
+                cmd += ' {}'.format(self.prefix)
+                is_detail = True
+            if self.route_type is not None:
+                cmd += ' route-type {}'.format(self.route_type)
+            # XXXJST Workaround Csccon issue that doesn't quote Tcl arguments properly
+            cmd = re.escape(cmd)
+            out = self.device.execute(cmd)
+            out = re.sub(r'\r+\n', r'\n', out)
+        else:
+            out = output
 
-        # XXXJST Workaround Csccon issue that doesn't quote Tcl arguments properly
-        cmd = re.escape(cmd)
-        out = self.device.execute(cmd)
-        out = re.sub(r'\r+\n', r'\n', out)
+
 
         result = {
             'rds': collections.OrderedDict(),
@@ -5038,11 +5098,13 @@ class ShowBgpL2vpnEvpnAdvertised(MetaParser):
     """Parser class for 'show bgp l2vpn evpn advertised' CLI."""
 
     # TODO schema
+    cli_command = 'show bgp l2vpn evpn advertised'
 
-    def cli(self):
-        cmd = 'show bgp l2vpn evpn advertised'.format()
-
-        out = self.device.execute(cmd)
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         result = {
             'entries': [],

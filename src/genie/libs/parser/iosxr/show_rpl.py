@@ -71,8 +71,14 @@ class ShowRplRoutePolicySchema(MetaParser):
 
 class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
     """Parser for show rpl route-policy"""
-    def cli(self):
-        out = self.device.execute('show rpl route-policy')
+
+    cli_command = 'show rpl route-policy'
+
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute()
+        else:
+            out = output
 
         rpl_route_policy_dict = {}
 

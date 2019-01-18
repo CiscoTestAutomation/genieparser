@@ -43,15 +43,14 @@ class ShowEvpnEvi(MetaParser):
     """Parser class for 'show evpn evi' CLI."""
 
     # TODO schema
+    cli_command = 'show evpn evi'
 
     def cli(self):
         """parsing mechanism: cli"""
 
-        cmd = 'show evpn evi'
-
         tcl_package_require_caas_parsers()
         kl = tcl_invoke_caas_abstract_parser(
-            device=self.device, exec=cmd)
+            device=self.device, exec=self.cli_command)
 
         return kl
 
@@ -60,16 +59,13 @@ class ShowEvpnEviDetail(MetaParser):
     """Parser class for 'show evpn evi detail' CLI."""
 
     # TODO schema
-
+    cli_command = 'show evpn evi detail'
     def cli(self):
         """parsing mechanism: cli
         """
-
-        cmd = 'show evpn evi detail'
-
         tcl_package_require_caas_parsers()
         kl = tcl_invoke_caas_abstract_parser(
-            device=self.device, exec=cmd)
+            device=self.device, exec=self.cli_command)
 
         return kl
 
@@ -85,12 +81,13 @@ class ShowEvpnEviMac(MetaParser):
         self.vpn_id = vpn_id
         super().__init__(**kwargs)
 
+    cli_command = ['show evpn evi vpn-id {vpn_id} mac','show evpn evi mac']
     def cli(self):
 
         if self.vpn_id is not None:
-            cmd = 'show evpn evi vpn-id {vpn_id} mac'.format(vpn_id=self.vpn_id)
+            cmd = self.cli_command[0].format(vpn_id=self.vpn_id)
         else:
-            cmd = 'show evpn evi mac'
+            cmd = self.cli_command[1]
 
         if self.mac:
             cmd += ' {mac}'.format(self.mac)
@@ -316,26 +313,25 @@ class ShowEvpnEthernetSegment(MetaParser):
         self.carving = carving
         super().__init__(**kwargs)
 
+    cli_command = 'show evpn ethernet-segment'
     def cli(self):
         """parsing mechanism: cli
         """
 
-        cmd = 'show evpn ethernet-segment'
-
         if self.esi:
-            cmd += ' esi {esi}'.format(esi=self.esi)
+            self.cli_command += ' esi {esi}'.format(esi=self.esi)
 
         if self.carving:
-            cmd += ' carving'
+            self.cli_command += ' carving'
 
         if self.private:
-            cmd += ' private'
+            self.cli_command += ' private'
         elif self.detail:
-            cmd += ' detail'
+            self.cli_command += ' detail'
 
         tcl_package_require_caas_parsers()
         kl = tcl_invoke_caas_abstract_parser(
-            device=self.device, exec=cmd)
+            device=self.device, exec=self.cli_command)
 
         return kl
 
@@ -347,13 +343,15 @@ class ShowEvpnInternalLabelDetail(MetaParser):
     def __init__(self,**kwargs):
         super().__init__(**kwargs)
 
-    def cli(self):
+    cli_command = 'show evpn internal-label detail'
+
+    def cli(self,output=None):
         """parsing mechanism: cli
         """
-        cmd = 'show evpn internal-label detail'
-
-        out = self.device.execute(cmd)
-
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         res = {
             'entries': [],
         }

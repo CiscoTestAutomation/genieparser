@@ -19,11 +19,13 @@ class ShowL2routeTopology(MetaParser):
 
     # TODO schema
 
-    def cli(self):
+    cli_command = 'show l2route topology'
 
-        cmd = 'show l2route topology'.format()
-
-        out = self.device.execute(cmd)
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         result = {
             'topologies': [],
@@ -60,11 +62,13 @@ class ShowL2routeEvpnMac(MetaParser):
 
     # TODO schema
 
-    def cli(self):
+    cli_command = 'show l2route evpn mac all'
 
-        cmd = 'show l2route evpn mac all'.format()
-
-        out = self.device.execute(cmd)
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         result = {
             'entries': [],
@@ -101,11 +105,13 @@ class ShowL2routeEvpnMacIp(MetaParser):
 
     # TODO schema
 
-    def cli(self):
+    cli_command = 'show l2route evpn mac-ip all'
 
-        cmd = 'show l2route evpn mac-ip all'.format()
-
-        out = self.device.execute(cmd)
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         result = {
             'entries': [],

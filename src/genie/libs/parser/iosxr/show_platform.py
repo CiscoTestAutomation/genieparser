@@ -53,9 +53,13 @@ class ShowVersionSchema(MetaParser):
 
 class ShowVersion(ShowVersionSchema):
     """Parser for show version"""
-    def cli(self):
-        cmd = 'show version'.format()
-        out = self.device.execute(cmd)
+    cli_command = 'show version'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         
         # Init vars
         show_version_dict = {}
@@ -167,9 +171,13 @@ class ShowSdrDetailSchema(MetaParser):
 
 class ShowSdrDetail(ShowSdrDetailSchema):
     """Parser for show sdr detail"""
-    def cli(self):
-        cmd = 'show sdr detail'.format()
-        out = self.device.execute(cmd)
+    cli_command = 'show sdr detail'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         
         # Init vars
         sdr_detail = {}
@@ -308,10 +316,14 @@ class ShowPlatformSchema(MetaParser):
 
 class ShowPlatform(ShowPlatformSchema):
     """Parser for show platform"""
-    def cli(self):
-        cmd = 'show platform'.format()
-        out = self.device.execute(cmd)
-        
+    cli_command = 'show platform'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         # Init vars
         show_platform = {}
         daughtercard_dict = {}
@@ -434,10 +446,14 @@ class ShowPlatformVmSchema(MetaParser):
 
 class ShowPlatformVm(ShowPlatformVmSchema):
     """Parser for show platform vm"""
-    def cli(self):
-        cmd = 'show platform vm'.format()
-        out = self.device.execute(cmd)
-        
+
+    cli_command = 'show platform vm'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         # Init vars
         show_platform_vm = {}
         
@@ -484,10 +500,14 @@ class ShowInstallActiveSummarySchema(MetaParser):
 
 class ShowInstallActiveSummary(ShowInstallActiveSummarySchema):
     """Parser for show install active summary"""
-    def cli(self):
-        cmd = 'show install active summary'.format()
-        out = self.device.execute(cmd)
-        
+
+    cli_command = 'show install active summary'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         # Init vars
         install_active_dict = {}
         previous_line_sdr = False
@@ -550,9 +570,14 @@ class ShowInventorySchema(MetaParser):
 
 class ShowInventory(ShowInventorySchema):
     """Parser for show inventory"""
-    def cli(self):
-        cmd = 'show inventory'.format()
-        out = self.device.execute(cmd)
+
+    cli_command = 'show inventory'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         
         # Init vars
         inventory_dict = {}
@@ -616,9 +641,13 @@ class AdminShowDiagChassisSchema(MetaParser):
 
 class AdminShowDiagChassis(AdminShowDiagChassisSchema):
     """Parser for admin show diag chassis"""
-    def cli(self):
-        cmd = 'admin show diag chassis'.format()
-        out = self.device.execute(cmd)
+    cli_command = 'admin show diag chassis'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         
         # Init vars
         admin_show_diag_dict = {}
@@ -727,10 +756,13 @@ class ShowRedundancySummarySchema(MetaParser):
 
 class ShowRedundancySummary(ShowRedundancySummarySchema):
     """Parser for show redundancy summary"""
-    def cli(self):
-        cmd = 'show redundancy summary'.format()
-        out = self.device.execute(cmd)
-        
+    cli_command = 'show redundancy summary'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         # Init vars
         redundancy_summary = {}
         redundancy_communication = False
@@ -1096,10 +1128,14 @@ class DirSchema(MetaParser):
 
 class Dir(DirSchema):
     """Parser for dir"""
-    def cli(self):
-        cmd = 'dir'.format()
-        out = self.device.execute(cmd)
-        
+    cli_command = 'dir'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         # Init vars
         dir_dict = {}
         
