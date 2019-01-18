@@ -10542,8 +10542,10 @@ class ShowBgpL2vpnEvpnNeighbors(ShowBgpL2vpnEvpnNeighborsSchema):
         p8 = re.compile(r'^\s*Last written +(?P<lastwrite>[\w\:\.]+), keepalive timer expiry due +(?P<keepalive>[\w\:]+)$')
         p9 = re.compile(r'^\s*Received +(?P<msgrecvd>[\d]+) +messages, +(?P<notificationsrcvd>[\d]+) +notifications,'
                         ' +(?P<recvbufbytes>[\d]+)+ bytes in queue$')
-        p10 = re.compile(r'^\s*Sent +(?P<msgsent>[\d]+) messages, +(?P<notificationssent>[\d]+)'
-                         ' +notifications, +(?P<sentbytesoutstanding>[\d]+)\((?P<totalbytessent>[\d]+)\) +bytes in queue$')
+        p10 = re.compile(r'^\s*Sent +(?P<msgsent>[\d]+) messages,'
+                          ' +(?P<notificationssent>[\d]+)'
+                          ' +notifications, +(?P<sentbytesoutstanding>[\d]+)'
+                          '(?:\((?P<totalbytessent>[\d]+)\))? +bytes in queue$')
         p11 = re.compile(r'^\s*Connections established +(?P<connsestablished>[\d]+), +dropped +(?P<connsdropped>[\d]+)$')
         p12 = re.compile(r'^\s*Last reset by us +(?P<resettime>[\w]+), +due to +(?P<resetreason>[\w\s]+)$')
         p13 = re.compile(r'^\s*Last reset by peer +(?P<peerresettime>[\w]+), due to +(?P<peerresetreason>[\w\s]+)$')
