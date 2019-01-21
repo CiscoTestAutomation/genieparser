@@ -80,7 +80,6 @@ class CreateApiDoc(object):
 
         output['doc'] = parser.__doc__
         output['schema'] = str(parser.schema)
-        output['source'] = mod.__file__
         line = inspect.getsourcelines(parser)[-1]
 
         temp_url = mod.__file__.replace(os.path.join(
