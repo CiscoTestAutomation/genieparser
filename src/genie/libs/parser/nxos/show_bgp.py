@@ -4425,7 +4425,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutesSchema(MetaParser):
 class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRoutesSchema):
     """Parser for show bgp vrf <vrf> all neighbors <neighbor> advertised-routes"""
 
-    cli_command = 'show bgp vrf {vrf} all neighbors {neighbor} advertised-route'
+    cli_command = 'show bgp vrf {vrf} all neighbors {neighbor} advertised-routes'
 
     def cli(self, vrf, neighbor,output=None):
         if output is None:
