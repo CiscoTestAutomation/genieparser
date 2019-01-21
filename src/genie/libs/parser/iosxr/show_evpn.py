@@ -313,25 +313,27 @@ class ShowEvpnEthernetSegment(MetaParser):
         self.carving = carving
         super().__init__(**kwargs)
 
-    cli_command = 'show evpn ethernet-segment'
+    cli_command = ['show evpn ethernet-segment esi {esi}','show evpn ethernet-segment']
     def cli(self):
         """parsing mechanism: cli
         """
 
         if self.esi:
-            self.cli_command += ' esi {esi}'.format(esi=self.esi)
+            cmd = self.cli_command[0].format(esi=self.esi)
+        else:
+            cmd = self.cli_command[1]
 
         if self.carving:
-            self.cli_command += ' carving'
+            cmd += ' carving'
 
         if self.private:
-            self.cli_command += ' private'
+            cmd += ' private'
         elif self.detail:
-            self.cli_command += ' detail'
+            cmd += ' detail'
 
         tcl_package_require_caas_parsers()
         kl = tcl_invoke_caas_abstract_parser(
-            device=self.device, exec=self.cli_command)
+            device=self.device, exec=cmd)
 
         return kl
 
