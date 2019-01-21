@@ -55,9 +55,13 @@ class ShowVlanSchema(MetaParser):
 class ShowVlan(ShowVlanSchema):
     """Parser for show vlan"""
 
-    def cli(self):
-        cmd = 'show vlan'
-        out = self.device.execute(cmd)
+    cli_command = 'show vlan'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         vlan_dict = {}
         for line in out.splitlines():
@@ -225,9 +229,13 @@ class ShowVlanIdVnSegmentSchema(MetaParser):
 class ShowVlanIdVnSegment(ShowVlanIdVnSegmentSchema):
     """Parser for show vlan id 1-3967 vn_segment"""
 
-    def cli(self):
-        cmd = 'show vlan id 1-3967 vn-segment'
-        out = self.device.execute(cmd)
+    cli_command = 'show vlan id 1-3967 vn-segment'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         vlan_dict = {}
         for line in out.splitlines():
@@ -304,15 +312,18 @@ class ShowVlanOld(ShowVlanOldSchema, MetaParser):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
 
-    def cli(self):
+    cli_command = 'show vlan'
+    def cli(self,output=None):
         ''' parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: exe
         cuting, transforming, returning
         '''
-        cmd = 'show vlan'.format()
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         vlan_dict = {}
         main_section = False
         mtu_section = False
@@ -507,7 +518,10 @@ class ShowVlanFilter(ShowVlanFilterSchema):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
 
-    def cli(self):
+    cli_command = 'show vlan filter'
+
+    def cli(self, output=None):
+
         ''' parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
@@ -515,8 +529,11 @@ class ShowVlanFilter(ShowVlanFilterSchema):
         cuting, transforming, returning
         '''
 
-        cmd = 'show vlan filter'.format()
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         vlan_dict = {}
         for line in out.splitlines():
             line = line.rstrip()
@@ -567,15 +584,20 @@ class ShowVlanAccessMap(ShowVlanAccessMapSchema):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
 
-    def cli(self):
+    cli_command = 'show vlan access-map'
+
+    def cli(self, output=None):
         ''' parsing mechanism: cli
 
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: exe
-        cuting, transforming, returning
-        '''
-        cmd = 'show vlan access-map'.format()
-        out = self.device.execute(cmd)
+           Function cli() defines the cli type output parsing mechanism which
+           typically contains 3 steps: exe
+           cuting, transforming, returning
+           '''
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         access_map_dict = {}
         for line in out.splitlines():
             line = line.rstrip()
@@ -631,9 +653,20 @@ class ShowVxlanSchema(MetaParser):
 class ShowVxlan(ShowVxlanSchema):
     """Parser for show vxlan"""
 
-    def cli(self):
-        cmd = 'show vxlan'
-        out = self.device.execute(cmd)
+    cli_command = 'show vxlan'
+
+    def cli(self, output=None):
+        ''' parsing mechanism: cli
+
+        Function cli() defines the cli type output parsing mechanism which
+        typically contains 3 steps: exe
+        cuting, transforming, returning
+        '''
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         ret_dict = {}
 
         for line in out.splitlines():

@@ -57,11 +57,17 @@ class ShowCryptoPkiCertificatesSchema(MetaParser):
 class ShowCryptoPkiCertificates(ShowCryptoPkiCertificatesSchema):
     """Parser for show crypto pki certificates <WORD>"""
 
-    def cli(self, trustpoint_name=''):
-         # get output from device
-        out = self.device.execute('show crypto pki certificates {}'\
-                .format(trustpoint_name)) if trustpoint_name else \
-                     self.device.execute('show crypto pki certificates')
+    cli_command = ['show crypto pki certificates {trustpoint_name}','show crypto pki certificates']
+
+    def cli(self, trustpoint_name='',output=None):
+        if output is None:
+            if trustpoint_name:
+                cmd = self.cli_command[0].format(trustpoint_name=trustpoint_name)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         # initial return dictionary
         ret_dict = {}

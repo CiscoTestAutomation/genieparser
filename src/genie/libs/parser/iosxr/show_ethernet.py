@@ -41,11 +41,13 @@ class ShowEthernetCfmMeps(MetaParser):
     def __init__(self,**kwargs):
         super().__init__(**kwargs)
 
-    def cli(self):
+    cli_command = 'show ethernet cfm peer meps'
 
-        cmd = 'show ethernet cfm peer meps'
-
-        out = self.device.execute(cmd)
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         result = {
             'entries' : []
@@ -173,15 +175,19 @@ class ShowEthernetTrunkDetail(ShowEthernetTrunkDetailSchema):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
 
-    def cli(self):
+    cli_command = 'show ethernet trunk detail'
+    def cli(self,output=None):
         """parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: exe
         cuting, transforming, returning
         """
-        cmd = 'show ethernet trunk detail'.format()
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         trunk_dict = {}
         for line in out.splitlines():
             line = line.rstrip()
@@ -240,15 +246,20 @@ class ShowEthernetTags(ShowEthernetTagsSchema):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
 
-    def cli(self):
+    cli_command = 'show ethernet tags'
+
+    def cli(self,output=None):
         """parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: exe
         cuting, transforming, returning
         """
-        cmd = 'show ethernet tags'.format()
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         intf_dict = {}
         stage = ''
         for line in out.splitlines():

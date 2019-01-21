@@ -37,9 +37,14 @@ class ShowStackPowerSchema(MetaParser):
 class ShowStackPower(ShowStackPowerSchema):
     """Parser for show stack-power"""
 
-    def cli(self):
-         # get output from device
-        out = self.device.execute('show stack-power')
+    cli_command = 'show stack-power'
+
+    def cli(self,output=None):
+        if output is None:
+            # get output from device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # initial return dictionary
         ret_dict = {}
@@ -94,9 +99,14 @@ class ShowPowerInlineInterfaceSchema(MetaParser):
 class ShowPowerInlineInterface(ShowPowerInlineInterfaceSchema):
     """Parser for show power inline <interface>"""
 
-    def cli(self, interface):
-         # get output from device
-        out = self.device.execute('show power inline {}'.format(interface))
+    cli_command = 'show power inline {interface}'
+
+    def cli(self, interface,output=None):
+        if output is None:
+            # get output from device
+            out = self.device.execute(self.cli_command.format(interface=interface))
+        else:
+            out = output
 
         # initial return dictionary
         ret_dict = {}

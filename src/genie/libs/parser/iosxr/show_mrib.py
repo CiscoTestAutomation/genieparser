@@ -61,12 +61,19 @@ class ShowMribVrfRouteSchema(MetaParser):
         }
 
 class ShowMribVrfRoute(ShowMribVrfRouteSchema):
-    
-    """Parser for show mrib vrf <vrf> <address-family> route"""
+    """
+    Parser for show mrib vrf <vrf> <address-family> route
+    For checking any output with the parser ,below mandatory keys have to be in cli command.
+    - vrf
+    - af
+    """
+    cli_command = 'show mrib vrf {vrf} {af} route'
 
-    def cli(self, vrf='default', af='ipv4'):
-        out = self.device.execute('show mrib vrf {vrf} {af} route'.\
-                                  format(vrf=vrf, af=af))
+    def cli(self, vrf='default', af='ipv4',output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(vrf=vrf, af=af))
+        else:
+            out = output
         
         # Init vars
         parsed_dict = {}

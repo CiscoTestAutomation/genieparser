@@ -188,9 +188,14 @@ class ShowBootvarSchema(MetaParser):
 class ShowBootvar(ShowBootvarSchema):
     """Parser for show boot"""
 
-    def cli(self):
-        cmd = 'show boot'.format()
-        out = self.device.execute(cmd)
+    cli_command = 'show boot'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         boot_dict = {}
         boot_variable = None
 

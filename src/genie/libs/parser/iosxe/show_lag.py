@@ -49,8 +49,13 @@ class ShowLacpSysId(ShowLacpSysIdSchema):
     """Parser for :
        show lacp sys-id"""
 
-    def cli(self):
-        out = self.device.execute('show lacp sys-id')
+    cli_command = 'show lacp sys-id'
+
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         result_dict = {}
         # 32768, 001e.49af.8c00
@@ -109,8 +114,17 @@ class ShowLacpCounters(ShowLacpCountersSchema):
     """Parser for :
       show lacp counters"""
 
-    def cli(self, channel_group=""):
-        out = self.device.execute('show lacp {} counters'.format(channel_group))
+    cli_command = ['show lacp {channel_group} counters', 'show lacp counters']
+
+    def cli(self, channel_group="",output=None):
+        if output is None:
+            if channel_group:
+                cmd = self.cli_command[0].format(channel_group=channel_group)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         result_dict = {}
         #              LACPDUs         Marker      Marker Response    LACPDUs
@@ -194,8 +208,17 @@ class ShowLacpInternal(ShowLacpInternalSchema):
     """Parser for :
       show lacp internal"""
 
-    def cli(self, channel_group=""):
-        out = self.device.execute('show lacp {} internal'.format(channel_group))
+    cli_command = ['show lacp {channel_group} internal', 'show lacp internal']
+
+    def cli(self, channel_group="",output=None):
+        if output is None:
+            if channel_group:
+                cmd = self.cli_command[0].format(channel_group=channel_group)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         result_dict = {}
         # Channel group 1
@@ -288,8 +311,17 @@ class ShowLacpNeighbor(ShowLacpNeighborSchema):
     """Parser for :
       show lacp neighbor"""
 
-    def cli(self, channel_group=""):
-        out = self.device.execute('show lacp {} neighbor'.format(channel_group))
+    cli_command = ['show lacp {channel_group} neighbor', 'show lacp neighbor']
+
+    def cli(self, channel_group="", output=None):
+        if output is None:
+            if channel_group:
+                cmd = self.cli_command[0].format(channel_group=channel_group)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         result_dict = {}
         # Channel group 1 neighbors
@@ -458,8 +490,17 @@ class ShowPagpNeighbor(ShowPagpNeighborSchema):
     """Parser for :
       show pagp neighbor"""
 
-    def cli(self, channel_group=""):
-        out = self.device.execute('show pagp {} neighbor'.format(channel_group))
+    cli_command = ['show pagp {channel_group} neighbor', 'show pagp neighbor']
+
+    def cli(self, channel_group="", output=None):
+        if output is None:
+            if channel_group:
+                cmd = self.cli_command[0].format(channel_group=channel_group)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         result_dict = {}
         # Channel group 1 neighbors
@@ -545,8 +586,17 @@ class ShowPagpInternal(ShowPagpInternalSchema):
       show pagp internal
       show pagp <channel_group> internal"""
 
-    def cli(self, channel_group=""):
-        out = self.device.execute('show pagp {} internal'.format(channel_group))
+    cli_command = ['show pagp {channel_group} internal', 'show pagp internal']
+
+    def cli(self, channel_group="", output=None):
+        if output is None:
+            if channel_group:
+                cmd = self.cli_command[0].format(channel_group=channel_group)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         result_dict = {}
         # Channel group 1
@@ -638,8 +688,13 @@ class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
     """Parser for :
       show etherchannel summary"""
 
-    def cli(self):
-        out = self.device.execute('show etherchannel summary')
+    cli_command = 'show etherchannel summary'
+
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         result_dict = {}
         m1 = ""

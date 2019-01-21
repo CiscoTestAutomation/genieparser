@@ -35,9 +35,13 @@ class ShowMemoryStatisticsSchema(MetaParser):
 class ShowMemoryStatistics(ShowMemoryStatisticsSchema):
     """Parser for show memory statistics"""
 
-    def cli(self):
-        out = self.device.execute('show memory statistics')
+    cli_command = 'show memory statistics'
 
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         # initial return dictionary
         ret_dict = {}
 

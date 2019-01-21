@@ -53,26 +53,27 @@ class ShowIpRoute(ShowIpRouteSchema):
         show ip route vrf <vrf> bgp
         show ipv6 route bgp
         show ipv6 route vrf <vrf> bgp"""
-    def cli(self, protocol, vrf='', ip='ip'):
-
-        # Calling the corresponding show command
-        if ip:
-            if vrf:
-                cmd = 'show {ip} route vrf {vrf} {protocol}'.format(ip=ip,
-                        vrf=vrf, protocol= protocol)
+    cli_command = ['show {ip} route vrf {vrf} {protocol}','show {ip} route {protocol}','show ip route vrf {vrf} {protocol}',\
+                   'show route {protocol}']
+    def cli(self, protocol, vrf='', ip='ip',output=None):
+        if output is None:
+            # Calling the corresponding show command
+            if ip:
+                if vrf:
+                    cmd = self.cli_command[0].format(ip=ip,vrf=vrf, protocol= protocol)
+                else:
+                    vrf = 'default'
+                    cmd = self.cli_command[1].format(ip=ip,protocol= protocol)
             else:
-                vrf = 'default'
-                cmd = 'show {ip} route {protocol}'.format(ip=ip,
-                        protocol= protocol)
+                if vrf:
+                    cmd = self.cli_command[2].format(vrf=vrf,protocol= protocol)
+                else:
+                    vrf = 'default'
+                    cmd = self.cli_command[3].format(protocol= protocol)
+
+            out = self.device.execute(cmd)
         else:
-            if vrf:
-                cmd = 'show ip route vrf {vrf} {protocol}'.format(vrf=vrf,
-                        protocol= protocol)
-            else:
-                vrf = 'default'
-                cmd = 'show route {protocol}'.format(protocol= protocol)
-
-        out = self.device.execute(cmd)
+            out = output
 
         # Init dict
         bgp_dict = {}
@@ -223,5 +224,5 @@ class ShowIpv6Route(ShowIpRoute):
         show ipv6 route bgp
         show ipv6 route vrf <vrf> bgp"""
 
-    def cli(self, protocol, ip='ipv6', vrf = ''):
-        return(super().cli(protocol=protocol, ip='ipv6', vrf=vrf))
+    def cli(self, protocol, ip='ipv6', vrf = '',output=None):
+        return(super().cli(protocol=protocol, ip='ipv6', vrf=vrf,output=output))

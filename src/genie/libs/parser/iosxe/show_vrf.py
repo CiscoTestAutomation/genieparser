@@ -71,11 +71,13 @@ class ShowVrfDetailSchema(MetaParser):
 
 class ShowVrfDetail(ShowVrfDetailSchema):
     """Parser for show vrf detail"""
+    cli_command = 'show vrf detail'
 
-    def cli(self):
-        cmd = 'show vrf detail'
-        out = self.device.execute(cmd)
-        
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         # Init vars
         vrf_dict = {}
         af_dict = {}

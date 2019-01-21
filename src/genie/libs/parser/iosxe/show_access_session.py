@@ -52,9 +52,14 @@ class ShowAccessSession(ShowAccessSessionSchema):
     MAP = {'auth': 'authenticator',
            'supp': 'supplicant'}
 
-    def cli(self):
-         # get output from device
-        out = self.device.execute('show access-session')
+    cli_command = 'show access-session'
+
+    def cli(self,output=None):
+        if output is None:
+            # get output from device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # initial return dictionary
         ret_dict = {}

@@ -81,10 +81,13 @@ class ShowLispSession(ShowLispSessionSchema):
 
     ''' Parser for "show lisp session"'''
 
-    def cli(self):
+    cli_command = 'show lisp session'
 
-        # Execute command on device
-        out = self.device.execute('show lisp session')
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # Init vars
         parsed_dict = {}
@@ -162,10 +165,13 @@ class ShowLispPlatform(ShowLispPlatformSchema):
 
     ''' Parser for "show lisp platform" '''
 
-    def cli(self):
+    cli_command = 'show lisp platform'
 
-        # Execute command on device
-        out = self.device.execute('show lisp platform')
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # Init vars
         parsed_dict = {}
@@ -296,11 +302,13 @@ class ShowLispExtranet(ShowLispExtranetSchema):
 
     ''' Parser for "show lisp all extranet <extranet> instance-id <instance_id>"'''
 
-    def cli(self, extranet, instance_id):
+    cli_command = 'show lisp all extranet {extranet} instance-id {instance_id}'
 
-        # Execute command on device
-        out = self.device.execute('show lisp all extranet {ext} instance-id {id}'.\
-                                    format(ext=extranet,id=instance_id))
+    def cli(self, extranet, instance_id, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(extranet=extranet,instance_id=instance_id))
+        else:
+            out = output
 
         # Init vars
         parsed_dict = {}
@@ -458,11 +466,13 @@ class ShowLispDynamicEidDetail(ShowLispDynamicEidDetailSchema):
 
     ''' Parser for "show lisp all instance-id <instance_id> dynamic-eid detail"'''
 
-    def cli(self, instance_id):
+    cli_command = 'show lisp all instance-id {instance_id} dynamic-eid detail'
 
-        # Execute command on device
-        out = self.device.execute('show lisp all instance-id {} dynamic-eid '
-                                  'detail'.format(instance_id))
+    def cli(self, instance_id, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(instance_id=instance_id))
+        else:
+            out = output
 
         # Init vars
         parsed_dict = {}
@@ -779,20 +789,19 @@ class ShowLispService(ShowLispServiceSchema):
 
     '''Parser for "show lisp all instance-id <instance_id> <service>"'''
 
-    def cli(self, service, instance_id=None):
+    cli_command = ['show lisp all instance-id {instance_id} {service}','show lisp all service {service}']
 
-        assert service in ['ipv4', 'ipv6', 'ethernet']
+    def cli(self, service, instance_id=None, output=None):
 
-        # Build the command
-        cmd = 'show lisp all '
-        if instance_id:
-            cmd += 'instance-id {iid} {service}'.format(iid=instance_id,
-                                                         service=service)
+        if output is None:
+            assert service in ['ipv4', 'ipv6', 'ethernet']
+            if instance_id:
+                cmd = self.cli_command[0].format(instance_id=instance_id,service=service)
+            else:
+                cmd = self.cli_command[1].format(service=service)
+            out = self.device.execute(cmd)
         else:
-            cmd += 'service {}'.format(service)
-        
-        # Execute command on device
-        out = self.device.execute(cmd)
+            out = output
 
         # Init vars
         parsed_dict = {}
@@ -1527,14 +1536,15 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
 
     '''Parser for "show lisp all instance-id <instance_id> <service> map-cache"'''
 
-    def cli(self, service, instance_id):
+    cli_command = 'show lisp all instance-id {instance_id} {service} map-cache'
 
-        assert service in ['ipv4', 'ipv6', 'ethernet']
+    def cli(self, service, instance_id, output=None):
 
-        # Execute command on device
-        out = self.device.execute('show lisp all instance-id {instance_id} '
-                                  '{service} map-cache'.\
-                            format(instance_id=instance_id, service=service))
+        if output is None:
+            assert service in ['ipv4', 'ipv6', 'ethernet']
+            out = self.device.execute(self.cli_command.format(instance_id=instance_id,service=service))
+        else:
+            out = output
 
         # Init vars
         parsed_dict = {}
@@ -1723,14 +1733,15 @@ class ShowLispServiceRlocMembers(ShowLispServiceRlocMembersSchema):
 
     '''Parser for "show lisp all instance-id <instance_id> <service> rloc members"'''
 
-    def cli(self, service, instance_id):
+    cli_command = 'show lisp all instance-id {instance_id} service {service} rloc members'
 
-        assert service in ['ipv4', 'ipv6', 'ethernet']
+    def cli(self, service, instance_id, output=None):
 
-        # Execute command on device
-        out = self.device.execute('show lisp all instance-id {instance_id}'
-                                  ' service {service} rloc members'.\
-                            format(instance_id=instance_id, service=service))
+        if output is None:
+            assert service in ['ipv4', 'ipv6', 'ethernet']
+            out = self.device.execute(self.cli_command.format(instance_id=instance_id, service=service))
+        else:
+            out = output
 
         # Init vars
         parsed_dict = {}
@@ -1847,14 +1858,15 @@ class ShowLispServiceSmr(ShowLispServiceSmrSchema):
 
     '''Parser for "show lisp all instance-id <instance_id> <service> smr"'''
 
-    def cli(self, service, instance_id):
+    cli_command = 'show lisp all instance-id {instance_id} service {service} smr'
 
-        assert service in ['ipv4', 'ipv6', 'ethernet']
+    def cli(self, service, instance_id, output=None):
 
-        # Execute command on device
-        out = self.device.execute('show lisp all instance-id {instance_id}'
-                                  ' service {service} smr'.\
-                            format(instance_id=instance_id, service=service))
+        if output is None:
+            assert service in ['ipv4', 'ipv6', 'ethernet']
+            out = self.device.execute(self.cli_command.format(instance_id=instance_id, service=service))
+        else:
+            out = output
 
         # Init vars
         parsed_dict = {}
@@ -1983,13 +1995,15 @@ class ShowLispServiceSummary(ShowLispServiceSummarySchema):
 
     '''Parser for "show lisp all service <service> summary"'''
 
-    def cli(self, service):
+    cli_command = 'show lisp all service {service} summary'
 
-        assert service in ['ipv4', 'ipv6', 'ethernet']
+    def cli(self, service, output=None):
 
-        # Execute command on device
-        out = self.device.execute('show lisp all service {service} summary'.\
-                                    format(service=service))
+        if output is None:
+            assert service in ['ipv4', 'ipv6', 'ethernet']
+            out = self.device.execute(self.cli_command.format(service=service))
+        else:
+            out = output
 
         # Init vars
         parsed_dict = {}
@@ -2226,14 +2240,14 @@ class ShowLispServiceDatabase(ShowLispServiceDatabaseSchema):
 
     '''Parser for "show lisp all instance-id <instance_id> <service> dabatase"'''
 
-    def cli(self, service, instance_id):
+    cli_command = 'show lisp all instance-id {instance_id} {service} database'
 
-        assert service in ['ipv4', 'ipv6', 'ethernet']
-
-        # Execute command on device
-        out = self.device.execute('show lisp all instance-id {instance_id} '
-                                  '{service} database'.\
-                            format(service=service, instance_id=instance_id))
+    def cli(self, service, instance_id, output=None):
+        if output is None:
+            assert service in ['ipv4', 'ipv6', 'ethernet']
+            out = self.device.execute(self.cli_command.format(instance_id=instance_id, service=service))
+        else:
+            out = output
 
         # Init vars
         parsed_dict = {}
@@ -2413,14 +2427,14 @@ class ShowLispServiceServerSummary(ShowLispServiceServerSummarySchema):
 
     '''Parser for "show lisp all instance-id <instance_id> <service> server summary"'''
 
-    def cli(self, service, instance_id):
+    cli_command = 'show lisp all instance-id {instance_id} {service} server summary'
 
-        assert service in ['ipv4', 'ipv6', 'ethernet']
-
-        # Execute command on device
-        out = self.device.execute('show lisp all instance-id {instance_id} '
-                                  '{service} server summary'.\
-                            format(service=service, instance_id=instance_id))
+    def cli(self, service, instance_id, output=None):
+        if output is None:
+            assert service in ['ipv4', 'ipv6', 'ethernet']
+            out = self.device.execute(self.cli_command.format(instance_id=instance_id, service=service))
+        else:
+            out = output
 
         # Init vars
         parsed_dict = {}
@@ -2676,14 +2690,14 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
 
     '''Parser for "show lisp all instance-id <instance_id> <service> server detail internal"'''
 
-    def cli(self, service, instance_id):
+    cli_command = 'show lisp all instance-id {instance_id} {service} server detail internal'
 
-        assert service in ['ipv4', 'ipv6', 'ethernet']
-
-        # Execute command on device
-        out = self.device.execute('show lisp all instance-id {instance_id}'
-                                  ' {service} server detail internal'.\
-                            format(service=service, instance_id=instance_id))
+    def cli(self, service, instance_id, output=None):
+        if output is None:
+            assert service in ['ipv4', 'ipv6', 'ethernet']
+            out = self.device.execute(self.cli_command.format(instance_id=instance_id, service=service))
+        else:
+            out = output
 
         # Init vars
         parsed_dict = {}
@@ -3049,14 +3063,14 @@ class ShowLispServiceStatistics(ShowLispServiceStatisticsSchema):
 
     '''Parser for "show lisp all instance-id <instance_id> <service> statistics"'''
 
-    def cli(self, service, instance_id):
+    cli_command = 'show lisp all instance-id {instance_id} {service} statistics'
 
-        assert service in ['ipv4', 'ipv6', 'ethernet']
-
-        # Execute command on device
-        out = self.device.execute('show lisp all instance-id {instance_id} '
-                                  '{service} statistics'.format(service=service,
-                                  instance_id=instance_id))
+    def cli(self, service, instance_id, output=None):
+        if output is None:
+            assert service in ['ipv4', 'ipv6', 'ethernet']
+            out = self.device.execute(self.cli_command.format(instance_id=instance_id, service=service))
+        else:
+            out = output
 
         # Init vars
         parsed_dict = {}

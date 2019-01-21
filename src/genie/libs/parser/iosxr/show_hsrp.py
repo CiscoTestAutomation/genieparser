@@ -61,9 +61,15 @@ class ShowHsrpSummarySchema(MetaParser):
 
 class ShowHsrpSummary(ShowHsrpSummarySchema):
     """Parser for show hsrp summary"""
-    def cli(self):
-        cmd = 'show hsrp summary'
-        out = self.device.execute(cmd)
+
+    cli_command = 'show hsrp summary'
+
+    def cli(self,output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         
         # Init vars
         hsrp_summary_dict = {}
@@ -379,10 +385,13 @@ class ShowHsrpDetailSchema(MetaParser):
 
 class ShowHsrpDetail(ShowHsrpDetailSchema):
     """Parser for show hsrp detail"""
+    cli_command = 'show hsrp detail'
 
-    def cli(self):
-        cmd = 'show hsrp detail'
-        out = self.device.execute(cmd)
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         
         # Init vars
         hsrp_detail_dict = {}

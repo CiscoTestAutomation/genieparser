@@ -50,17 +50,19 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
         show ipv6 pim interface
         show ipv6 pim vrf <vrf> interface"""
 
-    def cli(self, vrf=''):
+    cli_command = ['show ipv6 pim vrf {vrf} interface','show ipv6 pim interface']
 
-        # set vrf infomation
-        if vrf:
-            cmd = 'show ipv6 pim vrf {} interface'.format(vrf)
+    def cli(self, vrf='',output=None):
+        if output is None:
+            # set vrf infomation
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+                vrf = 'default'
+            out = self.device.execute(cmd)
         else:
-            cmd = 'show ipv6 pim interface'
-            vrf = 'default'
-
-        # excute command to get output
-        out = self.device.execute(cmd)
+            out = output
 
         # initial variables
         ret_dict = {}
@@ -167,21 +169,23 @@ class ShowIpv6PimBsrElection(ShowIpv6PimBsrElectionSchema):
         show ipv6 pim bsr election
         show ipv6 pim vrf <vrf> bsr election"""
 
-    def cli(self, vrf=""):
+    cli_command = ['show ipv6 pim vrf {vrf} bsr election', 'show ipv6 pim bsr election']
 
-        # find cmd
-        if vrf:
-            cmd = 'show ipv6 pim vrf {} bsr election'.format(vrf)
+    def cli(self, vrf='', output=None):
+        if output is None:
+            # set vrf infomation
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+                vrf = 'default'
+            out = self.device.execute(cmd)
         else:
-            cmd = 'show ipv6 pim bsr election'
-            vrf = 'default'
+            out = output
 
         # initial variables
         ret_dict = {}
         af_name = 'ipv6'
-
-        # execute command to get output
-        out = self.device.execute(cmd)
 
         for line in out.splitlines():
             line = line.strip()
@@ -330,23 +334,26 @@ class ShowIpv6PimBsrCandidateRp(ShowIpv6PimBsrCandidateRpSchema):
         show ipv6 pim bsr candidate-rp
         show ipv6 pim vrf <vrf> bsr candidate-rp"""
 
-    def cli(self, vrf=""):
+    cli_command = ['show ipv6 pim vrf {vrf} bsr candidate-rp', 'show ipv6 pim bsr candidate-rp']
 
-        # find cmd
-        if vrf:
-            cmd = 'show ipv6 pim vrf {} bsr candidate-rp'.format(vrf)
+    def cli(self, vrf='', output=None):
+        if output is None:
+            # set vrf infomation
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+                vrf = 'default'
+            out = self.device.execute(cmd)
         else:
-            cmd = 'show ipv6 pim bsr candidate-rp'
-            vrf = 'default'
+            out = output
+
 
         # initial variables
         ret_dict = {}
         af_name = 'ipv6'
         address = priority = holdtime = interval = mode = ""
         next_advertisement = ""
-
-        # execute command to get output
-        out = self.device.execute(cmd)
 
         for line in out.splitlines():
             line = line.strip()
@@ -470,19 +477,21 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
             show ip pim interface
             show ip pim vrf <vrf> interface"""
 
-    def cli(self, vrf=""):
+    cli_command = ['show ip pim vrf {vrf} interface', 'show ip pim interface']
 
-        # find cmd
-        if vrf:
-            cmd = 'show ip pim vrf {} interface'.format(vrf)
+    def cli(self, vrf='', output=None):
+        if output is None:
+            # set vrf infomation
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+                vrf = 'default'
+            out = self.device.execute(cmd)
         else:
-            cmd = 'show ip pim interface'
-            vrf = 'default'
+            out = output
 
         af_name = 'ipv4'
-
-        # excute command to get output
-        out = self.device.execute(cmd)
 
         # initial variables
         ret_dict = {}
@@ -603,21 +612,24 @@ class ShowIpPimBsrRouter(ShowIpPimBsrRouterSchema):
         show ip pim bsr-router
         show ip pim vrf <vrf> bsr-router'''
 
-    def cli(self, vrf=""):
+    cli_command = ['show ip pim vrf {vrf} bsr-router', 'show ip pim bsr-router']
 
-        # find cmd
-        if vrf:
-            cmd = 'show ip pim vrf {} bsr-router'.format(vrf)
+    def cli(self, vrf='', output=None):
+        if output is None:
+            # set vrf infomation
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+                vrf = 'default'
+            out = self.device.execute(cmd)
         else:
-            cmd = 'show ip pim bsr-router'
-            vrf = 'default'
+            out = output
 
         af_name = 'ipv4'
         rp_can_interface = rp_can_address = rp_can_holdtime = rp_can_interval = ""
         rp_can_next_advertisment = rp_can_priority = ""
 
-        # excute command to get output
-        out = self.device.execute(cmd)
 
         # initial variables
         ret_dict = {}
@@ -894,20 +906,22 @@ class ShowIpPimRpMapping(ShowIpPimRpMappingSchema):
     # Parser for 'show ip pim rp mapping'
     # Parser for 'show ip pim vrf <vrf_name> rp mapping'
 
-    def cli(self, vrf=""):
+    cli_command = ['show ip pim vrf {vrf} rp mapping', 'show ip pim rp mapping']
 
-        # find cmd
-        if vrf:
-            cmd = 'show ip pim vrf {} rp mapping'.format(vrf)
+    def cli(self, vrf='', output=None):
+        if output is None:
+            # set vrf infomation
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+                vrf = 'default'
+            out = self.device.execute(cmd)
         else:
-            cmd = 'show ip pim rp mapping'
-            vrf = 'default'
+            out = output
 
         protocol_static = ""
         af_name = 'ipv4'
-
-        # excute command to get output
-        out = self.device.execute(cmd)
 
         # initial variables
         ret_dict = {}
@@ -1304,23 +1318,23 @@ class ShowIpPimInterfaceDetail(ShowIpPimInterfaceDetailSchema):
     # Parser for 'show ip pim Interface detail'
     # Parser for 'show ip pim vrf <vrf_name> interface detail'
 
-    def cli(self, vrf=""):
+    cli_command = ['show ip pim vrf {vrf} interface detail', 'show ip pim interface detail']
 
-        # find cmd
-        if vrf:
-            cmd = 'show ip pim vrf {} interface detail'.format(vrf)
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+                vrf = 'default'
+            out = self.device.execute(cmd)
         else:
-            cmd = 'show ip pim interface detail'
-            vrf = 'default'
+            out = output
 
         af_name = 'ipv4'
 
         # initial variables
         ret_dict = {}
-
-        # excute command to get output
-        out = self.device.execute(cmd)
-
 
         for line in out.splitlines():
             line = line.strip()
@@ -1664,12 +1678,18 @@ class ShowPimNeighbor(ShowPimNeighborSchema):
     '''Parser for show ip/ipv6 pim [vrf <WORD>] neighbor
                   show ipv6 pim [vrf <word>] neighbor detail'''
 
-    def cli(self , af='ip', vrf=''):
+    cli_command = ['show {af} pim vrf {vrf} neighbor', 'show {af} pim neighbor']
 
-        cmd = 'show {af} pim vrf {vrf} neighbor'.format(af=af, vrf=vrf) \
-              if vrf else 'show {af} pim neighbor'.format(af=af)
+    def cli(self, af='ip',vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(af=af,vrf=vrf)
+            else:
+                cmd = self.cli_command[1].format(af=af)
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
-        out = self.device.execute(cmd)
         af= 'ipv4' if af == 'ip' else af
         vrf = 'default' if not vrf else vrf
 
@@ -1774,8 +1794,8 @@ class ShowPimNeighbor(ShowPimNeighborSchema):
 class ShowIpPimNeighbor(ShowPimNeighbor):
     '''Parser for show ip pim [vrf <WORD>] neighbor'''
 
-    def cli(self, vrf=''):
-        return super().cli(af='ip', vrf=vrf)
+    def cli(self, vrf='',output=None):
+        return super().cli(af='ip', vrf=vrf,output=output)
 
 # ==========================================================
 #  parser for 'show ipv6 pim [vrf <WORD>] neighbor'
@@ -1783,8 +1803,8 @@ class ShowIpPimNeighbor(ShowPimNeighbor):
 class ShowIpv6PimNeighbor(ShowPimNeighbor):
     '''Parser for show ipv6 pim [vrf <WORD>] neighbor'''
 
-    def cli(self, vrf=''):
-        return super().cli(af='ipv6', vrf=vrf)
+    def cli(self, vrf='',output=None):
+        return super().cli(af='ipv6', vrf=vrf,output=output)
 
 
 # ==========================================================
@@ -1793,8 +1813,8 @@ class ShowIpv6PimNeighbor(ShowPimNeighbor):
 class ShowIpv6PimNeighborDetail(ShowPimNeighbor):
     '''Parser for show ipv6 pim [vrf <WORD>] neighbor detail'''
 
-    def cli(self, vrf=''):
-        return super().cli(af='ipv6', vrf=vrf)
+    def cli(self, vrf='',output=None):
+        return super().cli(af='ipv6', vrf=vrf,output=output)
 
 
 # ===========================================================
@@ -1836,12 +1856,18 @@ class ShowIpPimInterfaceDfSchema(MetaParser):
 class ShowIpPimInterfaceDf(ShowIpPimInterfaceDfSchema):
     '''Parser for show ip pim [vrf <WORD>] interface df'''
 
-    def cli(self , vrf=''):
+    cli_command = ['show ip pim vrf {vrf} interface df', 'show ip pim interface df']
 
-        cmd = 'show ip pim vrf {vrf} interface df'.format(vrf=vrf) if vrf else \
-              'show ip pim interface df'
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
-        out = self.device.execute(cmd)
         af= 'ipv4'
         vrf = 'default' if not vrf else vrf
 

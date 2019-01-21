@@ -61,8 +61,14 @@ class ShowRouteMapAllSchema(MetaParser):
     
 class ShowRouteMapAll(ShowRouteMapAllSchema):
     """Parser for show route-map all"""
-    def cli(self):
-        out = self.device.execute('show route-map all')
+    cli_command = 'show route-map all'
+
+    def cli(self, output=None):
+        if output is None:
+            # get output from device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         route_map_dict = {}
         clause_type = ''

@@ -103,12 +103,20 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
     """Parser for :
        show ip msdp peer vrf <vrf>"""
 
-    def cli(self,vrf=""):
+    cli_command = ['show ip msdp peer vrf {vrf}', 'show ip msdp peer']
 
+    def cli(self,vrf="", output=None):
         if vrf and vrf !='default':
-            out = self.device.execute('show ip msdp peer vrf {}'.format(vrf))
+            cmd = self.cli_command[0].format(vrf=vrf)
         else:
-            out = self.device.execute('show ip msdp peer')
+            cmd = self.cli_command[1]
+
+        # excute command to get output
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
         result_dict = {}
 
         # MSDP peer 1.1.1.1 for VRF "default"
@@ -422,12 +430,19 @@ class ShowIpMsdpSaCacheDetailVrf(ShowIpMsdpSaCacheDetailVrfSchema):
     """Parser for :
        show ip msdp sa-cache detail vrf <vrf>"""
 
-    def cli(self,vrf=""):
+    cli_command = ['show ip msdp sa-cache detail vrf {vrf}','show ip msdp sa-cache detail']
 
+    def cli(self,vrf="",output=None):
         if vrf and vrf !='default':
-            out = self.device.execute('show ip msdp sa-cache detail vrf {}'.format(vrf))
+            cmd = self.cli_command[0].format(vrf=vrf)
         else:
-            out = self.device.execute('show ip msdp sa-cache detail')
+            cmd = self.cli_command[1]
+
+        # excute command to get output
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         result_dict = {}
         # MSDP SA Route Cache for VRF "default" - 1 entries
@@ -532,18 +547,26 @@ class ShowIpMsdpPolicyStatisticsSaPolicyInOut(ShowIpMsdpPolicyStatisticsSaPolicy
         show ip msdp policy statistics sa-policy <address> in
         show ip msdp policy statistics sa-policy <address> out"""
 
-    def cli(self, peer, method, vrf=''):
+    cli_command= ['show ip msdp policy statistics sa-policy {peer} {method} vrf {vrf}',
+                  'show ip msdp policy statistics sa-policy {peer} {method}']
+
+    def cli(self, peer, method, vrf='', output=None):
 
         assert method in ['in', 'out']
 
-        cmd = 'show ip msdp policy statistics sa-policy %s %s' % (peer, method)
+        cmd = ""
+        if peer:
+            if vrf and vrf !='default':
+                cmd = self.cli_command[0].format(peer=peer,method=method,vrf=vrf)
+            else:
+                vrf = 'default'
+                cmd = self.cli_command[1].format(peer=peer,method=method)
 
-        if vrf and vrf != 'default':
-            cmd += ' vrf %s' % vrf
+        # excute command to get output
+        if output is None:
+            out = self.device.execute(cmd)
         else:
-            vrf = 'default'
-
-        out = self.device.execute(cmd)
+            out = output
 
         ret_dict = {}
         match1 = ''
@@ -702,12 +725,20 @@ class ShowIpMsdpSummary(ShowIpMsdpSummarySchema):
         show ip msdp summary vrf all
         show ip msdp summary vrf <vrf>"""
 
-    def cli(self, vrf=''):
+    cli_command = ['show ip msdp summary vrf {vrf}','show ip msdp summary']
+
+    def cli(self, vrf='', output=None):
 
         if vrf and vrf !='default':
-            out = self.device.execute('show ip msdp summary vrf {}'.format(vrf))
+            cmd = self.cli_command[0].format(vrf=vrf)
         else:
-            out = self.device.execute('show ip msdp summary')
+            cmd = self.cli_command[1]
+
+        # excute command to get output
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         ret_dict = {}
 
@@ -822,20 +853,29 @@ class ShowRunningConfigMsdp(ShowRunningConfigMsdpSchema):
     """Parser for :
         show run msdp [| sec <vrf> | inc <pip_str>]"""
 
-    def cli(self, pip_str=None, vrf=None):
+    cli_command = 'show running-config msdp'
 
-        cmd  = 'show running-config msdp'
+    def cli(self, pip_str=None, vrf=None, output=None):
+
+        cmd = ""
+
         if vrf:
             if vrf == 'default':
                 # command start with ip pim, or interface without spaces
-                cmd += " | sec '^i'"
+                cmd = self.cli_command + " | sec '^i'"
             else:
-                cmd += ' | sec %s' % vrf
+                cmd = self.cli_command + ' | sec {vrf}'.format(vrf=vrf)
         if pip_str:
-            cmd += ' | inc %s' % pip_str
+            if cmd:
+                cmd += ' | inc {pip_str}'.format(pip_str=pip_str)
+            else:
+                cmd = self.cli_command +' | inc {pip_str}'.format(pip_str=pip_str)
 
-        # initial output
-        out = self.device.execute(cmd)
+            # excute command to get output
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         # Init vars
         msdp_dict = {}

@@ -24,13 +24,15 @@ class ShowL2vpnMacLearning(MetaParser):
         self.mac_type = mac_type
         super().__init__(**kwargs)
 
-    def cli(self):
+    cli_command = 'show l2vpn mac-learning {mac_type} all location {location}'
 
-        cmd = 'show l2vpn mac-learning {mac_type} all location {location}'.format(
-            mac_type=self.mac_type,
-            location=self.location)
-
-        out = self.device.execute(cmd)
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                mac_type=self.mac_type,
+                location=self.location))
+        else:
+            out = output
 
         result = {
             'entries': [],
@@ -172,12 +174,13 @@ class ShowL2vpnForwardingProtectionMainInterface(MetaParser):
         self.location = location
         super().__init__(**kwargs)
 
-    def cli(self):
+    cli_command = 'show l2vpn forwarding protection main-interface location {location}'
 
-        cmd = 'show l2vpn forwarding protection main-interface location {location}'.format(
-            location=self.location)
-
-        out = self.device.execute(cmd)
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(location=self.location))
+        else:
+            out = output
 
         result = {
             'entries' : []

@@ -73,11 +73,19 @@ class ShowRoutingVrfAllSchema(MetaParser):
 
 class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
     """Parser for show ip routing vrf all"""
-    
-    def cli(self, ip=''):
+    cli_command = ['show routing {ip} vrf all', 'show routing vrf all']
 
-        cmd = 'show routing {} vrf all'.format(ip) if ip else 'show routing vrf all'
-        out = self.device.execute(cmd)
+    def cli(self, ip='',output=None):
+        if ip:
+            cmd = self.cli_command[0].format(ip=ip)
+        else:
+            cmd = self.cli_command[1]
+
+        # excute command to get output
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
         
         # Init dict
         bgp_dict = {}
@@ -249,8 +257,8 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
 class ShowRoutingIpv6VrfAll(ShowRoutingVrfAll):
     """Parser for show ipv6 routing vrf all"""
 
-    def cli(self):
-        return(super().cli(ip='ipv6'))
+    def cli(self,output=None):
+        return(super().cli(ip='ipv6',output=output))
 
 
 # ====================================================
@@ -317,14 +325,20 @@ class ShowIpRoute(ShowIpRouteSchema):
        show ip route
        show ip route vrf <vrf>
        show ip route vrf all"""
+    cli_command = ['show ip route vrf {vrf}', 'show ip route vrf']
 
-    def cli(self, vrf=""):
+    def cli(self, vrf='', output=None):
         if vrf:
-            cmd = 'show ip route vrf {}'.format(vrf)
+            cmd = self.cli_command[0].format(vrf=vrf)
         else:
-            cmd = 'show ip route'
             vrf = 'default'
-        out = self.device.execute(cmd)
+            cmd = self.cli_command[1]
+
+        # excute command to get output
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         af = 'ipv4'
         route = ""
@@ -623,13 +637,20 @@ class ShowIpv6Route(ShowIpv6RouteSchema):
        show ipv6 route vrf <vrf>
        show ipv6 route vrf all"""
 
-    def cli(self, vrf=""):
-        if vrf:
-            cmd = 'show ipv6 route vrf {}'.format(vrf)
+    cli_command = ['show ipv6 route vrf {vrf}', 'show ipv6 route']
+
+    def cli(self, vrf='', output=None):
+        if vrf and vrf != 'default':
+            cmd = self.cli_command[0].format(vrf=vrf)
         else:
-            cmd = 'show ipv6 route'
             vrf = 'default'
-        out = self.device.execute(cmd)
+            cmd = self.cli_command[1]
+
+        # excute command to get output
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         af = 'ipv6'
         route = ""

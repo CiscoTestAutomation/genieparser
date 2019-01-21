@@ -67,9 +67,13 @@ class ShowVlanSchema(MetaParser):
 # ====================================================
 class ShowVlan(ShowVlanSchema):
     """Parser for show vlan"""
-    def cli(self):
-        cmd = 'show vlan'
-        out = self.device.execute(cmd)
+    cli_command = 'show vlan'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         vlan_dict = {}
         primary = ""
@@ -276,15 +280,13 @@ class ShowVlanMtu(ShowVlanMtuSchema):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
 
-    def cli(self):
-        ''' parsing mechanism: cli
+    cli_command = 'show vlan mtu'
 
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: exe
-        cuting, transforming, returning
-        '''
-        cmd = 'show vlan mtu'.format()
-        out = self.device.execute(cmd)
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         vlan_list = []
         vlan_mtu_dict = {}
         for line in out.splitlines():
@@ -339,15 +341,13 @@ class ShowVlanAccessMap(ShowVlanAccessMapSchema):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
 
-    def cli(self):
-        ''' parsing mechanism: cli
+    cli_command = 'show vlan access-map'
 
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: exe
-        cuting, transforming, returning
-        '''
-        cmd = 'show vlan access-map'.format()
-        out = self.device.execute(cmd)
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         access_map_dict = {}
         for line in out.splitlines():
             line = line.rstrip()
@@ -405,16 +405,14 @@ class ShowVlanRemoteSpan(ShowVlanRemoteSpanSchema):
     # Purpose is to make sure the parser always return the output
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
+    cli_command = 'show vlan remote-span'
 
-    def cli(self):
-        """parsing mechanism: cli
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: exe
-        cuting, transforming, returning
-        """
-        cmd = 'show vlan remote-span'.format()
-        out = self.device.execute(cmd)
         remote_span_vlan_dict = {}
         for line in out.splitlines():
             line = line.rstrip()
@@ -455,17 +453,14 @@ class ShowVlanFilter(ShowVlanFilterSchema):
     # Purpose is to make sure the parser always return the output
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
+    cli_command = 'show vlan filter'
 
-    def cli(self):
-        """parsing mechanism: cli
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: exe
-        cuting, transforming, returning
-        """
-
-        cmd = 'show vlan filter'.format()
-        out = self.device.execute(cmd)
         vlan_dict = {}
         for line in out.splitlines():
             line = line.rstrip()

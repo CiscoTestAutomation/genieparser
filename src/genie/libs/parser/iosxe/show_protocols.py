@@ -135,10 +135,15 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
 
     ''' Parser for "show ip protocols" '''
 
-    def cli(self):
+    cli_command = 'show ip protocols'
 
-        # Execute command on device
-        out = self.device.execute('show ip protocols')
+    def cli(self, output=None):
+
+        if output is None:
+            # get output from device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # Init vars
         ret_dict = {}

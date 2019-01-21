@@ -81,16 +81,17 @@ class ShowIpMroute(ShowIpMrouteSchema):
         show ip mroute
         show ip mroute vrf <vrf>"""
 
-    def cli(self, cmd='show ip mroute', vrf=''):
+    cli_command = 'show ip mroute'
 
-        # set vrf infomation
-        if vrf:
-            cmd += ' vrf {}'.format(vrf)
+    def cli(self, cmd=cli_command, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd += ' vrf {vrf}'.format(vrf=vrf)
+            else:
+                vrf = 'default'
+            out = self.device.execute(cmd)
         else:
-            vrf = 'default'
-
-        # excute command to get output
-        out = self.device.execute(cmd)
+            out = output
 
         # initial variables
         mroute_dict = {}
@@ -292,8 +293,11 @@ class ShowIpv6Mroute(ShowIpMroute):
     """Parser for:
        show ipv6 mroute
        show ipv6 mroute vrf <vrf>"""
-    def cli(self, vrf=''):
-        return super().cli(cmd='show ipv6 mroute', vrf=vrf)
+
+    cli_command = 'show ipv6 mroute'
+
+    def cli(self, vrf='',output=None):
+        return super().cli(cmd=self.cli_command, vrf=vrf,output=output)
 
 
 # ===========================================
@@ -327,13 +331,19 @@ class ShowIpMrouteStatic(ShowIpMrouteStaticSchema):
             show ip mroute static
             show ip mroute vrf <vrf> static
         """
+    cli_command = ['show ip mroute static', 'show ip mroute vrf {vrf} static']
 
-    def cli(self, vrf=''):
-        # cli implemetation of parsers
-        cmd = 'show ip mroute static' if not vrf else \
-              'show ip mroute vrf {} static'.format(vrf)
-        vrf = vrf if vrf else 'default'
-        out = self.device.execute(cmd)
+    def cli(self, vrf='',output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                vrf = 'default'
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
 
         ret_dict = {}
 
@@ -411,13 +421,18 @@ class ShowIpMulticast(ShowIpMulticastSchema):
         show ip multicast
         show ip multicast vrf <vrf>
     """
-    def cli(self, vrf=''):
+    cli_command = ['show ip multicast', 'show ip multicast vrf {vrf}']
 
-        # cli implemetation of parsers
-        cmd = 'show ip multicast' if not vrf else \
-              'show ip multicast vrf {}'.format(vrf)
-        vrf = vrf if vrf else 'default'
-        out = self.device.execute(cmd)
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                vrf = 'default'
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         ret_dict = {}
 

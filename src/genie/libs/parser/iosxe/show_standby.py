@@ -61,9 +61,13 @@ class ShowStandbyInternalSchema(MetaParser):
 class ShowStandbyInternal(ShowStandbyInternalSchema):
     """Parser for show standby internal"""
 
-    def cli(self):
-        cmd = 'show standby internal'.format()
-        out = self.device.execute(cmd)
+    cli_command = 'show standby internal'
+
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         
         # Init vars
         standby_internal_dict = {}
@@ -378,10 +382,13 @@ class ShowStandbyAll(ShowStandbyAllSchema):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
 
-    def cli(self):
-        """Cli result for show standby all """
-        cmd = 'show standby all'.format()
-        out = self.device.execute(cmd)
+    cli_command = 'show standby all'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         
         # Init vars
         standby_all_dict = {}
@@ -970,9 +977,13 @@ class ShowStandbyDelaySchema(MetaParser):
 
 class ShowStandbyDelay(ShowStandbyDelaySchema):
     """Parser for show standby delay"""
-    def cli(self):
-        cmd = 'show standby delay'
-        out = self.device.execute(cmd)
+    cli_command = 'show standby delay'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # Init vars
         hsrp_delay_dict = {}
