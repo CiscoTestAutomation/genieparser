@@ -54,18 +54,22 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
 
-    def cli(self, ip=''):
+    cli_command = ['show ip interface brief | include {ip}','show ip interface brief']
+    def cli(self, ip='',output=None):
         ''' parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: exe
         cuting, transforming, returning
         '''
-
-        cmd = 'show ip interface brief' if not ip else \
-              'show ip interface brief | include {}'.format(ip)
-
-        out = self.device.execute(cmd)
+        if output is None:
+            if ip:
+                cmd = self.cli_command[0].format(ip=ip)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         # Loopback500                    200.0.0.1       Up              Up       default
         p = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.\-]+) '
@@ -141,15 +145,14 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
 
-    def cli(self):
-        ''' parser for show interface switchport
+    cli_command = 'show interface switchport'
 
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: exe
-        cuting, transforming, returning
-        '''
-        cmd = 'show interface switchport'.format()
-        out = self.device.execute(cmd)
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         intf_dict = {}
         trunk_section = False
         access_section = False
@@ -292,15 +295,14 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
         super().__init__(*args, **kwargs)
         self.cmd = 'show interface brief'.format()
 
-    def cli(self):
-        """parsing mechanism: cli
+    cli_command = 'show interface brief'
 
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: exe
-        cuting, transforming, returning
-        """
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
-        out = self.device.execute(self.cmd)
         interface_dict = {}
         for line in out.splitlines():
             line = line.rstrip()
@@ -558,8 +560,13 @@ class ShowInterfacesDetailSchema(MetaParser):
 class ShowInterfacesDetail(ShowInterfacesDetailSchema):
     """Parser for show interface detail"""
 
-    def cli(self):
-        out = self.device.execute('show interface detail')
+    cli_command = 'show interface detail'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         interface_detail_dict = {}
 
@@ -1170,9 +1177,13 @@ class ShowVlanInterfaceSchema(MetaParser):
 class ShowVlanInterface(ShowVlanInterfaceSchema):
     """Parser for show vlan interface"""
 
-    def cli(self):
+    cli_command = 'show vlan interface'
 
-        out = self.device.execute('show vlan interface')
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         vlan_interface_dict = {}
 
@@ -1275,10 +1286,16 @@ class ShowIpv4VrfAllInterfaceSchema(MetaParser):
         }
 
 class ShowIpv4VrfAllInterface(ShowIpv4VrfAllInterfaceSchema):
-     """Parser for show ipv4 vrf all interface"""
-     def cli(self):
+    """Parser for show ipv4 vrf all interface"""
 
-        out = self.device.execute('show ipv4 vrf all interface')
+    cli_command = 'show ipv4 vrf all interface'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         ipv4_vrf_all_interface_dict = {}
 
         for line in out.splitlines():
@@ -1616,8 +1633,13 @@ class ShowIpv6VrfAllInterfaceSchema(MetaParser):
 class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
     """Parser for show ipv6 vrf all interface"""
 
-    def cli(self):
-        out = self.device.execute('show ipv6 vrf all interface')
+    cli_command = 'show ipv6 vrf all interface'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         ipv6_vrf_all_interface_dict = {}
 
@@ -2129,9 +2151,13 @@ class ShowEthernetTagsSchema(MetaParser):
 class ShowEthernetTags(ShowEthernetTagsSchema):
     """Parser for show ethernet tags"""
 
-    def cli(self):
+    cli_command = 'show ethernet tags'
 
-        out = self.device.execute('show ethernet tags')
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         ret_dict = {}
 
@@ -2220,15 +2246,18 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
         show interfaces accounting
         show interfaces <interface> accounting
     """
+    cli_command = ['show interfaces {intf} accounting','show interfaces accounting']
 
-    def cli(self, intf=None):
-        if intf:
-            cmd = 'show interfaces {intf} accounting'.format(intf=intf)
+    def cli(self, intf=None, output=None):
+        if output is None:
+            if intf:
+                cmd = self.cli_command[0].format(intf=intf)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
         else:
-            cmd = 'show interfaces accounting'
+            out = output
 
-        # get output from device
-        out = self.device.execute(cmd)
         # initial return disctionary
         ret_dict = {}
 

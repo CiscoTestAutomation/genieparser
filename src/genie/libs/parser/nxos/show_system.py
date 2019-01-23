@@ -45,9 +45,18 @@ class ShowSystemInternalSysmgrServiceName(
     ShowSystemInternalSysmgrServiceNameSchema):
     """Parser for show system internal sysmgr service name <process>"""
 
-    def cli(self, process):
-        cmd = 'show system internal sysmgr service name {}'.format(process)
-        out = self.device.execute(cmd)
+    cli_command = 'show system internal sysmgr service name {process}'
+
+    def cli(self, process,output=None):
+        if process:
+            cmd = self.cli_command.format(process=process)
+        else:
+            cmd = ""
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
         ret_dict = {}
 
         for line in out.splitlines():
@@ -238,9 +247,15 @@ class ShowSystemInternalL2fwderMacSchema(MetaParser):
 class ShowSystemInternalL2fwderMac(ShowSystemInternalL2fwderMacSchema):
     """Parser for show system internal l2fwder Mac"""
 
-    def cli(self):
-        cmd = 'show system internal l2fwder Mac'
-        out = self.device.execute(cmd)
+    cli_command = 'show system internal l2fwder Mac'
+
+    def cli(self,output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         ret_dict = {}
 
         for line in out.splitlines():

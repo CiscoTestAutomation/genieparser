@@ -1,5 +1,22 @@
 | Module                  | Version       |
 | ------------------------|:-------------:|
+| ``genie.libs.parser``   | 3.1.13        |
+
+
+* Parsers are now made indexable by show command
+  *  Updated all parsers to parse custom "output"
+  *  Took out cmd to outside of parser and named to "cli_command" and "xml_command" for cli and xml parsers
+
+--------------------------------------------------------------------------------
+                                NTP
+--------------------------------------------------------------------------------
+* IOSXR
+    * Add ShowNtpAssociations for 'show ntp associations'
+    * Add ShowNtpStatus for 'show ntp status'
+
+
+| Module                  | Version       |
+| ------------------------|:-------------:|
 | ``genie.libs.parser``   | 3.1.12        |
 
 --------------------------------------------------------------------------------

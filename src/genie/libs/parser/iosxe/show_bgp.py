@@ -100,14 +100,15 @@ class ShowBgpAllDetailSchema(MetaParser):
 
 
 class ShowBgpAllDetail(ShowBgpAllDetailSchema):
-
     """Parser for show bgp all detail"""
 
-    def cli(self):
+    cli_command = 'show bgp all detail'
 
-        # show bgp all detail
-        cmd  = 'show bgp all detail'
-        out = self.device.execute(cmd)
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # Init dictionary
         bgp_dict = {}
@@ -584,14 +585,15 @@ class ShowBgpAllNeighborsPolicySchema(MetaParser):
 
 
 class ShowBgpAllNeighborsPolicy(ShowBgpAllNeighborsPolicySchema):
-
     """Parser for show bgp all neighbors <neighbor> policy"""
 
-    def cli(self, neighbor):
+    cli_command = 'show bgp all neighbors {neighbor} policy'
 
-        # show bgp all neighbors {neighbor} policy
-        cmd  = 'show bgp all neighbors {neighbor} policy'.format(neighbor=neighbor)
-        out = self.device.execute(cmd)
+    def cli(self, neighbor,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(neighbor=neighbor))
+        else:
+            out = output
 
         # Init dictionary
         policy_dict = {}

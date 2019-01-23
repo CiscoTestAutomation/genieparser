@@ -67,9 +67,14 @@ class ShowSpanningTreeSummarySchema(MetaParser):
 class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
     """Parser for show show spanning-tree summary"""
 
-    def cli(self):
-         # get output from device
-        out = self.device.execute('show spanning-tree summary')
+    cli_command = 'show spanning-tree summary'
+
+    def cli(self,output=None):
+        if output is None:
+            # get output from device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # initial return dictionary
         ret_dict = {}
@@ -257,11 +262,14 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
     MODE_KEY_MAP = {'mstp': 'mst_id',
                      'ieee': 'vlan_id',
                      'rstp': 'vlan_id'}
+    cli_command = 'show spanning-tree detail'
 
-    def cli(self):
-         # get output from device
-        out = self.device.execute('show spanning-tree detail')
-
+    def cli(self, output=None):
+        if output is None:
+            # get output from device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         # initial return dictionary
         ret_dict = {}
 
@@ -551,9 +559,14 @@ class ShowSpanningTreeMstDetailSchema(MetaParser):
 class ShowSpanningTreeMstDetail(ShowSpanningTreeMstDetailSchema):
     """Parser for show spanning-tree mst detail"""
 
-    def cli(self):
-         # get output from device
-        out = self.device.execute('show spanning-tree mst detail')
+    cli_command = 'show spanning-tree mst detail'
+
+    def cli(self, output=None):
+        if output is None:
+            # get output from device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # initial return dictionary
         ret_dict = {}
@@ -733,9 +746,14 @@ class ShowErrdisableRecoverySchema(MetaParser):
 class ShowErrdisableRecovery(ShowErrdisableRecoverySchema):
     """Parser for show errdisable recovery"""
 
-    def cli(self):
-         # get output from device
-        out = self.device.execute('show errdisable recovery')
+    cli_command = 'show errdisable recovery'
+
+    def cli(self, output=None):
+        if output is None:
+            # get output from device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # initial return dictionary
         ret_dict = {}
@@ -836,17 +854,21 @@ class ShowSpanningTree(ShowSpanningTreeSchema):
                 'Root': 'root',
                 'BLK': 'blocking',
                 'Altn': 'alternate',}
+    cli_command = ['show spanning-tree vlan {vlan}','show spanning-tree mst {mst}','show spanning-tree']
 
-    def cli(self, mst='', vlan=''):
-        # get output from device
-        if vlan:
-            out = self.device.execute('show spanning-tree vlan {}'.format(vlan))
-        elif mst:
-            out = self.device.execute('show spanning-tree mst {}'.format(mst))
+    def cli(self, mst='', vlan='',output=None):
+        if output is None:
+            # get output from device
+            if vlan:
+                cmd = self.cli_command[0].format(vlan=vlan)
+            elif mst:
+                cmd = self.cli_command[1].format(mst=mst)
+            else:
+                cmd = self.cli_command[2]
+
+            out = self.device.execute(cmd)
         else:
-            out = self.device.execute('show spanning-tree')
-        
-             
+            out = output
 
         # initial return dictionary
         ret_dict = {}
@@ -973,10 +995,13 @@ class ShowSpanningTreeMstConfigurationSchema(MetaParser):
 class ShowSpanningTreeMstConfiguration(ShowSpanningTreeMstConfigurationSchema):
     """Parser for show spanning-tree mst configuration"""
 
-    def cli(self):
-         # get output from device
-        out = self.device.execute('show spanning-tree mst configuration')
+    cli_command = 'show spanning-tree mst configuration'
 
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         # initial return dictionary
         ret_dict = {}
 

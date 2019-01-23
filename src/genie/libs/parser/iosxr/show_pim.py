@@ -44,11 +44,20 @@ class ShowPimVrfMstaticSchema(MetaParser):
         }
 
 class ShowPimVrfMstatic(ShowPimVrfMstaticSchema):
-    """Parser for show pim vrf <vrf> <address_family> mstatic"""
+    """Parser for show pim vrf <vrf> <address_family> mstatic
+    For checking any output with the parser ,below mandatory keys have to be in cli command.
 
-    def cli(self, vrf='default', af='ipv4'):
-        out = self.device.execute('show pim vrf {vrf} {af} mstatic'.\
-                                  format(vrf=vrf, af=af))
+    - vrf
+    - af
+    """
+
+    cli_command = 'show pim vrf {vrf} {af} mstatic'
+
+    def cli(self, vrf='default', af='ipv4', output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(vrf=vrf, af=af))
+        else:
+            out = output
         
         # Init vars
         parsed_dict = {}
@@ -148,11 +157,21 @@ class ShowPimVrfInterfaceDetailSchema(MetaParser):
         }
 
 class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
-    """Parser for show pim vrf <vrf> <address_family> interface detail"""
+    """
+    Parser for show pim vrf <vrf> <address_family> interface detail
+    For checking any output with the parser ,below mandatory key(s) have to be in cli command.
 
-    def cli(self, vrf='default', af='ipv4'):
-        out = self.device.execute('show pim vrf {vrf} {af} interface detail'.\
-                                  format(vrf=vrf, af=af))
+    - vrf
+    - af
+    """
+
+    cli_command = 'show pim vrf {vrf} {af} interface detail'
+
+    def cli(self, vrf='default', af='ipv4', output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(vrf=vrf, af=af))
+        else:
+            out = output
         
         # Init vars
         parsed_dict = {}
@@ -345,11 +364,21 @@ class ShowPimVrfRpfSummarySchema(MetaParser):
         }
 
 class ShowPimVrfRpfSummary(ShowPimVrfRpfSummarySchema):
-    """Parser for show pim vrf <vrf> <address_family> rpf summary"""
+    """
+    Parser for show pim vrf <vrf> <address_family> rpf summary
+    For checking any output with the parser ,below mandatory keys have to be in cli command.
 
-    def cli(self, vrf='default', af='ipv4'):
-        out = self.device.execute('show pim vrf {vrf} {af} rpf summary'.\
-                                  format(vrf=vrf, af=af))
+    - vrf
+    - af
+    """
+
+    cli_command = 'show pim vrf {vrf} {af} rpf summary'
+
+    def cli(self, vrf='default', af='ipv4', output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(vrf=vrf, af=af))
+        else:
+            out = output
         
         # Init vars
         parsed_dict = {}

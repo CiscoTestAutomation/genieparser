@@ -72,18 +72,22 @@ class ShowVersion(ShowVersionSchema):
     # Purpose is to make sure the parser always return the output
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
+    cli_command = 'show version'
 
-    def cli(self):
+    def cli(self,output=None):
         ''' parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: executing, transforming, returning
         '''
-        cmd = 'show version'.format()
-        output = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         version_dict = {}
 
-        for line in output.splitlines():
+        for line in out.splitlines():
             line = line.rstrip()
             p1 = re.compile(r'^\s*Cisco +(?P<platform>[a-zA-Z]+) +Operating +System +\((?P<os>[A-Z\-]+)\)? +Software$')
             m = p1.match(line)
@@ -362,14 +366,19 @@ class ShowInventorySchema(MetaParser):
 class ShowInventory(ShowInventorySchema):
     """Parser for show inventory"""
 
-    def cli(self):
+    cli_command = 'show inventory'
+
+    def cli(self,output=None):
         ''' parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: executing, transforming, returning
         '''
-        cmd = 'show inventory'.format()
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         inventory_dict = {}
 
         # NAME: "Chassis", DESCR: "NX-OSv Chassis"
@@ -431,15 +440,19 @@ class ShowInstallActive(ShowInstallActiveSchema):
     # Purpose is to make sure the parser always return the output
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
+    cli_command = 'show install active'
 
-    def cli(self):
+    def cli(self, output=None):
         ''' parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: executing, transforming, returning
         '''
-        cmd = 'show install active'.format()
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         active_dict = {}
         active_package_module_number = 0
         for line in out.splitlines():
@@ -514,10 +527,17 @@ class ShowRedundancyStatusSchema(MetaParser):
 
 class ShowRedundancyStatus(ShowRedundancyStatusSchema):
     """Parser for show redundancy status"""
+    cli_command = 'show redundancy status'
 
-    def cli(self, cmd='show redundancy status'):
+    def cli(self, cmd='',output=None):
+        if not cmd:
+            cmd = self.cli_command
 
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
         redundancy_dict = {}
         sup_number = None
         for line in out.splitlines():
@@ -609,8 +629,9 @@ class ShowRedundancyStatus(ShowRedundancyStatusSchema):
 class ShowSystemRedundancyStatus(ShowRedundancyStatus):
     """Parser for show system redundancy status"""
 
-    def cli(self):
-        return super().cli(cmd='show system redundancy status')
+    def cli(self,output=None):
+        cmd = 'show system redundancy status'
+        return super().cli(cmd=cmd,output=output)
 
 
 class ShowBootSchema(MetaParser):
@@ -641,14 +662,19 @@ class ShowBootSchema(MetaParser):
 class ShowBoot(ShowBootSchema):
     """Parser for show boot"""
 
-    def cli(self):
+    cli_command = 'show boot'
+
+    def cli(self,output=None):
         ''' parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: executing, transforming, returning
         '''
-        cmd = 'show boot'.format()
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         boot_dict = {}
         boot_variable = None
         sup_number = None
@@ -838,14 +864,20 @@ class ShowModuleSchema(MetaParser):
 
 class ShowModule(ShowModuleSchema):
     """Parser for show module"""
-    def cli(self):
+
+    cli_command = 'show module'
+
+    def cli(self,output=None):
         ''' parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: executing, transforming, returning
         '''
-        cmd = 'show module'.format()
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         module_dict = {}
         table_header = None
         header_type = None
@@ -1004,14 +1036,19 @@ class DirSchema(MetaParser):
 class Dir(DirSchema):
     """Parser for dir"""
 
-    def cli(self):
+    cli_command = 'dir'
+
+    def cli(self,output=None):
         ''' parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: executing, transforming, returning
         '''
-        cmd = 'dir'.format()
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         dir_dict = {}
         file = None
         disk_type = None
@@ -1075,14 +1112,20 @@ class ShowVdcDetailSchema(MetaParser):
 
 class ShowVdcDetail(ShowVdcDetailSchema):
     """Parser for show vdc detail"""
-    def cli(self):
+
+    cli_command = 'show vdc detail'
+
+    def cli(self,output=None):
         ''' parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: executing, transforming, returning
         '''
-        cmd = 'show vdc detail'.format()
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         vdc_dict = {}
         for line in out.splitlines():
             line = line.rstrip()
@@ -1207,14 +1250,19 @@ class ShowVdcCurrentSchema(MetaParser):
 class ShowVdcCurrent(ShowVdcCurrentSchema):
     """Parser for show vdc current-vdc"""
 
-    def cli(self):
+    cli_command = 'show vdc current-vdc'
+
+    def cli(self,output=None):
         ''' parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: executing, transforming, returning
         '''
-        cmd = 'show vdc current-vdc'.format()
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         current_vdc_dict = {}
         for line in out.splitlines():
             line = line.rstrip()
@@ -1247,14 +1295,19 @@ class ShowVdcMembershipStatusSchema(MetaParser):
 class ShowVdcMembershipStatus(ShowVdcMembershipStatusSchema):
     """Parser for show vdc membership status"""
 
-    def cli(self):
+    cli_command = 'show vdc membership status'
+
+    def cli(self,output=None):
         ''' parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: executing, transforming, returning
         '''
-        cmd = 'show vdc membership status'.format()
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         member_status_vdc_dict = {}
         port_type = None
         port_number = None

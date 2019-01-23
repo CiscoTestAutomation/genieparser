@@ -39,14 +39,19 @@ class ShowMacAddressTableVni(ShowMacAddressTableVniSchema):
     """Parser for show mac address-table vni <WORD> | grep <WORD>"""
     """Parser for show mac address-table local vni <WORD>"""
 
-    def cli(self, vni, intf=None):
+    cli_command = ['show mac address-table vni {vni} | grep {intf}', 'show mac address-table local vni {vni}']
 
-        if intf:
-            cmd = 'show mac address-table vni {k} | grep {l}'.format(k=vni, l=intf)
+    def cli(self, vni, intf=None, output=None):
+
+        cmd = ""
+        if output is None:
+            if vni and intf:
+                cmd = self.cli_command[0].format(vni=vni, intf=intf)
+            if vni and not intf:
+                cmd = self.cli_command[1].format(vni=vni)
+            out = self.device.execute(cmd)
         else:
-            cmd = 'show mac address-table local vni {l}'.format(l=vni)
-
-        out = self.device.execute(cmd)
+            out = output
 
         # initial return dictionary
         ret_dict = {}

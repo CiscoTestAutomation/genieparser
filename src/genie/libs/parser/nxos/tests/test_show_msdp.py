@@ -269,7 +269,7 @@ class test_show_ip_msdp_peer_vrf(unittest.TestCase):
 #  Unit test for 'show ip msdp policy statistics sa-policy <address> in|out'
 # =============================================================================
 
-class test_show_ip_msdp_policy_statistics_sa_poligy(unittest.TestCase):
+class test_show_ip_msdp_policy_statistics_sa_policy(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': '''No SA input policy set for this peer'''}
 

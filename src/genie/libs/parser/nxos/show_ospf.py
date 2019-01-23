@@ -170,15 +170,18 @@ class ShowIpOspf(ShowIpOspfSchema):
         show ip ospf
         show ip ospf vrf <vrf>"""
 
-    def cli(self, vrf=''):
-        
-        # Build command
-        cmd = 'show ip ospf'
-        if vrf:
-            cmd += ' vrf {}'.format(vrf)
+    cli_command = ['show ip ospf vrf {vrf}', 'show ip ospf']
 
-        # Execute command
-        out = self.device.execute(cmd)
+    def cli(self, vrf='', output=None):
+        if vrf:
+            cmd = self.cli_command[0].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[1]
+
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
         
         # Init vars
         ret_dict = {}
@@ -813,15 +816,18 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
         show ip ospf mpls ldp interface
         show ip ospf mpls ldp interface vrf <vrf>"""
 
-    def cli(self, vrf=''):
-        
-        # Build cmd
-        cmd = 'show ip ospf mpls ldp interface'
+    cli_command = ['show ip ospf mpls ldp interface vrf {vrf}', 'show ip ospf mpls ldp interface']
+
+    def cli(self, vrf='', output=None):
         if vrf:
-            cmd += ' vrf {}'.format(vrf)
-        
-        # Execute cmd
-        out = self.device.execute(cmd)
+            cmd = self.cli_command[0].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[1]
+
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         # Init vars
         ret_dict = {}
@@ -1012,10 +1018,11 @@ class ShowIpOspfLinksParser(MetaParser):
         show ip ospf <link_type>
         show ip ospf <link_type> vrf <vrf>"""
 
-    def cli(self, cmd):
-        
-        # Cxcute command to get output
-        out = self.device.execute(cmd)
+    def cli(self, cmd, output=None):
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
         
         # Init vars
         ret_dict = {}
@@ -1500,14 +1507,16 @@ class ShowIpOspfVirtualLinks(ShowIpOspfVirtualLinksSchema, ShowIpOspfLinksParser
         show ip ospf virtual-links
         show ip ospf virtual-links vrf <vrf>"""
 
-    def cli(self, vrf=''):
-        
-        # Build command
-        cmd = 'show ip ospf virtual-links'
-        if vrf:
-            cmd += ' vrf {}'.format(vrf)
+    cli_command = ['show ip ospf virtual-links vrf {vrf}','show ip ospf virtual-links']
 
-        return super().cli(cmd)
+    def cli(self, vrf='',output=None):
+        
+        if vrf:
+            cmd = self.cli_command[0].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[1]
+
+        return super().cli(cmd,output=output)
 
 
 # =================================================
@@ -1608,14 +1617,15 @@ class ShowIpOspfShamLinks(ShowIpOspfShamLinksSchema, ShowIpOspfLinksParser):
         show ip ospf sham-links
         show ip ospf sham-links vrf <vrf>"""
 
-    def cli(self, vrf=''):
-        
-        # Build command
-        cmd = 'show ip ospf sham-links'
-        if vrf:
-            cmd += ' vrf {}'.format(vrf)
+    cli_command = ['show ip ospf sham-links vrf {vrf}', 'show ip ospf sham-links']
 
-        return super().cli(cmd)
+    def cli(self, vrf='', output=None):
+        if vrf:
+            cmd = self.cli_command[0].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[1]
+
+        return super().cli(cmd,output=output)
 
 
 # ================================================
@@ -1775,16 +1785,19 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
         show ip ospf interface
         show ip ospf interface vrf <vrf>"""
 
-    def cli(self, vrf=''):
-        
-        # Build command
-        cmd = 'show ip ospf interface'
-        if vrf:
-            cmd += ' vrf {}'.format(vrf)
+    cli_command = ['show ip ospf interface vrf {vrf}', 'show ip ospf interface']
 
-        # Execute command on device
-        out = self.device.execute(cmd)
-        
+    def cli(self, vrf='', output=None):
+        if vrf:
+            cmd = self.cli_command[0].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[1]
+
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
         # Init vars
         ret_dict = {}
         af = 'ipv4'
@@ -2198,16 +2211,19 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
         show ip ospf neighbors detail
         show ip ospf neighbors detail vrf <vrf>"""
 
-    def cli(self, vrf=''):
-        
-        # Build command
-        cmd = 'show ip ospf neighbors detail'
-        if vrf:
-            cmd += ' vrf {}'.format(vrf)
+    cli_command = ['show ip ospf neighbors detail vrf {vrf}', 'show ip ospf neighbors detail']
 
-        # Execute command on device
-        out = self.device.execute(cmd)
-        
+    def cli(self, vrf='', output=None):
+        if vrf:
+            cmd = self.cli_command[0].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[1]
+
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
         # Init vars
         ret_dict = {}
         af = 'ipv4'
@@ -2383,13 +2399,15 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
         show ip ospf database <db_type> detail
         show ip ospf database <db_type> detail vrf <vrf>"""
 
-    def cli(self, cmd, db_type):
+    def cli(self, cmd, db_type,output):
 
         assert db_type in ['external', 'network', 'summary', 'router',
                            'opaque']
 
-        # Execute command on device
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
         
         # Init vars
         ret_dict = {}
@@ -3116,14 +3134,16 @@ class ShowIpOspfDatabaseExternalDetail(ShowIpOspfDatabaseExternalDetailSchema, S
         show ip ospf database external detail
         show ip ospf database external detail vrf <vrf>"""
 
-    def cli(self, vrf=''):
-        # excute command to get output
-        # Build command
-        cmd = 'show ip ospf database external detail'
-        if vrf:
-            cmd += ' vrf {}'.format(vrf)
+    cli_command = ['show ip ospf database external detail vrf {vrf}', 'show ip ospf database external detail']
 
-        return super().cli(cmd=cmd, db_type='external')
+    def cli(self, vrf='',output=None):
+        # excute command to get output
+        if vrf:
+            cmd = self.cli_command[0].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[1]
+
+        return super().cli(cmd=cmd, db_type='external',output=output)
 
 
 # ==============================================================
@@ -3195,15 +3215,16 @@ class ShowIpOspfDatabaseNetworkDetail(ShowIpOspfDatabaseNetworkDetailSchema, Sho
     """Parser for:
         show ip ospf database network detail
         show ip ospf database network detail vrf <vrf>"""
+    cli_command = ['show ip ospf database network detail vrf {vrf}', 'show ip ospf database network detail']
 
-    def cli(self, vrf=''):
+    def cli(self, vrf='', output=None):
         # excute command to get output
-        # Build command
-        cmd = 'show ip ospf database network detail'
         if vrf:
-            cmd += ' vrf {}'.format(vrf)
+            cmd = self.cli_command[0].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[1]
 
-        return super().cli(cmd=cmd, db_type='network')
+        return super().cli(cmd=cmd, db_type='network',output=output)
 
 
 # ==============================================================
@@ -3280,14 +3301,16 @@ class ShowIpOspfDatabaseSummaryDetail(ShowIpOspfDatabaseSummaryDetailSchema, Sho
         show ip ospf database summary detail
         show ip ospf database summary detail vrf <vrf>"""
 
-    def cli(self, vrf=''):
-        # excute command to get output
-        # Build command
-        cmd = 'show ip ospf database summary detail'
-        if vrf:
-            cmd += ' vrf {}'.format(vrf)
+    cli_command = ['show ip ospf database summary detail vrf {vrf}', 'show ip ospf database summary detail']
 
-        return super().cli(cmd=cmd, db_type='summary')
+    def cli(self, vrf='', output=None):
+        # excute command to get output
+        if vrf:
+            cmd = self.cli_command[0].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[1]
+
+        return super().cli(cmd=cmd, db_type='summary',output=output)
 
 
 # =============================================================
@@ -3372,14 +3395,16 @@ class ShowIpOspfDatabaseRouterDetail(ShowIpOspfDatabaseRouterDetailSchema, ShowI
         show ip ospf database router detail
         show ip ospf database router detail vrf <vrf>"""
 
-    def cli(self, vrf=''):
-        # excute command to get output
-        # Build command
-        cmd = 'show ip ospf database router detail'
-        if vrf:
-            cmd += ' vrf {}'.format(vrf)
+    cli_command = ['show ip ospf database router detail vrf {vrf}', 'show ip ospf database router detail']
 
-        return super().cli(cmd=cmd, db_type='router')
+    def cli(self, vrf='', output=None):
+        # excute command to get output
+        if vrf:
+            cmd = self.cli_command[0].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[1]
+
+        return super().cli(cmd=cmd, db_type='router',output=output)
 
 
 # =============================================================
@@ -3479,11 +3504,13 @@ class ShowIpOspfDatabaseOpaqueAreaDetail(ShowIpOspfDatabaseOpaqueAreaDetailSchem
         show ip ospf database opaque-area detail
         show ip ospf database opaque-area detail vrf <vrf>"""
 
-    def cli(self, vrf=''):
-        # excute command to get output
-        # Build command
-        cmd = 'show ip ospf database opaque-area detail'
-        if vrf:
-            cmd += ' vrf {}'.format(vrf)
+    cli_command = ['show ip ospf database opaque-area detail vrf {vrf}', 'show ip ospf database opaque-area detail']
 
-        return super().cli(cmd=cmd, db_type='opaque')
+    def cli(self, vrf='', output=None):
+        # excute command to get output
+        if vrf:
+            cmd = self.cli_command[0].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[1]
+
+        return super().cli(cmd=cmd, db_type='opaque',output=output)

@@ -150,12 +150,14 @@ class ShowProtocolsAfiAllAllSchema(MetaParser):
 # Parser for 'show protocols afi-all all'
 # =======================================
 class ShowProtocolsAfiAllAll(ShowProtocolsAfiAllAllSchema):
-     """Parser for show protocols afi-all all"""
-     def cli(self):
+    """Parser for show protocols afi-all all"""
 
-        # Execute command on device
-        out = self.device.execute('show protocols afi-all all')
-
+    cli_command = 'show protocols afi-all all'
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         # Init vars
         ret_dict = {}
 
@@ -256,7 +258,7 @@ class ShowProtocolsAfiAllAll(ShowProtocolsAfiAllAllSchema):
                     continue
 
             # Redistribution:
-            #   connected 
+            #   connected
             #   connected with metric 10
             #   static
             #   static with metric 10

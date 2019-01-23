@@ -54,14 +54,16 @@ class ShowArpDetail(ShowArpDetailSchema):
         show arp vrf <WORD> detail
         parser class - implements detail parsing mechanisms for cli,xml and yang output.
     """
-
-    def cli(self, vrf=None):
-        if vrf:
-            cmd  = 'show arp vrf {vrf} detail'.format(vrf=vrf)
+    cli_command = ['show arp vrf {vrf} detail','show arp detail']
+    def cli(self, vrf=None,output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
         else:
-            cmd = 'show arp detail'
-
-        out = self.device.execute(cmd)
+            out = output
 
         # 10.1.2.1        02:55:43   fa16.3e4c.b963  Dynamic    Dynamic ARPA GigabitEthernet0/0/0/0
         # 10.1.2.2        -          fa16.3ee4.1462  Interface  Unknown ARPA GigabitEthernet0/0/0/0
@@ -146,9 +148,12 @@ class ShowArpTrafficDetailSchema(MetaParser):
 class ShowArpTrafficDetail(ShowArpTrafficDetailSchema):
     """ Parser for show arp traffic detail """
 
-    def cli(self):
-
-        out = self.device.execute('show arp traffic detail')
+    cli_command = 'show arp traffic detail'
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # 0/0/CPU0
         p1 = re.compile(r'^(?P<rack_slot_module>[\w\/]+)$')

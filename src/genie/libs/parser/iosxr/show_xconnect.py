@@ -67,16 +67,15 @@ class ShowL2VpnXconnectSummary(MetaParser):
               'system_version': str,
               Any(): str,}
     """
+    cli_command = 'show l2vpn xconnect summary'
 
     def cli(self):
         '''parsing mechanism: cli
         '''
 
-        cmd = 'show l2vpn xconnect summary'
-
         tcl_package_require_caas_parsers()
         kl = tcl_invoke_caas_abstract_parser(
-            device=self.device, exec=cmd)
+            device=self.device, exec=self.cli_command)
 
         return kl
 
@@ -129,16 +128,14 @@ class ShowL2VpnXconnectBrief(MetaParser):
               'system_version': str,
               Any(): str,}
     """
-
+    cli_command = 'show l2vpn xconnect brief'
     def cli(self):
         '''parsing mechanism: cli
         '''
 
-        cmd = 'show l2vpn xconnect brief'
-
         tcl_package_require_caas_parsers()
         kl = tcl_invoke_caas_abstract_parser(
-            device=self.device, exec=cmd)
+            device=self.device, exec=self.cli_command)
 
         return kl
 
@@ -190,16 +187,16 @@ class ShowL2VpnXconnectDetail(MetaParser):
               'system_version': str,
               Any(): str,}
     """
+    cli_command = 'show l2vpn xconnect detail'
 
     def cli(self):
         '''parsing mechanism: cli
         '''
 
-        cmd = 'show l2vpn xconnect detail'
 
         tcl_package_require_caas_parsers()
         kl = tcl_invoke_caas_abstract_parser(
-            device=self.device, exec=cmd)
+            device=self.device, exec=self.cli_command)
 
         return kl
 
@@ -251,16 +248,15 @@ class ShowL2VpnXconnectMp2mpDetail(MetaParser):
               'system_version': str,
               Any(): str,}
     """
+    cli_command = 'show l2vpn xconnect mp2mp detail'
 
     def cli(self):
         '''parsing mechanism: cli
         '''
 
-        cmd = 'show l2vpn xconnect mp2mp detail'
-
         tcl_package_require_caas_parsers()
         kl = tcl_invoke_caas_abstract_parser(
-            device=self.device, exec=cmd)
+            device=self.device, exec=self.cli_command)
 
         return kl
 

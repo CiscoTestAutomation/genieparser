@@ -170,8 +170,13 @@ class ShowInterfacesSchema(MetaParser):
 class ShowInterfaces(ShowInterfacesSchema):
     """parser for show interfaces"""
 
-    def cli(self):
-        out = self.device.execute('show interfaces')
+    cli_command = 'show interfaces'
+
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         interface_dict = {}
         unnumbered_dict = {}
         for line in out.splitlines():
@@ -855,7 +860,9 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
     def __init__ (self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def cli(self, interface=''):
+    cli_command = ['show ip interface brief {interface}','show ip interface brief']
+
+    def cli(self, interface='',output=None):
         """parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
@@ -863,13 +870,19 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
         cuting, transforming, returning
         """
         parsed_dict = {}
-        if interface:
-            output = self.device.execute('show ip interface brief {}'.format(interface))
-        else:
-            output = self.device.execute('show ip interface brief')
 
-        if output:
-            res = parsergen.oper_fill_tabular(device_output=output,
+        if output is None:
+            if interface:
+                cmd = self.cli_command[0].format(interface=interface)
+            else:
+                cmd = self.cli_command[1]
+
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        if out:
+            res = parsergen.oper_fill_tabular(device_output=out,
                                               device_os='iosxe',
                                               table_terminal_pattern=r"^\n",
                                               header_fields=
@@ -1024,8 +1037,12 @@ class ShowIpInterfaceBriefPipeIp(ShowIpInterfaceBriefPipeIpSchema):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
 
-    def cli(self, ip):
-        out = self.device.execute('show ip interface brief | include {}'.format(ip))
+    cli_command = 'show ip interface brief | include {ip}'
+    def cli(self, ip,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(ip=ip))
+        else:
+            out = output
         interface_dict = {}
 
         # GigabitEthernet0/0     10.1.18.80      YES manual up                    up
@@ -1105,8 +1122,14 @@ class ShowInterfacesSwitchportSchema(MetaParser):
 class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
     """parser for show interfaces switchport"""
 
-    def cli(self):
-        out = self.device.execute('show interfaces switchport')
+    cli_command = 'show interfaces switchport'
+
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         ret_dict = {}
         private_trunk_mappings = None
         private_operational = None
@@ -1522,8 +1545,14 @@ class ShowIpInterfaceSchema(MetaParser):
 class ShowIpInterface(ShowIpInterfaceSchema):
     """Parser for show ip interface"""
 
-    def cli(self):
-        out = self.device.execute('show ip interface')
+    cli_command = 'show ip interface'
+
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         interface_dict = {}
         unnumbered_dict = {}
         for line in out.splitlines():
@@ -2128,12 +2157,18 @@ class ShowIpv6InterfaceSchema(MetaParser):
 
 class ShowIpv6Interface(ShowIpv6InterfaceSchema):
     """Parser for show ipv6 interface"""
+    cli_command = ['show ipv6 interface {interface}','show ipv6 interface']
 
-    def cli(self, interface=''):
-        if not interface:
-            out = self.device.execute('show ipv6 interface')
+    def cli(self, interface='',output=None):
+        if output is None:
+            if not interface:
+                cmd = self.cli_command[1]
+            else:
+                cmd = self.cli_command[0].format(interface=interface)
+            out = self.device.execute(cmd)
         else:
-            out = self.device.execute('show ipv6 interface {}'.format(interface))
+            out = output
+
         ret_dict = {}
         ipv6 = False
         joined_group = []
@@ -2547,9 +2582,13 @@ class ShowInterfacesTrunkSchema(MetaParser):
 
 class ShowInterfacesTrunk(ShowInterfacesTrunkSchema):
     """parser for show interfaces trunk"""
+    cli_command = 'show interfaces trunk'
 
-    def cli(self):
-        out = self.device.execute('show interfaces trunk')
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # initial regexp pattern
         p1 = re.compile(r'^(?P<name>[\w\-\/\.]+) +(?P<mode>\w+) +(?P<encapsulation>[\w\.]+) +'
@@ -2620,8 +2659,13 @@ class ShowInterfacesCountersSchema(MetaParser):
 class ShowInterfacesCounters(ShowInterfacesCountersSchema):
     """parser for show interfaces <WORD> counters"""
 
-    def cli(self, interface):
-        out = self.device.execute('show interfaces {} counters'.format(interface))
+    cli_command = 'show interfaces {interface} counters'
+
+    def cli(self, interface,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(interface=interface))
+        else:
+            out = output
 
         # initial regexp pattern
         p1 = re.compile(r'^(?P<name>[\w\-\/\.]+) +(?P<octets>\d+) +(?P<ucast_pkts>\d+) +'
@@ -2677,15 +2721,18 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
         show interfaces accounting
         show interfaces <interface> accounting
     """
+    cli_command = ['show interfaces {intf} accounting','show interfaces accounting']
 
-    def cli(self, intf=None):
-        if intf:
-            cmd = 'show interfaces {intf} accounting'.format(intf=intf)
+    def cli(self, intf=None,output=None):
+        if output is None:
+            if not intf:
+                cmd = self.cli_command[1]
+            else:
+                cmd = self.cli_command[0].format(intf=intf)
+            out = self.device.execute(cmd)
         else:
-            cmd = 'show interfaces accounting'
+            out = output
 
-        # get output from device
-        out = self.device.execute(cmd)
         # initial return disctionary
         ret_dict = {}
 

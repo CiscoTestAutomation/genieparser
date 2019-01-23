@@ -96,15 +96,20 @@ class ShowVersion(ShowVersionSchema):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
 
-    def cli(self):
+    cli_command = 'show version'
+
+    def cli(self,output=None):
         """parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: exe
         cuting, transforming, returning
         """
-        cmd = 'show version'.format()
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         version_dict = {}
         active_dict = {}
         rtr_type = ''
@@ -590,16 +595,20 @@ class Dir(DirSchema):
     # Purpose is to make sure the parser always return the output
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
+    cli_command = 'dir'
 
-    def cli(self):
+    def cli(self, output=None):
         """parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: exe
         cuting, transforming, returning
         """
-        cmd = 'dir'.format()
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         dir_dict = {}
         for line in out.splitlines():
             line = line.rstrip()
@@ -685,15 +694,20 @@ class ShowRedundancy(ShowRedundancySchema):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
 
-    def cli(self):
+    cli_command = 'show redundancy'
+
+    def cli(self,output=None):
         """parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: exe
         cuting, transforming, returning
         """
-        cmd = 'show redundancy'.format()
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         redundancy_dict = {}
         if out:
             redundancy_dict['red_sys_info'] = {}
@@ -949,16 +963,20 @@ class ShowInventory(ShowInventorySchema):
     # Purpose is to make sure the parser always return the output
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
+    cli_command = 'show inventory'
 
-    def cli(self):
+    def cli(self, output=None):
         """parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: exe
         cuting, transforming, returning
         """
-        cmd = 'show inventory'.format()
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         name = descr = slot = subslot = pid = ''
         inventory_dict = {}
         for line in out.splitlines():
@@ -1172,16 +1190,20 @@ class ShowPlatform(ShowPlatformSchema):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
 
-    def cli(self):
+    cli_command = 'show platform'
+
+    def cli(self, output=None):
         """parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: exe
         cuting, transforming, returning
         """
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
-        cmd = 'show platform'.format()
-        out = self.device.execute(cmd)
         platform_dict = {}
         sub_dict = {}
         if out:
@@ -1403,9 +1425,14 @@ class ShowBootSchema(MetaParser):
 class ShowBoot(ShowBootSchema):
     """Parser for show boot"""
 
-    def cli(self):
-        cmd = 'show boot'.format()
-        out = self.device.execute(cmd)
+    cli_command = 'show boot'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         boot_dict = {}
         boot_variable = None
 
@@ -1534,13 +1561,15 @@ class ShowSwitchDetailSchema(MetaParser):
 class ShowSwitchDetail(ShowSwitchDetailSchema):
     """Parser for show switch detail."""
 
-    CLI_CMD = 'show switch detail'
+    cli_command = 'show switch detail'
     STACK_PORT_RANGE = ('1', '2')
 
-    def cli(self):
+    def cli(self,output=None):
 
-        # get output from device
-        out = self.device.execute(self.CLI_CMD)
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # initial return dictionary
         ret_dict = {}
@@ -1635,7 +1664,7 @@ class ShowSwitchSchema(MetaParser):
 
 class ShowSwitch(ShowSwitchSchema, ShowSwitchDetail):
     """Parser for show switch."""
-    CLI_CMD = 'show switch'
+    cli_command = 'show switch'
 
 
 class ShowEnvironmentAllSchema(MetaParser):
@@ -1681,9 +1710,13 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
     """Parser for show environment all"""
     PS_MAPPING = {'A': '1', 'B': '2'}
 
-    def cli(self):
-         # get output from device
-        out = self.device.execute('show environment all')
+    cli_command = 'show environment all'
+
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # initial return dictionary
         ret_dict = {}
@@ -1804,9 +1837,13 @@ class ShowModuleSchema(MetaParser):
 class ShowModule(ShowModuleSchema):
     """Parser for show module"""
 
-    def cli(self):
-         # get output from device
-        out = self.device.execute('show module')
+    cli_command = 'show module'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # initial return dictionary
         ret_dict = {}
@@ -1858,9 +1895,13 @@ class ShowPlatformSoftwareSlotActiveMonitorMemSchema(MetaParser):
 class ShowPlatformSoftwareSlotActiveMonitorMem(ShowPlatformSoftwareSlotActiveMonitorMemSchema):
     """Parser for show platform software process slot switch active R0 monitor | inc Mem :|Swap:"""
 
-    def cli(self):
-        out = self.device.execute(
-            'show platform software process slot switch active R0 monitor | inc Mem :|Swap:')
+    cli_command = 'show platform software process slot switch active R0 monitor | inc Mem :|Swap:'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # initial return dictionary
         ret_dict = {}
@@ -1935,8 +1976,13 @@ class ShowPlatformSoftwareStatusControlSchema(MetaParser):
 class ShowPlatformSoftwareStatusControl(ShowPlatformSoftwareStatusControlSchema):
     """Parser for show platform software status control-processor brief"""
 
-    def cli(self):
-        out = self.device.execute('show platform software status control-processor brief')
+    cli_command = 'show platform software status control-processor brief'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # initial return dictionary
         ret_dict = {}
@@ -2035,15 +2081,20 @@ class ShowProcessesCpuSorted(ShowProcessesCpuSortedSchema):
                   show processes cpu sorted | include <WORD>
                   show processes cpu sorted <1min|5min|5sec> | include <WORD>"""
 
-    def cli(self, sort_time='', key_word=''):
-        assert sort_time in ['1min', '5min', '5sec', ''], "Not one from 1min 5min 5sec"
-        cmd = 'show processes cpu sorted'
-        if sort_time:
-            cmd += ' ' + sort_time
-        if key_word:
-            cmd += ' | include ' + key_word
+    cli_command = 'show processes cpu sorted'
 
-        out = self.device.execute(cmd)
+    def cli(self, sort_time='', key_word='',output=None):
+
+        assert sort_time in ['1min', '5min', '5sec', ''], "Not one from 1min 5min 5sec"
+        if output is None:
+            if sort_time:
+                self.cli_command += ' ' + sort_time
+            if key_word:
+                self.cli_command += ' | include ' + key_word
+
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # initial return dictionary
         ret_dict = {}

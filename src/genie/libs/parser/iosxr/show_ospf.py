@@ -233,10 +233,13 @@ class ShowOspfVrfAllInclusiveInterfaceSchema(MetaParser):
 class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
     """Parser for show ospf vrf all-inclusive interface"""
 
-    def cli(self):
+    cli_command = 'show ospf vrf all-inclusive interface'
 
-        # Execute command on device
-        out = self.device.execute('show ospf vrf all-inclusive interface')
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # Init vars
         ret_dict = {}
@@ -778,10 +781,13 @@ class ShowOspfVrfAllInclusiveNeighborDetailSchema(MetaParser):
 class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetailSchema):
     """Parser for show ospf vrf all-inclusive neighbor detail"""
 
-    def cli(self):
+    cli_command = 'show ospf vrf all-inclusive neighbor detail'
 
-        # Execute command on device
-        out = self.device.execute('show ospf vrf all-inclusive neighbor detail')
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # Init vars
         ret_dict = {}
@@ -1217,10 +1223,13 @@ class ShowOspfVrfAllInclusiveSchema(MetaParser):
 class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
     """Parser for show ospf vrf all-inclusive"""
 
-    def cli(self):
+    cli_command = 'show ospf vrf all-inclusive'
 
-        # Execute command on device
-        out = self.device.execute('show ospf vrf all-inclusive')
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # Init vars
         ret_dict = {}
@@ -2036,12 +2045,14 @@ class ShowOspfVrfAllInclusiveLinksParser(MetaParser):
 
     """Parser for "show ip ospf vrf all-inclusive <link_type>-links"""
 
-    def cli(self, cmd, link_type):
+    def cli(self, cmd, link_type, output=None):
 
         assert link_type in ['virtual_links', 'sham_links']
-
-        # Execute command on device
-        out = self.device.execute(cmd)
+        if output is None:
+            # Execute command on device
+            out = self.device.execute(cmd)
+        else:
+            out = output
         
         # Init vars
         ret_dict = {}
@@ -2384,11 +2395,10 @@ class ShowOspfVrfAllInclusiveShamLinksSchema(MetaParser):
 class ShowOspfVrfAllInclusiveShamLinks(ShowOspfVrfAllInclusiveShamLinksSchema, ShowOspfVrfAllInclusiveLinksParser):
 
     """Parser for show ospf vrf all-inclusive sham-links"""
-
-    def cli(self):
+    cli_command = 'show ospf vrf all-inclusive sham-links'
+    def cli(self,output=None):
         
-        cmd = 'show ospf vrf all-inclusive sham-links'
-        return super().cli(cmd=cmd, link_type='sham_links')
+        return super().cli(cmd=self.cli_command, link_type='sham_links',output=output)
 
 
 # ======================================================
@@ -2452,11 +2462,11 @@ class ShowOspfVrfAllInclusiveVirtualLinksSchema(MetaParser):
 class ShowOspfVrfAllInclusiveVirtualLinks(ShowOspfVrfAllInclusiveVirtualLinksSchema, ShowOspfVrfAllInclusiveLinksParser):
 
     """Parser for show ospf vrf all-inclusive virtual-links"""
+    cli_command = 'show ospf vrf all-inclusive virtual-links'
 
-    def cli(self):
-        
-        cmd = 'show ospf vrf all-inclusive virtual-links'
-        return super().cli(cmd=cmd, link_type='virtual_links')
+    def cli(self, output=None):
+
+        return super().cli(cmd=self.cli_command, link_type='virtual_links',output=output)
 
 
 # ============================================
@@ -2528,10 +2538,13 @@ class ShowOspfMplsTrafficEngLinkSchema(MetaParser):
 class ShowOspfMplsTrafficEngLink(ShowOspfMplsTrafficEngLinkSchema):
     """Parser for show ospf mpls traffic-eng link"""
 
-    def cli(self):
+    cli_command = 'show ospf mpls traffic-eng link'
 
-        # Execute command on device
-        out = self.device.execute('show ospf mpls traffic-eng link')
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         
         # Init vars
         ret_dict = {}
@@ -2797,13 +2810,15 @@ class ShowOspfMplsTrafficEngLink(ShowOspfMplsTrafficEngLinkSchema):
 class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
     """Parser for show ospf vrf all-inclusive database <db_type>"""
 
-    def cli(self, cmd, db_type):
+    def cli(self, cmd, db_type,output=None):
 
         assert db_type in ['external', 'network', 'summary', 'router',
                            'opaque']
 
-        # Execute command on device
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
         
         # Init vars
         ret_dict = {}
@@ -3595,14 +3610,17 @@ class ShowOspfVrfAllInclusiveDatabaseRouterSchema(MetaParser):
 # Parser for 'show ospf vrf all-inclusive database router'
 # ========================================================
 class ShowOspfVrfAllInclusiveDatabaseRouter(ShowOspfVrfAllInclusiveDatabaseRouterSchema, ShowOspfVrfAllInclusiveDatabaseParser):
-    """Parser for show ospf vrf all-inclusive database router"""
+    """
+    Parser for show ospf vrf all-inclusive database router
+    For checking any output with the parser ,below mandatory key(s) are needed and have to be in cli command.
 
-    def cli(self):
+    - db_type
+    """
 
-        # Build command
-        cmd = 'show ospf vrf all-inclusive database router'
+    cli_command = 'show ospf vrf all-inclusive database router'
 
-        return super().cli(cmd=cmd, db_type='router')
+    def cli(self,output=None):
+        return super().cli(cmd=self.cli_command, db_type='router',output=output)
 
 
 # ==========================================================
@@ -3676,14 +3694,18 @@ class ShowOspfVrfAllInclusiveDatabaseExternalSchema(MetaParser):
 # Parser for 'show ospf vrf all-inclusive database external'
 # ==========================================================
 class ShowOspfVrfAllInclusiveDatabaseExternal(ShowOspfVrfAllInclusiveDatabaseExternalSchema, ShowOspfVrfAllInclusiveDatabaseParser):
-    """Parser for show ospf vrf all-inclusive database external"""
+    """
+    Parser for show ospf vrf all-inclusive database external
+    For checking any output with the parser ,below mandatory key(s) are needed and have to be in cli command.
 
-    def cli(self):
+    - db_type
+    """
 
-        # Build command
-        cmd = 'show ospf vrf all-inclusive database external'
+    cli_command = 'show ospf vrf all-inclusive database external'
 
-        return super().cli(cmd=cmd, db_type='external')
+    def cli(self, output=None):
+
+        return super().cli(cmd=self.cli_command, db_type='external',output=output)
 
 
 # =========================================================
@@ -3751,14 +3773,18 @@ class ShowOspfVrfAllInclusiveDatabaseNetworkSchema(MetaParser):
 # Parser for 'show ospf vrf all-inclusive database network'
 # ==========================================================
 class ShowOspfVrfAllInclusiveDatabaseNetwork(ShowOspfVrfAllInclusiveDatabaseNetworkSchema, ShowOspfVrfAllInclusiveDatabaseParser):
-    """Parser for show ospf vrf all-inclusive database network"""
+    """
+    Parser for show ospf vrf all-inclusive database network
+    For checking any output with the parser ,below mandatory key(s) are needed and have to be in cli command.
 
-    def cli(self):
+    - db_type
+    """
 
-        # Build command
-        cmd = 'show ospf vrf all-inclusive database network'
+    cli_command = 'show ospf vrf all-inclusive database network'
 
-        return super().cli(cmd=cmd, db_type='network')
+    def cli(self, output=None):
+
+        return super().cli(cmd=self.cli_command, db_type='network',output=output)
 
 
 # =========================================================
@@ -3829,14 +3855,17 @@ class ShowOspfVrfAllInclusiveDatabaseSummarySchema(MetaParser):
 # Parser for 'show ospf vrf all-inclusive database summary'
 # =========================================================
 class ShowOspfVrfAllInclusiveDatabaseSummary(ShowOspfVrfAllInclusiveDatabaseSummarySchema, ShowOspfVrfAllInclusiveDatabaseParser):
-    """Parser for show ospf vrf all-inclusive database summary"""
+    """
+    Parser for show ospf vrf all-inclusive database summary
+    For checking any output with the parser ,below mandatory key(s) are needed and have to be in cli command.
 
-    def cli(self):
+    - db_type
+    """
 
-        # Build command
-        cmd = 'show ospf vrf all-inclusive database summary'
+    cli_command = 'show ospf vrf all-inclusive database summary'
 
-        return super().cli(cmd=cmd, db_type='summary')
+    def cli(self, output=None):
+        return super().cli(cmd=self.cli_command, db_type='summary',output=output)
 
 
 # =============================================================
@@ -3938,11 +3967,16 @@ class ShowOspfVrfAllInclusiveDatabaseOpaqueAreaSchema(MetaParser):
 # Parser for 'show ospf vrf all-inclusive database opaque-area'
 # =============================================================
 class ShowOspfVrfAllInclusiveDatabaseOpaqueArea(ShowOspfVrfAllInclusiveDatabaseOpaqueAreaSchema, ShowOspfVrfAllInclusiveDatabaseParser):
-    """Parser for show ospf vrf all-inclusive database opaque-area"""
+    """
+    Parser for show ospf vrf all-inclusive database opaque-area
+    For checking any output with the parser ,below mandatory key(s) are needed and have to be in cli command.
 
-    def cli(self):
+    - db_type
 
-        # Build command
-        cmd = 'show ospf vrf all-inclusive database opaque-area'
+    """
 
-        return super().cli(cmd=cmd, db_type='opaque')
+    cli_command = 'show ospf vrf all-inclusive database opaque-area'
+
+    def cli(self, output=None):
+
+        return super().cli(cmd=self.cli_command, db_type='opaque',output=output)

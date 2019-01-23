@@ -36,16 +36,20 @@ class ShowIpArp(ShowIpArpSchema):
 		show ip arp
 		parser class - implements detail parsing mechanisms for cli,xml and yang output.
 	"""
+	cli_command = 'show ip arp'
 
-	def cli(self):
-		output = self.device.execute('show ip arp')
+	def cli(self,output=None):
+		if output is None:
+			out = self.device.execute(self.cli_command)
+		else:
+			out = output
 		 
 		if not 'Flags' not in output:
 			header = ['Address', 'Age', 'MAC Address', 'Interface']
 		else:
 			header = ['Address', 'Age', 'MAC Address', 'Interface', 'Flags']
 		result = parsergen.oper_fill_tabular(
-					  device_output=output,
+					  device_output=out,
 					  device_os= 'nxos',
 					  header_fields= header,
 					  index= [0])
@@ -92,15 +96,20 @@ class ShowIpArpDetailVrfAll(ShowIpArpDetailVrfAllSchema):
 				'PS': 'Added via L2RIB, Peer Sync',
 				'RO': 'Re-Originated Peer Sync Entry'}
 
-	def cli(self, vrf=None):
+	cli_command = ['show ip arp detail vrf {vrf}', 'show ip arp detail']
+
+	def cli(self, vrf=None, output=None):
 
 		if vrf:
-			cmd = 'show ip arp detail vrf {}'.format(vrf)
+			cmd = self.cli_command[0].format(vrf=vrf)
 		else:
-			cmd = 'show ip arp detail'
+			cmd = self.cli_command[1]
 
 		# excute command to get output
-		out = self.device.execute(cmd)
+		if output is None:
+			out = self.device.execute(cmd)
+		else:
+			out = output
 
 		# initial variables
 		ret_dict = {}
@@ -164,16 +173,17 @@ class ShowIpArpSummaryVrfAll(ShowIpArpSummaryVrfAllSchema):
 		show ip arp summary vrf all
 		parser class - implements detail parsing mechanisms for cli,xml and yang output.
 	"""
+	cli_command = ['show ip arp summary vrf {vrf}', 'show ip arp summary']
 
-	def cli(self, vrf=None):
-
-		if vrf:
-			cmd = 'show ip arp summary vrf {}'.format(vrf)
+	def cli(self, vrf=None, output=None):
+		if output is None:
+			if vrf:
+				cmd = self.cli_command[0].format(vrf=vrf)
+			else:
+				cmd = self.cli_command[1]
+			out = self.device.execute(cmd)
 		else:
-			cmd = 'show ip arp summary'
-
-		# excute command to get output
-		out = self.device.execute(cmd)
+			out = output
 
 		# initial variables
 		ret_dict = {}
@@ -322,16 +332,17 @@ class ShowIpArpstatisticsVrfAll(ShowIpArpstatisticsVrfAllSchema):
 		show ip arp statistics vrf all
 		parser class - implements detail parsing mechanisms for cli,xml and yang output.
 	"""
+	cli_command = ['show ip arp statistics vrf {vrf}', 'show ip arp statistics']
 
-	def cli(self, vrf=None):
-
-		if vrf:
-			cmd = 'show ip arp statistics vrf {}'.format(vrf)
+	def cli(self, vrf=None, output=None):
+		if output is None:
+			if vrf:
+				cmd = self.cli_command[0].format(vrf=vrf)
+			else:
+				cmd = self.cli_command[1]
+			out = self.device.execute(cmd)
 		else:
-			cmd = 'show ip arp statistics'
-
-		# excute command to get output
-		out = self.device.execute(cmd)
+			out = output
 
 		# initial variables
 		ret_dict = {}

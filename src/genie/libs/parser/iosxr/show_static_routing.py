@@ -83,20 +83,28 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
        show static ipv4 topology detail
        show static ipv6 topology detail
     """
-    def cli(self, vrf="", af=""):
-        if vrf:
-            if af:
-                cmd = 'show static vrf {} {} topology detail'.format(vrf, af)
-            else:
-                cmd = 'show static vrf {} topology detail'.format(vrf)
-        else:
-            if af:
-                cmd = 'show static {} topology detail'.format(af)
-            else:
-                cmd = 'show static topology detail'
-            vrf = 'default'
+    cli_command = ['show static vrf {vrf} {af} topology detail','show static vrf {vrf} topology detail',
+                   'show static {af} topology detail','show static topology detail']
 
-        out = self.device.execute(cmd)
+    def cli(self, vrf="", af="", output=None):
+        if output is None:
+            if vrf:
+                if af:
+                    cmd = self.cli_command[0].format(vrf=vrf, af=af)
+                else:
+                    cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                if af:
+                    cmd = self.cli_command[2].format(af=af)
+                else:
+                    cmd = self.cli_command[3]
+
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        if not vrf:
+            vrf = 'default'
 
         route = interface = next_hop = ""
 

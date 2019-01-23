@@ -35,10 +35,13 @@ class ShowLldpSchema(MetaParser):
 class ShowLldp(ShowLldpSchema):
     """Parser for show lldp"""
 
-    def cli(self):
-         # get output from device
-        out = self.device.execute('show lldp')
+    cli_command = 'show lldp'
 
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         # initial return dictionary
         ret_dict = {}
 
@@ -123,13 +126,17 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                         'S': 'station_only',
                         'O': 'other'}
 
-    def cli(self, entry='*'):
-        # get output from device
-        if hasattr(self, 'CMD'):
-            out = self.device.execute(self.CMD)
-        else:
-            out = self.device.execute('show lldp entry {}'.format(entry))
+    cli_command = 'show lldp entry {entry}'
 
+    def cli(self, entry='*',output=None):
+        if output is None:
+            # get output from device
+            if hasattr(self, 'CMD'):
+                out = self.device.execute(self.CMD)
+            else:
+                out = self.device.execute(self.cli_command.format(entry=entry))
+        else:
+            out = output
         # initial return dictionary
         ret_dict = {}
 
@@ -346,9 +353,13 @@ class ShowLldpTrafficSchema(MetaParser):
 class ShowLldpTraffic(ShowLldpTrafficSchema):
     """Parser for show lldp traffic"""
 
-    def cli(self):
-         # get output from device
-        out = self.device.execute('show lldp traffic')
+    cli_command = 'show lldp traffic'
+
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # initial return dictionary
         ret_dict = {}
@@ -407,10 +418,17 @@ class ShowLldpInterfaceSchema(MetaParser):
 class ShowLldpInterface(ShowLldpInterfaceSchema):
     """Parser for show lldp interface [<WORD>]"""
 
-    def cli(self, interface=''):
-         # get output from device
-        out = self.device.execute('show lldp interface') if not interface else \
-              self.device.execute('show lldp interface {}'.format(interface))
+    cli_command = ['show lldp interface {interface}','show lldp interface']
+
+    def cli(self, interface='',output=None):
+        if output is None:
+            if interface:
+                cmd = self.cli_command[0].format(interface=interface)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         # initial return dictionary
         ret_dict = {}

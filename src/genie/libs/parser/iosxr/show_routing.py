@@ -59,14 +59,20 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
     """Parser for :
        show route ipv4
        show route vrf <vrf> ipv4"""
+    cli_command = ['show route vrf {vrf} ipv4','show route ipv4']
 
-    def cli(self, vrf=""):
-        if vrf:
-            cmd = 'show route vrf {} ipv4'.format(vrf)
+    def cli(self, vrf="",output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
         else:
-            cmd = 'show route ipv4'
+            out = output
+
+        if not vrf:
             vrf = 'default'
-        out = self.device.execute(cmd)
 
         af = 'ipv4'
         route = ""
@@ -352,14 +358,20 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
     """Parser for :
        show route ipv6
        show route vrf <vrf> ipv6"""
+    cli_command = ['show route vrf {vrf} ipv6', 'show route ipv6']
 
-    def cli(self, vrf=""):
-        if vrf:
-            cmd = 'show route vrf {} ipv6'.format(vrf)
+    def cli(self, vrf="", output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
         else:
-            cmd = 'show route ipv6'
+            out = output
+
+        if not vrf:
             vrf = 'default'
-        out = self.device.execute(cmd)
 
         af = 'ipv6'
         route = ""

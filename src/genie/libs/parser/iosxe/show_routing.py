@@ -59,14 +59,18 @@ class ShowIpRoute(ShowIpRouteSchema):
     """Parser for :
        show ip route
        show ip route vrf <vrf>"""
+    cli_command = ['show ip route vrf {vrf}','show ip route']
 
-    def cli(self, vrf=""):
-        if vrf:
-            cmd = 'show ip route vrf {}'.format(vrf)
+    def cli(self, vrf="",output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+                vrf = 'default'
+            out = self.device.execute(cmd)
         else:
-            cmd = 'show ip route'
-            vrf = 'default'
-        out = self.device.execute(cmd)
+            out = output
 
         af = 'ipv4'
         route = ""
@@ -472,13 +476,18 @@ class ShowIpv6RouteUpdated(ShowIpv6RouteUpdatedSchema):
        show ipv6 route updated
        show ipv6 route vrf <vrf> updated"""
 
-    def cli(self, vrf=""):
-        if vrf:
-            cmd = 'show ipv6 route vrf {} updated'.format(vrf)
+    cli_command = ['show ipv6 route vrf {vrf} updated', 'show ipv6 route updated']
+
+    def cli(self, vrf="", output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+                vrf = 'default'
+            out = self.device.execute(cmd)
         else:
-            cmd = 'show ipv6 route updated'
-            vrf = 'default'
-        out = self.device.execute(cmd)
+            out = output
 
         af = 'ipv6'
         route = ""
@@ -815,15 +824,19 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
        show ip route vrf <vrf> <Hostname or A.B.C.D>"""
     IP_VER = 'ip'
 
-    def cli(self, route, vrf=''):
+    cli_command = ['show {ip} route vrf {vrf} {route}', 'show {ip} route {route}']
 
-        # excute command to get output
-        if vrf:
-            cmd = 'show {ip} route vrf {v} {r}'.format(v=vrf, r=route, ip=self.IP_VER)
+    def cli(self, route, vrf='', output=None):
+        if output is None:
+            # excute command to get output
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf, route=route, ip=self.IP_VER)
+            else:
+                cmd = self.cli_command[1].format(route=route, ip=self.IP_VER)
+
+            out = self.device.execute(cmd)
         else:
-            cmd = 'show {ip} route {r}'.format(r=route, ip=self.IP_VER)
-
-        out = self.device.execute(cmd)
+            out = output
 
         # initial regexp pattern
         p1 = re.compile(r'^Routing +entry +for +'

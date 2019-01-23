@@ -58,17 +58,22 @@ class ShowArp(ShowArpSchema):
                   show arp vrf <vrf>
                   show arp vrf <vrf> <WROD> """
 
-    def cli(self, vrf='', intf_or_ip='', cmd=None):
+    cli_command = ['show arp','show arp vrf {vrf}','show arp vrf {vrf} {intf_or_ip}','show arp {intf_or_ip}']
 
-        # excute command to get output
-        if not cmd:
-            cmd = 'show arp'
-            if vrf:
-                cmd += 'vrf ' + vrf
-            if intf_or_ip:
-                cmd += ' ' + intf_or_ip
+    def cli(self, vrf='', intf_or_ip='', cmd=None, output=None):
+        if output is None:
+            if not cmd:
+                cmd = self.cli_command[0]
+                if vrf and not intf_or_ip:
+                    cmd = self.cli_command[1].format(vrf=vrf)
+                if vrf and intf_or_ip:
+                    cmd = self.cli_command[2].format(vrf=vrf,intf_or_ip=intf_or_ip)
+                if not vrf and intf_or_ip:
+                    cmd = self.cli_command[3].format(intf_or_ip=intf_or_ip)
 
-        out = self.device.execute(cmd)
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         # initial regexp pattern
         p1 = re.compile(r'^(?P<protocol>\w+) +(?P<address>[\d\.\:]+) +(?P<age>[\d\-]+) +'
@@ -122,11 +127,13 @@ class ShowIpArpSummary(ShowIpArpSummarySchema):
         show ip arp summary
         parser class - implements detail parsing mechanisms for cli,xml and yang output.
     """
-
-    def cli(self):
-
-        # excute command to get output
-        out = self.device.execute('show ip arp summary')
+    cli_command = 'show ip arp summary'
+    def cli(self,output=None):
+        if output is None:
+            # excute command to get output
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # 40 IP ARP entries, with 0 of them incomplete
         p1 = re.compile(r'^(?P<total_entries>\w+) +IP +ARP +entries, +with '
@@ -333,11 +340,13 @@ class ShowIpTraffic(ShowIpTrafficSchema):
         show ip traffic
         parser class - implements detail parsing mechanisms for cli,xml and yang output.
     """
-
-    def cli(self):
-
-        # excute command to get output
-        out = self.device.execute('show ip traffic')
+    cli_command = 'show ip traffic'
+    def cli(self,output=None):
+        if output is None:
+            # excute command to get output
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # ARP statistics:
         p1 = re.compile(r'^ARP +statistics:')

@@ -44,11 +44,13 @@ class ShowVtpStatusSchema(MetaParser):
 class ShowVtpStatus(ShowVtpStatusSchema):
     """Parser for show vtp status """
 
-    def cli(self):
+    cli_command = 'show vtp status'
 
-        # excute command to get output
-        out = self.device.execute('show vtp status')
-
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         # initial variables
         ret_dict = {}
 

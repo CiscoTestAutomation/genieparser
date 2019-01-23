@@ -44,9 +44,13 @@ class ShowVrfAllDetailSchema(MetaParser):
 class ShowVrfAllDetail(ShowVrfAllDetailSchema):
     """Parser for show vrf all detail"""
 
-    def cli(self):
-        cmd = 'show vrf all detail'
-        out = self.device.execute(cmd)
+    cli_command = 'show vrf all detail'
+
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         
         # Init vars
         vrf_dict = {}

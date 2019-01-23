@@ -60,8 +60,14 @@ class ShowIpMrouteVrfAllSchema(MetaParser):
 class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
     """Parser for show ip mroute vrf all"""
 
-    def cli(self):
-        out = self.device.execute('show ip mroute vrf all')
+    cli_command = 'show ip mroute vrf all'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         mroute_dict = {}
 
         for line in out.splitlines():
@@ -233,10 +239,15 @@ class ShowIpv6MrouteVrfAllSchema(MetaParser):
 class ShowIpv6MrouteVrfAll(ShowIpv6MrouteVrfAllSchema):
     """Parser for show ipv6 mroute vrf all"""
 
-    def cli(self):
-        # Parser for show ipv6 mroute vrf all
+    cli_command = 'show ipv6 mroute vrf all'
 
-        out = self.device.execute('show ipv6 mroute vrf all')
+    def cli(self, output=None):
+        # Parser for show ipv6 mroute vrf all
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         ipv6_mroute_vrf_all_dict = {}
 
         for line in out.splitlines():
@@ -426,9 +437,16 @@ class ShowIpStaticRouteMulticastSchema(MetaParser):
 class ShowIpStaticRouteMulticast(ShowIpStaticRouteMulticastSchema):
     """Parser for show ip static-route multicast vrf all"""
 
-    def cli(self):
+    cli_command = 'show ip static-route multicast vrf all'
+
+    def cli(self, output=None):
         # cli implemetation of parsers
-        out = self.device.execute('show ip static-route multicast vrf all')
+
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         static_routemulticast_dict = {}
 
         for line in out.splitlines():
@@ -586,10 +604,15 @@ class ShowIpv6StaticRouteMulticastSchema(MetaParser):
 class ShowIpv6StaticRouteMulticast(ShowIpv6StaticRouteMulticastSchema):
     """Parser for show ipv6 static-route multicast vrf all"""
 
-    def cli(self):
-        # cli implementation of parsers '''
+    cli_command = 'show ipv6 static-route multicast vrf all'
 
-        out = self.device.execute('show ipv6 static-route multicast vrf all')
+    def cli(self, output=None):
+        # cli implementation of parsers '''
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         ipv6_multicast_dict = {}
 
         for line in out.splitlines():
@@ -778,8 +801,10 @@ class ShowForwardingDistributionMulticastRoute(ShowForwardingDistributionMultica
         show forwarding distribution multicast route
         show forwarding distribution multicast route vrf <vrf>
         show forwarding distribution multicast route vrf all"""
+    cli_command = ['show forwarding distribution multicast route vrf {vrf}',
+                   'show forwarding distribution multicast route']
 
-    def cli(self, vrf=""):
+    def cli(self, vrf="", output=None):
         # finding vrf names
         vrf_dict = {}
 
@@ -791,10 +816,15 @@ class ShowForwardingDistributionMulticastRoute(ShowForwardingDistributionMultica
                     vrf_id = vrfs_list['vrfs'][vrf_name]['vrf_id']
                     vrf_dict.update({vrf_id: vrf_name})
 
-            out = self.device.execute('show forwarding distribution multicast route vrf {}'.format(vrf))
+            cmd = self.cli_command[0].format(vrf=vrf)
         else:
             vrf = 'default'
-            out = self.device.execute('show forwarding distribution multicast route')
+            cmd = self.cli_command[1]
+
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         result_dict = {}
 

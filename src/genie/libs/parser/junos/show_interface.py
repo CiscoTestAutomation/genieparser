@@ -46,16 +46,18 @@ class ShowInterfacesTerseSchema(MetaParser):
 class ShowInterfacesTerse(ShowInterfacesTerseSchema):
     """Parser for show interfaces terse [| match <interface>]"""
 
-    def cli(self, interface=None):
+    cli_command = ['show interfaces terse | match {interface}','show interfaces terse' ]
 
-        # compose command
-        if interface:
-            cmd = 'show interfaces terse | match %s' % interface
-        else:
-            cmd = 'show interfaces terse'
-
+    def cli(self, interface=None,output=None):
         # execute the command
-        out = self.device.execute(cmd)
+        if output is None:
+            if interface:
+                cmd = self.cli_command[0].format(interface=interface)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         ret_dict = {}
 

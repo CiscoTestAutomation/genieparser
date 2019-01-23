@@ -55,13 +55,20 @@ class ShowIpStaticRoute(ShowIpStaticRouteSchema):
        show ip static-route vrf <vrf>
        show ip static-route vrf all
     """
-    def cli(self, vrf=""):
-        if vrf:
-            cmd = 'show ip static-route vrf {}'.format(vrf)
+    cli_command = ['show ip static-route vrf {vrf}','show ip static-route']
+
+    def cli(self, vrf='', output=None):
+        if vrf and vrf != 'default':
+            cmd = self.cli_command[0].format(vrf=vrf)
         else:
-            cmd = 'show ip static-route'
             vrf = 'default'
-        out = self.device.execute(cmd)
+            cmd = self.cli_command[1]
+
+        # excute command to get output
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         af = 'ipv4'
         vrf = route = next_hop = ""
@@ -256,12 +263,19 @@ class ShowIpv6StaticRoute(ShowIpv6StaticRouteSchema):
         show ipv6 static-route vrf <vrf>
         show ipv6 static-route vrf all"""
 
-    def cli(self, vrf=""):
+    cli_command = ['show ipv6 static-route vrf {vrf}', 'show ipv6 static-route']
+
+    def cli(self, vrf='', output=None):
         if vrf:
-            cmd = 'show ipv6 static-route vrf {}'.format(vrf)
+            cmd = self.cli_command[0].format(vrf=vrf)
         else:
-            cmd = 'show ipv6 static-route'
-        out = self.device.execute(cmd)
+            cmd = self.cli_command[1]
+
+        # excute command to get output
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         af = 'ipv6'
         vrf = route = interface = next_hop = ""

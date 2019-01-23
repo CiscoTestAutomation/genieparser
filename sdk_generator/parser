@@ -1,0 +1,2 @@
+#!/bin/sh
+exec "$VIRTUAL_ENV/bin/python" "$0.py" "$@"
