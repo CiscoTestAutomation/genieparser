@@ -8,6 +8,3 @@
 --------------------------------------------------------------------------------
                                 NTP
 --------------------------------------------------------------------------------
-* IOSXR
-    * Add ShowNtpAssociations for 'show ntp associations'
-    * Add ShowNtpStatus for 'show ntp status'
