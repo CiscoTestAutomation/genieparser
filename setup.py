@@ -127,6 +127,7 @@ setup(
 
     # additional package data files that goes into the package itself
     package_data = {
+            '': ['*.json'],
     },
 
     # console entry point
@@ -154,7 +155,7 @@ setup(
     # format:
     #   [('target', ['list', 'of', 'files'])]
     # where target is sys.prefix/<target>
-    data_files = [],
+    data_files = [], 
 
     # non zip-safe (never tested it)
     zip_safe = False,
