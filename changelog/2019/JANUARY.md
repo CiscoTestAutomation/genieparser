@@ -1,5 +1,13 @@
 | Module                  | Version       |
 | ------------------------|:-------------:|
+| ``genie.libs.parser``   | 3.1.15        |
+
+
+* Mandatory pump version number to avoid conflict with pypi
+
+
+| Module                  | Version       |
+| ------------------------|:-------------:|
 | ``genie.libs.parser``   | 3.1.14        |
 
 
