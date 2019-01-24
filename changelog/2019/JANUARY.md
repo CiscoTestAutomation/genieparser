@@ -1,5 +1,13 @@
 | Module                  | Version       |
 | ------------------------|:-------------:|
+| ``genie.libs.parser``   | 3.1.14        |
+
+
+* Added parsers.json file required for the new Genie search index.
+
+
+| Module                  | Version       |
+| ------------------------|:-------------:|
 | ``genie.libs.parser``   | 3.1.13        |
 
 
