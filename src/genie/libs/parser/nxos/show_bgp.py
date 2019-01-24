@@ -11022,13 +11022,13 @@ class ShowBgpIpMvpnRouteType(ShowBgpIpMvpnRouteTypeSchema):
 
     def cli(self, route_type="",vrf="",cmd="",output=None):
         if output is None:
-            if cmd is None:
+            if not cmd:
                 if vrf and route_type:
                     cmd = self.cli_command[0].format(route_type=route_type,vrf=vrf)
-                elif route_type and not vrf:
+                if route_type and not vrf:
                     vrf = 'default'
                     cmd = self.cli_command[1].format(route_type=route_type)
-                elif not route_type and not vrf:
+                if not route_type and not vrf:
                     cmd = self.cli_command[2]
             out = self.device.execute(cmd)
         else:
