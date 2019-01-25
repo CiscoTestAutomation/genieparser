@@ -1,5 +1,13 @@
 | Module                  | Version       |
 | ------------------------|:-------------:|
+| ``genie.libs.parser``   | 3.1.16        |
+
+
+* Fix for parser `show ip arp` under NXOS.
+
+
+| Module                  | Version       |
+| ------------------------|:-------------:|
 | ``genie.libs.parser``   | 3.1.15        |
 
 
