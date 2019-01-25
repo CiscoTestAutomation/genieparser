@@ -44,7 +44,7 @@ class ShowIpArp(ShowIpArpSchema):
 		else:
 			out = output
 		 
-		if not 'Flags' not in output:
+		if not 'Flags' not in out:
 			header = ['Address', 'Age', 'MAC Address', 'Interface']
 		else:
 			header = ['Address', 'Age', 'MAC Address', 'Interface', 'Flags']
