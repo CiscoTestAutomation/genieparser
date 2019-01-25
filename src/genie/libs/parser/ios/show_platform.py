@@ -79,9 +79,12 @@ class ShowRedundancy(ShowRedundancyIosSchema, ShowRedundancy_iosxe):
 class ShowInventory(ShowInventorySchema_iosxe):
     """Parser for show Inventory
     """
-    def cli(self):
-        cmd = 'show inventory'.format()
-        out = self.device.execute(cmd)
+    cli_command = 'show inventory'
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         name = descr = slot = subslot = pid = ''
         inventory_dict = {}
 

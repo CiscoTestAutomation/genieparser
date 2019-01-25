@@ -260,6 +260,7 @@ class ShowRunningConfigVrfSchema(MetaParser):
 class ShowRunningConfigVrf(ShowRunningConfigVrfSchema):
     """Parser for show running-config vrf <vrf> | sec '^vrf' """
 
+    cli_command = "show running-config vrf {vrf} | sec '^vrf'"
     def cli(self):
         # Init vars
         vrf_list = []
@@ -290,8 +291,7 @@ class ShowRunningConfigVrf(ShowRunningConfigVrfSchema):
 
 
         for vrf in vrf_list:
-            cmd = "show running-config vrf {} | sec '^vrf'".format(vrf)
-            out = self.device.execute(cmd)
+            out = self.device.execute(self.cli_command.format(vrf=vrf))
 
             for line in out.splitlines():
                 line = line.strip()

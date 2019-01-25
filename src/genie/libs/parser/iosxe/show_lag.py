@@ -409,9 +409,13 @@ class ShowPagpCountersSchema(MetaParser):
 class ShowPagpCounters(ShowPagpCountersSchema):
     """Parser for :
       show pagp counters"""
+    cli_command = 'show pagp {channel_group} counters'
 
-    def cli(self, channel_group=""):
-        out = self.device.execute('show pagp {} counters'.format(channel_group))
+    def cli(self, channel_group="",output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(channel_group=channel_group))
+        else:
+            out = output
 
         result_dict = {}
         #           Information         Flush        PAgP

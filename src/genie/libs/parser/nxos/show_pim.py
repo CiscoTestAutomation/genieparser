@@ -1573,15 +1573,18 @@ class ShowIpPimDf(ShowIpPimDfSchema):
     """Parser for:
         show ip pim df
         show ip pim df vrf <vrf>"""
+    cli_command = ['show ip pim df vrf {vrf}','show ip pim df']
 
-    def cli(self, vrf=""):
-
-        if vrf:
-            cmd = 'show ip pim df vrf {}'.format(vrf)
+    def cli(self, vrf="",output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
         else:
-            cmd = 'show ip pim df'
+            out = output
 
-        out = self.device.execute(cmd)
         af_name = 'ipv4'
         # Init dictionary
         parsed_dict = dict()
@@ -1770,14 +1773,18 @@ class ShowIpv6PimRoute(ShowIpv6PimRouteSchema):
     """Parser for:
         show ipv6 pim route
         show ipv6 pim route vrf <vrf>"""
+    cli_command = ['show ipv6 pim route vrf {vrf}','show ipv6 pim route']
 
-    def cli(self, vrf=""):
-
-        if vrf:
-            cmd = 'show ipv6 pim route vrf {}'.format(vrf)
+    def cli(self, vrf="",output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+            output = self.device.execute(cmd)
         else:
-            cmd = 'show ipv6 pim route'
-        output = self.device.execute(cmd)
+            out = output
+
         af_name = 'ipv6'
         rp_bit = False
         is_rpt = False
@@ -2023,15 +2030,18 @@ class ShowIpv6PimNeighbor(ShowIpv6PimNeighborSchema):
     """Parser for:
         show ipv6 pim neighbor
         show ipv6 pim neighbor vrf <vrf>"""
+    cli_command = ['show ipv6 pim neighbor','show ipv6 pim neighbor vrf {vrf}']
 
-    def cli(self, vrf=""):
+    def cli(self, vrf="",output=None):
+        if output is None:
+            if not vrf:
+                cmd = self.cli_command[0]
+            else:
+                cmd = self.cli_command[1].format(vrf=vrf)
 
-        if not vrf:
-            cmd = 'show ipv6 pim neighbor'
+            output = self.device.execute(cmd)
         else:
-            cmd = 'show ipv6 pim neighbor vrf {}'.format(vrf)
-
-        output = self.device.execute(cmd)
+            out = output
         af_name = 'ipv6'
 
         # Init dictionary
@@ -2212,15 +2222,18 @@ class ShowIpPimRoute(ShowIpPimRouteSchema):
     """Parser for:
         show ip pim route
         show ip pim route vrf <vrf>"""
+    cli_command = ['show ip pim route','show ip pim route vrf {vrf}']
 
-    def cli(self, vrf=""):
-
-        if not vrf:
-            cmd = 'show ip pim route'
+    def cli(self, vrf="",output=None):
+        if output is None:
+            if not vrf:
+                cmd = self.cli_command[0]
+            else:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            output = self.device.execute(cmd)
         else:
-            cmd = 'show ip pim route vrf {}'.format(vrf)
+            out = output
 
-        output = self.device.execute(cmd)
         af_name = 'ipv4'
         rp_bit = False
         is_rpt = False
@@ -2451,16 +2464,18 @@ class ShowIpv6PimGroupRange(ShowIpv6PimGroupRangeSchema):
     """Parser for:
         show ipv6 pim group-range
         show ipv6 pim group-range vrf <vrf>"""
+    cli_command = ['show ipv6 pim group-range','show ipv6 pim group-range vrf {vrf}']
 
-    def cli(self, vrf=""):
-
-        if not vrf:
-            cmd = 'show ipv6 pim group-range'
+    def cli(self, vrf="",output=None):
+        if output is None:
+            if not vrf:
+                cmd = self.cli_command[0]
+            else:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            output = self.device.execute(cmd)
         else:
-            cmd = 'show ipv6 pim group-range vrf {}'.format(vrf)
+            out = output
 
-
-        output = self.device.execute(cmd)
         af_name = 'ipv6'
 
         # Init dictionary
@@ -2573,15 +2588,19 @@ class ShowIpPimNeighbor(ShowIpPimNeighborSchema):
     """Parser for:
         show ip pim neighbor
         show ip pim neighbor vrf <vrf>"""
+    cli_command = ['show ip pim neighbor','show ip pim neighbor vrf {vrf}']
 
-    def cli(self, vrf=""):
+    def cli(self, vrf="",output=None):
+        if output is None:
+            if not vrf:
+                cmd = self.cli_command[0]
+            else:
+                cmd = self.cli_command[1].format(vrf=vrf)
 
-        if not vrf:
-            cmd = 'show ip pim neighbor'
+            output = self.device.execute(cmd)
         else:
-            cmd = 'show ip pim neighbor vrf {}'.format(vrf)
+            out = output
 
-        output = self.device.execute(cmd)
         af_name = 'ipv4'
 
         # Init dictionary
@@ -2729,14 +2748,19 @@ class ShowIpPimVrfDetail(ShowIpPimVrfDetailSchema):
         show ip pim vrf detail
         show ip pim vrf <vrf> detail"""
 
-    def cli(self, vrf=""):
+    cli_command = ['show ip pim vrf {vrf} detail','show ip pim vrf detail']
 
-        if vrf:
-            cmd = 'show ip pim vrf {} detail'.format(vrf)
+    def cli(self, vrf="",output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf)
+            else:
+                cmd = self.cli_command[1]
+
+            out = self.device.execute(cmd)
         else:
-            cmd = 'show ip pim vrf detail'
+            out = output
 
-        out = self.device.execute(cmd)
         af_name = 'ipv4'
 
         # Init dictionary
@@ -3038,13 +3062,18 @@ class ShowIpPimGroupRange(ShowIpPimGroupRangeSchema):
         show ip pim group-range
         show ip pim group-range vrf <vrf>"""
 
-    def cli(self,vrf = ""):
+    cli_command = ['show ip pim group-range','show ip pim group-range vrf {vrf}']
 
-        if not vrf:
-            cmd = 'show ip pim group-range'
+    def cli(self,vrf = "",output=None):
+        if output is None:
+            if not vrf:
+                cmd = self.cli_command[0]
+            else:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            output = self.device.execute(cmd)
         else:
-            cmd = 'show ip pim group-range vrf {}'.format(vrf)
-        output = self.device.execute(cmd)
+            out = output
+
         af_name = 'ipv4'
 
         # Init dictionary
@@ -3160,6 +3189,7 @@ class ShowIpPimPolicyStaticticsRegisterPolicy(ShowIpPimPolicyStaticticsRegisterP
         show ip pim policy statictics register_policy
         show ip pim policy statictics register_policy vrf <vrf>"""
 
+    cli_command = ['show ip pim policy statistics register-policy','show ip pim policy statistics register-policy vrf {vrf}']
     def cli(self, vrf=""):
 
         cmd_vrf = "sh run | egrep '^vrf|register-policy'"
@@ -3184,9 +3214,9 @@ class ShowIpPimPolicyStaticticsRegisterPolicy(ShowIpPimPolicyStaticticsRegisterP
                 continue
 
         if not vrf:
-            cmd = 'show ip pim policy statistics register-policy'
+            cmd = self.cli_command[0]
         else:
-            cmd = 'show ip pim policy statistics register-policy vrf {}'.format(vrf)
+            cmd = self.cli_command[1].format(vrf=vrf)
 
         out = self.device.execute(cmd)
         af_name = 'ipv4'
@@ -3412,19 +3442,22 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
         show ip pim interface vrf <vrf>
         show ip pim interface <interface>
         show ip pim interface <interface> vrf <vrf>"""
+    cli_command = ['show ip pim interface','show ip pim interface {interface}',\
+                   'show ip pim interface vrf {vrf}','show ip pim interface {interface} vrf {vrf}']
+    def cli(self , interface ="", vrf="",output=None):
+        if output is None:
+            if not vrf and not interface:
+                cmd = self.cli_command[0]
+            if not vrf and interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            if vrf and not interface:
+                cmd = self.cli_command[2].format(vrf=vrf)
+            if vrf and interface:
+                cmd = self.cli_command[3].format(interface=interface, vrf=vrf)
 
-    def cli(self , interface ="", vrf=""):
-
-        if not vrf and not interface:
-            cmd = 'show ip pim interface'
-        if not vrf and interface:
-            cmd = 'show ip pim interface {}'.format(interface)
-        if vrf and not interface:
-            cmd = 'show ip pim interface vrf {}'.format(vrf)
-        if vrf and interface:
-            cmd = 'show ip pim interface {0} vrf {1}'.format(interface, vrf)
-
-        out = self.device.execute(cmd)
+            out = self.device.execute(cmd)
+        else:
+            out = output
         af_name = 'ipv4'
 
         # Init dictionary
@@ -3982,10 +4015,13 @@ class ShowIpv6PimVrfAllDetailSchema(MetaParser):
 class ShowIpv6PimVrfAllDetail(ShowIpv6PimVrfAllDetailSchema):
     """Parser for show ipv6 pim vrf all detail"""
 
-    def cli(self):
+    cli_command = 'show ipv6 pim vrf all detail'
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
-        cmd = 'show ipv6 pim vrf all detail'
-        out = self.device.execute(cmd)
         af_name = 'ipv6'
         # Init dictionary
         parsed_dict = dict()
@@ -4152,6 +4188,13 @@ class ShowRunningConfigPimSchema(MetaParser):
 class ShowRunningConfigPim(ShowRunningConfigPimSchema):
     """Parser for show running-config pim"""
 
+    cli_command = ["show running-config {feature}",\
+                   "show running-config {feature} | sec '^i'", \
+                   "show running-config {feature} | sec {vrf}", \
+                   "show running-config {feature} | sec '^i' | inc {pip_str}", \
+                   "show running-config {feature} | sec {vrf} | inc {pip_str}",
+                   "show running-config {feature} | inc {pip_str}"]
+
     def cli(self, address_family=None, pip_str=None, vrf=None):
 
         assert address_family in ['ipv4', 'ipv6', None]
@@ -4162,21 +4205,27 @@ class ShowRunningConfigPim(ShowRunningConfigPimSchema):
             features = ['pim6']
         else:
             features = ['pim', 'pim6']
-        cmd  = 'show running-config {feature}'
-        if vrf:
-            if vrf == 'default':
-                # command start with ip pim, or interface without spaces
-                cmd += " | sec '^i'"
-            else:
-                cmd += ' | sec %s' % vrf
-        if pip_str:
-            cmd += ' | inc %s' % pip_str
 
-        # initial output
         out = ''
-
         for ft in features:
-            out += '\n' + self.device.execute(cmd.format(feature=ft))
+            if vrf and not  pip_str :
+                if vrf == 'default':
+                    # command start with ip pim, or interface without spaces
+                    cmd = self.cli_command[1].format(feature=ft)
+                else:
+                    cmd = self.cli_command[2].format(vrf=vrf,feature=ft)
+            if pip_str and vrf:
+                if vrf == 'default':
+                    cmd = self.cli_command[3].format(pip_str=pip_str,feature=ft)
+                else:
+                    cmd = self.cli_command[4].format(vrf=vrf,pip_str=pip_str,feature=ft)
+            if not vrf and not pip_str:
+                cmd = self.cli_command[0].format(feature=ft)
+            if not vrf and pip_str:
+                cmd = self.cli_command[5].format(pip_str=pip_str,feature=ft)
+
+            out += '\n' + self.device.execute(cmd)
+
 
         # Init vars
         pim_dict = {}

@@ -273,10 +273,13 @@ class ShowHsrpAllSchema(MetaParser):
 class ShowHsrpAll(ShowHsrpAllSchema):
 
     ''' Parser for "'show hsrp all" '''
+    cli_command = 'show hsrp all'
 
-    def cli(self):
-
-        out = self.device.execute('show hsrp all')
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         
         # Init vars
         parsed_dict = {}

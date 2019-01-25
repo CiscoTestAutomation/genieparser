@@ -328,7 +328,7 @@ class ShowNveInterfaceDetailSchema(MetaParser):
 class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
     """parser for:
         show nve interface <nve> detail"""
-
+    cli_command = 'show nve interface {intf} detail'
     def cli(self, intf=""):
         nve_list = []
 
@@ -388,7 +388,7 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
             r'^\s*Multi(-S|s)ite +bgw\-if +oper +down +reason: +(?P<multisite_convergence_time_left>\d+) +seconds$')
 
         for nve in nve_list:
-            out = self.device.execute('show nve interface {} detail'.format(nve))
+            out = self.device.execute(self.cli_command.format(intf=nve))
             for line in out.splitlines():
                 if line:
                     line = line.rstrip()

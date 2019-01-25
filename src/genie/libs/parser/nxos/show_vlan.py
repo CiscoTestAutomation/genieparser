@@ -465,16 +465,20 @@ class ShowVlanInternalInfo(ShowVlanInternalInfoSchema):
     # Purpose is to make sure the parser always return the output
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
+    cli_command = 'show vlan internal info'
 
-    def cli(self):
+    def cli(self,output=None):
         ''' parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: exe
         cuting, transforming, returning
         '''
-        cmd = 'show vlan internal info'.format()
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         vlan_list = []
         vlan_configuration_dict = {}
         for line in out.splitlines():
