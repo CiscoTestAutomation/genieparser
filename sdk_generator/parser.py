@@ -23,6 +23,19 @@ AVAILABLE_FUNC = ['cli', 'xml', 'yang', 'rest']
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 log = logging.getLogger(__name__)
 
+def format(d, tab=0):
+    s = ['{\n']
+    if d is None:
+        return d
+    for k,v in d.items():
+        if isinstance(v, dict):
+            v = format(v, tab+1)
+        else:
+            v = repr(v)
+        s.append('%s%r: %s,\n' % ('  '*tab, k, v))
+    s.append('%s}' % ('  '*tab))
+    return ''.join(s)
+
 class CreateApiDoc(object):
     def __init__(self, datafile):
         assert 'VIRTUAL_ENV' in os.environ
@@ -79,7 +92,7 @@ class CreateApiDoc(object):
                 self.output['tokens'].append(token)
 
         output['doc'] = parser.__doc__
-        output['schema'] = str(parser.schema)
+        output['schema'] = format(parser.schema)
         line = inspect.getsourcelines(parser)[-1]
 
         temp_url = mod.__file__.replace(os.path.join(
