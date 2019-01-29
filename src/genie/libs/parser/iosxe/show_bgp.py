@@ -295,7 +295,7 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
             p4 = re.compile(r'^\s*((?P<nexthop>[a-zA-Z0-9\.\:]+)'
                              '(( +\(metric +(?P<next_hop_igp_metric>[0-9]+)\))|'
                              '( +\((?P<inaccessible>inaccessible)\)))?'
-                             '( +\(via +(?P<next_hop_via>[a-zA-Z0-9\s]+)\))? +'
+                             '( +\(via +(?P<next_hop_via>[a-zA-Z0-9\-\_\s]+)\))? +'
                              'from +(?P<gateway>[a-zA-Z0-9\.\:]+)'
                              ' +\((?P<originator>[0-9\.]+)\))$')
             m = p4.match(line)
@@ -377,7 +377,7 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
                              '(?: +weight +(?P<weight>[0-9]+),?)?'
                              '(?: +(?P<valid>(valid),?))?'
                              '(?: +(?P<sourced>(sourced),?))?'
-                             '(?: +(?P<state>(internal|external),?))?'
+                             '(?: +(?P<state>(internal|external|local),?))?'
                              '(?: +(?P<best>(best)))?$')
             m = p5.match(line)
             if m:
@@ -1931,7 +1931,7 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
 
             # BGP neighbor is 20.4.6.6,  vrf VRF2,  remote AS 400, external link
             p2_2 = re.compile(r'^\s*BGP +neighbor +is +(?P<neghibor>[0-9\S]+),'
-                              ' +vrf +(?P<vrf_name>[a-zA-Z0-9]+),'
+                              ' +vrf +(?P<vrf_name>[\w\-]+),'
                               '\s+remote +AS +(?P<remote_as>[0-9]+),'
                               '\s+(?P<link>[a-zA-Z]+) +link$')
             m = p2_2.match(line)
@@ -1971,7 +1971,7 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
             # IOS output
             # BGP neighbor is 50.1.1.101,  remote AS 300,  local AS 101, external link
             p2_3 = re.compile(r'^\s*BGP +neighbor +is +(?P<neghibor>[\w\.\:]+),'
-                              '( +vrf +(?P<vrf_name>[a-zA-Z0-9]+),)?'
+                              '( +vrf +(?P<vrf_name>[\w\-]+),)?'
                               ' +remote +AS +(?P<remote_as>[0-9]+),'
                               ' +local +AS +(?P<local_as>[0-9]+),'
                               ' +(?P<link>[a-zA-Z]+) +link$')
