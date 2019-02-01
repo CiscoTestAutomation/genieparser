@@ -585,12 +585,20 @@ class test_show_run_ntp(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     
     golden_parsed_output = {
-        'address': {
-            '1.1.1.1': {'type': 'server'},
-            '2.2.2.2': {'type': 'peer'},
-            '3.3.3.3': {'type': 'peer'},
-            '4.4.4.4': {'type': 'peer'},
-            'source': 'Loopback0'}
+        'vrf': {
+            'default': {
+                'address': {
+                    '1.1.1.1': {
+                        'type': 'server'},
+                    '2.2.2.2': {
+                        'type': 'peer'},
+                    '3.3.3.3': {
+                        'type': 'peer'},
+                    '4.4.4.4': {
+                        'type': 'peer'},
+                    'source': 'Loopback0'}
+                }
+            }
         }
 
     golden_output = {'execute.return_value': '''\

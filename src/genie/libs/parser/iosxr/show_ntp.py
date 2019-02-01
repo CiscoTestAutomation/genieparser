@@ -490,10 +490,14 @@ class ShowRunNtpSchema(MetaParser):
     """Schema for: show run ntp"""
 
     schema = {
-        'address': {
-            'source': str,
+        'vrf': {
             Any(): {
-                'type': str,
+                'address': {
+                    'source': str,
+                    Any(): {
+                        'type': str,
+                        },
+                    }
                 },
             }
         }
@@ -513,7 +517,7 @@ class ShowRunNtp(ShowRunNtpSchema):
         ret_dict = {}
 
         # peer 2.2.2.2
-        p1 = re.compile(r'^(?P<type>\w+) +(?P<address>[\d\.]+)$')
+        p1 = re.compile(r'^(?P<type>\w+)( +vrf +(?P<vrf>\w+))? +(?P<address>[\d\.]+)$')
 
         # source Loopback0
         p2 = re.compile(r'^source +(?P<intf>\w+)$')
@@ -526,15 +530,17 @@ class ShowRunNtp(ShowRunNtpSchema):
             m = p1.match(line)
             if m:
                 address = m.groupdict()['address']
-                final_dict = ret_dict.setdefault('address', {}).setdefault(
-                    address, {})
+                vrf = m.groupdict()['vrf'] or 'default'
+                final_dict = ret_dict.setdefault('vrf', {}).setdefault(
+                    vrf, {}).setdefault('address', {}).setdefault(address, {})
                 final_dict['type'] = m.groupdict()['type']
                 continue
 
             m = p2.match(line)
             if m:
-                if 'address' in ret_dict:
-                    ret_dict['address']['source'] = m.groupdict()['intf']
+                if 'vrf' in ret_dict:
+                    ret_dict['vrf'][vrf]['address']['source'] = \
+                        m.groupdict()['intf']
                 continue
 
         return ret_dict
