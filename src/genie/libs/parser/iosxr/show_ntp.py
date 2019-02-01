@@ -508,10 +508,13 @@ class ShowRunNtp(ShowRunNtpSchema):
 
     cli_command = 'show run ntp'
 
-    def cli(self):
+    def cli(self, output=None):
 
-        # excute command to get output
-        out = self.device.execute(self.cli_command)
+        if output is None:
+            # excute command to get output
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # initial variables
         ret_dict = {}
@@ -529,18 +532,19 @@ class ShowRunNtp(ShowRunNtpSchema):
 
             m = p1.match(line)
             if m:
-                address = m.groupdict()['address']
-                vrf = m.groupdict()['vrf'] or 'default'
+                groups = m.groupdict()
+                address = groups['address']
+                vrf = groups['vrf'] or 'default'
                 final_dict = ret_dict.setdefault('vrf', {}).setdefault(
                     vrf, {}).setdefault('address', {}).setdefault(address, {})
-                final_dict['type'] = m.groupdict()['type']
+                final_dict['type'] = groups['type']
                 continue
 
             m = p2.match(line)
             if m:
+                groups = m.groupdict()
                 if 'vrf' in ret_dict:
-                    ret_dict['vrf'][vrf]['address']['source'] = \
-                        m.groupdict()['intf']
+                    ret_dict['vrf'][vrf]['address']['source'] = groups['intf']
                 continue
 
         return ret_dict
