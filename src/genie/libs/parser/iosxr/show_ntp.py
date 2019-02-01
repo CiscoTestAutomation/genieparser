@@ -481,3 +481,60 @@ class ShowNtpStatus(ShowNtpStatusSchema):
 				continue
 
 		return ret_dict
+
+# ==============================================
+# Parser for 'show run ntp'
+# ==============================================
+
+class ShowRunNtpSchema(MetaParser):
+    """Schema for: show run ntp"""
+
+    schema = {
+        'address': {
+            'source': str,
+            Any(): {
+                'type': str,
+                },
+            }
+        }
+
+
+class ShowRunNtp(ShowRunNtpSchema):
+    """Parser for: show run ntp"""
+
+    cli_command = 'show run ntp'
+
+    def cli(self):
+
+        # excute command to get output
+        out = self.device.execute(self.cli_command)
+
+        # initial variables
+        ret_dict = {}
+
+        # peer 2.2.2.2
+        p1 = re.compile(r'^(?P<type>\w+) +(?P<address>[\d\.]+)$')
+
+        # source Loopback0
+        p2 = re.compile(r'^source +(?P<intf>\w+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line: 
+                continue
+
+            m = p1.match(line)
+            if m:
+                address = m.groupdict()['address']
+                final_dict = ret_dict.setdefault('address', {}).setdefault(
+                    address, {})
+                final_dict['type'] = m.groupdict()['type']
+                continue
+
+            m = p2.match(line)
+            if m:
+                if 'address' in ret_dict:
+                    ret_dict['address']['source'] = m.groupdict()['intf']
+                continue
+
+        return ret_dict

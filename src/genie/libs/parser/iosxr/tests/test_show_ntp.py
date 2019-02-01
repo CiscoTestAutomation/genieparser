@@ -11,7 +11,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
 
 # Parser
 from genie.libs.parser.iosxr.show_ntp import ShowNtpAssociations, \
-                                             ShowNtpStatus
+                                             ShowNtpStatus, \
+                                             ShowRunNtp
 
 #=========================================================
 # Unit test for show ntp associations
@@ -573,6 +574,50 @@ class test_show_ntp_status(unittest.TestCase):
         obj = ShowNtpStatus(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
+
+# ==============================================
+# Unit test for 'show run ntp'
+# ==============================================
+class test_show_run_ntp(unittest.TestCase):
+    
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output = {
+        'address': {
+            '1.1.1.1': {'type': 'server'},
+            '2.2.2.2': {'type': 'peer'},
+            '3.3.3.3': {'type': 'peer'},
+            '4.4.4.4': {'type': 'peer'},
+            'source': 'Loopback0'}
+        }
+
+    golden_output = {'execute.return_value': '''\
+        RP/0/RP0/CPU0:iosxrv9000-1#sh run ntp
+        Thu Dec 20 23:56:57.618 EST
+        ntp
+         server 1.1.1.1
+         peer 2.2.2.2
+         peer 3.3.3.3
+         peer 4.4.4.4
+         source Loopback0
+        !
+    '''
+    }
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowRunNtp(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowRunNtp(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
 if __name__ == '__main__':
