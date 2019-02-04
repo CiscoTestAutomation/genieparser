@@ -292,6 +292,7 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
             # 2.2.2.2 (metric 11) (via default) from 2.2.2.2 (2.2.2.2)
             # :: (via vrf VRF1) from 0.0.0.0 (10.1.1.1)
             # 192.168.0.1 (inaccessible) from 192.168.0.9 (192.168.0.9)
+            # 172.17.111.1 (via vrf SH_BGP_VRF100) from 172.17.111.1 (10.5.5.5)
             p4 = re.compile(r'^\s*((?P<nexthop>[a-zA-Z0-9\.\:]+)'
                              '(( +\(metric +(?P<next_hop_igp_metric>[0-9]+)\))|'
                              '( +\((?P<inaccessible>inaccessible)\)))?'
@@ -1930,6 +1931,7 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                 continue
 
             # BGP neighbor is 20.4.6.6,  vrf VRF2,  remote AS 400, external link
+            # BGP neighbor is 172.17.111.1,  vrf SH_BGP_VRF100,  remote AS 65000, external link
             p2_2 = re.compile(r'^\s*BGP +neighbor +is +(?P<neghibor>[0-9\S]+),'
                               ' +vrf +(?P<vrf_name>[\w\-]+),'
                               '\s+remote +AS +(?P<remote_as>[0-9]+),'
