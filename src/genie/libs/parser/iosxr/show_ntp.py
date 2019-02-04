@@ -506,7 +506,7 @@ class ShowRunNtpSchema(MetaParser):
 class ShowRunNtp(ShowRunNtpSchema):
     """Parser for: show run ntp"""
 
-    cli_command = 'show run ntp'
+    cli_command = 'show running-config ntp'
 
     def cli(self, output=None):
 
@@ -520,10 +520,10 @@ class ShowRunNtp(ShowRunNtpSchema):
         ret_dict = {}
 
         # peer 2.2.2.2
-        p1 = re.compile(r'^(?P<type>\w+)( +vrf +(?P<vrf>\w+))? +(?P<address>[\d\.]+)$')
+        p1 = re.compile(r'^(?P<type>\w+)( +vrf +(?P<vrf>\S+))? +(?P<address>[\d\.]+)$')
 
         # source Loopback0
-        p2 = re.compile(r'^source +(?P<intf>\w+)$')
+        p2 = re.compile(r'^source +(?P<intf>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
