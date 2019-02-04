@@ -958,6 +958,82 @@ class test_show_interfaces(unittest.TestCase):
             "mtu": 1500,
             "delay": 10,
             "reliability": "255/255"
+       },
+       "GigabitEthernet0/0/4": {
+            "arp_timeout": "04:00:00",
+            "arp_type": "arpa",
+            "bandwidth": 1000000,
+            "counters": {
+                 "in_broadcast_pkts": 0,
+                 "in_crc_errors": 0,
+                 "in_errors": 0,
+                 "in_frame": 0,
+                 "in_giants": 0,
+                 "in_ignored": 0,
+                 "in_mac_pause_frames": 0,
+                 "in_multicast_pkts": 0,
+                 "in_no_buffer": 0,
+                 "in_octets": 0,
+                 "in_overrun": 0,
+                 "in_pkts": 0,
+                 "in_runts": 0,
+                 "in_throttles": 0,
+                 "in_watchdog": 0,
+                 "last_clear": "never",
+                 "out_babble": 0,
+                 "out_collision": 0,
+                 "out_deferred": 0,
+                 "out_errors": 0,
+                 "out_interface_resets": 1,
+                 "out_late_collision": 0,
+                 "out_lost_carrier": 0,
+                 "out_mac_pause_frames": 0,
+                 "out_no_carrier": 0,
+                 "out_octets": 0,
+                 "out_pkts": 0,
+                 "out_underruns": 0,
+                 "out_unknown_protocl_drops": 0,
+                 "rate": {
+                     "in_rate": 0,
+                     "in_rate_pkts": 0,
+                     "load_interval": 300,
+                     "out_rate": 0,
+                     "out_rate_pkts": 0
+                 }
+            },
+            "delay": 10,
+            "enabled": False,
+            "encapsulations": {
+                 "encapsulation": "arpa"
+            },
+            "flow_control": {
+                 "receive": False, "send": False
+            },
+            "last_input": "never",
+            "last_output": "never",
+            "line_protocol": "down",
+            "mac_address": "380e.4d6c.7006",
+            "phys_address": "380e.4d6c.7006",
+            "mtu": 1500,
+            "oper_status": "down",
+            "output_hang": "never",
+            "port_channel": {
+                 "port_channel_member": False
+            },
+            "queues": {
+                 "input_queue_drops": 0,
+                 "input_queue_flushes": 0,
+                 "input_queue_max": 375,
+                 "input_queue_size": 0,
+                 "output_queue_max": 40,
+                 "output_queue_size": 0,
+                 "queue_strategy": "fifo",
+                 "total_output_drop": 0
+            },
+            "reliability": "255/255",
+            "rxload": "1/255",
+            "txload": "1/255",
+            "type": "BUILT-IN-2T+6X1GE"
        }
 
     }
@@ -1122,6 +1198,32 @@ class test_show_interfaces(unittest.TestCase):
              0 babbles, 0 late collision, 0 deferred
              0 lost carrier, 0 no carrier, 0 pause output
              0 output buffer failures, 0 output buffers swapped out
+        GigabitEthernet0/0/4 is administratively down, line protocol is down
+          Hardware is BUILT-IN-2T+6X1GE, address is 380e.4d6c.7006 (bia 380e.4d6c.7006)
+          MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+             reliability 255/255, txload 1/255, rxload 1/255
+          Encapsulation ARPA, loopback not set
+          Keepalive not supported
+          Full Duplex, 1000Mbps, link type is auto, media type is unknown media type
+          output flow-control is unsupported, input flow-control is unsupported
+          ARP type: ARPA, ARP Timeout 04:00:00
+          Last input never, output never, output hang never
+          Last clearing of "show interface" counters never
+          Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0
+          Queueing strategy: fifo
+          Output queue: 0/40 (size/max)
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+             0 packets input, 0 bytes, 0 no buffer
+             Received 0 broadcasts (0 IP multicasts)
+             0 runts, 0 giants, 0 throttles
+             0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+             0 watchdog, 0 multicast, 0 pause input
+             0 packets output, 0 bytes, 0 underruns
+             0 output errors, 0 collisions, 1 interface resets
+             0 unknown protocol drops
+             0 babbles, 0 late collision, 0 deferred
+             0 lost carrier, 0 no carrier, 0 pause output
 
     '''}
 
