@@ -492,8 +492,8 @@ class ShowRunNtpSchema(MetaParser):
     schema = {
         'vrf': {
             Any(): {
+                'source': str,
                 'address': {
-                    'source': str,
                     Any(): {
                         'type': str,
                         },
@@ -544,7 +544,7 @@ class ShowRunNtp(ShowRunNtpSchema):
             if m:
                 groups = m.groupdict()
                 if 'vrf' in ret_dict:
-                    ret_dict['vrf'][vrf]['address']['source'] = groups['intf']
+                    ret_dict['vrf'][vrf]['source'] = groups['intf']
                 continue
 
         return ret_dict

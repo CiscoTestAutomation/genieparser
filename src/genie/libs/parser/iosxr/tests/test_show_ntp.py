@@ -587,6 +587,7 @@ class test_show_run_ntp(unittest.TestCase):
     golden_parsed_output = {
         'vrf': {
             'default': {
+                'source': 'Loopback0',
                 'address': {
                     '1.1.1.1': {
                         'type': 'server'},
@@ -596,7 +597,7 @@ class test_show_run_ntp(unittest.TestCase):
                         'type': 'peer'},
                     '4.4.4.4': {
                         'type': 'peer'},
-                    'source': 'Loopback0'}
+                    }
                 }
             }
         }
