@@ -12,7 +12,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
 # Parser
 from genie.libs.parser.iosxr.show_ntp import ShowNtpAssociations, \
                                              ShowNtpStatus, \
-                                             ShowRunNtp
+                                             ShowRunningConfigNtp
 
 #=========================================================
 # Unit test for show ntp associations
@@ -618,13 +618,13 @@ class test_show_run_ntp(unittest.TestCase):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowRunNtp(device=self.device)
+        obj = ShowRunningConfigNtp(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
-        obj = ShowRunNtp(device=self.device)
+        obj = ShowRunningConfigNtp(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
