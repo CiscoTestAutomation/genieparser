@@ -25,6 +25,7 @@ class test_show_version(unittest.TestCase):
     dev2 = Device(name='semi_empty')
     dev_asr1k = Device(name='asr1k')
     dev_c3850 = Device(name='c3850')
+    dev_isr4k = Device(name='isr4k')
     empty_output = {'execute.return_value': ''}
     semi_empty_output = {'execute.return_value': '''\
         Cisco IOS-XE software, Copyright (c) 2005-2017 by cisco Systems, Inc.
@@ -445,6 +446,132 @@ class test_show_version(unittest.TestCase):
         Configuration register is 0x2000 (will be 0x2002 at next reload)
 '''}
 
+    golden_parsed_output_isr4k = {
+        'version': {
+            'chassis': 'ISR4451-X/K9',
+            'chassis_sn': 'FGL273610NK',
+            'curr_config_register': '0x2102',
+            'disks': {
+                'bootflash:.': {
+                    'disk_size': '7341807',
+                    'type_of_disk': 'flash memory'
+                },
+                'webui:.': {
+                    'disk_size': '0',
+                    'type_of_disk': 'WebUI ODM Files'
+                }
+            },
+            'hostname': 'isr4k',
+            'image_id': 'X86_64_LINUX_IOSD-UNIVERSALK9-M',
+            'image_type': 'production image',
+            'last_reload_reason': 'Reload Command',
+            'main_mem': '1795979',
+            'mem_size': {
+                'non-volatile configuration': '32768',
+                'physical': '4194304'
+            },
+            'number_of_intfs': {
+                'Gigabit Ethernet': '4'
+            },
+            'os': 'IOS-XE',
+            'platform': 'ISR',
+            'processor_type': '2RU',
+            'rom': 'IOS-XE ROMMON',
+            'rtr_type': 'ISR4451-X/K9',
+            'system_image': 'bootflash:isr4400-universalk9.16.06.05.SPA.bin',
+            'system_restarted_at': '07:19:15 UTC Fri Feb 1 2019',
+            'uptime': '2 days, 3 hours, 18 minutes',
+            'uptime_this_cp': '2 days, 3 hours, 19 minutes',
+            'version': '16.6.5,',
+            'version_short': '16.6'
+        }
+    }
+
+    golden_output_isr4k = {'execute.return_value': '''\
+        Cisco IOS XE Software, Version 16.06.05
+        Cisco IOS Software [Everest], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.5, RELEASE SOFTWARE (fc3)
+        Technical Support: http://www.cisco.com/techsupport
+        Copyright (c) 1986-2018 by Cisco Systems, Inc.
+        Compiled Mon 10-Dec-18 13:10 by mcpre
+
+
+        Cisco IOS-XE software, Copyright (c) 2005-2018 by cisco Systems, Inc.
+        All rights reserved.  Certain components of Cisco IOS-XE software are
+        licensed under the GNU General Public License ("GPL") Version 2.0.  The
+        software code licensed under GPL Version 2.0 is free software that comes
+        with ABSOLUTELY NO WARRANTY.  You can redistribute and/or modify such
+        GPL code under the terms of GPL Version 2.0.  For more details, see the
+        documentation or "License Notice" file accompanying the IOS-XE software,
+        or the applicable URL provided on the flyer accompanying the IOS-XE
+        software.
+
+
+        ROM: IOS-XE ROMMON
+
+        isr4k uptime is 2 days, 3 hours, 18 minutes
+        Uptime for this control processor is 2 days, 3 hours, 19 minutes
+        System returned to ROM by Reload Command at 07:15:43 UTC Fri Feb 1 2019
+        System restarted at 07:19:15 UTC Fri Feb 1 2019
+        System image file is "bootflash:isr4400-universalk9.16.06.05.SPA.bin"
+        Last reload reason: Reload Command
+
+
+
+        This product contains cryptographic features and is subject to United
+        States and local country laws governing import, export, transfer and
+        use. Delivery of Cisco cryptographic products does not imply
+        third-party authority to import, export, distribute or use encryption.
+        Importers, exporters, distributors and users are responsible for
+        compliance with U.S. and local country laws. By using this product you
+        agree to comply with applicable laws and regulations. If you are unable
+        to comply with U.S. and local laws, return this product immediately.
+
+        A summary of U.S. laws governing Cisco cryptographic products may be found at:
+        http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+
+        If you require further assistance please contact us by sending email to
+        export@cisco.com.
+
+
+
+        Suite License Information for Module:'esg'
+
+        --------------------------------------------------------------------------------
+        Suite                 Suite Current         Type           Suite Next reboot
+        --------------------------------------------------------------------------------
+        FoundationSuiteK9     None                  None           None
+        securityk9
+        appxk9
+
+        AdvUCSuiteK9          None                  None           None
+        uck9
+        cme-srst
+        cube
+
+
+        Technology Package License Information:
+
+        -----------------------------------------------------------------
+        Technology    Technology-package           Technology-package
+                      Current       Type           Next reboot
+        ------------------------------------------------------------------
+        appxk9           appxk9           RightToUse       appxk9
+        uck9             None             None             None
+        securityk9       securityk9       RightToUse       securityk9
+        ipbase           ipbasek9         Permanent        ipbasek9
+
+        cisco ISR4451-X/K9 (2RU) processor with 1795979K/6147K bytes of memory.
+        Processor board ID FGL273610NK
+        1 Virtual Ethernet interface
+        4 Gigabit Ethernet interfaces
+        32768K bytes of non-volatile configuration memory.
+        4194304K bytes of physical memory.
+        7341807K bytes of flash memory at bootflash:.
+        0K bytes of WebUI ODM Files at webui:.
+
+        Configuration register is 0x2102
+''' }
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         version_obj = ShowVersion(device=self.dev1)
@@ -471,6 +598,12 @@ class test_show_version(unittest.TestCase):
         parsed_output = version_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_c3850)
 
+    def test_golden_isr4k(self):
+        self.maxDiff = None
+        self.dev_isr4k = Mock(**self.golden_output_isr4k)
+        version_obj = ShowVersion(device=self.dev_isr4k)
+        parsed_output = version_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_isr4k)
 
 class test_dir(unittest.TestCase):
     dev1 = Device(name='empty')
