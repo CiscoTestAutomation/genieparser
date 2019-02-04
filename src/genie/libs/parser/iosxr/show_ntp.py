@@ -483,11 +483,11 @@ class ShowNtpStatus(ShowNtpStatusSchema):
 		return ret_dict
 
 # ==============================================
-# Parser for 'show run ntp'
+# Parser for 'show running-config ntp'
 # ==============================================
 
-class ShowRunNtpSchema(MetaParser):
-    """Schema for: show run ntp"""
+class ShowRunningConfigNtpSchema(MetaParser):
+    """Schema for: show running-config ntp"""
 
     schema = {
         'vrf': {
@@ -503,8 +503,8 @@ class ShowRunNtpSchema(MetaParser):
         }
 
 
-class ShowRunNtp(ShowRunNtpSchema):
-    """Parser for: show run ntp"""
+class ShowRunningConfigNtp(ShowRunningConfigNtpSchema):
+    """Parser for: show running-config ntp"""
 
     cli_command = 'show running-config ntp'
 

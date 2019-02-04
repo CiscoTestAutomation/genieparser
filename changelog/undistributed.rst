@@ -9,4 +9,4 @@
                                 NTP
 --------------------------------------------------------------------------------
 * IOSXR
-    * Add ShowRunNtp for 'show run ntp'
+    * Add ShowRunNtp for 'show running-config ntp'

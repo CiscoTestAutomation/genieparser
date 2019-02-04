@@ -577,7 +577,7 @@ class test_show_ntp_status(unittest.TestCase):
 
 
 # ==============================================
-# Unit test for 'show run ntp'
+# Unit test for 'show running-config ntp'
 # ==============================================
 class test_show_run_ntp(unittest.TestCase):
     
