@@ -295,7 +295,7 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
             p4 = re.compile(r'^\s*((?P<nexthop>[a-zA-Z0-9\.\:]+)'
                              '(( +\(metric +(?P<next_hop_igp_metric>[0-9]+)\))|'
                              '( +\((?P<inaccessible>inaccessible)\)))?'
-                             '( +\(via +(?P<next_hop_via>[a-zA-Z0-9\-\_\s]+)\))? +'
+                             '( +\(via +(?P<next_hop_via>[\S\s]+)\))? +'
                              'from +(?P<gateway>[a-zA-Z0-9\.\:]+)'
                              ' +\((?P<originator>[0-9\.]+)\))$')
             m = p4.match(line)
@@ -1971,7 +1971,7 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
             # IOS output
             # BGP neighbor is 50.1.1.101,  remote AS 300,  local AS 101, external link
             p2_3 = re.compile(r'^\s*BGP +neighbor +is +(?P<neghibor>[\w\.\:]+),'
-                              '( +vrf +(?P<vrf_name>[\w\-]+),)?'
+                              '( +vrf +(?P<vrf_name>[\S]+),)?'
                               ' +remote +AS +(?P<remote_as>[0-9]+),'
                               ' +local +AS +(?P<local_as>[0-9]+),'
                               ' +(?P<link>[a-zA-Z]+) +link$')
