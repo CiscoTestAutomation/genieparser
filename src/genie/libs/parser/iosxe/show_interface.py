@@ -228,7 +228,7 @@ class ShowInterfaces(ShowInterfacesSchema):
 
             # Hardware is Gigabit Ethernet, address is 0057.d228.1a64 (bia 0057.d228.1a64)
             # Hardware is Loopback
-            p2 = re.compile(r'^Hardware +is +(?P<type>[a-zA-Z0-9\-\/\s]+)'
+            p2 = re.compile(r'^Hardware +is +(?P<type>[a-zA-Z0-9\-\/\s\+]+)'
                             '(, *address +is +(?P<mac_address>[a-z0-9\.]+)'
                             ' *\(bia *(?P<phys_address>[a-z0-9\.]+)\))?$')
             # Hardware is LTE Adv CAT6 - Multimode LTE/DC-HSPA+/HSPA+/HSPA/UMTS/EDGE/GPRS 
