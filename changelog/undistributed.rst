@@ -8,4 +8,8 @@
 --------------------------------------------------------------------------------
                                     BGP
 --------------------------------------------------------------------------------
-* Fixed ShowBgpAllDetail and ShowBgpAllNeighbors in IOSXE to cover all types of vrf(s) and next_hope(s)
+* IOSXE
+    * Fixed ShowBgpAllDetail and ShowBgpAllNeighbors in IOSXE to cover all types of vrf(s) and next_hope(s)
+
+* IOSXR
+    * Add ShowRunningConfigNtp for 'show running-config ntp'
