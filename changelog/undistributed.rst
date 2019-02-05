@@ -11,5 +11,8 @@
 * IOSXE
     * Fixed ShowBgpAllDetail and ShowBgpAllNeighbors in IOSXE to cover all types of vrf(s) and next_hop(s)
 
+--------------------------------------------------------------------------------
+                                    NTP
+--------------------------------------------------------------------------------
 * IOSXR
     * Add ShowRunningConfigNtp for 'show running-config ntp'
