@@ -2753,7 +2753,7 @@ class ShowIpPimVrfDetail(ShowIpPimVrfDetailSchema):
     def cli(self, vrf="",output=None):
         if output is None:
             if vrf:
-                cmd = self.cli_command[0].format(vrf)
+                cmd = self.cli_command[0].format(vrf=vrf)
             else:
                 cmd = self.cli_command[1]
 
