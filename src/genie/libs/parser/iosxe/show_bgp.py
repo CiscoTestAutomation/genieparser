@@ -292,10 +292,11 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
             # 2.2.2.2 (metric 11) (via default) from 2.2.2.2 (2.2.2.2)
             # :: (via vrf VRF1) from 0.0.0.0 (10.1.1.1)
             # 192.168.0.1 (inaccessible) from 192.168.0.9 (192.168.0.9)
+            # 172.17.111.1 (via vrf SH_BGP_VRF100) from 172.17.111.1 (10.5.5.5)
             p4 = re.compile(r'^\s*((?P<nexthop>[a-zA-Z0-9\.\:]+)'
                              '(( +\(metric +(?P<next_hop_igp_metric>[0-9]+)\))|'
                              '( +\((?P<inaccessible>inaccessible)\)))?'
-                             '( +\(via +(?P<next_hop_via>[a-zA-Z0-9\s]+)\))? +'
+                             '( +\(via +(?P<next_hop_via>[\S\s]+)\))? +'
                              'from +(?P<gateway>[a-zA-Z0-9\.\:]+)'
                              ' +\((?P<originator>[0-9\.]+)\))$')
             m = p4.match(line)
@@ -377,7 +378,7 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
                              '(?: +weight +(?P<weight>[0-9]+),?)?'
                              '(?: +(?P<valid>(valid),?))?'
                              '(?: +(?P<sourced>(sourced),?))?'
-                             '(?: +(?P<state>(internal|external),?))?'
+                             '(?: +(?P<state>(internal|external|local),?))?'
                              '(?: +(?P<best>(best)))?$')
             m = p5.match(line)
             if m:
@@ -1930,8 +1931,9 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                 continue
 
             # BGP neighbor is 20.4.6.6,  vrf VRF2,  remote AS 400, external link
+            # BGP neighbor is 172.17.111.1,  vrf SH_BGP_VRF100,  remote AS 65000, external link
             p2_2 = re.compile(r'^\s*BGP +neighbor +is +(?P<neghibor>[0-9\S]+),'
-                              ' +vrf +(?P<vrf_name>[a-zA-Z0-9]+),'
+                              ' +vrf +(?P<vrf_name>[\w\-]+),'
                               '\s+remote +AS +(?P<remote_as>[0-9]+),'
                               '\s+(?P<link>[a-zA-Z]+) +link$')
             m = p2_2.match(line)
@@ -1971,7 +1973,7 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
             # IOS output
             # BGP neighbor is 50.1.1.101,  remote AS 300,  local AS 101, external link
             p2_3 = re.compile(r'^\s*BGP +neighbor +is +(?P<neghibor>[\w\.\:]+),'
-                              '( +vrf +(?P<vrf_name>[a-zA-Z0-9]+),)?'
+                              '( +vrf +(?P<vrf_name>[\S]+),)?'
                               ' +remote +AS +(?P<remote_as>[0-9]+),'
                               ' +local +AS +(?P<local_as>[0-9]+),'
                               ' +(?P<link>[a-zA-Z]+) +link$')
