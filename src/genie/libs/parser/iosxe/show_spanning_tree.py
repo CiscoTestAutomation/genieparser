@@ -33,10 +33,12 @@ class ShowSpanningTreeSummarySchema(MetaParser):
         'portfast_default': bool,
         'bpdu_guard': bool,
         'bpdu_filter': bool,
+        Optional('bridge_assurance'): bool,
         'loop_guard': bool,
         'uplink_fast': bool,
         'backbone_fast': bool,
         'root_bridge_for': str,
+        Optional('pvst_simulation'): bool,
         "configured_pathcost": {
             'method': str,
             Optional('operational_value'): str,
@@ -96,10 +98,14 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
                    'Extended system ID': 'extended_system_id',
                    'Portfast Default': 'portfast_default',
                    'PortFast BPDU Guard Default': 'bpdu_guard',
+                   'Portfast Edge BPDU Guard Default': 'bpdu_guard',
                    'Portfast BPDU Filter Default': 'bpdu_filter',
+                   'Portfast Edge BPDU Filter Default': 'bpdu_filter',
                    'Loopguard Default': 'loop_guard',
                    'UplinkFast': 'uplink_fast',
-                   'BackboneFast': 'backbone_fast'}
+                   'Bridge Assurance': 'bridge_assurance',
+                   'BackboneFast': 'backbone_fast',
+                   'PVST Simulation': 'pvst_simulation'}
 
         for line in out.splitlines():
             line = line.strip()
@@ -119,11 +125,12 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
             # EtherChannel misconfig guard is disabled
             # Extended system ID           is enabled
             # Portfast Default             is disabled
-            # PortFast BPDU Guard Default  is disabled
-            # Portfast BPDU Filter Default is disabled
+            # PortFast BPDU Guard Default  is disabled  or  Portfast Edge BPDU Guard Default
+            # Portfast BPDU Filter Default is disabled  or  Portfast Edge BPDU Filter Default
             # Loopguard Default            is disabled
             # UplinkFast                   is disabled
             # BackboneFast                 is disabled
+            # PVST Simulation              is enabled
             m = p3.match(line)
             if m:
                 group = m.groupdict()
