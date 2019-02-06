@@ -2,7 +2,68 @@
 
 # python
 import re
+import os
+import json
 import warnings
+import importlib
+from genie.libs import parser
+from genie.abstract import Lookup
+
+def get_parser(command, device):
+    '''From a show command and device, return parser class'''
+    mod = importlib.import_module('genie.libs.parser')
+    parsers = os.path.join(mod.__path__[0], 'parsers.json')
+
+    # Make sure it exists
+    if not os.path.isfile(parsers):
+        raise Exception('parsers.json does not exists, make sure you '
+                        'are running with latest version of '
+                        'genie.libs.parsers')
+
+    # Open all the parsers in json file
+    with open(parsers) as f:
+        data = json.load(f)
+
+    if command in data:
+        # Let's go!
+        # Then just return it
+
+        return _find_parser_cls(device, data[command])
+    else:
+        # Regex world!
+        try:
+            found_data, kwargs = _find_command(command, data)
+        except SyntaxError:
+            # Could not find a match
+            raise Exception("Could not find parser for "
+                            "'{c}'".format(c=command)) from None
+
+        return _find_parser_cls(device, found_data[command])
+
+def _find_command(command, data):
+    for key in data:
+        if not '{' in key:
+            # Disregard the non regex ones
+            continue
+
+        # Okay... this is not optimal
+        patterns = re.findall('{.*?}', key)
+        reg = key
+
+        for pattern in patterns:
+            word = pattern.replace('{', '').replace('}', '')
+            new_pattern = '(?P<{p}>.*)'.format(p=word)
+            reg = re.sub(pattern, new_pattern, key)
+
+        match = re.match(reg, command)
+        if match:
+            # Found a match!
+            return (data[key], match.groupdict())
+    raise SyntaxError('Could not find a parser match')
+
+def _find_parser_cls(device, data):
+    lookup = Lookup.from_device(device, packages={'parser':parser})
+    return getattr(getattr(lookup.parser, data['module_name']), data['class'])
 
 class Common():
     '''Common functions to be used in parsers.'''
