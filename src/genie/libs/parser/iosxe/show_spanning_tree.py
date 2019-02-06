@@ -87,7 +87,7 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
         p3 = re.compile(r'^(?P<name>[\w\s]+) +is +(?P<value>disabled|enabled)$')
         p4 = re.compile(r'^(?P<id>(?!Total)\w+) +(?P<blocking>\d+) +(?P<listening>\d+)'
                          ' +(?P<learning>\d+) +(?P<forwarding>\d+) +(?P<stp_active>\d+)$')
-        p5 = re.compile(r'^(?P<num>\d+) +(msts|vlans) +(?P<blockings>\d+) +(?P<listenings>\d+)'
+        p5 = re.compile(r'^(?P<num>\d+) +(msts?|vlans?) +(?P<blockings>\d+) +(?P<listenings>\d+)'
                          ' +(?P<learnings>\d+) +(?P<forwardings>\d+) +(?P<stp_actives>\d+)$')
         p6 = re.compile(r'^Configured +Pathcost +method +used +is +(?P<method>\w+) *'
                          '(\(Operational +value +is +(?P<operational_value>\w+)\))?$')
