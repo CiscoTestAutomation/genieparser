@@ -9,36 +9,40 @@ import importlib
 from genie.libs import parser
 from genie.abstract import Lookup
 
-def get_parser(command, device):
-    '''From a show command and device, return parser class'''
+# Parser within Genie
+try:
     mod = importlib.import_module('genie.libs.parser')
     parsers = os.path.join(mod.__path__[0], 'parsers.json')
+except Exception:
+    parsers = ''
 
-    # Make sure it exists
-    if not os.path.isfile(parsers):
-        raise Exception('parsers.json does not exists, make sure you '
-                        'are running with latest version of '
-                        'genie.libs.parsers')
-
+if not os.path.isfile(parsers):
+    log.warning('parsers.json does not exists, make sure you '
+                'are running with latest version of '
+                'genie.libs.parsers')
+    parser_data = {}
+else:
     # Open all the parsers in json file
     with open(parsers) as f:
-        data = json.load(f)
+        parser_data = json.load(f)
 
-    if command in data:
-        # Let's go!
+def get_parser(command, device):
+    '''From a show command and device, return parser class and kwargs if any'''
+
+    kwargs = {}
+    if command in parser_data:
         # Then just return it
-
-        return _find_parser_cls(device, data[command])
+        return _find_parser_cls(device, parser_data[command]), kwargs
     else:
         # Regex world!
         try:
-            found_data, kwargs = _find_command(command, data)
+            found_data, kwargs = _find_command(command, parser_data)
         except SyntaxError:
             # Could not find a match
             raise Exception("Could not find parser for "
                             "'{c}'".format(c=command)) from None
 
-        return _find_parser_cls(device, found_data[command])
+        return _find_parser_cls(device, found_data), kwargs
 
 def _find_command(command, data):
     for key in data:
