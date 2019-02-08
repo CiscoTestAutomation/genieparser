@@ -3785,7 +3785,7 @@ class ShowIpOspfDatabaseRouterSchema(MetaParser):
                                                                     {'router': 
                                                                         {Optional('flags'): str,
                                                                         'num_of_links': int,
-                                                                        'links':
+                                                                        Optional('links'):
                                                                             {Any(): 
                                                                                 {'link_id': str,
                                                                                 'link_data': str,
