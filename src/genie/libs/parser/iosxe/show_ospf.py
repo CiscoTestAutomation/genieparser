@@ -1346,10 +1346,13 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
             # OSPF_SL1 is up, line protocol is up 
             # OSPF_VL3 is up, line protocol is up 
             # TenGigabitEthernet3/0/1 is up, line protocol is up (connected)
+            # TenGigabitEthernet1/8 is down, line protocol is down (notconnect)
+            # TenGigabitEthernet2/6.3052 is administratively down, line protocol is down (disabled)
+            # TenGigabitEthernet1/15 is down, line protocol is down (err-disabled)
             p1 = re.compile(r'^(?P<interface>(\S+)) +is( +administratively)?'
                              ' +(?P<enable>(unknown|up|down)), +line +protocol'
                              ' +is +(?P<line_protocol>(up|down))'
-                             '(?: +\(connected\))?$')
+                             '(?: +\(\S+\))?$')
             m = p1.match(line)
             if m:
                 interface = str(m.groupdict()['interface'])
