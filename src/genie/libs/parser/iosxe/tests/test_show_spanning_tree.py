@@ -61,6 +61,43 @@ class test_show_spanning_tree_summary(unittest.TestCase):
         }
     }
 
+    golden_parsed_output_mstp_single_mst = {
+        "backbone_fast": False,
+        "bpdu_filter": False,
+        "bpdu_guard": False,
+        "bridge_assurance": True,
+        "configured_pathcost": {
+            "method": "short",
+            "operational_value": "long"
+        },
+        "etherchannel_misconfig_guard": True,
+        "extended_system_id": True,
+        "loop_guard": False,
+        "mode": {
+            "mst": {
+                "MST0": {
+                    "blocking": 3,
+                    "forwarding": 0,
+                    "learning": 0,
+                    "listening": 0,
+                    "stp_active": 3
+                }
+            }
+        },
+        "portfast_default": False,
+        "pvst_simulation": True,
+        "root_bridge_for": "MST0",
+        "total_statistics": {
+            "blockings": 3,
+            "forwardings": 0,
+            "learnings": 0,
+            "listenings": 0,
+            "num_of_msts": 1,
+            "stp_actives": 3
+        },
+        "uplink_fast": False
+    }
+
     golden_parsed_output_pvst = {
         "etherchannel_misconfig_guard": True,
         "mode": {
@@ -123,6 +160,41 @@ class test_show_spanning_tree_summary(unittest.TestCase):
         }
     }
 
+    golden_parsed_output_rpvst = {
+        "backbone_fast": False,
+        "bpdu_filter": False,
+        "bpdu_guard": False,
+        "bridge_assurance": True,
+        "configured_pathcost": {
+            "method": "short"
+        },
+        "etherchannel_misconfig_guard": True,
+        "extended_system_id": True,
+        "loop_guard": False,
+        "mode": {
+            "rapid_pvst": {
+                "VLAN0001": {
+                    "blocking": 0,
+                    "forwarding": 1,
+                    "learning": 0,
+                    "listening": 0,
+                    "stp_active": 1
+                }
+            }
+        },
+        "portfast_default": False,
+        "root_bridge_for": "VLAN0001",
+        "total_statistics": {
+            "blockings": 0,
+            "forwardings": 1,
+            "learnings": 0,
+            "listenings": 0,
+            "num_of_vlans": 1,
+            "stp_actives": 1
+        },
+        "uplink_fast": False
+    }
+
     golden_output_mstp = {'execute.return_value': '''\
         Switch is in mst mode (IEEE Standard)
         Root bridge for: MST0, MST100
@@ -142,6 +214,29 @@ class test_show_spanning_tree_summary(unittest.TestCase):
         MST100                       3         0        0          1          4
         ---------------------- -------- --------- -------- ---------- ----------
         2 msts                       6         0        0         10         16
+    '''
+    }
+
+    golden_output_mstp_single_mst = {'execute.return_value': '''\
+        Switch is in mst mode (IEEE Standard)
+        Root bridge for: MST0
+        Extended system ID                      is enabled
+        Portfast Default                        is disabled
+        Portfast Edge BPDU Guard Default        is disabled
+        Portfast Edge BPDU Filter Default       is disabled
+        Loopguard Default                       is disabled
+        PVST Simulation                         is enabled
+        Bridge Assurance                        is enabled
+        EtherChannel misconfig guard            is enabled
+        UplinkFast                              is disabled
+        BackboneFast                            is disabled
+        Configured Pathcost method used is short (Operational value is long)
+
+        Name                   Blocking Listening Learning Forwarding STP Active
+        ---------------------- -------- --------- -------- ---------- ----------
+        MST0                         3         0        0          0          3
+        ---------------------- -------- --------- -------- ---------- ----------
+        1 mst                        3         0        0          0          3
     '''
     }
 
@@ -177,6 +272,30 @@ class test_show_spanning_tree_summary(unittest.TestCase):
     '''
    }
 
+    golden_output_rpvst = {'execute.return_value': '''\
+        Switch is in rapid-pvst mode
+        Root bridge for: VLAN0001
+        Extended system ID                      is enabled
+        Portfast Default                        is disabled
+        Portfast Edge BPDU Guard Default        is disabled
+        Portfast Edge BPDU Filter Default       is disabled
+        Loopguard Default                       is disabled
+        PVST Simulation Default                 is enabled but inactive in rapid-pvst mode
+        Bridge Assurance                        is enabled
+        EtherChannel misconfig guard            is enabled
+        UplinkFast                              is disabled
+        BackboneFast                            is disabled
+        Configured Pathcost method used is short
+
+        Name                   Blocking Listening Learning Forwarding STP Active
+        ---------------------- -------- --------- -------- ---------- ----------
+        VLAN0001                     0         0        0          1          1
+        ---------------------- -------- --------- -------- ---------- ----------
+        1 vlan                       0         0        0          1          1
+
+     '''
+    }
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowSpanningTreeSummary(device=self.dev1)
@@ -190,6 +309,13 @@ class test_show_spanning_tree_summary(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_mstp)
 
+    def test_golden_single_mst(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_mstp_single_mst)
+        obj = ShowSpanningTreeSummary(device=self.dev_c3850)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_mstp_single_mst)
+
     def test_golden_pvst(self):
         self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_pvst)
@@ -197,6 +323,12 @@ class test_show_spanning_tree_summary(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_pvst)
 
+    def test_golden_rpvst(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_rpvst)
+        obj = ShowSpanningTreeSummary(device=self.dev_c3850)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_rpvst)
 
 class test_show_spanning_tree_detail(unittest.TestCase):
     dev1 = Device(name='empty')
