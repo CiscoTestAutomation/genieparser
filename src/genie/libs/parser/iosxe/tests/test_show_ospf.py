@@ -2904,6 +2904,67 @@ class test_show_ip_ospf_database_router(unittest.TestCase):
                                                                     'option': 'None',
                                                                     'option_desc': 'No TOS-capability, DC',
                                                                     'seq_num': '80000030',
+                                                                    'type': 1}}}}}}}}}},
+                            '3':
+                                {'areas':
+                                    {'0.0.0.0':
+                                        {'database':
+                                            {'lsa_types':
+                                                {1:
+                                                    {'lsa_type': 1,
+                                                     'lsas':
+                                                        {'55.55.11.11 55.55.11.11':
+                                                            {'adv_router': '55.55.11.11',
+                                                            'lsa_id': '55.55.11.11',
+                                                            'ospfv2':
+                                                                {'body':
+                                                                    {'router':
+                                                                        {'links':
+                                                                            {'55.55.11.11':
+                                                                                {'link_data': '255.255.255.255',
+                                                                                'link_id': '55.55.11.11',
+                                                                                'num_mtid_metrics': 0,
+                                                                                'topologies':
+                                                                                    {0:
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'stub network'}},
+                                                                        'num_of_links': 1}},
+                                                                'header':
+                                                                    {'adv_router': '55.55.11.11',
+                                                                    'age': 50,
+                                                                    'as_boundary_router': True,
+                                                                    'checksum': '0x881A',
+                                                                    'length': 36,
+                                                                    'lsa_id': '55.55.11.11',
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No TOS-capability, DC',
+                                                                    'seq_num': '80000001',
+                                                                    'type': 1}}}}}}}},
+                                    '0.0.0.11':
+                                        {'database':
+                                            {'lsa_types':
+                                                {1:
+                                                    {'lsa_type': 1,
+                                                     'lsas':
+                                                        {'55.55.11.11 55.55.11.11':
+                                                            {'adv_router': '55.55.11.11',
+                                                            'lsa_id': '55.55.11.11',
+                                                            'ospfv2':
+                                                                {'body':
+                                                                    {'router':
+                                                                        {'num_of_links': 0}},
+                                                                'header':
+                                                                    {'adv_router': '55.55.11.11',
+                                                                    'age': 8,
+                                                                    'as_boundary_router': True,
+                                                                    'checksum': '0x1D1B',
+                                                                    'length': 24,
+                                                                    'lsa_id': '55.55.11.11',
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No TOS-capability, DC',
+                                                                    'seq_num': '80000001',
                                                                     'type': 1}}}}}}}}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
@@ -3209,6 +3270,44 @@ class test_show_ip_ospf_database_router(unittest.TestCase):
              (Link Data) Router Interface address: 20.3.7.7
               Number of MTID metrics: 0
                TOS 0 Metrics: 1
+
+
+
+                    OSPF Router with ID (55.55.11.11) (Process ID 3)
+
+                        Router Link States (Area 0)
+
+          LS age: 50
+          Options: (No TOS-capability, DC)
+          LS Type: Router Links
+          Link State ID: 55.55.11.11
+          Advertising Router: 55.55.11.11
+          LS Seq Number: 80000001
+          Checksum: 0x881A
+          Length: 36
+          AS Boundary Router
+          Number of Links: 1
+
+            Link connected to: a Stub Network
+             (Link ID) Network/subnet number: 55.55.11.11
+             (Link Data) Network Mask: 255.255.255.255
+              Number of MTID metrics: 0
+               TOS 0 Metrics: 1
+
+
+
+                        Router Link States (Area 11)
+
+          LS age: 8
+          Options: (No TOS-capability, DC)
+          LS Type: Router Links
+          Link State ID: 55.55.11.11
+          Advertising Router: 55.55.11.11
+          LS Seq Number: 80000001
+          Checksum: 0x1D1B
+          Length: 24
+          AS Boundary Router
+          Number of Links: 0
         '''}
 
     def test_show_ip_ospf_database_router_full1(self):
