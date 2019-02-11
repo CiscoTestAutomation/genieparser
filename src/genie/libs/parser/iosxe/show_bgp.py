@@ -292,10 +292,11 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
             # 2.2.2.2 (metric 11) (via default) from 2.2.2.2 (2.2.2.2)
             # :: (via vrf VRF1) from 0.0.0.0 (10.1.1.1)
             # 192.168.0.1 (inaccessible) from 192.168.0.9 (192.168.0.9)
+            # 172.17.111.1 (via vrf SH_BGP_VRF100) from 172.17.111.1 (10.5.5.5)
             p4 = re.compile(r'^\s*((?P<nexthop>[a-zA-Z0-9\.\:]+)'
                              '(( +\(metric +(?P<next_hop_igp_metric>[0-9]+)\))|'
                              '( +\((?P<inaccessible>inaccessible)\)))?'
-                             '( +\(via +(?P<next_hop_via>[a-zA-Z0-9\s]+)\))? +'
+                             '( +\(via +(?P<next_hop_via>[\S\s]+)\))? +'
                              'from +(?P<gateway>[a-zA-Z0-9\.\:]+)'
                              ' +\((?P<originator>[0-9\.]+)\))$')
             m = p4.match(line)
@@ -377,7 +378,7 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
                              '(?: +weight +(?P<weight>[0-9]+),?)?'
                              '(?: +(?P<valid>(valid),?))?'
                              '(?: +(?P<sourced>(sourced),?))?'
-                             '(?: +(?P<state>(internal|external),?))?'
+                             '(?: +(?P<state>(internal|external|local),?))?'
                              '(?: +(?P<best>(best)))?$')
             m = p5.match(line)
             if m:
@@ -700,6 +701,7 @@ class ShowBgpAllNeighborsAdvertisedRoutesSchema(MetaParser):
 class ShowBgpAllNeighborsAdvertisedRoutes(ShowBgpAllNeighborsAdvertisedRoutesSchema):
 
     """Parser for show bgp all neighbors <WORD> advertised-routes"""
+    cli_command = 'show bgp all neighbors {neighbor} advertised-routes'
 
     def cli(self, neighbor):
         # find vrf names
@@ -730,7 +732,7 @@ class ShowBgpAllNeighborsAdvertisedRoutes(ShowBgpAllNeighborsAdvertisedRoutesSch
                     continue
 
         # show bgp all neighbors {neighbor} advertised-routes
-        cmd  = 'show bgp all neighbors {neighbor} advertised-routes'.format(neighbor=neighbor)
+        cmd  = self.cli_command.format(neighbor=neighbor)
         out = self.device.execute(cmd)
 
         # Init dictionary
@@ -1162,10 +1164,13 @@ class ShowBgpAllSummary(ShowBgpAllSummarySchema):
     """
     Parser for show bgp All Summary
     """
+    cli_command = 'show bgp all summary'
 
-    def cli(self):
-        cmd = 'show bgp all summary'
-        out = self.device.execute(cmd)
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # Init vars
         sum_dict = {}
@@ -1515,8 +1520,9 @@ class ShowBgpAllClusterIds(ShowBgpAllClusterIdsSchema):
        Parser for show bgp all cluster-ids
        Executing 'show vrf detail | inc \(VRF' to collect vrf names.
     """
+    cli_command = 'show bgp all cluster-ids'
 
-    def cli(self):
+    def cli(self,output=None):
         # find vrf names
         # show vrf detail | inc \(VRF
         cmd_vrfs = 'show vrf detail | inc \(VRF'
@@ -1543,7 +1549,7 @@ class ShowBgpAllClusterIds(ShowBgpAllClusterIdsSchema):
 
 
         # show bgp all cluster-ids
-        cmd = 'show bgp all cluster-ids'
+        cmd = self.cli_command
         out = self.device.execute(cmd)
 
         # Init vars
@@ -1859,11 +1865,13 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
     """
     Parser for show bgp all neighbors
     """
+    cli_command = 'show bgp all neighbors'
 
-    def cli(self):
-
-        cmd = 'show bgp all neighbors'
-        out = self.device.execute(cmd)
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # Init vars
         parsed_dict = {}
@@ -1923,8 +1931,9 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                 continue
 
             # BGP neighbor is 20.4.6.6,  vrf VRF2,  remote AS 400, external link
+            # BGP neighbor is 172.17.111.1,  vrf SH_BGP_VRF100,  remote AS 65000, external link
             p2_2 = re.compile(r'^\s*BGP +neighbor +is +(?P<neghibor>[0-9\S]+),'
-                              ' +vrf +(?P<vrf_name>[a-zA-Z0-9]+),'
+                              ' +vrf +(?P<vrf_name>[\w\-]+),'
                               '\s+remote +AS +(?P<remote_as>[0-9]+),'
                               '\s+(?P<link>[a-zA-Z]+) +link$')
             m = p2_2.match(line)
@@ -1964,7 +1973,7 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
             # IOS output
             # BGP neighbor is 50.1.1.101,  remote AS 300,  local AS 101, external link
             p2_3 = re.compile(r'^\s*BGP +neighbor +is +(?P<neghibor>[\w\.\:]+),'
-                              '( +vrf +(?P<vrf_name>[a-zA-Z0-9]+),)?'
+                              '( +vrf +(?P<vrf_name>[\S]+),)?'
                               ' +remote +AS +(?P<remote_as>[0-9]+),'
                               ' +local +AS +(?P<local_as>[0-9]+),'
                               ' +(?P<link>[a-zA-Z]+) +link$')
@@ -3113,6 +3122,7 @@ class ShowBgpAllNeighborsReceivedRoutes(ShowBgpAllNeighborsReceivedRoutesSchema)
     Parser for show bgp all neighbors <WORD> received-routes
     executing 'show bgp all neighbors | i BGP neighbor' for finging vrf names
     """
+    cli_command = 'show bgp all neighbors {neighbor} received-routes'
 
     def cli(self, neighbor):
         # find vrf names
@@ -3143,8 +3153,7 @@ class ShowBgpAllNeighborsReceivedRoutes(ShowBgpAllNeighborsReceivedRoutesSchema)
                     continue
 
         # show bgp all neighbors {neighbor} received-routes
-        cmd  = 'show bgp all neighbors {neighbor} received-routes'.format(neighbor=neighbor)
-        out = self.device.execute(cmd)
+        out = self.device.execute(self.cli_command.format(neighbor=neighbor))
 
         # Init dictionary
         route_dict = {}
@@ -3548,10 +3557,14 @@ class ShowIpbgpTemplatePeerSessionSchema(MetaParser):
 class ShowIpBgpTemplatePeerSession(ShowIpbgpTemplatePeerSessionSchema):
     """Parser for show ip bgp template peer-session <WORD>"""
 
-    def cli(self, template_name=""):
+    cli_command = 'show ip bgp template peer-session {template_name}'
+
+    def cli(self, template_name="",output=None):
         # show ip bgp template peer-session <WORD>
-        cmd = 'show ip bgp template peer-session {template_name}'.format(template_name=template_name)
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(self.cli_command.format(template_name=template_name))
+        else:
+            out = output
 
         # Init vars
         parsed_dict = {}
@@ -3811,7 +3824,7 @@ class ShowBgpAllNeighborsRoutes(ShowBgpAllNeighborsRoutesSchema):
     Parser for show bgp all neighbors <WORD> routes
     executing 'show bgp all neighbors | i BGP neighbor' for finding vrf names
     """
-
+    cli_command = 'show bgp all neighbors {neighbor} routes'
     def cli(self, neighbor):
         # find vrf names
         # show bgp all neighbors | i BGP neighbor
@@ -3841,9 +3854,8 @@ class ShowBgpAllNeighborsRoutes(ShowBgpAllNeighborsRoutesSchema):
                     continue
 
         # show bgp all neighbors {neighbor} routes
-        cmd  = 'show bgp all neighbors {neighbor} routes'.format(
-            neighbor=neighbor)
-        out = self.device.execute(cmd)
+        out = self.device.execute(self.cli_command.format(
+            neighbor=neighbor))
 
         # Init dictionary
         route_dict = {}
@@ -4250,11 +4262,14 @@ class ShowIpbgpTemplatePeerPolicySchema(MetaParser):
 
 class ShowIpBgpTemplatePeerPolicy(ShowIpbgpTemplatePeerPolicySchema):
     """Parser for show ip bgp template peer-policy <WORD>"""
+    cli_command = 'show ip bgp template peer-policy {template_name}'
 
-    def cli(self, template_name=""):
+    def cli(self, template_name="",output=None):
         # show ip bgp template peer-policy <WORD>
-        cmd = 'show ip bgp template peer-policy {template_name}'.format(template_name=template_name)
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(self.cli_command.format(template_name=template_name))
+        else:
+            out = output
 
         # Init vars
         parsed_dict = {}
@@ -4507,10 +4522,14 @@ class ShowIpBgpAllDampeningParametersSchema(MetaParser):
 class ShowIpBgpAllDampeningParameters(ShowIpBgpAllDampeningParametersSchema):
     """Parser for show ip bgp all dampening parameters"""
 
-    def cli(self):
+    cli_command = 'show ip bgp all dampening parameters'
 
-        cmd = 'show ip bgp all dampening parameters'
-        out = self.device.execute(cmd)
+    def cli(self,output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # Init vars
         parsed_dict = {}
@@ -4682,10 +4701,14 @@ class ShowBgpAllSchema(MetaParser):
 class ShowBgpAll(ShowBgpAllSchema):
     """Parser for show bgp all"""
 
-    def cli(self):
+    cli_command = 'show bgp all'
+
+    def cli(self,output=None):
         # show bgp all
-        cmd = 'show bgp all'
-        out = self.device.execute(cmd)
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # Init dictionary
         route_dict = {}

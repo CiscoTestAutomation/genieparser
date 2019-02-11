@@ -79,16 +79,19 @@ class ShowL2vpnForwardingBridgeDomainMacAddress(MetaParser):
         self.bridge_domain = bridge_domain
         super().__init__(**kwargs)
 
-    def cli(self):
+    cli_command = ['show l2vpn forwarding bridge-domain mac-address location {location}', \
+                   'show l2vpn forwarding bridge-domain {bridge_domain} mac-address location {location}']
 
-        if self.bridge_domain is None:
-            cmd = 'show l2vpn forwarding bridge-domain mac-address location {location}'.format(
-                location=self.location)
+    def cli(self,output=None):
+        if output is None:
+            if self.bridge_domain is None:
+                cmd = self.cli_command[0].format(location=self.location)
+            else:
+                cmd = self.cli_command[1].format(bridge_domain=self.bridge_domain,location=self.location)
+
+            out = self.device.execute(cmd)
         else:
-            cmd = 'show l2vpn forwarding bridge-domain {bridge_domain} mac-address location {location}'.format(
-                bridge_domain=self.bridge_domain,location=self.location)
-
-        out = self.device.execute(cmd)
+            out = output
 
         result = {
             'entries' : []

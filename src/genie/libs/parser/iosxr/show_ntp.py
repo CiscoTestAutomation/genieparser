@@ -93,10 +93,14 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
 				'-': 'outlyer',
 				None: 'unsynchronized'}
 
-	def cli(self):
+	cli_command = 'show ntp associations'
 
-		# execute command to get output
-		out = self.device.execute('show ntp associations')
+	def cli(self,output=None):
+		if output is None:
+			out = self.device.execute(self.cli_command)
+		else:
+			out = output
+
 
 		# initial variables
 		ret_dict = {}
@@ -328,10 +332,13 @@ class ShowNtpStatusSchema(MetaParser):
 class ShowNtpStatus(ShowNtpStatusSchema):
 	"""Parser for: show ntp status"""
 
-	def cli(self):
+	cli_command = 'show ntp status'
 
-		# excute command to get output
-		out = self.device.execute('show ntp status')
+	def cli(self,output=None):
+		if output is None:
+			out = self.device.execute(self.cli_command)
+		else:
+			out = output
 
 		# initial variables
 		ret_dict = {}
@@ -474,3 +481,70 @@ class ShowNtpStatus(ShowNtpStatusSchema):
 				continue
 
 		return ret_dict
+
+# ==============================================
+# Parser for 'show running-config ntp'
+# ==============================================
+
+class ShowRunningConfigNtpSchema(MetaParser):
+    """Schema for: show running-config ntp"""
+
+    schema = {
+        'vrf': {
+            Any(): {
+                'source': str,
+                'address': {
+                    Any(): {
+                        'type': str,
+                        },
+                    }
+                },
+            }
+        }
+
+
+class ShowRunningConfigNtp(ShowRunningConfigNtpSchema):
+    """Parser for: show running-config ntp"""
+
+    cli_command = 'show running-config ntp'
+
+    def cli(self, output=None):
+
+        if output is None:
+            # excute command to get output
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial variables
+        ret_dict = {}
+
+        # peer 2.2.2.2
+        p1 = re.compile(r'^(?P<type>\w+)( +vrf +(?P<vrf>\S+))? +(?P<address>[\d\.]+)$')
+
+        # source Loopback0
+        p2 = re.compile(r'^source +(?P<intf>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line: 
+                continue
+
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                address = groups['address']
+                vrf = groups['vrf'] or 'default'
+                final_dict = ret_dict.setdefault('vrf', {}).setdefault(
+                    vrf, {}).setdefault('address', {}).setdefault(address, {})
+                final_dict['type'] = groups['type']
+                continue
+
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                if 'vrf' in ret_dict:
+                    ret_dict['vrf'][vrf]['source'] = groups['intf']
+                continue
+
+        return ret_dict

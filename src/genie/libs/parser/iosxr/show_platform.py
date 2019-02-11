@@ -891,9 +891,12 @@ class ShowRedundancySchema(MetaParser):
 
 class ShowRedundancy(ShowRedundancySchema):
     """Parser for show redundancy"""
-    def cli(self):
-        cmd = 'show redundancy'.format()
-        out = self.device.execute(cmd)
+    cli_command = 'show redundancy'
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         
         # Init vars
         redundancy_dict = {}

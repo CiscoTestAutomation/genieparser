@@ -297,8 +297,9 @@ class ShowVersion(ShowVersionSchema):
             # cisco C1111-4P (1RU) processor with 1453955K/6147K bytes of memory. 
             # Cisco IOSv (revision 1.0) with  with 435457K/87040K bytes of memory.
             # cisco WS-C3750X-24P (PowerPC405) processor (revision W0) with 262144K bytes of memory.
+            # cisco ISR4451-X/K9 (2RU) processor with 1795979K/6147K bytes of memory.
             p8 = re.compile(
-                r'^\s*(C|c)isco +(?P<chassis>[a-zA-Z0-9\-]+) +\((?P<processor_type>.+)\) +((processor.*)|with) +with +(?P<main_mem>[0-9]+)[kK](\/[0-9]+[kK])?')
+                r'^\s*(C|c)isco +(?P<chassis>[a-zA-Z0-9\-\/]+) +\((?P<processor_type>.+)\) +((processor.*)|with) +with +(?P<main_mem>[0-9]+)[kK](\/[0-9]+[kK])?')
             m = p8.match(line)
             if m:
                 version_dict['version']['chassis'] \
