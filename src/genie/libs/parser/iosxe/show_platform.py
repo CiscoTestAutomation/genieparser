@@ -2146,4 +2146,326 @@ class ShowProcessesCpuSorted(ShowProcessesCpuSortedSchema):
         ret_dict.setdefault('nonzero_cpu_processes', nonzero_cpu_processes) if nonzero_cpu_processes else None
         return ret_dict
 
-        
+
+class ShowProcessesCpuPlatformSchema(MetaParser):
+    """Schema for show processes cpu platform"""
+    schema = {
+        'source': str,
+        'zone': str,
+        'day': str,
+        'week_day': str,
+        'month': str,
+        'year': str,
+        'time': str,
+        'load': {
+            'five_secs': str,
+            'one_min': str,
+            'five_min': str,
+        },
+        'cpu_utilization': {
+            'cpu_util_five_secs': str,
+            'cpu_util_one_min': str,
+            'cpu_util_five_min': str,
+            'core': {
+                Any(): {
+                    'core_cpu_util_five_secs': str,
+                    'core_cpu_util_one_min': str,
+                    'core_cpu_util_five_min': str,
+                },
+            }
+        },
+        'process': {
+            Any(): {
+                'process_id': int,
+                'ppid': int,
+                'five_sec': str,
+                'one_min': str,
+                'five_min': str,
+                'status': str,
+                'size': int,
+                'name': str,
+            },
+        }
+    }
+
+
+class ShowProcessesCpuPlatform(ShowProcessesCpuPlatformSchema):
+    """Parser for show processes cpu platform"""
+
+    cli_command = 'show processes cpu platform'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # initial regexp pattern
+        p1 = re.compile(r'^Load +for +five +secs: +(?P<five_secs>[\d\/\%]+); '
+                         '+one +minute: +(?P<one_min>[\d\%]+); '
+                         '+five +minutes: +(?P<five_min>[\d\%]+)$')
+
+        p2 = re.compile(r'^Time +source +is +(?P<source>\w+),'
+                         ' +(?P<time>[\d\:\.]+) +(?P<zone>\w+)'
+                         ' +(?P<week_day>\w+) +(?P<month>\w+) +'
+                         '(?P<day>\d+) +(?P<year>\d+)$')
+
+        p3 = re.compile(r'^CPU +utilization +for +five +seconds: +(?P<cpu_util_five_secs>[\d\%]+),'
+                         ' +one +minute: +(?P<cpu_util_one_min>[\d\%]+),'
+                         ' +five +minutes: +(?P<cpu_util_five_min>[\d\%]+)$')
+
+        p4 = re.compile(r'^(?P<core>[\w\s]+): +CPU +utilization +for'
+                         ' +five +seconds: +(?P<core_cpu_util_five_secs>\d\%+),'
+                         ' +one +minute: +(?P<core_cpu_util_one_min>[\d\%]+),'
+                         ' +five +minutes: +(?P<core_cpu_util_five_min>[\d\%]+)$')
+
+        p5 = re.compile(r'^(?P<pid>\d+) +(?P<ppid>\d+)'
+                         ' +(?P<five_sec>[\d\%]+) +(?P<one_min>[\d\%]+)'
+                         ' +(?P<five_min>[\d\%]+) +(?P<status>[\w]+)'
+                         ' +(?P<size>\d+) +(?P<name>.*)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Load for five secs: 1%/0%; one minute: 2%; five minutes: 3%
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('load', {})
+                ret_dict['load'].update({k:str(v) for k, v in group.items()})
+                continue
+
+            # Time source is NTP, 18:56:04.554 JST Mon Oct 17 2016
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({k:str(v) for k, v in group.items()})
+                continue
+
+            # CPU utilization for five seconds:  2%, one minute:  5%, five minutes: 22%
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('cpu_utilization', {})
+                ret_dict['cpu_utilization'].update({k:str(v) for k, v in group.items()})
+                continue
+
+            # Core 0: CPU utilization for five seconds:  2%, one minute:  8%, five minutes: 18%
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                core = group.pop('core')
+                if 'cpu_utilization' not in ret_dict:
+                    ret_dict.setdefault('cpu_utilization', {})
+                ret_dict['cpu_utilization'].setdefault('core', {}).setdefault(core, {})
+                ret_dict['cpu_utilization']['core'][core].update({k:str(v) for k, v in group.items()})
+                continue
+
+            #    Pid    PPid    5Sec    1Min    5Min  Status        Size  Name                  
+            # --------------------------------------------------------------------------------
+            #      1       0      0%      0%      0%  S          1863680  init                  
+            #      2       0      0%      0%      0%  S                0  kthreadd              
+            #      3       2      0%      0%      0%  S                0  migration/0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                pid = group['pid']
+                ret_dict.setdefault('process', {}).setdefault(pid, {})
+                ret_dict['process'][pid]['process_id'] = int(group['pid'])
+                ret_dict['process'][pid]['ppid'] = int(group['ppid'])
+                ret_dict['process'][pid]['five_sec'] = group['five_sec']
+                ret_dict['process'][pid]['one_min'] = group['one_min']
+                ret_dict['process'][pid]['five_min'] = group['five_min']
+                ret_dict['process'][pid]['status'] = group['status']
+                ret_dict['process'][pid]['size'] = int(group['size'])
+                ret_dict['process'][pid]['name'] = group['name']
+                continue
+
+        return ret_dict
+
+
+# class ShowProcessesCpuSchema(MetaParser):
+#     """Schema for show processes cpu
+#                   show processes cpu <1min|5min|5sec>
+#                   show processes cpu | include <WORD>
+#                   show processes cpu <1min|5min|5sec> | include <WORD>"""
+#     schema = {
+#         'five_sec_cpu_interrupts': int,
+#         'five_sec_cpu_total': int,
+#         'one_min_cpu': int,
+#         'five_min_cpu': int,
+#         Optional('zero_cpu_processes'): list,
+#         Optional('nonzero_cpu_processes'): list,
+#         Optional('sort'): {
+#             Any(): {
+#                 'runtime': int,
+#                 'invoked': int,
+#                 'usecs': int,
+#                 'five_sec_cpu': float,
+#                 'one_min_cpu': float,
+#                 'five_min_cpu': float,
+#                 'tty': int,
+#                 'pid': int,
+#                 'process': str
+#             }
+#         }
+#     }
+
+
+# class ShowProcessesCpu(ShowProcessesCpuSchema):
+#     """Parser for show processes cpu
+#                   show processes cpu <1min|5min|5sec>
+#                   show processes cpu | include <WORD>
+#                   show processes cpu <1min|5min|5sec> | include <WORD>"""
+
+#     cli_command = 'show processes cpu'
+
+#     def cli(self, key_word='',output=None):
+
+#         if output is None:
+#             if key_word:
+#                 self.cli_command += ' | include ' + key_word
+
+#             out = self.device.execute(self.cli_command)
+#         else:
+#             out = output
+
+#         # initial return dictionary
+#         ret_dict = {}
+#         zero_cpu_processes = []
+#         nonzero_cpu_processes = []
+#         index = 0
+
+#         # initial regexp pattern
+#         p1 = re.compile(r'^CPU +utilization +for +five +seconds: +'
+#                          '(?P<five_sec_cpu_total>\d+)\%\/(?P<five_sec_cpu_interrupts>\d+)\%;'
+#                          ' +one +minute: +(?P<one_min_cpu>\d+)\%;'
+#                          ' +five +minutes: +(?P<five_min_cpu>\d+)\%$')
+
+#         p2 = re.compile(r'^(?P<pid>\d+) +(?P<runtime>\d+) +(?P<invoked>\d+) +(?P<usecs>\d+) +'
+#                          '(?P<five_sec_cpu>[\d\.]+)\% +(?P<one_min_cpu>[\d\.]+)\% +'
+#                          '(?P<five_min_cpu>[\d\.]+)\% +(?P<tty>\d+) +'
+#                          '(?P<process>[\w\-\/\s]+)$')
+
+#         for line in out.splitlines():
+#             line = line.strip()
+
+#             # CPU utilization for five seconds: 5%/1%; one minute: 6%; five minutes: 6%
+#             m = p1.match(line)
+#             if m:
+#                 ret_dict.update({k:int(v) for k, v in m.groupdict().items()})
+#                 continue
+
+#             # PID Runtime(ms)     Invoked      uSecs   5Sec   1Min   5Min TTY Process 
+#             # 539     6061647    89951558         67  0.31%  0.36%  0.38%   0 HSRP Common 
+#             m = p2.match(line)
+#             if m:
+#                 group = m.groupdict()
+#                 index += 1
+#                 sort_dict = ret_dict.setdefault('sort', {}).setdefault(index, {})
+#                 sort_dict['process'] = group['process']
+#                 sort_dict.update({k:int(v) for k, v in group.items() 
+#                     if k in ['runtime', 'invoked', 'usecs', 'tty', 'pid']})
+#                 sort_dict.update({k:float(v) for k, v in group.items() 
+#                     if k in ['five_sec_cpu', 'one_min_cpu', 'five_min_cpu']})
+#                 if float(group['five_sec_cpu']) or \
+#                    float(group['one_min_cpu']) or \
+#                    float(group['five_min_cpu']):
+#                     nonzero_cpu_processes.append(group['process'])
+#                 else:
+#                     zero_cpu_processes.append(group['process'])
+#                 continue
+#         ret_dict.setdefault('zero_cpu_processes', zero_cpu_processes) if zero_cpu_processes else None
+#         ret_dict.setdefault('nonzero_cpu_processes', nonzero_cpu_processes) if nonzero_cpu_processes else None
+#         return ret_dict
+
+# class ShowEnvSchema(MetaParser):
+#     """Schema for show env"""
+#     schema = {
+#         'source': str,
+#         'zone': str,
+#         'day': str,
+#         'week_day': str,
+#         'month': str,
+#         'year': str,
+#         'time': str,
+#         'load': {
+#             'five_secs': str,
+#             'one_min': str,
+#             'five_min': str,
+#         },
+#         'busy': bool,
+#         'line': str,
+#         'user': str,
+#         'host': str,
+#         'idle': str,
+#         'location': str,
+#     }
+
+
+# class ShowEnv(ShowEnvSchema):
+#     """Parser for show env"""
+
+#     cli_command = 'show env'
+
+#     def cli(self, output=None):
+#         if output is None:
+#             out = self.device.execute(self.cli_command)
+#         else:
+#             out = output
+
+#         # initial return dictionary
+#         ret_dict = {}
+
+#         # initial regexp pattern
+#         p1 = re.compile(r'^Load +for +five +secs: +(?P<five_secs>[\d\/\%]+); '
+#                          '+one +minute: +(?P<one_min>[\d\%]+); '
+#                          '+five +minutes: +(?P<five_min>[\d\%]+)$')
+
+#         p2 = re.compile(r'^Time +source +is +(?P<source>\w+),'
+#                          ' +(?P<time>[\d\:\.]+) +(?P<zone>\w+)'
+#                          ' +(?P<week_day>\w+) +(?P<month>\w+) +'
+#                          '(?P<day>\d+) +(?P<year>\d+)$')
+
+#         p3 = re.compile(r'^((?P<busy>\*) +)?(?P<line>[\w\s]+)'
+#                          ' +(?P<user>\w+) +(?P<host>\w+)'
+#                          ' +(?P<idle>[0-9\:]+) +(?P<location>[\d\.]+)$')
+
+#         for line in out.splitlines():
+#             line = line.strip()
+
+#             # Load for five secs: 1%/0%; one minute: 2%; five minutes: 3%
+#             m = p1.match(line)
+#             if m:
+#                 group = m.groupdict()
+#                 import pdb; pdb.set_trace
+#                 ret_dict.setdefault('load', {})
+#                 ret_dict['load'].update({k:str(v) for k, v in group.items()})
+#                 continue
+
+#             # Time source is NTP, 18:56:04.554 JST Mon Oct 17 2016
+#             m = p2.match(line)
+#             if m:
+#                 group = m.groupdict()
+#                 ret_dict.update({k:str(v) for k, v in group.items()})
+#                 continue
+
+#             #     Line       User       Host(s)              Idle       Location
+#             #    2 vty 0     nos        idle                 00:35:32 10.241.137.203
+#             #    3 vty 1     testuser   idle                 00:41:43 10.241.147.155
+#             # *  4 vty 2     testuser   idle                 00:00:07 10.241.146.52
+#             m = p3.match(line)
+#             if m:
+#                 group = m.groupdict()
+#                 if group['busy']:
+#                     ret_dict['busy'] = True
+#                 else:
+#                     ret_dict['busy'] = False
+#                 group.pop('busy')
+#                 ret_dict.update({k:str(v) for k, v in group.items()})
+#                 continue
+
+#         return ret_dict
