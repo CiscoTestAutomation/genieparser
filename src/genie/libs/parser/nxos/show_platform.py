@@ -454,6 +454,8 @@ class ShowInstallActive(ShowInstallActiveSchema):
             out = output
 
         active_dict = {}
+        active_package = False
+
         active_package_module_number = 0
         for line in out.splitlines():
             line = line.rstrip()
@@ -479,6 +481,7 @@ class ShowInstallActive(ShowInstallActiveSchema):
             p4 = re.compile(r'^\s*Active Packages:$')
             m = p4.match(line)
             if m:
+                active_package = True
                 if 'active_packages' not in active_dict:
                     active_dict['active_packages'] = {}
                 continue
@@ -486,6 +489,7 @@ class ShowInstallActive(ShowInstallActiveSchema):
             p5 = re.compile(r'^\s*Active Packages on Module #(?P<module_number>[0-9]+):$')
             m = p5.match(line)
             if m:
+                active_package = True
                 active_package_module_number = m.groupdict()['module_number']
                 if 'active_packages' not in active_dict:
                     active_dict['active_packages'] = {}
@@ -493,11 +497,12 @@ class ShowInstallActive(ShowInstallActiveSchema):
 
             p6 = re.compile(r'^\s*(?P<active_package_name>[a-zA-z0-9\-\.]+)$')
             m = p6.match(line)
-            if m:
+            if m and active_package:
                 module_number = 'active_package_module_' + str(active_package_module_number)
                 if module_number not in active_dict['active_packages']:
                     active_dict['active_packages'][module_number] = {}
                 active_dict['active_packages'][module_number]['active_package_name'] = m.groupdict()['active_package_name']
+                active_package = False
                 continue
 
         return active_dict
