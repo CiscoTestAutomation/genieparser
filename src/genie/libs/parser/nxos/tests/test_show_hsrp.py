@@ -353,6 +353,16 @@ class test_show_hsrp_all(unittest.TestCase):
           IP redundancy name is hsrp-Eth1/3-1 (default)
         '''}
 
+    golden_parsed_output_4 = {}
+
+    golden_output_4 = {'execute.return_value': '''
+        +++ CE1: executing command 'show hsrp all' +++
+        show hsrp all
+
+                      ^
+        % Invalid command at '^' marker.
+        '''}
+
     def test_golden_1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
@@ -373,6 +383,13 @@ class test_show_hsrp_all(unittest.TestCase):
         hsrp_all_obj = ShowHsrpAll(device=self.device)
         parsed_output = hsrp_all_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_3)
+
+    def test_golden_4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_4)
+        obj = ShowHsrpAll(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
