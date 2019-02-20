@@ -1855,20 +1855,67 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 ip_address = str(m.groupdict()['ip_address'])
                 continue
 
-            # Unnumbered interface using IP address of loopback1 (22.22.22.22)
-            p2_2 = re.compile(r'^Unnumbered +interface +using +IP +address +of'
-                               ' +(?P<interface>(\S+))'
-                               ' +\((?P<ip_address>(\S+))\)$')
+            # IP address 201.3.12.1/24, Process ID 2 VRF default, area 0.0.0.1
+            p2_2 = re.compile(r'^IP +address +(?P<ip_address>(\S+)), +Process'
+                               ' +ID +(?P<pid>(\S+)) +VRF +(?P<vrf>(\S+)),'
+                               ' +area +(?P<area>(\S+))$')
             m = p2_2.match(line)
             if m:
-                ip_address = str(m.groupdict()['ip_address'])
+                group = m.groupdict()
+                vrf = str(group['vrf'])
+                instance = str(group['pid'])
+                ip_address = str(group['ip_address'])
+                area = str(group['area'])
+
+                if re.search('VL', interface):
+                    intf_name = area + ' ' + router_id
+
+                vrf_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {})
+                af_dict = vrf_dict.setdefault('address_family', {}).\
+                                   setdefault(af, {})
+                instance_dict = af_dict.setdefault('instance', {}).\
+                                        setdefault(instance, {})
+                area_dict = instance_dict.setdefault('areas', {}).\
+                                          setdefault(area, {})
+                sub_dict = area_dict.setdefault(intf_type, {}).\
+                                     setdefault(intf_name, {})
+
+                # Set all other values
+                sub_dict['bfd'] = {}
+                sub_dict['bfd']['enable'] = False
+                sub_dict['if_cfg'] = False
+
+                try:
+                    sub_dict['name'] = interface
+                    del interface
+                except Exception:
+                    pass
+                try:
+                    sub_dict['enable'] = bool_dict[enable]
+                except Exception:
+                    pass
+                try:
+                    sub_dict['line_protocol'] = line_protocol
+                    del line_protocol
+                except Exception:
+                    pass
+                try:
+                    sub_dict['ip_address'] = ip_address
+                    del ip_address
+                except Exception:
+                    pass
+                try:
+                    sub_dict['backbone_area_id'] = backbone_area_id
+                    del backbone_area_id
+                except Exception:
+                    pass
                 continue
 
             # Process ID 1 VRF default, area 0.0.0.0
             # Process ID UNDERLAY VRF default, area 0.0.0.0
-            p3 = re.compile(r'^Process +ID +(?P<pid>(\S+)) +VRF'
+            p2_3 = re.compile(r'^Process +ID +(?P<pid>(\S+)) +VRF'
                              ' +(?P<vrf>(\S+)), +area +(?P<area>(\S+))$')
-            m = p3.match(line)
+            m = p2_3.match(line)
             if m:
                 instance = str(m.groupdict()['pid'])
                 vrf = str(m.groupdict()['vrf'])
@@ -1911,11 +1958,12 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 sub_dict = ret_dict['vrf'][vrf]['address_family'][af]\
                             ['instance'][instance]['areas'][area]\
                             [intf_type][intf_name]
+
+                # Set all other values
                 sub_dict['bfd'] = {}
                 sub_dict['bfd']['enable'] = False
                 sub_dict['if_cfg'] = False
 
-                # Set all other values
                 try:
                     sub_dict['name'] = interface
                     del interface
@@ -1940,6 +1988,15 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                     del backbone_area_id
                 except Exception:
                     pass
+                continue
+
+            # Unnumbered interface using IP address of loopback1 (22.22.22.22)
+            p3 = re.compile(r'^Unnumbered +interface +using +IP +address +of'
+                               ' +(?P<interface>(\S+))'
+                               ' +\((?P<ip_address>(\S+))\)$')
+            m = p3.match(line)
+            if m:
+                ip_address = str(m.groupdict()['ip_address'])
                 continue
 
             # Enabled by interface configuration
@@ -2927,7 +2984,9 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
 
             # Link ID : 10.1.4.4
             # Link-ID : 100.1.11.2
-            p28 = re.compile(r'^(Link +ID|Link-ID) *: +(?P<id>(\S+))$')
+            # Link-ID :   Link ID : 201.0.35.2
+            p28 = re.compile(r'^(?:Link-ID +:)? *(Link +ID|Link-ID) *:'
+                              ' +(?P<id>(\S+))$')
             m = p28.match(line)
             if m:
                 db_dict['link_tlvs'][link_tlv_counter]['link_id'] = \
@@ -2935,7 +2994,9 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                 continue
 
             # Interface Address : 10.1.4.1
-            p29 = re.compile(r'^Interface +Address *: +(?P<addr>(\S+))$')
+            # Interface Address :   Interface Address : 201.0.35.2
+            p29 = re.compile(r'^(?:Interface +Address +:)? *Interface'
+                              ' +Address *: +(?P<addr>(\S+))$')
             m = p29.match(line)
             if m:
                 addr = str(m.groupdict()['addr'])
