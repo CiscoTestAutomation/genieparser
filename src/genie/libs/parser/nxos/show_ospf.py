@@ -1805,6 +1805,11 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
         # Mapping dict
         bool_dict = {'up': True, 'down': False}
 
+        # IP address 201.3.12.1/24, Process ID 2 VRF default, area 0.0.0.1
+        p2_2 = re.compile(r'^IP +address +(?P<ip_address>(\S+)), +Process'
+                               ' +ID +(?P<pid>(\S+)) +VRF +(?P<vrf>(\S+)),'
+                               ' +area +(?P<area>(\S+))$')
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -1856,9 +1861,6 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 continue
 
             # IP address 201.3.12.1/24, Process ID 2 VRF default, area 0.0.0.1
-            p2_2 = re.compile(r'^IP +address +(?P<ip_address>(\S+)), +Process'
-                               ' +ID +(?P<pid>(\S+)) +VRF +(?P<vrf>(\S+)),'
-                               ' +area +(?P<area>(\S+))$')
             m = p2_2.match(line)
             if m:
                 group = m.groupdict()
