@@ -315,6 +315,7 @@ class test_show_ntp_associations_detail(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowNtpAssociationsDetail(device=self.device)
         parsed_output = obj.parse()
+        import pdb; pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 

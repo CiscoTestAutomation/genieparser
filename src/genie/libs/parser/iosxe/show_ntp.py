@@ -400,36 +400,84 @@ class ShowNtpAssociationsDetailSchema(MetaParser):
     """Schema for show ntp associations detail"""
 
     schema = {
-        'peer': {
+        'source': str,
+        'zone': str,
+        'day': str,
+        'week_day': str,
+        'month': str,
+        'year': str,
+        'time': str,
+        'load': {
+            'five_secs': str,
+            'one_min': str,
+            'five_min': str,
+        },
+        'vrf': {
             Any():{
-                'local_mode': {
-                    Any(): {
-                        'remote': str,
-                        'configured': bool,
-                        Optional('refid'): str,
-                        Optional('local_mode'): str,
-                        Optional('stratum'): int,
-                        Optional('receive_time'): Or(str, int),
-                        Optional('poll'): int,
-                        Optional('reach'): int,
-                        Optional('delay'): float,
-                        Optional('offset'): float,
-                        Optional('jitter'): float,
-                        'mode': str,
-                    },
+                'associations': {
+                    'address': {
+                        Any():{
+                            'local_mode': {
+                                Any():{
+                                    'isconfigured': {
+                                        Any():{
+                                            'address': str,
+                                            'local_mode': str,
+                                            'isconfigured': bool,
+                                            'stratum': int,
+                                            'refid': str,
+                                            'authentication': str,
+                                            Optional('prefer'): str,
+                                            'peer_interface': str,
+                                            'minpoll': int,
+                                            'maxpoll': int,
+                                            Optional('port'): str,
+                                            'version': int,
+                                            'reach': int,
+                                            Optional('unreach'): str,
+                                            'poll': str,
+                                            Optional('now'): str,
+                                            'offset': str,
+                                            'delay': str,
+                                            'dispersion': str,
+                                            'originate_time': str,
+                                            'receive_time': str,
+                                            'transmit_time': str,
+                                            'input_time': str,
+                                            'vrf': str,
+                                            'ip_type': str,
+                                            'sane': bool,
+                                            'valid': bool,
+                                            'master': bool,
+                                            'sync_dist': str,
+                                            'precision': str,
+                                            'assoc_id': int,
+                                            'assoc_name': str,
+                                            'filterror': str,
+                                            'ntp_statistics': {
+                                                'packet_sent': int,
+                                                Optional('packet_sent_fail'): int,
+                                                'packet_received': int,
+                                                'packet_dropped': int,
+                                            },
+                                            'peer': {
+                                                Any():{
+                                                    'local_mode': {
+                                                        Any(): {
+                                                            'local_mode': str,
+                                                            'poll': int,
+                                                        },
+                                                    }
+                                                },
+                                            }
+                                        },
+                                    }
+                                },
+                            }
+                        },
+                    }
                 }
             },
-        },
-        'clock_state': {
-            'system_status': {
-                'clock_state': str,
-                Optional('clock_stratum'): int,
-                Optional('associations_address'): str,
-                Optional('root_delay'): float,
-                Optional('clock_offset'): float,
-                Optional('clock_refid'): str,
-                Optional('associations_local_mode'): str,
-            }
         }
     }
 
@@ -438,14 +486,6 @@ class ShowNtpAssociationsDetailSchema(MetaParser):
 # ==============================================
 class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
     """Parser for show ntp associations detail"""
-
-    # * sys.peer, # selected, + candidate, - outlyer, x falseticker, ~ configured
-    MODE_MAP = {'*': 'synchronized',
-                '#': 'selected',
-                'x': 'falseticker',
-                '+': 'candidate',
-                '-': 'outlyer',
-                None: 'unsynchronized'}
 
     cli_command = 'show ntp associations detail'
 
@@ -458,71 +498,227 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
         # initial variables
         ret_dict = {}
 
-        #   address         ref clock       st   when   poll reach  delay  offset   disp
-        # *~127.127.1.1     .LOCL.           0      6     16   377  0.000   0.000  1.204
-        #  ~1.1.1.1         .INIT.          16      -   1024     0  0.000   0.000 15937.
-        # +~2.2.2.2         127.127.1.1      8    137     64     1 15.917 556.786 7938.0
-        p1 = re.compile(r'^(?P<mode_code>[x\*\#\+\- ])?(?P<configured>[\~])? *(?P<remote>[\w\.\:]+) +'
-                         '(?P<refid>[\w\.]+) +(?P<stratum>\d+) +'
-                         '(?P<receive_time>[\d\-]+) +(?P<poll>\d+) +'
-                         '(?P<reach>\d+) +(?P<delay>[\d\.]+) +'
-                         '(?P<offset>[\d\.\-]+) +(?P<disp>[\d\.\-]+)$')
+        # Load for five secs: 1%/0%; one minute: 2%; five minutes: 3%
+        p1 = re.compile(r'^Load +for +five +secs: +(?P<five_secs>[\d\/\%]+); '
+                         '+one +minute: +(?P<one_min>[\d\%]+); '
+                         '+five +minutes: +(?P<five_min>[\d\%]+)$')
 
+        # Time source is NTP, 18:56:04.554 JST Mon Oct 17 2016
+        p2 = re.compile(r'^Time +source +is +(?P<source>\w+),'
+                         ' +(?P<time>[\d\:\.]+) +(?P<zone>\w+)'
+                         ' +(?P<week_day>\w+) +(?P<month>\w+) +'
+                         '(?P<day>\d+) +(?P<year>\d+)$')
+
+        # 202.239.165.120 configured, ipv4, authenticated, insane, invalid, stratum 
+        # 106.162.197.252 configured, ipv4, authenticated, our_master, sane, valid, stratum 2
+        p3 = re.compile(r'^(?P<address>[\w\.\:]+) +(?P<configured>\w+),'
+                         ' +(?P<ip_type>\w+), +(?P<authenticated>\w+),'
+                         '( +(?P<our_master>\w+),)? +(?P<insane>\w+), +(?P<invalid>\w+),'
+                         ' +stratum +(?P<stratum>\d+)$')
+
+        # ref ID 106.162.197.252, time DBAB02D6.9E354130 (16:08:06.618 JST Fri Oct 14 2016)
+        p4 = re.compile(r'^ref +ID +(?P<refid>[\w\.]+), +time +(?P<input_time>[\w\:\s\(\)\.]+)$')
+
+        # our mode client, peer mode server, our poll intvl 512, peer poll intvl 512
+        # our mode client, peer mode server, our poll intvl 512, peer poll intvl 512
+        p5 = re.compile(r'^our +mode +(?P<mode>\w+), +peer +mode +(?P<peer_mode>\w+),'
+                         ' +our +poll +intvl +(?P<poll_intv>\d+),'
+                         ' +peer +poll +intvl +(?P<peer_poll_intv>\d+)$')
+
+        # root delay 0.00 msec, root disp 14.52, reach 377, sync dist 28.40
+        p6 = re.compile(r'^root +delay +(?P<root_delay>[\w\s\d\.]+), +root +disp +(?P<root_disp>[\d\.]+),'
+                         ' +reach +(?P<reach>\d+),'
+                         ' +sync +dist +(?P<sync_dist>[\d\.]+)$')
+
+        # delay 0.00 msec, offset 0.0000 msec, dispersion 7.23, jitter 0.97 
+        # delay 0.00 msec, offset -1.0000 msec, dispersion 5.64, jitter 0.97 msec
+        p7 = re.compile(r'^delay +(?P<delay>[\w\s\d\.]+), +offset +(?P<offset>[\w\s\d\.\-]+),'
+                         ' +dispersion +(?P<dispersion>[\d\.]+),'
+                         ' +jitter +(?P<jitter>[\w\s\d\.]+)$')
+
+        # precision 2**10, version 4
+        p8 = re.compile(r'^precision +(?P<precision>[\d\*]+), +version +(?P<version>\d+)$')
+
+        # assoc id 62758, assoc name 202.239.165.120
+        p9 = re.compile(r'^assoc +id +(?P<assoc_id>\d+), +assoc +name +(?P<assoc_name>[\d\.]+)$')
+
+        # assoc in packets 27, assoc out packets 27, assoc error packets 0
+        p10 = re.compile(r'^assoc +in +packets +(?P<assoc_in_packets>\d+),'
+                         ' +assoc +out +packets +(?P<assoc_out_packets>\d+),'
+                         ' +assoc +error +packets +(?P<assoc_error_packets>[\d\.]+)$')
+
+        # org time 00000000.00000000 (09:00:00.000 JST Mon Jan 1 1900)
+        p11 = re.compile(r'^org +time +(?P<org_time>[\w\:\s\(\)\.]+)$')
+
+        # rec time DBAB046D.A8B43B28 (16:14:53.659 JST Fri Oct 14 2016)
+        p12 = re.compile(r'^rec +time +(?P<rec_time>[\w\:\s\(\)\.]+)$')
+
+        # xmt time DBAB046D.A8B43B28 (16:14:53.659 JST Fri Oct 14 2016)
+        p13 = re.compile(r'^xmt +time +(?P<xmt_time>[\w\:\s\(\)\.]+)$')
+
+        # filtdelay =     0.00    1.00    0.00    0.00    0.00    0.00    0.00    0.00
+        p14 = re.compile(r'^filtdelay +\= +(?P<filtdelay>[\d\s\.]+)$')
+
+        # filtoffset =    0.00    0.50    0.00    1.00    1.00    1.00    1.00    1.00
+        p15 = re.compile(r'^filtoffset +\= +(?P<filtoffset>[\d\s\.]+)$')
+
+        # filterror =     1.95    5.89    9.88   13.89   15.84   17.79   19.74   21.76
+        p16 = re.compile(r'^filterror +\= +(?P<filterror>[\d\s\.]+)$')
+
+        # minpoll = 6, maxpoll = 10
+        p17 = re.compile(r'^minpoll +\= +(?P<minpoll>\d+), +maxpoll +\= +(?P<maxpoll>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
             if not line:
                 continue
 
-            # *171.68.38.65     .GNSS.           1 -   59   64  377    1.436   73.819  10.905
             m = p1.match(line)
             if m:
-                groups = m.groupdict()
-                peer = groups['remote']
-                if '~' is groups['configured']:
-                    configured = True
+                group = m.groupdict()
+                ret_dict.setdefault('load', {})
+                ret_dict['load'].update({k:str(v) for k, v in group.items()})
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({k:str(v) for k, v in group.items()})
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                address = group['address']
+                ip_type = group['ip_type']
+                authentication = group['authenticated']
+                stratum = int(group['stratum'])
+                if group['configured']:
+                    isconfigured = True
                 else:
-                    configured = False
-                local_mode = 'client'
-                mode = self.MODE_MAP.get(groups['mode_code'])
-                try:
-                    receive_time = int(groups['receive_time'])
-                except:
-                    receive_time = str(groups['receive_time'])
+                    isconfigured = False
 
-                peer_dict = ret_dict.setdefault('peer', {}).setdefault(peer, {})\
-                    .setdefault('local_mode', {}).setdefault(local_mode, {})
-                peer_dict.update({'remote': peer,
-                                  'configured': configured,
-                                  'refid': groups['refid'],
-                                  'local_mode': local_mode,
-                                  'mode': mode,
-                                  'stratum': int(groups['stratum']),
-                                  'receive_time': receive_time,
-                                  'poll': int(groups['poll']),
-                                  'reach': int(groups['reach']),
-                                  'delay': float(groups['delay']),
-                                  'offset': float(groups['offset']),
-                                  'jitter': float(groups['disp'])})
+                if group['insane'] == 'insane':
+                    sane = False
+                else:
+                    sane = True
 
-                # ops clock_state structure
-                if groups['mode_code']:
-                    if '*' in groups['mode_code']:
-                        clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
-                        clock_dict['clock_state'] = mode
-                        clock_dict['clock_stratum'] = int(groups['stratum'])
-                        clock_dict['associations_address'] = peer
-                        clock_dict['root_delay'] = float(groups['delay'])
-                        clock_dict['clock_offset'] = float(groups['offset'])
-                        clock_dict['clock_refid'] = groups['refid']
-                        clock_dict['associations_local_mode'] = local_mode
-                    else:
-                        clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
-                        clock_dict['clock_state'] = 'unsynchronized'
-    
-        # check if has synchronized peers, if no create unsynchronized entry
-        if ret_dict and not ret_dict.get('clock_state'):
-            ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})\
-                .setdefault('clock_state', 'unsynchronized')
+                if group['invalid'] == 'invalid':
+                    valid = False
+                else:
+                    valid = True
+
+                if group['our_master']:
+                    master = True
+                else:
+                    master = False
+
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                refid = group['refid']
+                input_time = group['input_time']
+
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                local_mode = group['mode']
+                peer_mode = group['peer_mode']
+
+                add_dict = ret_dict.setdefault('vrf', {}).setdefault('default', {}).\
+                    setdefault('associations', {}).setdefault('address', {}).\
+                    setdefault(address, {}).setdefault('local_mode', {}).\
+                    setdefault(local_mode, {}).setdefault('isconfigured', {}).\
+                    setdefault(isconfigured, {})
+                add_dict['address'] = address
+                add_dict['isconfigured'] = isconfigured
+                add_dict['ip_type'] = ip_type
+                add_dict['authentication'] = authentication
+                add_dict['sane'] = sane
+                add_dict['valid'] = valid
+                add_dict['master'] = master
+                add_dict['stratum'] = stratum
+                add_dict['refid'] = refid
+                add_dict['input_time'] = input_time
+                add_dict['peer_interface'] = refid
+                add_dict['poll'] = group['poll_intv']
+                add_dict['vrf'] = 'default'
+
+                peer_dict = add_dict.setdefault('peer', {}).setdefault(refid, {}).\
+                    setdefault('local_mode', {}).setdefault(peer_mode, {})
+                peer_dict['poll'] = int(group['peer_poll_intv'])
+                peer_dict['local_mode'] = peer_mode
+
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                add_dict['reach'] = int(group['reach'])
+                add_dict['sync_dist'] = group['sync_dist']
+
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                add_dict.update({k:str(v) for k, v in group.items()})
+
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                add_dict['precision'] = group['precision']
+                add_dict['version'] = int(group['version'])
+
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                add_dict['assoc_name'] = group['assoc_name']
+                add_dict['assoc_id'] = int(group['assoc_id'])
+
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                add_dict['assoc_name'] = group['assoc_name']
+                add_dict['assoc_id'] = int(group['assoc_id'])
+
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                add_dict.setdefault('ntp_statistics', {})
+                add_dict['ntp_statistics']['packet_received'] = int(group['assoc_in_packets'])
+                add_dict['ntp_statistics']['packet_sent'] = int(group['assoc_out_packets'])
+                add_dict['ntp_statistics']['packet_dropped'] = int(group['assoc_error_packets'])
+
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                add_dict['originate_time'] = group['org_time']
+
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                add_dict['receive_time'] = group['rec_time']
+
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                add_dict['transmit_time'] = group['xmt_time']
+
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                add_dict['delay'] = group['filtdelay']
+
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                add_dict['offset'] = group['filtoffset']
+
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                add_dict['filterror'] = group['filterror']
+
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                add_dict['minpoll'] = int(group['minpoll'])
+                add_dict['maxpoll'] = int(group['maxpoll'])
 
         return ret_dict
