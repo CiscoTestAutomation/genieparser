@@ -454,50 +454,60 @@ class ShowInstallActive(ShowInstallActiveSchema):
             out = output
 
         active_dict = {}
+        active_package = False
+
         active_package_module_number = 0
+
+        p1 = re.compile(r'^\s*(?P<boot_images>[a-zA-Z\s]+):$')
+        p2 = re.compile(r'^\s*Kickstart Image: +(?P<kickstart_image>[a-zA-z0-9\:\/\-\.]+)$')
+        p3 = re.compile(r'^\s*System Image: +(?P<system_image>[a-zA-z0-9\:\/\-\.]+)$')
+        p4 = re.compile(r'^\s*Active Packages:$')
+        p5 = re.compile(r'^\s*Active Packages on Module #(?P<module_number>[0-9]+):$')
+        p6 = re.compile(r'^\s*(?P<active_package_name>[a-zA-z0-9\-\.]+)$')
+
         for line in out.splitlines():
             line = line.rstrip()
-            p1 = re.compile(r'^\s*(?P<boot_images>[a-zA-Z\s]+):$')
+
             m = p1.match(line)
             if m:
                 if 'boot_images' not in active_dict:
                     active_dict['boot_images'] = {}
                     continue
 
-            p2 = re.compile(r'^\s*Kickstart Image: +(?P<kickstart_image>[a-zA-z0-9\:\/\-\.]+)$')
+
             m = p2.match(line)
             if m:
                 active_dict['boot_images']['kickstart_image'] = m.groupdict()['kickstart_image']
                 continue
 
-            p3 = re.compile(r'^\s*System Image: +(?P<system_image>[a-zA-z0-9\:\/\-\.]+)$')
+
             m = p3.match(line)
             if m:
                 active_dict['boot_images']['system_image'] = m.groupdict()['system_image']
                 continue
 
-            p4 = re.compile(r'^\s*Active Packages:$')
             m = p4.match(line)
             if m:
+                active_package = True
                 if 'active_packages' not in active_dict:
                     active_dict['active_packages'] = {}
                 continue
 
-            p5 = re.compile(r'^\s*Active Packages on Module #(?P<module_number>[0-9]+):$')
             m = p5.match(line)
             if m:
+                active_package = True
                 active_package_module_number = m.groupdict()['module_number']
                 if 'active_packages' not in active_dict:
                     active_dict['active_packages'] = {}
                 continue
 
-            p6 = re.compile(r'^\s*(?P<active_package_name>[a-zA-z0-9\-\.]+)$')
             m = p6.match(line)
-            if m:
+            if m and active_package:
                 module_number = 'active_package_module_' + str(active_package_module_number)
                 if module_number not in active_dict['active_packages']:
                     active_dict['active_packages'][module_number] = {}
                 active_dict['active_packages'][module_number]['active_package_name'] = m.groupdict()['active_package_name']
+                active_package = False
                 continue
 
         return active_dict
