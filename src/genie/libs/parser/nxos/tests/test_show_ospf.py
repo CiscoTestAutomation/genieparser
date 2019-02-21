@@ -1663,12 +1663,175 @@ class test_show_ip_ospf_interface_vrf_all(unittest.TestCase):
             Number of opaque link LSAs: 0, checksum sum 0
         '''}
 
-    def test_full(self):
+    golden_parsed_output2 = {
+        'vrf': 
+            {'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'100': 
+                                {'areas': 
+                                    {'0.0.0.1': 
+                                        {'interfaces': 
+                                            {'loopback0': 
+                                                {'bfd': 
+                                                    {'enable': False},
+                                                'cost': 1,
+                                                'enable': True,
+                                                'if_cfg': True,
+                                                'index': 3,
+                                                'interface_type': 'loopback',
+                                                'ip_address': '200.0.1.1/32',
+                                                'line_protocol': 'up',
+                                                'name': 'loopback0',
+                                                'state': 'loopback'},
+                                            'loopback21': 
+                                                {'bfd': 
+                                                    {'enable': False},
+                                                'cost': 1,
+                                                'enable': True,
+                                                'if_cfg': True,
+                                                'index': 2,
+                                                'interface_type': 'loopback',
+                                                'ip_address': '200.21.0.1/32',
+                                                'line_protocol': 'up',
+                                                'name': 'loopback21',
+                                                'state': 'loopback'},
+                                            'port-channel1.100': 
+                                                {'bdr_ip_addr': '201.0.12.1',
+                                                'bdr_router_id': '200.0.1.1',
+                                                'bfd': 
+                                                    {'enable': False},
+                                                'cost': 1,
+                                                'dead_interval': 40,
+                                                'dr_ip_addr': '201.0.12.2',
+                                                'dr_router_id': '200.16.0.1',
+                                                'enable': True,
+                                                'hello_interval': 10,
+                                                'hello_timer': '00:00:04',
+                                                'if_cfg': True,
+                                                'index': 1,
+                                                'interface_type': 'broadcast',
+                                                'ip_address': '201.0.12.1/24',
+                                                'line_protocol': 'up',
+                                                'name': 'port-channel1.100',
+                                                'passive': False,
+                                                'priority': 1,
+                                                'retransmit_interval': 5,
+                                                'state': 'bdr',
+                                                'statistics': 
+                                                    {'link_scope_lsa_cksum_sum': 0,
+                                                    'link_scope_lsa_count': 0,
+                                                    'num_nbrs_adjacent': 1,
+                                                    'num_nbrs_flooding': 1,
+                                                    'total_neighbors': 1},
+                                                'transmit_delay': 1,
+                                                'wait_interval': 40}}}}},
+                            '2': 
+                                {'areas': 
+                                    {'0.0.0.1': 
+                                        {'interfaces': 
+                                            {'loopback3': 
+                                                {'bfd': 
+                                                    {'enable': False},
+                                                'cost': 1,
+                                                'enable': True,
+                                                'if_cfg': True,
+                                                'index': 2,
+                                                'interface_type': 'loopback',
+                                                'ip_address': '200.3.1.1/32',
+                                                'line_protocol': 'up',
+                                                'name': 'loopback3',
+                                                'state': 'loopback'},
+                                            'port-channel1.103': 
+                                                {'bdr_ip_addr': '201.3.12.1',
+                                                'bdr_router_id': '200.0.1.1',
+                                                'bfd': 
+                                                    {'enable': False},
+                                                'cost': 1,
+                                                'dead_interval': 40,
+                                                'dr_ip_addr': '201.3.12.2',
+                                                'dr_router_id': '200.0.2.1',
+                                                'enable': True,
+                                                'hello_interval': 10,
+                                                'hello_timer': '00:00:05',
+                                                'if_cfg': True,
+                                                'index': 1,
+                                                'interface_type': 'broadcast',
+                                                'ip_address': '201.3.12.1/24',
+                                                'line_protocol': 'up',
+                                                'name': 'port-channel1.103',
+                                                'passive': False,
+                                                'priority': 1,
+                                                'retransmit_interval': 5,
+                                                'state': 'bdr',
+                                                'statistics': 
+                                                    {'link_scope_lsa_cksum_sum': 0,
+                                                    'link_scope_lsa_count': 0,
+                                                    'num_nbrs_adjacent': 1,
+                                                    'num_nbrs_flooding': 1,
+                                                    'total_neighbors': 1},
+                                                'transmit_delay': 1,
+                                                'wait_interval': 40}}}}}}}}}}}
+
+    golden_output2 = {'execute.return_value': '''
+        +++ CE1: executing command 'show ip ospf interface vrf all' +++
+        show ip ospf interface vrf all
+
+         port-channel1.103 is up, line protocol is up
+            IP address 201.3.12.1/24, Process ID 2 VRF default, area 0.0.0.1
+            Enabled by interface configuration
+            State BDR, Network type BROADCAST, cost 1
+            Index 1, Transmit delay 1 sec, Router Priority 1
+            Designated Router ID: 200.0.2.1, address: 201.3.12.2
+            Backup Designated Router ID: 200.0.1.1, address: 201.3.12.1
+            1 Neighbors, flooding to 1, adjacent with 1
+            Timer intervals: Hello 10, Dead 40, Wait 40, Retransmit 5
+              Hello timer due in 00:00:05
+            No authentication
+            Number of opaque link LSAs: 0, checksum sum 0
+         loopback3 is up, line protocol is up
+            IP address 200.3.1.1/32, Process ID 2 VRF default, area 0.0.0.1
+            Enabled by interface configuration
+            State LOOPBACK, Network type LOOPBACK, cost 1
+            Index 2
+         port-channel1.100 is up, line protocol is up
+            IP address 201.0.12.1/24, Process ID 100 VRF default, area 0.0.0.1
+            Enabled by interface configuration
+            State BDR, Network type BROADCAST, cost 1
+            Index 1, Transmit delay 1 sec, Router Priority 1
+            Designated Router ID: 200.16.0.1, address: 201.0.12.2
+            Backup Designated Router ID: 200.0.1.1, address: 201.0.12.1
+            1 Neighbors, flooding to 1, adjacent with 1
+            Timer intervals: Hello 10, Dead 40, Wait 40, Retransmit 5
+              Hello timer due in 00:00:04
+            No authentication
+            Number of opaque link LSAs: 0, checksum sum 0
+         loopback0 is up, line protocol is up
+            IP address 200.0.1.1/32, Process ID 100 VRF default, area 0.0.0.1
+            Enabled by interface configuration
+            State LOOPBACK, Network type LOOPBACK, cost 1
+            Index 3
+         loopback21 is up, line protocol is up
+            IP address 200.21.0.1/32, Process ID 100 VRF default, area 0.0.0.1
+            Enabled by interface configuration
+            State LOOPBACK, Network type LOOPBACK, cost 1
+            Index 2
+        '''}
+
+    def test_full_1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowIpOspfInterface(device=self.device)
         parsed_output = obj.parse(vrf='all')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_full_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowIpOspfInterface(device=self.device)
+        parsed_output = obj.parse(vrf='all')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
     def test_empty(self):
         self.maxDiff = None
@@ -4857,12 +5020,877 @@ class test_show_ip_ospf_database_opaque_area_detail_vrf_all(unittest.TestCase):
          Number of Links : 1
         '''}
 
-    def test_full(self):
+    golden_parsed_output2 = {
+        'vrf': 
+            {'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'1': 
+                                {'areas': 
+                                    {'0.0.0.0': 
+                                        {'database': 
+                                            {'lsa_types': 
+                                                {10: 
+                                                    {'lsa_type': 10,
+                                                    'lsas': 
+                                                        {'1.0.0.0 200.0.2.1': 
+                                                            {'adv_router': '200.0.2.1',
+                                                            'lsa_id': '1.0.0.0',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'opaque': {}},
+                                                                'header': 
+                                                                    {'adv_router': '200.0.2.1',
+                                                                    'age': 720,
+                                                                    'checksum': '0x8c2b',
+                                                                    'fragment_number': 0,
+                                                                    'length': 28,
+                                                                    'lsa_id': '1.0.0.0',
+                                                                    'mpls_te_router_id': '200.0.2.1',
+                                                                    'num_links': 0,
+                                                                    'opaque_id': 0,
+                                                                    'opaque_type': 1,
+                                                                    'option': '0x2',
+                                                                    'option_desc': 'No TOS-capability, No DC',
+                                                                    'seq_num': '0x80000002',
+                                                                    'type': 10}}},
+                                                        '1.0.0.0 200.0.3.1': 
+                                                            {'adv_router': '200.0.3.1',
+                                                            'lsa_id': '1.0.0.0',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'opaque': {}},
+                                                                'header': 
+                                                                    {'adv_router': '200.0.3.1',
+                                                                    'age': 720,
+                                                                    'checksum': '0x8e27',
+                                                                    'fragment_number': 0,
+                                                                    'length': 28,
+                                                                    'lsa_id': '1.0.0.0',
+                                                                    'mpls_te_router_id': '200.0.3.1',
+                                                                    'num_links': 0,
+                                                                    'opaque_id': 0,
+                                                                    'opaque_type': 1,
+                                                                    'option': '0x2',
+                                                                    'option_desc': 'No TOS-capability, No DC',
+                                                                    'seq_num': '0x80000002',
+                                                                    'type': 10}}},
+                                                        '1.0.0.0 200.0.4.1': 
+                                                            {'adv_router': '200.0.4.1',
+                                                            'lsa_id': '1.0.0.0',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'opaque': {}},
+                                                                'header': 
+                                                                    {'adv_router': '200.0.4.1',
+                                                                    'age': 515,
+                                                                    'checksum': '0x9023',
+                                                                    'fragment_number': 0,
+                                                                    'length': 28,
+                                                                    'lsa_id': '1.0.0.0',
+                                                                    'mpls_te_router_id': '200.0.4.1',
+                                                                    'num_links': 0,
+                                                                    'opaque_id': 0,
+                                                                    'opaque_type': 1,
+                                                                    'option': '0x2',
+                                                                    'option_desc': 'No TOS-capability, No DC',
+                                                                    'seq_num': '0x80000002',
+                                                                    'type': 10}}},
+                                                        '1.0.0.0 200.0.5.1': 
+                                                            {'adv_router': '200.0.5.1',
+                                                            'lsa_id': '1.0.0.0',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'opaque': {}},
+                                                                'header': 
+                                                                    {'adv_router': '200.0.5.1',
+                                                                    'age': 497,
+                                                                    'checksum': '0x921f',
+                                                                    'fragment_number': 0,
+                                                                    'length': 28,
+                                                                    'lsa_id': '1.0.0.0',
+                                                                    'mpls_te_router_id': '200.0.5.1',
+                                                                    'num_links': 0,
+                                                                    'opaque_id': 0,
+                                                                    'opaque_type': 1,
+                                                                    'option': '0x2',
+                                                                    'option_desc': 'No TOS-capability, No DC',
+                                                                    'seq_num': '0x80000002',
+                                                                    'type': 10}}},
+                                                        '1.0.0.233 200.0.4.1': 
+                                                            {'adv_router': '200.0.4.1',
+                                                            'lsa_id': '1.0.0.233',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'opaque': 
+                                                                        {'link_tlvs': 
+                                                                            {1: 
+                                                                                {'admin_group': '0x0',
+                                                                                'link_id': '201.0.34.2',
+                                                                                'link_name': 'broadcast network',
+                                                                                'link_type': 2,
+                                                                                'local_if_ipv4_addrs': 
+                                                                                    {'201.0.34.2': {}},
+                                                                                'max_bandwidth': 5000000000,
+                                                                                'max_reservable_bandwidth': 3749999872,
+                                                                                'remote_if_ipv4_addrs': 
+                                                                                    {'0.0.0.0': {}},
+                                                                                'te_metric': 1,
+                                                                                'unreserved_bandwidths': 
+                                                                                    {'0 3749999872': 
+                                                                                        {'priority': 0,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '1 3749999872': 
+                                                                                        {'priority': 1,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '2 3749999872': 
+                                                                                        {'priority': 2,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '3 3749999872': 
+                                                                                        {'priority': 3,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '4 3749999872': 
+                                                                                        {'priority': 4,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '5 3749999872': 
+                                                                                        {'priority': 5,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '6 3749999872': 
+                                                                                        {'priority': 6,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '7 3749999872': 
+                                                                                        {'priority': 7,
+                                                                                        'unreserved_bandwidth': 3749999872}}}}}},
+                                                                'header': 
+                                                                    {'adv_router': '200.0.4.1',
+                                                                    'age': 475,
+                                                                    'checksum': '0x9a3b',
+                                                                    'fragment_number': 233,
+                                                                    'length': 116,
+                                                                    'lsa_id': '1.0.0.233',
+                                                                    'num_links': 1,
+                                                                    'opaque_id': 233,
+                                                                    'opaque_type': 1,
+                                                                    'option': '0x2',
+                                                                    'option_desc': 'No TOS-capability, No DC',
+                                                                    'seq_num': '0x80000002',
+                                                                    'type': 10}}},
+                                                        '1.0.0.237 200.0.4.1': 
+                                                            {'adv_router': '200.0.4.1',
+                                                            'lsa_id': '1.0.0.237',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'opaque': 
+                                                                        {'link_tlvs': 
+                                                                            {1: 
+                                                                                {'admin_group': '0x0',
+                                                                                'link_id': '201.0.45.2',
+                                                                                'link_name': 'broadcast network',
+                                                                                'link_type': 2,
+                                                                                'local_if_ipv4_addrs': 
+                                                                                    {'201.0.45.1': {}},
+                                                                                'max_bandwidth': 5000000000,
+                                                                                'max_reservable_bandwidth': 3749999872,
+                                                                                'remote_if_ipv4_addrs': 
+                                                                                    {'0.0.0.0': {}},
+                                                                                'te_metric': 1,
+                                                                                'unreserved_bandwidths': 
+                                                                                    {'0 3749999872': 
+                                                                                        {'priority': 0,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '1 3749999872': 
+                                                                                        {'priority': 1,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '2 3749999872': 
+                                                                                        {'priority': 2,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '3 3749999872': 
+                                                                                        {'priority': 3,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '4 3749999872': 
+                                                                                        {'priority': 4,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '5 3749999872': 
+                                                                                        {'priority': 5,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '6 3749999872': 
+                                                                                        {'priority': 6,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '7 3749999872': 
+                                                                                        {'priority': 7,
+                                                                                        'unreserved_bandwidth': 3749999872}}}}}},
+                                                                'header': 
+                                                                    {'adv_router': '200.0.4.1',
+                                                                    'age': 455,
+                                                                    'checksum': '0x7c40',
+                                                                    'fragment_number': 237,
+                                                                    'length': 116,
+                                                                    'lsa_id': '1.0.0.237',
+                                                                    'num_links': 1,
+                                                                    'opaque_id': 237,
+                                                                    'opaque_type': 1,
+                                                                    'option': '0x2',
+                                                                    'option_desc': 'No TOS-capability, No DC',
+                                                                    'seq_num': '0x80000002',
+                                                                    'type': 10}}},
+                                                        '1.0.0.42 200.0.3.1': 
+                                                            {'adv_router': '200.0.3.1',
+                                                            'lsa_id': '1.0.0.42',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'opaque': 
+                                                                        {'link_tlvs': 
+                                                                            {1: 
+                                                                                {'admin_group': '0x0',
+                                                                                'link_id': '201.0.23.2',
+                                                                                'link_name': 'broadcast network',
+                                                                                'link_type': 2,
+                                                                                'local_if_ipv4_addrs': 
+                                                                                    {'201.0.23.2': {}},
+                                                                                'max_bandwidth': 2500000000,
+                                                                                'max_reservable_bandwidth': 1874999936,
+                                                                                'remote_if_ipv4_addrs': 
+                                                                                    {'0.0.0.0': {}},
+                                                                                'te_metric': 2,
+                                                                                'unreserved_bandwidths': 
+                                                                                    {'0 1874999936': 
+                                                                                        {'priority': 0,
+                                                                                        'unreserved_bandwidth': 1874999936},
+                                                                                    '1 1874999936': 
+                                                                                        {'priority': 1,
+                                                                                        'unreserved_bandwidth': 1874999936},
+                                                                                    '2 1874999936': 
+                                                                                        {'priority': 2,
+                                                                                        'unreserved_bandwidth': 1874999936},
+                                                                                    '3 1874999936': 
+                                                                                        {'priority': 3,
+                                                                                        'unreserved_bandwidth': 1874999936},
+                                                                                    '4 1874999936': 
+                                                                                        {'priority': 4,
+                                                                                        'unreserved_bandwidth': 1874999936},
+                                                                                    '5 1874999936': 
+                                                                                        {'priority': 5,
+                                                                                        'unreserved_bandwidth': 1874999936},
+                                                                                    '6 1874999936': 
+                                                                                        {'priority': 6,
+                                                                                        'unreserved_bandwidth': 1874999936},
+                                                                                    '7 1874999936': 
+                                                                                        {'priority': 7,
+                                                                                        'unreserved_bandwidth': 1874999936}}}}}},
+                                                                'header': 
+                                                                    {'adv_router': '200.0.3.1',
+                                                                    'age': 510,
+                                                                    'checksum': '0xcce3',
+                                                                    'fragment_number': 42,
+                                                                    'length': 116,
+                                                                    'lsa_id': '1.0.0.42',
+                                                                    'num_links': 1,
+                                                                    'opaque_id': 42,
+                                                                    'opaque_type': 1,
+                                                                    'option': '0x2',
+                                                                    'option_desc': 'No TOS-capability, No DC',
+                                                                    'seq_num': '0x80000002',
+                                                                    'type': 10}}},
+                                                        '1.0.0.47 200.0.3.1': 
+                                                            {'adv_router': '200.0.3.1',
+                                                            'lsa_id': '1.0.0.47',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'opaque': 
+                                                                        {'link_tlvs': 
+                                                                            {1: 
+                                                                                {'admin_group': '0x0',
+                                                                                'link_id': '201.0.34.2',
+                                                                                'link_name': 'broadcast '
+                                                                                'network',
+                                                                                'link_type': 2,
+                                                                                'local_if_ipv4_addrs': 
+                                                                                    {'201.0.34.1': {}},
+                                                                                'max_bandwidth': 5000000000,
+                                                                                'max_reservable_bandwidth': 3749999872,
+                                                                                'remote_if_ipv4_addrs': 
+                                                                                    {'0.0.0.0': {}},
+                                                                                'te_metric': 1,
+                                                                                'unreserved_bandwidths': 
+                                                                                    {'0 3749999872': 
+                                                                                        {'priority': 0,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '1 3749999872': 
+                                                                                        {'priority': 1,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '2 3749999872': 
+                                                                                        {'priority': 2,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '3 3749999872': 
+                                                                                        {'priority': 3,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '4 3749999872': 
+                                                                                        {'priority': 4,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '5 3749999872': 
+                                                                                        {'priority': 5,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '6 3749999872': 
+                                                                                        {'priority': 6,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '7 3749999872': 
+                                                                                        {'priority': 7,
+                                                                                        'unreserved_bandwidth': 3749999872}}}}}},
+                                                                'header': 
+                                                                    {'adv_router': '200.0.3.1',
+                                                                    'age': 470,
+                                                                    'checksum': '0xcec3',
+                                                                    'fragment_number': 47,
+                                                                    'length': 116,
+                                                                    'lsa_id': '1.0.0.47',
+                                                                    'num_links': 1,
+                                                                    'opaque_id': 47,
+                                                                    'opaque_type': 1,
+                                                                    'option': '0x2',
+                                                                    'option_desc': 'No TOS-capability, No DC',
+                                                                    'seq_num': '0x80000002',
+                                                                    'type': 10}}},
+                                                        '1.0.0.51 200.0.3.1': 
+                                                            {'adv_router': '200.0.3.1',
+                                                            'lsa_id': '1.0.0.51',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'opaque': 
+                                                                        {'link_tlvs': 
+                                                                            {1: 
+                                                                                {'admin_group': '0x0',
+                                                                                'link_id': '201.0.35.2',
+                                                                                'link_name': 'broadcast network',
+                                                                                'link_type': 2,
+                                                                                'local_if_ipv4_addrs': 
+                                                                                    {'201.0.35.1': {}},
+                                                                                'max_bandwidth': 5000000000,
+                                                                                'max_reservable_bandwidth': 3749999872,
+                                                                                'remote_if_ipv4_addrs': 
+                                                                                    {'0.0.0.0': {}},
+                                                                                'te_metric': 1,
+                                                                                'unreserved_bandwidths': 
+                                                                                    {'0 3749999872': 
+                                                                                        {'priority': 0,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '1 3749999872': 
+                                                                                        {'priority': 1,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '2 3749999872': 
+                                                                                        {'priority': 2,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '3 3749999872': 
+                                                                                        {'priority': 3,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '4 3749999872': 
+                                                                                        {'priority': 4,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '5 3749999872': 
+                                                                                        {'priority': 5,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '6 3749999872': 
+                                                                                        {'priority': 6,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '7 3749999872': 
+                                                                                        {'priority': 7,
+                                                                                        'unreserved_bandwidth': 3749999872}}}}}},
+                                                                'header': 
+                                                                    {'adv_router': '200.0.3.1',
+                                                                    'age': 450,
+                                                                    'checksum': '0xd8b3',
+                                                                    'fragment_number': 51,
+                                                                    'length': 116,
+                                                                    'lsa_id': '1.0.0.51',
+                                                                    'num_links': 1,
+                                                                    'opaque_id': 51,
+                                                                    'opaque_type': 1,
+                                                                    'option': '0x2',
+                                                                    'option_desc': 'No TOS-capability, No DC',
+                                                                    'seq_num': '0x80000002',
+                                                                    'type': 10}}},
+                                                        '1.0.0.55 200.0.2.1': 
+                                                            {'adv_router': '200.0.2.1',
+                                                            'lsa_id': '1.0.0.55',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'opaque': 
+                                                                        {'link_tlvs': 
+                                                                            {1: 
+                                                                                {'admin_group': '0x0',
+                                                                                'link_id': '201.0.23.2',
+                                                                                'link_name': 'broadcast network',
+                                                                                'link_type': 2,
+                                                                                'local_if_ipv4_addrs': 
+                                                                                    {'201.0.23.1': {}},
+                                                                                'max_bandwidth': 2500000000,
+                                                                                'max_reservable_bandwidth': 1874999936,
+                                                                                'remote_if_ipv4_addrs': 
+                                                                                    {'0.0.0.0': {}},
+                                                                                'te_metric': 2,
+                                                                                'unreserved_bandwidths': 
+                                                                                    {'0 1874999936': 
+                                                                                        {'priority': 0,
+                                                                                        'unreserved_bandwidth': 1874999936},
+                                                                                    '1 1874999936': 
+                                                                                        {'priority': 1,
+                                                                                        'unreserved_bandwidth': 1874999936},
+                                                                                    '2 1874999936': 
+                                                                                        {'priority': 2,
+                                                                                        'unreserved_bandwidth': 1874999936},
+                                                                                    '3 1874999936': 
+                                                                                        {'priority': 3,
+                                                                                        'unreserved_bandwidth': 1874999936},
+                                                                                    '4 1874999936': 
+                                                                                        {'priority': 4,
+                                                                                        'unreserved_bandwidth': 1874999936},
+                                                                                    '5 1874999936': 
+                                                                                        {'priority': 5,
+                                                                                        'unreserved_bandwidth': 1874999936},
+                                                                                    '6 1874999936': 
+                                                                                        {'priority': 6,
+                                                                                        'unreserved_bandwidth': 1874999936},
+                                                                                    '7 1874999936': 
+                                                                                        {'priority': 7,
+                                                                                        'unreserved_bandwidth': 1874999936}}}}}},
+                                                            'header': 
+                                                                {'adv_router': '200.0.2.1',
+                                                                'age': 510,
+                                                                'checksum': '0x3372',
+                                                                'fragment_number': 55,
+                                                                'length': 116,
+                                                                'lsa_id': '1.0.0.55',
+                                                                'num_links': 1,
+                                                                'opaque_id': 55,
+                                                                'opaque_type': 1,
+                                                                'option': '0x2',
+                                                                'option_desc': 'No TOS-capability, No DC',
+                                                                'seq_num': '0x80000002',
+                                                                'type': 10}}},
+                                                        '1.0.1.11 200.0.5.1': 
+                                                            {'adv_router': '200.0.5.1',
+                                                            'lsa_id': '1.0.1.11',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'opaque': 
+                                                                        {'link_tlvs': 
+                                                                            {1: 
+                                                                                {'admin_group': '0x0',
+                                                                                'link_id': '201.0.45.2',
+                                                                                'link_name': 'broadcast '
+                                                                                'network',
+                                                                                'link_type': 2,
+                                                                                'local_if_ipv4_addrs': 
+                                                                                    {'201.0.45.2': {}},
+                                                                                'max_bandwidth': 5000000000,
+                                                                                'max_reservable_bandwidth': 3749999872,
+                                                                                'remote_if_ipv4_addrs': 
+                                                                                    {'0.0.0.0': {}},
+                                                                                'te_metric': 1,
+                                                                                'unreserved_bandwidths': 
+                                                                                    {'0 3749999872': 
+                                                                                        {'priority': 0,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '1 3749999872': 
+                                                                                        {'priority': 1,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '2 3749999872': 
+                                                                                        {'priority': 2,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '3 3749999872': 
+                                                                                        {'priority': 3,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '4 3749999872': 
+                                                                                        {'priority': 4,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '5 3749999872': 
+                                                                                        {'priority': 5,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '6 3749999872': 
+                                                                                        {'priority': 6,
+                                                                                        'unreserved_bandwidth': 3749999872},
+                                                                                    '7 3749999872': 
+                                                                                        {'priority': 7,
+                                                                                        'unreserved_bandwidth': 3749999872}}}}}},
+                                                                'header': 
+                                                                    {'adv_router': '200.0.5.1',
+                                                                    'age': 447,
+                                                                    'checksum': '0x6537',
+                                                                    'fragment_number': 267,
+                                                                    'length': 116,
+                                                                    'lsa_id': '1.0.1.11',
+                                                                    'num_links': 1,
+                                                                    'opaque_id': 267,
+                                                                    'opaque_type': 1,
+                                                                    'option': '0x2',
+                                                                    'option_desc': 'No TOS-capability, No DC',
+                                                                    'seq_num': '0x80000002',
+                                                                    'type': 10}}},
+                                                        '1.0.1.15 200.0.5.1': 
+                                                            {'adv_router': '200.0.5.1',
+                                                            'lsa_id': '1.0.1.15',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'opaque': 
+                                                                        {'link_tlvs': 
+                                                                            {1: {'admin_group': '0x0',
+                                                                            'link_id': '201.0.35.2',
+                                                                            'link_name': 'broadcast '
+                                                                            'network',
+                                                                            'link_type': 2,
+                                                                            'local_if_ipv4_addrs': 
+                                                                                {'201.0.35.2': {}},
+                                                                            'max_bandwidth': 5000000000,
+                                                                            'max_reservable_bandwidth': 3749999872,
+                                                                            'remote_if_ipv4_addrs': 
+                                                                                {'0.0.0.0': {}},
+                                                                            'te_metric': 1,
+                                                                            'unreserved_bandwidths': 
+                                                                                {'0 3749999872': 
+                                                                                    {'priority': 0,
+                                                                                    'unreserved_bandwidth': 3749999872},
+                                                                                '1 3749999872': 
+                                                                                    {'priority': 1,
+                                                                                    'unreserved_bandwidth': 3749999872},
+                                                                                '2 3749999872': 
+                                                                                    {'priority': 2,
+                                                                                    'unreserved_bandwidth': 3749999872},
+                                                                                '3 3749999872': 
+                                                                                    {'priority': 3,
+                                                                                    'unreserved_bandwidth': 3749999872},
+                                                                                '4 3749999872': 
+                                                                                    {'priority': 4,
+                                                                                    'unreserved_bandwidth': 3749999872},
+                                                                                '5 3749999872': 
+                                                                                    {'priority': 5,
+                                                                                    'unreserved_bandwidth': 3749999872},
+                                                                                '6 3749999872': 
+                                                                                    {'priority': 6,
+                                                                                    'unreserved_bandwidth': 3749999872},
+                                                                                '7 3749999872': 
+                                                                                    {'priority': 7,
+                                                                                    'unreserved_bandwidth': 3749999872}}}}}},
+                                                                'header': 
+                                                                    {'adv_router': '200.0.5.1',
+                                                                    'age': 457,
+                                                                    'checksum': '0x4765',
+                                                                    'fragment_number': 271,
+                                                                    'length': 116,
+                                                                    'lsa_id': '1.0.1.15',
+                                                                    'num_links': 1,
+                                                                    'opaque_id': 271,
+                                                                    'opaque_type': 1,
+                                                                    'option': '0x2',
+                                                                    'option_desc': 'No TOS-capability, No DC',
+                                                                    'seq_num': '0x80000002',
+                                                                    'type': 10}}}}}}}}}},
+                            '2': {}}}}}}}
+
+    golden_output2 = {'execute.return_value': '''
+        +++ P1: executing command 'show ip ospf database opaque-area detail vrf all' +++
+        show ip ospf database opaque-area detail vrf all
+
+                OSPF Router with ID (200.0.3.1) (Process ID 2 VRF default)
+
+                OSPF Router with ID (200.0.3.1) (Process ID 1 VRF default)
+
+                        Opaque Area Link States (Area 0.0.0.0)
+
+           LS age: 720
+           Options: 0x2 (No TOS-capability, No DC)
+           LS Type: Opaque Area Link
+           Link State ID: 1.0.0.0 
+           Opaque Type: 1
+           Opaque ID: 0
+           Advertising Router: 200.0.2.1
+           LS Seq Number: 0x80000002
+           Checksum: 0x8c2b
+           Length: 28
+           Fragment number: 0
+
+             MPLS TE router ID : 200.0.2.1
+
+             Number of Links : 0
+
+           LS age: 720
+           Options: 0x2 (No TOS-capability, No DC)
+           LS Type: Opaque Area Link
+           Link State ID: 1.0.0.0 
+           Opaque Type: 1
+           Opaque ID: 0
+           Advertising Router: 200.0.3.1
+           LS Seq Number: 0x80000002
+           Checksum: 0x8e27
+           Length: 28
+           Fragment number: 0
+
+             MPLS TE router ID : 200.0.3.1
+
+             Number of Links : 0
+
+           LS age: 515
+           Options: 0x2 (No TOS-capability, No DC)
+           LS Type: Opaque Area Link
+           Link State ID: 1.0.0.0 
+           Opaque Type: 1
+           Opaque ID: 0
+           Advertising Router: 200.0.4.1
+           LS Seq Number: 0x80000002
+           Checksum: 0x9023
+           Length: 28
+           Fragment number: 0
+
+             MPLS TE router ID : 200.0.4.1
+
+             Number of Links : 0
+
+           LS age: 497
+           Options: 0x2 (No TOS-capability, No DC)
+           LS Type: Opaque Area Link
+           Link State ID: 1.0.0.0 
+           Opaque Type: 1
+           Opaque ID: 0
+           Advertising Router: 200.0.5.1
+           LS Seq Number: 0x80000002
+           Checksum: 0x921f
+           Length: 28
+           Fragment number: 0
+
+             MPLS TE router ID : 200.0.5.1
+
+             Number of Links : 0
+
+           LS age: 510
+           Options: 0x2 (No TOS-capability, No DC)
+           LS Type: Opaque Area Link
+           Link State ID: 1.0.0.42 
+           Opaque Type: 1
+           Opaque ID: 42
+           Advertising Router: 200.0.3.1
+           LS Seq Number: 0x80000002
+           Checksum: 0xcce3
+           Length: 116
+           Fragment number: 42
+
+             Link connected to Broadcast network
+             Link-ID :   Link ID : 201.0.23.2
+             Interface Address :   Interface Address : 201.0.23.2
+             Admin Metric : 2
+             Maximum Bandwidth : 2500000000
+             Maximum reservable bandwidth : 1874999936
+             Number of Priority : 8
+               Priority 0 : 1874999936  Priority 1 : 1874999936
+               Priority 2 : 1874999936  Priority 3 : 1874999936
+               Priority 4 : 1874999936  Priority 5 : 1874999936
+               Priority 6 : 1874999936  Priority 7 : 1874999936
+             Affinity Bit : 0x0
+
+             Number of Links : 1
+
+           LS age: 470
+           Options: 0x2 (No TOS-capability, No DC)
+           LS Type: Opaque Area Link
+           Link State ID: 1.0.0.47 
+           Opaque Type: 1
+           Opaque ID: 47
+           Advertising Router: 200.0.3.1
+           LS Seq Number: 0x80000002
+           Checksum: 0xcec3
+           Length: 116
+           Fragment number: 47
+
+             Link connected to Broadcast network
+             Link-ID :   Link ID : 201.0.34.2
+             Interface Address :   Interface Address : 201.0.34.1
+             Admin Metric : 1
+             Maximum Bandwidth : 5000000000
+             Maximum reservable bandwidth : 3749999872
+             Number of Priority : 8
+               Priority 0 : 3749999872  Priority 1 : 3749999872
+               Priority 2 : 3749999872  Priority 3 : 3749999872
+               Priority 4 : 3749999872  Priority 5 : 3749999872
+               Priority 6 : 3749999872  Priority 7 : 3749999872
+             Affinity Bit : 0x0
+
+             Number of Links : 1
+
+           LS age: 450
+           Options: 0x2 (No TOS-capability, No DC)
+           LS Type: Opaque Area Link
+           Link State ID: 1.0.0.51 
+           Opaque Type: 1
+           Opaque ID: 51
+           Advertising Router: 200.0.3.1
+           LS Seq Number: 0x80000002
+           Checksum: 0xd8b3
+           Length: 116
+           Fragment number: 51
+
+             Link connected to Broadcast network
+             Link-ID :   Link ID : 201.0.35.2
+             Interface Address :   Interface Address : 201.0.35.1
+             Admin Metric : 1
+             Maximum Bandwidth : 5000000000
+             Maximum reservable bandwidth : 3749999872
+             Number of Priority : 8
+               Priority 0 : 3749999872  Priority 1 : 3749999872
+               Priority 2 : 3749999872  Priority 3 : 3749999872
+               Priority 4 : 3749999872  Priority 5 : 3749999872
+               Priority 6 : 3749999872  Priority 7 : 3749999872
+             Affinity Bit : 0x0
+
+             Number of Links : 1
+
+           LS age: 510
+           Options: 0x2 (No TOS-capability, No DC)
+           LS Type: Opaque Area Link
+           Link State ID: 1.0.0.55 
+           Opaque Type: 1
+           Opaque ID: 55
+           Advertising Router: 200.0.2.1
+           LS Seq Number: 0x80000002
+           Checksum: 0x3372
+           Length: 116
+           Fragment number: 55
+
+             Link connected to Broadcast network
+             Link-ID :   Link ID : 201.0.23.2
+             Interface Address :   Interface Address : 201.0.23.1
+             Admin Metric : 2
+             Maximum Bandwidth : 2500000000
+             Maximum reservable bandwidth : 1874999936
+             Number of Priority : 8
+               Priority 0 : 1874999936  Priority 1 : 1874999936
+               Priority 2 : 1874999936  Priority 3 : 1874999936
+               Priority 4 : 1874999936  Priority 5 : 1874999936
+               Priority 6 : 1874999936  Priority 7 : 1874999936
+             Affinity Bit : 0x0
+
+             Number of Links : 1
+
+           LS age: 475
+           Options: 0x2 (No TOS-capability, No DC)
+           LS Type: Opaque Area Link
+           Link State ID: 1.0.0.233 
+           Opaque Type: 1
+           Opaque ID: 233
+           Advertising Router: 200.0.4.1
+           LS Seq Number: 0x80000002
+           Checksum: 0x9a3b
+           Length: 116
+           Fragment number: 233
+
+             Link connected to Broadcast network
+             Link-ID :   Link ID : 201.0.34.2
+             Interface Address :   Interface Address : 201.0.34.2
+             Admin Metric : 1
+             Maximum Bandwidth : 5000000000
+             Maximum reservable bandwidth : 3749999872
+             Number of Priority : 8
+               Priority 0 : 3749999872  Priority 1 : 3749999872
+               Priority 2 : 3749999872  Priority 3 : 3749999872
+               Priority 4 : 3749999872  Priority 5 : 3749999872
+               Priority 6 : 3749999872  Priority 7 : 3749999872
+             Affinity Bit : 0x0
+
+             Number of Links : 1
+
+           LS age: 455
+           Options: 0x2 (No TOS-capability, No DC)
+           LS Type: Opaque Area Link
+           Link State ID: 1.0.0.237 
+           Opaque Type: 1
+           Opaque ID: 237
+           Advertising Router: 200.0.4.1
+           LS Seq Number: 0x80000002
+           Checksum: 0x7c40
+           Length: 116
+           Fragment number: 237
+
+             Link connected to Broadcast network
+             Link-ID :   Link ID : 201.0.45.2
+             Interface Address :   Interface Address : 201.0.45.1
+             Admin Metric : 1
+             Maximum Bandwidth : 5000000000
+             Maximum reservable bandwidth : 3749999872
+             Number of Priority : 8
+               Priority 0 : 3749999872  Priority 1 : 3749999872
+               Priority 2 : 3749999872  Priority 3 : 3749999872
+               Priority 4 : 3749999872  Priority 5 : 3749999872
+               Priority 6 : 3749999872  Priority 7 : 3749999872
+             Affinity Bit : 0x0
+
+             Number of Links : 1
+
+           LS age: 447
+           Options: 0x2 (No TOS-capability, No DC)
+           LS Type: Opaque Area Link
+           Link State ID: 1.0.1.11 
+           Opaque Type: 1
+           Opaque ID: 267
+           Advertising Router: 200.0.5.1
+           LS Seq Number: 0x80000002
+           Checksum: 0x6537
+           Length: 116
+           Fragment number: 267
+
+             Link connected to Broadcast network
+             Link-ID :   Link ID : 201.0.45.2
+             Interface Address :   Interface Address : 201.0.45.2
+             Admin Metric : 1
+             Maximum Bandwidth : 5000000000
+             Maximum reservable bandwidth : 3749999872
+             Number of Priority : 8
+               Priority 0 : 3749999872  Priority 1 : 3749999872
+               Priority 2 : 3749999872  Priority 3 : 3749999872
+               Priority 4 : 3749999872  Priority 5 : 3749999872
+               Priority 6 : 3749999872  Priority 7 : 3749999872
+             Affinity Bit : 0x0
+
+             Number of Links : 1
+
+           LS age: 457
+           Options: 0x2 (No TOS-capability, No DC)
+           LS Type: Opaque Area Link
+           Link State ID: 1.0.1.15 
+           Opaque Type: 1
+           Opaque ID: 271
+           Advertising Router: 200.0.5.1
+           LS Seq Number: 0x80000002
+           Checksum: 0x4765
+           Length: 116
+           Fragment number: 271
+
+             Link connected to Broadcast network
+             Link-ID :   Link ID : 201.0.35.2
+             Interface Address :   Interface Address : 201.0.35.2
+             Admin Metric : 1
+             Maximum Bandwidth : 5000000000
+             Maximum reservable bandwidth : 3749999872
+             Number of Priority : 8
+               Priority 0 : 3749999872  Priority 1 : 3749999872
+               Priority 2 : 3749999872  Priority 3 : 3749999872
+               Priority 4 : 3749999872  Priority 5 : 3749999872
+               Priority 6 : 3749999872  Priority 7 : 3749999872
+             Affinity Bit : 0x0
+
+             Number of Links : 1
+
+        '''}
+
+    def test_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowIpOspfDatabaseOpaqueAreaDetail(device=self.device)
         parsed_output = obj.parse(vrf='all')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_full2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowIpOspfDatabaseOpaqueAreaDetail(device=self.device)
+        parsed_output = obj.parse(vrf='all')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
     def test_empty(self):
         self.maxDiff = None

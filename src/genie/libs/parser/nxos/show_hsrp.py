@@ -275,14 +275,16 @@ class ShowHsrpAll(ShowHsrpAllSchema):
     ''' Parser for "'show hsrp all" '''
     cli_command = 'show hsrp all'
 
-    def cli(self,output=None):
+    def cli(self, output=None):
+
         if output is None:
             out = self.device.execute(self.cli_command)
         else:
             out = output
-        
+
         # Init vars
         parsed_dict = {}
+        secondary_vip_exists = False
  
         # Ethernet1/3 - Group 1 (HSRP-V1) (IPv4)
         p1 = re.compile(r'(?P<intf>(\S+)) +\- +Group +(?P<gnum>[0-9]+)'
@@ -390,7 +392,6 @@ class ShowHsrpAll(ShowHsrpAllSchema):
                 groups_dict = version_dict.setdefault('groups', {}).\
                                            setdefault(gnum, {})
                 groups_dict['group_number'] = gnum
-                secondary_vip_exists = False
                 continue
 
             # Local state is Active, priority 100 (Cfged 100)
@@ -639,7 +640,6 @@ class ShowHsrpAll(ShowHsrpAllSchema):
                                         setdefault(vip, {})
                     mdict['address'] = vip
                 continue
-
 
         return parsed_dict
 
