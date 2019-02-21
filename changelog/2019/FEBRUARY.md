@@ -51,3 +51,15 @@
 
 * IOSXR
   * Fixed parser 'show interface detail' to support non utf8 characters
+
+--------------------------------------------------------------------------------
+                                    OSPF
+--------------------------------------------------------------------------------
+* NXOS
+    * Fixed ShowIpOspfInterface and ShowIpOspfDatabaseOpaqueAreaDetail to cover N7K output differences
+
+--------------------------------------------------------------------------------
+                                    HSRP
+--------------------------------------------------------------------------------
+* NXOS
+    * Fixed ShowHsrpAll to cover N7K output differences
