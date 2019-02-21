@@ -1805,19 +1805,92 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
         # Mapping dict
         bool_dict = {'up': True, 'down': False}
 
+        # Ethernet2/2 is up, line protocol is up
+        # port-channel2.100 is up, line protocol is up
+        p1 = re.compile(r'^(?P<intf>(\S+)) +is +(?P<enable>(up|down)),'
+                         ' +line +protocol +is'
+                         ' +(?P<line_protocol>(up|down))$')
+
+        # IP address 10.2.3.2/24
+        p2_1 = re.compile(r'^IP +address +(?P<ip_address>(\S+))$')
+
         # IP address 201.3.12.1/24, Process ID 2 VRF default, area 0.0.0.1
         p2_2 = re.compile(r'^IP +address +(?P<ip_address>(\S+)), +Process'
                                ' +ID +(?P<pid>(\S+)) +VRF +(?P<vrf>(\S+)),'
                                ' +area +(?P<area>(\S+))$')
+
+        # Process ID 1 VRF default, area 0.0.0.0
+        # Process ID UNDERLAY VRF default, area 0.0.0.0
+        p2_3 = re.compile(r'^Process +ID +(?P<pid>(\S+)) +VRF'
+                         ' +(?P<vrf>(\S+)), +area +(?P<area>(\S+))$')
+
+        # Unnumbered interface using IP address of loopback1 (22.22.22.22)
+        p3 = re.compile(r'^Unnumbered +interface +using +IP +address +of'
+                           ' +(?P<interface>(\S+))'
+                           ' +\((?P<ip_address>(\S+))\)$')
+
+        # Enabled by interface configuration
+        p4 = re.compile(r'^Enabled +by +interface +configuration$')
+
+        # State BDR, Network type BROADCAST, cost 1
+        p5 = re.compile(r'^State +(?P<state>(\S+)), +Network +type '
+                         '(?P<intf_type>(\S+)), +cost +(?P<cost>(\d+))$')
+
+        # Index 3, Transmit delay 1 sec, Router Priority 1
+        p6_1 = re.compile(r'^Index +(?P<index>(\d+))(?:, +Transmit +delay'
+                           ' +(?P<transmit_delay>(\d+)) +sec)?(?:, +Router'
+                           ' +Priority +(?P<priority>(\d+)))?$')
+
+        # Index 2, Passive interface
+        p6_2 = re.compile(r'^Index +(?P<index>(\d+)), +Passive +interface$')
+
+        # Designated Router ID: 3.3.3.3, address: 10.2.3.3
+        p7_1 = re.compile(r'^(D|d)esignated +(R|r)outer +(ID|Id):'
+                           ' (?P<router_id>(\S+)), +address:'
+                           ' +(?P<ip_addr>(\S+))$')
+
+        # Backup Designated Router ID: 2.2.2.2, address: 10.2.3.2
+        p7_2 = re.compile(r'^(B|b)ackup +(D|d)esignated +(R|r)outer'
+                           ' +(ID|Id): +(?P<router_id>(\S+)), +address:'
+                           ' +(?P<ip_addr>(\S+))$')
+
+        # 1 Neighbors, flooding to 1, adjacent with 1
+        p8 = re.compile(r'^(?P<num_neighbors>(\d+)) +Neighbors, +flooding'
+                         ' +to +(?P<flooding>(\d+)), +adjacent +with'
+                         ' +(?P<adjacent>(\d+))$')
+
+        # Timer intervals: Hello 10, Dead 40, Wait 40, Retransmit 5
+        p9 = re.compile(r'^Timer +intervals: +Hello +(?P<hello>(\d+)),'
+                         ' +Dead +(?P<dead>(\d+)), +Wait +(?P<wait>(\d+)),'
+                         ' +Retransmit +(?P<retransmit>(\d+))$')
+
+        # Hello timer due in 00:00:02
+        p10 = re.compile(r'^Hello +timer +due +in +(?P<hello>(\S+))$')
+
+        # Simple authentication
+        # Simple authentication, using keychain test (ready)
+        # Simple authentication, using keychain test (not ready)
+        p11_1 = re.compile(r'^Simple +authentication(?:, +using +keychain'
+                            ' +(?P<keychain>(\S+))'
+                            ' +\((not +ready|ready)\))?$')
+
+        # Message-digest authentication, using default key id 0
+        p11_2 = re.compile(r'^Message-digest +authentication, +using'
+                            ' +default key id +(?P<key>(\S+))$')
+
+        # Number of opaque link LSAs: 0, checksum sum 0
+        p12 = re.compile(r'^Number +of +opaque +link +LSAs:'
+                          ' +(?P<count>(\d+)), +checksum +sum'
+                          ' +(?P<checksum>(\d+))$')
+
+        # BFD is enabled
+        p13 = re.compile(r'^BFD +is +enabled$')
 
         for line in out.splitlines():
             line = line.strip()
 
             # Ethernet2/2 is up, line protocol is up
             # port-channel2.100 is up, line protocol is up
-            p1 = re.compile(r'^(?P<intf>(\S+)) +is +(?P<enable>(up|down)),'
-                             ' +line +protocol +is'
-                             ' +(?P<line_protocol>(up|down))$')
             m = p1.match(line)
             if m:
                 # intf name
@@ -1854,7 +1927,6 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 continue
             
             # IP address 10.2.3.2/24
-            p2_1 = re.compile(r'^IP +address +(?P<ip_address>(\S+))$')
             m = p2_1.match(line)
             if m:
                 ip_address = str(m.groupdict()['ip_address'])
@@ -1915,8 +1987,6 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
 
             # Process ID 1 VRF default, area 0.0.0.0
             # Process ID UNDERLAY VRF default, area 0.0.0.0
-            p2_3 = re.compile(r'^Process +ID +(?P<pid>(\S+)) +VRF'
-                             ' +(?P<vrf>(\S+)), +area +(?P<area>(\S+))$')
             m = p2_3.match(line)
             if m:
                 instance = str(m.groupdict()['pid'])
@@ -1993,24 +2063,18 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 continue
 
             # Unnumbered interface using IP address of loopback1 (22.22.22.22)
-            p3 = re.compile(r'^Unnumbered +interface +using +IP +address +of'
-                               ' +(?P<interface>(\S+))'
-                               ' +\((?P<ip_address>(\S+))\)$')
             m = p3.match(line)
             if m:
                 ip_address = str(m.groupdict()['ip_address'])
                 continue
 
             # Enabled by interface configuration
-            p4 = re.compile(r'^Enabled +by +interface +configuration$')
             m = p4.match(line)
             if m:
                 sub_dict['if_cfg'] = True
                 continue
 
             # State BDR, Network type BROADCAST, cost 1
-            p5 = re.compile(r'^State +(?P<state>(\S+)), +Network +type '
-                             '(?P<intf_type>(\S+)), +cost +(?P<cost>(\d+))$')
             m = p5.match(line)
             if m:
                 sub_dict['state'] = str(m.groupdict()['state']).lower()
@@ -2020,9 +2084,6 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 continue
 
             # Index 3, Transmit delay 1 sec, Router Priority 1
-            p6_1 = re.compile(r'^Index +(?P<index>(\d+))(?:, +Transmit +delay'
-                               ' +(?P<transmit_delay>(\d+)) +sec)?(?:, +Router'
-                               ' +Priority +(?P<priority>(\d+)))?$')
             m = p6_1.match(line)
             if m:
                 sub_dict['index'] = int(m.groupdict()['index'])
@@ -2035,7 +2096,6 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 continue
 
             # Index 2, Passive interface
-            p6_2 = re.compile(r'^Index +(?P<index>(\d+)), +Passive +interface$')
             m = p6_2.match(line)
             if m:
                 sub_dict['index'] = int(m.groupdict()['index'])
@@ -2043,9 +2103,6 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 continue
 
             # Designated Router ID: 3.3.3.3, address: 10.2.3.3
-            p7_1 = re.compile(r'^(D|d)esignated +(R|r)outer +(ID|Id):'
-                               ' (?P<router_id>(\S+)), +address:'
-                               ' +(?P<ip_addr>(\S+))$')
             m = p7_1.match(line)
             if m:
                 sub_dict['dr_router_id'] = str(m.groupdict()['router_id'])
@@ -2053,9 +2110,6 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 continue
 
             # Backup Designated Router ID: 2.2.2.2, address: 10.2.3.2
-            p7_2 = re.compile(r'^(B|b)ackup +(D|d)esignated +(R|r)outer'
-                               ' +(ID|Id): +(?P<router_id>(\S+)), +address:'
-                               ' +(?P<ip_addr>(\S+))$')
             m = p7_2.match(line)
             if m:
                 sub_dict['bdr_router_id'] = str(m.groupdict()['router_id'])
@@ -2063,9 +2117,6 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 continue
 
             # 1 Neighbors, flooding to 1, adjacent with 1
-            p8 = re.compile(r'^(?P<num_neighbors>(\d+)) +Neighbors, +flooding'
-                             ' +to +(?P<flooding>(\d+)), +adjacent +with'
-                             ' +(?P<adjacent>(\d+))$')
             m = p8.match(line)
             if m:
                 if 'statistics' not in sub_dict:
@@ -2079,9 +2130,6 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 continue
 
             # Timer intervals: Hello 10, Dead 40, Wait 40, Retransmit 5
-            p9 = re.compile(r'^Timer +intervals: +Hello +(?P<hello>(\d+)),'
-                             ' +Dead +(?P<dead>(\d+)), +Wait +(?P<wait>(\d+)),'
-                             ' +Retransmit +(?P<retransmit>(\d+))$')
             m = p9.match(line)
             if m:
                 sub_dict['hello_interval'] = int(m.groupdict()['hello'])
@@ -2092,7 +2140,6 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 continue
 
             # Hello timer due in 00:00:02
-            p10 = re.compile(r'^Hello +timer +due +in +(?P<hello>(\S+))$')
             m = p10.match(line)
             if m:
                 sub_dict['hello_timer'] = str(m.groupdict()['hello'])
@@ -2101,9 +2148,6 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
             # Simple authentication
             # Simple authentication, using keychain test (ready)
             # Simple authentication, using keychain test (not ready)
-            p11_1 = re.compile(r'^Simple +authentication(?:, +using +keychain'
-                                ' +(?P<keychain>(\S+))'
-                                ' +\((not +ready|ready)\))?$')
             m = p11_1.match(line)
             if m:
                 if 'authentication' not in sub_dict:
@@ -2121,8 +2165,6 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                     continue
 
             # Message-digest authentication, using default key id 0
-            p11_2 = re.compile(r'^Message-digest +authentication, +using'
-                                ' +default key id +(?P<key>(\S+))$')
             m = p11_2.match(line)
             if m:
                 if 'authentication' not in sub_dict:
@@ -2138,9 +2180,6 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                     continue
 
             # Number of opaque link LSAs: 0, checksum sum 0
-            p12 = re.compile(r'^Number +of +opaque +link +LSAs:'
-                              ' +(?P<count>(\d+)), +checksum +sum'
-                              ' +(?P<checksum>(\d+))$')
             m = p12.match(line)
             if m:
                 count = int(m.groupdict()['count'])
@@ -2154,10 +2193,10 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 continue
 
             # BFD is enabled
-            p13 = re.compile(r'^BFD +is +enabled$')
             m = p13.match(line)
             if m:
                 sub_dict['bfd']['enable'] = True
+                continue
 
         return ret_dict
 

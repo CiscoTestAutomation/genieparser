@@ -16,10 +16,19 @@
     * Add ShowUsers for 'show users'
 
 --------------------------------------------------------------------------------
+                                    ARP
+--------------------------------------------------------------------------------
+* NXOS
+    * Fixed ShowIpArpstatisticsVrfAll for 'show ip arp statistics'
+
+--------------------------------------------------------------------------------
                                     PLATFORM
 --------------------------------------------------------------------------------
 * IOSXE
     * Add ShowProcessesCpuPlatform for 'show processes cpu platform'
+
+* NXOS
+    * Fixed ShowInstallActive for 'show install active'
 
 
 | Module                  | Version       |
