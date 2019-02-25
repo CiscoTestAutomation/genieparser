@@ -27,6 +27,18 @@ class ShowIpRouteSchema(MetaParser):
                                 Optional('metric'): int,
                                 Optional('source_protocol'): str,
                                 Optional('source_protocol_codes'): str,
+                                Optional('mask'): str,
+                                Optional('known_via'): str,
+                                Optional('distance'): int,
+                                Optional('type'): str,
+                                Optional('net'): str,
+                                Optional('redist_via'): str,
+                                Optional('redist_via_tag'): str,
+                                Optional('update'): {
+                                    'from': str,
+                                    'interface': str,
+                                    'age': str
+                                },
                                 Optional('next_hop'): {
                                     Optional('outgoing_interface'): {
                                         Any(): {  # interface  if there is no next_hop
@@ -40,6 +52,16 @@ class ShowIpRouteSchema(MetaParser):
                                             Optional('next_hop'): str,
                                             Optional('outgoing_interface'): str,
                                             Optional('updated'): str,
+                                            Optional('age'): str,
+                                            Optional('from'): str,
+                                            Optional('metric'): str,
+                                            Optional('share_count'): str,
+                                            Optional('loading'): str,
+                                            Optional('hops'): str,
+                                            Optional('minimum_mtu'): str,
+                                            Optional('reliability'): str,
+                                            Optional('minimum_bandwidth'): str,
+                                            Optional('total_delay'): str,
                                         },
                                     },
                                 },
@@ -59,15 +81,21 @@ class ShowIpRoute(ShowIpRouteSchema):
     """Parser for :
        show ip route
        show ip route vrf <vrf>"""
-    cli_command = ['show ip route vrf {vrf}','show ip route']
+    cli_command = ['show ip route vrf {vrf}','show ip route','show ip route {route}','show ip route vrf {vrf} {route}']
 
-    def cli(self, vrf="",output=None):
+    def cli(self,vrf="",route="",output=None):
         if output is None:
-            if vrf:
+            if vrf and not route:
                 cmd = self.cli_command[0].format(vrf=vrf)
-            else:
+            elif not route  and not vrf :
                 cmd = self.cli_command[1]
                 vrf = 'default'
+            elif route and not vrf :
+                cmd = self.cli_command[2].format(route=route)
+                vrf = 'default'
+            elif route and vrf :
+                cmd = self.cli_command[3].format(route=route,vrf=vrf)
+
             out = self.device.execute(cmd)
         else:
             out = output
@@ -89,9 +117,42 @@ class ShowIpRoute(ShowIpRouteSchema):
         source_protocol_dict['bgp'] = ['B']
 
         result_dict = {}
+
+        # initial regexp pattern
+        p100 = re.compile(r'^Routing +entry +for +'
+                        '(?P<entry>(?P<ip>[\w\:\.]+)\/(?P<mask>\d+))'
+                        '(, +(?P<net>[\w\s]+))?$')
+        p200 = re.compile(r'^Known +via +\"(?P<known_via>[\w\s]+)\", +'
+                        'distance +(?P<distance>\d+), +'
+                        'metric +(?P<metric>\d+)'
+                        '(, +type +(?P<type>[\w\-\s]+)(?P<connected>, connected)?)?$')
+        p300 = re.compile(r'^Redistributing +via +(?P<redist_via>\w+) *'
+                        '(?P<redist_via_tag>\d+)?$')
+        p400 = re.compile(r'^Last +update +from +(?P<from>[\w\.]+) +'
+                        'on +(?P<interface>[\w\.\/\-]+), +'
+                        '(?P<age>[\w\.\:]+) +ago$')
+        p500 = re.compile(r'^\*? *(?P<nexthop>[\w\.]+)(, +'
+                        'from +(?P<from>[\w\.]+), +'
+                        '(?P<age>[\w\.\:]+) +ago, +'
+                        'via +(?P<interface>[\w\.\/\-]+))?$')
+        p600 = re.compile(r'^Route +metric +is +(?P<metric>\d+), +'
+                        'traffic +share +count +is +(?P<share_count>\d+)$')
+
+        p600 = re.compile(r'^Route +metric +is +(?P<metric>\d+), +'
+                          'traffic +share +count +is +(?P<share_count>\d+)$')
+        p700 = re.compile(r'^Total +delay +is +(?P<total_delay>\d+) +microseconds, '
+                          '+minimum +bandwidth +is +(?P<minimum_bandwidth>\d+) +Kbit$')
+        p800 = re.compile(r'^Reliability +(?P<reliability>[\d\/]+), +minimum +MTU +(?P<minimum_mtu>\d+) +bytes$')
+        p900 = re.compile(r'^Loading +(?P<loading>[\d\/]+), Hops +(?P<hops>\d+)$')
+
+        # initial variables
+        ret_dict = {}
+        index = 0
+
+
         for line in out.splitlines():
             if line:
-                line = line.rstrip()
+                line = line.strip()
             else:
                 continue
             next_hop = interface = updated = metrics = route_preference = ""
@@ -127,12 +188,12 @@ class ShowIpRoute(ShowIpRouteSchema):
             # O        10.2.3.0/24 [110/2] via 20.1.2.2, 06:46:59, GigabitEthernet0/1
             # i L1     22.22.22.22 [115/20] via 20.1.2.2, 06:47:04, GigabitEthernet0/1
             # D        200.1.4.1
-            p3 = re.compile(r'^\s*(?P<code>[\w]+) +(?P<code1>[\w]+)? +(?P<network>[\d\/\.]+)?'
+            p3 = re.compile(r'^\s*(?P<code>[\w\*]+) +(?P<code1>[\w]+)? +(?P<network>[\d\/\.]+)?'
                             '( +is +directly +connected,)?( +\[(?P<route_preference>[\d\/]+)\]?'
                             '( +via )?(?P<next_hop>[\d\.]+)?,)?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
             m = p3.match(line)
             if m:
-
+                active = True
                 if m.groupdict()['code']:
                     source_protocol_codes = m.groupdict()['code'].strip()
                     for key,val in source_protocol_dict.items():
@@ -421,6 +482,88 @@ class ShowIpRoute(ShowIpRouteSchema):
                             result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
                                 ['next_hop_list'][index]['outgoing_interface'] = interface
 
+                continue
+            # Routing entry for 61.0.0.0/24, 1 known subnets
+            # Routing entry for 0.0.0.0/0, supernet
+            # Routing entry for 200.1.2.0/24
+            m = p100.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}).setdefault('address_family',
+                                                                                              {}).setdefault(af, {})
+                route_dict = entry_dict.setdefault('routes', {}).setdefault(route, {})
+                route_dict.update({'route': group['ip']})
+                route_dict.update({'mask': group['mask']})
+                route_dict.update({'active': True})
+                continue
+
+            # Known via "eigrp 1", distance 130, metric 10880, type internal
+            # Known via "rip", distance 120, metric 2
+            m = p200.match(line)
+            if m:
+                group = m.groupdict()
+                route_dict.update({'distance': int(group['distance'])})
+                route_dict.update({'metric': int(group['metric'])})
+                if group['type']:
+                    route_dict.update({'type': group['type']})
+                continue
+
+            # Redistributing via rip
+            # Redistributing via eigrp 1
+            m = p300.match(line)
+            if m:
+                group = m.groupdict()
+                route_dict.update({k: v for k, v in group.items() if v})
+                continue
+
+            # Last update from 201.1.12.2 on Vlan101, 2w3d ago
+            # Last update from 201.3.12.2 on Vlan103, 00:00:12 ago
+            m = p400.match(line)
+            if m:
+                group = m.groupdict()
+                update_dict = route_dict.setdefault('update', {})
+                update_dict.update({k: v for k, v in group.items() if v})
+                continue
+
+            # * 201.1.12.2, from 201.1.12.2, 2w3d ago, via Vlan101
+            # * 18.0.1.2
+            m = p500.match(line)
+            if m:
+                group = m.groupdict()
+                index += 1
+                path_dict = route_dict.setdefault('next_hop',{}).setdefault('next_hop_list', {}).setdefault(index, {})
+                path_dict.update({'index': index})
+                path_dict.update({'next_hop': group['nexthop']})
+                path_dict.update({'age': group['age']})
+                path_dict.update({'from': group['from']})
+                path_dict.update({'outgoing_interface': group['interface']})
+                continue
+
+            # Route metric is 10880, traffic share count is 1
+            m = p600.match(line)
+            if m:
+                group = m.groupdict()
+                path_dict.update({k: v for k, v in group.items() if v})
+
+            # Total delay is 20 microseconds, minimum bandwidth is 1000000 Kbit
+            m = p700.match(line)
+            if m:
+                group = m.groupdict()
+                path_dict.update({k: v for k, v in group.items() if v})
+                continue
+
+            # Reliability 255/255, minimum MTU 1500 bytes
+            m = p800.match(line)
+            if m:
+                group = m.groupdict()
+                path_dict.update({k: v for k, v in group.items() if v})
+                continue
+
+            # Loading 1/255, Hops 1
+            m = p900.match(line)
+            if m:
+                group = m.groupdict()
+                path_dict.update({k: v for k, v in group.items() if v})
                 continue
         return result_dict
 
@@ -785,7 +928,7 @@ class ShowIpRouteWordSchema(MetaParser):
     schema = {
         'entry': {
             Any(): {
-                'ip': str,                
+                'ip': str,
                 'mask': str,
                 'known_via': str,
                 'distance': str,
@@ -975,7 +1118,7 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
 #  schema for show ip route <WORD>
 # ====================================================
 class ShowIpv6RouteWordSchema(MetaParser):
-    """Schema for show ip route <WORD>"""
+    """Schema for show ipv6 route <WORD>"""
     schema = {
         'entry': {
             Any(): {

@@ -114,12 +114,13 @@ class ShowIpRoute(ShowIpRouteSchema):
             # B   2001:2:2:2::2/128 [200/0]
             # B        15.1.1.0 [200/2219] via 1.1.1.1, 01:40:40
             # B        46.2.2.0 [20/2219] via 20.4.6.6 (VRF2), 01:36:26
-            p2 = re.compile(r'^\s*(?P<protocol>[a-zA-Z0-9\+\%]+)'
+            # B*    0.0.0.0/0 [20/0] via 100.1.1.1, 4d22h
+            p2 = re.compile(r'^\s*(?P<protocol>[a-zA-Z0-9\+\%]+)\*?'
                              ' +(?P<ip_add>[0-9\.\:\/]+)'
                              ' +(\[(?P<preference>[0-9]+)/(?P<metric>[0-9]+)\])'
                              '( +via +(?P<next_hop>[0-9\.]+)(\s)?(\()?'
                              '(?P<table>[a-zA-Z0-9]+)?(\)?),'
-                             ' +(?P<up_time>[0-9\:]+))?$')
+                             ' +(?P<up_time>[\w\:]+))?$')
             m = p2.match(line)
             if m:
                 protocol = str(m.groupdict()['protocol'])

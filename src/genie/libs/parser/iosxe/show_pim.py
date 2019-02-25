@@ -348,7 +348,6 @@ class ShowIpv6PimBsrCandidateRp(ShowIpv6PimBsrCandidateRpSchema):
         else:
             out = output
 
-
         # initial variables
         ret_dict = {}
         af_name = 'ipv6'
@@ -361,7 +360,7 @@ class ShowIpv6PimBsrCandidateRp(ShowIpv6PimBsrCandidateRpSchema):
             # PIMv2 C-RP information
             # Candidate RP: 2001:3:3:3::3 SM
             p1 = re.compile(r'^\s*Candidate RP: +(?P<candidate_rp_address>[\w\:\.]+)'
-                            ' +(?P<mode>\w+)$')
+                            '( +(?P<mode>\w+))?$')
             m = p1.match(line)
             if m:
                 address = m.groupdict()['candidate_rp_address']
@@ -369,7 +368,8 @@ class ShowIpv6PimBsrCandidateRp(ShowIpv6PimBsrCandidateRpSchema):
                 continue
 
             # Priority 5, Holdtime 150
-            p2 = re.compile(r'^\s*Priority +(?P<priority>\d+)'
+            # All Learnt Scoped Zones, Priority 192, Holdtime 150
+            p2 = re.compile(r'^\s*(All +Learnt +Scoped +Zones, )?Priority +(?P<priority>\d+)'
                             ', +Holdtime +(?P<holdtime>\d+)$')
             m = p2.match(line)
             if m:

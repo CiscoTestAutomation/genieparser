@@ -83,7 +83,7 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
 
         # initial regexp pattern
         p1 = re.compile(r'^Switch +is +in +(?P<mode>[\w\-]+) +mode( *\(IEEE +Standard\))?$')
-        p2 = re.compile(r'^Root +bridge +for: +(?P<root_bridge_for>[\w\-\,\s]+)$')
+        p2 = re.compile(r'^Root +bridge +for: +(?P<root_bridge_for>[\w\-\,\s]+).?$')
         p3 = re.compile(r'^(?P<name>[\w\s]+) +is +(?P<value>disabled|enabled)$')
         p4 = re.compile(r'^(?P<id>(?!Total)\w+) +(?P<blocking>\d+) +(?P<listening>\d+)'
                          ' +(?P<learning>\d+) +(?P<forwarding>\d+) +(?P<stp_active>\d+)$')
@@ -97,6 +97,7 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
         key_map = {'EtherChannel misconfig guard': 'etherchannel_misconfig_guard',
                    'Extended system ID': 'extended_system_id',
                    'Portfast Default': 'portfast_default',
+                   'PortFast BPDU Guard': 'bpdu_guard',
                    'PortFast BPDU Guard Default': 'bpdu_guard',
                    'Portfast Edge BPDU Guard Default': 'bpdu_guard',
                    'Portfast BPDU Filter Default': 'bpdu_filter',
@@ -125,6 +126,7 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
             # EtherChannel misconfig guard is disabled
             # Extended system ID           is enabled
             # Portfast Default             is disabled
+            # PortFast BPDU Guard Default  is disabled
             # PortFast BPDU Guard Default  is disabled  or  Portfast Edge BPDU Guard Default
             # Portfast BPDU Filter Default is disabled  or  Portfast Edge BPDU Filter Default
             # Loopguard Default            is disabled

@@ -59,9 +59,11 @@ class ShowIpOspfSchema(MetaParser):
                                         Optional('warn_only'): bool},
                                     Optional('connected'): 
                                         {'enabled': bool,
+                                        Optional('subnets'): str,
                                         Optional('metric'): int},
                                     Optional('static'): 
                                         {'enabled': bool,
+                                        Optional('subnets'): str,
                                         Optional('metric'): int},
                                     Optional('bgp'): 
                                         {'bgp_id': int,
@@ -71,6 +73,7 @@ class ShowIpOspfSchema(MetaParser):
                                         },
                                     Optional('isis'): 
                                         {'isis_pid': str,
+                                        Optional('subnets'): str,
                                         Optional('metric'): int}},
                                 Optional('database_control'): 
                                     {'max_lsa': int},
@@ -360,6 +363,7 @@ class ShowIpOspf(ShowIpOspfSchema):
                 continue
 
             # Redistributing External Routes from,
+            #  Maximum limit of redistributed prefixes 5000 (warning-only)
             p12_1 = re.compile(r'^Redistributing +External +Routes +from,$')
             m = p12_1.match(line)
             if m:
@@ -382,8 +386,22 @@ class ShowIpOspf(ShowIpOspfSchema):
                 if m.groupdict()['metric']:
                     sub_dict['redistribution'][the_type]['metric'] = \
                         int(m.groupdict()['metric'])
-                    continue
+                continue
 
+            # connected, includes subnets in redistribution
+            # static, includes subnets in redistribution
+            # isis, includes subnets in redistribution
+            p12_2_1 = re.compile(r'^(?P<type>(connected|static|isis))'
+                                 ', +includes +(?P<redist>(subnets)) +in +redistribution')
+            m = p12_2_1.match(line)
+            if m:
+                the_type = str(m.groupdict()['type'])
+                if the_type not in sub_dict['redistribution']:
+                    sub_dict['redistribution'][the_type] = {}
+                sub_dict['redistribution'][the_type]['enabled'] = True
+
+                sub_dict['redistribution'][the_type]['subnets'] = m.groupdict()['redist']
+                continue
             # bgp 100 with metric mapped to 111
             # isis 10 with metric mapped to 3333
             # bgp 100 with metric mapped to 100, includes subnets in redistribution, nssa areas only
