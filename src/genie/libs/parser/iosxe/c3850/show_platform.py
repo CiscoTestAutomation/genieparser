@@ -2,7 +2,6 @@
 
 """
 import re
-import logging
 
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, \
@@ -12,13 +11,6 @@ from genie.metaparser.util.schemaengine import Schema, \
                                          And, \
                                          Default, \
                                          Use
-try:
-    import genie.parsergen
-except (ImportError, OSError):
-    pass
-
-# import parser utils
-from genie.libs.parser.utils.common import Common
 
 
 class ShowEnvironmentAllSchema(MetaParser):
