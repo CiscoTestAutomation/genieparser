@@ -17,7 +17,7 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   ShowPlatformSoftwareSlotActiveMonitorMem, \
                                                   ShowProcessesCpuSorted, \
                                                   ShowProcessesCpuPlatform, \
-                                                  ShowEnv, \
+                                                  ShowEnvironment, \
                                                   ShowProcessesCpu
 
 from genie.libs.parser.iosxe.c3850.show_platform import ShowEnvironmentAll as ShowEnvironmentAllc3850
@@ -2192,7 +2192,7 @@ class test_show_switch(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
 
 
-class test_show_environment_all(unittest.TestCase):
+class test_show_environment_all_c3850(unittest.TestCase):
     dev1 = Device(name='empty')
     dev_c3850 = Device(name='c3850')
     empty_output = {'execute.return_value': '      '}
@@ -4620,9 +4620,9 @@ class test_show_processes_cpu_platform(unittest.TestCase):
             parsed_output = cpu_platform_obj.parse()
 
 
-class test_show_env(unittest.TestCase):
+class test_show_env_asr1k(unittest.TestCase):
 
-    dev = Device(name='c3850')
+    dev = Device(name='asr1k')
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {'day': '2',
@@ -5384,14 +5384,14 @@ class test_show_env(unittest.TestCase):
 
     def test_empty(self):
         self.dev = Mock(**self.empty_output)
-        obj = ShowEnv(device=self.dev)
+        obj = ShowEnvironment(device=self.dev)
         with self.assertRaises(SchemaEmptyParserError):
             parsered_output = obj.parse()
 
     def test_golden(self):
         self.maxDiff = None
         self.dev = Mock(**self.golden_output)
-        obj = ShowEnv(device=self.dev)
+        obj = ShowEnvironment(device=self.dev)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 

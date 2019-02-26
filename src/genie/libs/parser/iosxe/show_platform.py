@@ -2422,8 +2422,8 @@ class ShowEnvAll(ShowEnvAllSchema):
 
         return ret_dict
 
-class ShowEnvSchema(MetaParser):
-    """Schema for show env"""
+class ShowEnvironmentSchema(MetaParser):
+    """Schema for show environment"""
 
     schema = {
         Optional('source'): str,
@@ -2452,10 +2452,10 @@ class ShowEnvSchema(MetaParser):
     }
 
 
-class ShowEnv(ShowEnvSchema):
-    """Parser for show env"""
+class ShowEnvironment(ShowEnvironmentSchema):
+    """Parser for show environment"""
 
-    cli_command = 'show env'
+    cli_command = 'show environment'
 
     def cli(self, output=None):
         if output is None:
