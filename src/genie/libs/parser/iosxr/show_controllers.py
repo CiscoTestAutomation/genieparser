@@ -19,6 +19,7 @@ class ShowControllersFiaDiagshellL2show(MetaParser):
     """Parser class for show controllers fia diagshell 0 'l2 show' """
 
     # TODO schema
+    cli_command = 'show controllers fia diagshell {diagshell_unit} "l2 show" location {location}'
 
     def __init__(self, diagshell_unit=0, location='all', **kwargs):
         self.diagshell_unit = diagshell_unit
@@ -26,7 +27,7 @@ class ShowControllersFiaDiagshellL2show(MetaParser):
         super().__init__(**kwargs)
 
     def cli(self):
-        cmd = 'show controllers fia diagshell {diagshell_unit} "l2 show" location {location}'.format(
+        cmd = self.cli_command.format(
             diagshell_unit=self.diagshell_unit,
             location=self.location)
 
