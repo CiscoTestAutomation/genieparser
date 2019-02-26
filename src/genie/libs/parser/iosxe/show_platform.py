@@ -20,8 +20,6 @@ except (ImportError, OSError):
 # import parser utils
 from genie.libs.parser.utils.common import Common
 
-logger = logging.getLogger(__name__)
-
 
 class ShowVersionSchema(MetaParser):
     """Schema for show version"""
@@ -1668,6 +1666,7 @@ class ShowSwitch(ShowSwitchSchema, ShowSwitchDetail):
     cli_command = 'show switch'
 
 
+# c3850
 class ShowEnvironmentAllSchema(MetaParser):
     """Schema for show environment all"""
     schema = {
@@ -2054,10 +2053,22 @@ class ShowProcessesCpuSortedSchema(MetaParser):
                   show processes cpu sorted | include <WORD>
                   show processes cpu sorted <1min|5min|5sec> | include <WORD>"""
     schema = {
-        'five_sec_cpu_interrupts': int,
-        'five_sec_cpu_total': int,
-        'one_min_cpu': int,
-        'five_min_cpu': int,
+        Optional('source'): str,
+        Optional('zone'): str,
+        Optional('day'): str,
+        Optional('week_day'): str,
+        Optional('month'): str,
+        Optional('year'): str,
+        Optional('time'): str,
+        Optional('load'): {
+            Optional('five_secs'): str,
+            Optional('one_min'): str,
+            Optional('five_min'): str,
+        },
+        Optional('five_sec_cpu_interrupts'): int,
+        Optional('five_sec_cpu_total'): int,
+        Optional('one_min_cpu'): int,
+        Optional('five_min_cpu'): int,
         Optional('zero_cpu_processes'): list,
         Optional('nonzero_cpu_processes'): list,
         Optional('sort'): {
@@ -2084,7 +2095,7 @@ class ShowProcessesCpuSorted(ShowProcessesCpuSortedSchema):
 
     cli_command = 'show processes cpu sorted'
 
-    def cli(self, sort_time='', key_word='',output=None):
+    def cli(self, sort_time='', key_word='', output=None):
 
         assert sort_time in ['1min', '5min', '5sec', ''], "Not one from 1min 5min 5sec"
         if output is None:
@@ -2114,6 +2125,15 @@ class ShowProcessesCpuSorted(ShowProcessesCpuSortedSchema):
                          '(?P<five_min_cpu>[\d\.]+)\% +(?P<tty>\d+) +'
                          '(?P<process>[\w\-\/\s]+)$')
 
+        p3 = re.compile(r'^Load +for +five +secs: +(?P<five_secs>[\d\/\%]+); '
+                         '+one +minute: +(?P<one_min>[\d\%]+); '
+                         '+five +minutes: +(?P<five_min>[\d\%]+)$')
+
+        p4 = re.compile(r'^Time +source +is +(?P<source>\w+),'
+                         ' +(?P<time>[\d\:\.]+) +(?P<zone>\w+)'
+                         ' +(?P<week_day>\w+) +(?P<month>\w+) +'
+                         '(?P<day>\d+) +(?P<year>\d+)$')
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -2142,6 +2162,22 @@ class ShowProcessesCpuSorted(ShowProcessesCpuSortedSchema):
                 else:
                     zero_cpu_processes.append(group['process'])
                 continue
+
+            # Load for five secs: 1%/0%; one minute: 2%; five minutes: 3%
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('load', {})
+                ret_dict['load'].update({k:str(v) for k, v in group.items()})
+                continue
+
+            # Time source is NTP, 18:56:04.554 JST Mon Oct 17 2016
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({k:str(v) for k, v in group.items()})
+                continue
+
         ret_dict.setdefault('zero_cpu_processes', zero_cpu_processes) if zero_cpu_processes else None
         ret_dict.setdefault('nonzero_cpu_processes', nonzero_cpu_processes) if nonzero_cpu_processes else None
         return ret_dict
@@ -2287,6 +2323,7 @@ class ShowProcessesCpuPlatform(ShowProcessesCpuPlatformSchema):
         return ret_dict
 
 
+# ASR1K
 class ShowEnvAllSchema(MetaParser):
     """Schema for show env all
                   show env all | include <WORD>"""
@@ -2355,7 +2392,6 @@ class ShowEnvAll(ShowEnvAllSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                import pdb; pdb.set_trace
                 ret_dict.setdefault('load', {})
                 ret_dict['load'].update({k:str(v) for k, v in group.items()})
                 continue
@@ -2402,10 +2438,12 @@ class ShowEnvSchema(MetaParser):
             'one_min': str,
             'five_min': str,
         },
-        Optional('sensor_list'): str,
+        'critical_larams': int,
+        'major_alarms': int,
+        'minor_alarms': int,
         'sensor': {
             Any(): {
-                'location': str,
+                'slot': str,
                 'state': str,
                 'reading': str,
                 'sensor_name': str,
@@ -2438,140 +2476,74 @@ class ShowEnv(ShowEnvSchema):
                          ' +(?P<week_day>\w+) +(?P<month>\w+) +'
                          '(?P<day>\d+) +(?P<year>\d+)$')
 
-        # p3 = re.compile(r'^Sensor +List: +(?P<sensor_list>[\w\s]+)$')
+        p3 = re.compile(r'^Number +of +Critical +alarms: +(?P<critic_larams>\d+)$')
 
-        # p4 = re.compile(r'^(?P<sensor_name>([\w\d\:]+ [\w]+( [\w]+)?)) +(?P<location>[\w\d]+)'
-        #                  ' +(?P<state>([\w]+ [\w]+ [\d%]+)|([\w]+)) +(?P<reading>[\w\d\s]+)$')
+        p4 = re.compile(r'^Number +of +Major +alarms: +(?P<maj_alarms>\d+)$')
 
-        # for line in out.splitlines():
-        #     line = line.strip()
+        p5 = re.compile(r'^Number +of +Minor +alarms: +(?P<min_alarms>\d+)$')
 
-        #     # Load for five secs: 1%/0%; one minute: 2%; five minutes: 3%
-        #     m = p1.match(line)
-        #     if m:
-        #         group = m.groupdict()
-        #         import pdb; pdb.set_trace
-        #         ret_dict.setdefault('load', {})
-        #         ret_dict['load'].update({k:str(v) for k, v in group.items()})
-        #         continue
+        p6 = re.compile(r'^(?P<slot>([\w\d]+)) +(?P<sensor_name>([\w\d\:]+ [\w]+( [\w]+)?))'
+                         ' +(?P<state>([\w]+ [\w]+ [\d%]+)|([\w]+)) +(?P<reading>[\w\d\s]+)$')
 
-        #     # Time source is NTP, 18:56:04.554 JST Mon Oct 17 2016
-        #     m = p2.match(line)
-        #     if m:
-        #         group = m.groupdict()
-        #         ret_dict.update({k:str(v) for k, v in group.items()})
-        #         continue
+        for line in out.splitlines():
+            line = line.strip()
 
-        #     # Sensor List:  Environmental Monitoring
-        #     m = p3.match(line)
-        #     if m:
-        #         group = m.groupdict()
-        #         ret_dict.update({k:str(v) for k, v in group.items()})
+            # Load for five secs: 1%/0%; one minute: 2%; five minutes: 3%
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('load', {})
+                ret_dict['load'].update({k:str(v) for k, v in group.items()})
+                continue
 
-        #     # Sensor           Location          State             Reading
-        #     # V1: VMA          0                 Normal            1098 mV
-        #     # V1: VMB          0                 Normal            1201 mV
-        #     m = p4.match(line)
-        #     if m:
-        #         group = m.groupdict()
-        #         sensor_name = group['sensor_name']
-        #         fin_dict = ret_dict.setdefault('sensor', {}).setdefault(sensor_name, {})
-        #         fin_dict.update({k:str(v) for k, v in group.items()})
-        #         continue
+            # Time source is NTP, 18:56:04.554 JST Mon Oct 17 2016
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({k:str(v) for k, v in group.items()})
+                continue
 
-        # return ret_dict
+            # Number of Critical alarms:  0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['critical_larams'] = int(group['critic_larams'])
+                continue
 
-class ShowProcessesCpuSchema(MetaParser):
-    """Schema for show processes cpu
-                  show processes cpu <1min|5min|5sec>
-                  show processes cpu | include <WORD>
-                  show processes cpu <1min|5min|5sec> | include <WORD>"""
-    schema = {
-        'five_sec_cpu_interrupts': int,
-        'five_sec_cpu_total': int,
-        'one_min_cpu': int,
-        'five_min_cpu': int,
-        Optional('zero_cpu_processes'): list,
-        Optional('nonzero_cpu_processes'): list,
-        Optional('sort'): {
-            Any(): {
-                'runtime': int,
-                'invoked': int,
-                'usecs': int,
-                'five_sec_cpu': float,
-                'one_min_cpu': float,
-                'five_min_cpu': float,
-                'tty': int,
-                'pid': int,
-                'process': str
-            }
-        }
-    }
+            # Number of Major alarms:     0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['major_alarms'] = int(group['maj_alarms'])
+                continue
+
+            # Number of Minor alarms:     0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['minor_alarms'] = int(group['min_alarms'])
+                continue
+
+            # Slot    Sensor       Current State       Reading
+            # ----    ------       -------------       -------
+            #  F0    Temp: Pop Die    Normal           43 Celsius
+            #  P6    Temp: FC PWM1    Fan Speed 60%    26 Celsius
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                sensor_name = group['sensor_name']
+                fin_dict = ret_dict.setdefault('sensor', {}).setdefault(sensor_name, {})
+                fin_dict.update({k:str(v) for k, v in group.items()})
+                continue
+
+        return ret_dict
 
 
-class ShowProcessesCpu(ShowProcessesCpuSchema):
+class ShowProcessesCpu(ShowProcessesCpuSorted):
     """Parser for show processes cpu
-                  show processes cpu <1min|5min|5sec>
-                  show processes cpu | include <WORD>
-                  show processes cpu <1min|5min|5sec> | include <WORD>"""
+                  show processes cpu | include <WORD>"""
 
     cli_command = 'show processes cpu'
 
-#     def cli(self, key_word='',output=None):
-
-#         if output is None:
-#             if key_word:
-#                 self.cli_command += ' | include ' + key_word
-
-#             out = self.device.execute(self.cli_command)
-#         else:
-#             out = output
-
-#         # initial return dictionary
-#         ret_dict = {}
-#         zero_cpu_processes = []
-#         nonzero_cpu_processes = []
-#         index = 0
-
-#         # initial regexp pattern
-#         p1 = re.compile(r'^CPU +utilization +for +five +seconds: +'
-#                          '(?P<five_sec_cpu_total>\d+)\%\/(?P<five_sec_cpu_interrupts>\d+)\%;'
-#                          ' +one +minute: +(?P<one_min_cpu>\d+)\%;'
-#                          ' +five +minutes: +(?P<five_min_cpu>\d+)\%$')
-
-#         p2 = re.compile(r'^(?P<pid>\d+) +(?P<runtime>\d+) +(?P<invoked>\d+) +(?P<usecs>\d+) +'
-#                          '(?P<five_sec_cpu>[\d\.]+)\% +(?P<one_min_cpu>[\d\.]+)\% +'
-#                          '(?P<five_min_cpu>[\d\.]+)\% +(?P<tty>\d+) +'
-#                          '(?P<process>[\w\-\/\s]+)$')
-
-#         for line in out.splitlines():
-#             line = line.strip()
-
-#             # CPU utilization for five seconds: 5%/1%; one minute: 6%; five minutes: 6%
-#             m = p1.match(line)
-#             if m:
-#                 ret_dict.update({k:int(v) for k, v in m.groupdict().items()})
-#                 continue
-
-#             # PID Runtime(ms)     Invoked      uSecs   5Sec   1Min   5Min TTY Process 
-#             # 539     6061647    89951558         67  0.31%  0.36%  0.38%   0 HSRP Common 
-#             m = p2.match(line)
-#             if m:
-#                 group = m.groupdict()
-#                 index += 1
-#                 sort_dict = ret_dict.setdefault('sort', {}).setdefault(index, {})
-#                 sort_dict['process'] = group['process']
-#                 sort_dict.update({k:int(v) for k, v in group.items() 
-#                     if k in ['runtime', 'invoked', 'usecs', 'tty', 'pid']})
-#                 sort_dict.update({k:float(v) for k, v in group.items() 
-#                     if k in ['five_sec_cpu', 'one_min_cpu', 'five_min_cpu']})
-#                 if float(group['five_sec_cpu']) or \
-#                    float(group['one_min_cpu']) or \
-#                    float(group['five_min_cpu']):
-#                     nonzero_cpu_processes.append(group['process'])
-#                 else:
-#                     zero_cpu_processes.append(group['process'])
-#                 continue
-#         ret_dict.setdefault('zero_cpu_processes', zero_cpu_processes) if zero_cpu_processes else None
-#         ret_dict.setdefault('nonzero_cpu_processes', nonzero_cpu_processes) if nonzero_cpu_processes else None
-#         return ret_dict
+    def cli(self, key_word='', output=None):
+        return(super().cli(key_word=key_word, output=output))

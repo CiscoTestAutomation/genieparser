@@ -264,7 +264,6 @@ class test_show_ntp_associations_detail(unittest.TestCase):
 
     golden_parsed_output = {}
 
-
     golden_output = {'execute.return_value': '''
         Router#show ntp associations detail
         Load for five secs: 1%/0%; one minute: 3%; five minutes: 4%
