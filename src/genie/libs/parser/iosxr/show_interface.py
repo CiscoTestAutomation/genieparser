@@ -570,6 +570,13 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
 
         interface_detail_dict = {}
 
+        # it's supported for NCS500 that output has non utf8 character
+        if "non_utf-8_character b'" in out:
+            out = out.split("non_utf-8_character b'")[1]
+
+        elif "b'" in out:
+            out = out.split("b'")[1]
+
         for line in out.splitlines():
             line = line.strip()
 

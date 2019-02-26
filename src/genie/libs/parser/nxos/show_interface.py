@@ -1730,11 +1730,12 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
                 ['access_vlan_mode'] = access_vlan_mode
                 continue
 
-            #Trunking Native Mode VLAN: 1 (default)
+            # Trunking Native Mode VLAN: 1 (default)
             # Trunking Native Mode VLAN: 200 (VLAN0200)
+            # Trunking Native Mode VLAN: 3967 (Vlan not created)
             p6 = re.compile(r'^\s*Trunking *Native *Mode *VLAN:'
                              ' *(?P<native_vlan>[0-9]+)'
-                             ' *\((?P<native_vlan_mode>[a-zA-Z0-9\-\_]+)\)$')
+                             ' *\((?P<native_vlan_mode>[a-zA-Z0-9\-\_\s]+)\)$')
             m = p6.match(line)
             if m:
                 native_vlan = int(m.groupdict()['native_vlan'])
@@ -2311,10 +2312,11 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
     # Purpose is to make sure the parser always return the output
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
+    cli_command = 'show ip interface brief'
 
     def __init__ (self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.cmd = 'show ip interface brief'.format()
+        self.cmd = self.cli_command
 
     def cli(self, output=None):
         ''' parsing mechanism: cli
@@ -2390,10 +2392,11 @@ class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBrief):
     # Purpose is to make sure the parser always return the output
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
+    cli_command = 'show ip interface brief | include Vlan'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.cmd = 'show ip interface brief | include Vlan'.format()
+        self.cmd = self.cli_command
 
 
 # =================================
@@ -2450,10 +2453,11 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
     # Purpose is to make sure the parser always return the output
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
+    cli_command = 'show interface brief'
 
     def __init__ (self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.cmd = 'show interface brief'.format()
+        self.cmd = self.cli_command
 
     def cli(self, output=None):
         ''' parsing mechanism: cli
