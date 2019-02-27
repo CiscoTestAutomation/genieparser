@@ -348,10 +348,11 @@ class test_show_ip_protocols(unittest.TestCase):
                                 'distance': 120,
                                 'maximum_paths': 4,
                                 'output_delay': 50,
-                                'number_of_redistributed_metric': 3,
+                                'default_redistribution_metric': 3,
                                 'network': ['10.0.0.0'],
                                 'send_version': 2,
                                 'receive_version': 2,
+                                'automatic_network_summarization_in_effect': False,
                                 'outgoing_update_filterlist':{
                                     'outgoing_update_filterlist': "not set"
                                 },
@@ -451,12 +452,14 @@ Routing Protocol is "rip"
                                     'outgoing_update_filterlist': "150",
                                     'interfaces': {
                                         'GigabitEthernet2.100': {
-                                            'filtered_per_user': 150,
-                                            'default_is_set': False
+                                            'filter': "150",
+                                            'per_user': True,
+                                            'default': "not set",
                                         },
                                         'GigabitEthernet3.100': {
-                                            'filtered_per_user': 130,
-                                            'default_is_set': False
+                                            'filter': "130",
+                                            'per_user': True,
+                                            'default': "not set",
                                         },
                                     },
                                 },
@@ -464,8 +467,9 @@ Routing Protocol is "rip"
                                     'incoming_update_filterlist': "100",
                                     'interfaces': {
                                         "GigabitEthernet2.100": {
-                                            'filtered_per_user': 13,
-                                            'default_is_set': False
+                                            'filter': "13",
+                                            'per_user': True,
+                                            'default': "not set",
                                         },
                                     },
                                 },

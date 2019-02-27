@@ -561,12 +561,14 @@ class ShowIpProtocolsSectionRipSchema(MetaParser):
                                 Optional('offset_list'): int,
                                 Optional('send_version'): int,
                                 Optional('receive_version'): int,
+                                Optional('automatic_network_summarization_in_effect'): bool,
                                 Optional('outgoing_update_filterlist'):{
                                     Optional('outgoing_update_filterlist') :str,
                                     Optional('interfaces'):{
                                         Any():{
-                                            'filtered_per_user': int,
-                                            'default_is_set': bool
+                                            'filter': str,
+                                            'per_user': bool,
+                                            'default': str,
                                         },
                                     },
                                 },
@@ -574,15 +576,16 @@ class ShowIpProtocolsSectionRipSchema(MetaParser):
                                     Optional('incoming_update_filterlist'): str,
                                     Optional('interfaces'): {
                                         Any(): {
-                                            'filtered_per_user': int,
-                                            'default_is_set': bool
+                                            'filter': str,
+                                            'per_user': bool,
+                                            'default': str,
                                         },
                                     },
                                 },
                                 Optional('number_of_incoming_route_added'): int,
                                 Optional('list_number'): int,
                                 Optional('network'): list,
-                                Optional('number_of_redistributed_metric'): int,
+                                Optional('default_redistribution_metric'): int,
                                 Optional('redistribute'): {
                                     Any(): {
                                         Optional(Any()): {
@@ -679,7 +682,8 @@ class ShowIpProtocolsSectionRip(ShowIpProtocolsSectionRipSchema):
 
         # GigabitEthernet3.100 filtered by 130 (per-user), default is not set
         p4_1 = re.compile(
-            r'^\s*(?P<interface>\S+) +filtered +by +(?P<filtered_per_user>\d+) +\(per-user\), +default +is +(?P<default_set>[\w\s]+)$')
+            r'^\s*(?P<interface>\S+) +filtered +by +(?P<filter>\d+)( +\((?P<per_user>\S+)\))?,'
+            ' +default +is +(?P<default>[\w\s]+)$')
         # Incoming routes will have 10 added to metric if on list 21
         p5 = re.compile(r'^\s*Incoming +routes +will +have +(?P<number_of_incoming_route_added>\d+) +added +to +metric'
                          ' +if +on +list +(?P<list_number>\d+)$')
@@ -692,7 +696,7 @@ class ShowIpProtocolsSectionRip(ShowIpProtocolsSectionRipSchema):
                         ', +flushed +after +(?P<flush_interval>\d+)$')
 
         # Default redistribution metric is 3
-        p8 = re.compile(r'^\s*Default redistribution metric is +(?P<number_of_redistributed_metric>\d+)$')
+        p8 = re.compile(r'^\s*Default redistribution metric is +(?P<default_redistribution_metric>\d+)$')
 
         # Redistributing: connected, static, rip
         p9 = re.compile(r'^\s*Redistributing: +(?P<Redistributing>[\w\,\s]+)$')
@@ -710,12 +714,13 @@ class ShowIpProtocolsSectionRip(ShowIpProtocolsSectionRipSchema):
         #   Interface                           Send  Recv  Triggered RIP  Key-chain
         #   GigabitEthernet3.100                2     2          No        1
         #   GigabitEthernet3.100                1 2   2          No        none
-        p13 = re.compile(r'^\s*(?P<interface>[\w\.]+) +(?P<send>\d+)((?P<space>\s{1})(?P<send2>\d+))?'
-                         ' +(?P<receive>\d+)((?P<space2>\s{1})(?P<receive2>\d+))?'
+        p13 = re.compile(r'^\s*(?P<interface>[\S]+) +(?P<send>\d( \d)?)'
+                         ' +(?P<receive>\d( \d)?)?'
                          ' +(?P<triggered_rip>(Yes|No)) +(?P<key_chain>\w+)$')
 
         # Automatic network summarization is not in effect
-        p14 = re.compile(r'^\s*Automatic +network +summarization +is +not +in +effect$')
+        # Automatic network summarization is in effect
+        p14 = re.compile(r'^\s*Automatic +network +summarization +is( +(?P<automatic_network_summarization>not)+)? +in +effect$')
 
         # Address Summarization:
         p15 = re.compile(r'^\s*Address +Summarization:$')
@@ -804,12 +809,17 @@ class ShowIpProtocolsSectionRip(ShowIpProtocolsSectionRipSchema):
 
                 group = m.groupdict()
                 interface_out_dict = temp_dict.setdefault('interfaces', {}).setdefault(group['interface'], {})
-                interface_out_dict.update({"filtered_per_user": int(group['filtered_per_user'])})
-                if group['default_set']:
-                    default_set = False
+                interface_out_dict.update({"filter": group['filter']})
+                if group['per_user']:
+                    if 'per-user' in group['per_user']:
+                        per_user = True
+                    else:
+                        per_user = False
                 else:
-                    default_set = True
-                interface_out_dict.update({"default_is_set": default_set})
+                    per_user = False
+
+                interface_out_dict.update({"per_user": per_user})
+                interface_out_dict.update({"default": group['default']})
                 continue
 
             # Incoming routes will have 10 added to metric if on list 21
@@ -843,7 +853,7 @@ class ShowIpProtocolsSectionRip(ShowIpProtocolsSectionRipSchema):
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                rip_dict.update({'number_of_redistributed_metric': int(group['number_of_redistributed_metric'])})
+                rip_dict.update({'default_redistribution_metric': int(group['default_redistribution_metric'])})
                 continue
 
             # Redistributing: connected, static, rip
@@ -862,21 +872,26 @@ class ShowIpProtocolsSectionRip(ShowIpProtocolsSectionRipSchema):
                 rip_dict.update({k: int(v) for k, v in group.items() if v })
                 continue
 
+            # Automatic network summarization is not in effect
+            # Automatic network summarization is in effect
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                if group['automatic_network_summarization']:
+                    automatic_network_summarization = False
+                else:
+                    automatic_network_summarization = True
+                rip_dict.update({'automatic_network_summarization_in_effect': automatic_network_summarization})
+                continue
+
             #   Interface                           Send  Recv  Triggered RIP  Key-chain
             #   GigabitEthernet3.100                2     2          No        1
             m = p13.match(line)
             if m:
                 group = m.groupdict()
                 interface_dict = rip_dict.setdefault('interfaces', {}).setdefault(group['interface'], {})
-                if group['send2']:
-                    send = '{} {}'.format(group['send'],group['send2'])
-                else:
-                    send = group['send']
-
-                if group['receive2']:
-                    receive = '{} {}'.format(group['receive'],group['receive2'])
-                else:
-                    receive = group['receive']
+                send = group['send']
+                receive = group['receive']
 
                 interface_dict.update({'send_version': send})
                 interface_dict.update({'receive_version': receive})
