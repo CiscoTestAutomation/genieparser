@@ -82,8 +82,6 @@ class CreateApiDoc(object):
             self.output[cli] = {}
 
         output = self.output[cli]
-        output['module_name'] = mod.__name__.rsplit('.', 1)[-1]
-        output['class'] = parser.__name__
         for token in tokens:
             if token not in output:
                 output[token] = {}
@@ -91,8 +89,11 @@ class CreateApiDoc(object):
             if token not in self.output['tokens']:
                 self.output['tokens'].append(token)
 
+        output['module_name'] = mod.__name__.rsplit('.', 1)[-1]
+        output['class'] = parser.__name__
         output['doc'] = parser.__doc__
         output['schema'] = format(parser.schema)
+        output['uid'] = cli.replace(' ','_').replace('{', '').replace('}', '').replace('|', '_')
         line = inspect.getsourcelines(parser)[-1]
 
         temp_url = mod.__file__.replace(os.path.join(
