@@ -93,7 +93,7 @@ class CreateApiDoc(object):
         output['class'] = parser.__name__
         output['doc'] = parser.__doc__
         output['schema'] = format(parser.schema)
-        output['uid'] = cli.replace(' ','_').replace('{', '').replace('}', '')
+        output['uid'] = cli.replace(' ','_').replace('{', '').replace('}', '').replace('|', '_')
         line = inspect.getsourcelines(parser)[-1]
 
         temp_url = mod.__file__.replace(os.path.join(
