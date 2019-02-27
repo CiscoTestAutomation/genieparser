@@ -32,7 +32,14 @@ def get_parser(command, device):
     kwargs = {}
     if command in parser_data:
         # Then just return it
-        return _find_parser_cls(device, parser_data[command]), kwargs
+        lookup = Lookup.from_device(device, packages={'parser':parser})
+        # Check if all the tokens exists; take the farthest one
+        data = parser_data[command]
+        for token in lookup._tokens:
+            if token in data:
+                data = data[token]
+
+        return _find_parser_cls(device, data), kwargs
     else:
         # Regex world!
         try:
