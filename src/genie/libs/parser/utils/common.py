@@ -43,7 +43,7 @@ def get_parser(command, device):
     else:
         # Regex world!
         try:
-            found_data, kwargs = _find_command(command, parser_data)
+            found_data, kwargs = _find_command(command, parser_data, device)
         except SyntaxError:
             # Could not find a match
             raise Exception("Could not find parser for "
@@ -51,7 +51,7 @@ def get_parser(command, device):
 
         return _find_parser_cls(device, found_data), kwargs
 
-def _find_command(command, data):
+def _find_command(command, data, device):
     for key in data:
         if not '{' in key:
             # Disregard the non regex ones
@@ -69,7 +69,13 @@ def _find_command(command, data):
         match = re.match(reg, command)
         if match:
             # Found a match!
-            return (data[key], match.groupdict())
+            lookup = Lookup.from_device(device, packages={'parser':parser})
+            # Check if all the tokens exists; take the farthest one
+            ret_data = data[key]
+            for token in lookup._tokens:
+                if token in ret_data:
+                    ret_data = ret_data[token]
+            return (ret_data, match.groupdict())
     raise SyntaxError('Could not find a parser match')
 
 def _find_parser_cls(device, data):
