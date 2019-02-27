@@ -4213,7 +4213,6 @@ class test_show_processes_cpu_platform(unittest.TestCase):
         cpu_platform_obj = ShowProcessesCpuPlatform(device=self.device)
         parsed_output = cpu_platform_obj.parse()
         self.maxDiff = None
-        import pdb; pdb.set_trace()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_empty(self):
@@ -4447,20 +4446,60 @@ class test_show_env(unittest.TestCase):
                                         'state': 'Normal'},
                             'V3: VMD': {'reading': '996 mV',
                                         'state': 'Normal'}}},
-          'P0': {'sensor': {'': {'reading': 'Normal           26 Celsius',
-                                 'state': 'Temp3'}}},
-          'P1': {'sensor': {'': {'reading': 'Normal           26 Celsius',
-                                 'state': 'Temp3'}}},
-          'P2': {'sensor': {'': {'reading': 'Normal           26 Celsius',
-                                 'state': 'Temp3'}}},
-          'P3': {'sensor': {'': {'reading': 'Normal           26 Celsius',
-                                 'state': 'Temp3'}}},
-          'P6': {'sensor': {'': {'reading': 'Normal           38 Celsius',
-                                 'state': 'Temp1'},
+          'P0': {'sensor': {'Iin': {'reading': '1 A', 'state': 'Normal'},
+                            'Iout': {'reading': '15 A', 'state': 'Normal'},
+                            'Temp1': {'reading': '26 Celsius',
+                                      'state': 'Normal'},
+                            'Temp2': {'reading': '31 Celsius',
+                                      'state': 'Normal'},
+                            'Temp3': {'reading': '26 Celsius',
+                                      'state': 'Normal'},
+                            'Vin': {'reading': '101 V AC',
+                                    'state': 'Normal'},
+                            'Vout': {'reading': '12 V AC',
+                                     'state': 'Normal'}}},
+          'P1': {'sensor': {'Iin': {'reading': '2 A', 'state': 'Normal'},
+                            'Iout': {'reading': '16 A', 'state': 'Normal'},
+                            'Temp1': {'reading': '26 Celsius',
+                                      'state': 'Normal'},
+                            'Temp2': {'reading': '33 Celsius',
+                                      'state': 'Normal'},
+                            'Temp3': {'reading': '26 Celsius',
+                                      'state': 'Normal'},
+                            'Vin': {'reading': '101 V AC',
+                                    'state': 'Normal'},
+                            'Vout': {'reading': '12 V AC',
+                                     'state': 'Normal'}}},
+          'P2': {'sensor': {'Iin': {'reading': '1 A', 'state': 'Normal'},
+                            'Iout': {'reading': '13 A', 'state': 'Normal'},
+                            'Temp1': {'reading': '26 Celsius',
+                                      'state': 'Normal'},
+                            'Temp2': {'reading': '31 Celsius',
+                                      'state': 'Normal'},
+                            'Temp3': {'reading': '26 Celsius',
+                                      'state': 'Normal'},
+                            'Vin': {'reading': '101 V AC',
+                                    'state': 'Normal'},
+                            'Vout': {'reading': '12 V AC',
+                                     'state': 'Normal'}}},
+          'P3': {'sensor': {'Iin': {'reading': '1 A', 'state': 'Normal'},
+                            'Iout': {'reading': '13 A', 'state': 'Normal'},
+                            'Temp1': {'reading': '26 Celsius',
+                                      'state': 'Normal'},
+                            'Temp2': {'reading': '31 Celsius',
+                                      'state': 'Normal'},
+                            'Temp3': {'reading': '26 Celsius',
+                                      'state': 'Normal'},
+                            'Vin': {'reading': '100 V AC',
+                                    'state': 'Normal'},
+                            'Vout': {'reading': '12 V AC',
+                                     'state': 'Normal'}}},
+          'P6': {'sensor': {'Temp1': {'reading': '38 Celsius',
+                                      'state': 'Normal'},
                             'Temp: FC PWM1': {'reading': '26 Celsius',
                                               'state': 'Fan Speed 60%'}}},
-          'P7': {'sensor': {'': {'reading': 'Normal           37 Celsius',
-                                 'state': 'Temp1'},
+          'P7': {'sensor': {'Temp1': {'reading': '37 Celsius',
+                                      'state': 'Normal'},
                             'Temp: FC PWM1': {'reading': '26 Celsius',
                                               'state': 'Fan Speed 60%'}}},
           'R0': {'sensor': {'Temp: C2D C0': {'reading': '35 Celsius',
@@ -4571,10 +4610,8 @@ class test_show_env(unittest.TestCase):
                                         'state': 'Normal'},
                             'V2: VMF': {'reading': '1000 mV',
                                         'state': 'Normal'}}},
-          'Slot': {'sensor': {'': {'reading': 'Current State       '
-                                              'Reading',
-                                   'state': 'Sensor'}}}}}
-
+          'Slot': {'sensor': {'Sensor': {'reading': 'State       Reading',
+                                         'state': 'Current'}}}}}
 
     golden_output = {'execute.return_value': '''\
         Router#show environment
@@ -4796,7 +4833,6 @@ class test_show_env(unittest.TestCase):
         self.dev = Mock(**self.golden_output)
         obj = ShowEnvironment(device=self.dev)
         parsed_output = obj.parse()
-        import pdb; pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 class test_show_processes_cpu(unittest.TestCase):

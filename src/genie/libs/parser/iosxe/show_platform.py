@@ -2313,7 +2313,7 @@ class ShowEnvironment(ShowEnvironmentSchema):
 
         p3 = re.compile(r'^Number +of +Minor +alarms: +(?P<min_alarms>\d+)$')
 
-        p4 = re.compile(r'^(?P<slot>([\w\d]+)) +(?P<sensor_name>([\w\d\:]+( [\w]+( [\w]+)?))?)'
+        p4 = re.compile(r'^(?P<slot>([\w\d]+)) +(?P<sensor_name>([\w\d\:]+( [\w]+( [\w]+)?)?))'
                          ' +(?P<state>([\w]+ [\w]+ [\d%]+)|([\w]+)) +(?P<reading>[\w\d\s]+)$')
 
         for line in out.splitlines():
@@ -2345,6 +2345,7 @@ class ShowEnvironment(ShowEnvironmentSchema):
             #  F0    Temp: Pop Die    Normal           43 Celsius
             #  P6    Temp: FC PWM1    Fan Speed 60%    26 Celsius
             #  P0    Iin              Normal           1 A
+            #  P0    Vin              Normal           101 V AC
             m = p4.match(line)
             if m:
                 group = m.groupdict()

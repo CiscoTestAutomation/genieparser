@@ -6,7 +6,8 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
 
-from genie.libs.parser.iosxe.asr1k.show_platform import ShowEnvironmentAll as ShowEnvironmentAllasr1k
+from genie.libs.parser.iosxe.asr1k.show_platform import ShowEnvironmentAllIncludeLocation,\
+                                                        ShowEnvironmentAll as ShowEnvironmentAllasr1k
 
 
 class test_show_env_asr1k(unittest.TestCase):
@@ -322,15 +323,6 @@ class test_show_env_asr1k(unittest.TestCase):
     '''
     }
 
-    golden_parsed_output_1 = {}
-
-    golden_output_1 = {'execute.return_value': '''\
-        Router#### FAN 7 OUT ###show env all | in P6 | P7
-         Temp1            P6                Normal            40 Celsius
-         Temp: FC PWM1    P6                Fan Speed 45%     25 Celsius
-    '''
-    }
-
     def test_empty(self):
         self.dev = Mock(**self.empty_output)
         obj = ShowEnvironmentAllasr1k(device=self.dev)
@@ -344,13 +336,42 @@ class test_show_env_asr1k(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
-    # def test_golden_1(self):
-    #     self.maxDiff = None
-    #     self.dev = Mock(**self.golden_output_1)
-    #     obj = ShowEnvironmentAllasr1k(device=self.dev)
-    #     parsed_output = obj.parse(key_word='P6 | P7')
-    #     import pdb; pdb.set_trace()
-    #     self.assertEqual(parsed_output, self.golden_parsed_output_1)
+class test_show_env_asr1k_include(unittest.TestCase):
+
+    dev = Device(name='asr1k')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {'sensor_list': {'Environmental Monitoring': {'sensor': {'Temp1': {'location': 'P6',
+                                                                   'reading': '40 '
+                                                                              'Celsius',
+                                                                   'state': 'Normal'},
+                                                         'Temp: FC PWM1': {'location': 'P6',
+                                                                           'reading': '25 '
+                                                                                      'Celsius',
+                                                                           'state': 'Fan '
+                                                                                    'Speed '
+                                                                                    '45%'}}}}}
+
+    golden_output = {'execute.return_value': '''\
+        Router#### FAN 7 OUT ###show env all | include Sensor | in P6 | P7
+        Sensor List:  Environmental Monitoring 
+         Temp1            P6                Normal            40 Celsius
+         Temp: FC PWM1    P6                Fan Speed 45%     25 Celsius
+    '''
+    }
+
+    def test_empty(self):
+        self.dev = Mock(**self.empty_output)
+        obj = ShowEnvironmentAllIncludeLocation(device=self.dev)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsered_output = obj.parse(key_word='P6 | P7')
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output)
+        obj = ShowEnvironmentAllIncludeLocation(device=self.dev)
+        parsed_output = obj.parse(key_word='P6 | P7')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
 if __name__ == '__main__':
