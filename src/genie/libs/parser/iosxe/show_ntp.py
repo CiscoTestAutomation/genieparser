@@ -421,13 +421,14 @@ class ShowNtpAssociationsDetailSchema(MetaParser):
                                             'maxpoll': int,
                                             Optional('port'): str,
                                             'version': int,
-                                            'reach': int,
+                                            'reach': str,
                                             Optional('unreach'): str,
                                             'poll': str,
                                             Optional('now'): str,
                                             'offset': str,
                                             'delay': str,
                                             'dispersion': str,
+                                            'jitter': str,
                                             'originate_time': str,
                                             'receive_time': str,
                                             'transmit_time': str,
@@ -442,6 +443,7 @@ class ShowNtpAssociationsDetailSchema(MetaParser):
                                             'assoc_id': int,
                                             'assoc_name': str,
                                             'filterror': str,
+                                            'filtoffset': str,
                                             'ntp_statistics': {
                                                 'packet_sent': int,
                                                 Optional('packet_sent_fail'): int,
@@ -467,18 +469,6 @@ class ShowNtpAssociationsDetailSchema(MetaParser):
                 }
             },
         },
-        'source': str,
-        'zone': str,
-        'day': str,
-        'week_day': str,
-        'month': str,
-        'year': str,
-        'time': str,
-        'load': {
-            'five_secs': str,
-            'one_min': str,
-            'five_min': str,
-        }
     }
 
 # ==============================================
@@ -498,75 +488,64 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
         # initial variables
         ret_dict = {}
 
-        # Load for five secs: 1%/0%; one minute: 2%; five minutes: 3%
-        p1 = re.compile(r'^Load +for +five +secs: +(?P<five_secs>[\d\/\%]+); '
-                         '+one +minute: +(?P<one_min>[\d\%]+); '
-                         '+five +minutes: +(?P<five_min>[\d\%]+)$')
-
-        # Time source is NTP, 18:56:04.554 JST Mon Oct 17 2016
-        p2 = re.compile(r'^Time +source +is +(?P<source>\w+),'
-                         ' +(?P<time>[\d\:\.]+) +(?P<zone>\w+)'
-                         ' +(?P<week_day>\w+) +(?P<month>\w+) +'
-                         '(?P<day>\d+) +(?P<year>\d+)$')
-
-        # 202.239.165.120 configured, ipv4, authenticated, insane, invalid, stratum 
-        # 106.162.197.252 configured, ipv4, authenticated, our_master, sane, valid, stratum 2
-        p3 = re.compile(r'^(?P<address>[\w\.\:]+) +(?P<configured>\w+),'
+        # 192.168.255.254 configured, ipv4, authenticated, insane, invalid, stratum 
+        # 172.16.255.254 configured, ipv4, authenticated, our_master, sane, valid, stratum 2
+        p1 = re.compile(r'^(?P<address>[\w\.\:]+) +(?P<configured>\w+),'
                          ' +(?P<ip_type>\w+), +(?P<authenticated>\w+),'
                          '( +(?P<our_master>\w+),)? +(?P<insane>\w+), +(?P<invalid>\w+),'
                          ' +stratum +(?P<stratum>\d+)$')
 
         # ref ID 106.162.197.252, time DBAB02D6.9E354130 (16:08:06.618 JST Fri Oct 14 2016)
-        p4 = re.compile(r'^ref +ID +(?P<refid>[\w\.]+), +time +(?P<input_time>[\w\:\s\(\)\.]+)$')
+        p2 = re.compile(r'^ref +ID +(?P<refid>[\w\.]+), +time +(?P<input_time>[\w\:\s\(\)\.]+)$')
 
         # our mode client, peer mode server, our poll intvl 512, peer poll intvl 512
         # our mode client, peer mode server, our poll intvl 512, peer poll intvl 512
-        p5 = re.compile(r'^our +mode +(?P<mode>\w+), +peer +mode +(?P<peer_mode>\w+),'
+        p3 = re.compile(r'^our +mode +(?P<mode>\w+), +peer +mode +(?P<peer_mode>\w+),'
                          ' +our +poll +intvl +(?P<poll_intv>\d+),'
                          ' +peer +poll +intvl +(?P<peer_poll_intv>\d+)$')
 
         # root delay 0.00 msec, root disp 14.52, reach 377, sync dist 28.40
-        p6 = re.compile(r'^root +delay +(?P<root_delay>[\w\s\d\.]+), +root +disp +(?P<root_disp>[\d\.]+),'
-                         ' +reach +(?P<reach>\d+),'
+        p4 = re.compile(r'^root +delay +(?P<root_delay>[\d\.]+) +msec, +root +disp +(?P<root_disp>[\d\.]+),'
+                         ' +reach +(?P<reach>[\d\.]+),'
                          ' +sync +dist +(?P<sync_dist>[\d\.]+)$')
 
         # delay 0.00 msec, offset 0.0000 msec, dispersion 7.23, jitter 0.97 
         # delay 0.00 msec, offset -1.0000 msec, dispersion 5.64, jitter 0.97 msec
-        p7 = re.compile(r'^delay +(?P<delay>[\w\s\d\.]+), +offset +(?P<offset>[\w\s\d\.\-]+),'
+        p5 = re.compile(r'^delay +(?P<delay>[\d\.]+) +msec, +offset +(?P<offset>[\d\.\-]+) +msec,'
                          ' +dispersion +(?P<dispersion>[\d\.]+),'
-                         ' +jitter +(?P<jitter>[\w\s\d\.]+)$')
+                         ' +jitter +(?P<jitter>[\d\.]+)( +msec)?$')
 
         # precision 2**10, version 4
-        p8 = re.compile(r'^precision +(?P<precision>[\d\*]+), +version +(?P<version>\d+)$')
+        p6 = re.compile(r'^precision +(?P<precision>[\d\*]+), +version +(?P<version>\d+)$')
 
-        # assoc id 62758, assoc name 202.239.165.120
-        p9 = re.compile(r'^assoc +id +(?P<assoc_id>\d+), +assoc +name +(?P<assoc_name>[\d\.]+)$')
+        # assoc id 62758, assoc name 192.168.255.254
+        p7 = re.compile(r'^assoc +id +(?P<assoc_id>\d+), +assoc +name +(?P<assoc_name>[\d\.]+)$')
 
         # assoc in packets 27, assoc out packets 27, assoc error packets 0
-        p10 = re.compile(r'^assoc +in +packets +(?P<assoc_in_packets>\d+),'
+        p8 = re.compile(r'^assoc +in +packets +(?P<assoc_in_packets>\d+),'
                          ' +assoc +out +packets +(?P<assoc_out_packets>\d+),'
                          ' +assoc +error +packets +(?P<assoc_error_packets>[\d\.]+)$')
 
         # org time 00000000.00000000 (09:00:00.000 JST Mon Jan 1 1900)
-        p11 = re.compile(r'^org +time +(?P<org_time>[\w\:\s\(\)\.]+)$')
+        p9 = re.compile(r'^org +time +(?P<org_time>[\w\:\s\(\)\.]+)$')
 
         # rec time DBAB046D.A8B43B28 (16:14:53.659 JST Fri Oct 14 2016)
-        p12 = re.compile(r'^rec +time +(?P<rec_time>[\w\:\s\(\)\.]+)$')
+        p10 = re.compile(r'^rec +time +(?P<rec_time>[\w\:\s\(\)\.]+)$')
 
         # xmt time DBAB046D.A8B43B28 (16:14:53.659 JST Fri Oct 14 2016)
-        p13 = re.compile(r'^xmt +time +(?P<xmt_time>[\w\:\s\(\)\.]+)$')
+        p11 = re.compile(r'^xmt +time +(?P<xmt_time>[\w\:\s\(\)\.]+)$')
 
         # filtdelay =     0.00    1.00    0.00    0.00    0.00    0.00    0.00    0.00
-        p14 = re.compile(r'^filtdelay +\= +(?P<filtdelay>[\d\s\.]+)$')
+        p12 = re.compile(r'^filtdelay +\= +(?P<filtdelay>[\d\s\.]+)$')
 
         # filtoffset =    0.00    0.50    0.00    1.00    1.00    1.00    1.00    1.00
-        p15 = re.compile(r'^filtoffset +\= +(?P<filtoffset>[\d\s\.]+)$')
+        p13 = re.compile(r'^filtoffset +\= +(?P<filtoffset>[\d\s\.\-]+)$')
 
         # filterror =     1.95    5.89    9.88   13.89   15.84   17.79   19.74   21.76
-        p16 = re.compile(r'^filterror +\= +(?P<filterror>[\d\s\.]+)$')
+        p14 = re.compile(r'^filterror +\= +(?P<filterror>[\d\s\.]+)$')
 
         # minpoll = 6, maxpoll = 10
-        p17 = re.compile(r'^minpoll +\= +(?P<minpoll>\d+), +maxpoll +\= +(?P<maxpoll>\d+)$')
+        p15 = re.compile(r'^minpoll +\= +(?P<minpoll>\d+), +maxpoll +\= +(?P<maxpoll>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -574,18 +553,6 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
                 continue
 
             m = p1.match(line)
-            if m:
-                group = m.groupdict()
-                ret_dict.setdefault('load', {})
-                ret_dict['load'].update({k:str(v) for k, v in group.items()})
-                continue
-
-            m = p2.match(line)
-            if m:
-                group = m.groupdict()
-                ret_dict.update({k:str(v) for k, v in group.items()})
-
-            m = p3.match(line)
             if m:
                 group = m.groupdict()
                 address = group['address']
@@ -612,13 +579,13 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
                 else:
                     master = False
 
-            m = p4.match(line)
+            m = p2.match(line)
             if m:
                 group = m.groupdict()
                 refid = group['refid']
                 input_time = group['input_time']
 
-            m = p5.match(line)
+            m = p3.match(line)
             if m:
                 group = m.groupdict()
                 local_mode = group['mode']
@@ -656,6 +623,8 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
                     [local_mode]['isconfigured'][str(isconfigured)]['poll'] = group['poll_intv']
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
                     [local_mode]['isconfigured'][str(isconfigured)]['vrf'] = 'default'
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['local_mode'] = local_mode
 
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
                     [local_mode]['isconfigured'][str(isconfigured)].setdefault('peer', {}).setdefault(refid, {}).\
@@ -668,21 +637,21 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
                     [local_mode]['isconfigured'][str(isconfigured)]['peer'][refid]['local_mode']\
                     [peer_mode]['local_mode'] = peer_mode
 
-            m = p6.match(line)
+            m = p4.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
-                    [local_mode]['isconfigured'][str(isconfigured)]['reach'] = int(group['reach'])
+                    [local_mode]['isconfigured'][str(isconfigured)]['reach'] = group['reach']
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
                     [local_mode]['isconfigured'][str(isconfigured)]['sync_dist'] = group['sync_dist']
 
-            m = p7.match(line)
+            m = p5.match(line)
             if m:
-                group = m.groupdict()
+                group = m.groupdict() 
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
                     [local_mode]['isconfigured'][str(isconfigured)].update({k:str(v) for k, v in group.items()})
 
-            m = p8.match(line)
+            m = p6.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
@@ -690,7 +659,7 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
                     [local_mode]['isconfigured'][str(isconfigured)]['version'] = int(group['version'])
 
-            m = p9.match(line)
+            m = p7.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
@@ -698,7 +667,7 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
                     [local_mode]['isconfigured'][str(isconfigured)]['assoc_id'] = int(group['assoc_id'])
 
-            m = p10.match(line)
+            m = p8.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
@@ -713,43 +682,43 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
                     [local_mode]['isconfigured'][str(isconfigured)]['ntp_statistics']['packet_dropped'] = \
                     int(group['assoc_error_packets'])
 
-            m = p11.match(line)
+            m = p9.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
                     [local_mode]['isconfigured'][str(isconfigured)]['originate_time'] = group['org_time']
 
-            m = p12.match(line)
+            m = p10.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
                     [local_mode]['isconfigured'][str(isconfigured)]['receive_time'] = group['rec_time']
 
-            m = p13.match(line)
+            m = p11.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
                     [local_mode]['isconfigured'][str(isconfigured)]['transmit_time'] = group['xmt_time']
 
-            m = p14.match(line)
+            m = p12.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
                     [local_mode]['isconfigured'][str(isconfigured)]['delay'] = group['filtdelay']
 
-            m = p15.match(line)
+            m = p13.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
-                    [local_mode]['isconfigured'][str(isconfigured)]['offset'] = group['filtoffset']
+                    [local_mode]['isconfigured'][str(isconfigured)]['filtoffset'] = group['filtoffset']
 
-            m = p16.match(line)
+            m = p14.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
                     [local_mode]['isconfigured'][str(isconfigured)]['filterror'] = group['filterror']
 
-            m = p17.match(line)
+            m = p15.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\

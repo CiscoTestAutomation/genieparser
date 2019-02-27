@@ -21,9 +21,9 @@ class test_show_clock(unittest.TestCase):
         'month': 'Oct',
         'source': 'NTP',
         'time': '18:56:04.554',
-        'week_day': 'Mon',
+        'day_of_week': 'Mon',
         'year': '2016',
-        'zone': 'JST'}
+        'timezone': 'JST'}
 
     golden_output = {'execute.return_value': '''\
         Router#show clock

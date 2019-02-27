@@ -17,9 +17,9 @@ class ShowClockSchema(MetaParser):
     """Schema for show clock"""
     schema = {
         'source': str,
-        'zone': str,
+        'timezone': str,
         'day': str,
-        'week_day': str,
+        'day_of_week': str,
         'month': str,
         'year': str,
         'time': str,
@@ -51,8 +51,8 @@ class ShowClock(ShowClockSchema):
                          '+five +minutes: +(?P<five_min>[\d\%]+)$')
 
         p2 = re.compile(r'^Time +source +is +(?P<source>\w+),'
-                         ' +(?P<time>[\d\:\.]+) +(?P<zone>\w+)'
-                         ' +(?P<week_day>\w+) +(?P<month>\w+) +'
+                         ' +(?P<time>[\d\:\.]+) +(?P<timezone>\w+)'
+                         ' +(?P<day_of_week>\w+) +(?P<month>\w+) +'
                          '(?P<day>\d+) +(?P<year>\d+)$')
 
         for line in out.splitlines():
@@ -62,7 +62,6 @@ class ShowClock(ShowClockSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                import pdb; pdb.set_trace
                 ret_dict.setdefault('load', {})
                 ret_dict['load'].update({k:str(v) for k, v in group.items()})
                 continue
