@@ -360,8 +360,10 @@ class test_show_ip_protocols(unittest.TestCase):
                                     'incoming_update_filterlist': "not set"
 
                                 },
-                                'number_of_incoming_route_added': 10,
-                                'list_number': 21,
+                                'incoming_route_metric':{
+                                    "list": "21",
+                                    "added": "10"
+                                },
                                 'redistribute': {
                                     'connected': {},
                                     'static': {},

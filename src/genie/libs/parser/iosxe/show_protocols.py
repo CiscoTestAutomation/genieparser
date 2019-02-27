@@ -582,8 +582,10 @@ class ShowIpProtocolsSectionRipSchema(MetaParser):
                                         },
                                     },
                                 },
-                                Optional('number_of_incoming_route_added'): int,
-                                Optional('list_number'): int,
+                                Optional('incoming_route_metric'): {
+                                    'added': str,
+                                    'list': str,
+                                },
                                 Optional('network'): list,
                                 Optional('default_redistribution_metric'): int,
                                 Optional('redistribute'): {
@@ -685,8 +687,8 @@ class ShowIpProtocolsSectionRip(ShowIpProtocolsSectionRipSchema):
             r'^\s*(?P<interface>\S+) +filtered +by +(?P<filter>\d+)( +\((?P<per_user>\S+)\))?,'
             ' +default +is +(?P<default>[\w\s]+)$')
         # Incoming routes will have 10 added to metric if on list 21
-        p5 = re.compile(r'^\s*Incoming +routes +will +have +(?P<number_of_incoming_route_added>\d+) +added +to +metric'
-                         ' +if +on +list +(?P<list_number>\d+)$')
+        p5 = re.compile(r'^\s*Incoming +routes +will +have +(?P<added>\S+) +added +to +metric'
+                         ' +if +on +list +(?P<list>\S+)$')
 
         # Sending updates every 10 seconds, next due in 8 seconds
         p6 = re.compile(r'^\s*Sending +updates every +(?P<update_interval>\d+) +seconds, +next +due +in (?P<next_update>\d+) +seconds$')
@@ -826,7 +828,8 @@ class ShowIpProtocolsSectionRip(ShowIpProtocolsSectionRipSchema):
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                rip_dict.update({k: int(v) for k, v in group.items() if v})
+                incoming_route_dict = rip_dict.setdefault('incoming_route_metric', {})
+                incoming_route_dict.update({k: v for k, v in group.items() if v})
                 continue
 
             # Sending updates every 10 seconds, next due in 8 seconds
