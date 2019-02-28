@@ -16,18 +16,12 @@ from genie.metaparser.util.schemaengine import Schema, \
 class ShowClockSchema(MetaParser):
     """Schema for show clock"""
     schema = {
-        'source': str,
         'timezone': str,
         'day': str,
         'day_of_week': str,
         'month': str,
         'year': str,
         'time': str,
-        'load': {
-            'five_secs': str,
-            'one_min': str,
-            'five_min': str,
-        }
     }
 
 
@@ -46,28 +40,15 @@ class ShowClock(ShowClockSchema):
         ret_dict = {}
 
         # initial regexp pattern
-        p1 = re.compile(r'^Load +for +five +secs: +(?P<five_secs>[\d\/\%]+); '
-                         '+one +minute: +(?P<one_min>[\d\%]+); '
-                         '+five +minutes: +(?P<five_min>[\d\%]+)$')
-
-        p2 = re.compile(r'^Time +source +is +(?P<source>\w+),'
-                         ' +(?P<time>[\d\:\.]+) +(?P<timezone>\w+)'
+        p1 = re.compile(r'^(?P<time>[\d\:\.]+) +(?P<timezone>\w+)'
                          ' +(?P<day_of_week>\w+) +(?P<month>\w+) +'
                          '(?P<day>\d+) +(?P<year>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
 
-            # Load for five secs: 1%/0%; one minute: 2%; five minutes: 3%
+            # 18:56:04.554 JST Mon Oct 17 2016
             m = p1.match(line)
-            if m:
-                group = m.groupdict()
-                ret_dict.setdefault('load', {})
-                ret_dict['load'].update({k:str(v) for k, v in group.items()})
-                continue
-
-            # Time source is NTP, 18:56:04.554 JST Mon Oct 17 2016
-            m = p2.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict.update({k:str(v) for k, v in group.items()})

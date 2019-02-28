@@ -430,7 +430,7 @@ class ShowNtpAssociationsDetailSchema(MetaParser):
                                             'offset_msec': str,
                                             'delay_msec': str,
                                             'dispersion': str,
-                                            'jitter': str,
+                                            'jitter_msec': str,
                                             'originate_time': str,
                                             'receive_time': str,
                                             'transmit_time': str,
@@ -516,7 +516,7 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
         # delay 0.00 msec, offset -1.0000 msec, dispersion 5.64, jitter 0.97 msec
         p5 = re.compile(r'^delay +(?P<delay_msec>[\d\.]+) +msec, +offset +(?P<offset_msec>[\d\.\-]+) +msec,'
                          ' +dispersion +(?P<dispersion>[\d\.]+),'
-                         ' +jitter +(?P<jitter>[\d\.]+)( +msec)?$')
+                         ' +jitter +(?P<jitter_msec>[\d\.]+)( +msec)?$')
 
         # precision 2**10, version 4
         p6 = re.compile(r'^precision +(?P<precision>[\d\*]+), +version +(?P<version>\d+)$')

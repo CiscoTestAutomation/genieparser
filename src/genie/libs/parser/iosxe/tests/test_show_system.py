@@ -14,12 +14,7 @@ class test_show_clock(unittest.TestCase):
 
     golden_parsed_output = {
         'day': '17',
-        'load': {
-            'five_min': '3%',
-            'five_secs': '1%/0%',
-            'one_min': '2%'},
         'month': 'Oct',
-        'source': 'NTP',
         'time': '18:56:04.554',
         'day_of_week': 'Mon',
         'year': '2016',
