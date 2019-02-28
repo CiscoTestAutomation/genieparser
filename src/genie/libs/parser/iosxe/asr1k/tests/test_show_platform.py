@@ -353,7 +353,7 @@ class test_show_env_asr1k_include(unittest.TestCase):
                                                                                     '45%'}}}}}
 
     golden_output = {'execute.return_value': '''\
-        Router#### FAN 7 OUT ###show env all | include Sensor | in P6 | P7
+        Router#### FAN 7 OUT ###show env all | include Sensor | P6 | P7
         Sensor List:  Environmental Monitoring 
          Temp1            P6                Normal            40 Celsius
          Temp: FC PWM1    P6                Fan Speed 45%     25 Celsius

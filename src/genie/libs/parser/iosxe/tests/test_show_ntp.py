@@ -266,15 +266,16 @@ class test_show_ntp_associations_detail(unittest.TestCase):
                                                                                                                          'assoc_id': 62756,
                                                                                                                          'assoc_name': '172.16.255.254',
                                                                                                                          'authentication': 'authenticated',
-                                                                                                                         'delay': '1.00    '
-                                                                                                                                  '1.00    '
-                                                                                                                                  '1.00    '
-                                                                                                                                  '1.00    '
-                                                                                                                                  '0.00    '
-                                                                                                                                  '1.00    '
-                                                                                                                                  '1.00    '
-                                                                                                                                  '0.00',
+                                                                                                                         'delay_msec': '0.00',
                                                                                                                          'dispersion': '5.64',
+                                                                                                                         'filtdelay': '1.00    '
+                                                                                                                                      '1.00    '
+                                                                                                                                      '1.00    '
+                                                                                                                                      '1.00    '
+                                                                                                                                      '0.00    '
+                                                                                                                                      '1.00    '
+                                                                                                                                      '1.00    '
+                                                                                                                                      '0.00',
                                                                                                                          'filterror': '1.95    '
                                                                                                                                       '2.88    '
                                                                                                                                       '3.81    '
@@ -308,7 +309,7 @@ class test_show_ntp_associations_detail(unittest.TestCase):
                                                                                                                          'ntp_statistics': {'packet_dropped': 0,
                                                                                                                                             'packet_received': 38,
                                                                                                                                             'packet_sent': 50},
-                                                                                                                         'offset': '-1.0000',
+                                                                                                                         'offset_msec': '-1.0000',
                                                                                                                          'originate_time': '00000000.00000000 '
                                                                                                                                            '(09:00:00.000 '
                                                                                                                                            'JST '
@@ -330,6 +331,8 @@ class test_show_ntp_associations_detail(unittest.TestCase):
                                                                                                                                          '14 '
                                                                                                                                          '2016)',
                                                                                                                          'refid': '172.16.255.254',
+                                                                                                                         'root_delay_msec': '0.00',
+                                                                                                                         'root_disp': '2.18',
                                                                                                                          'sane': True,
                                                                                                                          'stratum': 2,
                                                                                                                          'sync_dist': '9.47',
@@ -347,15 +350,16 @@ class test_show_ntp_associations_detail(unittest.TestCase):
                                                                                                                           'assoc_id': 62758,
                                                                                                                           'assoc_name': '192.168.255.254',
                                                                                                                           'authentication': 'authenticated',
-                                                                                                                          'delay': '0.00    '
-                                                                                                                                   '1.00    '
-                                                                                                                                   '0.00    '
-                                                                                                                                   '0.00    '
-                                                                                                                                   '0.00    '
-                                                                                                                                   '0.00    '
-                                                                                                                                   '0.00    '
-                                                                                                                                   '0.00',
+                                                                                                                          'delay_msec': '0.00',
                                                                                                                           'dispersion': '7.23',
+                                                                                                                          'filtdelay': '0.00    '
+                                                                                                                                       '1.00    '
+                                                                                                                                       '0.00    '
+                                                                                                                                       '0.00    '
+                                                                                                                                       '0.00    '
+                                                                                                                                       '0.00    '
+                                                                                                                                       '0.00    '
+                                                                                                                                       '0.00',
                                                                                                                           'filterror': '1.95    '
                                                                                                                                        '5.89    '
                                                                                                                                        '9.88   '
@@ -389,7 +393,7 @@ class test_show_ntp_associations_detail(unittest.TestCase):
                                                                                                                           'ntp_statistics': {'packet_dropped': 0,
                                                                                                                                              'packet_received': 27,
                                                                                                                                              'packet_sent': 27},
-                                                                                                                          'offset': '0.0000',
+                                                                                                                          'offset_msec': '0.0000',
                                                                                                                           'originate_time': '00000000.00000000 '
                                                                                                                                             '(09:00:00.000 '
                                                                                                                                             'JST '
@@ -411,6 +415,8 @@ class test_show_ntp_associations_detail(unittest.TestCase):
                                                                                                                                           '14 '
                                                                                                                                           '2016)',
                                                                                                                           'refid': '172.16.255.254',
+                                                                                                                          'root_delay_msec': '0.00',
+                                                                                                                          'root_disp': '14.52',
                                                                                                                           'sane': False,
                                                                                                                           'stratum': 3,
                                                                                                                           'sync_dist': '28.40',

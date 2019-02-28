@@ -101,13 +101,13 @@ class ShowEnvironmentAllSchema(MetaParser):
 
 
 class ShowEnvironmentAllIncludeLocation(ShowEnvironmentAllSchema):
-    """Parser for show environment all | include Sensor | include <WORD>"""
+    """Parser for show environment all | include Sensor |<WORD>"""
 
     cli_command = 'show environment all | include Sensor'
 
     def cli(self, key_word,output=None):
         if output is None:
-            self.cli_command += ' | include ' + key_word
+            self.cli_command += ' |' + key_word
             out = self.device.execute(self.cli_command)
         else:
             out = output
