@@ -22,47 +22,7 @@ from genie.libs.parser.iosxe.show_spanning_tree import ShowSpanningTreeSummary a
                                                        ShowErrdisableRecovery as ShowErrdisableRecovery_iosxe,\
                                                        ShowSpanningTreeMstConfiguration as ShowSpanningTreeMstConfiguration_iosxe
 
-class ShowSpanningTreeSummarySchema(MetaParser):
-    """Schema for show spanning-tree summary"""
-    schema = {
-        Optional('etherchannel_misconfig_guard'): bool,
-        Optional('extended_system_id'): bool,
-        Optional('portfast_default'): bool,
-        'bpdu_guard': bool,
-        Optional('bpdu_filter'): bool,
-        Optional('bridge_assurance'): bool,
-        Optional('loop_guard'): bool,
-        'uplink_fast': bool,
-        'backbone_fast': bool,
-        Optional('root_bridge_for'): str,
-        Optional('pvst_simulation'): bool,
-        Optional("configured_pathcost"): {
-            'method': str,
-            Optional('operational_value'): str,
-        },
-        Optional('mode'): {
-            Any(): {  # mstp, pvst, rapid_pvst
-                Any(): {   # <mst_domain>,  <pvst_id>
-                    'blocking': int,
-                    'listening': int,
-                    'learning': int,
-                    'forwarding': int,
-                    'stp_active': int,
-                }
-            }
-        },
-        'total_statistics': {
-            'blockings': int,
-            'listenings': int,
-            'learnings': int,
-            'forwardings': int,
-            'stp_actives': int,
-            Optional('num_of_msts'): int,
-            Optional('num_of_vlans'): int,
-        }
-    }
-
-class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema,ShowSpanningTreeSummary_iosxe):
+class ShowSpanningTreeSummary(ShowSpanningTreeSummary_iosxe):
     """Parser for show show spanning-tree summary"""
     pass
 

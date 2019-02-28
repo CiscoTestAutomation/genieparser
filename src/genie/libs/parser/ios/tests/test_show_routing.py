@@ -86,7 +86,7 @@ class test_show_ip_route_ios(unittest.TestCase):
         self.device = Mock(**self.empty_output)
         obj = ShowIpRoute(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
+            parsed_output = obj.parse(route='201.4.8.0')
 
     def test_show_ip_route_with_route(self):
         self.maxDiff = None
@@ -95,7 +95,7 @@ class test_show_ip_route_ios(unittest.TestCase):
         parsed_output = obj.parse(route='201.4.8.0')
         self.assertEqual(parsed_output, self.golden_parsed_output_with_route)
 
-class test_show_ip_route(unittest.TestCase):
+class test_show_ip_route(test_show_ip_route_iosxe):
 
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
@@ -117,14 +117,6 @@ class test_show_ip_route(unittest.TestCase):
 
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output, self.golden_parsed_output_2_with_vrf)
-
-    def test_show_ip_route_3_with_route(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output_3_with_route)
-        obj = ShowIpRoute(device=self.device)
-        parsed_output = obj.parse(route='201.4.8.0')
-        self.assertEqual(parsed_output, self.golden_parsed_output_3_with_route)
-
 
 ###################################################
 # unit test for show ipv6 route updated

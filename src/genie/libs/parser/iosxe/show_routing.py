@@ -1115,7 +1115,7 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
 
 
 # ====================================================
-#  schema for show ip route <WORD>
+#  schema for show ipv6 route <WORD>
 # ====================================================
 class ShowIpv6RouteWordSchema(MetaParser):
     """Schema for show ipv6 route <WORD>"""

@@ -115,31 +115,72 @@ class test_show_ipv6_pim_bsr_election(test_show_ipv6_pim_bsr_election_iosxe):
 # ============================================
 class test_show_ipv6_pim_bsr_candidate_rp(test_show_ipv6_pim_bsr_candidate_rp_iosxe):
 
-        def test_empty(self):
-            self.device = Mock(**self.empty_output)
-            obj = ShowIpv6PimBsrCandidateRp(device=self.device)
-            with self.assertRaises(SchemaEmptyParserError):
-                parsed_output = obj.parse()
-
-        def test_golden_candidate_rp_1(self):
-            self.maxDiff = None
-            self.device = Mock(**self.golden_output_bsr_candidate_1)
-            obj = ShowIpv6PimBsrCandidateRp(device=self.device)
-            parsed_output = obj.parse(vrf='VRF1')
-            self.assertEqual(parsed_output, self.golden_parsed_output_bsr_candidate_1)
-
-        def test_golden_candidate_rp_2(self):
-            self.maxDiff = None
-            self.device = Mock(**self.golden_output_bsr_candidate_2)
-            obj = ShowIpv6PimBsrCandidateRp(device=self.device)
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpv6PimBsrCandidateRp(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
-            self.assertEqual(parsed_output, self.golden_parsed_output_candidate_2)
 
-        def test_golden_candidate_rp_3(self):
-            self.device = Mock(**self.golden_output_bsr_candidate_3)
-            obj = ShowIpv6PimBsrCandidateRp(device=self.device)
-            with self.assertRaises(SchemaEmptyParserError):
-                parsed_output = obj.parse()
+    def test_golden_candidate_rp_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_bsr_candidate_1)
+        obj = ShowIpv6PimBsrCandidateRp(device=self.device)
+        parsed_output = obj.parse(vrf='VRF1')
+        self.assertEqual(parsed_output, self.golden_parsed_output_bsr_candidate_1)
+
+    def test_golden_candidate_rp_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_bsr_candidate_2)
+        obj = ShowIpv6PimBsrCandidateRp(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_candidate_2)
+
+    def test_golden_candidate_rp_3(self):
+        self.device = Mock(**self.golden_output_bsr_candidate_3)
+        obj = ShowIpv6PimBsrCandidateRp(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+class test_show_ipv6_pim_bsr_candidate_rp(unittest.TestCase):
+    golden_output_ios = {'execute.return_value': '''
+            Device# show ipv6 pim bsr candidate-rp
+            PIMv2 C-RP information
+                Candidate RP: 10::1:1:3
+                  All Learnt Scoped Zones, Priority 192, Holdtime 150
+                  Advertisement interval 60 seconds
+                  Next advertisement in 00:00:33
+            '''}
+
+    golden_parsed_output_candidate_ios = {
+        "vrf": {
+            "default": {
+                "address_family": {
+                    "ipv6": {
+                        "rp": {
+                            "bsr": {
+                                "rp_candidate_next_advertisement": "00:00:33",
+                                "10::1:1:3": {
+                                    "holdtime": 150,
+                                    "priority": 192,
+                                    "interval": 60,
+                                    "scope": "All Learnt Scoped Zones",
+                                    "address": "10::1:1:3"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    def test_golden_candidate_rp_4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_ios)
+        obj = ShowIpv6PimBsrCandidateRp(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_candidate_ios)
+
 
 # ============================================
 # Parser for 'show ip pim bsr-router'

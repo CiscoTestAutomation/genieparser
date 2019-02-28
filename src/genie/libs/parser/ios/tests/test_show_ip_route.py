@@ -15,6 +15,38 @@ from genie.libs.parser.iosxe.tests.test_show_ip_route import test_show_ip_route 
 #                'show ipv6 route vrf <WORD> bgp'
 # =========================================
 class test_show_ip_route(test_show_ip_route_iosxe):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_ios = {'vrf':
+                             {'default':
+                                  {'address_family':
+                                       {'ipv4 unicast':
+                                            {'ip':
+                                                 {'0.0.0.0/24':
+                                                      {'nexthop':
+                                                           {'172.16.1.1':
+                                                                {'protocol':
+                                                                     {'static':
+                                                                          {'metric': '0',
+                                                                           'preference': '254',
+                                                                           'uptime': '01:40:40'}}}}}}}}}}}
+
+    golden_output_ios = {'execute.return_value': '''
+      R1#show ip route
+      Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+        D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+        N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+        E1 - OSPF external type 1, E2 - OSPF external type 2
+        i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+        ia - IS-IS inter area, * - candidate default, U - per-user static route
+        o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP
+        a - application route
+        + - replicated route, % - next hop override, p - overrides from PfR
+
+        S*       0.0.0.0 [254/0] via 172.16.1.1
+
+      '''}
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)

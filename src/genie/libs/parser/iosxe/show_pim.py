@@ -315,6 +315,7 @@ class ShowIpv6PimBsrCandidateRpSchema(MetaParser):
                                     Optional('priority'): int,
                                     Optional('mode'): str,
                                     Optional('interval'): int,
+                                    Optional('scope'): str,
                                 },
                                 Optional('rp_candidate_next_advertisement'): str,
                             },
@@ -352,7 +353,7 @@ class ShowIpv6PimBsrCandidateRp(ShowIpv6PimBsrCandidateRpSchema):
         ret_dict = {}
         af_name = 'ipv6'
         address = priority = holdtime = interval = mode = ""
-        next_advertisement = ""
+        next_advertisement = scope =""
 
         for line in out.splitlines():
             line = line.strip()
@@ -369,12 +370,14 @@ class ShowIpv6PimBsrCandidateRp(ShowIpv6PimBsrCandidateRpSchema):
 
             # Priority 5, Holdtime 150
             # All Learnt Scoped Zones, Priority 192, Holdtime 150
-            p2 = re.compile(r'^\s*(All +Learnt +Scoped +Zones, )?Priority +(?P<priority>\d+)'
+            p2 = re.compile(r'^\s*((?P<scope>[\S\s]+), )?Priority +(?P<priority>\d+)'
                             ', +Holdtime +(?P<holdtime>\d+)$')
             m = p2.match(line)
             if m:
                 priority = int(m.groupdict()['priority'])
                 holdtime = int(m.groupdict()['holdtime'])
+                if m.groupdict()['scope']:
+                    scope = m.groupdict()['scope']
                 continue
 
             # Advertisement interval 60 seconds
@@ -432,6 +435,11 @@ class ShowIpv6PimBsrCandidateRp(ShowIpv6PimBsrCandidateRpSchema):
                 if next_advertisement:
                     ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr'] \
                         ['rp_candidate_next_advertisement'] = next_advertisement
+
+                if scope:
+                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr'] \
+                        [address]['scope'] = scope
+
 
             continue
 

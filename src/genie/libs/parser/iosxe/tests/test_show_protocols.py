@@ -309,7 +309,7 @@ class test_show_ip_protocols(unittest.TestCase):
                                             'redistributing': 'isis'}}}}}}}}}
 
     def test_show_ip_protocols_full1(self):
-        
+
         self.maxDiff = None
 
         def mapper(key):
