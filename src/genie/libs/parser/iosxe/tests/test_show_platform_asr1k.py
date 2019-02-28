@@ -1,0 +1,1 @@
+../asr1k/tests/test_show_platform.py
