@@ -718,7 +718,7 @@ class ShowIpProtocolsSectionRip(ShowIpProtocolsSectionRipSchema):
         #   GigabitEthernet3.100                1 2   2          No        none
         p13 = re.compile(r'^\s*(?P<interface>[\S]+) +(?P<send>\d( \d)?)'
                          ' +(?P<receive>\d( \d)?)?'
-                         ' +(?P<triggered_rip>(Yes|No)) +(?P<key_chain>\w+)$')
+                         ' +(?P<triggered_rip>\S+) +(?P<key_chain>\S+)$')
 
         # Automatic network summarization is not in effect
         # Automatic network summarization is in effect
