@@ -128,6 +128,7 @@ class ShowVlan(ShowVlanSchema):
             # 201-202
             # 201,202
             # 201,204,201-220
+            # P1-
             p4 = re.compile(r'^\s*(?P<remote_span_vlans>[^--][0-9\-\,]+)?$')
             m = p4.match(line)
             if m:
@@ -143,12 +144,16 @@ class ShowVlan(ShowVlanSchema):
                             remote_span_list = remote_vlan.split('-')
                             initial = remote_span_list[0]
                             end = remote_span_list[1]
-                            value = int(initial)
-                            while (value <= int(end)):
-                                if str(value) not in vlan_dict['vlans']:
-                                    vlan_dict['vlans'][str(value)] = {}
+                            try:
+                                value = int(initial)
+                                while (value <= int(end)):
+                                    if str(value) not in vlan_dict['vlans']:
+                                        vlan_dict['vlans'][str(value)] = {}
+                                    vlan_dict['vlans'][str(value)]['remote_span_vlan'] = True
+                                    value += 1
+                            except:
+                                value = initial
                                 vlan_dict['vlans'][str(value)]['remote_span_vlan'] = True
-                                value += 1
 
                         else:
                             if remote_vlan not in vlan_dict['vlans']:

@@ -655,7 +655,7 @@ class ShowIpv6Routers(ShowIpv6RoutersSchema):
 
         # Router fe80::f816:3eff:fe82:6320 on Ethernet1/1 , last update time 3.2 min
         p1 = re.compile(r'^\s*((?P<router>\w+) )?(?P<neighbor>[a-f0-9\:]+) +on'
-                        ' +(?P<interface>[\w\/\.]+) +,'
+                        ' +(?P<interface>[\S]+) +,'
                         ' +last +update +time +(?P<last_update>[\d\.]+) +min$')
         # Current_hop_limit 64, Lifetime 1800, AddrFlag 0, OtherFlag 0, MTU 1500
         p2 = re.compile(r'^\s*Current_hop_limit +(?P<current_hop_limit>\d+), +Lifetime +(?P<lifetime>\d+),'
