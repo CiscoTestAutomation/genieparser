@@ -6,10 +6,10 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
 from genie.libs.parser.ios.show_acl import ShowAccessLists
-from genie.libs.parser.iosxe.tests.test_show_acl import test_show_acl as test_show_acl_iosxe
 
+from genie.libs.parser.iosxe.tests.test_show_acl import test_show_access_lists as test_show_access_lists_iosxe
 
-class test_show_access_lists(unittest.TestCase):
+class test_show_access_lists(test_show_access_lists_iosxe):
 
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
