@@ -12,7 +12,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
 # Parser
 from genie.libs.parser.iosxe.show_ntp import ShowNtpAssociations, \
                                              ShowNtpStatus, \
-                                             ShowNtpConfig
+                                             ShowNtpConfig, \
+                                             ShowNtpAssociationsDetail
 
 #=========================================================
 # Unit test for show ntp associations
@@ -251,6 +252,236 @@ class test_show_ntp_config(unittest.TestCase):
         obj = ShowNtpConfig(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
+
+
+#=========================================================
+# Unit test for show ntp associations detail
+#=========================================================
+class test_show_ntp_associations_detail(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {'vrf': {'default': {'associations': {'address': {'172.16.255.254': {'local_mode': {'client': {'isconfigured': {'True': {'address': '172.16.255.254',
+                                                                                                                         'assoc_id': 62756,
+                                                                                                                         'assoc_name': '172.16.255.254',
+                                                                                                                         'authentication': 'authenticated',
+                                                                                                                         'delay_msec': '0.00',
+                                                                                                                         'dispersion': '5.64',
+                                                                                                                         'filtdelay': '1.00    '
+                                                                                                                                      '1.00    '
+                                                                                                                                      '1.00    '
+                                                                                                                                      '1.00    '
+                                                                                                                                      '0.00    '
+                                                                                                                                      '1.00    '
+                                                                                                                                      '1.00    '
+                                                                                                                                      '0.00',
+                                                                                                                         'filterror': '1.95    '
+                                                                                                                                      '2.88    '
+                                                                                                                                      '3.81    '
+                                                                                                                                      '4.74    '
+                                                                                                                                      '5.08    '
+                                                                                                                                      '5.11    '
+                                                                                                                                      '7.53    '
+                                                                                                                                      '8.46',
+                                                                                                                         'filtoffset': '-0.50   '
+                                                                                                                                       '-0.50   '
+                                                                                                                                       '-0.50   '
+                                                                                                                                       '-0.50   '
+                                                                                                                                       '-1.00   '
+                                                                                                                                       '-0.50   '
+                                                                                                                                       '-0.50   '
+                                                                                                                                       '-1.00',
+                                                                                                                         'input_time': 'DBAB02D6.9E354130 '
+                                                                                                                                       '(16:08:06.618 '
+                                                                                                                                       'JST '
+                                                                                                                                       'Fri '
+                                                                                                                                       'Oct '
+                                                                                                                                       '14 '
+                                                                                                                                       '2016)',
+                                                                                                                         'ip_type': 'ipv4',
+                                                                                                                         'isconfigured': True,
+                                                                                                                         'jitter_msec': '0.97',
+                                                                                                                         'local_mode': 'client',
+                                                                                                                         'master': True,
+                                                                                                                         'maxpoll': 10,
+                                                                                                                         'minpoll': 6,
+                                                                                                                         'ntp_statistics': {'packet_dropped': 0,
+                                                                                                                                            'packet_received': 38,
+                                                                                                                                            'packet_sent': 50},
+                                                                                                                         'offset_msec': '-1.0000',
+                                                                                                                         'originate_time': '00000000.00000000 '
+                                                                                                                                           '(09:00:00.000 '
+                                                                                                                                           'JST '
+                                                                                                                                           'Mon '
+                                                                                                                                           'Jan '
+                                                                                                                                           '1 '
+                                                                                                                                           '1900)',
+                                                                                                                         'peer': {'172.16.255.254': {'local_mode': {'server': {'local_mode': 'server',
+                                                                                                                                                                               'poll': 512}}}},
+                                                                                                                         'peer_interface': '172.16.255.254',
+                                                                                                                         'poll': '512',
+                                                                                                                         'precision': '2**10',
+                                                                                                                         'reach': '177',
+                                                                                                                         'receive_time': 'DBAB05BA.A8B43B28 '
+                                                                                                                                         '(16:20:26.659 '
+                                                                                                                                         'JST '
+                                                                                                                                         'Fri '
+                                                                                                                                         'Oct '
+                                                                                                                                         '14 '
+                                                                                                                                         '2016)',
+                                                                                                                         'refid': '172.16.255.254',
+                                                                                                                         'root_delay_msec': '0.00',
+                                                                                                                         'root_disp': '2.18',
+                                                                                                                         'sane': True,
+                                                                                                                         'stratum': 2,
+                                                                                                                         'sync_dist': '9.47',
+                                                                                                                         'transmit_time': 'DBAB05BA.A8B43B28 '
+                                                                                                                                          '(16:20:26.659 '
+                                                                                                                                          'JST '
+                                                                                                                                          'Fri '
+                                                                                                                                          'Oct '
+                                                                                                                                          '14 '
+                                                                                                                                          '2016)',
+                                                                                                                         'valid': True,
+                                                                                                                         'version': 4,
+                                                                                                                         'vrf': 'default'}}}}},
+                                                  '192.168.255.254': {'local_mode': {'client': {'isconfigured': {'True': {'address': '192.168.255.254',
+                                                                                                                          'assoc_id': 62758,
+                                                                                                                          'assoc_name': '192.168.255.254',
+                                                                                                                          'authentication': 'authenticated',
+                                                                                                                          'delay_msec': '0.00',
+                                                                                                                          'dispersion': '7.23',
+                                                                                                                          'filtdelay': '0.00    '
+                                                                                                                                       '1.00    '
+                                                                                                                                       '0.00    '
+                                                                                                                                       '0.00    '
+                                                                                                                                       '0.00    '
+                                                                                                                                       '0.00    '
+                                                                                                                                       '0.00    '
+                                                                                                                                       '0.00',
+                                                                                                                          'filterror': '1.95    '
+                                                                                                                                       '5.89    '
+                                                                                                                                       '9.88   '
+                                                                                                                                       '13.89   '
+                                                                                                                                       '15.84   '
+                                                                                                                                       '17.79   '
+                                                                                                                                       '19.74   '
+                                                                                                                                       '21.76',
+                                                                                                                          'filtoffset': '0.00    '
+                                                                                                                                        '0.50    '
+                                                                                                                                        '0.00    '
+                                                                                                                                        '1.00    '
+                                                                                                                                        '1.00    '
+                                                                                                                                        '1.00    '
+                                                                                                                                        '1.00    '
+                                                                                                                                        '1.00',
+                                                                                                                          'input_time': 'DBAB02D6.9E354130 '
+                                                                                                                                        '(16:08:06.618 '
+                                                                                                                                        'JST '
+                                                                                                                                        'Fri '
+                                                                                                                                        'Oct '
+                                                                                                                                        '14 '
+                                                                                                                                        '2016)',
+                                                                                                                          'ip_type': 'ipv4',
+                                                                                                                          'isconfigured': True,
+                                                                                                                          'jitter_msec': '0.97',
+                                                                                                                          'local_mode': 'client',
+                                                                                                                          'master': False,
+                                                                                                                          'maxpoll': 10,
+                                                                                                                          'minpoll': 6,
+                                                                                                                          'ntp_statistics': {'packet_dropped': 0,
+                                                                                                                                             'packet_received': 27,
+                                                                                                                                             'packet_sent': 27},
+                                                                                                                          'offset_msec': '0.0000',
+                                                                                                                          'originate_time': '00000000.00000000 '
+                                                                                                                                            '(09:00:00.000 '
+                                                                                                                                            'JST '
+                                                                                                                                            'Mon '
+                                                                                                                                            'Jan '
+                                                                                                                                            '1 '
+                                                                                                                                            '1900)',
+                                                                                                                          'peer': {'172.16.255.254': {'local_mode': {'server': {'local_mode': 'server',
+                                                                                                                                                                                'poll': 512}}}},
+                                                                                                                          'peer_interface': '172.16.255.254',
+                                                                                                                          'poll': '512',
+                                                                                                                          'precision': '2**10',
+                                                                                                                          'reach': '377',
+                                                                                                                          'receive_time': 'DBAB046D.A8B43B28 '
+                                                                                                                                          '(16:14:53.659 '
+                                                                                                                                          'JST '
+                                                                                                                                          'Fri '
+                                                                                                                                          'Oct '
+                                                                                                                                          '14 '
+                                                                                                                                          '2016)',
+                                                                                                                          'refid': '172.16.255.254',
+                                                                                                                          'root_delay_msec': '0.00',
+                                                                                                                          'root_disp': '14.52',
+                                                                                                                          'sane': False,
+                                                                                                                          'stratum': 3,
+                                                                                                                          'sync_dist': '28.40',
+                                                                                                                          'transmit_time': 'DBAB046D.A8B43B28 '
+                                                                                                                                           '(16:14:53.659 '
+                                                                                                                                           'JST '
+                                                                                                                                           'Fri '
+                                                                                                                                           'Oct '
+                                                                                                                                           '14 '
+                                                                                                                                           '2016)',
+                                                                                                                          'valid': False,
+                                                                                                                          'version': 4,
+                                                                                                                          'vrf': 'default'}}}}}}}}}}
+
+    golden_output = {'execute.return_value': '''
+        Router#show ntp associations detail
+        Load for five secs: 1%/0%; one minute: 3%; five minutes: 4%
+        Time source is NTP, 16:21:12.433 JST Fri Oct 14 2016
+
+        192.168.255.254 configured, ipv4, authenticated, insane, invalid, stratum 3
+        ref ID 172.16.255.254, time DBAB02D6.9E354130 (16:08:06.618 JST Fri Oct 14 2016)
+        our mode client, peer mode server, our poll intvl 512, peer poll intvl 512
+        root delay 0.00 msec, root disp 14.52, reach 377, sync dist 28.40
+        delay 0.00 msec, offset 0.0000 msec, dispersion 7.23, jitter 0.97 msec
+        precision 2**10, version 4
+        assoc id 62758, assoc name 192.168.255.254
+        assoc in packets 27, assoc out packets 27, assoc error packets 0
+        org time 00000000.00000000 (09:00:00.000 JST Mon Jan 1 1900)
+        rec time DBAB046D.A8B43B28 (16:14:53.659 JST Fri Oct 14 2016)
+        xmt time DBAB046D.A8B43B28 (16:14:53.659 JST Fri Oct 14 2016)
+        filtdelay =     0.00    1.00    0.00    0.00    0.00    0.00    0.00    0.00
+        filtoffset =    0.00    0.50    0.00    1.00    1.00    1.00    1.00    1.00
+        filterror =     1.95    5.89    9.88   13.89   15.84   17.79   19.74   21.76
+        minpoll = 6, maxpoll = 10
+
+        172.16.255.254 configured, ipv4, authenticated, our_master, sane, valid, stratum 2
+        ref ID 127.127.1.1    , time DBAB05B9.753F7E30 (16:20:25.458 JST Fri Oct 14 2016)
+        our mode client, peer mode server, our poll intvl 512, peer poll intvl 512
+        root delay 0.00 msec, root disp 2.18, reach 177, sync dist 9.47
+        delay 0.00 msec, offset -1.0000 msec, dispersion 5.64, jitter 0.97 msec
+        precision 2**10, version 4
+        assoc id 62756, assoc name 172.16.255.254
+        assoc in packets 38, assoc out packets 50, assoc error packets 0
+        org time 00000000.00000000 (09:00:00.000 JST Mon Jan 1 1900)
+        rec time DBAB05BA.A8B43B28 (16:20:26.659 JST Fri Oct 14 2016)
+        xmt time DBAB05BA.A8B43B28 (16:20:26.659 JST Fri Oct 14 2016)
+        filtdelay =     1.00    1.00    1.00    1.00    0.00    1.00    1.00    0.00
+        filtoffset =   -0.50   -0.50   -0.50   -0.50   -1.00   -0.50   -0.50   -1.00
+        filterror =     1.95    2.88    3.81    4.74    5.08    5.11    7.53    8.46
+        minpoll = 6, maxpoll = 10
+    '''
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowNtpAssociationsDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowNtpAssociationsDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
 if __name__ == '__main__':

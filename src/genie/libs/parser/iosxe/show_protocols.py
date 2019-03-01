@@ -23,7 +23,7 @@ class ShowIpProtocolsSchema(MetaParser):
     ''' Schema for "show ip protocols" '''
 
     schema = {
-        'protocols': 
+        'protocols':
             {Optional('rip'):
                 {'vrf': {
                     Any(): {
@@ -117,26 +117,24 @@ class ShowIpProtocolsSchema(MetaParser):
             },
             Optional('eigrp'):
                 {'protocol_under_dev': bool},
-            Optional('isis'):
-                {'protocol_under_dev': bool},
             Optional('ospf'):
-                {'vrf': 
-                    {Any(): 
-                        {'address_family': 
-                            {Any(): 
-                                {'instance': 
-                                    {Any(): 
-                                        {'spf_control': 
+                {'vrf':
+                    {Any():
+                        {'address_family':
+                            {Any():
+                                {'instance':
+                                    {Any():
+                                        {'spf_control':
                                             {'paths': int},
-                                        'preference': 
-                                            {'single_value': 
+                                        'preference':
+                                            {'single_value':
                                                 {'all': int},
-                                            Optional('multi_values'): 
-                                                {'granularity': 
-                                                    {'detail': 
+                                            Optional('multi_values'):
+                                                {'granularity':
+                                                    {'detail':
                                                         {'intra_area': int,
                                                         'inter_area': int},
-                                                    Optional('coarse'): 
+                                                    Optional('coarse'):
                                                         {'internal': int}},
                                                 'external': int},
                                             },
@@ -148,16 +146,15 @@ class ShowIpProtocolsSchema(MetaParser):
                                         'total_normal_area': int,
                                         'total_nssa_area': int,
                                         Optional('passive_interfaces'): list,
-                                        Optional('routing_information_sources'): 
-                                            {'gateway': 
-                                                {Any(): 
+                                        Optional('routing_information_sources'):
+                                            {'gateway':
+                                                {Any():
                                                     {'distance': int,
-                                                    'last_update': str,
-                                                    },
+                                                    'last_update': str},
                                                 },
                                             },
-                                        Optional('areas'): 
-                                            {Any(): 
+                                        Optional('areas'):
+                                            {Any():
                                                 {Optional('configured_interfaces'): list},
                                             },
                                         },
@@ -171,8 +168,8 @@ class ShowIpProtocolsSchema(MetaParser):
                 {'outgoing_filter_list': str,
                 'incoming_filter_list': str,
                 'maximum_path': int,
-                'preference': 
-                    {'single_value': 
+                'preference':
+                    {'single_value':
                         {'all': int}},
                 'update_frequency': int,
                 'invalid': int,
@@ -180,27 +177,27 @@ class ShowIpProtocolsSchema(MetaParser):
                 'flushed': int,
                 },
             Optional('bgp'):
-                {'instance': 
-                    {'default': 
+                {'instance':
+                    {'default':
                         {'bgp_id': int,
-                        'vrf': 
-                            {'default': 
-                                {'address_family': 
-                                    {'ipv4': 
+                        'vrf':
+                            {'default':
+                                {'address_family':
+                                    {'ipv4':
                                         {'outgoing_filter_list': str,
                                         'incoming_filter_list': str,
                                         'igp_sync': bool,
                                         'automatic_route_summarization': bool,
                                         'maximum_path': int,
-                                        Optional('preference'): 
-                                            {'multi_values': 
+                                        Optional('preference'):
+                                            {'multi_values':
                                                 {'external': int,
                                                 'local': int,
                                                 'internal': int,
                                                 },
                                             },
-                                        Optional('neighbor'): 
-                                            {Any(): 
+                                        Optional('neighbor'):
+                                            {Any():
                                                 {'neighbor_id': str,
                                                 'distance': int,
                                                 'last_update': str,
@@ -213,8 +210,42 @@ class ShowIpProtocolsSchema(MetaParser):
                         },
                     },
                 },
+            Optional('isis'):
+                {'vrf':
+                    {Any():
+                        {'address_family':
+                            {Any():
+                                {'instance':
+                                    {Any():
+                                        {'outgoing_filter_list': str,
+                                        'incoming_filter_list': str,
+                                        'redistributing': str,
+                                        Optional('address_summarization'): list,
+                                        Optional('maximum_path'): int,
+                                        'preference':
+                                            {'single_value':
+                                                {'all': int},
+                                            },
+                                        Optional('configured_interfaces'): list,
+                                        Optional('passive_interfaces'): list,
+                                        Optional('routing_information_sources'):
+                                            {'gateway':
+                                                {Any():
+                                                    {'distance': int,
+                                                    'last_update': str,
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
             },
         }
+
 
 
 # ==============================
@@ -242,12 +273,110 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
 
         # Init vars
         ret_dict = {}
-        af = 'ipv4' # this is ospf - always ipv4
+
         if not vrf:
             vrf = "default"
         protocol = None
-        routing_interfaces = None
-        passive_interfaces = None
+        # Routing for Networks:
+        routing_networks = False
+        routing_network_intfs = []
+        # Routing on Interfaces Configured Explicitly
+        routing_on_interfaces = False
+        routing_on_interfaces_intfs = []
+        # Routing Information Sources:
+        routing_information = False
+        routing_info_gateways = []
+        # Passive Interface(s):
+        passive_interfaces = False
+        passive_intfs = []
+
+        # Routing Protocol is "ospf 1"
+        # Routing Protocol is "application"
+        # Routing Protocol is "bgp 100"
+        # Routing Protocol is "isis"
+        # Routing Protocol is "isis banana"
+        # Routing Protocol is "eigrp 1"
+        p1 = re.compile(r"^Routing +Protocol +is"
+                         " +\"(?P<protocol>(ospf|bgp|isis|eigrp|application|rip))"
+                         "(?: *(?P<pid>(\S+)))?\"$")
+
+        # Outgoing update filter list for all interfaces is not set
+        # Incoming update filter list for all interfaces is not set
+        p2 = re.compile(r"^(?P<dir>(Outgoing|Incoming)) +update +filter +list"
+                         " +for +all +interfaces +is +(?P<state>([a-zA-Z\s]+))$")
+
+        # Router ID 1.1.1.1
+        p3 = re.compile(r"^Router +ID +(?P<router_id>(\S+))$")
+
+        # Number of areas in this router is 1. 1 normal 0 stub 0 nssa
+        p4 = re.compile(r"^Number +of +areas +in +this +router +is"
+                         " +(?P<areas>(\d+)). +(?P<normal>(\d+)) +normal"
+                         " +(?P<stub>(\d+)) +stub +(?P<nssa>(\d+)) +nssa$")
+
+        # Maximum path: 4
+        p5 = re.compile(r"^Maximum +path: +(?P<max>(\d+))$")
+
+        # Routing for Networks:
+        p6_1 = re.compile(r"^Routing +for +Networks:$")
+
+        # Routing on Interfaces Configured Explicitly (Area 0):
+        p6_2 = re.compile(r"^Routing +on +Interfaces +Configured +Explicitly"
+                         " +\(Area +(?P<area>(\d+))\)\:$")
+
+
+        # Routing Information Sources:
+        p6_3 = re.compile(r"^Routing +Information +Sources:$")
+
+        # Passive Interface(s):
+        p6_4 = re.compile(r"^Passive +Interface\(s\):$")
+
+        # Address Summarization:
+        p6_5 = re.compile(r"^Address +Summarization:$")
+
+        # Loopback0
+        # GigabitEthernet2
+        # GigabitEthernet1
+        # TenGigabitEthernet0/0/26
+        p7 = re.compile(r"^(?P<interface>(Lo.*|Gi.*|Ten.*|.*(SL|VL).*))$")
+
+
+        # Gateway         Distance      Last Update
+        # 3.3.3.3              110      07:33:00
+        # 2.2.2.2              110      07:33:00
+        # 4.4.4.4              110      00:19:15
+        p8 = re.compile(r"^(?P<gateway>([0-9\.]+)) +(?P<distance>(\d+))"
+                         " +(?P<last_update>([a-zA-Z0-9\:\.]+))$")
+
+        # Distance: (default is 110)
+        p9 = re.compile(r"^Distance: +\(default +is +(?P<num>(\d+))\)$")
+
+        # Distance: intra-area 112 inter-area 113 external 114
+        p10 = re.compile(r"^Distance: +intra-area +(?P<intra>(\d+)) +inter-area"
+                          " +(?P<inter>(\d+)) +external +(?P<external>(\d+))$")
+
+        # Sending updates every 0 seconds
+        p11 = re.compile(r"^Sending +updates +every +(?P<update>(\d+)) +seconds$")
+
+        # Invalid after 0 seconds, hold down 0, flushed after 0
+        p12 = re.compile(r"^Invalid +after +(?P<invalid>(\d+)) +seconds, +hold"
+                          " +down +(?P<holddown>(\d+)), +flushed +after"
+                          " +(?P<flushed>(\d+))$")
+
+        # IGP synchronization is disabled
+        p13 = re.compile(r"^IGP +synchronization +is +(?P<igp>(enabled|disabled))$")
+
+        # Automatic route summarization is disabled
+        p14 = re.compile(r"^Automatic +route +summarization +is"
+                          " +(?P<route>(enabled|disabled))$")
+
+        # Distance: external 20 internal 200 local 200
+        p15 = re.compile(r"^Distance: +external +(?P<external>(\d+)) +internal"
+                          " +(?P<internal>(\d+)) +local +(?P<local>(\d+))$")
+
+
+        # Redistributing: isis banana
+        p16 = re.compile(r"^Redistributing: +(?P<redistributing>([a-zA-Z\_\s]+))$")
+
 
         passive_interface_flag = False
         routing_network_flag = False
@@ -350,154 +479,86 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
             line = line.strip()
 
             # Routing Protocol is "ospf 1"
-            p1_1 = re.compile(r'^Routing +Protocol +is +\"ospf +(?P<pid>(\S+))\"$')
-            m = p1_1.match(line)
-            if m:
-                instance = str(m.groupdict()['pid'])
-                protocol = 'ospf'
-
-                # Get VRF information based on OSPF instance
-                cmd = 'show running-config | section router ospf {}'.format(instance)
-                out = self.device.execute(cmd)
-
-                for line in out.splitlines():
-                    line = line.rstrip()
-
-                    # Skip the show command line so as to not match
-                    if re.search('show', line):
-                        continue
-
-                    # router ospf 1
-                    # router ospf 2 vrf VRF1
-                    p = re.search('router +ospf +(?P<instance>(\S+))'
-                                  '(?: +vrf +(?P<vrf>(\S+)))?', line)
-                    if p:
-                        p_instance = str(p.groupdict()['instance'])
-                        if p_instance == instance:
-                            if p.groupdict()['vrf']:
-                                vrf = str(p.groupdict()['vrf'])
-                                break
-                            else:
-                                vrf = 'default'
-                                break
-
-                # Build dictionary
-                if 'protocols' not in ret_dict:
-                    ret_dict['protocols'] = {}
-                if 'ospf' not in ret_dict['protocols']:
-                    ret_dict['protocols']['ospf'] = {}
-                if 'vrf' not in ret_dict['protocols']['ospf']:
-                    ret_dict['protocols']['ospf']['vrf'] = {}
-                if vrf not in ret_dict['protocols']['ospf']['vrf']:
-                    ret_dict['protocols']['ospf']['vrf'][vrf] = {}
-                if 'address_family' not in ret_dict['protocols']['ospf']['vrf']\
-                        [vrf]:
-                    ret_dict['protocols']['ospf']['vrf'][vrf]\
-                        ['address_family'] = {}
-                if af not in ret_dict['protocols']['ospf']['vrf'][vrf]\
-                        ['address_family']:
-                    ret_dict['protocols']['ospf']['vrf'][vrf]['address_family']\
-                        [af] = {}
-                if 'instance' not in ret_dict['protocols']['ospf']['vrf'][vrf]\
-                        ['address_family'][af]:
-                    ret_dict['protocols']['ospf']['vrf'][vrf]['address_family']\
-                        [af]['instance'] = {}
-                if instance not in ret_dict['protocols']['ospf']['vrf'][vrf]\
-                        ['address_family'][af]['instance']:
-                    ret_dict['protocols']['ospf']['vrf'][vrf]['address_family']\
-                        [af]['instance'][instance] = {}
-                # Set ospf_dict
-                ospf_dict = ret_dict['protocols']['ospf']['vrf'][vrf]\
-                                ['address_family'][af]['instance'][instance]
-                continue
-
             # Routing Protocol is "application"
-            p1_2 = re.compile(r'^Routing +Protocol +is +\"application\"$')
-            m = p1_2.match(line)
-            if m:
-                protocol = 'application'
-                # Build dictionary
-                if 'protocols' not in ret_dict:
-                    ret_dict['protocols'] = {}
-                if 'application' not in ret_dict['protocols']:
-                    ret_dict['protocols']['application'] = {}
-                app_dict = ret_dict['protocols']['application']
-                continue
-
             # Routing Protocol is "bgp 100"
-            p1_3 = re.compile(r'^Routing +Protocol +is +\"bgp +(?P<pid>(\d+))\"$')
-            m = p1_3.match(line)
-            if m:
-                protocol = 'bgp'
-                # Build dictionary
-                if 'protocols' not in ret_dict:
-                    ret_dict['protocols'] = {}
-                if 'bgp' not in ret_dict['protocols']:
-                    ret_dict['protocols']['bgp'] = {}
-                if 'instance' not in ret_dict['protocols']['bgp']:
-                    ret_dict['protocols']['bgp']['instance'] = {}
-                if 'default' not in ret_dict['protocols']['bgp']['instance']:
-                    ret_dict['protocols']['bgp']['instance']['default'] = {}
-                ret_dict['protocols']['bgp']['instance']['default']['bgp_id'] = \
-                    int(m.groupdict()['pid'])
-                if 'vrf' not in ret_dict['protocols']['bgp']['instance']\
-                        ['default']:
-                    ret_dict['protocols']['bgp']['instance']['default']\
-                        ['vrf'] = {}
-                if 'default' not in ret_dict['protocols']['bgp']['instance']\
-                        ['default']['vrf']:
-                    ret_dict['protocols']['bgp']['instance']['default']['vrf']\
-                        ['default'] = {}
-                if 'address_family' not in ret_dict['protocols']['bgp']\
-                        ['instance']['default']['vrf']['default']:
-                    ret_dict['protocols']['bgp']['instance']['default']['vrf']\
-                        ['default']['address_family'] = {}
-                if 'ipv4' not in ret_dict['protocols']['bgp']['instance']\
-                        ['default']['vrf']['default']['address_family']:
-                    ret_dict['protocols']['bgp']['instance']['default']['vrf']\
-                        ['default']['address_family']['ipv4'] = {}
-                bgp_dict = ret_dict['protocols']['bgp']['instance']['default']\
-                            ['vrf']['default']['address_family']['ipv4']
-                continue
-
-            # Routing Protocol is "isis"
-            p1_4 = re.compile(r'^Routing +Protocol +is +\"isis\"$')
-            m = p1_4.match(line)
-            if m:
-                protocol = 'isis'
-                # Build dictionary
-                if 'protocols' not in ret_dict:
-                    ret_dict['protocols'] = {}
-                if 'isis' not in ret_dict['protocols']:
-                    ret_dict['protocols']['isis'] = {}
-                    ret_dict['protocols']['isis']['protocol_under_dev'] = True
-                isis_dict = ret_dict['protocols']['isis']
-                continue
-
+            # Routing Protocol is "isis banana"
             # Routing Protocol is "eigrp 1"
-            p1_5 = re.compile(r'^Routing +Protocol +is +\"eigrp +(?P<pid>(\d+))\"$')
-            m = p1_5.match(line)
+            m = p1.match(line)
             if m:
-                protocol = 'eigrp'
-                # Build dictionary
-                if 'protocols' not in ret_dict:
-                    ret_dict['protocols'] = {}
-                if 'eigrp' not in ret_dict['protocols']:
-                    ret_dict['protocols']['eigrp'] = {}
-                    ret_dict['protocols']['eigrp']['protocol_under_dev'] = True
-                eigrp_dict = ret_dict['protocols']['eigrp']
-                continue
+                group = m.groupdict()
+                protocol = group['protocol']
+                if group['pid']:
+                    instance = str(m.groupdict()['pid'])
 
-            # Routing Protocol is "rip"
-            p1_6 = re.compile(r'^Routing +Protocol +is +\"rip\"$')
-            m = p1_6.match(line)
-            if m:
-                protocol = 'rip'
-                rip_dict = ret_dict.setdefault('protocols',{}).setdefault('rip',{}).setdefault('vrf', {}).setdefault(vrf, {}).setdefault('address_family', {}). \
-                    setdefault(af, {}).setdefault('instance', {}).setdefault(protocol, {})
-                continue
+                # Set protocol dict
+                protocol_dict = ret_dict.setdefault('protocols', {}). \
+                    setdefault(protocol, {})
 
-            if protocol=='rip':
+                if protocol == 'ospf':
+                    # Get VRF information based on OSPF instance
+                    out = self.device.execute("show running-config | section "
+                                              "router ospf {}".format(instance))
+                    # Parse for VRF
+                    for line in out.splitlines():
+                        line = line.strip()
+                        # router ospf 1
+                        # router ospf 2 vrf VRF1
+                        p = re.search('router +ospf +(?P<instance>(\S+))'
+                                      '(?: +vrf +(?P<vrf>(\S+)))?', line)
+                        if p:
+                            p_instance = str(p.groupdict()['instance'])
+                            if p_instance == instance:
+                                if p.groupdict()['vrf']:
+                                    vrf = str(p.groupdict()['vrf'])
+                                    break
+                                else:
+                                    vrf = 'default'
+                                    break
+
+                    # Set ospf_dict
+                    ospf_dict = protocol_dict.setdefault('vrf', {}). \
+                        setdefault(vrf, {}). \
+                        setdefault('address_family', {}). \
+                        setdefault('ipv4', {}). \
+                        setdefault('instance', {}). \
+                        setdefault(instance, {})
+                elif protocol == 'bgp':
+                    instance_dict = protocol_dict.setdefault('instance', {}). \
+                        setdefault('default', {})
+                    instance_dict['bgp_id'] = int(group['pid'])
+                    # Set bgp_dict
+                    bgp_dict = instance_dict.setdefault('vrf', {}). \
+                        setdefault('default', {}). \
+                        setdefault('address_family', {}). \
+                        setdefault('ipv4', {})
+                elif protocol == 'isis':
+                    # Set isis_dict
+                    if not group['pid']:
+                        instance = 'default'
+                    isis_dict = protocol_dict.setdefault('vrf', {}). \
+                        setdefault('default', {}). \
+                        setdefault('address_family', {}). \
+                        setdefault('ipv4', {}). \
+                        setdefault('instance', {}). \
+                        setdefault(instance, {})
+                elif protocol == 'application':
+                    application_dict = protocol_dict
+                elif protocol == 'eigrp':
+                    protocol_dict['protocol_under_dev'] = True
+                    eigrp_dict = protocol_dict
+                elif protocol == 'rip':
+                    address_family = 'ipv4'
+                    rip_dict = ret_dict.setdefault('protocols', {}).\
+                                            setdefault('rip', {}).\
+                                            setdefault('vrf',{}).\
+                                            setdefault(vrf, {}).\
+                                            setdefault('address_family', {}). \
+                                            setdefault(address_family, {}).\
+                                            setdefault('instance', {}).\
+                                            setdefault(protocol, {})
+                    continue
+
+            if protocol == 'rip':
                 # Output delay 50 milliseconds between packets
                 m = p102.match(line)
                 if m:
@@ -535,7 +596,8 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                         temp_dict = incoming_dict
 
                     group = m.groupdict()
-                    interface_out_dict = temp_dict.setdefault('interfaces', {}).setdefault(group['interface'], {})
+                    interface_out_dict = temp_dict.setdefault('interfaces', {}).setdefault(group['interface'],
+                                                                                           {})
                     interface_out_dict.update({"filter": group['filter']})
                     if group['per_user']:
                         if 'per-user' in group['per_user']:
@@ -581,7 +643,8 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                 m = p108.match(line)
                 if m:
                     group = m.groupdict()
-                    rip_dict.update({'default_redistribution_metric': int(group['default_redistribution_metric'])})
+                    rip_dict.update(
+                        {'default_redistribution_metric': int(group['default_redistribution_metric'])})
                     continue
 
                 # Redistributing: connected, static, rip
@@ -609,7 +672,8 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                         automatic_network_summarization = False
                     else:
                         automatic_network_summarization = True
-                    rip_dict.update({'automatic_network_summarization_in_effect': automatic_network_summarization})
+                    rip_dict.update(
+                        {'automatic_network_summarization_in_effect': automatic_network_summarization})
                     continue
 
                 # Interface                           Send  Recv  Triggered RIP  Key-chain
@@ -695,237 +759,303 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                     group = m.groupdict()
                     rip_dict.update({'distance': int(group['distance'])})
                     continue
-
             else:
                 # Outgoing update filter list for all interfaces is not set
                 # Incoming update filter list for all interfaces is not set
-                p2 = re.compile(r'^(?P<dir>(Outgoing|Incoming)) +update +filter'
-                                 ' +list +for +all +interfaces +is'
-                                 ' +(?P<state>([a-zA-Z\s]+))$')
                 m = p2.match(line)
                 if m:
-                    direction = str(m.groupdict()['dir']).lower()
-                    direction = direction + '_' + 'filter_list'
+                    group = m.groupdict()
                     if protocol == 'ospf':
                         pdict = ospf_dict
+                    elif protocol == 'isis':
+                        pdict = isis_dict
                     elif protocol == 'application':
-                        pdict = app_dict
+                        pdict = application_dict
                     elif protocol == 'bgp':
                         pdict = bgp_dict
                     else:
                         continue
-                    pdict[direction] = str(m.groupdict()['state']).lower()
+                    direction = str(group['dir']).lower() + '_' + 'filter_list'
+                    pdict[direction] = str(group['state']).lower()
                     continue
 
                 # Router ID 1.1.1.1
-                p3 = re.compile(r'^Router +ID +(?P<router_id>(\S+))$')
                 m = p3.match(line)
                 if m:
                     ospf_dict['router_id'] = str(m.groupdict()['router_id'])
                     continue
 
                 # Number of areas in this router is 1. 1 normal 0 stub 0 nssa
-                p4 = re.compile(r'^Number +of +areas +in +this +router +is'
-                                 ' +(?P<areas>(\d+)). +(?P<normal>(\d+)) +normal'
-                                 ' +(?P<stub>(\d+)) +stub +(?P<nssa>(\d+)) +nssa$')
                 m = p4.match(line)
                 if m:
-                    ospf_dict['total_areas'] = int(m.groupdict()['areas'])
-                    ospf_dict['total_normal_area'] = int(m.groupdict()['normal'])
-                    ospf_dict['total_stub_area'] = int(m.groupdict()['stub'])
-                    ospf_dict['total_nssa_area'] = int(m.groupdict()['nssa'])
+                    group = m.groupdict()
+                    ospf_dict['total_areas'] = int(group['areas'])
+                    ospf_dict['total_normal_area'] = int(group['normal'])
+                    ospf_dict['total_stub_area'] = int(group['stub'])
+                    ospf_dict['total_nssa_area'] = int(group['nssa'])
                     continue
 
                 # Maximum path: 4
-                p5 = re.compile(r'^Maximum +path: +(?P<max>(\d+))$')
                 m = p5.match(line)
                 if m:
+                    group = m.groupdict()
                     if protocol == 'ospf':
                         if 'spf_control' not in ospf_dict:
                             ospf_dict['spf_control'] = {}
-                        ospf_dict['spf_control']['paths'] = int(m.groupdict()['max'])
+                        ospf_dict['spf_control']['paths'] = int(group['max'])
                     elif protocol == 'application':
-                        app_dict['maximum_path'] = int(m.groupdict()['max'])
+                        application_dict['maximum_path'] = int(group['max'])
                     elif protocol == 'bgp':
-                        bgp_dict['maximum_path'] = int(m.groupdict()['max'])
+                        bgp_dict['maximum_path'] = int(group['max'])
+                    elif protocol == 'isis':
+                        isis_dict['maximum_path'] = int(group['max'])
                     continue
 
                 # Routing for Networks:
-                # Routing on Interfaces Configured Explicitly (Area 0):
-                p6_1 = re.compile(r'^Routing +on +Interfaces +Configured +Explicitly'
-                                 ' +\(Area +(?P<area>(\d+))\)\:$')
                 m = p6_1.match(line)
                 if m:
+                    # Routing for Networks:
+                    routing_networks = True
+                    routing_network_intfs = []
+                    # Routing on Interfaces Configured Explicitly
+                    routing_on_interfaces = False
+                    routing_on_interfaces_intfs = []
+                    # Routing Information Sources:
+                    routing_information = False
+                    routing_info_gateways = []
+                    # Passive Interface(s):
+                    passive_interfaces = False
+                    passive_intfs = []
+                    # Address Summarization:
+                    address_summarization = False
+                    address_summarization_intfs = []
+                    continue
+
+                # Routing on Interfaces Configured Explicitly (Area 0):
+                m = p6_2.match(line)
+                if m:
                     area = str(IPAddress(str(m.groupdict()['area'])))
-                    if 'areas' not in ospf_dict:
-                        ospf_dict['areas'] = {}
-                    if area not in ospf_dict['areas']:
-                        ospf_dict['areas'][area] = {}
-                    routing_interfaces = []
+                    ospf_area_dict = ospf_dict.setdefault('areas', {}). \
+                        setdefault(area, {})
+                    # Routing for Networks:
+                    routing_networks = False
+                    routing_network_intfs = []
+                    # Routing on Interfaces Configured Explicitly
+                    routing_on_interfaces = True
+                    routing_on_interfaces_intfs = []
+                    # Routing Information Sources:
+                    routing_information = False
+                    routing_info_gateways = []
+                    # Passive Interface(s):
+                    passive_interfaces = False
+                    passive_intfs = []
+                    # Address Summarization:
+                    address_summarization = False
+                    address_summarization_intfs = []
+                    continue
+
+                # Routing Information Sources:
+                m = p6_3.match(line)
+                if m:
+                    # Routing for Networks:
+                    routing_networks = False
+                    routing_network_intfs = []
+                    # Routing on Interfaces Configured Explicitly
+                    routing_on_interfaces = False
+                    routing_on_interfaces_intfs = []
+                    # Routing Information Sources:
+                    routing_information = True
+                    routing_info_gateways = []
+                    # Passive Interface(s):
+                    passive_interfaces = False
+                    passive_intfs = []
+                    # Address Summarization:
+                    address_summarization = False
+                    address_summarization_intfs = []
                     continue
 
                 # Passive Interface(s):
-                p6_2 = re.compile(r'^Passive +Interface\(s\):$')
-                m = p6_2.match(line)
+                m = p6_4.match(line)
                 if m:
-                    passive_interfaces = []
+                    # Routing for Networks:
+                    routing_networks = False
+                    routing_network_intfs = []
+                    # Routing on Interfaces Configured Explicitly
+                    routing_on_interfaces = False
+                    routing_on_interfaces_intfs = []
+                    # Routing Information Sources:
+                    routing_information = False
+                    routing_info_gateways = []
+                    # Passive Interface(s):
+                    passive_interfaces = True
+                    passive_intfs = []
+                    # Address Summarization:
+                    address_summarization = False
+                    address_summarization_intfs = []
+                    continue
+
+                # Address Summarization:
+                m = p6_5.match(line)
+                if m:
+                    # Routing for Networks:
+                    routing_networks = False
+                    routing_network_intfs = []
+                    # Routing on Interfaces Configured Explicitly
+                    routing_on_interfaces = False
+                    routing_on_interfaces_intfs = []
+                    # Routing Information Sources:
+                    routing_information = False
+                    routing_info_gateways = []
+                    # Passive Interface(s):
+                    passive_interfaces = True
+                    passive_intfs = []
+                    # Address Summarization:
+                    address_summarization = True
+                    address_summarization_intfs = []
                     continue
 
                 # Loopback0
                 # GigabitEthernet2
                 # GigabitEthernet1
-                p7 = re.compile(r'^(?P<interface>(Lo.*|Gi.*|.*(SL|VL).*))$')
                 m = p7.match(line)
                 if m:
-                    if routing_interfaces is not None:
-                        routing_interfaces.append(str(m.groupdict()['interface']))
-                        ospf_dict['areas'][area]['configured_interfaces'] = routing_interfaces
-                    elif passive_interfaces is not None:
-                        passive_interfaces.append(str(m.groupdict()['interface']))
-                        ospf_dict['passive_interfaces'] = passive_interfaces
+                    if routing_networks:
+                        routing_network_intfs.append(str(m.groupdict()['interface']))
+                        if protocol == 'ospf':
+                            ospf_dict['areas'][area]['configured_interfaces'] = routing_network_intfs
+                        elif protocol == 'isis':
+                            isis_dict['configured_interfaces'] = routing_network_intfs
+                    elif routing_on_interfaces:
+                        routing_on_interfaces_intfs.append(str(m.groupdict()['interface']))
+                        if protocol == 'ospf':
+                            ospf_dict['areas'][area]['configured_interfaces'] = routing_on_interfaces_intfs
+                    elif passive_interfaces:
+                        passive_intfs.append(str(m.groupdict()['interface']))
+                        if protocol == 'ospf':
+                            ospf_dict['passive_interfaces'] = passive_intfs
+                        elif protocol == 'isis':
+                            isis_dict['passive_interfaces'] = passive_intfs
+                    elif address_summarization:
+                        address_summarization_intfs.append(str(m.groupdict()['interface']))
+                        if protocol == 'isis':
+                            isis_dict['address_summarization'] = address_summarization_intfs
                     continue
 
-                # Routing Information Sources:
                 # Gateway         Distance      Last Update
                 # 3.3.3.3              110      07:33:00
                 # 2.2.2.2              110      07:33:00
                 # 4.4.4.4              110      00:19:15
-                p8 = re.compile(r'^(?P<gateway>([0-9\.]+)) +(?P<distance>(\d+))'
-                                 ' +(?P<last_update>([0-9\:]+))$')
                 m = p8.match(line)
                 if m:
-                    gateway = str(m.groupdict()['gateway'])
-                    distance = int(m.groupdict()['distance'])
-                    last_update = str(m.groupdict()['last_update'])
-                    if protocol == 'ospf':
-                        if 'routing_information_sources' not in ospf_dict:
-                            ospf_dict['routing_information_sources'] = {}
-                        if 'gateway' not in ospf_dict['routing_information_sources']:
-                            ospf_dict['routing_information_sources']['gateway'] = {}
-                        if gateway not in ospf_dict['routing_information_sources']\
-                                ['gateway']:
-                            ospf_dict['routing_information_sources']['gateway']\
-                                [gateway] = {}
-                        ospf_dict['routing_information_sources']['gateway'][gateway]\
-                            ['distance'] = distance
-                        ospf_dict['routing_information_sources']['gateway'][gateway]\
-                            ['last_update'] = last_update
-                    elif protocol == 'bgp':
-                        if 'neighbor' not in bgp_dict:
-                            bgp_dict['neighbor'] = {}
-                        if gateway not in bgp_dict['neighbor']:
-                            bgp_dict['neighbor'][gateway] = {}
-                        bgp_dict['neighbor'][gateway]['neighbor_id'] = gateway
-                        bgp_dict['neighbor'][gateway]['distance'] = distance
-                        bgp_dict['neighbor'][gateway]['last_update'] = last_update
+                    group = m.groupdict()
+                    gateway = str(group['gateway'])
+                    distance = int(group['distance'])
+                    last_update = str(group['last_update'])
+                    if routing_information:
+                        if protocol == 'ospf':
+                            gateway_dict = ospf_dict. \
+                                setdefault('routing_information_sources', {}). \
+                                setdefault('gateway', {}).setdefault(gateway, {})
+                            gateway_dict['distance'] = distance
+                            gateway_dict['last_update'] = last_update
+                        elif protocol == 'bgp':
+                            gateway_dict = bgp_dict.setdefault('neighbor', {}). \
+                                setdefault(gateway, {})
+                            gateway_dict['neighbor_id'] = gateway
+                            gateway_dict['distance'] = distance
+                            gateway_dict['last_update'] = last_update
+                        elif protocol == 'isis':
+                            gateway_dict = isis_dict. \
+                                setdefault('routing_information_sources', {}). \
+                                setdefault('gateway', {}).setdefault(gateway, {})
+
+                            gateway_dict['distance'] = distance
+                            gateway_dict['last_update'] = last_update
+
                     continue
 
                 # Distance: (default is 110)
-                p10 = re.compile(r'^Distance: +\(default +is +(?P<num>(\d+))\)$')
-                m = p10.match(line)
+                m = p9.match(line)
                 if m:
                     if protocol == 'ospf':
-                        if 'preference' not in ospf_dict:
-                            ospf_dict['preference'] = {}
-                        if 'single_value' not in ospf_dict['preference']:
-                            ospf_dict['preference']['single_value'] = {}
-                        ospf_dict['preference']['single_value']['all'] = \
-                            int(m.groupdict()['num'])
+                        pdict = ospf_dict
                     elif protocol == 'application':
-                        if 'preference' not in app_dict:
-                            app_dict['preference'] = {}
-                        if 'single_value' not in app_dict['preference']:
-                            app_dict['preference']['single_value'] = {}
-                        app_dict['preference']['single_value']['all'] = \
-                            int(m.groupdict()['num'])
+                        pdict = application_dict
+                    elif protocol == 'isis':
+                        pdict = isis_dict
+                    else:
+                        continue
+                    # Set values
+                    pref_dict = pdict.setdefault('preference', {})
+                    single_value_dict = pref_dict.setdefault('single_value', {})
+                    single_value_dict['all'] = int(m.groupdict()['num'])
                     continue
 
                 # Distance: intra-area 112 inter-area 113 external 114
-                p11 = re.compile(r'^Distance: +intra-area +(?P<intra>(\d+))'
-                                 ' +inter-area +(?P<inter>(\d+)) +external'
-                                 ' +(?P<external>(\d+))$')
-                m = p11.match(line)
+                m = p10.match(line)
                 if m:
+                    group = m.groupdict()
                     if protocol == 'ospf':
-                        if 'preference' not in ospf_dict:
-                            ospf_dict['preference'] = {}
-                        if 'multi_values' not in ospf_dict['preference']:
-                            ospf_dict['preference']['multi_values'] = {}
-                        if 'granularity' not in ospf_dict['preference']\
-                                ['multi_values']:
-                            ospf_dict['preference']['multi_values']\
-                                ['granularity'] = {}
-                        if 'detail' not in ospf_dict['preference']['multi_values']\
-                                ['granularity']:
-                            ospf_dict['preference']['multi_values']['granularity']\
-                                ['detail'] = {}
-                        ospf_dict['preference']['multi_values']['granularity']\
-                            ['detail']['intra_area'] = int(m.groupdict()['intra'])
-                        ospf_dict['preference']['multi_values']['granularity']\
-                            ['detail']['inter_area'] = int(m.groupdict()['inter'])
-                        ospf_dict['preference']['multi_values']['external'] = \
-                            int(m.groupdict()['external'])
+                        multi_values_dict = ospf_dict.setdefault('preference', {}). \
+                            setdefault('multi_values', {})
+                        multi_values_dict['external'] = int(group['external'])
+                        detail_dict = multi_values_dict. \
+                            setdefault('granularity', {}). \
+                            setdefault('detail', {})
+                        detail_dict['intra_area'] = int(group['intra'])
+                        detail_dict['inter_area'] = int(group['inter'])
                     continue
 
                 # Sending updates every 0 seconds
-                p12 = re.compile(r'^Sending +updates +every +(?P<update>(\d+))'
-                                  ' +seconds$')
-                m = p12.match(line)
+                m = p11.match(line)
                 if m:
                     if protocol == 'application':
-                        app_dict['update_frequency'] = int(m.groupdict()['update'])
-                        continue
+                        application_dict['update_frequency'] = \
+                            int(m.groupdict()['update'])
+                    continue
 
                 # Invalid after 0 seconds, hold down 0, flushed after 0
-                p13 = re.compile(r'^Invalid +after +(?P<invalid>(\d+)) +seconds,'
-                                  ' +hold +down +(?P<holddown>(\d+)), +flushed'
-                                  ' +after +(?P<flushed>(\d+))$')
-                m = p13.match(line)
+                m = p12.match(line)
                 if m:
+                    group = m.groupdict()
                     if protocol == 'application':
-                        app_dict['invalid'] = int(m.groupdict()['invalid'])
-                        app_dict['holddown'] = int(m.groupdict()['holddown'])
-                        app_dict['flushed'] = int(m.groupdict()['flushed'])
+                        application_dict['invalid'] = int(group['invalid'])
+                        application_dict['holddown'] = int(group['holddown'])
+                        application_dict['flushed'] = int(group['flushed'])
                     continue
 
                 # IGP synchronization is disabled
-                p13 = re.compile(r'^IGP +synchronization +is'
-                                  ' +(?P<igp>(enabled|disabled))$')
                 m = p13.match(line)
                 if m:
                     if 'enabled' in m.groupdict()['igp']:
                         bgp_dict['igp_sync'] = True
                     else:
                         bgp_dict['igp_sync'] = False
-                    continue
 
                 # Automatic route summarization is disabled
-                p14 = re.compile(r'^Automatic +route +summarization +is'
-                                  ' +(?P<route>(enabled|disabled))$')
                 m = p14.match(line)
                 if m:
                     if 'enabled' in m.groupdict()['route']:
                         bgp_dict['automatic_route_summarization'] = True
                     else:
                         bgp_dict['automatic_route_summarization'] = False
-                    continue
+
                 # Distance: external 20 internal 200 local 200
-                p15 = re.compile(r'^Distance: +external +(?P<external>(\d+))'
-                                  ' +internal +(?P<internal>(\d+)) +local'
-                                  ' +(?P<local>(\d+))$')
                 m = p15.match(line)
                 if m:
-                    if 'preference' not in bgp_dict:
-                        bgp_dict['preference'] = {}
-                    if 'multi_values' not in bgp_dict['preference']:
-                        bgp_dict['preference']['multi_values'] = {}
-                    bgp_dict['preference']['multi_values']['external'] = \
-                        int(m.groupdict()['external'])
-                    bgp_dict['preference']['multi_values']['internal'] = \
-                        int(m.groupdict()['internal'])
-                    bgp_dict['preference']['multi_values']['local'] = \
-                        int(m.groupdict()['local'])
+                    group = m.groupdict()
+                    if protocol == 'bgp':
+                        multi_values_dict = bgp_dict.setdefault('preference', {}).setdefault('multi_values', {})
+                    multi_values_dict['external'] = int(group['external'])
+                    multi_values_dict['internal'] = int(group['internal'])
+                    multi_values_dict['local'] = int(group['local'])
                     continue
+
+                # Redistributing: isis banana
+                m = p16.match(line)
+                if m:
+                    if protocol == 'isis':
+                        isis_dict['redistributing'] = m.groupdict()['redistributing']
 
         return ret_dict
 

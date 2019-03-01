@@ -9,7 +9,7 @@ from ats.topology import loader
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
-# iosxr show_ospf
+# iosxe show_protocols
 from genie.libs.parser.iosxe.show_protocols import ShowIpProtocols,\
                                                    ShowIpProtocolsSectionRip,\
                                                    ShowIpv6ProtocolsSectionRip
@@ -19,10 +19,7 @@ from genie.libs.parser.iosxe.show_protocols import ShowIpProtocols,\
 # =================================
 class test_show_ip_protocols(unittest.TestCase):
 
-    '''Unit test for "show ip protocols" '''
-
     device = Device(name='aDevice')
-    
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
@@ -160,6 +157,157 @@ class test_show_ip_protocols(unittest.TestCase):
                                         'total_normal_area': 1,
                                         'total_nssa_area': 0,
                                         'total_stub_area': 0}}}}}}}}}
+
+    golden_output3 = {'execute.return_value': '''
+        show ip protocols
+        *** IP Routing is NSF aware ***
+
+        Routing Protocol is "application"
+          Sending updates every 0 seconds
+          Invalid after 0 seconds, hold down 0, flushed after 0
+          Outgoing update filter list for all interfaces is not set
+          Incoming update filter list for all interfaces is not set
+          Maximum path: 32
+          Routing for Networks:
+          Routing Information Sources:
+            Gateway         Distance      Last Update
+          Distance: (default is 4)
+
+        Routing Protocol is "isis banana"
+          Outgoing update filter list for all interfaces is not set
+          Incoming update filter list for all interfaces is not set
+          Redistributing: isis banana
+          Address Summarization:
+            None
+          Maximum path: 4
+          Routing for Networks:
+            TenGigabitEthernet0/0/26
+            TenGigabitEthernet0/0/27
+          Passive Interface(s):
+            Loopback0
+          Routing Information Sources:
+            Gateway         Distance      Last Update
+            11.139.6.3           115      05:56:34
+            11.139.6.2           115      05:56:34
+            11.139.6.4           115      05:56:34
+            11.139.6.9           115      05:56:34
+          Distance: (default is 115)
+
+        Routing Protocol is "bgp 9999"
+          Outgoing update filter list for all interfaces is not set
+          Incoming update filter list for all interfaces is not set
+          IGP synchronization is disabled
+          Automatic route summarization is disabled
+          Maximum path: 1
+          Routing Information Sources:
+            Gateway         Distance      Last Update
+            11.139.6.3           200      12w5d
+            11.139.6.2           200      14w4d
+          Distance: external 20 internal 200 local 200
+        '''}
+
+    golden_parsed_output3 = {
+        'protocols': 
+            {'application': 
+                {'flushed': 0,
+                'holddown': 0,
+                'incoming_filter_list': 'not set',
+                'invalid': 0,
+                'maximum_path': 32,
+                'outgoing_filter_list': 'not set',
+                'preference': 
+                    {'single_value': 
+                        {'all': 4}},
+                'update_frequency': 0},
+            'bgp': 
+                {'instance': 
+                    {'default': 
+                        {'bgp_id': 9999,
+                        'vrf': 
+                            {'default': 
+                                {'address_family': 
+                                    {'ipv4': 
+                                        {'automatic_route_summarization': False,
+                                        'igp_sync': False,
+                                        'incoming_filter_list': 'not set',
+                                        'maximum_path': 1,
+                                        'neighbor': 
+                                            {'11.139.6.2': 
+                                                {'distance': 200,
+                                                'last_update': '14w4d',
+                                                'neighbor_id': '11.139.6.2'},
+                                            '11.139.6.3': 
+                                                {'distance': 200,
+                                                'last_update': '12w5d',
+                                                'neighbor_id': '11.139.6.3'}},
+                                        'outgoing_filter_list': 'not set',
+                                        'preference': 
+                                            {'multi_values': 
+                                                {'external': 20,
+                                                'internal': 200,
+                                                'local': 200}}}}}}}}},
+            'isis': 
+                {'vrf': 
+                    {'default': 
+                        {'address_family': 
+                            {'ipv4': 
+                                {'instance': 
+                                    {'banana': 
+                                        {'configured_interfaces': ['TenGigabitEthernet0/0/26', 'TenGigabitEthernet0/0/27'],
+                                        'incoming_filter_list': 'not set',
+                                        'maximum_path': 4,
+                                        'outgoing_filter_list': 'not set',
+                                        'passive_interfaces': ['Loopback0'],
+                                        'preference': 
+                                            {'single_value': 
+                                                {'all': 115}},
+                                        'redistributing': 'isis banana',
+                                        'routing_information_sources': 
+                                            {'gateway': 
+                                                {'11.139.6.2': 
+                                                    {'distance': 115,
+                                                    'last_update': '05:56:34'},
+                                                '11.139.6.3': 
+                                                    {'distance': 115,
+                                                    'last_update': '05:56:34'},
+                                                '11.139.6.4': 
+                                                    {'distance': 115,
+                                                    'last_update': '05:56:34'},
+                                                '11.139.6.9': 
+                                                    {'distance': 115,
+                                                    'last_update': '05:56:34'}}}}}}}}}}}}
+
+    golden_output4 = {'execute.return_value': '''
+        Router# show ip protocols
+        *** IP Routing is NSF aware ***
+        Routing Protocol is "isis"
+          Sending updates every 0 seconds
+          Invalid after 0 seconds, hold down 0, flushed after 0
+          Outgoing update filter list for all interfaces is not set
+          Incoming update filter list for all interfaces is not set
+          Redistributing: isis
+          Address Summarization:
+            None
+          Routing for Networks:
+            Serial0
+          Routing Information Sources:
+          Distance: (default is 115)
+        '''}
+
+    golden_parsed_output4 = {
+        'protocols': 
+            {'isis': 
+                {'vrf': 
+                    {'default': 
+                        {'address_family': 
+                            {'ipv4': 
+                                {'instance': 
+                                    {'default': 
+                                        {'incoming_filter_list': 'not set',
+                                        'outgoing_filter_list': 'not set',
+                                        'preference': 
+                                            {'single_value': {'all': 115}},
+                                            'redistributing': 'isis'}}}}}}}}}
 
     def test_show_ip_protocols_full1(self):
         
@@ -321,6 +469,20 @@ class test_show_ip_protocols(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
+    def test_show_ip_protocols_full3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowIpProtocols(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
+
+    def test_show_ip_protocols_full4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output4)
+        obj = ShowIpProtocols(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output4)
+
     def test_show_ip_protocols_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -330,6 +492,20 @@ class test_show_ip_protocols(unittest.TestCase):
 
     golden_parsed_output = {
     'protocols':{
+        'application':{
+            'flushed': 0,
+            'holddown': 0,
+            'incoming_filter_list': 'not set',
+            'invalid': 0,
+            'maximum_path': 32,
+            'outgoing_filter_list': 'not set',
+            'preference':{
+                'single_value':{
+                    'all': 4
+                }
+            },
+            'update_frequency': 0
+        },
         'rip':{
             'vrf': {
                 'default': {
@@ -400,38 +576,51 @@ class test_show_ip_protocols(unittest.TestCase):
     }
     }
     golden_output = {'execute.return_value': '''\
-    R1#show ip protocols | sec rip
-    Routing Protocol is "rip"
-      Output delay 50 milliseconds between packets
-      Outgoing update filter list for all interfaces is not set
-      Incoming update filter list for all interfaces is not set
-      Incoming routes will have 10 added to metric if on list 21
-      Sending updates every 10 seconds, next due in 8 seconds
-      Invalid after 21 seconds, hold down 22, flushed after 23
-      Default redistribution metric is 3
-      Redistributing: connected, static, rip
-      Neighbor(s):
-        10.1.2.2
-      Default version control: send version 2, receive version 2
-        Interface                           Send  Recv  Triggered RIP  Key-chain
-        GigabitEthernet3.100                2     2          No        1
-      Automatic network summarization is not in effect
-      Address Summarization:
-        172.16.0.0/17 for GigabitEthernet3.100
-      Maximum path: 4
-      Routing for Networks:
-        10.0.0.0
-      Passive Interface(s):
-        GigabitEthernet2.100
-      Routing Information Sources:
-        Gateway         Distance      Last Update
-        10.1.3.3             120      00:00:00
-        10.1.2.2             120      00:00:04
-      Distance: (default is 120)
+    R1#show ip protocols
+    *** IP Routing is NSF aware ***
+
+        Routing Protocol is "application"
+          Sending updates every 0 seconds
+          Invalid after 0 seconds, hold down 0, flushed after 0
+          Outgoing update filter list for all interfaces is not set
+          Incoming update filter list for all interfaces is not set
+          Maximum path: 32
+          Routing for Networks:
+          Routing Information Sources:
+            Gateway         Distance      Last Update
+          Distance: (default is 4)
+
+        Routing Protocol is "rip"
+          Output delay 50 milliseconds between packets
+          Outgoing update filter list for all interfaces is not set
+          Incoming update filter list for all interfaces is not set
+          Incoming routes will have 10 added to metric if on list 21
+          Sending updates every 10 seconds, next due in 8 seconds
+          Invalid after 21 seconds, hold down 22, flushed after 23
+          Default redistribution metric is 3
+          Redistributing: connected, static, rip
+          Neighbor(s):
+            10.1.2.2
+          Default version control: send version 2, receive version 2
+            Interface                           Send  Recv  Triggered RIP  Key-chain
+            GigabitEthernet3.100                2     2          No        1
+          Automatic network summarization is not in effect
+          Address Summarization:
+            172.16.0.0/17 for GigabitEthernet3.100
+          Maximum path: 4
+          Routing for Networks:
+            10.0.0.0
+          Passive Interface(s):
+            GigabitEthernet2.100
+          Routing Information Sources:
+            Gateway         Distance      Last Update
+            10.1.3.3             120      00:00:00
+            10.1.2.2             120      00:00:04
+          Distance: (default is 120)
 
         '''}
 
-    golden_parsed_output_2 = {
+    golden_parsed_output_5 = {
         'protocols':{
             'rip':{
                 'vrf': {
@@ -516,8 +705,8 @@ class test_show_ip_protocols(unittest.TestCase):
             }
         }
     }
-    golden_output_2 = {'execute.return_value': '''
-    R1#show ip protocols vrf VRF1 | sec rip
+    golden_output_5 = {'execute.return_value': '''
+    R1#show ip protocols vrf VRF1
     Routing Protocol is "rip"
       Output delay 50 milliseconds between packets
       Outgoing update filter list for all interfaces is 150
@@ -558,10 +747,10 @@ class test_show_ip_protocols(unittest.TestCase):
 
     def test_golden_vrf_vrf1(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output_2)
+        self.device = Mock(**self.golden_output_5)
         obj = ShowIpProtocols(device=self.device)
         parsed_output = obj.parse(vrf="VRF1")
-        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+        self.assertEqual(parsed_output, self.golden_parsed_output_5)
 
 
 # ============================================
