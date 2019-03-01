@@ -576,6 +576,8 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                     pdict = application_dict
                 elif protocol == 'isis':
                     pdict = isis_dict
+                else:
+                    continue
                 # Set values
                 pref_dict = pdict.setdefault('preference', {})
                 single_value_dict = pref_dict.setdefault('single_value', {})
