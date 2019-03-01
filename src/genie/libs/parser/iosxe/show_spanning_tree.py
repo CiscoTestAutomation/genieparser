@@ -28,24 +28,24 @@ from genie.libs.parser.utils.common import Common
 class ShowSpanningTreeSummarySchema(MetaParser):
     """Schema for show spanning-tree summary"""
     schema = {
-        'etherchannel_misconfig_guard': bool,
-        'extended_system_id': bool,
-        'portfast_default': bool,
+        Optional('etherchannel_misconfig_guard'): bool,
+        Optional('extended_system_id'): bool,
+        Optional('portfast_default'): bool,
         'bpdu_guard': bool,
-        'bpdu_filter': bool,
+        Optional('bpdu_filter'): bool,
         Optional('bridge_assurance'): bool,
-        'loop_guard': bool,
+        Optional('loop_guard'): bool,
         'uplink_fast': bool,
         'backbone_fast': bool,
-        'root_bridge_for': str,
+        Optional('root_bridge_for'): str,
         Optional('pvst_simulation'): bool,
-        "configured_pathcost": {
+        Optional("configured_pathcost"): {
             'method': str,
             Optional('operational_value'): str,
         },
         Optional('mode'): {
             Any(): {  # mstp, pvst, rapid_pvst
-                Any(): {   # <mst_domain>,  <pvst_id>
+                Any(): {  # <mst_domain>,  <pvst_id>
                     'blocking': int,
                     'listening': int,
                     'learning': int,
@@ -64,8 +64,6 @@ class ShowSpanningTreeSummarySchema(MetaParser):
             Optional('num_of_vlans'): int,
         }
     }
-
-
 class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
     """Parser for show show spanning-tree summary"""
 
@@ -83,7 +81,7 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
 
         # initial regexp pattern
         p1 = re.compile(r'^Switch +is +in +(?P<mode>[\w\-]+) +mode( *\(IEEE +Standard\))?$')
-        p2 = re.compile(r'^Root +bridge +for: +(?P<root_bridge_for>[\w\-\,\s]+)$')
+        p2 = re.compile(r'^Root +bridge +for: +(?P<root_bridge_for>[\w\-\,\s]+).?$')
         p3 = re.compile(r'^(?P<name>[\w\s]+) +is +(?P<value>disabled|enabled)$')
         p4 = re.compile(r'^(?P<id>(?!Total)\w+) +(?P<blocking>\d+) +(?P<listening>\d+)'
                          ' +(?P<learning>\d+) +(?P<forwarding>\d+) +(?P<stp_active>\d+)$')
@@ -97,6 +95,7 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
         key_map = {'EtherChannel misconfig guard': 'etherchannel_misconfig_guard',
                    'Extended system ID': 'extended_system_id',
                    'Portfast Default': 'portfast_default',
+                   'PortFast BPDU Guard': 'bpdu_guard',
                    'PortFast BPDU Guard Default': 'bpdu_guard',
                    'Portfast Edge BPDU Guard Default': 'bpdu_guard',
                    'Portfast BPDU Filter Default': 'bpdu_filter',
