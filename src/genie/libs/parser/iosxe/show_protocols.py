@@ -366,6 +366,8 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                     pdict = application_dict
                 elif protocol == 'bgp':
                     pdict = bgp_dict
+                else:
+                    continue
                 direction = str(group['dir']).lower() + '_' + 'filter_list'
                 pdict[direction] = str(group['state']).lower()
                 continue
