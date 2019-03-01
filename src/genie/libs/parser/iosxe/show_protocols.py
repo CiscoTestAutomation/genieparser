@@ -132,7 +132,7 @@ class ShowIpProtocolsSchema(MetaParser):
                                         'incoming_filter_list': str,
                                         'redistributing': str,
                                         Optional('address_summarization'): list,
-                                        'maximum_path': int,
+                                        Optional('maximum_path'): int,
                                         'preference': 
                                             {'single_value': 
                                                 {'all': int},
@@ -195,10 +195,11 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
         # Routing Protocol is "ospf 1"
         # Routing Protocol is "application"
         # Routing Protocol is "bgp 100"
+        # Routing Protocol is "isis"
         # Routing Protocol is "isis banana"
         # Routing Protocol is "eigrp 1"
         p1 = re.compile(r"^Routing +Protocol +is"
-                         " +\"(?P<protocol>(ospf|bgp|isis|eigrp|application))"
+                         " +\"(?P<protocol>(ospf|bgp|isis|eigrp|application|rip))"
                          "(?: *(?P<pid>(\S+)))?\"$")
 
         # Outgoing update filter list for all interfaces is not set
@@ -337,6 +338,8 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                                              setdefault('ipv4', {})
                 elif protocol == 'isis':
                     # Set isis_dict
+                    if not group['pid']:
+                        instance = 'default'
                     isis_dict = protocol_dict.setdefault('vrf', {}).\
                                               setdefault('default', {}).\
                                               setdefault('address_family', {}).\
