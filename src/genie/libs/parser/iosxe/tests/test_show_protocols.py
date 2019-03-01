@@ -236,13 +236,12 @@ class test_show_ip_protocols(unittest.TestCase):
 
         self.device.execute = Mock()
         self.device.execute.side_effect = mapper
-        
         obj = ShowIpProtocols(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_show_ip_protocols_full2(self):
-        
+
         self.maxDiff = None
 
         def mapper(key):
@@ -287,7 +286,7 @@ class test_show_ip_protocols(unittest.TestCase):
               Automatic route summarization is disabled
               Neighbor(s):
                 Address          FiltIn FiltOut DistIn DistOut Weight RouteMap
-                192.168.0.9                                          
+                192.168.0.9
               Maximum path: 1
               Routing Information Sources:
                 Gateway         Distance      Last Update
@@ -317,7 +316,7 @@ class test_show_ip_protocols(unittest.TestCase):
 
         self.device.execute = Mock()
         self.device.execute.side_effect = mapper
-        
+
         obj = ShowIpProtocols(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
@@ -329,17 +328,254 @@ class test_show_ip_protocols(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+    golden_parsed_output = {
+    'protocols':{
+        'rip':{
+            'vrf': {
+                'default': {
+                    'address_family': {
+                        'ipv4': {
+                            'instance': {
+                                'rip': {
+                                    'distance': 120,
+                                    'maximum_paths': 4,
+                                    'output_delay': 50,
+                                    'default_redistribution_metric': 3,
+                                    'network': ['10.0.0.0'],
+                                    'send_version': 2,
+                                    'receive_version': 2,
+                                    'automatic_network_summarization_in_effect': False,
+                                    'outgoing_update_filterlist': {
+                                        'outgoing_update_filterlist': "not set"
+                                    },
+                                    'incoming_update_filterlist': {
+                                        'incoming_update_filterlist': "not set"
+
+                                    },
+                                    'incoming_route_metric': {
+                                        "list": "21",
+                                        "added": "10"
+                                    },
+                                    'redistribute': {
+                                        'connected': {},
+                                        'static': {},
+                                        'rip': {},
+                                    },
+                                    'timers': {
+                                        'update_interval': 10,
+                                        'next_update': 8,
+                                        'invalid_interval': 21,
+                                        'holddown_interval': 22,
+                                        'flush_interval': 23,
+                                    },
+                                    'interfaces': {
+                                        'GigabitEthernet3.100': {
+                                            'summary_address': {
+                                                '172.16.0.0/17': {},
+                                            },
+                                            'passive': True,
+                                            'send_version': '2',
+                                            'receive_version': '2',
+                                            'triggered_rip': 'no',
+                                            'key_chain': '1',
+                                        },
+                                    },
+                                    'neighbors': {
+                                        '10.1.3.3': {
+                                            'last_update': '00:00:00',
+                                            'distance': 120,
+                                        },
+                                        '10.1.2.2': {
+                                            'last_update': '00:00:04',
+                                            'distance': 120,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            }
+        }
+    }
+    }
+    golden_output = {'execute.return_value': '''\
+    R1#show ip protocols | sec rip
+    Routing Protocol is "rip"
+      Output delay 50 milliseconds between packets
+      Outgoing update filter list for all interfaces is not set
+      Incoming update filter list for all interfaces is not set
+      Incoming routes will have 10 added to metric if on list 21
+      Sending updates every 10 seconds, next due in 8 seconds
+      Invalid after 21 seconds, hold down 22, flushed after 23
+      Default redistribution metric is 3
+      Redistributing: connected, static, rip
+      Neighbor(s):
+        10.1.2.2
+      Default version control: send version 2, receive version 2
+        Interface                           Send  Recv  Triggered RIP  Key-chain
+        GigabitEthernet3.100                2     2          No        1
+      Automatic network summarization is not in effect
+      Address Summarization:
+        172.16.0.0/17 for GigabitEthernet3.100
+      Maximum path: 4
+      Routing for Networks:
+        10.0.0.0
+      Passive Interface(s):
+        GigabitEthernet2.100
+      Routing Information Sources:
+        Gateway         Distance      Last Update
+        10.1.3.3             120      00:00:00
+        10.1.2.2             120      00:00:04
+      Distance: (default is 120)
+
+        '''}
+
+    golden_parsed_output_2 = {
+        'protocols':{
+            'rip':{
+                'vrf': {
+                    'VRF1': {
+                        'address_family': {
+                            'ipv4': {
+                                'instance': {
+                                    'rip': {
+                                        'distance': 120,
+                                        'maximum_paths': 4,
+                                        'output_delay': 50,
+                                        'network': ['10.0.0.0'],
+                                        'send_version': 2,
+                                        'receive_version': 2,
+                                        'outgoing_update_filterlist': {
+                                            'outgoing_update_filterlist': "150",
+                                            'interfaces': {
+                                                'GigabitEthernet2.100': {
+                                                    'filter': "150",
+                                                    'per_user': True,
+                                                    'default': "not set",
+                                                },
+                                                'GigabitEthernet3.100': {
+                                                    'filter': "130",
+                                                    'per_user': True,
+                                                    'default': "not set",
+                                                },
+                                            },
+                                        },
+                                        'incoming_update_filterlist': {
+                                            'incoming_update_filterlist': "100",
+                                            'interfaces': {
+                                                "GigabitEthernet2.100": {
+                                                    'filter': "13",
+                                                    'per_user': True,
+                                                    'default': "not set",
+                                                },
+                                            },
+                                        },
+                                        'redistribute': {
+                                            'connected': {},
+                                            'static': {},
+                                            'rip': {},
+                                        },
+                                        'timers': {
+                                            'update_interval': 30,
+                                            'next_update': 2,
+                                            'invalid_interval': 180,
+                                            'holddown_interval': 180,
+                                            'flush_interval': 240,
+                                        },
+                                        'interfaces': {
+                                            'GigabitEthernet2.200': {
+                                                'send_version': '2',
+                                                'receive_version': '2',
+                                                'triggered_rip': 'no',
+                                                'key_chain': 'none',
+                                            },
+                                            'GigabitEthernet3.200': {
+                                                'send_version': "1 2",
+                                                'receive_version': "2",
+                                                'triggered_rip': 'no',
+                                                'key_chain': 'none',
+                                            },
+                                        },
+                                        'neighbors': {
+                                            '10.1.3.3': {
+                                                'last_update': '20:33:00',
+                                                'distance': 120,
+                                            },
+                                            '10.1.2.2': {
+                                                'last_update': '00:00:21',
+                                                'distance': 120,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                }
+            }
+        }
+    }
+    golden_output_2 = {'execute.return_value': '''
+    R1#show ip protocols vrf VRF1 | sec rip
+    Routing Protocol is "rip"
+      Output delay 50 milliseconds between packets
+      Outgoing update filter list for all interfaces is 150
+        GigabitEthernet2.100 filtered by 150 (per-user), default is not set
+        GigabitEthernet3.100 filtered by 130 (per-user), default is not set
+      Incoming update filter list for all interfaces is 100
+        GigabitEthernet2.100 filtered by 13 (per-user), default is not set
+      Sending updates every 30 seconds, next due in 2 seconds
+      Invalid after 180 seconds, hold down 180, flushed after 240
+      Redistributing: connected, static, rip
+      Default version control: send version 2, receive version 2
+        Interface                           Send  Recv  Triggered RIP  Key-chain
+        GigabitEthernet2.200                2     2          No        none
+        GigabitEthernet3.200                1 2   2          No        none
+      Maximum path: 4
+      Routing for Networks:
+         10.0.0.0
+        10.0.0.0
+      Routing Information Sources:
+        Gateway         Distance      Last Update
+        10.1.3.3             120      20:33:00
+        10.1.2.2             120      00:00:21
+      Distance: (default is 120)
+    '''}
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowIpProtocols(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_vrf_default(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpProtocols(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_vrf_vrf1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowIpProtocols(device=self.device)
+        parsed_output = obj.parse(vrf="VRF1")
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
 
 # ============================================
 # Parser for 'show ip protocols | sec rip'
 # Parser for 'show ip protocols vrf {vrf} | sec rip'
 # ============================================
-class test_show_ip_protocols(unittest.TestCase):
+class test_show_ip_protocols_section_rip(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-        'vrf': {
+        'protocols':{
+            'rip':{
+                'vrf': {
             'default': {
                 'address_family': {
                     'ipv4': {
@@ -404,6 +640,8 @@ class test_show_ip_protocols(unittest.TestCase):
                 },
             },
         }
+            }
+        }
     }
     golden_output = {'execute.return_value': '''\
 R1#show ip protocols | sec rip
@@ -438,7 +676,9 @@ Routing Protocol is "rip"
     '''}
 
     golden_parsed_output_2 = {
-        'vrf': {
+        'protocols': {
+            'rip': {
+            'vrf': {
             'VRF1': {
                 'address_family': {
                     'ipv4': {
@@ -516,6 +756,8 @@ Routing Protocol is "rip"
                     },
                 },
             },
+        }
+            }
         }
     }
     golden_output_2 = {'execute.return_value': '''
