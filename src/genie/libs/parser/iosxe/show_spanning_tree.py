@@ -124,7 +124,6 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
             # EtherChannel misconfig guard is disabled
             # Extended system ID           is enabled
             # Portfast Default             is disabled
-            # PortFast BPDU Guard Default  is disabled
             # PortFast BPDU Guard Default  is disabled  or  Portfast Edge BPDU Guard Default
             # Portfast BPDU Filter Default is disabled  or  Portfast Edge BPDU Filter Default
             # Loopguard Default            is disabled

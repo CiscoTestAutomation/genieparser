@@ -165,6 +165,7 @@ class test_show_ip_ospf(test_show_ip_ospf_iosxe):
                                 "max_lsa_ignore_count": 5,
                                 "max_lsa_warning_only": False,
                                 "max_lsa_current_count": 0
+                                "max_lsa_limit": 5000
                             },
                             "spf_control": {
                                 "incremental_spf": False,

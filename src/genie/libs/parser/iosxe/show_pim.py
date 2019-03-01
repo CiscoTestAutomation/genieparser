@@ -360,6 +360,7 @@ class ShowIpv6PimBsrCandidateRp(ShowIpv6PimBsrCandidateRpSchema):
 
             # PIMv2 C-RP information
             # Candidate RP: 2001:3:3:3::3 SM
+            # Candidate RP: 10::1:1:3
             p1 = re.compile(r'^\s*Candidate RP: +(?P<candidate_rp_address>[\w\:\.]+)'
                             '( +(?P<mode>\w+))?$')
             m = p1.match(line)

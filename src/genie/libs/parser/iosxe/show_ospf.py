@@ -83,8 +83,9 @@ class ShowIpOspfSchema(MetaParser):
                                      Optional('max_lsa_current_count'): int,
                                      Optional('max_lsa_ignore_time'): int,
                                      Optional('max_lsa_reset_time'): int,
+                                     Optional('max_lsa_limit'): int,
                                      Optional('max_lsa_warning_only'): bool},
-                                Optional('stub_router'): 
+                                Optional('stub_router'):
                                     {Optional('always'): 
                                         {'always': bool,
                                         'include_stub': bool,
@@ -830,6 +831,7 @@ class ShowIpOspf(ShowIpOspfSchema):
             if m:
                 if 'database_control' not in sub_dict:
                     sub_dict['database_control'] = {}
+                sub_dict['database_control']['max_lsa_limit'] = int(m.groupdict()['max_lsa_limit'])
                 sub_dict['database_control']['max_lsa_warning_only'] = False
                 continue
 
