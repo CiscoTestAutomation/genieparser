@@ -276,6 +276,38 @@ class test_show_ip_protocols(unittest.TestCase):
                                                     {'distance': 115,
                                                     'last_update': '05:56:34'}}}}}}}}}}}}
 
+    golden_output4 = {'execute.return_value': '''
+        Router# show ip protocols
+        *** IP Routing is NSF aware ***
+        Routing Protocol is "isis"
+          Sending updates every 0 seconds
+          Invalid after 0 seconds, hold down 0, flushed after 0
+          Outgoing update filter list for all interfaces is not set
+          Incoming update filter list for all interfaces is not set
+          Redistributing: isis
+          Address Summarization:
+            None
+          Routing for Networks:
+            Serial0
+          Routing Information Sources:
+          Distance: (default is 115)
+        '''}
+
+    golden_parsed_output4 = {
+        'protocols': 
+            {'isis': 
+                {'vrf': 
+                    {'default': 
+                        {'address_family': 
+                            {'ipv4': 
+                                {'instance': 
+                                    {'default': 
+                                        {'incoming_filter_list': 'not set',
+                                        'outgoing_filter_list': 'not set',
+                                        'preference': 
+                                            {'single_value': {'all': 115}},
+                                            'redistributing': 'isis'}}}}}}}}}
+
     def test_show_ip_protocols_full1(self):
         
         self.maxDiff = None
@@ -443,6 +475,13 @@ class test_show_ip_protocols(unittest.TestCase):
         obj = ShowIpProtocols(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output3)
+
+    def test_show_ip_protocols_full4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output4)
+        obj = ShowIpProtocols(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output4)
 
     def test_show_ip_protocols_empty(self):
         self.maxDiff = None
