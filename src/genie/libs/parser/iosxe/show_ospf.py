@@ -3073,7 +3073,7 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
 # ===============================================
 # Super parser for 'show ip ospf database <WORD>'
 # ===============================================
-class ShowIpOspfDatabaseParser(MetaParser):
+class ShowIpOspfDatabaseWordParser(MetaParser):
 
     ''' Parser for "show ip ospf database <WORD>" '''
 
@@ -3902,7 +3902,7 @@ class ShowIpOspfDatabaseRouterSchema(MetaParser):
 # =========================================
 # Parser for 'show ip ospf database router'
 # =========================================
-class ShowIpOspfDatabaseRouter(ShowIpOspfDatabaseRouterSchema, ShowIpOspfDatabaseParser):
+class ShowIpOspfDatabaseRouter(ShowIpOspfDatabaseRouterSchema, ShowIpOspfDatabaseWordParser):
 
     ''' Parser for "show ip ospf database router" '''
 
@@ -3983,7 +3983,7 @@ class ShowIpOspfDatabaseExternalSchema(MetaParser):
 # ===========================================
 # Parser for 'show ip ospf database external'
 # ===========================================
-class ShowIpOspfDatabaseExternal(ShowIpOspfDatabaseExternalSchema, ShowIpOspfDatabaseParser):
+class ShowIpOspfDatabaseExternal(ShowIpOspfDatabaseExternalSchema, ShowIpOspfDatabaseWordParser):
 
     ''' Parser for "show ip ospf database external" '''
 
@@ -4058,7 +4058,7 @@ class ShowIpOspfDatabaseNetworkSchema(MetaParser):
 # ==========================================
 # Parser for 'show ip ospf database network'
 # ==========================================
-class ShowIpOspfDatabaseNetwork(ShowIpOspfDatabaseNetworkSchema, ShowIpOspfDatabaseParser):
+class ShowIpOspfDatabaseNetwork(ShowIpOspfDatabaseNetworkSchema, ShowIpOspfDatabaseWordParser):
 
     ''' Parser for "show ip ospf database network" '''
     cli_command = 'show ip ospf database network'
@@ -4134,7 +4134,7 @@ class ShowIpOspfDatabaseSummarySchema(MetaParser):
 # ==========================================
 # Parser for 'show ip ospf database summary'
 # ==========================================
-class ShowIpOspfDatabaseSummary(ShowIpOspfDatabaseSummarySchema, ShowIpOspfDatabaseParser):
+class ShowIpOspfDatabaseSummary(ShowIpOspfDatabaseSummarySchema, ShowIpOspfDatabaseWordParser):
 
     ''' Parser for "show ip ospf database summary" '''
     cli_command = 'show ip ospf database summary'
@@ -4243,7 +4243,7 @@ class ShowIpOspfDatabaseOpaqueAreaSchema(MetaParser):
 # =============================================================
 # Parser for 'show ospf vrf all-inclusive database opaque-area'
 # =============================================================
-class ShowIpOspfDatabaseOpaqueArea(ShowIpOspfDatabaseOpaqueAreaSchema, ShowIpOspfDatabaseParser):
+class ShowIpOspfDatabaseOpaqueArea(ShowIpOspfDatabaseOpaqueAreaSchema, ShowIpOspfDatabaseWordParser):
 
     ''' Parser for "show ip ospf database opaque-area" '''
 
