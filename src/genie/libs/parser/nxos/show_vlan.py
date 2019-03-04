@@ -148,8 +148,8 @@ class ShowVlan(ShowVlanSchema):
                             while (value <= int(end)):
                                 if str(value) not in vlan_dict['vlans']:
                                     vlan_dict['vlans'][str(value)] = {}
-                                 vlan_dict['vlans'][str(value)]['remote_span_vlan'] = True
-                                 value += 1
+                                vlan_dict['vlans'][str(value)]['remote_span_vlan'] = True
+                                value += 1
 
                         else:
                             if remote_vlan not in vlan_dict['vlans']:
