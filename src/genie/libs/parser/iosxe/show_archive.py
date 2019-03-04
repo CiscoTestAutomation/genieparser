@@ -23,7 +23,7 @@ class ShowArchiveSchema(MetaParser):
 
     schema = {'archive': {
                 'total': int,
-                'max_archive_configurations': int,
+                Optional('max_archive_configurations'): int,
                 'most_recent_file': str,
                 Any(): {
                     'file': str,

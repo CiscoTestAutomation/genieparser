@@ -260,8 +260,8 @@ class ShowIpArpstatisticsVrfAllSchema(MetaParser):
 					'null_source_mac': int,
 					'client_enqueue_failed': int,
 					'dest_not_reachable_for_proxy_arp': int,
-					'dest_unreachable_for_enhanced_proxy': int,
-					'destnination_on_l2_port_tracked': int,
+					Optional('dest_unreachable_for_enhanced_proxy'): int,
+					Optional('destnination_on_l2_port_tracked'): int,
 					'invalid_local_proxy_arp': int,
 					'invalid_proxy_arp': int,
 					'vip_is_not_active': int,
@@ -276,14 +276,14 @@ class ShowIpArpstatisticsVrfAllSchema(MetaParser):
 				'l2_replies': int,
 				'proxy_arp': int,
 				'local_proxy_arp': int,
-				'enhanced_proxy_arp': int,
-				'anycast_proxy_arp': int,
-				'l2_port_track_proxy_arp': int,
+				Optional('enhanced_proxy_arp'): int,
+				Optional('anycast_proxy_arp'): int,
+				Optional('l2_port_track_proxy_arp'): int,
 				'tunneled': int,
 				'fastpath': int,
 				'snooped': int,
 				'dropped': int,
-				'dropped_server_port': int,
+				Optional('dropped_server_port'): int,
 				'drops_details': {
 					'context_not_created': int,
 					'invalid_context': int,
@@ -367,13 +367,14 @@ class ShowIpArpstatisticsVrfAll(ShowIpArpstatisticsVrfAllSchema):
 			'+(?P<tunneled>[\w]+), +Dropped +(?P<dropped>[\w]+)$')
 
 		# Proxy arp 0, Local-Proxy arp 0,  Enhanced Proxy arp 0, Anycast proxy Proxy arp 0,  L2 Port-track Proxy arp 0,  Tunneled 0, Fastpath 0, Snooped 0, Dropped 28218  on Server Port 0 
+		# Proxy arp 0, Local-Proxy arp 0, Tunneled 0, Fastpath 0, Snooped 0, Dropped 4
 		p4 = re.compile(r'^\s*Proxy +arp +(?P<proxy_arp>[\w]+), +Local-Proxy +arp '
-			'+(?P<local_proxy_arp>[\w]+), +Enhanced +Proxy +arp +(?P<enhanced_proxy_arp>[\w]+), '
-			'+Anycast +proxy +Proxy +arp +(?P<anycast_proxy_arp>[\w]+), +L2 +Port-track +Proxy +arp '
-			'+(?P<l2_port_track_proxy_arp>[\w]+),'
+			'+(?P<local_proxy_arp>[\w]+),( +Enhanced +Proxy +arp +(?P<enhanced_proxy_arp>[\w]+),)?'
+			'( +Anycast +proxy +Proxy +arp +(?P<anycast_proxy_arp>[\w]+),)?( +L2 +Port-track +Proxy +arp'
+			' +(?P<l2_port_track_proxy_arp>[\w]+),)?'
 			' +Tunneled +(?P<tunneled>[\w]+), +Fastpath +(?P<fastpath>[\w]+),'
 			' +Snooped +(?P<snooped>[\w]+), +Dropped +(?P<dropped>[\w]+)(,)?'
-			' +on +Server +Port +(?P<dropped_server_port>[\w]+)$')
+			'( +on +Server +Port +(?P<dropped_server_port>[\w]+))?$')
 
 		# MBUF operation failed               : 0
 		p5 = re.compile(r'^\s*MBUF +operation +failed +: +(?P<mbuf_operation_failed>[\d]+)$')
@@ -573,7 +574,7 @@ class ShowIpArpstatisticsVrfAll(ShowIpArpstatisticsVrfAllSchema):
 				# l2_port_track_proxy_arp, tunneled, fastpath, snooped, dropped
 				# dropped_server_port
 				ret_dict['statistics']['received'].update({k: \
-					int(v) for k, v in groups.items()})
+					int(v) for k, v in groups.items() if v})
 				continue
 
 			m = p5.match(line)

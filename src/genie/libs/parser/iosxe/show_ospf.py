@@ -59,9 +59,11 @@ class ShowIpOspfSchema(MetaParser):
                                         Optional('warn_only'): bool},
                                     Optional('connected'): 
                                         {'enabled': bool,
+                                        Optional('subnets'): str,
                                         Optional('metric'): int},
                                     Optional('static'): 
                                         {'enabled': bool,
+                                        Optional('subnets'): str,
                                         Optional('metric'): int},
                                     Optional('bgp'): 
                                         {'bgp_id': int,
@@ -71,10 +73,19 @@ class ShowIpOspfSchema(MetaParser):
                                         },
                                     Optional('isis'): 
                                         {'isis_pid': str,
+                                        Optional('subnets'): str,
                                         Optional('metric'): int}},
                                 Optional('database_control'): 
-                                    {'max_lsa': int},
-                                Optional('stub_router'): 
+                                    {'max_lsa': int,
+                                     Optional('max_lsa_current'): int,
+                                     Optional('max_lsa_threshold_value'): int,
+                                     Optional('max_lsa_ignore_count'): int,
+                                     Optional('max_lsa_current_count'): int,
+                                     Optional('max_lsa_ignore_time'): int,
+                                     Optional('max_lsa_reset_time'): int,
+                                     Optional('max_lsa_limit'): int,
+                                     Optional('max_lsa_warning_only'): bool},
+                                Optional('stub_router'):
                                     {Optional('always'): 
                                         {'always': bool,
                                         'include_stub': bool,
@@ -382,8 +393,22 @@ class ShowIpOspf(ShowIpOspfSchema):
                 if m.groupdict()['metric']:
                     sub_dict['redistribution'][the_type]['metric'] = \
                         int(m.groupdict()['metric'])
-                    continue
+                continue
 
+            # connected, includes subnets in redistribution
+            # static, includes subnets in redistribution
+            # isis, includes subnets in redistribution
+            p12_2_1 = re.compile(r'^(?P<type>(connected|static|isis))'
+                                 ', +includes +(?P<redist>(subnets)) +in +redistribution')
+            m = p12_2_1.match(line)
+            if m:
+                the_type = str(m.groupdict()['type'])
+                if the_type not in sub_dict['redistribution']:
+                    sub_dict['redistribution'][the_type] = {}
+                sub_dict['redistribution'][the_type]['enabled'] = True
+
+                sub_dict['redistribution'][the_type]['subnets'] = m.groupdict()['redist']
+                continue
             # bgp 100 with metric mapped to 111
             # isis 10 with metric mapped to 3333
             # bgp 100 with metric mapped to 100, includes subnets in redistribution, nssa areas only
@@ -752,6 +777,62 @@ class ShowIpOspf(ShowIpOspfSchema):
                     sub_dict['database_control'] = {}
                 sub_dict['database_control']['max_lsa'] = \
                     int(m.groupdict()['max_lsa'])
+                continue
+
+            # Current number of non self-generated LSA 0
+            p33_1 = re.compile(r'^Current +number +of +non +self\-generated +LSA +(?P<max_lsa_current>\d+)$')
+            m = p33_1.match(line)
+            if m:
+                if 'database_control' not in sub_dict:
+                    sub_dict['database_control'] = {}
+                sub_dict['database_control']['max_lsa_current'] = \
+                    int(m.groupdict()['max_lsa_current'])
+                continue
+
+            # Threshold for warning message 75%
+            p33_2 = re.compile(r'^Threshold +for +warning +message +(?P<max_lsa_threshold_value>\d+)\%$')
+            m = p33_2.match(line)
+            if m:
+                if 'database_control' not in sub_dict:
+                    sub_dict['database_control'] = {}
+                sub_dict['database_control']['max_lsa_threshold_value'] = \
+                    int(m.groupdict()['max_lsa_threshold_value'])
+                continue
+
+            # Ignore-time 5 minutes, reset-time 10 minutes
+            p33_3 = re.compile(r'^Ignore\-time +(?P<max_lsa_ignore_time>\d+) +minutes,'
+                               ' +reset\-time +(?P<max_lsa_reset_time>\d+) +minutes$')
+            m = p33_3.match(line)
+            if m:
+                if 'database_control' not in sub_dict:
+                    sub_dict['database_control'] = {}
+                sub_dict['database_control']['max_lsa_ignore_time'] = \
+                    int(m.groupdict()['max_lsa_ignore_time']) * 60
+                sub_dict['database_control']['max_lsa_reset_time'] = \
+                    int(m.groupdict()['max_lsa_reset_time']) * 60
+                continue
+
+            # Ignore-count allowed 5, current ignore-count 0
+            p33_4 = re.compile(r'^Ignore\-count +allowed +(?P<max_lsa_ignore_count>\d+),'
+                              ' +current ignore\-count +(?P<max_lsa_current_count>\d+)$')
+            m = p33_4.match(line)
+            if m:
+                if 'database_control' not in sub_dict:
+                    sub_dict['database_control'] = {}
+                sub_dict['database_control']['max_lsa_ignore_count'] = \
+                    int(m.groupdict()['max_lsa_ignore_count'])
+                sub_dict['database_control']['max_lsa_current_count'] = \
+                    int(m.groupdict()['max_lsa_current_count'])
+                continue
+
+            # Maximum limit of redistributed prefixes 5000 (warning-only)
+            p33_5 = re.compile(r'^Maximum +limit +of +redistributed +prefixes +(?P<max_lsa_limit>\d+) +\(warning\-only\)$')
+            m = p33_5.match(line)
+            if m:
+                if 'database_control' not in sub_dict:
+                    sub_dict['database_control'] = {}
+                sub_dict['database_control']['max_lsa_limit'] = int(m.groupdict()['max_lsa_limit'])
+                sub_dict['database_control']['max_lsa_warning_only'] = False
                 continue
 
             # External flood list length 0
@@ -2368,63 +2449,62 @@ class ShowIpOspfShamLinksSchema(MetaParser):
     ''' Schema for 'show ip ospf sham-links' '''
 
     schema = {
-        'vrf': 
-            {Any(): 
-                {'address_family': 
-                    {Any(): 
-                        {'instance': 
-                            {Any(): 
-                                {'areas': 
-                                    {Any(): 
-                                        {'sham_links': 
-                                            {Any(): 
-                                                {'name': str,
-                                                'link_state': str,
-                                                'local_id': str,
-                                                'remote_id': str,
-                                                'transit_area_id': str,
-                                                Optional('hello_interval'): int,
-                                                Optional('dead_interval'): int,
-                                                Optional('wait_interval'): int,
-                                                Optional('retransmit_interval'): int,
-                                                Optional('transmit_delay'): int,
-                                                'cost': int,
-                                                'state': str,
-                                                'hello_timer': str,
-                                                'demand_circuit': bool,
-                                                Optional('dcbitless_lsa_count'): int,
-                                                Optional('donotage_lsa'): str,
-                                                Optional('adjacency_state'): str,
-                                                Optional('ttl_security'): 
-                                                    {'enable': bool,
-                                                    Optional('hops'): int},
-                                                Optional('index'): str,
-                                                Optional('first'): str,
-                                                Optional('next'): str,
-                                                Optional('last_retransmission_max_length'): int,
-                                                Optional('last_retransmission_max_scan'): int,
-                                                Optional('last_retransmission_scan_length'): int,
-                                                Optional('last_retransmission_scan_time'): int,
-                                                Optional('total_retransmission'): int,
-                                                Optional('retrans_qlen'): int,
-                                                Optional('topology'): 
-                                                    {Any(): 
-                                                        {'cost': int,
-                                                        'disabled': bool,
-                                                        'shutdown': bool,
-                                                        'name': str}},
-                                                },
+    'vrf':
+        {Any():
+             {'address_family':
+                  {Any():
+                       {'instance':
+                            {Any():
+                                 {'areas':
+                                      {Any():
+                                           {'sham_links':
+                                                {Any():
+                                                     {'name': str,
+                                                      'link_state': str,
+                                                      'local_id': str,
+                                                      'remote_id': str,
+                                                      'transit_area_id': str,
+                                                      Optional('hello_interval'): int,
+                                                      Optional('dead_interval'): int,
+                                                      Optional('wait_interval'): int,
+                                                      Optional('retransmit_interval'): int,
+                                                      Optional('transmit_delay'): int,
+                                                      'cost': int,
+                                                      'state': str,
+                                                      Optional('hello_timer'): str,
+                                                      Optional('demand_circuit'): bool,
+                                                      Optional('dcbitless_lsa_count'): int,
+                                                      Optional('donotage_lsa'): str,
+                                                      Optional('adjacency_state'): str,
+                                                      Optional('ttl_security'):
+                                                          {'enable': bool,
+                                                           Optional('hops'): int},
+                                                      Optional('index'): str,
+                                                      Optional('first'): str,
+                                                      Optional('next'): str,
+                                                      Optional('last_retransmission_max_length'): int,
+                                                      Optional('last_retransmission_max_scan'): int,
+                                                      Optional('last_retransmission_scan_length'): int,
+                                                      Optional('last_retransmission_scan_time'): int,
+                                                      Optional('total_retransmission'): int,
+                                                      Optional('retrans_qlen'): int,
+                                                      Optional('topology'):
+                                                          {Any():
+                                                               {'cost': int,
+                                                                'disabled': bool,
+                                                                'shutdown': bool,
+                                                                'name': str}},
+                                                      },
+                                                 },
                                             },
-                                        },
-                                    },
-                                },
-                            },
+                                       },
+                                  },
+                             },
                         },
-                    },
-                },
-            },
-        }
-
+                   },
+              },
+         },
+}
 
 # ====================================
 # Parser for 'show ip ospf sham-links'
@@ -2444,66 +2524,63 @@ class ShowIpOspfShamLinks(ShowIpOspfShamLinksSchema, ShowIpOspfLinksParser):
 class ShowIpOspfVirtualLinksSchema(MetaParser):
 
     ''' Schema for 'show ip ospf virtual-links' '''
-
     schema = {
-        'vrf': 
-            {Any(): 
-                {'address_family': 
-                    {Any(): 
-                        {'instance': 
-                            {Any(): 
-                                {'areas': 
-                                    {Any(): 
-                                        {'virtual_links': 
-                                            {Any(): 
-                                                {'name': str,
-                                                'link_state': str,
-                                                'router_id': str,
-                                                'transit_area_id': str,
-                                                Optional('hello_interval'): int,
-                                                Optional('dead_interval'): int,
-                                                Optional('wait_interval'): int,
-                                                Optional('retransmit_interval'): int,
-                                                'transmit_delay': int,
-                                                'state': str,
-                                                'demand_circuit': bool,
-                                                Optional('cost'): int,
-                                                Optional('hello_timer'): str,
-                                                Optional('interface'): str,
-                                                Optional('dcbitless_lsa_count'): int,
-                                                Optional('donotage_lsa'): str,
-                                                Optional('adjacency_state'): str,
-                                                Optional('ttl_security'): 
-                                                    {'enable': bool,
-                                                    Optional('hops'): int},
-                                                Optional('index'): str,
-                                                Optional('first'): str,
-                                                Optional('next'): str,
-                                                Optional('last_retransmission_max_length'): int,
-                                                Optional('last_retransmission_max_scan'): int,
-                                                Optional('last_retransmission_scan_length'): int,
-                                                Optional('last_retransmission_scan_time'): int,
-                                                Optional('total_retransmission'): int,
-                                                Optional('retrans_qlen'): int,
-                                                Optional('topology'): 
-                                                    {Any(): 
-                                                        {'cost': int,
-                                                        'disabled': bool,
-                                                        'shutdown': bool,
-                                                        'name': str}},
+        'vrf':
+            {Any():
+                 {'address_family':
+                      {Any():
+                           {'instance':
+                                {Any():
+                                     {'areas':
+                                          {Any():
+                                               {'virtual_links':
+                                                    {Any():
+                                                         {'name': str,
+                                                          'link_state': str,
+                                                          'router_id': str,
+                                                          'transit_area_id': str,
+                                                          Optional('hello_interval'): int,
+                                                          Optional('dead_interval'): int,
+                                                          Optional('wait_interval'): int,
+                                                          Optional('retransmit_interval'): int,
+                                                          'transmit_delay': int,
+                                                          'state': str,
+                                                          'demand_circuit': bool,
+                                                          Optional('cost'): int,
+                                                          Optional('hello_timer'): str,
+                                                          Optional('interface'): str,
+                                                          Optional('dcbitless_lsa_count'): int,
+                                                          Optional('donotage_lsa'): str,
+                                                          Optional('adjacency_state'): str,
+                                                          Optional('ttl_security'):
+                                                              {'enable': bool,
+                                                               Optional('hops'): int},
+                                                          Optional('index'): str,
+                                                          Optional('first'): str,
+                                                          Optional('next'): str,
+                                                          Optional('last_retransmission_max_length'): int,
+                                                          Optional('last_retransmission_max_scan'): int,
+                                                          Optional('last_retransmission_scan_length'): int,
+                                                          Optional('last_retransmission_scan_time'): int,
+                                                          Optional('total_retransmission'): int,
+                                                          Optional('retrans_qlen'): int,
+                                                          Optional('topology'):
+                                                              {Any():
+                                                                   {'cost': int,
+                                                                    'disabled': bool,
+                                                                    'shutdown': bool,
+                                                                    'name': str}},
+                                                          },
+                                                     },
                                                 },
-                                            },
-                                        },
-                                    },
-                                },
+                                           },
+                                      },
+                                 },
                             },
-                        },
-                    },
-                },
-            },
-        }
-
-
+                       },
+                  },
+             },
+    }
 # =======================================
 # Parser for 'show ip ospf virtual-links'
 # =======================================

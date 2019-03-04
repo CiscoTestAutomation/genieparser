@@ -392,3 +392,347 @@ class ShowNtpConfig(ShowNtpConfigSchema):
                                                               'isconfigured': isconfigured})
 
         return ret_dict
+
+# ==============================================
+#  Schema for show ntp associations detail
+# ==============================================
+class ShowNtpAssociationsDetailSchema(MetaParser):
+    """Schema for show ntp associations detail"""
+
+    schema = {
+        'vrf': {
+            Any(): {
+                'associations': {
+                    'address': {
+                        Any(): {
+                            'local_mode': {
+                                Any(): {
+                                    'isconfigured': {
+                                        Any(): {
+                                            'address': str,
+                                            'local_mode': str,
+                                            'isconfigured': bool,
+                                            'stratum': int,
+                                            'refid': str,
+                                            'authentication': str,
+                                            Optional('prefer'): str,
+                                            'peer_interface': str,
+                                            'minpoll': int,
+                                            'maxpoll': int,
+                                            Optional('port'): str,
+                                            'version': int,
+                                            'reach': str,
+                                            Optional('unreach'): str,
+                                            'poll': str,
+                                            Optional('now'): str,
+                                            'root_delay_msec': str,
+                                            'root_disp': str,
+                                            'offset_msec': str,
+                                            'delay_msec': str,
+                                            'dispersion': str,
+                                            'jitter_msec': str,
+                                            'originate_time': str,
+                                            'receive_time': str,
+                                            'transmit_time': str,
+                                            'input_time': str,
+                                            'vrf': str,
+                                            'ip_type': str,
+                                            'sane': bool,
+                                            'valid': bool,
+                                            'master': bool,
+                                            'sync_dist': str,
+                                            'precision': str,
+                                            'assoc_id': int,
+                                            'assoc_name': str,
+                                            'filterror': str,
+                                            'filtoffset': str,
+                                            'filtdelay': str,
+                                            'ntp_statistics': {
+                                                'packet_sent': int,
+                                                Optional('packet_sent_fail'): int,
+                                                'packet_received': int,
+                                                'packet_dropped': int,
+                                            },
+                                            'peer': {
+                                                Any(): {
+                                                    'local_mode': {
+                                                        Any(): {
+                                                            'local_mode': str,
+                                                            'poll': int,
+                                                        },
+                                                    }
+                                                },
+                                            }
+                                        }
+                                    }
+                                },
+                            }
+                        },
+                    }
+                }
+            },
+        },
+    }
+
+# ==============================================
+#  Parser for show ntp associations detail
+# ==============================================
+class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
+    """Parser for show ntp associations detail"""
+
+    cli_command = 'show ntp associations detail'
+
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial variables
+        ret_dict = {}
+
+        # 192.168.255.254 configured, ipv4, authenticated, insane, invalid, stratum 
+        # 172.16.255.254 configured, ipv4, authenticated, our_master, sane, valid, stratum 2
+        p1 = re.compile(r'^(?P<address>[\w\.\:]+) +(?P<configured>\w+),'
+                         ' +(?P<ip_type>\w+), +(?P<authenticated>\w+),'
+                         '( +(?P<our_master>\w+),)? +(?P<insane>\w+), +(?P<invalid>\w+),'
+                         ' +stratum +(?P<stratum>\d+)$')
+
+        # ref ID 172.16.255.254, time DBAB02D6.9E354130 (16:08:06.618 JST Fri Oct 14 2016)
+        p2 = re.compile(r'^ref +ID +(?P<refid>[\w\.]+), +time +(?P<input_time>[\w\:\s\(\)\.]+)$')
+
+        # our mode client, peer mode server, our poll intvl 512, peer poll intvl 512
+        # our mode client, peer mode server, our poll intvl 512, peer poll intvl 512
+        p3 = re.compile(r'^our +mode +(?P<mode>\w+), +peer +mode +(?P<peer_mode>\w+),'
+                         ' +our +poll +intvl +(?P<poll_intv>\d+),'
+                         ' +peer +poll +intvl +(?P<peer_poll_intv>\d+)$')
+
+        # root delay 0.00 msec, root disp 14.52, reach 377, sync dist 28.40
+        p4 = re.compile(r'^root +delay +(?P<root_delay_msec>[\d\.]+) +msec, +root +disp +(?P<root_disp>[\d\.]+),'
+                         ' +reach +(?P<reach>[\d\.]+),'
+                         ' +sync +dist +(?P<sync_dist>[\d\.]+)$')
+
+        # delay 0.00 msec, offset 0.0000 msec, dispersion 7.23, jitter 0.97 
+        # delay 0.00 msec, offset -1.0000 msec, dispersion 5.64, jitter 0.97 msec
+        p5 = re.compile(r'^delay +(?P<delay_msec>[\d\.]+) +msec, +offset +(?P<offset_msec>[\d\.\-]+) +msec,'
+                         ' +dispersion +(?P<dispersion>[\d\.]+),'
+                         ' +jitter +(?P<jitter_msec>[\d\.]+)( +msec)?$')
+
+        # precision 2**10, version 4
+        p6 = re.compile(r'^precision +(?P<precision>[\d\*]+), +version +(?P<version>\d+)$')
+
+        # assoc id 62758, assoc name 192.168.255.254
+        p7 = re.compile(r'^assoc +id +(?P<assoc_id>\d+), +assoc +name +(?P<assoc_name>[\d\.]+)$')
+
+        # assoc in packets 27, assoc out packets 27, assoc error packets 0
+        p8 = re.compile(r'^assoc +in +packets +(?P<assoc_in_packets>\d+),'
+                         ' +assoc +out +packets +(?P<assoc_out_packets>\d+),'
+                         ' +assoc +error +packets +(?P<assoc_error_packets>[\d\.]+)$')
+
+        # org time 00000000.00000000 (09:00:00.000 JST Mon Jan 1 1900)
+        p9 = re.compile(r'^org +time +(?P<org_time>[\w\:\s\(\)\.]+)$')
+
+        # rec time DBAB046D.A8B43B28 (16:14:53.659 JST Fri Oct 14 2016)
+        p10 = re.compile(r'^rec +time +(?P<rec_time>[\w\:\s\(\)\.]+)$')
+
+        # xmt time DBAB046D.A8B43B28 (16:14:53.659 JST Fri Oct 14 2016)
+        p11 = re.compile(r'^xmt +time +(?P<xmt_time>[\w\:\s\(\)\.]+)$')
+
+        # filtdelay =     0.00    1.00    0.00    0.00    0.00    0.00    0.00    0.00
+        p12 = re.compile(r'^filtdelay +\= +(?P<filtdelay>[\d\s\.]+)$')
+
+        # filtoffset =    0.00    0.50    0.00    1.00    1.00    1.00    1.00    1.00
+        p13 = re.compile(r'^filtoffset +\= +(?P<filtoffset>[\d\s\.\-]+)$')
+
+        # filterror =     1.95    5.89    9.88   13.89   15.84   17.79   19.74   21.76
+        p14 = re.compile(r'^filterror +\= +(?P<filterror>[\d\s\.]+)$')
+
+        # minpoll = 6, maxpoll = 10
+        p15 = re.compile(r'^minpoll +\= +(?P<minpoll>\d+), +maxpoll +\= +(?P<maxpoll>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                address = group['address']
+                ip_type = group['ip_type']
+                authentication = group['authenticated']
+                stratum = int(group['stratum'])
+                if group['configured']:
+                    isconfigured = True
+                else:
+                    isconfigured = False
+
+                if group['insane'] == 'insane':
+                    sane = False
+                else:
+                    sane = True
+
+                if group['invalid'] == 'invalid':
+                    valid = False
+                else:
+                    valid = True
+
+                if group['our_master']:
+                    master = True
+                else:
+                    master = False
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                refid = group['refid']
+                input_time = group['input_time']
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                local_mode = group['mode']
+                peer_mode = group['peer_mode']
+
+                ret_dict.setdefault('vrf', {}).setdefault('default', {}).\
+                    setdefault('associations', {}).setdefault('address', {}).\
+                    setdefault(address, {}).setdefault('local_mode', {}).\
+                    setdefault(local_mode, {}).setdefault('isconfigured', {}).\
+                    setdefault(str(isconfigured), {})
+
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['address'] = address
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['isconfigured'] = isconfigured
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['ip_type'] = ip_type
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['authentication'] = authentication
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['sane'] = sane
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['valid'] = valid
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['master'] = master
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['stratum'] = stratum
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['refid'] = refid
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['input_time'] = input_time
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['peer_interface'] = refid
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['poll'] = group['poll_intv']
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['vrf'] = 'default'
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['local_mode'] = local_mode
+
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)].setdefault('peer', {}).setdefault(refid, {}).\
+                    setdefault('local_mode', {}).setdefault(peer_mode, {})
+
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['peer'][refid]['local_mode']\
+                    [peer_mode]['poll'] = int(group['peer_poll_intv'])
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['peer'][refid]['local_mode']\
+                    [peer_mode]['local_mode'] = peer_mode
+
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                # ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                #     [local_mode]['isconfigured'][str(isconfigured)]['reach'] = group['root_delay_msec']
+                # ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                #     [local_mode]['isconfigured'][str(isconfigured)]['sync_dist'] = group['root_disp']
+                # ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                #     [local_mode]['isconfigured'][str(isconfigured)]['reach'] = group['reach']
+                # ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                #     [local_mode]['isconfigured'][str(isconfigured)]['sync_dist'] = group['sync_dist']
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)].update({k:str(v) for k, v in group.items()})
+
+            m = p5.match(line)
+            if m:
+                group = m.groupdict() 
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)].update({k:str(v) for k, v in group.items()})
+
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['precision'] = group['precision']
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['version'] = int(group['version'])
+
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['assoc_name'] = group['assoc_name']
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['assoc_id'] = int(group['assoc_id'])
+
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)].setdefault('ntp_statistics', {})
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['ntp_statistics']['packet_received'] = \
+                    int(group['assoc_in_packets'])
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['ntp_statistics']['packet_sent'] = \
+                    int(group['assoc_out_packets'])
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['ntp_statistics']['packet_dropped'] = \
+                    int(group['assoc_error_packets'])
+
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['originate_time'] = group['org_time']
+
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['receive_time'] = group['rec_time']
+
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['transmit_time'] = group['xmt_time']
+
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['filtdelay'] = group['filtdelay']
+
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['filtoffset'] = group['filtoffset']
+
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['filterror'] = group['filterror']
+
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['minpoll'] = int(group['minpoll'])
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['maxpoll'] = int(group['maxpoll'])
+
+        return ret_dict

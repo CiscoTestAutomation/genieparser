@@ -340,7 +340,7 @@ class test_show_lldp_entry(unittest.TestCase):
         parsed_output = obj.parse(entry='*')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
-class test_show_lldp_entry(unittest.TestCase):
+class test_show_lldp_neighbor_detail(unittest.TestCase):
     dev1 = Device(name='empty')
     dev_c3850 = Device(name='c3850')
     empty_output = {'execute.return_value': '      '}

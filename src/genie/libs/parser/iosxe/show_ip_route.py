@@ -30,6 +30,7 @@ class ShowIpRouteSchema(MetaParser):
                                         {Optional('protocol'):
                                             {Optional(Any()):
                                                 {Optional('route_table'): str,
+                                                Optional('candidate_default'): bool,
                                                 Optional('uptime'): str,
                                                 Optional('preference'): str,
                                                 Optional('metric'): str,
@@ -82,6 +83,21 @@ class ShowIpRoute(ShowIpRouteSchema):
         preference = None
         metric = None
         mask = ''
+        candidate_dafault = False
+
+        source_protocol_dict = {}
+        source_protocol_dict['ospf'] = ['O', 'IA', 'N1', 'N2', 'E1', 'E2']
+        source_protocol_dict['odr'] = ['o']
+        source_protocol_dict['isis'] = ['i', 'su', 'L1', 'L2', 'ia']
+        source_protocol_dict['eigrp'] = ['D', 'EX']
+        source_protocol_dict['static'] = ['S']
+        source_protocol_dict['mobile'] = ['M']
+        source_protocol_dict['rip'] = ['R']
+        source_protocol_dict['lisp'] = ['I']
+        source_protocol_dict['nhrp'] = ['H']
+        source_protocol_dict['local'] = ['L']
+        source_protocol_dict['connected'] = ['C']
+        source_protocol_dict['bgp'] = ['B']
 
         # Setting the address_family
         if vrf == 'default' and ip =='ip':
@@ -114,22 +130,27 @@ class ShowIpRoute(ShowIpRouteSchema):
             # B   2001:2:2:2::2/128 [200/0]
             # B        15.1.1.0 [200/2219] via 1.1.1.1, 01:40:40
             # B        46.2.2.0 [20/2219] via 20.4.6.6 (VRF2), 01:36:26
-            p2 = re.compile(r'^\s*(?P<protocol>[a-zA-Z0-9\+\%]+)'
+            # S*    0.0.0.0/0 [20/0] via 100.1.1.1, 4d22h
+            p2 = re.compile(r'^\s*(?P<protocol>[a-zA-Z0-9\+\%]+)(?P<candidate_dafault>\*)?'
                              ' +(?P<ip_add>[0-9\.\:\/]+)'
                              ' +(\[(?P<preference>[0-9]+)/(?P<metric>[0-9]+)\])'
                              '( +via +(?P<next_hop>[0-9\.]+)(\s)?(\()?'
                              '(?P<table>[a-zA-Z0-9]+)?(\)?),'
-                             ' +(?P<up_time>[0-9\:]+))?$')
+                             ' +(?P<up_time>[\w\:]+))?$')
             m = p2.match(line)
             if m:
-                protocol = str(m.groupdict()['protocol'])
-                if protocol == 'B':
-                    protocol = 'bgp'
+                protocol_abr = str(m.groupdict()['protocol'])
+                for key, val in source_protocol_dict.items():
+                    if protocol_abr in val:
+                        protocol = key
+
                 ip_add = str(m.groupdict()['ip_add'])
                 if mask:
                     ip_add = ip_add+mask
                 preference = m.groupdict()['preference']
                 metric = m.groupdict()['metric']
+                if m.groupdict()['candidate_dafault']:
+                    candidate_dafault = True
 
                 # Init vrf dict
                 if 'vrf' not in bgp_dict:
@@ -170,7 +191,8 @@ class ShowIpRoute(ShowIpRouteSchema):
                         prot_dict[protocol]['route_table'] = table
 
                     prot_dict[protocol]['preference'] = preference
-
+                    if candidate_dafault == True:
+                        prot_dict[protocol]['candidate_dafault'] = True
                     metric = m.groupdict()['metric']
                     prot_dict[protocol]['metric'] = metric
 

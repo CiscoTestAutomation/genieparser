@@ -53,6 +53,7 @@ class ShowVtpStatus(ShowVtpStatusSchema):
             out = output
         # initial variables
         ret_dict = {}
+        digest = []
 
         for line in out.splitlines():
             line = line.strip()
@@ -182,9 +183,10 @@ class ShowVtpStatus(ShowVtpStatusSchema):
             p13_1 = re.compile(r'^(?P<val>[\w\s]+)$')
             m = p13_1.match(line)
             if m:
-                digest.extend(m.groupdict()['val'].split())
-                ret_dict['vtp']['md5_digest'] = ' '.join(sorted(digest))
-                continue
+                if digest:
+                    digest.extend(m.groupdict()['val'].split())
+                    ret_dict['vtp']['md5_digest'] = ' '.join(sorted(digest))
+                    continue
 
 
 
