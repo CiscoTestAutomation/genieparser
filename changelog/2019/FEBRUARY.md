@@ -1,48 +1,5 @@
 | Module                  | Version       |
 | ------------------------|:-------------:|
-| ``genie.libs.parser``   | 19.0.0        |
-
---------------------------------------------------------------------------------
-                                    SYSTEM
---------------------------------------------------------------------------------
-* IOSXE
-    * Add ShowClock for 'show clock'
-
---------------------------------------------------------------------------------
-                                    SESSION
---------------------------------------------------------------------------------
-* IOSXE
-    * Add ShowLine for 'show line'
-    * Add ShowUsers for 'show users'
-
---------------------------------------------------------------------------------
-                                    ARP
---------------------------------------------------------------------------------
-* NXOS
-    * Fixed ShowIpArpstatisticsVrfAll for 'show ip arp statistics'
-
---------------------------------------------------------------------------------
-                                    PLATFORM
---------------------------------------------------------------------------------
-* IOSXE
-    * Add ShowProcessesCpuPlatform for 'show processes cpu platform'
-    * Add ShowProcessesCpu for 'show processes cpu'
-    * Enhanced ShowProcessesCpuSorted for 'show processes cpu sorted'
-    * Add ShowEnvironmentAll for 'show environment all' - ASR1K
-    * Add ShowEnvironment for 'show environment'
-
-* NXOS
-    * Fixed ShowInstallActive for 'show install active'
-
---------------------------------------------------------------------------------
-                                    NTP
---------------------------------------------------------------------------------
-* IOSXE
-    * Add ShowNtpAssociationsDetailSchema for 'show ntp associations detail'
-
-
-| Module                  | Version       |
-| ------------------------|:-------------:|
 | ``genie.libs.parser``   | 3.1.17        |
 
 --------------------------------------------------------------------------------
