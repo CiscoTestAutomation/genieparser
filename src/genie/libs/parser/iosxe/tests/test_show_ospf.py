@@ -17,6 +17,7 @@ from genie.libs.parser.iosxe.show_ospf import ShowIpOspf,\
                                    ShowIpOspfNeighborDetail,\
                                    ShowIpOspfShamLinks,\
                                    ShowIpOspfVirtualLinks,\
+                                   ShowIpOspfDatabase,\
                                    ShowIpOspfDatabaseRouter,\
                                    ShowIpOspfDatabaseExternal,\
                                    ShowIpOspfDatabaseNetwork,\
@@ -2383,6 +2384,289 @@ class test_show_ip_ospf_virtual_links(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
         obj = ShowIpOspfVirtualLinks(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+
+# =====================================
+# Unit test for 'show ip ospf database'
+# =====================================
+class test_show_ip_ospf_database(unittest.TestCase):
+
+    '''Unit test for "show ip ospf database router" '''
+
+    device = Device(name='aDevice')
+    
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'vrf': 
+            {'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'1': 
+                                {'areas': 
+                                    {'0.0.0.9': 
+                                        {'database': 
+                                            {'lsa_types': 
+                                                {1: 
+                                                    {'lsa_type': 1,
+                                                    'lsas': 
+                                                        {'1.1.1.1': 
+                                                            {'adv_router': '1.1.1.1',
+                                                            'lsa_id': '1.1.1.1',
+                                                            'ospfv2': 
+                                                                {'header': 
+                                                                    {'adv_router': '1.1.1.1',
+                                                                    'age': 167,
+                                                                    'checksum': '0x00D8C6',
+                                                                    'link_count': 1,
+                                                                    'lsa_id': '1.1.1.1',
+                                                                    'seq_num': '0x8000000D'}}}}}}}}}},
+                            '9996': 
+                                {'areas': 
+                                    {'0.0.0.0': 
+                                        {'database': 
+                                            {'lsa_types': 
+                                                {1: 
+                                                    {'lsa_type': 1,
+                                                    'lsas': 
+                                                        {'106.162.197.252': 
+                                                            {'adv_router': '106.162.197.252',
+                                                            'lsa_id': '106.162.197.252',
+                                                            'ospfv2': 
+                                                                {'header': 
+                                                                    {'adv_router': '106.162.197.252',
+                                                                    'age': 1802,
+                                                                    'checksum': '0x007F23',
+                                                                    'link_count': 5,
+                                                                    'lsa_id': '106.162.197.252',
+                                                                    'seq_num': '0x80000161'}}},
+                                                        '106.162.197.253': 
+                                                            {'adv_router': '106.162.197.253',
+                                                            'lsa_id': '106.162.197.253',
+                                                            'ospfv2': 
+                                                                {'header': 
+                                                                    {'adv_router': '106.162.197.253',
+                                                                    'age': 1784,
+                                                                    'checksum': '0x00CC34',
+                                                                    'link_count': 8,
+                                                                    'lsa_id': '106.162.197.253',
+                                                                    'seq_num': '0x80000103'}}},
+                                                        '106.162.197.254': 
+                                                            {'adv_router': '106.162.197.254',
+                                                            'lsa_id': '106.162.197.254',
+                                                            'ospfv2': 
+                                                                {'header': 
+                                                                    {'adv_router': '106.162.197.254',
+                                                                    'age': 1675,
+                                                                    'checksum': '0x007A61',
+                                                                    'link_count': 3,
+                                                                    'lsa_id': '106.162.197.254',
+                                                                    'seq_num': '0x8000000C'}}},
+                                                        '111.111.111.2': 
+                                                            {'adv_router': '111.111.111.2',
+                                                            'lsa_id': '111.111.111.2',
+                                                            'ospfv2': 
+                                                                {'header': 
+                                                                    {'adv_router': '111.111.111.2',
+                                                                    'age': 226,
+                                                                    'checksum': '0x006975',
+                                                                    'link_count': 501,
+                                                                    'lsa_id': '111.111.111.2',
+                                                                    'seq_num': '0x80000069'}}},
+                                                        '202.239.165.119': 
+                                                            {'adv_router': '202.239.165.119',
+                                                            'lsa_id': '202.239.165.119',
+                                                            'ospfv2': 
+                                                                {'header': 
+                                                                    {'adv_router': '202.239.165.119',
+                                                                    'age': 1089,
+                                                                    'checksum': '0x0080E0',
+                                                                    'link_count': 2,
+                                                                    'lsa_id': '202.239.165.119',
+                                                                    'seq_num': '0x80000029'}}},
+                                                        '202.239.165.120': 
+                                                            {'adv_router': '202.239.165.120',
+                                                            'lsa_id': '202.239.165.120',
+                                                            'ospfv2': 
+                                                                {'header': 
+                                                                    {'adv_router': '202.239.165.120',
+                                                                    'age': 1482,
+                                                                    'checksum': '0x0063CB',
+                                                                    'link_count': 2,
+                                                                    'lsa_id': '202.239.165.120',
+                                                                    'seq_num': '0x80000033'}}},
+                                                        '202.239.165.220': 
+                                                            {'adv_router': '202.239.165.220',
+                                                            'lsa_id': '202.239.165.220',
+                                                            'ospfv2': 
+                                                                {'header': 
+                                                                    {'adv_router': '202.239.165.220',
+                                                                    'age': 525,
+                                                                    'checksum': '0x004E8E',
+                                                                    'link_count': 3,
+                                                                    'lsa_id': '202.239.165.220',
+                                                                    'seq_num': '0x800000DE'}}},
+                                                        '27.93.202.64': 
+                                                            {'adv_router': '27.93.202.64',
+                                                            'lsa_id': '27.93.202.64',
+                                                            'ospfv2': 
+                                                                {'header': 
+                                                                    {'adv_router': '27.93.202.64',
+                                                                    'age': 2794,
+                                                                    'checksum': '0x002254',
+                                                                    'link_count': 3,
+                                                                    'lsa_id': '27.93.202.64',
+                                                                    'seq_num': '0x80000043'}}}}},
+                                                2: 
+                                                    {'lsa_type': 2,
+                                                    'lsas': 
+                                                        {'106.162.197.102': 
+                                                            {'adv_router': '202.239.165.220',
+                                                            'lsa_id': '106.162.197.102',
+                                                            'ospfv2': 
+                                                                {'header': 
+                                                                    {'adv_router': '202.239.165.220',
+                                                                    'age': 525,
+                                                                    'checksum': '0x0094CD',
+                                                                    'lsa_id': '106.162.197.102',
+                                                                    'seq_num': '0x80000058'}}},
+                                                        '106.162.197.93': 
+                                                            {'adv_router': '106.162.197.252',
+                                                            'lsa_id': '106.162.197.93',
+                                                            'ospfv2': 
+                                                                {'header': 
+                                                                    {'adv_router': '106.162.197.252',
+                                                                    'age': 1802,
+                                                                    'checksum': '0x002D67',
+                                                                    'lsa_id': '106.162.197.93',
+                                                                    'seq_num': '0x80000008'}}},
+                                                        '106.162.197.97': 
+                                                            {'adv_router': '106.162.197.253',
+                                                            'lsa_id': '106.162.197.97',
+                                                            'ospfv2': 
+                                                                {'header': 
+                                                                    {'adv_router': '106.162.197.253',
+                                                                    'age': 1356,
+                                                                    'checksum': '0x000D83',
+                                                                    'lsa_id': '106.162.197.97',
+                                                                    'seq_num': '0x80000006'}}},
+                                                        '111.111.111.2': 
+                                                            {'adv_router': '106.162.197.253',
+                                                            'lsa_id': '111.111.111.2',
+                                                            'ospfv2': 
+                                                                {'header': 
+                                                                    {'adv_router': '106.162.197.253',
+                                                                    'age': 2213,
+                                                                    'checksum': '0x00D374',
+                                                                    'lsa_id': '111.111.111.2',
+                                                                    'seq_num': '0x80000BA8'}}},
+                                                        '20.1.1.2': 
+                                                            {'adv_router': '106.162.197.253',
+                                                            'lsa_id': '20.1.1.2',
+                                                            'ospfv2': 
+                                                                {'header': 
+                                                                    {'adv_router': '106.162.197.253',
+                                                                    'age': 70,
+                                                                    'checksum': '0x0015EF',
+                                                                    'lsa_id': '20.1.1.2',
+                                                                     'seq_num': '0x8000003F'}}},
+                                                        '202.239.165.49': 
+                                                            {'adv_router': '106.162.197.253',
+                                                            'lsa_id': '202.239.165.49',
+                                                            'ospfv2': 
+                                                                {'header': 
+                                                                    {'adv_router': '106.162.197.253',
+                                                                    'age': 499,
+                                                                    'checksum': '0x005CBC',
+                                                                    'lsa_id': '202.239.165.49',
+                                                                     'seq_num': '0x8000001A'}}},
+                                                        '202.239.165.57': 
+                                                            {'adv_router': '106.162.197.253',
+                                                            'lsa_id': '202.239.165.57',
+                                                            'ospfv2': 
+                                                                {'header': 
+                                                                    {'adv_router': '106.162.197.253',
+                                                                    'age': 927,
+                                                                    'checksum': '0x0008FE',
+                                                                    'lsa_id': '202.239.165.57',
+                                                                    'seq_num': '0x80000023'}}},
+                                                        '27.93.202.49': 
+                                                            {'adv_router': '106.162.197.252',
+                                                            'lsa_id': '27.93.202.49',
+                                                            'ospfv2': 
+                                                                {'header': 
+                                                                    {'adv_router': '106.162.197.252',
+                                                                    'age': 289,
+                                                                    'checksum': '0x007AD0',
+                                                                    'lsa_id': '27.93.202.49',
+                                                                    'seq_num': '0x8000005B'}}},
+                                                        '27.93.202.57': 
+                                                            {'adv_router': '106.162.197.253',
+                                                            'lsa_id': '27.93.202.57',
+                                                            'ospfv2': 
+                                                                {'header': 
+                                                                    {'adv_router': '106.162.197.253',
+                                                                    'age': 2641,
+                                                                    'checksum': '0x0062F8',
+                                                                    'lsa_id': '27.93.202.57',
+                                                                    'seq_num': '0x80000041'}}}}}}}}}}}}}}}}
+
+    golden_output1 = {'execute.return_value': '''
+        Router#show ip ospf database
+        Load for five secs: 71%/0%; one minute: 11%; five minutes: 9%
+        Time source is NTP, 20:29:26.348 JST Fri Nov 11 2016
+
+
+                    OSPF Router with ID (106.162.197.254) (Process ID 9996)
+
+                Router Link States (Area 0)
+
+        Link ID         ADV Router      Age         Seq#       Checksum Link count
+        27.93.202.64    27.93.202.64    2794        0x80000043 0x002254 3
+        106.162.197.252 106.162.197.252 1802        0x80000161 0x007F23 5
+        106.162.197.253 106.162.197.253 1784        0x80000103 0x00CC34 8
+        106.162.197.254 106.162.197.254 1675        0x8000000C 0x007A61 3
+        111.111.111.2   111.111.111.2   226         0x80000069 0x006975 501
+        202.239.165.119 202.239.165.119 1089        0x80000029 0x0080E0 2
+        202.239.165.120 202.239.165.120 1482        0x80000033 0x0063CB 2
+        202.239.165.220 202.239.165.220 525         0x800000DE 0x004E8E 3
+
+                Net Link States (Area 0)
+
+        Link ID         ADV Router      Age         Seq#       Checksum
+        20.1.1.2        106.162.197.253 70          0x8000003F 0x0015EF
+        27.93.202.49    106.162.197.252 289         0x8000005B 0x007AD0
+        27.93.202.57    106.162.197.253 2641        0x80000041 0x0062F8
+        106.162.197.93  106.162.197.252 1802        0x80000008 0x002D67
+        106.162.197.97  106.162.197.253 1356        0x80000006 0x000D83
+        106.162.197.102 202.239.165.220 525         0x80000058 0x0094CD
+        111.111.111.2   106.162.197.253 2213        0x80000BA8 0x00D374
+        202.239.165.49  106.162.197.253 499         0x8000001A 0x005CBC
+        202.239.165.57  106.162.197.253 927         0x80000023 0x0008FE
+
+                    OSPF Router with ID (1.1.1.1) (Process ID 1)
+
+                Router Link States (Area 9)
+
+        Link ID         ADV Router      Age         Seq#       Checksum Link count
+        1.1.1.1         1.1.1.1         167         0x8000000D 0x00D8C6 1
+        Router#
+        '''}
+
+    def test_show_ip_ospf_database_full1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowIpOspfDatabase(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_ip_ospf_database_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpOspfDatabase(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 

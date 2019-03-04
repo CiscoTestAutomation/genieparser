@@ -3070,6 +3070,193 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
         return ret_dict
 
 
+# ==================================
+# Schema for 'show ip ospf database'
+# ==================================
+class ShowIpOspfDatabaseSchema(MetaParser):
+    
+    ''' Schema for "show ip ospf database" '''
+
+    schema = {
+        'vrf':
+            {Any():
+                {'address_family':
+                    {Any():
+                        {'instance':
+                            {Any():
+                                {Optional('areas'):
+                                    {Any():
+                                        {'database':
+                                            {'lsa_types':
+                                                {Any():
+                                                    {'lsa_type': int,
+                                                    'lsas':
+                                                        {Any():
+                                                            {'lsa_id': str,
+                                                            'adv_router': str,
+                                                            'ospfv2':
+                                                                {'header':
+                                                                    {'lsa_id': str,
+                                                                    'adv_router': str,
+                                                                    'age': int,
+                                                                    'seq_num': str,
+                                                                    'checksum': str,
+                                                                    Optional('link_count'): int,
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+
+# ==================================
+# Parser for 'show ip ospf database'
+# ==================================
+class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
+
+    ''' Parser for "show ip ospf database" '''
+
+    def cli(self, output=None):
+
+        if output is None:
+            # Execute command on device
+            out = self.device.execute('show ip ospf database')
+        else:
+            out = output
+
+        # Init vars
+        ret_dict = {}
+        address_family = 'ipv4'
+        default_mt_id = 0
+
+        # Router
+        # Network Link
+        # Summary Network
+        # Opaque Area
+        # Type-5 AS External
+        lsa_type_mapping = {
+            'router': 1,
+            'net': 2,
+            'summary': 3,
+            'external': 5,
+            'opaque': 10,
+            }
+
+        # Load for five secs: 71%/0%; one minute: 11%; five minutes: 9%
+        p1 = re.compile(r'^$')
+
+        # Time source is NTP, 20:29:26.348 JST Fri Nov 11 2016
+        p2 = re.compile(r'^$')
+
+        # OSPF Router with ID (106.162.197.254) (Process ID 9996)
+        # OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
+        p3 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
+                         ' +\(Process +ID +(?P<instance>(\d+))'
+                         '(?:, +VRF +(?P<vrf>(\S+)))?\)$')
+
+        # Router Link States (Area 0)
+        # Net Link States (Area 0)
+        p4 = re.compile(r'^(?P<lsa_type>(Router|Net)) +Link +States'
+                         ' +\(Area +(?P<area>(\S+))\)$')
+
+        # Link ID         ADV Router      Age         Seq#       Checksum Link count
+        # 27.93.202.64    27.93.202.64    2794        0x80000043 0x002254 3
+        # 20.1.1.2        106.162.197.253 70          0x8000003F 0x0015EF
+        p5 = re.compile(r'^(?P<link_id>(\S+)) +(?P<adv_router>(\S+))'
+                         ' +(?P<age>(\d+)) +(?P<seq>(\S+)) +(?P<checksum>(\S+))'
+                         '(?: *(?P<link_count>(\d+)))?$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Load for five secs: 71%/0%; one minute: 11%; five minutes: 9%
+
+            # Time source is NTP, 20:29:26.348 JST Fri Nov 11 2016
+
+            # OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                router_id = str(group['router_id'])
+                instance = str(group['instance'])
+                if group['vrf']:
+                    vrf = str(group['vrf'])
+                else:
+                    vrf = 'default'
+                # Create dict
+                ospf_dict = ret_dict.setdefault('vrf', {}).\
+                                     setdefault(vrf, {}).\
+                                     setdefault('address_family', {}).\
+                                     setdefault(address_family, {}).\
+                                     setdefault('instance', {}).\
+                                     setdefault(instance, {})
+                continue
+
+            # Router Link States (Area 0)
+            # Net Link States (Area 0)
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                lsa_type = lsa_type_mapping[group['lsa_type'].lower()]
+
+                # Set area
+                if group['area']:
+                    try:
+                        int(group['area'])
+                        area = str(IPAddress(str(group['area'])))
+                    except Exception:
+                        area = str(group['area'])
+                else:
+                    area = '0.0.0.0'
+
+                # Create dict structure
+                lsa_type_dict = ospf_dict.setdefault('areas', {}).\
+                                          setdefault(area, {}).\
+                                          setdefault('database', {}).\
+                                          setdefault('lsa_types', {}).\
+                                          setdefault(lsa_type, {})
+
+                # Set lsa_type
+                lsa_type_dict['lsa_type'] = lsa_type
+
+            # 27.93.202.64    27.93.202.64    2794        0x80000043 0x002254 3
+            # 20.1.1.2        106.162.197.253 70          0x8000003F 0x0015EF
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                lsa_id = group['link_id']
+
+                # Create dict
+                lsas_dict = lsa_type_dict.setdefault('lsas', {}).\
+                                          setdefault(lsa_id, {})
+                lsas_dict['lsa_id'] = lsa_id
+                lsas_dict['adv_router'] = group['adv_router']
+
+                # osfpv2 dict
+                ospfv2_dict = lsas_dict.setdefault('ospfv2', {}).\
+                                        setdefault('header', {})
+                ospfv2_dict['lsa_id'] = lsa_id
+                ospfv2_dict['adv_router'] = group['adv_router']
+                ospfv2_dict['age'] = int(group['age'])
+                ospfv2_dict['seq_num'] = group['seq']
+                ospfv2_dict['checksum'] = group['checksum']
+                if group['link_count']:
+                    ospfv2_dict['link_count'] = int(group['link_count'])
+
+        return ret_dict
+
+
 # ===============================================
 # Super parser for 'show ip ospf database <WORD>'
 # ===============================================
