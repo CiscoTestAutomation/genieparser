@@ -168,15 +168,21 @@ class ShowInterfacesSchema(MetaParser):
 
 
 class ShowInterfaces(ShowInterfacesSchema):
-    """parser for show interfaces"""
+    """parser for show interfaces
+                  show interfaces <interface>"""
 
-    cli_command = 'show interfaces'
+    cli_command = ['show interfaces','show interfaces {interface}']
 
-    def cli(self,output=None):
+    def cli(self,interface="",output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
         else:
             out = output
+
         interface_dict = {}
         unnumbered_dict = {}
         for line in out.splitlines():
@@ -1545,11 +1551,15 @@ class ShowIpInterfaceSchema(MetaParser):
 class ShowIpInterface(ShowIpInterfaceSchema):
     """Parser for show ip interface"""
 
-    cli_command = 'show ip interface'
+    cli_command = ['show ip interface','show ip interface {interface}']
 
-    def cli(self,output=None):
+    def cli(self,interface="",output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
         else:
             out = output
 
