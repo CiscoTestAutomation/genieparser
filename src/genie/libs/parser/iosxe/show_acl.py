@@ -21,7 +21,11 @@ from genie.libs.parser.utils.common import Common
 
 
 class ShowAccessListsSchema(MetaParser):
-    """Schema for show access-lists"""
+    """Schema for show access-lists
+                  show ip access-lists
+                  show ip access-lists <acl>
+                  show ipv6 access-lists
+                  show ipv6 access-lists <acl>"""
     schema = {
         Any():{
             'name': str,
@@ -111,7 +115,11 @@ class ShowAccessListsSchema(MetaParser):
     }
 
 class ShowAccessLists(ShowAccessListsSchema):
-    """Parser for show access-lists"""
+    """Parser for show access-lists
+                  show ip access-lists
+                  show ip access-lists <acl>
+                  show ipv6 access-lists
+                  show ipv6 access-lists <acl>"""
     OPT_MAP = {
         'add-ext':       147,
        'any-options':   random.randint(0, 255),
