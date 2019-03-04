@@ -3239,7 +3239,9 @@ class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
 
                 # Set lsa_type
                 lsa_type_dict['lsa_type'] = lsa_type
+                continue
 
+            # Link ID         ADV Router      Age         Seq#       Checksum Link count
             # 27.93.202.64    27.93.202.64    2794        0x80000043 0x002254 3
             # 20.1.1.2        106.162.197.253 70          0x8000003F 0x0015EF
             m = p5.match(line)
