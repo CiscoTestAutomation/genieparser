@@ -3154,10 +3154,14 @@ class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
             }
 
         # Load for five secs: 71%/0%; one minute: 11%; five minutes: 9%
-        p1 = re.compile(r'^$')
+        p1 = re.compile(r'^Load +for +five +secs:'
+                         ' +(?P<load_top>(\d+))%/(?P<load_bottom>(\d+))%;'
+                         ' +one +minute: (?P<one_min>(\d+))%;'
+                         ' +five +minutes: +(?P<five_min>(\d+))%$')
 
         # Time source is NTP, 20:29:26.348 JST Fri Nov 11 2016
-        p2 = re.compile(r'^$')
+        p2 = re.compile(r'^Time +source +is (?P<time_source>(\S+)),'
+                         ' *(?P<timestamp>(.*))$')
 
         # OSPF Router with ID (106.162.197.254) (Process ID 9996)
         # OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
@@ -3181,8 +3185,14 @@ class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
             line = line.strip()
 
             # Load for five secs: 71%/0%; one minute: 11%; five minutes: 9%
+            m = p1.match(line)
+            if m:
+                continue
 
             # Time source is NTP, 20:29:26.348 JST Fri Nov 11 2016
+            m = p2.match(line)
+            if m:
+                continue
 
             # OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
             m = p3.match(line)
