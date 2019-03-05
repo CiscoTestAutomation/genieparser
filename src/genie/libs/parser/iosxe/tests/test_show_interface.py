@@ -1227,6 +1227,132 @@ class test_show_interfaces(unittest.TestCase):
 
     '''}
 
+    golden_interface_output = {'execute.return_value': '''
+    CE1#show interfaces GigabitEthernet1
+GigabitEthernet1 is up, line protocol is up
+  Hardware is CSR vNIC, address is 5e00.0001.0000 (bia 5e00.0001.0000)
+  Internet address is 172.16.1.243/24
+  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+     reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation ARPA, loopback not set
+  Keepalive set (10 sec)
+  Full Duplex, 1000Mbps, link type is auto, media type is Virtual
+  output flow-control is unsupported, input flow-control is unsupported
+  ARP type: ARPA, ARP Timeout 04:00:00
+  Last input 00:00:02, output 00:00:25, output hang never
+  Last clearing of "show interface" counters never
+  Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0
+  Queueing strategy: fifo
+  Output queue: 0/40 (size/max)
+  5 minute input rate 32000 bits/sec, 28 packets/sec
+  5 minute output rate 0 bits/sec, 0 packets/sec
+     7658 packets input, 1125842 bytes, 0 no buffer
+     Received 0 broadcasts (0 IP multicasts)
+     0 runts, 0 giants, 0 throttles
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+     0 watchdog, 0 multicast, 0 pause input
+     44 packets output, 4324 bytes, 0 underruns
+     0 output errors, 0 collisions, 1 interface resets
+     0 unknown protocol drops
+     0 babbles, 0 late collision, 0 deferred
+     0 lost carrier, 0 no carrier, 0 pause output
+     0 output buffer failures, 0 output buffers swapped out
+
+    '''
+}
+    golden_parsed_interface_output={
+            "GigabitEthernet1": {
+                "rxload": "1/255",
+                "phys_address": "5e00.0001.0000",
+                "flow_control": {
+                    "send": False,
+                    "receive": False
+                },
+                "arp_type": "arpa",
+                "type": "CSR vNIC",
+                "enabled": True,
+                "media_type": "Virtual",
+                "last_input": "00:00:02",
+                "link_type": "auto",
+                "last_output": "00:00:25",
+                "counters": {
+                    "in_errors": 0,
+                    "in_frame": 0,
+                    "in_watchdog": 0,
+                    "out_babble": 0,
+                    "in_overrun": 0,
+                    "out_collision": 0,
+                    "out_buffer_failure": 0,
+                    "out_no_carrier": 0,
+                    "in_runts": 0,
+                    "out_late_collision": 0,
+                    "in_mac_pause_frames": 0,
+                    "out_underruns": 0,
+                    "out_pkts": 44,
+                    "in_ignored": 0,
+                    "in_pkts": 7658,
+                    "out_buffers_swapped": 0,
+                    "out_interface_resets": 1,
+                    "rate": {
+                        "out_rate": 0,
+                        "load_interval": 300,
+                        "in_rate_pkts": 28,
+                        "out_rate_pkts": 0,
+                        "in_rate": 32000
+                    },
+                    "out_mac_pause_frames": 0,
+                    "in_broadcast_pkts": 0,
+                    "in_no_buffer": 0,
+                    "out_deferred": 0,
+                    "in_crc_errors": 0,
+                    "out_octets": 4324,
+                    "out_lost_carrier": 0,
+                    "in_octets": 1125842,
+                    "out_unknown_protocl_drops": 0,
+                    "last_clear": "never",
+                    "in_throttles": 0,
+                    "in_multicast_pkts": 0,
+                    "out_errors": 0,
+                    "in_giants": 0
+                },
+                "keepalive": 10,
+                "mtu": 1500,
+                "delay": 10,
+                "encapsulations": {
+                    "encapsulation": "arpa"
+                },
+                "ipv4": {
+                    "172.16.1.243/24": {
+                        "ip": "172.16.1.243",
+                        "prefix_length": "24"
+                    }
+                },
+                "queues": {
+                    "output_queue_size": 0,
+                    "input_queue_size": 0,
+                    "input_queue_flushes": 0,
+                    "queue_strategy": "fifo",
+                    "total_output_drop": 0,
+                    "output_queue_max": 40,
+                    "input_queue_drops": 0,
+                    "input_queue_max": 375
+                },
+                "auto_negotiate": True,
+                "line_protocol": "up",
+                "oper_status": "up",
+                "duplex_mode": "full",
+                "bandwidth": 1000000,
+                "arp_timeout": "04:00:00",
+                "port_speed": "1000",
+                "port_channel": {
+                    "port_channel_member": False
+                },
+                "output_hang": "never",
+                "txload": "1/255",
+                "mac_address": "5e00.0001.0000",
+                "reliability": "255/255"
+            }
+        }
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         interface_obj = ShowInterfaces(device=self.device)
@@ -1240,6 +1366,12 @@ class test_show_interfaces(unittest.TestCase):
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
+    def test_show_interfaces(self):
+        self.device = Mock(**self.golden_interface_output)
+        interface_obj = ShowInterfaces(device=self.device)
+        parsed_output = interface_obj.parse(interface='GigabitEthernet1')
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_interface_output)
 
 #############################################################################
 # unitest For Show ip interface
@@ -1548,6 +1680,113 @@ class test_show_ip_interface(unittest.TestCase):
         Internet protocol processing disabled
     '''}
 
+    golden_interface_output = {'execute.return_value':'''
+CE1#show ip interface GigabitEthernet1
+GigabitEthernet1 is up, line protocol is up
+  Internet address is 172.16.1.243/24
+  Broadcast address is 255.255.255.255
+  Address determined by DHCP
+  MTU is 1500 bytes
+  Helper address is not set
+  Directed broadcast forwarding is disabled
+  Outgoing Common access list is not set
+  Outgoing access list is not set
+  Inbound Common access list is not set
+  Inbound  access list is not set
+  Proxy ARP is enabled
+  Local Proxy ARP is disabled
+  Security level is default
+  Split horizon is enabled
+  ICMP redirects are always sent
+  ICMP unreachables are always sent
+  ICMP mask replies are never sent
+  IP fast switching is enabled
+  IP Flow switching is disabled
+  IP CEF switching is enabled
+  IP CEF switching turbo vector
+  IP Null turbo vector
+  Associated unicast routing topologies:
+        Topology "base", operation state is UP
+  IP multicast fast switching is enabled
+  IP multicast distributed fast switching is disabled
+  IP route-cache flags are Fast, CEF
+  Router Discovery is disabled
+  IP output packet accounting is disabled
+  IP access violation accounting is disabled
+  TCP/IP header compression is disabled
+  RTP/IP header compression is disabled
+  Probe proxy name replies are disabled
+  Policy routing is disabled
+  Network address translation is disabled
+  BGP Policy Mapping is disabled
+  Input features: MCI Check
+  IPv4 WCCP Redirect outbound is disabled
+  IPv4 WCCP Redirect inbound is disabled
+  IPv4 WCCP Redirect exclude is disabled
+'''
+}
+    golden_parsed_interface_output = {
+        "GigabitEthernet1": {
+            "ip_multicast_fast_switching": True,
+            "oper_status": "up",
+            "ip_output_packet_accounting": False,
+            "address_determined_by": "DHCP",
+            "rtp_ip_header_compression": False,
+            "ip_multicast_distributed_fast_switching": False,
+            "wccp": {
+                "redirect_exclude": False,
+                "redirect_outbound": False,
+                "redirect_inbound": False
+            },
+            "unicast_routing_topologies": {
+                "topology": {
+                    "base": {
+                        "status": "up"
+                    }
+                }
+            },
+            "router_discovery": False,
+            "tcp_ip_header_compression": False,
+            "probe_proxy_name_replies": False,
+            "local_proxy_arp": False,
+            "policy_routing": False,
+            "mtu": 1500,
+            "icmp": {
+                "mask_replies": "never sent",
+                "unreachables": "always sent",
+                "redirects": "always sent"
+            },
+            "enabled": True,
+            "ip_route_cache_flags": [
+                "CEF",
+                "Fast"
+            ],
+            "ip_cef_switching": True,
+            "ip_fast_switching": True,
+            "sevurity_level": "default",
+            "directed_broadcast_forwarding": False,
+            "proxy_arp": True,
+            "ip_null_turbo_vector": True,
+            "network_address_translation": False,
+            "input_features": [
+                "MCI Check"
+            ],
+            "bgp_policy_mapping": False,
+            "split_horizon": True,
+            "ip_access_violation_accounting": False,
+            "ip_cef_switching_turbo_vector": True,
+            "ipv4": {
+                "172.16.1.243/24": {
+                    "ip": "172.16.1.243",
+                    "prefix_length": "24",
+                    "broadcase_address": "255.255.255.255",
+                    "secondary": False
+                }
+            },
+            "ip_flow_switching": False
+        }
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         interface_obj = ShowIpInterface(device=self.device)
@@ -1560,6 +1799,13 @@ class test_show_ip_interface(unittest.TestCase):
         parsed_output = interface_obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_interface_golden(self):
+        self.device = Mock(**self.golden_interface_output)
+        interface_obj = ShowIpInterface(device=self.device)
+        parsed_output = interface_obj.parse(interface='GigabitEthernet1')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_interface_output)
 
 
 #############################################################################
