@@ -250,13 +250,6 @@ Extended IP access list ACL_TEST
 
     '''}
     golden_parsed_ip_access_list_output = {
-        'time_zone': 'NTP',
-        'time_date': '18:12:32.965 JST Mon Oct 17 2016',
-        'load': {
-            'five_sec': '1%/0%',
-            'one_min': '2%',
-            'five_min': '2%',
-        },
         "ACL_TEST": {
                 "aces": {
                     "80": {

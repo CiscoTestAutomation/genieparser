@@ -24,16 +24,9 @@ class ShowAccessListsSchema(MetaParser):
     """Schema for show access-lists
                   show ip access-lists
                   show ip access-lists <acl>
-                  show ipv6 access-lists
-                  show ipv6 access-lists <acl>"""
+                  show ipv6 access-list
+                  show ipv6 access-list <acl>"""
     schema = {
-        Optional('time_zone'): str,
-        Optional('time_date'): str,
-        Optional('load'):{
-            Optional('five_sec'): str,
-            Optional('one_min'): str,
-            Optional('five_min'): str,
-        },
         Any():{
             'name': str,
             'type': str,
@@ -257,12 +250,6 @@ class ShowAccessLists(ShowAccessListsSchema):
         ret_dict = {}
 
         # initial regexp pattern
-        #Load for five secs: 1%/0%; one minute: 2%; five minutes: 2%
-        p_1 = re.compile(r'^Load +for +five +secs: +(?P<five_sec>[\d/%\/]+); +one +minute: +(?P<one_min>[\d\%]+);'
-                         ' +five minutes: +(?P<five_min>[\d\%]+)$')
-
-        #Time source is NTP, 18:12:32.965 JST Mon Oct 17 2016
-        p_2 = re.compile(r'^Time +source +is +(?P<time_zone>\w+), +(?P<time_date>[\S\s]+)$')
         p_ip = re.compile(r'^Extended +IP +access +list +(?P<name>[\w\-\.]+)( *\((?P<per_user>.*)\))?$')
         p_ipv6 = re.compile(r'^IPv6 +access +list +(?P<name>[\w\-\.]+)( *\((?P<per_user>.*)\))?$')
         p_mac = re.compile(r'^Extended +MAC +access +list +(?P<name>[\w\-\.]+)( *\((?P<per_user>.*)\))?$')
@@ -289,17 +276,6 @@ class ShowAccessLists(ShowAccessListsSchema):
 
         for line in out.splitlines():
             line = line.strip()
-
-            m = p_1.match(line)
-            if m:
-                load_dict = ret_dict.setdefault('load',{})
-                load_dict.update({k: v for k, v in m.groupdict().items()})
-                continue
-
-            m = p_2.match(line)
-            if m:
-                ret_dict.update({k: v for k, v in m.groupdict().items()})
-                continue
 
             # Extended IP access list acl_name
             m_ip = p_ip.match(line)
