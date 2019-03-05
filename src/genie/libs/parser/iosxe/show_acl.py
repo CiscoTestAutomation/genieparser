@@ -232,15 +232,20 @@ class ShowAccessLists(ShowAccessListsSchema):
        'xdmcp':          177
     }
 
-    cli_command = ['show access-lists','show {ip} access-lists','show {ip} access-lists {acl}']
+    cli_command = ['show access-lists','show {ip} {access_list}','show {ip} {access_list} {acl}']
 
     def cli(self,ip="",acl="",output=None):
         if output is None:
             assert ip in ['ip','ipv6','']
+            if ip == 'ip':
+                access_list = 'access-lists'
+            if ip == 'ipv6':
+                access_list = 'access-list'
+
             if ip and acl:
-                cmd = self.cli_command[2].format(ip=ip,acl=acl)
+                cmd = self.cli_command[2].format(ip=ip, acl=acl, access_list=access_list)
             if ip and not acl:
-                cmd = self.cli_command[1].format(ip=ip)
+                cmd = self.cli_command[1].format(ip=ip, access_list=access_list)
             if not ip and not acl:
                 cmd = self.cli_command[0]
             # get output from device
