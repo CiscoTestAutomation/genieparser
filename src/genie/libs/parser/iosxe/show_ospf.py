@@ -3127,11 +3127,13 @@ class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
 
     ''' Parser for "show ip ospf database" '''
 
+    cli_command = 'show ip ospf database'
+
     def cli(self, output=None):
 
         if output is None:
             # Execute command on device
-            out = self.device.execute('show ip ospf database')
+            out = self.device.execute(self.cli_command)
         else:
             out = output
 
@@ -3140,11 +3142,13 @@ class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
         address_family = 'ipv4'
         default_mt_id = 0
 
-        # Router
-        # Network Link
-        # Summary Network
-        # Opaque Area
-        # Type-5 AS External
+        # 1: Router
+        # 2: Network Link
+        # 3: Summary Network
+        # 3: Summary Net
+        # 3: Summary ASB
+        # 4: Opaque Area
+        # 5: Type-5 AS External
         lsa_type_mapping = {
             'router': 1,
             'net': 2,
@@ -3171,7 +3175,9 @@ class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
 
         # Router Link States (Area 0)
         # Net Link States (Area 0)
-        p4 = re.compile(r'^(?P<lsa_type>(Router|Net)) +Link +States'
+        # Summary Net Link States (Area 8)
+        # Summary ASB Link States (Area 8)
+        p4 = re.compile(r'^(?P<lsa_type>([a-zA-Z\s]+)) +Link +States'
                          ' +\(Area +(?P<area>(\S+))\)$')
 
         # Link ID         ADV Router      Age         Seq#       Checksum Link count
@@ -3218,7 +3224,8 @@ class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                lsa_type = lsa_type_mapping[group['lsa_type'].lower()]
+                lsa_type_key = group['lsa_type'].lower().split()[0]
+                lsa_type = lsa_type_mapping[lsa_type_key]
 
                 # Set area
                 if group['area']:
