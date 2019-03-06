@@ -8656,6 +8656,290 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
           No established BGP session with peer
         '''}
 
+    golden_output4 = {'execute.return_value': '''
+show bgp vrf default all neighbors
+
+BGP neighbor is 81.0.0.3, remote AS 1, ibgp link, fabric-internal, Peer index 1
+  BGP version 4, remote router ID 81.0.0.3
+  BGP state = Established, up for 6d01h
+  Using loopback0 as update source for this peer
+  Last read 00:00:22, hold time = 180, keepalive interval is 60 seconds
+  Last written 00:00:16, keepalive timer expiry due 00:00:43
+  Received 122732 messages, 0 notifications, 0 bytes in queue
+  Sent 39121 messages, 1 notifications, 0 bytes in queue
+  Connections established 2, dropped 1
+  Last reset by us 6d01h, due to holdtimer expired error
+  Last reset by peer never, due to No error
+
+  Neighbor capabilities:
+  Dynamic capability: advertised (mp, refresh, gr) received (mp, refresh, gr)
+  Dynamic capability (old): advertised received
+  Route refresh capability (new): advertised received 
+  Route refresh capability (old): advertised received 
+  4-Byte AS capability: advertised received 
+  Address family L2VPN EVPN: advertised received 
+  Graceful Restart capability: advertised received
+
+  Graceful Restart Parameters:
+  Address families advertised to peer:
+    L2VPN EVPN  
+  Address families received from peer:
+    L2VPN EVPN  
+  Forwarding state preserved by peer for:
+    L2VPN EVPN  
+  Restart time advertised to peer: 120 seconds
+  Stale time for routes advertised by peer: 300 seconds
+  Restart time advertised by peer: 120 seconds
+  Extended Next Hop Encoding Capability: advertised received
+  Receive IPv6 next hop encoding Capability for AF:
+    IPv4 Unicast  
+
+  Message statistics:
+                              Sent               Rcvd
+  Opens:                         2                  2  
+  Notifications:                 1                  0  
+  Updates:                   30397             114096  
+  Keepalives:                 8716               8631  
+  Route Refresh:                 2                  0  
+  Capability:                    3                  3  
+  Total:                     39121             122732  
+  Total bytes:             6141326           31462937  
+  Bytes in queue:                0                  0  
+
+  For address family: L2VPN EVPN
+  BGP table version 1509868, neighbor version 1509868
+  70456 accepted paths consume 8736544 bytes of memory
+  18989 sent paths
+  Extended community attribute sent to this neighbor
+  Third-party Nexthop will not be computed.
+  Last End-of-RIB received 00:00:02 after session start
+
+  Local host: 81.0.0.1, Local port: 63174
+  Foreign host: 81.0.0.3, Foreign port: 179
+  fd = 85
+
+BGP neighbor is 81.0.0.4, remote AS 1, ibgp link, fabric-internal, Peer index 2
+  BGP version 4, remote router ID 81.0.0.4
+  BGP state = Established, up for 6d02h
+  Using loopback0 as update source for this peer
+  Last read 00:00:22, hold time = 180, keepalive interval is 60 seconds
+  Last written 00:00:16, keepalive timer expiry due 00:00:43
+  Received 119972 messages, 0 notifications, 0 bytes in queue
+  Sent 38031 messages, 0 notifications, 0 bytes in queue
+  Connections established 1, dropped 0
+  Last reset by us never, due to No error
+  Last reset by peer never, due to No error
+
+  Neighbor capabilities:
+  Dynamic capability: advertised (mp, refresh, gr) received (mp, refresh, gr)
+  Dynamic capability (old): advertised received
+  Route refresh capability (new): advertised received 
+  Route refresh capability (old): advertised received 
+  4-Byte AS capability: advertised received 
+  Address family L2VPN EVPN: advertised received 
+  Graceful Restart capability: advertised received
+
+  Graceful Restart Parameters:
+  Address families advertised to peer:
+    L2VPN EVPN  
+  Address families received from peer:
+    L2VPN EVPN  
+  Forwarding state preserved by peer for:
+  Restart time advertised to peer: 120 seconds
+  Stale time for routes advertised by peer: 300 seconds
+  Restart time advertised by peer: 120 seconds
+  Extended Next Hop Encoding Capability: advertised received
+  Receive IPv6 next hop encoding Capability for AF:
+    IPv4 Unicast  
+
+  Message statistics:
+                              Sent               Rcvd
+  Opens:                         1                  1  
+  Notifications:                 0                  0  
+  Updates:                   29311             111338  
+  Keepalives:                 8715               8631  
+  Route Refresh:                 2                  0  
+  Capability:                    2                  2  
+  Total:                     38031             119972  
+  Total bytes:             5259433           29264135  
+  Bytes in queue:                0                  0  
+
+  For address family: L2VPN EVPN
+  BGP table version 1509868, neighbor version 1509868
+  70456 accepted paths consume 8736544 bytes of memory
+  18989 sent paths
+  Extended community attribute sent to this neighbor
+  Third-party Nexthop will not be computed.
+  Last End-of-RIB received 00:00:40 after session start
+
+  Local host: 81.0.0.1, Local port: 62918
+  Foreign host: 81.0.0.4, Foreign port: 179
+  fd = 83
+        '''}
+
+    golden_parsed_output4 = {'neighbor': {'81.0.0.3': {'address_family': {'l2vpn evpn': {'bgp_table_version': 1509868,
+                                                             'neighbor_version': 1509868,
+                                                             'path': {'accepted_paths': 70456,
+                                                                      'memory_usage': 8736544,
+                                                                      'total_entries': 18989},
+                                                             'send_community': 'extended',
+                                                             'session_state': 'established',
+                                                             'third_party_nexthop': True}},
+                           'bgp_negotiated_capabilities': {'dynamic_capability': 'advertised '
+                                                                                 '(mp, '
+                                                                                 'refresh, '
+                                                                                 'gr) '
+                                                                                 'received '
+                                                                                 '(mp, '
+                                                                                 'refresh, '
+                                                                                 'gr)',
+                                                           'dynamic_capability_old': 'advertised '
+                                                                                     'received',
+                                                           'graceful_restart': 'advertised '
+                                                                               'received',
+                                                           'route_refresh': 'advertised '
+                                                                            'received',
+                                                           'route_refresh_old': 'advertised '
+                                                                                'received'},
+                           'bgp_negotiated_keepalive_timers': {'hold_time': 180,
+                                                               'keepalive_interval': 60,
+                                                               'keepalive_timer': 'expiry '
+                                                                                  'due '
+                                                                                  '00:00:43',
+                                                               'last_read': '00:00:22',
+                                                               'last_written': '00:00:16'},
+                           'bgp_neighbor_counters': {'messages': {'received': {'bytes_in_queue': 0,
+                                                                               'capability': 3,
+                                                                               'keepalives': 8631,
+                                                                               'notifications': 0,
+                                                                               'opens': 2,
+                                                                               'route_refresh': 0,
+                                                                               'total': 122732,
+                                                                               'total_bytes': 31462937,
+                                                                               'updates': 114096},
+                                                                  'sent': {'bytes_in_queue': 0,
+                                                                           'capability': 3,
+                                                                           'keepalives': 8716,
+                                                                           'notifications': 1,
+                                                                           'opens': 2,
+                                                                           'route_refresh': 2,
+                                                                           'total': 39121,
+                                                                           'total_bytes': 6141326,
+                                                                           'updates': 30397}}},
+                           'bgp_session_transport': {'connection': {'dropped': 1,
+                                                                    'established': 2,
+                                                                    'last_reset': 'never',
+                                                                    'reset_by': 'peer',
+                                                                    'reset_reason': 'no '
+                                                                                    'error'},
+                                                     'transport': {'fd': '85',
+                                                                   'foreign_host': '81.0.0.3',
+                                                                   'foreign_port': '179',
+                                                                   'local_host': '81.0.0.1',
+                                                                   'local_port': '63174'}},
+                           'bgp_version': 4,
+                           'peer_fab_type': 'fabric-internal',
+                           'graceful_restart_paramters': {'restart_time_advertised_by_peer_seconds': 120,
+                                                          'restart_time_advertised_to_peer_seconds': 120,
+                                                          'stale_time_advertised_by_peer_seconds': 300},
+                           'link': 'ibgp',
+                           'local_as': 'None',
+                           'peer_index': 1,
+                           'received_bytes_queue': 0,
+                           'received_messages': 122732,
+                           'received_notifications': 0,
+                           'remote_as': 1,
+                           'retry_time': 'None',
+                           'router_id': '81.0.0.3',
+                           'sent_bytes_queue': 0,
+                           'sent_messages': 39121,
+                           'sent_notifications': 1,
+                           'session_state': 'established',
+                           'shutdown': False,
+                           'up_time': '6d01h',
+                           'update_source': 'loopback0'},
+              '81.0.0.4': {'address_family': {'l2vpn evpn': {'bgp_table_version': 1509868,
+                                                             'neighbor_version': 1509868,
+                                                             'path': {'accepted_paths': 70456,
+                                                                      'memory_usage': 8736544,
+                                                                      'total_entries': 18989},
+                                                             'send_community': 'extended',
+                                                             'session_state': 'established',
+                                                             'third_party_nexthop': True}},
+                           'bgp_negotiated_capabilities': {'dynamic_capability': 'advertised '
+                                                                                 '(mp, '
+                                                                                 'refresh, '
+                                                                                 'gr) '
+                                                                                 'received '
+                                                                                 '(mp, '
+                                                                                 'refresh, '
+                                                                                 'gr)',
+                                                           'dynamic_capability_old': 'advertised '
+                                                                                     'received',
+                                                           'graceful_restart': 'advertised '
+                                                                               'received',
+                                                           'route_refresh': 'advertised '
+                                                                            'received',
+                                                           'route_refresh_old': 'advertised '
+                                                                                'received'},
+                           'bgp_negotiated_keepalive_timers': {'hold_time': 180,
+                                                               'keepalive_interval': 60,
+                                                               'keepalive_timer': 'expiry '
+                                                                                  'due '
+                                                                                  '00:00:43',
+                                                               'last_read': '00:00:22',
+                                                               'last_written': '00:00:16'},
+                           'bgp_neighbor_counters': {'messages': {'received': {'bytes_in_queue': 0,
+                                                                               'capability': 2,
+                                                                               'keepalives': 8631,
+                                                                               'notifications': 0,
+                                                                               'opens': 1,
+                                                                               'route_refresh': 0,
+                                                                               'total': 119972,
+                                                                               'total_bytes': 29264135,
+                                                                               'updates': 111338},
+                                                                  'sent': {'bytes_in_queue': 0,
+                                                                           'capability': 2,
+                                                                           'keepalives': 8715,
+                                                                           'notifications': 0,
+                                                                           'opens': 1,
+                                                                           'route_refresh': 2,
+                                                                           'total': 38031,
+                                                                           'total_bytes': 5259433,
+                                                                           'updates': 29311}}},
+                           'bgp_session_transport': {'connection': {'dropped': 0,
+                                                                    'established': 1,
+                                                                    'last_reset': 'never',
+                                                                    'reset_by': 'peer',
+                                                                    'reset_reason': 'no '
+                                                                                    'error'},
+                                                     'transport': {'fd': '83',
+                                                                   'foreign_host': '81.0.0.4',
+                                                                   'foreign_port': '179',
+                                                                   'local_host': '81.0.0.1',
+                                                                   'local_port': '62918'}},
+                           'bgp_version': 4,
+                           'peer_fab_type': 'fabric-internal',
+                           'graceful_restart_paramters': {'restart_time_advertised_by_peer_seconds': 120,
+                                                          'restart_time_advertised_to_peer_seconds': 120,
+                                                          'stale_time_advertised_by_peer_seconds': 300},
+                           'link': 'ibgp',
+                           'local_as': 'None',
+                           'peer_index': 2,
+                           'received_bytes_queue': 0,
+                           'received_messages': 119972,
+                           'received_notifications': 0,
+                           'remote_as': 1,
+                           'retry_time': 'None',
+                           'router_id': '81.0.0.4',
+                           'sent_bytes_queue': 0,
+                           'sent_messages': 38031,
+                           'sent_notifications': 0,
+                           'session_state': 'established',
+                           'shutdown': False,
+                           'up_time': '6d02h',
+                           'update_source': 'loopback0'}}}
+
     def test_show_bgp_vrf_VRF1_all_neighbors_golden1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
@@ -8676,6 +8960,13 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
         obj = ShowBgpVrfAllNeighbors(device=self.device)
         parsed_output = obj.parse(vrf='default')
         self.assertEqual(parsed_output,self.golden_parsed_output3)
+
+    def test_show_bgp_vrf_default_all_neighbors_golden4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output4)
+        obj = ShowBgpVrfAllNeighbors(device=self.device)
+        parsed_output = obj.parse(vrf='default')
+        self.assertEqual(parsed_output,self.golden_parsed_output4)
 
     def test_show_bgp_vrf_default_all_neighbors_empty(self):
         self.device = Mock(**self.empty_output)
