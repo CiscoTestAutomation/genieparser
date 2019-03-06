@@ -6,6 +6,7 @@ IOSXE parsers for the following show commands:
     * show ip ospf sham-links
     * show ip ospf virtual-links
     * show ip ospf neighbor detail
+    * show ip ospf database
     * show ip ospf database router
     * show ip ospf database network
     * show ip ospf database summary
@@ -13,6 +14,7 @@ IOSXE parsers for the following show commands:
     * show ip ospf database opaque-area
     * show ip ospf mpls ldp interface
     * show ip ospf mpls traffic-eng link
+    * show ip ospf max-metric
 '''
 
 # Python
@@ -2506,6 +2508,7 @@ class ShowIpOspfShamLinksSchema(MetaParser):
          },
 }
 
+
 # ====================================
 # Parser for 'show ip ospf sham-links'
 # ====================================
@@ -2581,6 +2584,8 @@ class ShowIpOspfVirtualLinksSchema(MetaParser):
                   },
              },
     }
+
+
 # =======================================
 # Parser for 'show ip ospf virtual-links'
 # =======================================
@@ -3144,32 +3149,28 @@ class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
 
         # 1: Router
         # 2: Network Link
+        # 3: Summary
         # 3: Summary Network
         # 3: Summary Net
-        # 3: Summary ASB
-        # 4: Opaque Area
+        # 4: Summary ASB
         # 5: Type-5 AS External
+        # 10: Opaque Area
         lsa_type_mapping = {
             'router': 1,
             'net': 2,
             'summary': 3,
+            'summary net': 3,
+            'summary asb': 4,
             'external': 5,
             'opaque': 10,
             }
 
         # Load for five secs: 71%/0%; one minute: 11%; five minutes: 9%
-        p1 = re.compile(r'^Load +for +five +secs:'
-                         ' +(?P<load_top>(\d+))%/(?P<load_bottom>(\d+))%;'
-                         ' +one +minute: (?P<one_min>(\d+))%;'
-                         ' +five +minutes: +(?P<five_min>(\d+))%$')
-
         # Time source is NTP, 20:29:26.348 JST Fri Nov 11 2016
-        p2 = re.compile(r'^Time +source +is (?P<time_source>(\S+)),'
-                         ' *(?P<timestamp>(.*))$')
 
-        # OSPF Router with ID (106.162.197.254) (Process ID 9996)
+        # OSPF Router with ID (203.152.187.214) (Process ID 9996)
         # OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
-        p3 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
+        p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
                          ' +\(Process +ID +(?P<instance>(\d+))'
                          '(?:, +VRF +(?P<vrf>(\S+)))?\)$')
 
@@ -3177,13 +3178,13 @@ class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
         # Net Link States (Area 0)
         # Summary Net Link States (Area 8)
         # Summary ASB Link States (Area 8)
-        p4 = re.compile(r'^(?P<lsa_type>([a-zA-Z\s]+)) +Link +States'
-                         ' +\(Area +(?P<area>(\S+))\)$')
+        p2 = re.compile(r'^(?P<lsa_type>([a-zA-Z\s]+)) +Link +States +\(Area'
+                         ' +(?P<area>(\S+))\)$')
 
         # Link ID         ADV Router      Age         Seq#       Checksum Link count
-        # 27.93.202.64    27.93.202.64    2794        0x80000043 0x002254 3
-        # 20.1.1.2        106.162.197.253 70          0x8000003F 0x0015EF
-        p5 = re.compile(r'^(?P<link_id>(\S+)) +(?P<adv_router>(\S+))'
+        # 17.83.202.64    27.93.202.64    2794        0x80000043 0x002254 3
+        # 10.1.1.2        106.162.197.253 70          0x8000003F 0x0015EF
+        p3 = re.compile(r'^(?P<link_id>(\S+)) +(?P<adv_router>(\S+))'
                          ' +(?P<age>(\d+)) +(?P<seq>(\S+)) +(?P<checksum>(\S+))'
                          '(?: *(?P<link_count>(\d+)))?$')
 
@@ -3191,17 +3192,10 @@ class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
             line = line.strip()
 
             # Load for five secs: 71%/0%; one minute: 11%; five minutes: 9%
-            m = p1.match(line)
-            if m:
-                continue
-
             # Time source is NTP, 20:29:26.348 JST Fri Nov 11 2016
-            m = p2.match(line)
-            if m:
-                continue
 
             # OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
-            m = p3.match(line)
+            m = p1.match(line)
             if m:
                 group = m.groupdict()
                 router_id = str(group['router_id'])
@@ -3221,11 +3215,16 @@ class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
 
             # Router Link States (Area 0)
             # Net Link States (Area 0)
-            m = p4.match(line)
+            # Summary Net Link States (Area 8)
+            # Summary ASB Link States (Area 8)
+            m = p2.match(line)
             if m:
                 group = m.groupdict()
-                lsa_type_key = group['lsa_type'].lower().split()[0]
-                lsa_type = lsa_type_mapping[lsa_type_key]
+                lsa_type_key = group['lsa_type'].lower()
+                if lsa_type_key in lsa_type_mapping:
+                    lsa_type = lsa_type_mapping[lsa_type_key]
+                else:
+                    continue
 
                 # Set area
                 if group['area']:
@@ -3243,15 +3242,14 @@ class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
                                           setdefault('database', {}).\
                                           setdefault('lsa_types', {}).\
                                           setdefault(lsa_type, {})
-
                 # Set lsa_type
                 lsa_type_dict['lsa_type'] = lsa_type
                 continue
 
             # Link ID         ADV Router      Age         Seq#       Checksum Link count
-            # 27.93.202.64    27.93.202.64    2794        0x80000043 0x002254 3
-            # 20.1.1.2        106.162.197.253 70          0x8000003F 0x0015EF
-            m = p5.match(line)
+            # 17.83.202.64    27.93.202.64    2794        0x80000043 0x002254 3
+            # 10.1.1.2        106.162.197.253 70          0x8000003F 0x0015EF
+            m = p3.match(line)
             if m:
                 group = m.groupdict()
                 lsa_id = group['link_id']
@@ -3272,6 +3270,7 @@ class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
                 ospfv2_dict['checksum'] = group['checksum']
                 if group['link_count']:
                     ospfv2_dict['link_count'] = int(group['link_count'])
+                continue
 
         return ret_dict
 
@@ -4273,6 +4272,7 @@ class ShowIpOspfDatabaseNetwork(ShowIpOspfDatabaseNetworkSchema, ShowIpOspfDatab
 
         return super().cli(cmd=self.cli_command, db_type='network',output=output)
 
+
 # ==========================================
 # Schema for 'show ip ospf database summary'
 # ==========================================
@@ -4665,10 +4665,10 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
                     continue
 
             # Holddown timer is disabled
-            p5 = re.compile(r'^Holddown +timer +is (?P<val>(disabled|enabled))$')
+            p5 = re.compile(r'^Holddown +timer +is (?P<val>([a-zA-Z\s]+))$')
             m = p5.match(line)
             if m:
-                if m.groupdict()['val'] is 'enabled':
+                if 'enabled' in m.groupdict()['val']:
                     intf_dict['holddown_timer'] = True
                 else:
                     intf_dict['holddown_timer'] = False
@@ -5020,3 +5020,179 @@ class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
                 continue
 
         return ret_dict
+
+
+# ====================================
+# Schema for 'show ip ospf max-metric'
+# ====================================
+class ShowIpOspfMaxMetricSchema(MetaParser):
+    
+    ''' Schema for "show ip ospf max-metric" '''
+
+    schema = {
+        'vrf':
+            {Any():
+                {'address_family':
+                    {Any():
+                        {'instance':
+                            {Any():
+                                {'base_topology_mtid':
+                                    {Any():
+                                        {'start_time': str,
+                                        'time_elapsed': str,
+                                        'router_lsa_max_metric': bool,
+                                        Optional('condition'): str,
+                                        Optional('state'): str,
+                                        Optional('advertise_lsa_metric'): int,
+                                        Optional('unset_reason'): str,
+                                        Optional('unset_time'): str,
+                                        Optional('unset_time_elapsed'): str,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+
+# ====================================
+# Parser for 'show ip ospf max-metric'
+# ====================================
+class ShowIpOspfMaxMetric(ShowIpOspfMaxMetricSchema):
+
+    ''' Parser for "show ip ospf max-metric" '''
+
+    cli_command = 'show ip ospf max-metric'
+
+    def cli(self, output=None):
+
+        if output is None:
+            # Execute command on device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Init vars
+        ret_dict = {}
+        address_family = 'ipv4'
+
+        # Load for five secs: 71%/0%; one minute: 11%; five minutes: 9%
+        # Time source is NTP, 20:29:26.348 JST Fri Nov 11 2016
+
+        # OSPF Router with ID (203.152.187.214) (Process ID 9996)
+        # OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
+        p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
+                         ' +\(Process +ID +(?P<instance>(\d+))'
+                         '(?:, +VRF +(?P<vrf>(\S+)))?\)$')
+
+        # Base Topology (MTID 0)
+        p2 = re.compile(r'^Base +Topology +\(MTID +(?P<mtid>(\d+))\)$')
+
+        # Start time: 00:01:58.314, Time elapsed: 00:54:43.858
+        p3 = re.compile(r'^Start +time: +(?P<start_time>(\S+)), +Time +elapsed:'
+                         ' +(?P<time_elapsed>(\S+))$')
+
+        # Originating router-LSAs with maximum metric
+        p4_1 = re.compile(r'^Originating +router-LSAs +with +maximum +metric$')
+
+        # Router is not originating router-LSAs with maximum metric
+        p4_2 = re.compile(r'^Router +is +not +originating +router-LSAs +with'
+                           ' +maximum +metric$')
+
+        # Condition: on startup for 5 seconds, State: inactive
+        p5 = re.compile(r'^Condition: +(?P<condition>(.*)), +State:'
+                          ' +(?P<state>([a-zA-Z\s]+))$')
+
+        # Advertise summary-LSAs with metric 16711680
+        p6 = re.compile(r'^Advertise +summary-LSAs +with +metric'
+                         ' +(?P<metric>(\d+))$')
+
+        # Unset reason: timer expired, Originated for 5 seconds
+        p7 = re.compile(r'^Unset +reason: (?P<reason>(.*))$')
+
+        # Unset time: 00:02:03.314, Time elapsed: 00:54:38.858
+        p8 = re.compile(r'^Unset +time: +(?P<time>(\S+)), +Time +elapsed:'
+                         ' +(?P<elapsed>(\S+))$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                router_id = str(group['router_id'])
+                instance = str(group['instance'])
+                if group['vrf']:
+                    vrf = str(group['vrf'])
+                else:
+                    vrf = 'default'
+                # Create dict
+                ospf_dict = ret_dict.setdefault('vrf', {}).\
+                                     setdefault(vrf, {}).\
+                                     setdefault('address_family', {}).\
+                                     setdefault(address_family, {}).\
+                                     setdefault('instance', {}).\
+                                     setdefault(instance, {})
+                continue
+
+            # Base Topology (MTID 0)
+            m = p2.match(line)
+            if m:
+                mtid = m.groupdict()['mtid']
+                mtid_dict = ospf_dict.setdefault('base_topology_mtid', {}).\
+                                      setdefault(mtid, {})
+                continue
+
+            # Start time: 00:01:58.314, Time elapsed: 00:54:43.858
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                mtid_dict['start_time'] = group['start_time']
+                mtid_dict['time_elapsed'] = group['time_elapsed']
+                continue
+
+            # Originating router-LSAs with maximum metric
+            m = p4_1.match(line)
+            if m:
+                mtid_dict['router_lsa_max_metric'] = True
+                continue
+
+            # Router is not originating router-LSAs with maximum metric
+            m = p4_2.match(line)
+            if m:
+                mtid_dict['router_lsa_max_metric'] = False
+                continue
+
+            # Condition: on startup for 5 seconds, State: inactive
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                mtid_dict['condition'] = group['condition']
+                mtid_dict['state'] = group['state']
+                continue
+
+            # Advertise summary-LSAs with metric 16711680
+            m = p6.match(line)
+            if m:
+                mtid_dict['advertise_lsa_metric'] = int(m.groupdict()['metric'])
+
+            # Unset reason: timer expired, Originated for 5 seconds
+            m = p7.match(line)
+            if m:
+                mtid_dict['unset_reason'] = m.groupdict()['reason']
+                continue
+
+            # Unset time: 00:02:03.314, Time elapsed: 00:54:38.858
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                mtid_dict['unset_time'] = group['time']
+                mtid_dict['unset_time_elapsed'] = group['elapsed']
+                continue
+
+        return ret_dict
+
