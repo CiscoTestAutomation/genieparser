@@ -3,10 +3,12 @@
     IOSXE parsers for the following show commands:
 
     * show interfaces
+    * show ip interfaces <interface>
     * show ip interface brief
     * show ip interface brief | include Vlan
     * show interfaces switchport
     * show ip interface
+    * show interfaces <interface>
     * show ipv6 interface
     * show interfaces accounting
 """
@@ -48,7 +50,8 @@ logger = logging.getLogger(__name__)
 
 
 class ShowInterfacesSchema(MetaParser):
-    """schema for show interfaces"""
+    """schema for show interfaces
+                  show interfaces <interface>"""
 
     schema = {
             Any(): {
@@ -168,15 +171,21 @@ class ShowInterfacesSchema(MetaParser):
 
 
 class ShowInterfaces(ShowInterfacesSchema):
-    """parser for show interfaces"""
+    """parser for show interfaces
+                  show interfaces <interface>"""
 
-    cli_command = 'show interfaces'
+    cli_command = ['show interfaces','show interfaces {interface}']
 
-    def cli(self,output=None):
+    def cli(self,interface="",output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
         else:
             out = output
+
         interface_dict = {}
         unnumbered_dict = {}
         for line in out.splitlines():
@@ -1477,7 +1486,8 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
 
 
 class ShowIpInterfaceSchema(MetaParser):
-    """Schema for show ip interface"""
+    """Schema for show ip interface
+                  show ip interface <interface>"""
     schema = {
                 Any(): {
                     'enabled': bool,
@@ -1543,13 +1553,18 @@ class ShowIpInterfaceSchema(MetaParser):
             }
 
 class ShowIpInterface(ShowIpInterfaceSchema):
-    """Parser for show ip interface"""
+    """Parser for show ip interface
+                  show ip interface <interface>"""
 
-    cli_command = 'show ip interface'
+    cli_command = ['show ip interface','show ip interface {interface}']
 
-    def cli(self,output=None):
+    def cli(self,interface="",output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
         else:
             out = output
 

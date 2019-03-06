@@ -224,6 +224,1071 @@ class test_show_access_lists(unittest.TestCase):
     '''
     }
 
+    golden_ip_access_list_output = {'execute.return_value': '''\
+    Router#show ip access-lists ACL_TEST
+Load for five secs: 1%/0%; one minute: 2%; five minutes: 2%
+Time source is NTP, 18:12:32.965 JST Mon Oct 17 2016
+
+Extended IP access list ACL_TEST
+    10 deny tcp 1.32.188.0 0.0.0.255 host 192.168.16.1 eq www
+    20 deny tcp 1.1.1.0 0.0.0.255 host 192.168.16.1 eq www
+    30 deny tcp 1.1.2.0 0.0.0.255 host 192.168.16.1 eq www
+    40 deny tcp 1.1.3.0 0.0.0.255 host 192.168.16.1 eq www
+    50 deny tcp 1.1.4.0 0.0.0.255 host 192.168.16.1 eq www
+    60 deny tcp 1.1.5.0 0.0.0.255 host 192.168.16.1 eq www
+    70 deny tcp 1.1.6.0 0.0.0.255 host 192.168.16.1 eq www
+    80 deny tcp 1.1.7.0 0.0.0.255 host 192.168.16.1 eq www
+    90 deny tcp 1.1.8.0 0.0.0.255 host 192.168.16.1 eq www
+    100 deny tcp 1.1.9.0 0.0.0.255 host 192.168.16.1 eq www
+    110 deny tcp 1.1.10.0 0.0.0.255 host 192.168.16.1 eq www
+    120 deny tcp 1.1.11.0 0.0.0.255 host 192.168.16.1 eq www
+    130 deny tcp 1.1.12.0 0.0.0.255 host 192.168.16.1 eq www
+    140 deny tcp 1.1.13.0 0.0.0.255 host 192.168.16.1 eq www
+    150 deny tcp 1.1.14.0 0.0.0.255 host 192.168.16.1 eq www
+    160 deny tcp 1.1.15.0 0.0.0.255 host 192.168.16.1 eq www
+    170 deny tcp 1.1.16.0 0.0.0.255 host 192.168.16.1 eq www
+
+    '''}
+    golden_parsed_ip_access_list_output = {
+        "ACL_TEST": {
+                "aces": {
+                    "80": {
+                        "actions": {
+                            "forwarding": "deny",
+                            "logging": "log-none"
+                        },
+                        "matches": {
+                            "l3": {
+                                "tcp": {
+                                    "source_network": {
+                                        "1.1.7.0 0.0.0.255": {
+                                            "source_network": "1.1.7.0 0.0.0.255"
+                                        }
+                                    },
+                                    "protocol": "tcp",
+                                    "destination_network": {
+                                        "host 192.168.16.1": {
+                                            "destination_network": "host 192.168.16.1"
+                                        }
+                                    }
+                                }
+                            },
+                            "l4": {
+                                "tcp": {
+                                    "destination_port": {
+                                        "operator": {
+                                            "operator": "eq",
+                                            "port": 80
+                                        }
+                                    },
+                                    "established": False
+                                }
+                            }
+                        },
+                        "name": "80"
+                    },
+                    "50": {
+                        "actions": {
+                            "forwarding": "deny",
+                            "logging": "log-none"
+                        },
+                        "matches": {
+                            "l3": {
+                                "tcp": {
+                                    "source_network": {
+                                        "1.1.4.0 0.0.0.255": {
+                                            "source_network": "1.1.4.0 0.0.0.255"
+                                        }
+                                    },
+                                    "protocol": "tcp",
+                                    "destination_network": {
+                                        "host 192.168.16.1": {
+                                            "destination_network": "host 192.168.16.1"
+                                        }
+                                    }
+                                }
+                            },
+                            "l4": {
+                                "tcp": {
+                                    "destination_port": {
+                                        "operator": {
+                                            "operator": "eq",
+                                            "port": 80
+                                        }
+                                    },
+                                    "established": False
+                                }
+                            }
+                        },
+                        "name": "50"
+                    },
+                    "10": {
+                        "actions": {
+                            "forwarding": "deny",
+                            "logging": "log-none"
+                        },
+                        "matches": {
+                            "l3": {
+                                "tcp": {
+                                    "source_network": {
+                                        "1.32.188.0 0.0.0.255": {
+                                            "source_network": "1.32.188.0 0.0.0.255"
+                                        }
+                                    },
+                                    "protocol": "tcp",
+                                    "destination_network": {
+                                        "host 192.168.16.1": {
+                                            "destination_network": "host 192.168.16.1"
+                                        }
+                                    }
+                                }
+                            },
+                            "l4": {
+                                "tcp": {
+                                    "destination_port": {
+                                        "operator": {
+                                            "operator": "eq",
+                                            "port": 80
+                                        }
+                                    },
+                                    "established": False
+                                }
+                            }
+                        },
+                        "name": "10"
+                    },
+                    "130": {
+                        "actions": {
+                            "forwarding": "deny",
+                            "logging": "log-none"
+                        },
+                        "matches": {
+                            "l3": {
+                                "tcp": {
+                                    "source_network": {
+                                        "1.1.12.0 0.0.0.255": {
+                                            "source_network": "1.1.12.0 0.0.0.255"
+                                        }
+                                    },
+                                    "protocol": "tcp",
+                                    "destination_network": {
+                                        "host 192.168.16.1": {
+                                            "destination_network": "host 192.168.16.1"
+                                        }
+                                    }
+                                }
+                            },
+                            "l4": {
+                                "tcp": {
+                                    "destination_port": {
+                                        "operator": {
+                                            "operator": "eq",
+                                            "port": 80
+                                        }
+                                    },
+                                    "established": False
+                                }
+                            }
+                        },
+                        "name": "130"
+                    },
+                    "90": {
+                        "actions": {
+                            "forwarding": "deny",
+                            "logging": "log-none"
+                        },
+                        "matches": {
+                            "l3": {
+                                "tcp": {
+                                    "source_network": {
+                                        "1.1.8.0 0.0.0.255": {
+                                            "source_network": "1.1.8.0 0.0.0.255"
+                                        }
+                                    },
+                                    "protocol": "tcp",
+                                    "destination_network": {
+                                        "host 192.168.16.1": {
+                                            "destination_network": "host 192.168.16.1"
+                                        }
+                                    }
+                                }
+                            },
+                            "l4": {
+                                "tcp": {
+                                    "destination_port": {
+                                        "operator": {
+                                            "operator": "eq",
+                                            "port": 80
+                                        }
+                                    },
+                                    "established": False
+                                }
+                            }
+                        },
+                        "name": "90"
+                    },
+                    "40": {
+                        "actions": {
+                            "forwarding": "deny",
+                            "logging": "log-none"
+                        },
+                        "matches": {
+                            "l3": {
+                                "tcp": {
+                                    "source_network": {
+                                        "1.1.3.0 0.0.0.255": {
+                                            "source_network": "1.1.3.0 0.0.0.255"
+                                        }
+                                    },
+                                    "protocol": "tcp",
+                                    "destination_network": {
+                                        "host 192.168.16.1": {
+                                            "destination_network": "host 192.168.16.1"
+                                        }
+                                    }
+                                }
+                            },
+                            "l4": {
+                                "tcp": {
+                                    "destination_port": {
+                                        "operator": {
+                                            "operator": "eq",
+                                            "port": 80
+                                        }
+                                    },
+                                    "established": False
+                                }
+                            }
+                        },
+                        "name": "40"
+                    },
+                    "150": {
+                        "actions": {
+                            "forwarding": "deny",
+                            "logging": "log-none"
+                        },
+                        "matches": {
+                            "l3": {
+                                "tcp": {
+                                    "source_network": {
+                                        "1.1.14.0 0.0.0.255": {
+                                            "source_network": "1.1.14.0 0.0.0.255"
+                                        }
+                                    },
+                                    "protocol": "tcp",
+                                    "destination_network": {
+                                        "host 192.168.16.1": {
+                                            "destination_network": "host 192.168.16.1"
+                                        }
+                                    }
+                                }
+                            },
+                            "l4": {
+                                "tcp": {
+                                    "destination_port": {
+                                        "operator": {
+                                            "operator": "eq",
+                                            "port": 80
+                                        }
+                                    },
+                                    "established": False
+                                }
+                            }
+                        },
+                        "name": "150"
+                    },
+                    "30": {
+                        "actions": {
+                            "forwarding": "deny",
+                            "logging": "log-none"
+                        },
+                        "matches": {
+                            "l3": {
+                                "tcp": {
+                                    "source_network": {
+                                        "1.1.2.0 0.0.0.255": {
+                                            "source_network": "1.1.2.0 0.0.0.255"
+                                        }
+                                    },
+                                    "protocol": "tcp",
+                                    "destination_network": {
+                                        "host 192.168.16.1": {
+                                            "destination_network": "host 192.168.16.1"
+                                        }
+                                    }
+                                }
+                            },
+                            "l4": {
+                                "tcp": {
+                                    "destination_port": {
+                                        "operator": {
+                                            "operator": "eq",
+                                            "port": 80
+                                        }
+                                    },
+                                    "established": False
+                                }
+                            }
+                        },
+                        "name": "30"
+                    },
+                    "120": {
+                        "actions": {
+                            "forwarding": "deny",
+                            "logging": "log-none"
+                        },
+                        "matches": {
+                            "l3": {
+                                "tcp": {
+                                    "source_network": {
+                                        "1.1.11.0 0.0.0.255": {
+                                            "source_network": "1.1.11.0 0.0.0.255"
+                                        }
+                                    },
+                                    "protocol": "tcp",
+                                    "destination_network": {
+                                        "host 192.168.16.1": {
+                                            "destination_network": "host 192.168.16.1"
+                                        }
+                                    }
+                                }
+                            },
+                            "l4": {
+                                "tcp": {
+                                    "destination_port": {
+                                        "operator": {
+                                            "operator": "eq",
+                                            "port": 80
+                                        }
+                                    },
+                                    "established": False
+                                }
+                            }
+                        },
+                        "name": "120"
+                    },
+                    "100": {
+                        "actions": {
+                            "forwarding": "deny",
+                            "logging": "log-none"
+                        },
+                        "matches": {
+                            "l3": {
+                                "tcp": {
+                                    "source_network": {
+                                        "1.1.9.0 0.0.0.255": {
+                                            "source_network": "1.1.9.0 0.0.0.255"
+                                        }
+                                    },
+                                    "protocol": "tcp",
+                                    "destination_network": {
+                                        "host 192.168.16.1": {
+                                            "destination_network": "host 192.168.16.1"
+                                        }
+                                    }
+                                }
+                            },
+                            "l4": {
+                                "tcp": {
+                                    "destination_port": {
+                                        "operator": {
+                                            "operator": "eq",
+                                            "port": 80
+                                        }
+                                    },
+                                    "established": False
+                                }
+                            }
+                        },
+                        "name": "100"
+                    },
+                    "170": {
+                        "actions": {
+                            "forwarding": "deny",
+                            "logging": "log-none"
+                        },
+                        "matches": {
+                            "l3": {
+                                "tcp": {
+                                    "source_network": {
+                                        "1.1.16.0 0.0.0.255": {
+                                            "source_network": "1.1.16.0 0.0.0.255"
+                                        }
+                                    },
+                                    "protocol": "tcp",
+                                    "destination_network": {
+                                        "host 192.168.16.1": {
+                                            "destination_network": "host 192.168.16.1"
+                                        }
+                                    }
+                                }
+                            },
+                            "l4": {
+                                "tcp": {
+                                    "destination_port": {
+                                        "operator": {
+                                            "operator": "eq",
+                                            "port": 80
+                                        }
+                                    },
+                                    "established": False
+                                }
+                            }
+                        },
+                        "name": "170"
+                    },
+                    "160": {
+                        "actions": {
+                            "forwarding": "deny",
+                            "logging": "log-none"
+                        },
+                        "matches": {
+                            "l3": {
+                                "tcp": {
+                                    "source_network": {
+                                        "1.1.15.0 0.0.0.255": {
+                                            "source_network": "1.1.15.0 0.0.0.255"
+                                        }
+                                    },
+                                    "protocol": "tcp",
+                                    "destination_network": {
+                                        "host 192.168.16.1": {
+                                            "destination_network": "host 192.168.16.1"
+                                        }
+                                    }
+                                }
+                            },
+                            "l4": {
+                                "tcp": {
+                                    "destination_port": {
+                                        "operator": {
+                                            "operator": "eq",
+                                            "port": 80
+                                        }
+                                    },
+                                    "established": False
+                                }
+                            }
+                        },
+                        "name": "160"
+                    },
+                    "20": {
+                        "actions": {
+                            "forwarding": "deny",
+                            "logging": "log-none"
+                        },
+                        "matches": {
+                            "l3": {
+                                "tcp": {
+                                    "source_network": {
+                                        "1.1.1.0 0.0.0.255": {
+                                            "source_network": "1.1.1.0 0.0.0.255"
+                                        }
+                                    },
+                                    "protocol": "tcp",
+                                    "destination_network": {
+                                        "host 192.168.16.1": {
+                                            "destination_network": "host 192.168.16.1"
+                                        }
+                                    }
+                                }
+                            },
+                            "l4": {
+                                "tcp": {
+                                    "destination_port": {
+                                        "operator": {
+                                            "operator": "eq",
+                                            "port": 80
+                                        }
+                                    },
+                                    "established": False
+                                }
+                            }
+                        },
+                        "name": "20"
+                    },
+                    "70": {
+                        "actions": {
+                            "forwarding": "deny",
+                            "logging": "log-none"
+                        },
+                        "matches": {
+                            "l3": {
+                                "tcp": {
+                                    "source_network": {
+                                        "1.1.6.0 0.0.0.255": {
+                                            "source_network": "1.1.6.0 0.0.0.255"
+                                        }
+                                    },
+                                    "protocol": "tcp",
+                                    "destination_network": {
+                                        "host 192.168.16.1": {
+                                            "destination_network": "host 192.168.16.1"
+                                        }
+                                    }
+                                }
+                            },
+                            "l4": {
+                                "tcp": {
+                                    "destination_port": {
+                                        "operator": {
+                                            "operator": "eq",
+                                            "port": 80
+                                        }
+                                    },
+                                    "established": False
+                                }
+                            }
+                        },
+                        "name": "70"
+                    },
+                    "110": {
+                        "actions": {
+                            "forwarding": "deny",
+                            "logging": "log-none"
+                        },
+                        "matches": {
+                            "l3": {
+                                "tcp": {
+                                    "source_network": {
+                                        "1.1.10.0 0.0.0.255": {
+                                            "source_network": "1.1.10.0 0.0.0.255"
+                                        }
+                                    },
+                                    "protocol": "tcp",
+                                    "destination_network": {
+                                        "host 192.168.16.1": {
+                                            "destination_network": "host 192.168.16.1"
+                                        }
+                                    }
+                                }
+                            },
+                            "l4": {
+                                "tcp": {
+                                    "destination_port": {
+                                        "operator": {
+                                            "operator": "eq",
+                                            "port": 80
+                                        }
+                                    },
+                                    "established": False
+                                }
+                            }
+                        },
+                        "name": "110"
+                    },
+                    "140": {
+                        "actions": {
+                            "forwarding": "deny",
+                            "logging": "log-none"
+                        },
+                        "matches": {
+                            "l3": {
+                                "tcp": {
+                                    "source_network": {
+                                        "1.1.13.0 0.0.0.255": {
+                                            "source_network": "1.1.13.0 0.0.0.255"
+                                        }
+                                    },
+                                    "protocol": "tcp",
+                                    "destination_network": {
+                                        "host 192.168.16.1": {
+                                            "destination_network": "host 192.168.16.1"
+                                        }
+                                    }
+                                }
+                            },
+                            "l4": {
+                                "tcp": {
+                                    "destination_port": {
+                                        "operator": {
+                                            "operator": "eq",
+                                            "port": 80
+                                        }
+                                    },
+                                    "established": False
+                                }
+                            }
+                        },
+                        "name": "140"
+                    },
+                    "60": {
+                        "actions": {
+                            "forwarding": "deny",
+                            "logging": "log-none"
+                        },
+                        "matches": {
+                            "l3": {
+                                "tcp": {
+                                    "source_network": {
+                                        "1.1.5.0 0.0.0.255": {
+                                            "source_network": "1.1.5.0 0.0.0.255"
+                                        }
+                                    },
+                                    "protocol": "tcp",
+                                    "destination_network": {
+                                        "host 192.168.16.1": {
+                                            "destination_network": "host 192.168.16.1"
+                                        }
+                                    }
+                                }
+                            },
+                            "l4": {
+                                "tcp": {
+                                    "destination_port": {
+                                        "operator": {
+                                            "operator": "eq",
+                                            "port": 80
+                                        }
+                                    },
+                                    "established": False
+                                }
+                            }
+                        },
+                        "name": "60"
+                    }
+                },
+                "type": "ipv4-acl-type",
+                "name": "ACL_TEST"
+            }
+        }
+
+
+    golden_ipv6_access_list_output = {'execute.return_value':'''\
+    Router# show ipv6 access-list OutFilter_IPv6
+IPv6 access list OutFilter_IPv6
+    permit icmp any any mld-query sequence 30
+    permit icmp any any router-advertisement sequence 40
+    deny 103 any any sequence 50
+    permit icmp any any packet-too-big sequence 60
+    deny icmp any any sequence 70
+    deny ipv6 2404:1A8:1100:9::/64 any sequence 74
+    deny ipv6 2404:1A8:1100:10::/64 any sequence 75
+    permit ipv6 any 2050::/16 log-input sequence 80
+    deny ipv6 2404:1A8:1100:13::/64 any sequence 90
+    deny ipv6 2404:1A8:1100:14::/64 any sequence 100
+    deny ipv6 2408:40:2000::/35 2408:40:2000::/35 dscp default sequence 110
+    permit ipv6 any any (3974749339 matches) sequence 120
+    '''}
+
+    golden_parsed_ipv6_access_list_output = {
+     "OutFilter_IPv6": {
+          "aces": {
+               "120": {
+                    "statistics": {
+                         "matched_packets": 3974749339
+                    },
+                    "matches": {
+                         "l4": {
+                              "ipv6": {
+                                   "established": False
+                              }
+                         },
+                         "l3": {
+                              "ipv6": {
+                                   "destination_network": {
+                                        "any": {
+                                             "destination_network": "any"
+                                        }
+                                   },
+                                   "source_network": {
+                                        "any": {
+                                             "source_network": "any"
+                                        }
+                                   },
+                                   "protocol": "ipv6"
+                              }
+                         }
+                    },
+                    "actions": {
+                         "forwarding": "permit",
+                         "logging": "log-none"
+                    },
+                    "name": "120"
+               },
+               "30": {
+                    "matches": {
+                         "l4": {
+                              "icmp": {
+                                   "established": False
+                              }
+                         },
+                         "l3": {
+                              "icmp": {
+                                   "destination_network": {
+                                        "any": {
+                                             "destination_network": "any"
+                                        }
+                                   },
+                                   "source_network": {
+                                        "any": {
+                                             "source_network": "any"
+                                        }
+                                   },
+                                   "protocol": "icmp"
+                              }
+                         }
+                    },
+                    "actions": {
+                         "forwarding": "permit",
+                         "logging": "log-none"
+                    },
+                    "name": "30"
+               },
+               "100": {
+                    "matches": {
+                         "l2": {
+                              "eth": {
+                                   "source_mac_address": "ipv6",
+                                   "destination_mac_address": "2408",
+                                   "ether_type": ":40:2000::/35 2408:40:2000::/35 dscp default sequence 110"
+                              }
+                         }
+                    },
+                    "actions": {
+                         "forwarding": "permit",
+                         "logging": "log-none"
+                    },
+                    "name": "100"
+               },
+               "90": {
+                    "matches": {
+                         "l2": {
+                              "eth": {
+                                   "source_mac_address": "ipv6",
+                                   "destination_mac_address": "2404",
+                                   "ether_type": ":1A8:1100:10::/64 any sequence 75"
+                              }
+                         }
+                    },
+                    "actions": {
+                         "forwarding": "deny",
+                         "logging": "log-none"
+                    },
+                    "name": "90"
+               },
+               "80": {
+                    "matches": {
+                         "l2": {
+                              "eth": {
+                                   "source_mac_address": "ipv6",
+                                   "destination_mac_address": "2404",
+                                   "ether_type": ":1A8:1100:9::/64 any sequence 74"
+                              }
+                         }
+                    },
+                    "actions": {
+                         "forwarding": "deny",
+                         "logging": "log-none"
+                    },
+                    "name": "80"
+               },
+               "70": {
+                    "matches": {
+                         "l4": {
+                              "icmp": {
+                                   "established": False
+                              }
+                         },
+                         "l3": {
+                              "icmp": {
+                                   "destination_network": {
+                                        "any": {
+                                             "destination_network": "any"
+                                        }
+                                   },
+                                   "source_network": {
+                                        "any": {
+                                             "source_network": "any"
+                                        }
+                                   },
+                                   "protocol": "icmp"
+                              }
+                         }
+                    },
+                    "actions": {
+                         "forwarding": "deny",
+                         "logging": "log-none"
+                    },
+                    "name": "70"
+               },
+               "50": {
+                    "matches": {
+                         "l2": {
+                              "eth": {
+                                   "source_mac_address": "103",
+                                   "destination_mac_address": "any",
+                                   "ether_type": "any sequence 50"
+                              }
+                         }
+                    },
+                    "actions": {
+                         "forwarding": "deny",
+                         "logging": "log-none"
+                    },
+                    "name": "50"
+               },
+               "60": {
+                    "matches": {
+                         "l4": {
+                              "icmp": {
+                                   "established": False
+                              }
+                         },
+                         "l3": {
+                              "icmp": {
+                                   "destination_network": {
+                                        "any": {
+                                             "destination_network": "any"
+                                        }
+                                   },
+                                   "source_network": {
+                                        "any": {
+                                             "source_network": "any"
+                                        }
+                                   },
+                                   "protocol": "icmp"
+                              }
+                         }
+                    },
+                    "actions": {
+                         "forwarding": "permit",
+                         "logging": "log-none"
+                    },
+                    "name": "60"
+               },
+               "40": {
+                    "matches": {
+                         "l4": {
+                              "icmp": {
+                                   "established": False
+                              }
+                         },
+                         "l3": {
+                              "icmp": {
+                                   "destination_network": {
+                                        "any": {
+                                             "destination_network": "any"
+                                        }
+                                   },
+                                   "source_network": {
+                                        "any": {
+                                             "source_network": "any"
+                                        }
+                                   },
+                                   "protocol": "icmp"
+                              }
+                         }
+                    },
+                    "actions": {
+                         "forwarding": "permit",
+                         "logging": "log-none"
+                    },
+                    "name": "40"
+               }
+          },
+          "name": "OutFilter_IPv6",
+          "type": "ipv6-acl-type"
+     }
+}
+
+    golden_ipv6_access_list_all_output = {'execute.return_value': '''\
+        Device> show ipv6 access-list
+            IPv6 access list inbound
+                permit tcp any any eq bgp (8 matches) sequence 10
+                permit tcp any any eq telnet (15 matches) sequence 20
+                permit udp any any sequence 30
+            IPv6 access list Virtual-Access2.1#427819008151 (per-user)
+                permit tcp host 2001:DB8:1::32 eq bgp host 2001:DB8:2::32 eq 11000 sequence 1
+                permit tcp host 2001:DB8:1::32 eq telnet host 2001:DB8:2::32 eq 11001 sequence 2
+    '''
+    }
+
+    golden_parsed_ipv6_access_list_all_output = {
+    "inbound": {
+        "aces": {
+            "10": {
+                "statistics": {
+                    "matched_packets": 8
+                },
+                "matches": {
+                    "l3": {
+                        "tcp": {
+                            "destination_network": {
+                                "any": {
+                                    "destination_network": "any"
+                                }
+                            },
+                            "protocol": "tcp",
+                            "source_network": {
+                                "any": {
+                                    "source_network": "any"
+                                }
+                            }
+                        }
+                    },
+                    "l4": {
+                        "tcp": {
+                            "destination_port": {
+                                "operator": {
+                                    "operator": "eq",
+                                    "port": 179
+                                }
+                            },
+                            "established": False
+                        }
+                    }
+                },
+                "actions": {
+                    "logging": "log-none",
+                    "forwarding": "permit"
+                },
+                "name": "10"
+            },
+            "30": {
+                "matches": {
+                    "l3": {
+                        "udp": {
+                            "destination_network": {
+                                "any": {
+                                    "destination_network": "any"
+                                }
+                            },
+                            "protocol": "udp",
+                            "source_network": {
+                                "any": {
+                                    "source_network": "any"
+                                }
+                            }
+                        }
+                    },
+                    "l4": {
+                        "udp": {
+                            "established": False
+                        }
+                    }
+                },
+                "actions": {
+                    "logging": "log-none",
+                    "forwarding": "permit"
+                },
+                "name": "30"
+            },
+            "2": {
+                "matches": {
+                    "l3": {
+                        "tcp": {
+                            "destination_network": {
+                                "2001:DB8:2::32 eq": {
+                                    "destination_network": "2001:DB8:2::32 eq"
+                                }
+                            },
+                            "protocol": "tcp",
+                            "source_network": {
+                                "host 2001:DB8:1::32": {
+                                    "source_network": "host 2001:DB8:1::32"
+                                }
+                            }
+                        }
+                    },
+                    "l4": {
+                        "tcp": {
+                            "established": False,
+                            "source_port": {
+                                "operator": {
+                                    "operator": "eq",
+                                    "port": "telnet host"
+                                }
+                            }
+                        }
+                    }
+                },
+                "actions": {
+                    "logging": "log-none",
+                    "forwarding": "permit"
+                },
+                "name": "2"
+            },
+            "1": {
+                "matches": {
+                    "l3": {
+                        "tcp": {
+                            "destination_network": {
+                                "2001:DB8:2::32 eq": {
+                                    "destination_network": "2001:DB8:2::32 eq"
+                                }
+                            },
+                            "protocol": "tcp",
+                            "source_network": {
+                                "host 2001:DB8:1::32": {
+                                    "source_network": "host 2001:DB8:1::32"
+                                }
+                            }
+                        }
+                    },
+                    "l4": {
+                        "tcp": {
+                            "established": False,
+                            "source_port": {
+                                "operator": {
+                                    "operator": "eq",
+                                    "port": "bgp host"
+                                }
+                            }
+                        }
+                    }
+                },
+                "actions": {
+                    "logging": "log-none",
+                    "forwarding": "permit"
+                },
+                "name": "1"
+            },
+            "20": {
+                "statistics": {
+                    "matched_packets": 15
+                },
+                "matches": {
+                    "l3": {
+                        "tcp": {
+                            "destination_network": {
+                                "any": {
+                                    "destination_network": "any"
+                                }
+                            },
+                            "protocol": "tcp",
+                            "source_network": {
+                                "any": {
+                                    "source_network": "any"
+                                }
+                            }
+                        }
+                    },
+                    "l4": {
+                        "tcp": {
+                            "destination_port": {
+                                "operator": {
+                                    "operator": "eq",
+                                    "port": 23
+                                }
+                            },
+                            "established": False
+                        }
+                    }
+                },
+                "actions": {
+                    "logging": "log-none",
+                    "forwarding": "permit"
+                },
+                "name": "20"
+            }
+        },
+        "name": "inbound",
+        "type": "ipv6-acl-type"
+    }
+}
+
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowAccessLists(device=self.dev1)
@@ -237,6 +1302,26 @@ class test_show_access_lists(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
+    def test_ip_access_list_golden(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_ip_access_list_output)
+        obj = ShowAccessLists(device=self.dev_c3850)
+        parsed_output = obj.parse(ip="ip",acl="ACL_TEST")
+        self.assertEqual(parsed_output,self.golden_parsed_ip_access_list_output)
+
+    def test_ipv6_access_list_golden(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_ipv6_access_list_output)
+        obj = ShowAccessLists(device=self.dev_c3850)
+        parsed_output = obj.parse(ip="ipv6",acl="OutFilter_IPv6")
+        self.assertEqual(parsed_output,self.golden_parsed_ipv6_access_list_output)
+
+    def test_ipv6_access_list_all_golden(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_ipv6_access_list_all_output)
+        obj = ShowAccessLists(device=self.dev_c3850)
+        parsed_output = obj.parse(ip="ipv6")
+        self.assertEqual(parsed_output,self.golden_parsed_ipv6_access_list_all_output)
 
 if __name__ == '__main__':
     unittest.main()
