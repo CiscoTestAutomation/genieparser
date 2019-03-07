@@ -15,6 +15,7 @@ IOSXE parsers for the following show commands:
     * show ip ospf mpls ldp interface
     * show ip ospf mpls traffic-eng link
     * show ip ospf max-metric
+    * show ip ospf traffic
 '''
 
 # Python
@@ -5195,4 +5196,110 @@ class ShowIpOspfMaxMetric(ShowIpOspfMaxMetricSchema):
                 continue
 
         return ret_dict
+
+
+# =================================
+# Schema for 'show ip ospf traffic'
+# =================================
+class ShowIpOspfTrafficSchema(MetaParser):
+
+    schema = {}
+
+
+# =================================
+# Parser for 'show ip ospf traffic'
+# =================================
+class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
+
+    ''' Parser for "show ip ospf traffic" '''
+
+    cli_command = 'show ip ospf traffic'
+
+    def cli(self, output=None):
+
+        if output is None:
+            # Execute command on device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Init vars
+        ret_dict = {}
+        address_family = 'ipv4'
+
+
+        # OSPF statistics:
+        # Last clearing of OSPF traffic counters never
+        # Rcvd: 2112690 total, 0 checksum errors
+        # 2024732 hello, 938 database desc, 323 link state req
+        # 11030 link state updates, 75666 link state acks
+        # Sent: 2509472 total
+        # 2381794 hello, 1176 database desc, 43 link state req
+        # 92224 link state updates, 8893 link state acks
+
+        # OSPF Router with ID (106.162.197.252) (Process ID 9996)
+
+        # OSPF queue statistics for process ID 9996:
+
+        # InputQ     UpdateQ    OutputQ
+        # Limit            0          200        0
+        # Drops            0          0          0
+        # Max delay [msec] 49         2          2
+        # Max size         14         14         6
+        # Invalid        0          0          0
+        # Hello          0          0          0
+        # DB des         0          0          0
+        # LS req         0          0          0
+        # LS upd         0          0          0
+        # LS ack         14         14         6
+        # Current size     0          0          0
+        # Invalid        0          0          0
+        # Hello          0          0          0
+        # DB des         0          0          0
+        # LS req         0          0          0
+        # LS upd         0          0          0
+        # LS ack         0          0          0
+
+        # Interface statistics:
+
+        # Interface GigabitEthernet0/0/6
+
+        # Last clearing of interface traffic counters never
+
+        # OSPF packets received/sent
+        # Type          Packets              Bytes
+        # RX Invalid    0                    0
+        # RX Hello      169281               8125472
+        # RX DB des     36                   1232
+        # RX LS req     20                   25080
+        # RX LS upd     908                  76640
+        # RX LS ack     9327                 8733808
+        # RX Total      179572               16962232
+
+        # TX Failed     0                    0
+        # TX Hello      169411               13552440
+        # TX DB des     40                   43560
+        # TX LS req     4                    224
+        # TX LS upd     12539                12553264
+        # TX LS ack     899                  63396
+        # TX Total      182893               26212884
+
+        # OSPF header errors
+        # Length 0, Instance ID 0, Checksum 0, Auth Type 0,
+        # Version 0, Bad Source 0, No Virtual Link 0,
+        # Area Mismatch 0, No Sham Link 0, Self Originated 0,
+        # Duplicate ID 0, Hello 0, MTU Mismatch 0,
+        # Nbr Ignored 0, LLS 0, Unknown Neighbor 0,
+        # Authentication 0, TTL Check Fail 0, Adjacency Throttle 0,
+        # BFD 0, Test discard 0
+
+        # OSPF LSA errors
+        # Type 0, Length 0, Data 0, Checksum 0
+
+        for line in out.splitlines():
+            line = line.strip()
+
+        return ret_dict
+
+
 
