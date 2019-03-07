@@ -1,4 +1,4 @@
-"""  show_ldp.py
+"""  show_mpls.py
    supported commands:
         *  show mpls ldp neighbor
         *  show mpls ldp neighbor vrf <vrf>

@@ -6,7 +6,7 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
 
-from genie.libs.parser.iosxe.show_ldp import ShowMplsLdpNeighbor,\
+from genie.libs.parser.iosxe.show_mpls import ShowMplsLdpNeighbor,\
                                              ShowMplsLdpNeighborDetail
 
 
