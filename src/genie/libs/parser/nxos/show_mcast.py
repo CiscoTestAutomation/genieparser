@@ -829,7 +829,8 @@ class ShowForwardingDistributionMulticastRoute(ShowForwardingDistributionMultica
         result_dict = {}
 
         # IPv4 Multicast Routing Table for table-id: 1
-        p1 = re.compile(r'^\s*IPv4 +Multicast +Routing +Table +for +table\-id: +(?P<vrf_id>[\d]+)$')
+        # IPv4 Multicast Routing Table for table-id: 0x3
+        p1 = re.compile(r'^\s*IPv4 +Multicast +Routing +Table +for +table\-id: +(?P<vrf_id>[\S]+)$')
 
         # Total number of groups: 5
         p2 = re.compile(r'^\s*Total +number +of +groups: +(?P<total_number_group>[\d]+)$')
@@ -871,9 +872,14 @@ class ShowForwardingDistributionMulticastRoute(ShowForwardingDistributionMultica
             m = p1.match(line)
             if m:
                 group = m.groupdict()
+                try:
+                    vrfId = int(group['vrf_id'])
+                except:
+                    vrfId = int(group['vrf_id'],16)
+
                 if vrf_dict:
                     for vrf_id, vrf_name in vrf_dict.items():
-                        if vrf_id == int(group['vrf_id']) :
+                        if vrf_id == vrfId:
                             vrf = vrf_name
 
                 address_family_dict = result_dict.setdefault('distribution', {}).\

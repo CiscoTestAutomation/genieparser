@@ -2128,6 +2128,7 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
             {Any(): 
                 {'remote_as': int,
                  Optional('local_as'): str,
+                 Optional('peer_fab_type'): str,
                  Optional('link'): str,
                  Optional('peer_index'): int,
                  Optional('description'): str,
@@ -2293,11 +2294,13 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
 
             # BGP neighbor is 2.2.2.2,  remote AS 100, ibgp link,  Peer index 1
             # BGP neighbor is 2.2.2.5,  remote AS 200, local AS 333, ebgp link,  Peer index 2
+            # BGP neighbor is 81.0.0.4, remote AS 1, ibgp link, fabric-internal, Peer index 2
             p1 = re.compile(r'^\s*BGP +neighbor +is +(?P<neighbor_id>[a-zA-Z0-9\.\:]+),'
                              ' +remote +AS +(?P<remote_as>[0-9]+),'
                              '(?: +local +AS +(?P<local_as>[0-9]+),)?'
-                             ' +(?P<link>[a-zA-Z]+) +link, +Peer +index'
-                             ' +(?P<peer_index>[0-9]+)$')
+                             ' +(?P<link>[a-zA-Z]+) +link,'
+                             '( +(?P<peer_fab_type>[fabric\-\S]+),)?'
+                             ' +Peer +index +(?P<peer_index>[0-9]+)$')
             m = p1.match(line)
             if m:
                 standard_send_community = False
@@ -2307,9 +2310,13 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                 if neighbor_id not in parsed_dict['neighbor']:
                     parsed_dict['neighbor'][neighbor_id] = {}
                     remote_as = m.groupdict()['remote_as']
+                    peer_fab_type = m.groupdict()['peer_fab_type']
                     if remote_as != None:
                         parsed_dict['neighbor'][neighbor_id]['remote_as'] = \
                             int(m.groupdict()['remote_as'])
+                    if peer_fab_type != None:
+                        parsed_dict['neighbor'][neighbor_id]['peer_fab_type'] = \
+                            peer_fab_type
                     parsed_dict['neighbor'][neighbor_id]['local_as'] = \
                         str(m.groupdict()['local_as'])
                     parsed_dict['neighbor'][neighbor_id]['link'] = \

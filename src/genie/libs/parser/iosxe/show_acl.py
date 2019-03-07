@@ -21,7 +21,11 @@ from genie.libs.parser.utils.common import Common
 
 
 class ShowAccessListsSchema(MetaParser):
-    """Schema for show access-lists"""
+    """Schema for show access-lists
+                  show ip access-lists
+                  show ip access-lists <acl>
+                  show ipv6 access-list
+                  show ipv6 access-list <acl>"""
     schema = {
         Any():{
             'name': str,
@@ -111,7 +115,11 @@ class ShowAccessListsSchema(MetaParser):
     }
 
 class ShowAccessLists(ShowAccessListsSchema):
-    """Parser for show access-lists"""
+    """Parser for show access-lists
+                  show ip access-lists
+                  show ip access-lists <acl>
+                  show ipv6 access-lists
+                  show ipv6 access-lists <acl>"""
     OPT_MAP = {
         'add-ext':       147,
        'any-options':   random.randint(0, 255),
@@ -217,12 +225,24 @@ class ShowAccessLists(ShowAccessListsSchema):
        'xdmcp':          177
     }
 
-    cli_command = 'show access-lists'
+    cli_command = ['show access-lists','show {ip} {access_list}','show {ip} {access_list} {acl}']
 
-    def cli(self,output=None):
+    def cli(self,ip="",acl="",output=None):
         if output is None:
+            assert ip in ['ip','ipv6','']
+            if ip == 'ip':
+                access_list = 'access-lists'
+            if ip == 'ipv6':
+                access_list = 'access-list'
+
+            if ip and acl:
+                cmd = self.cli_command[2].format(ip=ip, acl=acl, access_list=access_list)
+            if ip and not acl:
+                cmd = self.cli_command[1].format(ip=ip, access_list=access_list)
+            if not ip and not acl:
+                cmd = self.cli_command[0]
             # get output from device
-            out = self.device.execute(self.cli_command)
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -256,7 +276,7 @@ class ShowAccessLists(ShowAccessListsSchema):
 
         for line in out.splitlines():
             line = line.strip()
-            
+
             # Extended IP access list acl_name
             m_ip = p_ip.match(line)
             # IPv6 access list preauth_v6 (per-user)
