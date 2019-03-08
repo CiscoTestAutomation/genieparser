@@ -2113,15 +2113,6 @@ class ShowProcessesCpuSorted(ShowProcessesCpuSortedSchema):
                          '(?P<five_min_cpu>[\d\.]+)\% +(?P<tty>\d+) +'
                          '(?P<process>[\w\-\/\s]+)$')
 
-        # p3 = re.compile(r'^Load +for +five +secs: +(?P<five_secs>[\d\/\%]+); '
-        #                  '+one +minute: +(?P<one_min>[\d]+)\%; '
-        #                  '+five +minutes: +(?P<five_min>[\d]+)\%$')
-
-        # p4 = re.compile(r'^Time +source +is +(?P<source>\w+),'
-        #                  ' +(?P<time>[\d\:\.]+) +(?P<zone>\w+)'
-        #                  ' +(?P<week_day>\w+) +(?P<month>\w+) +'
-        #                  '(?P<day>\d+) +(?P<year>\d+)$')
-
         for line in out.splitlines():
             line = line.strip()
 
@@ -2150,21 +2141,6 @@ class ShowProcessesCpuSorted(ShowProcessesCpuSortedSchema):
                 else:
                     zero_cpu_processes.append(group['process'])
                 continue
-
-            # # Load for five secs: 1%/0%; one minute: 2%; five minutes: 3%
-            # m = p3.match(line)
-            # if m:
-            #     group = m.groupdict()
-            #     ret_dict.setdefault('load', {})
-            #     ret_dict['load'].update({k:str(v) for k, v in group.items()})
-            #     continue
-
-            # # Time source is NTP, 18:56:04.554 JST Mon Oct 17 2016
-            # m = p4.match(line)
-            # if m:
-            #     group = m.groupdict()
-            #     ret_dict.update({k:str(v) for k, v in group.items()})
-            #     continue
 
         ret_dict.setdefault('zero_cpu_processes', zero_cpu_processes) if zero_cpu_processes else None
         ret_dict.setdefault('nonzero_cpu_processes', nonzero_cpu_processes) if nonzero_cpu_processes else None
