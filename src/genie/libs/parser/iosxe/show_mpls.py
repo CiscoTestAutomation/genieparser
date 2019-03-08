@@ -3,6 +3,7 @@
         *  show mpls ldp neighbor
         *  show mpls ldp neighbor vrf <vrf>
         *  show mpls ldp neighbor detail
+        *  show mpls ldp neighbor vrf <vrf> detail
         *  show mpls ldp bindings
         *  show mpls ldp bindings all
         *  show mpls ldp bindings all detail
@@ -347,3 +348,125 @@ class ShowMplsLdpNeighborDetail(ShowMplsLdpNeighbor):
 
     def cli(self, vrf="", cmd ="",output=None):
         return super().cli(cmd=self.cli_command,vrf=vrf,output=output)
+
+
+class ShowMplsLdpBindingsSchema(MetaParser):
+    """
+    Schema for show mpls ldp bindings
+               show mpls ldp bindings all
+               show mpls ldp bindings all detail
+    """
+    schema = {
+        'lib_entry':{
+            Any():{
+                'rev': str,
+                Optional('checkpoint'): str,
+                'local_binding': {
+                    'label': str,
+                    Optional('owner'): str,
+                    Optional('advertised_to'): list,
+                },
+                'remote_binding': {
+                    'index':{
+                        Any():{
+                            'label': str,
+                            'lsr': str,
+                            Optional('checkpointed'): bool,
+                        }
+                    }
+                },
+            },
+        }
+    }
+
+class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
+    """
+       Parser for show mpls ldp bindings
+                  show mpls ldp bindings all
+                  show mpls ldp bindings all detail
+       """
+    cli_command = ['show mpls ldp bindings','show mpls ldp bindings {all} {detail}']
+
+    def cli(self, all="", detail="", output=None):
+        if output is None:
+            if not all and not detail:
+               cmd = self.cli_command[0]
+            if all and not detail:
+                cmd = self.cli_command[1].format(all=all)
+            if all and detail:
+                cmd = self.cli_command[1].format(all=all, detail=detail)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # initial return dictionary
+        result_dict = {}
+        index_remote = 1
+
+        # lib entry: 20.1.1.0/24, rev 1028
+        # lib entry: 27.93.202.64/32, rev 12, chkpt: none
+        p1 = re.compile(r'^lib +entry: +(?P<lib_entry>[\d\.\/]+), +rev +(?P<rev>\d+)(, +chkpt: +(?P<checkpoint>\S+))?$')
+
+        #  local binding:  label: 2536
+        #  local binding:  label: 2027 (owner LDP)
+        p2 = re.compile(r'^local +binding:  +label: +(?P<local_label>\S+)( +\(owner +(?P<owner>\w+)\))?$')
+
+        #  Advertised to:
+        # 106.162.197.252:0      106.162.197.253:0
+        p3 = re.compile(r'^(?P<advertised_to>[\d\.\:\s]+)$')
+
+        #  remote binding: lsr: 106.162.197.252:0, label: 508
+        #  remote binding: lsr: 106.162.197.253:0, label: 308016 checkpointed
+        p4 = re.compile(r'^remote +binding: +lsr: +(?P<lsr>[\d\.\:]+), label: +(?P<remote_label>\S+)( +(?P<checkpointed>\w+))?$')
+
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # lib entry: 20.1.1.0/24, rev 1028
+            # lib entry: 27.93.202.64/32, rev 12, chkpt: none
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                lib_entry_dict = result_dict.setdefault('lib_entry', {}).setdefault(group['lib_entry'],{})
+                lib_entry_dict.update({'rev': group['rev']})
+                if group['checkpoint']:
+                    lib_entry_dict.update({'checkpoint': group['checkpoint']})
+                continue
+
+            # local binding:  label: 2536
+            # local binding:  label: 2027 (owner LDP)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                local_dict = lib_entry_dict.setdefault('local_binding', {})
+                local_dict.update({'label': group['local_label']})
+                if group['owner']:
+                    local_dict.update({'owner': group['owner']})
+                index_remote = 1
+                continue
+
+            # 106.162.197.252:0      106.162.197.253:0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                if 'advertised_to' not in local_dict:
+                    local_dict.update({'advertised_to': group['advertised_to'].split()})
+                else:
+                    local_dict['advertised_to'].extend(group['advertised_to'].split())
+                continue
+
+            # remote binding: lsr: 106.162.197.252:0, label: 508
+            # remote binding: lsr: 106.162.197.253:0, label: 308016 checkpointed
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                index_dict = lib_entry_dict.setdefault('remote_binding', {}).setdefault('index',{}).setdefault(index_remote,{})
+                index_dict.update({'lsr': group['lsr']})
+                index_dict.update({'label': group['remote_label']})
+                if group['checkpointed']:
+                    index_dict.update({'checkpointed': True})
+                index_remote +=1
+                continue
+
+        return result_dict

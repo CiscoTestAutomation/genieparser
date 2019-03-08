@@ -7,7 +7,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
 
 from genie.libs.parser.iosxe.show_mpls import ShowMplsLdpNeighbor,\
-                                             ShowMplsLdpNeighborDetail
+                                              ShowMplsLdpNeighborDetail,\
+                                              ShowMplsLdpBindings
 
 
 
@@ -373,6 +374,278 @@ class test_show_mpls_ldp_neighbor_detail(unittest.TestCase):
         obj = ShowMplsLdpNeighborDetail(device=self.dev)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+class test_show_mpls_ldp_bindings(unittest.TestCase):
+    dev1 = Device(name='empty')
+    dev = Device(name='dev1')
+    empty_output = {'execute.return_value': '      '}
+
+    golden_parsed_output = {
+    "lib_entry": {
+        "27.93.202.64/32": {
+            "rev": "1020",
+            "remote_binding": {
+                "index": {
+                    1: {
+                        "lsr": "106.162.197.252:0",
+                        "label": "506"
+                    },
+                    2: {
+                        "lsr": "106.162.197.253:0",
+                        "label": "399712"
+                    }
+                }
+            },
+            "local_binding": {
+                "label": "2532"
+            }
+        },
+        "27.93.202.56/30": {
+            "rev": "1024",
+            "remote_binding": {
+                "index": {
+                    1: {
+                        "lsr": "106.162.197.252:0",
+                        "label": "505"
+                    }
+                }
+            },
+            "local_binding": {
+                "label": "2534"
+            }
+        },
+        "27.93.202.48/30": {
+            "rev": "1034",
+            "remote_binding": {
+                "index": {
+                    1: {
+                        "lsr": "106.162.197.252:0",
+                        "label": "imp-null"
+                    }
+                }
+            },
+            "local_binding": {
+                "label": "2539"
+            }
+        },
+        "20.1.1.0/24": {
+            "rev": "1028",
+            "remote_binding": {
+                "index": {
+                    1: {
+                        "lsr": "106.162.197.252:0",
+                        "label": "508"
+                    }
+                }
+            },
+            "local_binding": {
+                "label": "2536"
+            }
+        },
+        "106.162.197.96/30": {
+            "rev": "4",
+            "remote_binding": {
+                "index": {
+                    1: {
+                        "lsr": "106.162.197.252:0",
+                        "label": "1002"
+                    }
+                }
+            },
+            "local_binding": {
+                "label": "imp-null"
+            }
+        },
+        "106.162.197.92/30": {
+            "rev": "2",
+            "remote_binding": {
+                "index": {
+                    1: {
+                        "lsr": "106.162.197.252:0",
+                        "label": "imp-null"
+                    },
+                    2: {
+                        "lsr": "106.162.197.253:0",
+                        "label": "736112"
+                    }
+                }
+            },
+            "local_binding": {
+                "label": "imp-null"
+            }
+        }
+    }
+}
+
+    golden_output = {'execute.return_value': '''\
+       Router#show mpls ldp bindings
+Load for five secs: 55%/0%; one minute: 15%; five minutes: 10%
+Time source is NTP, 20:29:28.227 JST Fri Nov 11 2016
+
+  lib entry: 20.1.1.0/24, rev 1028
+        local binding:  label: 2536
+        remote binding: lsr: 106.162.197.252:0, label: 508
+  lib entry: 27.93.202.48/30, rev 1034
+        local binding:  label: 2539
+        remote binding: lsr: 106.162.197.252:0, label: imp-null
+  lib entry: 27.93.202.56/30, rev 1024
+        local binding:  label: 2534
+        remote binding: lsr: 106.162.197.252:0, label: 505
+  lib entry: 27.93.202.64/32, rev 1020
+        local binding:  label: 2532
+        remote binding: lsr: 106.162.197.252:0, label: 506
+        remote binding: lsr: 106.162.197.253:0, label: 399712
+  lib entry: 106.162.197.92/30, rev 2
+        local binding:  label: imp-null
+        remote binding: lsr: 106.162.197.252:0, label: imp-null
+        remote binding: lsr: 106.162.197.253:0, label: 736112
+  lib entry: 106.162.197.96/30, rev 4
+        local binding:  label: imp-null
+        remote binding: lsr: 106.162.197.252:0, label: 1002
+            '''}
+
+    golden_output_all_detail = {'execute.return_value': '''\
+    Router#show mpls ldp bindings all detail
+Load for five secs: 2%/0%; one minute: 5%; five minutes: 5%
+Time source is NTP, 16:10:10.910 JST Tue Nov 8 2016
+
+  lib entry: 27.93.202.48/30, rev 18, chkpt: none
+        local binding:  label: 2030 (owner LDP)
+          Advertised to:
+          106.162.197.252:0      106.162.197.253:0
+        remote binding: lsr: 106.162.197.252:0, label: imp-null checkpointed
+  lib entry: 27.93.202.56/30, rev 1085, chkpt: none
+        local binding:  label: 6589 (owner LDP)
+          Advertised to:
+          106.162.197.252:0      106.162.197.253:0
+        remote binding: lsr: 106.162.197.252:0, label: 1014 checkpointed
+  lib entry: 27.93.202.64/32, rev 12, chkpt: none
+        local binding:  label: 2027 (owner LDP)
+          Advertised to:
+          106.162.197.252:0      106.162.197.253:0
+        remote binding: lsr: 106.162.197.252:0, label: 516 checkpointed
+        remote binding: lsr: 106.162.197.253:0, label: 308016 checkpointed
+  lib entry: 106.162.197.92/30, rev 4, chkpt: none
+        local binding:  label: imp-null (owner LDP)
+          Advertised to:
+          106.162.197.252:0      106.162.197.253:0
+        remote binding: lsr: 106.162.197.252:0, label: 126 checkpointed
+    '''
+    }
+    golden_parsed_output_all_detail ={
+   "lib_entry": {
+      "106.162.197.92/30": {
+         "local_binding": {
+            "advertised_to": [
+               "106.162.197.252:0",
+               "106.162.197.253:0"
+            ],
+            "owner": "LDP",
+            "label": "imp-null"
+         },
+         "checkpoint": "none",
+         "rev": "4",
+         "remote_binding": {
+            "index": {
+               1: {
+                  "checkpointed": True,
+                  "lsr": "106.162.197.252:0",
+                  "label": "126"
+               }
+            }
+         }
+      },
+      "27.93.202.56/30": {
+         "local_binding": {
+            "advertised_to": [
+               "106.162.197.252:0",
+               "106.162.197.253:0"
+            ],
+            "owner": "LDP",
+            "label": "6589"
+         },
+         "checkpoint": "none",
+         "rev": "1085",
+         "remote_binding": {
+            "index": {
+               1: {
+                  "checkpointed": True,
+                  "lsr": "106.162.197.252:0",
+                  "label": "1014"
+               }
+            }
+         }
+      },
+      "27.93.202.48/30": {
+         "local_binding": {
+            "advertised_to": [
+               "106.162.197.252:0",
+               "106.162.197.253:0"
+            ],
+            "owner": "LDP",
+            "label": "2030"
+         },
+         "checkpoint": "none",
+         "rev": "18",
+         "remote_binding": {
+            "index": {
+               1: {
+                  "checkpointed": True,
+                  "lsr": "106.162.197.252:0",
+                  "label": "imp-null"
+               }
+            }
+         }
+      },
+      "27.93.202.64/32": {
+         "local_binding": {
+            "advertised_to": [
+               "106.162.197.252:0",
+               "106.162.197.253:0"
+            ],
+            "owner": "LDP",
+            "label": "2027"
+         },
+         "checkpoint": "none",
+         "rev": "12",
+         "remote_binding": {
+            "index": {
+               1: {
+                  "checkpointed": True,
+                  "lsr": "106.162.197.252:0",
+                  "label": "516"
+               },
+               2: {
+                  "checkpointed": True,
+                  "lsr": "106.162.197.253:0",
+                  "label": "308016"
+               }
+            }
+         }
+      }
+   }
+}
+
+    def test_empty(self):
+        self.dev1 = Mock(**self.empty_output)
+        obj = ShowMplsLdpBindings(device=self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output)
+        obj = ShowMplsLdpBindings(device=self.dev)
+
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_all_detail(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output_all_detail)
+        obj = ShowMplsLdpBindings(device=self.dev)
+        parsed_output = obj.parse(all='all',detail="detail")
+        self.assertEqual(parsed_output, self.golden_parsed_output_all_detail)
 
 if __name__ == '__main__':
     unittest.main()
