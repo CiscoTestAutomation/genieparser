@@ -2113,14 +2113,14 @@ class ShowProcessesCpuSorted(ShowProcessesCpuSortedSchema):
                          '(?P<five_min_cpu>[\d\.]+)\% +(?P<tty>\d+) +'
                          '(?P<process>[\w\-\/\s]+)$')
 
-        p3 = re.compile(r'^Load +for +five +secs: +(?P<five_secs>[\d\/\%]+); '
-                         '+one +minute: +(?P<one_min>[\d]+)\%; '
-                         '+five +minutes: +(?P<five_min>[\d]+)\%$')
+        # p3 = re.compile(r'^Load +for +five +secs: +(?P<five_secs>[\d\/\%]+); '
+        #                  '+one +minute: +(?P<one_min>[\d]+)\%; '
+        #                  '+five +minutes: +(?P<five_min>[\d]+)\%$')
 
-        p4 = re.compile(r'^Time +source +is +(?P<source>\w+),'
-                         ' +(?P<time>[\d\:\.]+) +(?P<zone>\w+)'
-                         ' +(?P<week_day>\w+) +(?P<month>\w+) +'
-                         '(?P<day>\d+) +(?P<year>\d+)$')
+        # p4 = re.compile(r'^Time +source +is +(?P<source>\w+),'
+        #                  ' +(?P<time>[\d\:\.]+) +(?P<zone>\w+)'
+        #                  ' +(?P<week_day>\w+) +(?P<month>\w+) +'
+        #                  '(?P<day>\d+) +(?P<year>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -2151,20 +2151,20 @@ class ShowProcessesCpuSorted(ShowProcessesCpuSortedSchema):
                     zero_cpu_processes.append(group['process'])
                 continue
 
-            # Load for five secs: 1%/0%; one minute: 2%; five minutes: 3%
-            m = p3.match(line)
-            if m:
-                group = m.groupdict()
-                ret_dict.setdefault('load', {})
-                ret_dict['load'].update({k:str(v) for k, v in group.items()})
-                continue
+            # # Load for five secs: 1%/0%; one minute: 2%; five minutes: 3%
+            # m = p3.match(line)
+            # if m:
+            #     group = m.groupdict()
+            #     ret_dict.setdefault('load', {})
+            #     ret_dict['load'].update({k:str(v) for k, v in group.items()})
+            #     continue
 
-            # Time source is NTP, 18:56:04.554 JST Mon Oct 17 2016
-            m = p4.match(line)
-            if m:
-                group = m.groupdict()
-                ret_dict.update({k:str(v) for k, v in group.items()})
-                continue
+            # # Time source is NTP, 18:56:04.554 JST Mon Oct 17 2016
+            # m = p4.match(line)
+            # if m:
+            #     group = m.groupdict()
+            #     ret_dict.update({k:str(v) for k, v in group.items()})
+            #     continue
 
         ret_dict.setdefault('zero_cpu_processes', zero_cpu_processes) if zero_cpu_processes else None
         ret_dict.setdefault('nonzero_cpu_processes', nonzero_cpu_processes) if nonzero_cpu_processes else None
@@ -2367,3 +2367,147 @@ class ShowProcessesCpu(ShowProcessesCpuSorted):
 
     def cli(self, key_word='', output=None):
         return(super().cli(key_word=key_word, output=output))
+
+
+class ShowVersionRpSchema(MetaParser):
+    """Schema for show version RP active [running|provisioned|installed]
+                  show version RP standby [running|provisioned|installed]"""
+
+    schema = {
+        'rp': {
+            Any(): {
+                Optional('active'): {
+                    'package': {
+                        Any(): {
+                            'version': str,
+                            'status': str,
+                            'file': str,
+                            'built_time': str,
+                            'built_by': str,
+                            'file_sha1_checksum': str,
+                        },
+                    }
+                },
+                Optional('standby'): {
+                    'package': {
+                        Any(): {
+                            'version': str,
+                            'status': str,
+                            'file': str,
+                            'built_time': str,
+                            'built_by': str,
+                            'file_sha1_checksum': str,
+                        },
+                    }
+                }
+            },
+        }
+    }
+
+
+class ShowVersionRp(ShowVersionRpSchema):
+    """Parser for show version RP active [running|provisioned|installed]
+                  show version RP standby [running|provisioned|installed]"""
+
+    cli_command = 'show version RP'
+
+    def cli(self, rp='active', status='running', output=None):
+
+        if output is None:
+            self.cli_command += ' {rp} {status}'.format(rp=rp, status=status)
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+        package_name = ''
+        rp_slot = ''
+        built_time = ''
+
+        p1 = re.compile(r'^Package: +(?P<package_name>[\w\d\s]+),'
+                         ' +version: +(?P<version>[\w\d\.\-\/]+),'
+                         ' +status: +(?P<status>[\w\/]+)$')
+
+        p2 = re.compile(r'^File: +consolidated:(?P<file>[\w\d\-\.]+),'
+                         ' +on: +(?P<rp_slot>[\w\d\/]+)$')
+
+        p3 = re.compile(r'^Built: +(?P<built_time>[\w\d\:\.\_\/\-]+),'
+                         ' +by: +(?P<built_by>[\w\d\/]+)$')
+
+        p4 = re.compile(r'^File +SHA1 +checksum:'
+                         ' +(?P<file_sha1_checksum>[\w\d]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            # import pdb; pdb.set_trace()
+
+            # Package: rpbase, version: 03.16.04a.S.155-3.S4a-ext, status: active
+            # Package: Provisioning File, version: n/a, status: active
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                package_name = group['package_name']
+                version = group['version']
+                status = group['status']
+                continue
+
+            #   File: consolidated:asr1000rp2-rpbase.03.16.04a.S.155-3.S4a-ext.pkg, on: RP0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                file = group['file']
+                rp_slot = group['rp_slot']
+
+                # Safer, return empty dictionary instead of an error
+                if not package_name:
+                    return ret_dict
+                elif 'rp' not in ret_dict:
+                    ret_dict.setdefault('rp', {})
+
+                if rp_slot not in ret_dict['rp']:
+                    ret_dict['rp'].setdefault(rp_slot, {})
+                if rp not in ret_dict['rp'][rp_slot]:
+                    ret_dict['rp'][rp_slot].setdefault(rp, {})
+                if 'package' not in ret_dict['rp'][rp_slot][rp]:
+                    ret_dict['rp'][rp_slot][rp].setdefault('package', {})
+
+                ret_dict['rp'][rp_slot][rp]['package'].setdefault(
+                    package_name, {})
+                ret_dict['rp'][rp_slot][rp]['package'][package_name]\
+                    ['version'] = version
+                ret_dict['rp'][rp_slot][rp]['package'][package_name]\
+                    ['status'] = status
+                ret_dict['rp'][rp_slot][rp]['package'][package_name]\
+                    ['file'] = file
+                continue
+
+            # Built: 2016-10-04_12.28, by: mcpre
+            # Built: n/a, by: n/a
+            m = p3.match(line)
+            if m:
+                # Safer, return empty dictionary instead of an error
+                if not package_name or not rp_slot:
+                    return ret_dict
+
+                group = m.groupdict()
+                built_time = group['built_time']
+
+                ret_dict['rp'][rp_slot][rp]['package'][package_name]\
+                    ['built_time'] = built_time
+                ret_dict['rp'][rp_slot][rp]['package'][package_name]\
+                    ['built_by'] = group['built_by']
+                continue
+
+            #   File SHA1 checksum: 79e234871520fd480dc1128058160b4e2acee9f7
+            m = p4.match(line)
+            if m:
+                # Safer, return empty dictionary instead of an error
+                if not package_name or not rp_slot:
+                    return ret_dict
+                group = m.groupdict()
+                ret_dict['rp'][rp_slot][rp]['package'][package_name]\
+                    ['file_sha1_checksum'] = group['file_sha1_checksum']
+                continue
+
+        return ret_dict
