@@ -3279,7 +3279,7 @@ class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
 # ===============================================
 # Super parser for 'show ip ospf database <WORD>'
 # ===============================================
-class ShowIpOspfDatabaseWordParser(MetaParser):
+class ShowIpOspfDatabaseTypeParser(MetaParser):
 
     ''' Parser for "show ip ospf database <WORD>" '''
 
@@ -4108,7 +4108,7 @@ class ShowIpOspfDatabaseRouterSchema(MetaParser):
 # =========================================
 # Parser for 'show ip ospf database router'
 # =========================================
-class ShowIpOspfDatabaseRouter(ShowIpOspfDatabaseRouterSchema, ShowIpOspfDatabaseWordParser):
+class ShowIpOspfDatabaseRouter(ShowIpOspfDatabaseRouterSchema, ShowIpOspfDatabaseTypeParser):
 
     ''' Parser for "show ip ospf database router" '''
 
@@ -4189,7 +4189,7 @@ class ShowIpOspfDatabaseExternalSchema(MetaParser):
 # ===========================================
 # Parser for 'show ip ospf database external'
 # ===========================================
-class ShowIpOspfDatabaseExternal(ShowIpOspfDatabaseExternalSchema, ShowIpOspfDatabaseWordParser):
+class ShowIpOspfDatabaseExternal(ShowIpOspfDatabaseExternalSchema, ShowIpOspfDatabaseTypeParser):
 
     ''' Parser for "show ip ospf database external" '''
 
@@ -4264,7 +4264,7 @@ class ShowIpOspfDatabaseNetworkSchema(MetaParser):
 # ==========================================
 # Parser for 'show ip ospf database network'
 # ==========================================
-class ShowIpOspfDatabaseNetwork(ShowIpOspfDatabaseNetworkSchema, ShowIpOspfDatabaseWordParser):
+class ShowIpOspfDatabaseNetwork(ShowIpOspfDatabaseNetworkSchema, ShowIpOspfDatabaseTypeParser):
 
     ''' Parser for "show ip ospf database network" '''
     cli_command = 'show ip ospf database network'
@@ -4341,7 +4341,7 @@ class ShowIpOspfDatabaseSummarySchema(MetaParser):
 # ==========================================
 # Parser for 'show ip ospf database summary'
 # ==========================================
-class ShowIpOspfDatabaseSummary(ShowIpOspfDatabaseSummarySchema, ShowIpOspfDatabaseWordParser):
+class ShowIpOspfDatabaseSummary(ShowIpOspfDatabaseSummarySchema, ShowIpOspfDatabaseTypeParser):
 
     ''' Parser for "show ip ospf database summary" '''
     cli_command = 'show ip ospf database summary'
@@ -4450,7 +4450,7 @@ class ShowIpOspfDatabaseOpaqueAreaSchema(MetaParser):
 # =============================================================
 # Parser for 'show ospf vrf all-inclusive database opaque-area'
 # =============================================================
-class ShowIpOspfDatabaseOpaqueArea(ShowIpOspfDatabaseOpaqueAreaSchema, ShowIpOspfDatabaseWordParser):
+class ShowIpOspfDatabaseOpaqueArea(ShowIpOspfDatabaseOpaqueAreaSchema, ShowIpOspfDatabaseTypeParser):
 
     ''' Parser for "show ip ospf database opaque-area" '''
 
@@ -5037,7 +5037,8 @@ class ShowIpOspfMaxMetricSchema(MetaParser):
                     {Any():
                         {'instance':
                             {Any():
-                                {'base_topology_mtid':
+                                {'router_id': str,
+                                'base_topology_mtid':
                                     {Any():
                                         {'start_time': str,
                                         'time_elapsed': str,
@@ -5138,6 +5139,7 @@ class ShowIpOspfMaxMetric(ShowIpOspfMaxMetricSchema):
                                      setdefault(address_family, {}).\
                                      setdefault('instance', {}).\
                                      setdefault(instance, {})
+                ospf_dict['router_id'] = router_id
                 continue
 
             # Base Topology (MTID 0)
@@ -5203,7 +5205,95 @@ class ShowIpOspfMaxMetric(ShowIpOspfMaxMetricSchema):
 # =================================
 class ShowIpOspfTrafficSchema(MetaParser):
 
-    schema = {}
+    schema = {
+        'ospf_statistics':
+            {'last_clear_traffic_counters': str,
+            'rcvd':
+                {'total': int,
+                'checksum_errors': int,
+                'hello': int,
+                'database_desc': int,
+                'link_state_req': int,
+                'link_state_updates': int,
+                'link_state_acks': int,
+                },
+            'sent':
+                {'total': int,
+                'hello': int,
+                'database_desc': int,
+                'link_state_req': int,
+                'link_state_updates': int,
+                'link_state_acks': int,
+                },
+            },
+        'vrf':
+            {Any():
+                {'address_family':
+                    {Any():
+                        {'instance':
+                            {Any():
+                                {'router_id': str,
+                                'ospf_queue_statistics':
+                                    {Any():
+                                        {'inputq': int,
+                                        'updateq': int,
+                                        'outputq': int,
+                                        },
+                                    },
+                                'interface_statistics':
+                                    {'interfaces':
+                                        {Any():
+                                            {'interface': str,
+                                            'last_clear_traffic_counters': str,
+                                            'ospf_packets':
+                                                {Any():
+                                                    {'packets': int,
+                                                    'bytes': int,
+                                                    },
+                                                },
+                                            'ospf_header_errors':
+                                                {'length': int,
+                                                'instance_id': int,
+                                                'checksum': int,
+                                                'auth_type': int,
+                                                'version': int,
+                                                'bad_source': int,
+                                                'no_virtual_link': int,
+                                                'area_mismatch': int,
+                                                'no_sham_link': int,
+                                                'self_originated': int,
+                                                'duplicate_id': int,
+                                                'hello': int,
+                                                'mtu_mismatch': int,
+                                                'nbr_ignored': int,
+                                                'lls': int,
+                                                'unknown_neighbor': int,
+                                                'authentication': int,
+                                                'ttl_check_fail': int,
+                                                'adjacnecy_throttle': int,
+                                                'bfd': int,
+                                                'test_discard': int,
+                                                },
+                                            'ospf_lsa_errors':
+                                                {},
+                                            },
+                                        },
+                                    },
+                                'summary_traffic_statistics':
+                                    {'type':
+                                        {Any():
+                                            {'packets': int,
+                                            'bytes': int,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
 
 
 # =================================
@@ -5229,13 +5319,30 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
 
 
         # OSPF statistics:
+        p1 = re.compile(r'^OSPF +statistics:$')
+
         # Last clearing of OSPF traffic counters never
+        p2 = re.compile(r'^Last +clearing +of +OSPF +traffic +counters'
+                         ' +(?P<last>([a-zA-Z0-9\:\s]+))$')
+
         # Rcvd: 2112690 total, 0 checksum errors
+        p3 = re.compile(r'^Rcvd: +(?P<rcvd>(\d+)) total, +(?P<error>(\d+))'
+                         ' +checksum +errors$')
+
         # 2024732 hello, 938 database desc, 323 link state req
+        p4 = re.compile(r'^$')
+
         # 11030 link state updates, 75666 link state acks
+        p5 = re.compile(r'^$')
+
         # Sent: 2509472 total
+        p6 = re.compile(r'^$')
+
         # 2381794 hello, 1176 database desc, 43 link state req
+        p7 = re.compile(r'^$')
+
         # 92224 link state updates, 8893 link state acks
+        p8 = re.compile(r'^$')
 
         # OSPF Router with ID (106.162.197.252) (Process ID 9996)
 
@@ -5298,6 +5405,26 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
 
         for line in out.splitlines():
             line = line.strip()
+
+            # OSPF statistics:
+            m = p1.match(line)
+            if m:
+                ospf_stats_dict = ret_dict.setdefault('ospf_statistics', {})
+                continue
+
+            # Last clearing of OSPF traffic counters never
+            m = p2.match(line)
+            if m:
+                ospf_stats_dict['last_clear_traffic_counters'] = m.groupdict()['clear']
+                continue
+
+            # Rcvd: 2112690 total, 0 checksum errors
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_stats_dict['rcvd'] = int(group['rcvd'])
+                ospf_stats_dict['checksum_errors'] = int(group['errors'])
+                continue
 
         return ret_dict
 
