@@ -5766,6 +5766,4 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
                 interface_stats = False ; summary_stats = True
                 continue
 
-        import pdb ; pdb.set_trace()
         return ret_dict
-
