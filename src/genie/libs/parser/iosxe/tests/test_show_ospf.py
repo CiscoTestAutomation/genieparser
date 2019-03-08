@@ -2979,131 +2979,131 @@ class test_show_ip_ospf_database(unittest.TestCase):
                                                                     'link_count': 3,
                                                                     'lsa_id': '17.83.102.64',
                                                                     'seq_num': '0x8000003E'}}},
-                                                        '206.152.198.252': 
-                                                            {'adv_router': '206.152.198.252',
-                                                            'lsa_id': '206.152.198.252',
+                                                        '103.142.178.142': 
+                                                            {'adv_router': '103.142.178.142',
+                                                            'lsa_id': '103.142.178.142',
                                                             'ospfv2': 
                                                                 {'header': 
-                                                                    {'adv_router': '206.152.198.252',
+                                                                    {'adv_router': '103.142.178.142',
                                                                     'age': 768,
                                                                     'checksum': '0x00C5E7',
                                                                     'link_count': 5,
-                                                                    'lsa_id': '206.152.198.252',
+                                                                    'lsa_id': '103.142.178.142',
                                                                     'seq_num': '0x80000155'}}},
-                                                        '206.152.198.253': 
-                                                            {'adv_router': '206.152.198.253',
-                                                            'lsa_id': '206.152.198.253',
+                                                        '103.162.198.253': 
+                                                            {'adv_router': '103.162.198.253',
+                                                            'lsa_id': '103.162.198.253',
                                                             'ospfv2': 
                                                                 {'header': 
-                                                                    {'adv_router': '206.152.198.253',
+                                                                    {'adv_router': '103.162.198.253',
                                                                     'age': 657,
                                                                     'checksum': '0x00E328',
                                                                     'link_count': 8,
-                                                                    'lsa_id': '206.152.198.253',
+                                                                    'lsa_id': '103.162.198.253',
                                                                     'seq_num': '0x800000F8'}}},
-                                                        '206.152.198.254': 
-                                                            {'adv_router': '206.152.198.254',
-                                                            'lsa_id': '206.152.198.254',
+                                                        '103.162.198.254': 
+                                                            {'adv_router': '103.162.198.254',
+                                                            'lsa_id': '103.162.198.254',
                                                             'ospfv2': 
                                                                 {'header': 
-                                                                    {'adv_router': '206.152.198.254',
+                                                                    {'adv_router': '103.162.198.254',
                                                                     'age': 656,
                                                                     'checksum': '0x007A2A',
                                                                     'link_count': 3,
-                                                                    'lsa_id': '206.152.198.254',
+                                                                    'lsa_id': '103.162.198.254',
                                                                     'seq_num': '0x8000002F'}}}}},
                                                 2: 
                                                     {'lsa_type': 2,
                                                     'lsas': 
                                                         {'101.101.101.2': 
-                                                            {'adv_router': '206.152.198.253',
+                                                            {'adv_router': '103.162.198.253',
                                                             'lsa_id': '101.101.101.2',
                                                             'ospfv2': 
                                                                 {'header': 
-                                                                    {'adv_router': '206.152.198.253',
+                                                                    {'adv_router': '103.162.198.253',
                                                                     'age': 2501,
                                                                     'checksum': '0x00DF6E',
                                                                     'lsa_id': '101.101.101.2',
                                                                     'seq_num': '0x80000BA2'}}},
                                                         '102.138.135.49': 
-                                                            {'adv_router': '206.152.198.253',
+                                                            {'adv_router': '103.162.198.253',
                                                             'lsa_id': '102.138.135.49',
                                                             'ospfv2': 
                                                                 {'header': 
-                                                                    {'adv_router': '206.152.198.253',
+                                                                    {'adv_router': '103.162.198.253',
                                                                     'age': 1006,
                                                                     'checksum': '0x0068B6',
                                                                     'lsa_id': '102.138.135.49',
                                                                     'seq_num': '0x80000014'}}},
                                                         '102.138.135.57': 
-                                                            {'adv_router': '206.152.198.253',
+                                                            {'adv_router': '103.162.198.253',
                                                             'lsa_id': '102.138.135.57',
                                                             'ospfv2': 
                                                                 {'header': 
-                                                                    {'adv_router': '206.152.198.253',
+                                                                    {'adv_router': '103.162.198.253',
                                                                     'age': 2072,
                                                                     'checksum': '0x0014F8',
                                                                     'lsa_id': '102.138.135.57',
                                                                     'seq_num': '0x8000001D'}}},
                                                         '17.83.102.49': 
-                                                            {'adv_router': '206.152.198.252',
+                                                            {'adv_router': '103.142.178.142',
                                                             'lsa_id': '17.83.102.49',
                                                             'ospfv2': 
                                                                 {'header': 
-                                                                    {'adv_router': '206.152.198.252',
+                                                                    {'adv_router': '103.142.178.142',
                                                                     'age': 1763,
                                                                     'checksum': '0x008CC7',
                                                                     'lsa_id': '17.83.102.49',
                                                                     'seq_num': '0x80000052'}}},
                                                         '17.83.102.57': 
-                                                            {'adv_router': '206.152.198.253',
+                                                            {'adv_router': '103.162.198.253',
                                                             'lsa_id': '17.83.102.57',
                                                             'ospfv2': 
                                                                 {'header': 
-                                                                    {'adv_router': '206.152.198.253',
+                                                                    {'adv_router': '103.162.198.253',
                                                                     'age': 89,
                                                                     'checksum': '0x006CF3',
                                                                     'lsa_id': '17.83.102.57',
                                                                     'seq_num': '0x8000003C'}}},
                                                         '20.1.1.2': 
-                                                            {'adv_router': '206.152.198.253',
+                                                            {'adv_router': '103.162.198.253',
                                                             'lsa_id': '20.1.1.2',
                                                             'ospfv2': 
                                                                 {'header': 
-                                                                    {'adv_router': '206.152.198.253',
+                                                                    {'adv_router': '103.162.198.253',
                                                                     'age': 547,
                                                                     'checksum': '0x0021E9',
                                                                     'lsa_id': '20.1.1.2',
                                                                     'seq_num': '0x80000039'}}},
-                                                        '206.152.198.102': 
+                                                        '103.162.198.102': 
                                                             {'adv_router': '102.138.135.220',
-                                                            'lsa_id': '206.152.198.102',
+                                                            'lsa_id': '103.162.198.102',
                                                             'ospfv2': 
                                                                 {'header': 
                                                                     {'adv_router': '102.138.135.220',
                                                                     'age': 2014,
                                                                     'checksum': '0x00A6C4',
-                                                                    'lsa_id': '206.152.198.102',
+                                                                    'lsa_id': '103.162.198.102',
                                                                     'seq_num': '0x8000004F'}}},
-                                                        '206.152.198.94': 
-                                                            {'adv_router': '206.152.198.254',
-                                                            'lsa_id': '206.152.198.94',
+                                                        '103.162.198.94': 
+                                                            {'adv_router': '103.162.198.254',
+                                                            'lsa_id': '103.162.198.94',
                                                             'ospfv2': 
                                                                 {'header': 
-                                                                    {'adv_router': '206.152.198.254',
+                                                                    {'adv_router': '103.162.198.254',
                                                                     'age': 639,
                                                                     'checksum': '0x001B7C',
-                                                                    'lsa_id': '206.152.198.94',
+                                                                    'lsa_id': '103.162.198.94',
                                                                     'seq_num': '0x80000002'}}},
-                                                        '206.152.198.97': 
-                                                            {'adv_router': '206.152.198.253',
-                                                            'lsa_id': '206.152.198.97',
+                                                        '103.162.198.97': 
+                                                            {'adv_router': '103.162.198.253',
+                                                            'lsa_id': '103.162.198.97',
                                                             'ospfv2': 
                                                                 {'header': 
-                                                                    {'adv_router': '206.152.198.253',
+                                                                    {'adv_router': '103.162.198.253',
                                                                     'age': 657,
                                                                     'checksum': '0x00177E',
-                                                                    'lsa_id': '206.152.198.97',
+                                                                    'lsa_id': '103.162.198.97',
                                                                     'seq_num': '0x80000001'}}}}}}}}}}}}}}}}
 
     golden_output3 = {'execute.return_value': '''
@@ -3112,15 +3112,15 @@ class test_show_ip_ospf_database(unittest.TestCase):
         Time source is NTP, 15:51:24.610 JST Fri Nov 11 2016
 
 
-                    OSPF Router with ID (206.152.198.252) (Process ID 9996)
+                    OSPF Router with ID (103.142.178.142) (Process ID 9996)
 
                 Router Link States (Area 0)
 
         Link ID         ADV Router      Age         Seq#       Checksum Link count
         17.83.102.64    17.83.102.64    1111        0x8000003E 0x002C4F 3
-        206.152.198.252 206.152.198.252 768         0x80000155 0x00C5E7 5
-        206.152.198.253 206.152.198.253 657         0x800000F8 0x00E328 8
-        206.152.198.254 206.152.198.254 656         0x8000002F 0x007A2A 3
+        103.142.178.142 103.142.178.142 768         0x80000155 0x00C5E7 5
+        103.162.198.253 103.162.198.253 657         0x800000F8 0x00E328 8
+        103.162.198.254 103.162.198.254 656         0x8000002F 0x007A2A 3
         101.101.101.2   101.101.101.2   1548        0x8000005F 0x007D6B 501
         102.138.135.119 102.138.135.119 533         0x80000021 0x0090D8 2
         102.138.135.120 102.138.135.120 919         0x8000002B 0x0073C3 2
@@ -3129,15 +3129,15 @@ class test_show_ip_ospf_database(unittest.TestCase):
                 Net Link States (Area 0)
 
         Link ID         ADV Router      Age         Seq#       Checksum
-        20.1.1.2        206.152.198.253 547         0x80000039 0x0021E9
-        17.83.102.49    206.152.198.252 1763        0x80000052 0x008CC7
-        17.83.102.57    206.152.198.253 89          0x8000003C 0x006CF3
-        206.152.198.94  206.152.198.254 639         0x80000002 0x001B7C
-        206.152.198.97  206.152.198.253 657         0x80000001 0x00177E
-        206.152.198.102 102.138.135.220 2014        0x8000004F 0x00A6C4
-        101.101.101.2   206.152.198.253 2501        0x80000BA2 0x00DF6E
-        102.138.135.49  206.152.198.253 1006        0x80000014 0x0068B6
-        102.138.135.57  206.152.198.253 2072        0x8000001D 0x0014F8
+        20.1.1.2        103.162.198.253 547         0x80000039 0x0021E9
+        17.83.102.49    103.142.178.142 1763        0x80000052 0x008CC7
+        17.83.102.57    103.162.198.253 89          0x8000003C 0x006CF3
+        103.162.198.94  103.162.198.254 639         0x80000002 0x001B7C
+        103.162.198.97  103.162.198.253 657         0x80000001 0x00177E
+        103.162.198.102 102.138.135.220 2014        0x8000004F 0x00A6C4
+        101.101.101.2   103.162.198.253 2501        0x80000BA2 0x00DF6E
+        102.138.135.49  103.162.198.253 1006        0x80000014 0x0068B6
+        102.138.135.57  103.162.198.253 2072        0x8000001D 0x0014F8
         1006#
         '''}
 
@@ -6336,13 +6336,15 @@ class test_show_ip_ospf_max_metric(unittest.TestCase):
                     {'ipv4': 
                         {'instance': 
                             {'1': 
-                                {'base_topology_mtid': 
+                                {'router_id': '1.1.1.1',
+                                'base_topology_mtid': 
                                     {'0': 
                                         {'router_lsa_max_metric': False,
                                         'start_time': '00:01:58.313',
                                         'time_elapsed': '00:54:43.859'}}},
                             '9996': 
-                                {'base_topology_mtid': 
+                                {'router_id': '103.152.187.164',
+                                'base_topology_mtid': 
                                     {'0': 
                                         {'advertise_lsa_metric': 16711680,
                                         'condition': 'on startup for 5 seconds',
@@ -6360,7 +6362,7 @@ class test_show_ip_ospf_max_metric(unittest.TestCase):
         Time source is NTP, 17:13:44.700 JST Sat Nov 12 2016
 
 
-                    OSPF Router with ID (106.162.197.254) (Process ID 9996)
+                    OSPF Router with ID (103.152.187.164) (Process ID 9996)
 
 
                         Base Topology (MTID 0)
@@ -6408,7 +6410,556 @@ class test_show_ip_ospf_traffic(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output1 = {}
+    golden_parsed_output1 = {
+        'ospf_statistics': 
+            {'last_clear_traffic_counters': 'never',
+            'rcvd': 
+                {'checksum_errors': 0,
+                'database_desc': 938,
+                'hello': 2024732,
+                'link_state_acks': 75666,
+                'link_state_req': 323,
+                'link_state_updates': 11030,
+                'total': 2112690},
+            'sent': 
+                {'database_desc': 1176,
+                'hello': 2381794,
+                'link_state_acks': 8893,
+                'link_state_req': 43,
+                'link_state_updates': 92224,
+                'total': 2509472}},
+        'vrf': 
+            {'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'9996': 
+                                {'router_id': '106.162.197.252',
+                                'ospf_queue_statistics': 
+                                    {'current_size': 
+                                        {'inputq': 0,
+                                        'outputq': 0,
+                                        'updateq': 0},
+                                    'db_des': 
+                                        {'inputq': 0,
+                                        'outputq': 0,
+                                        'updateq': 0},
+                                    'drops': 
+                                        {'inputq': 0,
+                                        'outputq': 0,
+                                        'updateq': 0},
+                                    'hello': 
+                                        {'inputq': 0,
+                                        'outputq': 0,
+                                        'updateq': 0},
+                                    'invalid': 
+                                        {'inputq': 0,
+                                        'outputq': 0,
+                                        'updateq': 0},
+                                    'limit': 
+                                        {'inputq': 0,
+                                        'outputq': 0,
+                                        'updateq': 200},
+                                    'ls_ack': 
+                                        {'inputq': 0,
+                                        'outputq': 0,
+                                        'updateq': 0},
+                                    'ls_req': 
+                                        {'inputq': 0,
+                                        'outputq': 0,
+                                        'updateq': 0},
+                                    'ls_upd': 
+                                        {'inputq': 0,
+                                        'outputq': 0,
+                                        'updateq': 0},
+                                    'max_delay_msec': 
+                                        {'inputq': 49,
+                                        'outputq': 2,
+                                        'updateq': 2},
+                                    'max_size': 
+                                        {'inputq': 14,
+                                        'outputq': 6,
+                                        'updateq': 14}},
+                                'interface_statistics': 
+                                    {'interfaces': 
+                                        {'GigabitEthernet0/0/0': 
+                                            {'interface': 'GigabitEthernet0/0/0',
+                                            'last_clear_traffic_counters': 'never',
+                                            'ospf_header_errors': 
+                                                {'adjacency_throttle': 0,
+                                                'area_mismatch': 0,
+                                                'auth_type': 0,
+                                                'authentication': 0,
+                                                'bad_source': 0,
+                                                'bfd': 0,
+                                                'checksum': 0,
+                                                'duplicate_id': 0,
+                                                'hello': 0,
+                                                'instance_id': 0,
+                                                'length': 0,
+                                                'lls': 0,
+                                                'mtu_mismatch': 0,
+                                                'nbr_ignored': 0,
+                                                'no_sham_link': 0,
+                                                'no_virtual_link': 0,
+                                                'self_originated': 0,
+                                                'test_discard': 0,
+                                                'ttl_check_fail': 0,
+                                                'unknown_neighbor': 1,
+                                                'version': 0},
+                                            'ospf_lsa_errors': 
+                                                {'checksum': 0,
+                                                'data': 0,
+                                                'length': 0,
+                                                'type': 0},
+                                            'ospf_packets_received_sent': 
+                                                {'type': 
+                                                    {'rx_db_des': {'bytes': 4980,
+                                                                   'packets': 145},
+                                                    'rx_hello': {'bytes': 18443216,
+                                                                 'packets': 384238},
+                                                    'rx_invalid': {'bytes': 0,
+                                                                   'packets': 0},
+                                                    'rx_ls_ack': {'bytes': 713980,
+                                                                  'packets': 11840},
+                                                    'rx_ls_req': {'bytes': 9180,
+                                                                  'packets': 57},
+                                                    'rx_ls_upd': {'bytes': 242036,
+                                                                  'packets': 2581},
+                                                    'rx_total': {'bytes': 19413392,
+                                                                 'packets': 398861},
+                                                    'tx_db_des': {'bytes': 50840,
+                                                                  'packets': 475},
+                                                    'tx_failed': {'bytes': 0,
+                                                                  'packets': 0},
+                                                    'tx_hello': {'bytes': 30825036,
+                                                                 'packets': 385336},
+                                                    'tx_ls_ack': {'bytes': 187352,
+                                                                  'packets': 2473},
+                                                    'tx_ls_req': {'bytes': 404,
+                                                                  'packets': 7},
+                                                    'tx_ls_upd': {'bytes': 13558188,
+                                                                  'packets': 12658},
+                                                    'tx_total': {'bytes': 44621820,
+                                                                 'packets': 400949}}}},
+                                        'GigabitEthernet0/0/1': 
+                                            {'interface': 'GigabitEthernet0/0/1',
+                                            'last_clear_traffic_counters': 'never',
+                                            'ospf_header_errors': 
+                                                {'adjacency_throttle': 0,
+                                                'area_mismatch': 0,
+                                                'auth_type': 0,
+                                                'authentication': 0,
+                                                'bad_source': 0,
+                                                'bfd': 0,
+                                                'checksum': 0,
+                                                'duplicate_id': 0,
+                                                'hello': 0,
+                                                'instance_id': 0,
+                                                'length': 0,
+                                                'lls': 0,
+                                                'mtu_mismatch': 0,
+                                                'nbr_ignored': 0,
+                                                'no_sham_link': 0,
+                                                'no_virtual_link': 0,
+                                                'self_originated': 0,
+                                                'test_discard': 0,
+                                                'ttl_check_fail': 0,
+                                                'unknown_neighbor': 0,
+                                                'version': 0},
+                                            'ospf_lsa_errors': 
+                                                {'checksum': 0,
+                                                'data': 0,
+                                                'length': 0,
+                                                'type': 0},
+                                            'ospf_packets_received_sent': 
+                                                {'type': 
+                                                    {'rx_db_des': {'bytes': 11844,
+                                                                   'packets': 47},
+                                                    'rx_hello': {'bytes': 18812552,
+                                                                 'packets': 391929},
+                                                    'rx_invalid': {'bytes': 0,
+                                                                   'packets': 0},
+                                                    'rx_ls_ack': {'bytes': 18804556,
+                                                                  'packets': 19064},
+                                                    'rx_ls_req': {'bytes': 25212,
+                                                                  'packets': 22},
+                                                    'rx_ls_upd': {'bytes': 231124,
+                                                                  'packets': 1902},
+                                                    'rx_total': {'bytes': 37885288,
+                                                                 'packets': 412964},
+                                                    'tx_db_des': {'bytes': 54772,
+                                                                  'packets': 53},
+                                                    'tx_failed': {'bytes': 0,
+                                                                  'packets': 0},
+                                                    'tx_hello': {'bytes': 31355000,
+                                                                 'packets': 391938},
+                                                    'tx_ls_ack': {'bytes': 167024,
+                                                                  'packets': 1871},
+                                                    'tx_ls_req': {'bytes': 6632,
+                                                                  'packets': 10},
+                                                    'tx_ls_upd': {'bytes': 26983772,
+                                                                  'packets': 26114},
+                                                    'tx_total': {'bytes': 58567200,
+                                                                 'packets': 419986}}}},
+                                        'GigabitEthernet0/0/3': 
+                                            {'interface': 'GigabitEthernet0/0/3',
+                                            'last_clear_traffic_counters': 'never',
+                                            'ospf_header_errors': 
+                                                {'adjacency_throttle': 0,
+                                                'area_mismatch': 0,
+                                                'auth_type': 0,
+                                                'authentication': 0,
+                                                'bad_source': 0,
+                                                'bfd': 0,
+                                                'checksum': 0,
+                                                'duplicate_id': 0,
+                                                'hello': 0,
+                                                'instance_id': 0,
+                                                'length': 0,
+                                                'lls': 0,
+                                                'mtu_mismatch': 0,
+                                                'nbr_ignored': 3,
+                                                'no_sham_link': 0,
+                                                'no_virtual_link': 0,
+                                                'self_originated': 0,
+                                                'test_discard': 0,
+                                                'ttl_check_fail': 0,
+                                                'unknown_neighbor': 0,
+                                                'version': 0},
+                                            'ospf_lsa_errors': 
+                                                {'checksum': 0,
+                                                'data': 0,
+                                                'length': 0,
+                                                'type': 0},
+                                            'ospf_packets_received_sent': 
+                                                {'type': 
+                                                    {'rx_db_des': {'bytes': 25932,
+                                                                   'packets': 636},
+                                                    'rx_hello': {'bytes': 20276152,
+                                                                 'packets': 422436},
+                                                    'rx_invalid': {'bytes': 0,
+                                                                   'packets': 0},
+                                                    'rx_ls_ack': {'bytes': 788256,
+                                                                  'packets': 12534},
+                                                    'rx_ls_req': {'bytes': 29088,
+                                                                  'packets': 191},
+                                                    'rx_ls_upd': {'bytes': 170236,
+                                                                  'packets': 1967},
+                                                    'rx_total': {'bytes': 21289664,
+                                                                 'packets': 437764},
+                                                    'tx_db_des': {'bytes': 73492,
+                                                                  'packets': 508},
+                                                    'tx_failed': {'bytes': 0,
+                                                                  'packets': 0},
+                                                    'tx_hello': {'bytes': 31262032,
+                                                                 'packets': 390845},
+                                                    'tx_ls_ack': {'bytes': 127024,
+                                                                  'packets': 1956},
+                                                    'tx_ls_req': {'bytes': 644,
+                                                                  'packets': 10},
+                                                    'tx_ls_upd': {'bytes': 15890600,
+                                                                  'packets': 15015},
+                                                    'tx_total': {'bytes': 47353792,
+                                                                 'packets': 408334}}}},
+                                        'GigabitEthernet0/0/4': 
+                                            {'interface': 'GigabitEthernet0/0/4',
+                                            'last_clear_traffic_counters': 'never',
+                                            'ospf_header_errors': 
+                                                {'adjacency_throttle': 0,
+                                                'area_mismatch': 0,
+                                                'auth_type': 0,
+                                                'authentication': 0,
+                                                'bad_source': 0,
+                                                'bfd': 0,
+                                                'checksum': 0,
+                                                'duplicate_id': 0,
+                                                'hello': 0,
+                                                'instance_id': 0,
+                                                'length': 0,
+                                                'lls': 0,
+                                                'mtu_mismatch': 0,
+                                                'nbr_ignored': 0,
+                                                'no_sham_link': 0,
+                                                'no_virtual_link': 0,
+                                                'self_originated': 0,
+                                                'test_discard': 0,
+                                                'ttl_check_fail': 0,
+                                                'unknown_neighbor': 0,
+                                                'version': 0},
+                                            'ospf_lsa_errors': 
+                                                {'checksum': 0,
+                                                'data': 0,
+                                                'length': 0,
+                                                'type': 0},
+                                            'ospf_packets_received_sent': 
+                                                {'type': 
+                                                    {'rx_db_des': {'bytes': 524,
+                                                                   'packets': 12},
+                                                    'rx_hello': {'bytes': 14716084,
+                                                                 'packets': 306586},
+                                                    'rx_invalid': {'bytes': 0,
+                                                                   'packets': 0},
+                                                    'rx_ls_ack': {'bytes': 613440,
+                                                                  'packets': 10100},
+                                                    'rx_ls_req': {'bytes': 1032,
+                                                                  'packets': 6},
+                                                    'rx_ls_upd': {'bytes': 165556,
+                                                                  'packets': 1706},
+                                                    'rx_total': {'bytes': 15496636,
+                                                                 'packets': 318410},
+                                                    'tx_db_des': {'bytes': 2816,
+                                                                  'packets': 19},
+                                                    'tx_failed': {'bytes': 0,
+                                                                  'packets': 0},
+                                                    'tx_hello': {'bytes': 24538936,
+                                                                 'packets': 306737},
+                                                    'tx_ls_ack': {'bytes': 132900,
+                                                                  'packets': 1690},
+                                                    'tx_ls_req': {'bytes': 336,
+                                                                  'packets': 6},
+                                                    'tx_ls_upd': {'bytes': 10449232,
+                                                                  'packets': 11120},
+                                                    'tx_total': {'bytes': 35124220,
+                                                                 'packets': 319572}}}},
+                                        'GigabitEthernet0/0/5': 
+                                            {'interface': 'GigabitEthernet0/0/5',
+                                            'last_clear_traffic_counters': 'never',
+                                            'ospf_header_errors': 
+                                                {'adjacency_throttle': 0,
+                                                'area_mismatch': 0,
+                                                'auth_type': 0,
+                                                'authentication': 0,
+                                                'bad_source': 0,
+                                                'bfd': 0,
+                                                'checksum': 0,
+                                                'duplicate_id': 0,
+                                                'hello': 0,
+                                                'instance_id': 0,
+                                                'length': 0,
+                                                'lls': 0,
+                                                'mtu_mismatch': 0,
+                                                'nbr_ignored': 0,
+                                                'no_sham_link': 0,
+                                                'no_virtual_link': 0,
+                                                'self_originated': 0,
+                                                'test_discard': 0,
+                                                'ttl_check_fail': 0,
+                                                'unknown_neighbor': 0,
+                                                'version': 0},
+                                            'ospf_lsa_errors': 
+                                                {'checksum': 0,
+                                                'data': 0,
+                                                'length': 0,
+                                                'type': 0},
+                                            'ospf_packets_received_sent': 
+                                                {'type': 
+                                                    {'rx_db_des': {'bytes': 0,
+                                                                   'packets': 0},
+                                                    'rx_hello': {'bytes': 0,
+                                                                 'packets': 0},
+                                                    'rx_invalid': {'bytes': 0,
+                                                                   'packets': 0},
+                                                    'rx_ls_ack': {'bytes': 0,
+                                                                  'packets': 0},
+                                                    'rx_ls_req': {'bytes': 0,
+                                                                  'packets': 0},
+                                                    'rx_ls_upd': {'bytes': 0,
+                                                                  'packets': 0},
+                                                    'rx_total': {'bytes': 0,
+                                                                 'packets': 0},
+                                                    'tx_db_des': {'bytes': 0,
+                                                                  'packets': 0},
+                                                    'tx_failed': {'bytes': 0,
+                                                                  'packets': 0},
+                                                    'tx_hello': {'bytes': 27731564,
+                                                                 'packets': 364889},
+                                                    'tx_ls_ack': {'bytes': 0,
+                                                                  'packets': 0},
+                                                    'tx_ls_req': {'bytes': 0,
+                                                                  'packets': 0},
+                                                    'tx_ls_upd': {'bytes': 0,
+                                                                  'packets': 0},
+                                                    'tx_total': {'bytes': 27731564,
+                                                                 'packets': 364889}}}},
+                                        'GigabitEthernet0/0/6': 
+                                            {'interface': 'GigabitEthernet0/0/6',
+                                            'last_clear_traffic_counters': 'never',
+                                            'ospf_header_errors': 
+                                                {'adjacency_throttle': 0,
+                                                'area_mismatch': 0,
+                                                'auth_type': 0,
+                                                'authentication': 0,
+                                                'bad_source': 0,
+                                                'bfd': 0,
+                                                'checksum': 0,
+                                                'duplicate_id': 0,
+                                                'hello': 0,
+                                                'instance_id': 0,
+                                                'length': 0,
+                                                'lls': 0,
+                                                'mtu_mismatch': 0,
+                                                'nbr_ignored': 0,
+                                                'no_sham_link': 0,
+                                                'no_virtual_link': 0,
+                                                'self_originated': 0,
+                                                'test_discard': 0,
+                                                'ttl_check_fail': 0,
+                                                'unknown_neighbor': 0,
+                                                'version': 0},
+                                            'ospf_lsa_errors': 
+                                                {'checksum': 0,
+                                                'data': 0,
+                                                'length': 0,
+                                                'type': 0},
+                                            'ospf_packets_received_sent': 
+                                                {'type': 
+                                                    {'rx_db_des': {'bytes': 1232,
+                                                                   'packets': 36},
+                                                    'rx_hello': {'bytes': 8125472,
+                                                                 'packets': 169281},
+                                                    'rx_invalid': {'bytes': 0,
+                                                                   'packets': 0},
+                                                    'rx_ls_ack': {'bytes': 8733808,
+                                                                  'packets': 9327},
+                                                    'rx_ls_req': {'bytes': 25080,
+                                                                  'packets': 20},
+                                                    'rx_ls_upd': {'bytes': 76640,
+                                                                  'packets': 908},
+                                                    'rx_total': {'bytes': 16962232,
+                                                                 'packets': 179572},
+                                                    'tx_db_des': {'bytes': 43560,
+                                                                  'packets': 40},
+                                                    'tx_failed': {'bytes': 0,
+                                                                  'packets': 0},
+                                                    'tx_hello': {'bytes': 13552440,
+                                                                 'packets': 169411},
+                                                    'tx_ls_ack': {'bytes': 63396,
+                                                                  'packets': 899},
+                                                    'tx_ls_req': {'bytes': 224,
+                                                                  'packets': 4},
+                                                    'tx_ls_upd': {'bytes': 12553264,
+                                                                  'packets': 12539},
+                                                    'tx_total': {'bytes': 26212884,
+                                                                 'packets': 182893}}}},
+                                        'GigabitEthernet0/0/7': 
+                                            {'interface': 'GigabitEthernet0/0/7',
+                                            'last_clear_traffic_counters': 'never',
+                                            'ospf_header_errors': 
+                                                {'adjacency_throttle': 0,
+                                                'area_mismatch': 0,
+                                                'auth_type': 0,
+                                                'authentication': 0,
+                                                'bad_source': 0,
+                                                'bfd': 0,
+                                                'checksum': 0,
+                                                'duplicate_id': 0,
+                                                'hello': 0,
+                                                'instance_id': 0,
+                                                'length': 0,
+                                                'lls': 0,
+                                                'mtu_mismatch': 0,
+                                                'nbr_ignored': 0,
+                                                'no_sham_link': 0,
+                                                'no_virtual_link': 0,
+                                                'self_originated': 0,
+                                                'test_discard': 0,
+                                                'ttl_check_fail': 0,
+                                                'unknown_neighbor': 0,
+                                                'version': 0},
+                                            'ospf_lsa_errors': 
+                                                {'checksum': 0,
+                                                'data': 0,
+                                                'length': 0,
+                                                'type': 0},
+                                            'ospf_packets_received_sent': 
+                                                {'type': 
+                                                    {'rx_db_des': {'bytes': 2524,
+                                                                   'packets': 62},
+                                                    'rx_hello': {'bytes': 16812472,
+                                                                 'packets': 350262},
+                                                    'rx_invalid': {'bytes': 0,
+                                                                   'packets': 0},
+                                                    'rx_ls_ack': {'bytes': 759424,
+                                                                  'packets': 12801},
+                                                    'rx_ls_req': {'bytes': 4452,
+                                                                  'packets': 27},
+                                                    'rx_ls_upd': {'bytes': 11921824,
+                                                                  'packets': 1966},
+                                                    'rx_total': {'bytes': 29500696,
+                                                                 'packets': 365118},
+                                                    'tx_db_des': {'bytes': 11964,
+                                                                  'packets': 81},
+                                                    'tx_failed': {'bytes': 0,
+                                                                  'packets': 0},
+                                                    'tx_hello': {'bytes': 29795828,
+                                                                 'packets': 372638},
+                                                    'tx_ls_ack': {'bytes': 256,
+                                                                  'packets': 4},
+                                                    'tx_ls_req': {'bytes': 336,
+                                                                  'packets': 6},
+                                                    'tx_ls_upd': {'bytes': 13471532,
+                                                                  'packets': 14778},
+                                                    'tx_total': {'bytes': 43279916,
+                                                                 'packets': 387507}}}}}},
+                                'summary_traffic_statistics': 
+                                    {'ospf_header_errors': 
+                                        {'adjacency_throttle': 0,
+                                        'area_mismatch': 0,
+                                        'auth_type': 0,
+                                        'authentication': 0,
+                                        'bad_source': 0,
+                                        'bfd': 0,
+                                        'checksum': 0,
+                                        'duplicate_id': 0,
+                                        'hello': 0,
+                                        'instance_id': 0,
+                                        'length': 0,
+                                        'lls': 0,
+                                        'mtu_mismatch': 0,
+                                        'nbr_ignored': 3,
+                                        'no_sham_link': 0,
+                                        'no_virtual_link': 0,
+                                        'self_originated': 0,
+                                        'test_discard': 0,
+                                        'ttl_check_fail': 0,
+                                        'unknown_neighbor': 1,
+                                        'version': 0},
+                                    'ospf_lsa_errors': 
+                                        {'checksum': 0,
+                                        'data': 0,
+                                        'length': 0,
+                                        'type': 0},
+                                    'ospf_packets_received_sent': 
+                                        {'type': 
+                                            {'rx_db_des': {'bytes': 47036,
+                                                           'packets': 938},
+                                            'rx_hello': {'bytes': 97185948,
+                                                         'packets': 2024732},
+                                            'rx_invalid': {'bytes': 0,
+                                                           'packets': 0},
+                                            'rx_ls_ack': {'bytes': 30413464,
+                                                          'packets': 75666},
+                                            'rx_ls_req': {'bytes': 94044,
+                                                          'packets': 323},
+                                            'rx_ls_upd': {'bytes': 12807416,
+                                                          'packets': 11030},
+                                            'rx_total': {'bytes': 140547908,
+                                                         'packets': 2112689},
+                                            'tx_db_des': {'bytes': 237444,
+                                                          'packets': 1176},
+                                            'tx_failed': {'bytes': 0,
+                                                          'packets': 0},
+                                            'tx_hello': {'bytes': 189060836,
+                                                         'packets': 2381794},
+                                            'tx_ls_ack': {'bytes': 677952,
+                                                          'packets': 8893},
+                                            'tx_ls_req': {'bytes': 8576,
+                                                          'packets': 43},
+                                            'tx_ls_upd': {'bytes': 92906588,
+                                                          'packets': 92224},
+                                            'tx_total': {'bytes': 282891396,
+                                                         'packets': 2484130}}}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         1006#show ip ospf traffic

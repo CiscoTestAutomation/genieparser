@@ -5245,10 +5245,12 @@ class ShowIpOspfTrafficSchema(MetaParser):
                                         {Any():
                                             {'interface': str,
                                             'last_clear_traffic_counters': str,
-                                            'ospf_packets':
-                                                {Any():
-                                                    {'packets': int,
-                                                    'bytes': int,
+                                            'ospf_packets_received_sent':
+                                                {'type': 
+                                                    {Any():
+                                                        {'packets': int,
+                                                        'bytes': int,
+                                                        },
                                                     },
                                                 },
                                             'ospf_header_errors':
@@ -5270,21 +5272,56 @@ class ShowIpOspfTrafficSchema(MetaParser):
                                                 'unknown_neighbor': int,
                                                 'authentication': int,
                                                 'ttl_check_fail': int,
-                                                'adjacnecy_throttle': int,
+                                                'adjacency_throttle': int,
                                                 'bfd': int,
                                                 'test_discard': int,
                                                 },
                                             'ospf_lsa_errors':
-                                                {},
+                                                {'type': int,
+                                                'length': int,
+                                                'data': int,
+                                                'checksum': int,
+                                                },
                                             },
                                         },
                                     },
                                 'summary_traffic_statistics':
-                                    {'type':
-                                        {Any():
-                                            {'packets': int,
-                                            'bytes': int,
+                                    {'ospf_packets_received_sent': 
+                                        {'type':
+                                            {Any():
+                                                {'packets': int,
+                                                'bytes': int,
+                                                },
                                             },
+                                        },
+                                    'ospf_header_errors':
+                                        {'length': int,
+                                        'instance_id': int,
+                                        'checksum': int,
+                                        'auth_type': int,
+                                        'version': int,
+                                        'bad_source': int,
+                                        'no_virtual_link': int,
+                                        'area_mismatch': int,
+                                        'no_sham_link': int,
+                                        'self_originated': int,
+                                        'duplicate_id': int,
+                                        'hello': int,
+                                        'mtu_mismatch': int,
+                                        'nbr_ignored': int,
+                                        'lls': int,
+                                        'unknown_neighbor': int,
+                                        'authentication': int,
+                                        'ttl_check_fail': int,
+                                        'adjacency_throttle': int,
+                                        'bfd': int,
+                                        'test_discard': int,
+                                        },
+                                    'ospf_lsa_errors':
+                                        {'type': int,
+                                        'length': int,
+                                        'data': int,
+                                        'checksum': int,
                                         },
                                     },
                                 },
@@ -5316,62 +5353,71 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
         # Init vars
         ret_dict = {}
         address_family = 'ipv4'
-
+        received = False ; sent = False
+        interface_stats = False ; summary_stats = False
 
         # OSPF statistics:
         p1 = re.compile(r'^OSPF +statistics:$')
 
         # Last clearing of OSPF traffic counters never
-        p2 = re.compile(r'^Last +clearing +of +OSPF +traffic +counters'
-                         ' +(?P<last>([a-zA-Z0-9\:\s]+))$')
+        # Last clearing of interface traffic counters never
+        p2 = re.compile(r'^Last +clearing +of +(?P<type>(OSPF|interface)) +traffic'
+                         ' +counters +(?P<last_clear>([a-zA-Z0-9\:\s]+))$')
 
         # Rcvd: 2112690 total, 0 checksum errors
-        p3 = re.compile(r'^Rcvd: +(?P<rcvd>(\d+)) total, +(?P<error>(\d+))'
+        p3 = re.compile(r'^Rcvd: +(?P<total>(\d+)) total, +(?P<csum_errors>(\d+))'
                          ' +checksum +errors$')
 
         # 2024732 hello, 938 database desc, 323 link state req
-        p4 = re.compile(r'^$')
+        # 2381794 hello, 1176 database desc, 43 link state req
+        p4 = re.compile(r'^(?P<hello>(\d+)) +hello, +(?P<db_desc>(\d+))'
+                         ' +database +desc, +(?P<link_state_req>(\d+))'
+                         ' +link +state +req$')
 
         # 11030 link state updates, 75666 link state acks
-        p5 = re.compile(r'^$')
+        # 92224 link state updates, 8893 link state acks
+        p5 = re.compile(r'^(?P<link_state_updates>(\d+)) +link +state +updates,'
+                         ' +(?P<link_state_acks>(\d+)) +link +state +acks$')
 
         # Sent: 2509472 total
-        p6 = re.compile(r'^$')
+        p6 = re.compile(r'^Sent: +(?P<total>(\d+)) +total$')
 
-        # 2381794 hello, 1176 database desc, 43 link state req
-        p7 = re.compile(r'^$')
-
-        # 92224 link state updates, 8893 link state acks
-        p8 = re.compile(r'^$')
 
         # OSPF Router with ID (106.162.197.252) (Process ID 9996)
+        # OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
+        p7 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
+                         ' +\(Process +ID +(?P<instance>(\d+))'
+                         '(?:, +VRF +(?P<vrf>(\S+)))?\)$')
 
         # OSPF queue statistics for process ID 9996:
+        p8 = re.compile(r'^OSPF +queue +statistics +for +process +ID +(?P<pid>(\d+)):$')
 
-        # InputQ     UpdateQ    OutputQ
-        # Limit            0          200        0
-        # Drops            0          0          0
-        # Max delay [msec] 49         2          2
-        # Max size         14         14         6
-        # Invalid        0          0          0
-        # Hello          0          0          0
-        # DB des         0          0          0
-        # LS req         0          0          0
-        # LS upd         0          0          0
-        # LS ack         14         14         6
-        # Current size     0          0          0
-        # Invalid        0          0          0
-        # Hello          0          0          0
-        # DB des         0          0          0
-        # LS req         0          0          0
-        # LS upd         0          0          0
-        # LS ack         0          0          0
+        #                   InputQ   UpdateQ      OutputQ
+        # Limit             0        200          0
+        # Drops             0          0          0
+        # Max delay [msec] 49          2          2
+        # Max size         14         14          6
+        # Invalid           0          0          0
+        # Hello             0          0          0
+        # DB des            0          0          0
+        # LS req            0          0          0
+        # LS upd            0          0          0
+        # LS ack           14         14          6
+        # Current size      0          0          0
+        # Invalid           0          0          0
+        # Hello             0          0          0
+        # DB des            0          0          0
+        # LS req            0          0          0
+        # LS upd            0          0          0
+        # LS ack            0          0          0
+        p9 = re.compile(r'^(?P<item>([a-zA-Z\s\[\]]+)) +(?P<inputq>(\d+))'
+                         ' +(?P<updateq>(\d+)) +(?P<outputq>(\d+))$')
 
         # Interface statistics:
+        p10 = re.compile(r'^Interface +statistics:$')
 
         # Interface GigabitEthernet0/0/6
-
-        # Last clearing of interface traffic counters never
+        p11 = re.compile(r'^Interface +(?P<intf>(\S+))$')
 
         # OSPF packets received/sent
         # Type          Packets              Bytes
@@ -5382,7 +5428,6 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
         # RX LS upd     908                  76640
         # RX LS ack     9327                 8733808
         # RX Total      179572               16962232
-
         # TX Failed     0                    0
         # TX Hello      169411               13552440
         # TX DB des     40                   43560
@@ -5390,18 +5435,56 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
         # TX LS upd     12539                12553264
         # TX LS ack     899                  63396
         # TX Total      182893               26212884
+        p12 = re.compile(r'^(?P<type>([a-zA-Z\s]+)) +(?P<packets>(\d+))'
+                          ' +(?P<bytes>(\d+))$')
 
         # OSPF header errors
+        p13 = re.compile(r'^OSPF +header +errors$')
+
         # Length 0, Instance ID 0, Checksum 0, Auth Type 0,
+        p14 = re.compile(r'^Length +(?P<len>(\d+)), +Instance +ID'
+                          ' +(?P<iid>(\d+)), +Checksum +(?P<csum>(\d+)),'
+                          ' +Auth +Type +(?P<auth>(\d+)),?$')
+
         # Version 0, Bad Source 0, No Virtual Link 0,
+        p15 = re.compile(r'^Version +(?P<version>(\d+)), +Bad +Source'
+                          ' +(?P<bad_source>(\d+)), +No +Virtual +Link'
+                          ' +(?P<no_virtual_link>(\d+)),?$')
+
         # Area Mismatch 0, No Sham Link 0, Self Originated 0,
+        p16 = re.compile(r'^Area +Mismatch +(?P<area_mismatch>(\d+)),'
+                          ' +No +Sham +Link +(?P<no_sham_link>(\d+)),'
+                          ' +Self +Originated +(?P<self_originated>(\d+)),?$')
+
         # Duplicate ID 0, Hello 0, MTU Mismatch 0,
+        p17 = re.compile(r'^Duplicate +ID +(?P<duplicate_id>(\d+)),'
+                          ' +Hello +(?P<hello>(\d+)), +MTU +Mismatch'
+                          ' +(?P<mtu_mismatch>(\d+)),$')
+
         # Nbr Ignored 0, LLS 0, Unknown Neighbor 0,
+        p18 = re.compile(r'^Nbr +Ignored +(?P<nbr_ignored>(\d+)), +LLS'
+                          ' +(?P<lls>(\d+)), +Unknown +Neighbor'
+                          ' +(?P<unknown_neighbor>(\d+)),?$')
+
         # Authentication 0, TTL Check Fail 0, Adjacency Throttle 0,
+        p19 = re.compile(r'^Authentication +(?P<authentication>(\d+)), +TTL'
+                          ' +Check +Fail +(?P<ttl_check_fail>(\d+)), +Adjacency'
+                          ' +Throttle +(?P<adjacency_throttle>(\d+)),?$')
+
         # BFD 0, Test discard 0
+        p20 = re.compile(r'^BFD +(?P<bfd>(\d+)), +Test +discard'
+                          ' +(?P<test_discard>(\d+))$')
 
         # OSPF LSA errors
+        p21 = re.compile(r'^OSPF +LSA +errors$')
+
         # Type 0, Length 0, Data 0, Checksum 0
+        p22 = re.compile(r'^Type +(?P<type>(\d+)), +Length +(?P<len>(\d+)),'
+                          ' +Data +(?P<data>(\d+)), +Checksum +(?P<csum>(\d+))$')
+
+        # Summary traffic statistics for process ID 9996:
+        p23 = re.compile(r'^Summary +traffic +statistics +for +process +ID'
+                          ' +(?P<pid>(\d+)):$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -5413,20 +5496,276 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
                 continue
 
             # Last clearing of OSPF traffic counters never
+            # Last clearing of interface traffic counters never
             m = p2.match(line)
             if m:
-                ospf_stats_dict['last_clear_traffic_counters'] = m.groupdict()['clear']
+                if m.groupdict()['type'] == 'OSPF':
+                    ospf_stats_dict['last_clear_traffic_counters'] = \
+                                                m.groupdict()['last_clear']
+                if m.groupdict()['type'] == 'interface':
+                    intf_dict['last_clear_traffic_counters'] = \
+                                                m.groupdict()['last_clear']
                 continue
 
             # Rcvd: 2112690 total, 0 checksum errors
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                ospf_stats_dict['rcvd'] = int(group['rcvd'])
-                ospf_stats_dict['checksum_errors'] = int(group['errors'])
+                rcvd_dict = ospf_stats_dict.setdefault('rcvd', {})
+                rcvd_dict['total'] = int(group['total'])
+                rcvd_dict['checksum_errors'] = int(group['csum_errors'])
+                received = True ; sent = False
                 continue
 
+            # 2024732 hello, 938 database desc, 323 link state req
+            # 2381794 hello, 1176 database desc, 43 link state req
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                if received:
+                    sdict = rcvd_dict
+                elif sent:
+                    sdict = sent_dict
+                else:
+                    continue
+                sdict['hello'] = int(group['hello'])
+                sdict['database_desc'] = int(group['db_desc'])
+                sdict['link_state_req'] = int(group['link_state_req'])
+                continue
+
+            # 11030 link state updates, 75666 link state acks
+            # 92224 link state updates, 8893 link state acks
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                if received:
+                    sdict = rcvd_dict
+                elif sent:
+                    sdict = sent_dict
+                else:
+                    continue
+                sdict['link_state_updates'] = int(group['link_state_updates'])
+                sdict['link_state_acks'] = int(group['link_state_acks'])
+                continue
+
+            # Sent: 2509472 total
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                sent_dict = ospf_stats_dict.setdefault('sent', {})
+                sent_dict['total'] = int(group['total'])
+                sent = True ; received = False
+                continue
+
+            # OSPF Router with ID (106.162.197.252) (Process ID 9996)
+            # OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                router_id = str(group['router_id'])
+                instance = str(group['instance'])
+                if group['vrf']:
+                    vrf = str(group['vrf'])
+                else:
+                    vrf = 'default'
+                # Create dict
+                ospf_dict = ret_dict.setdefault('vrf', {}).\
+                                     setdefault(vrf, {}).\
+                                     setdefault('address_family', {}).\
+                                     setdefault(address_family, {}).\
+                                     setdefault('instance', {}).\
+                                     setdefault(instance, {})
+                ospf_dict['router_id'] = router_id
+                continue
+
+            # OSPF queue statistics for process ID 9996:
+            m = p8.match(line)
+            if m:
+                queue_stats_dict = ospf_dict.setdefault('ospf_queue_statistics', {})
+                continue
+
+            #                   InputQ   UpdateQ      OutputQ
+            # Limit             0        200          0
+            # Drops             0          0          0
+            # Max delay [msec] 49          2          2
+            # Max size         14         14          6
+            # Invalid           0          0          0
+            # Hello             0          0          0
+            # DB des            0          0          0
+            # LS req            0          0          0
+            # LS upd            0          0          0
+            # LS ack           14         14          6
+            # Current size      0          0          0
+            # Invalid           0          0          0
+            # Hello             0          0          0
+            # DB des            0          0          0
+            # LS req            0          0          0
+            # LS upd            0          0          0
+            # LS ack            0          0          0
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                item = group['item'].strip().lower().replace(" ", "_").\
+                                    replace("[", "").replace("]", "")
+                tmp_dict = queue_stats_dict.setdefault(item, {})
+                tmp_dict['inputq'] = int(group['inputq'])
+                tmp_dict['updateq'] = int(group['updateq'])
+                tmp_dict['outputq'] = int(group['outputq'])
+                continue
+
+            # Interface statistics:
+            m = p10.match(line)
+            if m:
+                intf_stats_dict = ospf_dict.setdefault('interface_statistics', {})
+                continue
+
+            # Interface GigabitEthernet0/0/6
+            m = p11.match(line)
+            if m:
+                intf = m.groupdict()['intf']
+                intf_dict = intf_stats_dict.setdefault('interfaces', {}).\
+                                            setdefault(intf, {})
+                intf_dict['interface'] = intf
+                interface_stats = True ; summary_stats = False
+                continue
+
+            # Type          Packets              Bytes
+            # RX Invalid    0                    0
+            # RX Hello      169281               8125472
+            # RX DB des     36                   1232
+            # RX LS req     20                   25080
+            # RX LS upd     908                  76640
+            # RX LS ack     9327                 8733808
+            # RX Total      179572               16962232
+            # TX Failed     0                    0
+            # TX Hello      169411               13552440
+            # TX DB des     40                   43560
+            # TX LS req     4                    224
+            # TX LS upd     12539                12553264
+            # TX LS ack     899                  63396
+            # TX Total      182893               26212884
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                if interface_stats:
+                    sdict = intf_dict
+                elif summary_stats:
+                    sdict = summary_stats_dict
+                else:
+                    continue
+                item_type = group['type'].strip().lower().replace(" ", "_")
+                tmp_dict = sdict.setdefault('ospf_packets_received_sent', {}).\
+                            setdefault('type', {}).setdefault(item_type, {})
+                tmp_dict['packets'] = int(group['packets'])
+                tmp_dict['bytes'] = int(group['bytes'])
+                continue
+
+            # OSPF header errors
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                if interface_stats:
+                    sdict = intf_dict
+                elif summary_stats:
+                    sdict = summary_stats_dict
+                else:
+                    continue
+                ospf_header_errors_dict = sdict.setdefault('ospf_header_errors', {})
+                continue
+
+            # Length 0, Instance ID 0, Checksum 0, Auth Type 0,
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_header_errors_dict['length'] = int(group['len'])
+                ospf_header_errors_dict['instance_id'] = int(group['iid'])
+                ospf_header_errors_dict['checksum'] = int(group['csum'])
+                ospf_header_errors_dict['auth_type'] = int(group['auth'])
+                continue
+
+            # Version 0, Bad Source 0, No Virtual Link 0,
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_header_errors_dict['version'] = int(group['version'])
+                ospf_header_errors_dict['bad_source'] = int(group['bad_source'])
+                ospf_header_errors_dict['no_virtual_link'] = int(group['no_virtual_link'])
+                continue
+
+            # Area Mismatch 0, No Sham Link 0, Self Originated 0,
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_header_errors_dict['area_mismatch'] = int(group['area_mismatch'])
+                ospf_header_errors_dict['no_sham_link'] = int(group['no_sham_link'])
+                ospf_header_errors_dict['self_originated'] = int(group['self_originated'])
+                continue
+
+            # Duplicate ID 0, Hello 0, MTU Mismatch 0,
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_header_errors_dict['duplicate_id'] = int(group['duplicate_id'])
+                ospf_header_errors_dict['hello'] = int(group['hello'])
+                ospf_header_errors_dict['mtu_mismatch'] = int(group['mtu_mismatch'])
+                continue
+
+            # Nbr Ignored 0, LLS 0, Unknown Neighbor 0,
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_header_errors_dict['nbr_ignored'] = int(group['nbr_ignored'])
+                ospf_header_errors_dict['lls'] = int(group['lls'])
+                ospf_header_errors_dict['unknown_neighbor'] = int(group['unknown_neighbor'])
+                continue
+
+            # Authentication 0, TTL Check Fail 0, Adjacency Throttle 0,
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_header_errors_dict['authentication'] = int(group['authentication'])
+                ospf_header_errors_dict['ttl_check_fail'] = int(group['ttl_check_fail'])
+                ospf_header_errors_dict['adjacency_throttle'] = int(group['adjacency_throttle'])
+                continue
+
+            # BFD 0, Test discard 0
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_header_errors_dict['bfd'] = int(group['bfd'])
+                ospf_header_errors_dict['test_discard'] = int(group['test_discard'])
+                continue
+
+            # OSPF LSA errors
+            m = p21.match(line)
+            if m:
+                if interface_stats:
+                    sdict = intf_dict
+                elif summary_stats:
+                    sdict = summary_stats_dict
+                else:
+                    continue
+                ospf_lsa_errors_dict = sdict.setdefault('ospf_lsa_errors', {})
+                continue
+
+            # Type 0, Length 0, Data 0, Checksum 0
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_lsa_errors_dict['type'] = int(group['type'])
+                ospf_lsa_errors_dict['length'] = int(group['len'])
+                ospf_lsa_errors_dict['data'] = int(group['data'])
+                ospf_lsa_errors_dict['checksum'] = int(group['csum'])
+                continue
+
+            # Summary traffic statistics for process ID 9996:
+            m = p23.match(line)
+            if m:
+                summary_stats_dict = ospf_dict.\
+                                setdefault('summary_traffic_statistics', {})
+                interface_stats = False ; summary_stats = True
+                continue
+
+        import pdb ; pdb.set_trace()
         return ret_dict
-
-
 
