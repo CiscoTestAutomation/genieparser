@@ -18,7 +18,8 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   ShowProcessesCpuSorted, \
                                                   ShowProcessesCpuPlatform, \
                                                   ShowEnvironment, \
-                                                  ShowProcessesCpu
+                                                  ShowProcessesCpu, \
+                                                  ShowPlatformPower
 
 
 class test_show_version(unittest.TestCase):
@@ -5546,6 +5547,70 @@ class test_show_processes_cpu(unittest.TestCase):
         obj = ShowProcessesCpu(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+
+
+class test_show_platform_power(unittest.TestCase):
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {'chassis': 'ASR1006-X', 'slot': {'0': {'type': 'ASR1000-SIP40', 'state': 'ok', 'allocation': '64'}, '0/0': {'type': 'SPA-8X1GE-V2', 'state': 'inserted', 'allocation': '14'}, '0/1': {'type': 'SPA-8X1GE-V2', 'state': 'inserted', 'allocation': '14'}, '0/2': {'type': 'SPA-1X10GE-L-V2', 'state': 'inserted', 'allocation': '17.40'}, '0/3': {'type': 'SPA-1X10GE-L-V2', 'state': 'inserted', 'allocation': '17.40'}, '1': {'type': 'ASR1000-SIP40', 'state': 'ok', 'allocation': '64'}, '1/0': {'type': 'SPA-8X1GE-V2', 'state': 'inserted', 'allocation': '14'}, 'R0': {'type': 'ASR1000-RP2', 'state': 'ok, active', 'allocation': '105'}, 'R1': {'type': 'ASR1000-RP2', 'state': 'ok, standby', 'allocation': '105'}, 'F0': {'type': 'ASR1000-ESP40', 'state': 'ok, active', 'allocation': '267'}, 'F1': {'type': 'ASR1000-ESP40', 'state': 'ok, standby', 'allocation': '267'}, 'P6': {'type': 'ASR1000X-FAN', 'state': 'ok', 'allocation': '125'}, 'P7': {'type': 'ASR1000X-FAN', 'state': 'ok', 'allocation': '125'}, 'P0': {'type': 'ASR1000X-AC-1100W', 'state': 'ok', 'allocation': '1100'}, 'P1': {'type': 'ASR1000X-AC-1100W', 'state': 'ok', 'allocation': '1100'}, 'P2': {'type': 'ASR1000X-AC-1100W', 'state': 'ok', 'allocation': '1100'}, 'P3': {'type': 'ASR1000X-AC-1100W', 'state': 'ok', 'allocation': '1100'}}, 'redundancy_mode': 'nplus1', 'allocation_status': 'Sufficient'}
+
+    golden_output = {'execute.return_value': '''\
+Chassis type: ASR1006-X           
+
+Slot      Type                State                 Allocation(W) 
+--------- ------------------- --------------------- ------------- 
+0         ASR1000-SIP40       ok                    64
+ 0/0      SPA-8X1GE-V2        inserted              14
+ 0/1      SPA-8X1GE-V2        inserted              14
+ 0/2      SPA-1X10GE-L-V2     inserted              17.40
+ 0/3      SPA-1X10GE-L-V2     inserted              17.40
+1         ASR1000-SIP40       ok                    64
+ 1/0      SPA-8X1GE-V2        inserted              14
+R0        ASR1000-RP2         ok, active            105
+R1        ASR1000-RP2         ok, standby           105
+F0        ASR1000-ESP40       ok, active            267
+F1        ASR1000-ESP40       ok, standby           267
+P6        ASR1000X-FAN        ok                    125        
+P7        ASR1000X-FAN        ok                    125        
+
+Slot      Type                State                 Capacity (W) Load (W)     
+--------- ------------------- --------------------- ------------ ------------ 
+P0        ASR1000X-AC-1100W   ok                    1100         132          
+P1        ASR1000X-AC-1100W   ok                    1100         204          
+P2        ASR1000X-AC-1100W   ok                    1100         180          
+P3        ASR1000X-AC-1100W   ok                    1100         180          
+
+Total load: 696 W, total capacity: 4400 W. Load / Capacity is 15%
+
+Power capacity:       4400 W
+Redundant allocation: 0 W
+Fan allocation:       250 W
+FRU allocation:       949 W
+--------------------------------------------
+Excess Power in Reserve:   3201 W
+Excess / (Capacity - Redundant) is 72%
+
+Power Redundancy Mode: nplus1
+
+Power Allocation Status: Sufficient
+
+'''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        platform_obj = ShowPlatformPower(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse()    
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        platform_obj = ShowPlatformPower(device=self.device)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
 if __name__ == '__main__':

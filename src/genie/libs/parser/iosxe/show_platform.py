@@ -2367,3 +2367,109 @@ class ShowProcessesCpu(ShowProcessesCpuSorted):
 
     def cli(self, key_word='', output=None):
         return(super().cli(key_word=key_word, output=output))
+
+
+
+class ShowPlatformPowerSchema(MetaParser):
+
+    schema = {
+        'chassis': str,
+        'redundancy_mode': str,
+        'allocation_status': str,
+        'slot':{
+            Any(): {
+                'type': str,
+                'state': str,
+                Optional('allocation'): str,
+                Optional('capacity'): str,
+                Optional('load'): str,
+            }
+        },
+    }
+
+
+class ShowPlatformPower(ShowPlatformPowerSchema):
+
+    cli_command = 'show platform power'
+
+    def cli(self,output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+        
+        for line in out.splitlines():
+            line = line.rstrip()
+
+            # Chassis type: ASR1006-X
+            p1 = re.compile(r'^\s*Chassis +type\: +(?P<chassis>[\w\-]+)')
+            m = p1.match(line)
+            if m:
+                ret_dict['chassis'] = m.groupdict()['chassis']
+                continue
+
+            # Power Redundancy Mode: nplus1
+            p2 = re.compile(r'^\s*Power +Redundancy +Mode\: +(?P<redundancy_mode>[\w]+)')
+            m = p2.match(line)
+            if m:
+                ret_dict['redundancy_mode'] = m.groupdict()['redundancy_mode']
+                continue
+
+            # Power Allocation Status: Sufficient
+            p3 = re.compile(r'^\s*Power +Allocation +Status\: +(?P<allocation_status>[\w]+)')
+            m = p3.match(line)
+            if m:
+                ret_dict['allocation_status'] = m.groupdict()['allocation_status']
+
+            # Slot      Type                State                 Allocation(W) 
+            # 0         ASR1000-SIP40       ok                    64
+            #  0/0      SPA-8X1GE-V2        inserted              14
+            #  0/1      SPA-1X10GE-L-V2     inserted              17.40 
+            p4 = re.compile(r'^\s*(?P<slot>[\w\/]+) +(?P<type>[\w\-]+) '
+                    '+(?P<state>\w+(?:\, \w+)?) +(?P<allocation>[\d\.]+)')
+            m = p4.match(line)
+            if m:
+                slot = m.groupdict()['slot']
+                t = m.groupdict()['type']
+                state = m.groupdict()['state']
+                allocation = m.groupdict()['allocation']
+
+                if 'slot' not in ret_dict:
+                        ret_dict['slot'] = {}
+                    
+                if slot not in ret_dict['slot']:
+                    ret_dict['slot'][slot] = {}
+                    ret_dict['slot'][slot]['type'] = t
+                    ret_dict['slot'][slot]['state'] = state
+                    ret_dict['slot'][slot]['allocation'] = allocation
+
+                continue
+
+            # Slot      Type                State                 Capacity (W) Load (W)     
+            # P0        ASR1000X-AC-1100W   ok                    1100         132    
+            p5 = re.compile(r'^\s*(?P<slot>[\w\/]+) +(?P<type>[\w\-]+) '
+                    '+(?P<state>\w+(?:\, \w+)?) +(?P<capacity>[\d\.]+) +(?P<load>[\d\.]+)')
+            m = p5.match(line)
+            if m:
+                slot = m.groupdict()['slot']
+                t = m.groupdict()['type']
+                state = m.groupdict()['state']
+                capacity = m.groupdict()['capacity']
+                load = m.groupdict()['load']
+
+                if 'slot' not in ret_dict:
+                    ret_dict['slot'] = {}
+                    
+                if slot not in ret_dict['slot']:
+                    ret_dict['slot'][slot] = {}
+                    ret_dict['slot'][slot]['type'] = t
+                    ret_dict['slot'][slot]['state'] = state
+                    ret_dict['slot'][slot]['capacity'] = capacity
+                    ret_dict['slot'][slot]['load'] = load
+
+                continue
+
+        return ret_dict
