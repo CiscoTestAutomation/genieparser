@@ -55,14 +55,27 @@ class ShowSnmpMib(ShowSnmpMibSchema):
         # mib-2.90.1.3.1.1.9
         # rmon.19.10.1.1
         # rmon.19.1
-        p2 = re.compile(r'^(?P<snmp>([a-zA-Z0-9\-\.]+)$')
+        p2 = re.compile(r'^(?P<snmp>([a-zA-Z0-9\-\.]+))$')
 
         for line in out.splitlines():
             line = line.strip()
 
-            #
+            # lldpLocalSystemData.1
+            # dot3adAggPortDebugPartnerSyncTransitionCount
             m = p1.match(line)
             if m:
+                group = m.groupdict()
+                item_dict = ret_dict.setdefault(group['snmp'], {})
+                if group['num']:
+                    num_dict = item_dict.setdefault(group['num'], {})
+                continue
+
+            # rmon.19.1
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                item_dict = ret_dict.setdefault(group['snmp'], {})
                 continue
 
         return ret_dict
+
