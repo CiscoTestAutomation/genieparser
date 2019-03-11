@@ -20,7 +20,8 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   ShowEnvironment, \
                                                   ShowProcessesCpu, \
                                                   ShowVersionRp, \
-                                                  ShowPlatformHardware
+                                                  ShowPlatformHardware, \
+                                                  ShowPlatformHardwarePlim
 
 
 class test_show_version(unittest.TestCase):
@@ -14372,6 +14373,424 @@ class test_show_platform_hardware(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+
+class test_show_platform_hardware_plim(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_port = {
+        'port': {
+            '0/0/0': {
+                'received': {
+                    'high_priority': {
+                        'dropped_bytes': 0,
+                        'dropped_pkts': 0,
+                        'errored_bytes': 0,
+                        'errored_pkts': 0,
+                        'total_bytes': 327940189,
+                        'total_pkts': 316215},
+                    'low_priority': {
+                        'dropped_bytes': 0,
+                        'dropped_pkts': 0,
+                        'errored_bytes': 0,
+                        'errored_pkts': 0,
+                        'total_bytes': 27789,
+                        'total_pkts': 369}
+                },
+                'transmitted': {
+                    'high_priority': {
+                        'dropped_bytes': 0,
+                        'dropped_pkts': 0,
+                        'total_bytes': 0,
+                        'total_pkts': 0},
+                    'low_priority': {
+                        'dropped_bytes': 0,
+                        'dropped_pkts': 0,
+                        'total_bytes': 250735325722,
+                        'total_pkts': 1265574622}
+                }
+            }
+        }
+    }
+
+    golden_output_port = {'execute.return_value': '''\
+        Router#show platform hardware port 0/0/0 plim statistics
+        Interface 0/0/0
+          RX Low Priority
+            RX Pkts      369         Bytes 27789      
+            RX Drop Pkts 0           Bytes 0          
+            RX Err  Pkts 0           Bytes 0          
+          TX Low Priority
+            TX Pkts      1265574622  Bytes 250735325722
+            TX Drop Pkts 0           Bytes 0          
+          RX High Priority
+            RX Pkts      316215      Bytes 327940189  
+            RX Drop Pkts 0           Bytes 0          
+            RX Err  Pkts 0           Bytes 0          
+          TX High Priority
+            TX Pkts      0           Bytes 0          
+            TX Drop Pkts 0           Bytes 0   
+    '''
+    }
+
+    golden_parsed_output_slot = {
+        'slot': {
+            '0': {
+                'subslot': {
+                    '0': {
+                        'name': 'SPA-8X1GE-V2',
+                        'received': {
+                            'bytes': 6378454260,
+                            'ipc_bytes': 0,
+                            'ipc_pkts': 0,
+                            'pkts': 13543013},
+                        'status': 'Online',
+                        'transmitted': {
+                            'bytes': 6258449952,
+                            'ipc_bytes': 0,
+                            'ipc_pkts': 0,
+                            'pkts': 13689497}
+                    },
+                    '1': {
+                        'name': 'SPA-8X1GE-V2',
+                        'received': {
+                            'bytes': 0,
+                            'ipc_bytes': 0,
+                            'ipc_pkts': 0,
+                            'pkts': 0},
+                        'status': 'Online',
+                        'transmitted': {
+                            'bytes': 0,
+                            'ipc_bytes': 0,
+                            'ipc_pkts': 0,
+                            'pkts': 0}
+                    },
+                    '2': {
+                        'name': 'SPA-1XTENGE-XFP-V2',
+                        'received': {
+                            'bytes': 0,
+                            'ipc_bytes': 0,
+                            'ipc_pkts': 0,
+                            'pkts': 0},
+                        'status': 'Online',
+                        'transmitted': {
+                            'bytes': 0,
+                            'ipc_bytes': 0,
+                            'ipc_pkts': 0,
+                            'pkts': 0}
+                    },
+                    '3': {
+                        'name': 'SPA-1XTENGE-XFP-V2',
+                        'received': {
+                            'bytes': 0,
+                            'ipc_bytes': 0,
+                            'ipc_pkts': 0,
+                            'pkts': 0},
+                        'status': 'Online',
+                        'transmitted': {
+                            'bytes': 0,
+                            'ipc_bytes': 0,
+                            'ipc_pkts': 0,
+                            'pkts': 0,
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_slot = {'execute.return_value': '''\
+        Router#show platform hardware slot 0 plim statistics 
+        0/0, SPA-8X1GE-V2, Online
+          RX Pkts 13543013    Bytes 6378454260 
+          TX Pkts 13689497    Bytes 6258449952 
+          RX IPC Pkts 0           Bytes 0          
+          TX IPC Pkts 0           Bytes 0          
+
+        0/1, SPA-8X1GE-V2, Online
+          RX Pkts 0           Bytes 0          
+          TX Pkts 0           Bytes 0          
+          RX IPC Pkts 0           Bytes 0          
+          TX IPC Pkts 0           Bytes 0          
+
+        0/2, SPA-1XTENGE-XFP-V2, Online
+          RX Pkts 0           Bytes 0          
+          TX Pkts 0           Bytes 0          
+          RX IPC Pkts 0           Bytes 0          
+          TX IPC Pkts 0           Bytes 0          
+
+        0/3, SPA-1XTENGE-XFP-V2, Online
+          RX Pkts 0           Bytes 0          
+          TX Pkts 0           Bytes 0          
+          RX IPC Pkts 0           Bytes 0          
+          TX IPC Pkts 0           Bytes 0
+    '''
+    }
+
+    golden_parsed_output_subslot = {
+        'slot': {
+            '0': {
+                'subslot': {
+                    '1': {
+                        'name': 'SPA-8X1GE-V2',
+                        'received': {
+                            'bytes': 0,
+                            'ipc_bytes': 0,
+                            'ipc_pkts': 0,
+                            'pkts': 0},
+                        'status': 'Online',
+                        'transmitted': {
+                            'bytes': 0,
+                            'ipc_bytes': 0,
+                            'ipc_pkts': 0,
+                            'pkts': 0,
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_subslot = {'execute.return_value': '''\
+        Router#show platform hardware subslot 0/1 plim statistics
+        0/1, SPA-8X1GE-V2, Online
+          RX Pkts 0           Bytes 0          
+          TX Pkts 0           Bytes 0          
+          RX IPC Pkts 0           Bytes 0          
+          TX IPC Pkts 0           Bytes 0 
+    '''
+    }
+
+    golden_parsed_output_slot_internal = {
+        'slot': {
+            '0': {
+                'subslot': {
+                    '0': {
+                        'name': 'SPA-8X1GE-V2',
+                        'received': {
+                            'ipc_err': 0,
+                            'spi4_interrupt_counters': {
+                                'burst_error': 0,
+                                'control_word_error': 0,
+                                'dip4_error': 0,
+                                'disabled': 0,
+                                'eop_abort': 0,
+                                'loss_of_sync': 0,
+                                'out_of_frame': 0,
+                                'packet_gap_error': 0,
+                                'sequence_error': 0,
+                            }
+                        },
+                        'status': 'Online',
+                        'transmitted': {
+                            'ipc_err': 0,
+                            'spi4_interrupt_counters': {
+                                'dip2_error': 0,
+                                'fifo_over_flow': 0,
+                                'frame_error': 0,
+                                'out_of_frame': 0,
+                            }
+                        }
+                    },
+                    '1': {
+                        'name': 'SPA-8X1GE-V2',
+                        'received': {
+                            'ipc_err': 0,
+                            'spi4_interrupt_counters': {
+                                'burst_error': 0,
+                                'control_word_error': 0,
+                                'dip4_error': 0,
+                                'disabled': 0,
+                                'eop_abort': 0,
+                                'loss_of_sync': 0,
+                                'out_of_frame': 0,
+                                'packet_gap_error': 0,
+                                'sequence_error': 0}
+                            },
+                        'status': 'Online',
+                        'transmitted': {
+                            'ipc_err': 0,
+                            'spi4_interrupt_counters': {
+                                'dip2_error': 0,
+                                'fifo_over_flow': 0,
+                                'frame_error': 0,
+                                'out_of_frame': 0,
+                            }
+                        }
+                    },
+                    '2': {
+                        'name': 'SPA-1XTENGE-XFP-V2',
+                        'received': {
+                            'ipc_err': 0,
+                            'spi4_interrupt_counters': {
+                                'burst_error': 0,
+                                'control_word_error': 0,
+                                'dip4_error': 0,
+                                'disabled': 0,
+                                'eop_abort': 0,
+                                'loss_of_sync': 0,
+                                'out_of_frame': 0,
+                                'packet_gap_error': 0,
+                                'sequence_error': 0,
+                            }
+                        },
+                        'status': 'Online',
+                        'transmitted': {
+                            'ipc_err': 0,
+                            'spi4_interrupt_counters': {
+                                'dip2_error': 0,
+                                'fifo_over_flow': 0,
+                                'frame_error': 0,
+                                'out_of_frame': 0,
+                            }
+                        }
+                    },
+                    '3': {
+                        'name': 'SPA-1XTENGE-XFP-V2',
+                        'received': {
+                            'ipc_err': 0,
+                            'spi4_interrupt_counters': {
+                                'burst_error': 0,
+                                'control_word_error': 0,
+                                'dip4_error': 0,
+                                'disabled': 0,
+                                'eop_abort': 0,
+                                'loss_of_sync': 0,
+                                'out_of_frame': 0,
+                                'packet_gap_error': 0,
+                                'sequence_error': 0,
+                            }
+                        },
+                        'status': 'Online',
+                        'transmitted': {
+                            'ipc_err': 0,
+                            'spi4_interrupt_counters': {
+                                'dip2_error': 0,
+                                'fifo_over_flow': 0,
+                                'frame_error': 0,
+                                'out_of_frame': 0,
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_slot_internal = {'execute.return_value': '''\
+        Router#show platform hardware slot 0 plim statistics internal 
+        0/0, SPA-8X1GE-V2, Online
+          RX IPC Err 0          
+          TX IPC Err 0          
+          RX Spi4 Interrupt Counters
+            Out Of Frame 0          
+            Dip4 Error 0          
+            Disabled 0          
+            Loss Of Sync 0          
+            Sequence Error 0          
+            Burst Error 0          
+            EOP Abort 0          
+            Packet Gap Error 0          
+            Control Word Error 0          
+          TX Spi4 Interrupt Counters
+            Out Of Frame 0          
+            Frame Error 0          
+            FIFO Over Flow 0          
+            Dip2 Error 0          
+
+        0/1, SPA-8X1GE-V2, Online
+          RX IPC Err 0          
+          TX IPC Err 0          
+          RX Spi4 Interrupt Counters
+            Out Of Frame 0          
+            Dip4 Error 0          
+            Disabled 0          
+            Loss Of Sync 0          
+            Sequence Error 0          
+            Burst Error 0          
+            EOP Abort 0          
+            Packet Gap Error 0          
+            Control Word Error 0          
+          TX Spi4 Interrupt Counters
+            Out Of Frame 0          
+            Frame Error 0          
+            FIFO Over Flow 0          
+            Dip2 Error 0          
+
+        0/2, SPA-1XTENGE-XFP-V2, Online
+          RX IPC Err 0          
+          TX IPC Err 0          
+          RX Spi4 Interrupt Counters
+            Out Of Frame 0          
+            Dip4 Error 0          
+            Disabled 0          
+            Loss Of Sync 0          
+            Sequence Error 0          
+            Burst Error 0          
+            EOP Abort 0          
+            Packet Gap Error 0          
+            Control Word Error 0          
+          TX Spi4 Interrupt Counters
+            Out Of Frame 0          
+            Frame Error 0          
+            FIFO Over Flow 0          
+            Dip2 Error 0          
+
+        0/3, SPA-1XTENGE-XFP-V2, Online
+          RX IPC Err 0          
+          TX IPC Err 0          
+          RX Spi4 Interrupt Counters
+            Out Of Frame 0          
+            Dip4 Error 0          
+            Disabled 0          
+            Loss Of Sync 0          
+            Sequence Error 0          
+            Burst Error 0          
+            EOP Abort 0          
+            Packet Gap Error 0          
+            Control Word Error 0          
+          TX Spi4 Interrupt Counters
+            Out Of Frame 0          
+            Frame Error 0          
+            FIFO Over Flow 0          
+            Dip2 Error 0    
+    '''
+    }
+
+    def test_golden_port(self):
+        self.device = Mock(**self.golden_output_port)
+        obj = ShowPlatformHardwarePlim(device=self.device)
+        parsed_output = obj.parse(port='0/0/0')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_port)
+
+    def test_golden_slot(self):
+        self.device = Mock(**self.golden_output_slot)
+        obj = ShowPlatformHardwarePlim(device=self.device)
+        parsed_output = obj.parse(slot='0')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_slot)
+
+    def test_golden_subslot(self):
+        self.device = Mock(**self.golden_output_subslot)
+        obj = ShowPlatformHardwarePlim(device=self.device)
+        parsed_output = obj.parse(subslot='0/1')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_subslot)
+
+    def test_golden_slot_internal(self):
+        self.device = Mock(**self.golden_output_slot_internal)
+        obj = ShowPlatformHardwarePlim(device=self.device)
+        parsed_output = obj.parse(slot='0', internal=True)
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_slot_internal)
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowPlatformHardwarePlim(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(port='0/0/0')
+
 if __name__ == '__main__':
     unittest.main()
-
