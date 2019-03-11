@@ -2416,7 +2416,6 @@ class ShowVersionRp(ShowVersionRpSchema):
 
         for line in out.splitlines():
             line = line.strip()
-            # import pdb; pdb.set_trace()
 
             # Package: rpbase, version: 03.16.04a.S.155-3.S4a-ext, status: active
             # Package: Provisioning File, version: n/a, status: active
@@ -2484,6 +2483,260 @@ class ShowVersionRp(ShowVersionRpSchema):
                 group = m.groupdict()
                 ret_dict['rp'][rp_slot][rp]['package'][package_name]\
                     ['file_sha1_checksum'] = group['file_sha1_checksum']
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformHardwareSchema(MetaParser):
+    """Schema for show platform hardware qfp active infrastructure bqs queue output default all"""
+
+    schema = {
+        'interface': {
+            Any(): {
+                'qfp': str,
+                'if_h': int,
+                'num_queues': int,
+                Optional('index'): {
+                    Any(): {
+                        'queue_id': str,
+                        'interf_name': str,
+                        'cache_queue_id': str,
+                        'wred': str,
+                        'qlimit_bytes': int,
+                        'parent_sid': str,
+                        'debug_name': str,
+                        'sw_flags': str,
+                        'sw_state': str,
+                        'port_uidb': int,
+                        'orig_min': int,
+                        'min': int,
+                        'min_qos': int,
+                        'min_dflt': int,
+                        'orig_max': int,
+                        'max': int,
+                        'max_qos': int,
+                        'max_dflt': int,
+                        'share': int,
+                        'plevel': int,
+                        'priority': int,
+                        'defer_obj_refcnt': int,
+                        'tail_drops_bytes': int,
+                        'tail_drops_packets': int,
+                        'total_enqs_bytes': int,
+                        'total_enqs_packets': int,
+                        'queue_depth_bytes': int,
+                        'lic_throughput_oversub_drops_bytes': int,
+                        'lic_throughput_oversub_drops_packets': int,
+                    },
+                }
+            },
+        },
+    }
+
+
+class ShowPlatformHardware(ShowPlatformHardwareSchema):
+    """Parser for show platform hardware qfp active infrastructure bqs queue output default all"""
+
+    cli_command = 'show platform hardware qfp active infrastructure bqs queue output default all'
+
+    def cli(self, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        p1 = re.compile(r'^Interface: +(?P<intf_name>[\w\d\/\.\-\:]+)'
+                         ' +QFP: +(?P<qfp>[\d\.]+)'
+                         ' +if_h: +(?P<if_h>\d+)'
+                         ' +Num Queues/Schedules: +(?P<num_queues>\d+)$')
+
+        p2 = re.compile(r'^Index +(?P<index>\d+)'
+                         ' +\(Queue +ID:(?P<queue_id>[\w\d]+),'
+                         ' +Name: +(?P<interf_name>[\w\d\/\.\-\:]+)\)$')
+
+        p3 = re.compile(r'^\(cache\) +queue +id: +(?P<cache_queue_id>[\w\d]+),'
+                         ' +wred: +(?P<wred>[\w\d]+),'
+                         ' +qlimit +\(bytes\): +(?P<qlimit_bytes>\d+)$')
+
+        p4 = re.compile(r'^parent_sid: +(?P<parent_sid>[\w\d]+),'
+                         ' debug_name: +(?P<debug_name>[\w\d\/\.\-\:]+)$')
+
+        p5 = re.compile(r'^sw_flags: +(?P<sw_flags>[\w\d]+),'
+                         ' +sw_state: +(?P<sw_state>[\w\d]+),'
+                         ' +port_uidb: +(?P<port_uidb>\d+)$')
+
+        p6 = re.compile(r'^orig_min +: +(?P<orig_min>\d+) +,'
+                         ' +min: +(?P<min>\d+)$')  
+
+        p7 = re.compile(r'^min_qos +: +(?P<min_qos>\d+) +,'
+                         ' +min_dflt: +(?P<min_dflt>\d+)$')  
+
+        p8 = re.compile(r'^orig_max +: +(?P<orig_max>\d+) +,'
+                         ' +max: +(?P<max>\d+)$')  
+
+        p9 = re.compile(r'^max_qos +: +(?P<max_qos>\d+) +,'
+                         ' +max_dflt: +(?P<max_dflt>\d+)$')  
+
+        p10 = re.compile(r'^share +: +(?P<share>\d+)$')  
+
+        p11 = re.compile(r'^plevel +: +(?P<plevel>\d+),'
+                         ' +priority: +(?P<priority>\d+)$')  
+
+        p12 = re.compile(r'^defer_obj_refcnt: +(?P<defer_obj_refcnt>\d+)$')  
+
+        p13 = re.compile(r'^tail +drops  +\(bytes\): +(?P<tail_drops_bytes>\d+) +,'
+                         ' +\(packets\): +(?P<tail_drops_packets>\d+)$')  
+
+        p14 = re.compile(r'^total +enqs  +\(bytes\): +(?P<total_enqs_bytes>\d+) +,'
+                         ' +\(packets\): +(?P<total_enqs_packets>\d+)$')  
+
+        p15 = re.compile(r'^queue_depth +\(bytes\): +(?P<queue_depth_bytes>\d+)$')  
+
+        p16 = re.compile(r'^\(bytes\): +(?P<lic_throughput_oversub_drops_bytes>\d+) +,'
+                         ' +\(packets\): +(?P<lic_throughput_oversub_drops_packets>\d+)$')  
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Interface: GigabitEthernet1/0/7 QFP: 0.0 if_h: 32 Num Queues/Schedules: 1
+            # Interface: Loopback2 QFP: 0.0 if_h: 34 Num Queues/Schedules: 0
+            # Interface: GigabitEthernet0/0/1.2 QFP: 0.0 if_h: 35 Num Queues/Schedules: 0
+            # Interface: GigabitEthernet0/0/1.EFP2054 QFP: 0.0 if_h: 36 Num Queues/Schedules: 0
+            # Interface: BG4048.10207e1 QFP: 0.0 if_h: 4079 Num Queues/Schedules: 0
+            # Interface: VPLS-2944.10207e2 QFP: 0.0 if_h: 4080 Num Queues/Schedules: 
+            # Interface: internal0/0/recycle:0 QFP: 0.0 if_h: 1 Num Queues/Schedules: 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group['intf_name']
+                ret_dict.setdefault('interface', {}).setdefault(interface, {})
+                ret_dict['interface'][interface]['qfp'] = group['qfp']
+                ret_dict['interface'][interface]['if_h'] = int(group['if_h'])
+                ret_dict['interface'][interface]['num_queues'] = int(group['num_queues'])
+                continue
+
+            #     Index 0 (Queue ID:0xa6, Name: GigabitEthernet1/0/7)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                index = group['index']
+                if 'index' not in ret_dict['interface'][interface]:
+                    ret_dict['interface'][interface].setdefault('index', {})
+                final_dict = ret_dict['interface'][interface]['index'].setdefault(index, {})
+                final_dict['queue_id'] = group['queue_id']
+                final_dict['interf_name'] = group['interf_name']
+                continue
+
+            #       (cache) queue id: 0x000000a6, wred: 0x88b16ac2, qlimit (bytes): 3281312
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict['cache_queue_id'] = group['cache_queue_id']
+                final_dict['wred'] = group['wred']
+                final_dict['qlimit_bytes'] = int(group['qlimit_bytes'])
+                continue
+
+            #       parent_sid: 0x284, debug_name: GigabitEthernet1/0/7
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict.update({k:v for k, v in group.items()})
+                # final_dict['parent_sid'] = group['parent_sid']
+                # final_dict['debug_name'] = group['debug_name']
+                continue
+
+            #       sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245728
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict['sw_flags'] = group['sw_flags']
+                final_dict['sw_state'] = group['sw_state']
+                ret_dict['interface'][interface]['index'][index]\
+                    ['port_uidb'] = int(group['port_uidb'])
+                continue
+
+            #       orig_min  : 0                   ,      min: 105000000    
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict.update({k:int(v) for k, v in group.items()})
+                continue
+
+            #       min_qos   : 0                   , min_dflt: 0       
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict.update({k:int(v) for k, v in group.items()})
+                continue
+
+            #       orig_max  : 0                   ,      max: 0    
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict.update({k:int(v) for k, v in group.items()})
+                continue
+
+            #       max_qos   : 0                   , max_dflt: 0  
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict.update({k:int(v) for k, v in group.items()})
+                continue
+
+            #       share     : 1
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict['share'] = int(group['share'])
+                continue
+
+            #       plevel    : 0, priority: 65535
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict.update({k:int(v) for k, v in group.items()})
+                continue
+
+            #       defer_obj_refcnt: 0
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict['defer_obj_refcnt'] = int(group['defer_obj_refcnt'])
+                continue
+
+            #     Statistics:
+            #       tail drops  (bytes): 0                   ,          (packets): 0   
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict.update({k:int(v) for k, v in group.items()})
+                continue
+
+            #       total enqs  (bytes): 0                   ,          (packets): 0       
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict.update({k:int(v) for k, v in group.items()})
+                continue
+
+            #       queue_depth (bytes): 0                   
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict['queue_depth_bytes'] = int(group['queue_depth_bytes'])
+                continue
+
+            #       licensed throughput oversubscription drops:
+            #                   (bytes): 0                   ,          (packets): 0  
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict.update({k:int(v) for k, v in group.items()})
                 continue
 
         return ret_dict

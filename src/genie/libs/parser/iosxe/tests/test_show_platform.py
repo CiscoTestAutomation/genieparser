@@ -19,7 +19,8 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   ShowProcessesCpuPlatform, \
                                                   ShowEnvironment, \
                                                   ShowProcessesCpu, \
-                                                  ShowVersionRp
+                                                  ShowVersionRp, \
+                                                  ShowPlatformHardware
 
 
 class test_show_version(unittest.TestCase):
@@ -11847,6 +11848,2527 @@ class test_show_version_rp(unittest.TestCase):
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         obj = ShowVersionRp(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+
+class test_show_platform_hardware(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_active = {'interface': {'BG4001.1020892': {'if_h': 4256,
+                                  'num_queues': 0,
+                                  'qfp': '0.0'},
+               'BG4002.1020893': {'if_h': 4257,
+                                  'num_queues': 0,
+                                  'qfp': '0.0'},
+               'BG4006.1020894': {'if_h': 4258,
+                                  'num_queues': 0,
+                                  'qfp': '0.0'},
+               'BG4010.1020895': {'if_h': 4259,
+                                  'num_queues': 0,
+                                  'qfp': '0.0'},
+               'BG4033.10207fd': {'if_h': 4107,
+                                  'num_queues': 0,
+                                  'qfp': '0.0'},
+               'BG4044.10207fe': {'if_h': 4108,
+                                  'num_queues': 0,
+                                  'qfp': '0.0'},
+               'BG4045.10207ff': {'if_h': 4109,
+                                  'num_queues': 0,
+                                  'qfp': '0.0'},
+               'BG4048.10207e1': {'if_h': 4079,
+                                  'num_queues': 0,
+                                  'qfp': '0.0'},
+               'BG4111.1020807': {'if_h': 4117,
+                                  'num_queues': 0,
+                                  'qfp': '0.0'},
+               'BG4117.1020808': {'if_h': 4118,
+                                  'num_queues': 0,
+                                  'qfp': '0.0'},
+               'BG4118.1020809': {'if_h': 4119,
+                                  'num_queues': 0,
+                                  'qfp': '0.0'},
+               'CPP_Null': {'if_h': 5, 'num_queues': 0, 'qfp': '0.0'},
+               'GigabitEthernet0/0/0': {'if_h': 7,
+                                        'index': {'0': {'cache_queue_id': '0x0000008d',
+                                                        'debug_name': 'GigabitEthernet0/0/0',
+                                                        'defer_obj_refcnt': 0,
+                                                        'interf_name': 'GigabitEthernet0/0/0',
+                                                        'lic_throughput_oversub_drops_bytes': 0,
+                                                        'lic_throughput_oversub_drops_packets': 0,
+                                                        'max': 0,
+                                                        'max_dflt': 0,
+                                                        'max_qos': 0,
+                                                        'min': 105000000,
+                                                        'min_dflt': 0,
+                                                        'min_qos': 0,
+                                                        'orig_max': 0,
+                                                        'orig_min': 0,
+                                                        'parent_sid': '0x268',
+                                                        'plevel': 0,
+                                                        'port_uidb': 245753,
+                                                        'priority': 65535,
+                                                        'qlimit_bytes': 3281312,
+                                                        'queue_depth_bytes': 0,
+                                                        'queue_id': '0x8d',
+                                                        'share': 1,
+                                                        'sw_flags': '0x08000011',
+                                                        'sw_state': '0x00000c01',
+                                                        'tail_drops_bytes': 0,
+                                                        'tail_drops_packets': 0,
+                                                        'total_enqs_bytes': 103120085,
+                                                        'total_enqs_packets': 518314,
+                                                        'wred': '0x88b16932'}},
+                                        'num_queues': 1,
+                                        'qfp': '0.0'},
+               'GigabitEthernet0/0/1': {'if_h': 8,
+                                        'index': {'0': {'cache_queue_id': '0x0000008e',
+                                                        'debug_name': 'GigabitEthernet0/0/1',
+                                                        'defer_obj_refcnt': 0,
+                                                        'interf_name': 'GigabitEthernet0/0/1',
+                                                        'lic_throughput_oversub_drops_bytes': 0,
+                                                        'lic_throughput_oversub_drops_packets': 0,
+                                                        'max': 0,
+                                                        'max_dflt': 0,
+                                                        'max_qos': 0,
+                                                        'min': 105000000,
+                                                        'min_dflt': 0,
+                                                        'min_qos': 0,
+                                                        'orig_max': 0,
+                                                        'orig_min': 0,
+                                                        'parent_sid': '0x269',
+                                                        'plevel': 0,
+                                                        'port_uidb': 245752,
+                                                        'priority': 65535,
+                                                        'qlimit_bytes': 3281312,
+                                                        'queue_depth_bytes': 0,
+                                                        'queue_id': '0x8e',
+                                                        'share': 1,
+                                                        'sw_flags': '0x08000011',
+                                                        'sw_state': '0x00000c01',
+                                                        'tail_drops_bytes': 0,
+                                                        'tail_drops_packets': 0,
+                                                        'total_enqs_bytes': 649104074,
+                                                        'total_enqs_packets': 7688841,
+                                                        'wred': '0x88b16942'}},
+                                        'num_queues': 1,
+                                        'qfp': '0.0'},
+               'GigabitEthernet0/0/1.11': {'if_h': 37,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.12': {'if_h': 38,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.13': {'if_h': 39,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.14': {'if_h': 40,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.15': {'if_h': 41,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.16': {'if_h': 42,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.17': {'if_h': 43,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.1795': {'if_h': 1821,
+                                             'num_queues': 0,
+                                             'qfp': '0.0'},
+               'GigabitEthernet0/0/1.1796': {'if_h': 1822,
+                                             'num_queues': 0,
+                                             'qfp': '0.0'},
+               'GigabitEthernet0/0/1.1797': {'if_h': 1823,
+                                             'num_queues': 0,
+                                             'qfp': '0.0'},
+               'GigabitEthernet0/0/1.18': {'if_h': 44,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.19': {'if_h': 45,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.2': {'if_h': 35,
+                                          'num_queues': 0,
+                                          'qfp': '0.0'},
+               'GigabitEthernet0/0/1.20': {'if_h': 46,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.21': {'if_h': 47,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.22': {'if_h': 48,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.23': {'if_h': 49,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.24': {'if_h': 50,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.25': {'if_h': 51,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.26': {'if_h': 52,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.27': {'if_h': 53,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.28': {'if_h': 54,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.29': {'if_h': 55,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.30': {'if_h': 56,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.31': {'if_h': 57,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.32': {'if_h': 58,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.33': {'if_h': 59,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.34': {'if_h': 60,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.35': {'if_h': 61,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.36': {'if_h': 62,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.37': {'if_h': 63,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.38': {'if_h': 64,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.400': {'if_h': 426,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.401': {'if_h': 427,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.402': {'if_h': 428,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.403': {'if_h': 429,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.404': {'if_h': 430,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.405': {'if_h': 431,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.406': {'if_h': 432,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.407': {'if_h': 433,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.408': {'if_h': 434,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.409': {'if_h': 435,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.410': {'if_h': 436,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.411': {'if_h': 437,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.412': {'if_h': 438,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.413': {'if_h': 439,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.414': {'if_h': 440,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.415': {'if_h': 441,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.416': {'if_h': 442,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.417': {'if_h': 443,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.418': {'if_h': 444,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.419': {'if_h': 445,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.420': {'if_h': 446,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.421': {'if_h': 447,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.422': {'if_h': 448,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.423': {'if_h': 449,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.424': {'if_h': 450,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.425': {'if_h': 451,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.426': {'if_h': 452,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.427': {'if_h': 453,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.428': {'if_h': 454,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.429': {'if_h': 455,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.430': {'if_h': 456,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.431': {'if_h': 457,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.432': {'if_h': 458,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.433': {'if_h': 459,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.434': {'if_h': 460,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.57': {'if_h': 83,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.58': {'if_h': 84,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.59': {'if_h': 85,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.60': {'if_h': 86,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.61': {'if_h': 87,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.62': {'if_h': 88,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.63': {'if_h': 89,
+                                           'num_queues': 0,
+                                           'qfp': '0.0'},
+               'GigabitEthernet0/0/1.720': {'if_h': 746,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.721': {'if_h': 747,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.722': {'if_h': 748,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.723': {'if_h': 749,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.724': {'if_h': 750,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.725': {'if_h': 751,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.726': {'if_h': 752,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.727': {'if_h': 753,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.728': {'if_h': 754,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.729': {'if_h': 755,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.730': {'if_h': 756,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.731': {'if_h': 757,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.732': {'if_h': 758,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.733': {'if_h': 759,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.734': {'if_h': 760,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.735': {'if_h': 761,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.736': {'if_h': 762,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.737': {'if_h': 763,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.738': {'if_h': 764,
+                                            'num_queues': 0,
+                                            'qfp': '0.0'},
+               'GigabitEthernet0/0/1.EFP2054': {'if_h': 36,
+                                                'num_queues': 0,
+                                                'qfp': '0.0'},
+               'GigabitEthernet0/0/2': {'if_h': 9,
+                                        'index': {'0': {'cache_queue_id': '0x0000008f',
+                                                        'debug_name': 'GigabitEthernet0/0/2',
+                                                        'defer_obj_refcnt': 0,
+                                                        'interf_name': 'GigabitEthernet0/0/2',
+                                                        'lic_throughput_oversub_drops_bytes': 0,
+                                                        'lic_throughput_oversub_drops_packets': 0,
+                                                        'max': 0,
+                                                        'max_dflt': 0,
+                                                        'max_qos': 0,
+                                                        'min': 105000000,
+                                                        'min_dflt': 0,
+                                                        'min_qos': 0,
+                                                        'orig_max': 0,
+                                                        'orig_min': 0,
+                                                        'parent_sid': '0x26a',
+                                                        'plevel': 0,
+                                                        'port_uidb': 245751,
+                                                        'priority': 65535,
+                                                        'qlimit_bytes': 3281312,
+                                                        'queue_depth_bytes': 0,
+                                                        'queue_id': '0x8f',
+                                                        'share': 1,
+                                                        'sw_flags': '0x08000011',
+                                                        'sw_state': '0x00000c01',
+                                                        'tail_drops_bytes': 0,
+                                                        'tail_drops_packets': 0,
+                                                        'total_enqs_bytes': 779830,
+                                                        'total_enqs_packets': 10261,
+                                                        'wred': '0x88b16952'}},
+                                        'num_queues': 1,
+                                        'qfp': '0.0'},
+               'GigabitEthernet0/0/3': {'if_h': 10,
+                                        'index': {'0': {'cache_queue_id': '0x00000090',
+                                                        'debug_name': 'GigabitEthernet0/0/3',
+                                                        'defer_obj_refcnt': 0,
+                                                        'interf_name': 'GigabitEthernet0/0/3',
+                                                        'lic_throughput_oversub_drops_bytes': 0,
+                                                        'lic_throughput_oversub_drops_packets': 0,
+                                                        'max': 0,
+                                                        'max_dflt': 0,
+                                                        'max_qos': 0,
+                                                        'min': 105000000,
+                                                        'min_dflt': 0,
+                                                        'min_qos': 0,
+                                                        'orig_max': 0,
+                                                        'orig_min': 0,
+                                                        'parent_sid': '0x26b',
+                                                        'plevel': 0,
+                                                        'port_uidb': 245750,
+                                                        'priority': 65535,
+                                                        'qlimit_bytes': 3281312,
+                                                        'queue_depth_bytes': 0,
+                                                        'queue_id': '0x90',
+                                                        'share': 1,
+                                                        'sw_flags': '0x08000011',
+                                                        'sw_state': '0x00000c01',
+                                                        'tail_drops_bytes': 0,
+                                                        'tail_drops_packets': 0,
+                                                        'total_enqs_bytes': 5698,
+                                                        'total_enqs_packets': 74,
+                                                        'wred': '0x88b16962'}},
+                                        'num_queues': 1,
+                                        'qfp': '0.0'},
+               'GigabitEthernet0/0/3.EFP2051': {'if_h': 2077,
+                                                'num_queues': 0,
+                                                'qfp': '0.0'},
+               'GigabitEthernet0/0/3.EFP2052': {'if_h': 2078,
+                                                'num_queues': 0,
+                                                'qfp': '0.0'},
+               'GigabitEthernet0/0/3.EFP2053': {'if_h': 2079,
+                                                'num_queues': 0,
+                                                'qfp': '0.0'},
+               'GigabitEthernet0/0/3.EFP2054': {'if_h': 2080,
+                                                'num_queues': 0,
+                                                'qfp': '0.0'},
+               'GigabitEthernet0/0/3.EFP2055': {'if_h': 2081,
+                                                'num_queues': 0,
+                                                'qfp': '0.0'},
+               'GigabitEthernet0/0/3.EFP2174': {'if_h': 2200,
+                                                'num_queues': 0,
+                                                'qfp': '0.0'},
+               'GigabitEthernet0/0/3.EFP2175': {'if_h': 2201,
+                                                'num_queues': 0,
+                                                'qfp': '0.0'},
+               'GigabitEthernet0/0/3.EFP2176': {'if_h': 2202,
+                                                'num_queues': 0,
+                                                'qfp': '0.0'},
+               'GigabitEthernet0/0/3.EFP2177': {'if_h': 2203,
+                                                'num_queues': 0,
+                                                'qfp': '0.0'},
+               'GigabitEthernet0/0/3.EFP2178': {'if_h': 2204,
+                                                'num_queues': 0,
+                                                'qfp': '0.0'},
+               'GigabitEthernet0/0/3.EFP2179': {'if_h': 2205,
+                                                'num_queues': 0,
+                                                'qfp': '0.0'},
+               'GigabitEthernet0/0/4': {'if_h': 11,
+                                        'index': {'0': {'cache_queue_id': '0x00000091',
+                                                        'debug_name': 'GigabitEthernet0/0/4',
+                                                        'defer_obj_refcnt': 0,
+                                                        'interf_name': 'GigabitEthernet0/0/4',
+                                                        'lic_throughput_oversub_drops_bytes': 0,
+                                                        'lic_throughput_oversub_drops_packets': 0,
+                                                        'max': 0,
+                                                        'max_dflt': 0,
+                                                        'max_qos': 0,
+                                                        'min': 105000000,
+                                                        'min_dflt': 0,
+                                                        'min_qos': 0,
+                                                        'orig_max': 0,
+                                                        'orig_min': 0,
+                                                        'parent_sid': '0x26c',
+                                                        'plevel': 0,
+                                                        'port_uidb': 245749,
+                                                        'priority': 65535,
+                                                        'qlimit_bytes': 3281312,
+                                                        'queue_depth_bytes': 0,
+                                                        'queue_id': '0x91',
+                                                        'share': 1,
+                                                        'sw_flags': '0x08000011',
+                                                        'sw_state': '0x00000c01',
+                                                        'tail_drops_bytes': 0,
+                                                        'tail_drops_packets': 0,
+                                                        'total_enqs_bytes': 2754752998,
+                                                        'total_enqs_packets': 2765893,
+                                                        'wred': '0x88b16972'}},
+                                        'num_queues': 1,
+                                        'qfp': '0.0'},
+               'GigabitEthernet0/0/5': {'if_h': 12,
+                                        'index': {'0': {'cache_queue_id': '0x00000092',
+                                                        'debug_name': 'GigabitEthernet0/0/5',
+                                                        'defer_obj_refcnt': 0,
+                                                        'interf_name': 'GigabitEthernet0/0/5',
+                                                        'lic_throughput_oversub_drops_bytes': 0,
+                                                        'lic_throughput_oversub_drops_packets': 0,
+                                                        'max': 0,
+                                                        'max_dflt': 0,
+                                                        'max_qos': 0,
+                                                        'min': 105000000,
+                                                        'min_dflt': 0,
+                                                        'min_qos': 0,
+                                                        'orig_max': 0,
+                                                        'orig_min': 0,
+                                                        'parent_sid': '0x26d',
+                                                        'plevel': 0,
+                                                        'port_uidb': 245748,
+                                                        'priority': 65535,
+                                                        'qlimit_bytes': 3281312,
+                                                        'queue_depth_bytes': 0,
+                                                        'queue_id': '0x92',
+                                                        'share': 1,
+                                                        'sw_flags': '0x08000011',
+                                                        'sw_state': '0x00000c01',
+                                                        'tail_drops_bytes': 0,
+                                                        'tail_drops_packets': 0,
+                                                        'total_enqs_bytes': 2754752998,
+                                                        'total_enqs_packets': 2765893,
+                                                        'wred': '0x88b16982'}},
+                                        'num_queues': 1,
+                                        'qfp': '0.0'},
+               'GigabitEthernet0/0/6': {'if_h': 13,
+                                        'index': {'0': {'cache_queue_id': '0x00000093',
+                                                        'debug_name': 'GigabitEthernet0/0/6',
+                                                        'defer_obj_refcnt': 0,
+                                                        'interf_name': 'GigabitEthernet0/0/6',
+                                                        'lic_throughput_oversub_drops_bytes': 0,
+                                                        'lic_throughput_oversub_drops_packets': 0,
+                                                        'max': 0,
+                                                        'max_dflt': 0,
+                                                        'max_qos': 0,
+                                                        'min': 105000000,
+                                                        'min_dflt': 0,
+                                                        'min_qos': 0,
+                                                        'orig_max': 0,
+                                                        'orig_min': 0,
+                                                        'parent_sid': '0x26e',
+                                                        'plevel': 0,
+                                                        'port_uidb': 245747,
+                                                        'priority': 65535,
+                                                        'qlimit_bytes': 3281312,
+                                                        'queue_depth_bytes': 0,
+                                                        'queue_id': '0x93',
+                                                        'share': 1,
+                                                        'sw_flags': '0x08000011',
+                                                        'sw_state': '0x00000c01',
+                                                        'tail_drops_bytes': 0,
+                                                        'tail_drops_packets': 0,
+                                                        'total_enqs_bytes': 5998,
+                                                        'total_enqs_packets': 79,
+                                                        'wred': '0x88b16992'}},
+                                        'num_queues': 1,
+                                        'qfp': '0.0'},
+               'GigabitEthernet0/0/7': {'if_h': 14,
+                                        'index': {'0': {'cache_queue_id': '0x00000094',
+                                                        'debug_name': 'GigabitEthernet0/0/7',
+                                                        'defer_obj_refcnt': 0,
+                                                        'interf_name': 'GigabitEthernet0/0/7',
+                                                        'lic_throughput_oversub_drops_bytes': 0,
+                                                        'lic_throughput_oversub_drops_packets': 0,
+                                                        'max': 0,
+                                                        'max_dflt': 0,
+                                                        'max_qos': 0,
+                                                        'min': 105000000,
+                                                        'min_dflt': 0,
+                                                        'min_qos': 0,
+                                                        'orig_max': 0,
+                                                        'orig_min': 0,
+                                                        'parent_sid': '0x270',
+                                                        'plevel': 0,
+                                                        'port_uidb': 245746,
+                                                        'priority': 65535,
+                                                        'qlimit_bytes': 3281312,
+                                                        'queue_depth_bytes': 0,
+                                                        'queue_id': '0x94',
+                                                        'share': 1,
+                                                        'sw_flags': '0x08000011',
+                                                        'sw_state': '0x00000c01',
+                                                        'tail_drops_bytes': 0,
+                                                        'tail_drops_packets': 0,
+                                                        'total_enqs_bytes': 0,
+                                                        'total_enqs_packets': 0,
+                                                        'wred': '0x88b169a2'}},
+                                        'num_queues': 1,
+                                        'qfp': '0.0'},
+               'GigabitEthernet0/1/0': {'if_h': 15,
+                                        'index': {'0': {'cache_queue_id': '0x00000095',
+                                                        'debug_name': 'GigabitEthernet0/1/0',
+                                                        'defer_obj_refcnt': 0,
+                                                        'interf_name': 'GigabitEthernet0/1/0',
+                                                        'lic_throughput_oversub_drops_bytes': 0,
+                                                        'lic_throughput_oversub_drops_packets': 0,
+                                                        'max': 0,
+                                                        'max_dflt': 0,
+                                                        'max_qos': 0,
+                                                        'min': 105000000,
+                                                        'min_dflt': 0,
+                                                        'min_qos': 0,
+                                                        'orig_max': 0,
+                                                        'orig_min': 0,
+                                                        'parent_sid': '0x271',
+                                                        'plevel': 0,
+                                                        'port_uidb': 245745,
+                                                        'priority': 65535,
+                                                        'qlimit_bytes': 3281312,
+                                                        'queue_depth_bytes': 0,
+                                                        'queue_id': '0x95',
+                                                        'share': 1,
+                                                        'sw_flags': '0x08000011',
+                                                        'sw_state': '0x00000c01',
+                                                        'tail_drops_bytes': 0,
+                                                        'tail_drops_packets': 0,
+                                                        'total_enqs_bytes': 0,
+                                                        'total_enqs_packets': 0,
+                                                        'wred': '0x88b169b2'}},
+                                        'num_queues': 1,
+                                        'qfp': '0.0'},
+               'GigabitEthernet0/1/1': {'if_h': 16,
+                                        'index': {'0': {'cache_queue_id': '0x00000096',
+                                                        'debug_name': 'GigabitEthernet0/1/1',
+                                                        'defer_obj_refcnt': 0,
+                                                        'interf_name': 'GigabitEthernet0/1/1',
+                                                        'lic_throughput_oversub_drops_bytes': 0,
+                                                        'lic_throughput_oversub_drops_packets': 0,
+                                                        'max': 0,
+                                                        'max_dflt': 0,
+                                                        'max_qos': 0,
+                                                        'min': 105000000,
+                                                        'min_dflt': 0,
+                                                        'min_qos': 0,
+                                                        'orig_max': 0,
+                                                        'orig_min': 0,
+                                                        'parent_sid': '0x272',
+                                                        'plevel': 0,
+                                                        'port_uidb': 245744,
+                                                        'priority': 65535,
+                                                        'qlimit_bytes': 3281312,
+                                                        'queue_depth_bytes': 0,
+                                                        'queue_id': '0x96',
+                                                        'share': 1,
+                                                        'sw_flags': '0x08000011',
+                                                        'sw_state': '0x00000c01',
+                                                        'tail_drops_bytes': 0,
+                                                        'tail_drops_packets': 0,
+                                                        'total_enqs_bytes': 0,
+                                                        'total_enqs_packets': 0,
+                                                        'wred': '0x88b169c2'}},
+                                        'num_queues': 1,
+                                        'qfp': '0.0'},
+               'GigabitEthernet0/1/2': {'if_h': 17,
+                                        'index': {'0': {'cache_queue_id': '0x00000097',
+                                                        'debug_name': 'GigabitEthernet0/1/2',
+                                                        'defer_obj_refcnt': 0,
+                                                        'interf_name': 'GigabitEthernet0/1/2',
+                                                        'lic_throughput_oversub_drops_bytes': 0,
+                                                        'lic_throughput_oversub_drops_packets': 0,
+                                                        'max': 0,
+                                                        'max_dflt': 0,
+                                                        'max_qos': 0,
+                                                        'min': 105000000,
+                                                        'min_dflt': 0,
+                                                        'min_qos': 0,
+                                                        'orig_max': 0,
+                                                        'orig_min': 0,
+                                                        'parent_sid': '0x273',
+                                                        'plevel': 0,
+                                                        'port_uidb': 245743,
+                                                        'priority': 65535,
+                                                        'qlimit_bytes': 3281312,
+                                                        'queue_depth_bytes': 0,
+                                                        'queue_id': '0x97',
+                                                        'share': 1,
+                                                        'sw_flags': '0x08000011',
+                                                        'sw_state': '0x00000c01',
+                                                        'tail_drops_bytes': 0,
+                                                        'tail_drops_packets': 0,
+                                                        'total_enqs_bytes': 0,
+                                                        'total_enqs_packets': 0,
+                                                        'wred': '0x88b169d2'}},
+                                        'num_queues': 1,
+                                        'qfp': '0.0'},
+               'GigabitEthernet0/1/3': {'if_h': 18,
+                                        'index': {'0': {'cache_queue_id': '0x00000098',
+                                                        'debug_name': 'GigabitEthernet0/1/3',
+                                                        'defer_obj_refcnt': 0,
+                                                        'interf_name': 'GigabitEthernet0/1/3',
+                                                        'lic_throughput_oversub_drops_bytes': 0,
+                                                        'lic_throughput_oversub_drops_packets': 0,
+                                                        'max': 0,
+                                                        'max_dflt': 0,
+                                                        'max_qos': 0,
+                                                        'min': 105000000,
+                                                        'min_dflt': 0,
+                                                        'min_qos': 0,
+                                                        'orig_max': 0,
+                                                        'orig_min': 0,
+                                                        'parent_sid': '0x274',
+                                                        'plevel': 0,
+                                                        'port_uidb': 245742,
+                                                        'priority': 65535,
+                                                        'qlimit_bytes': 3281312,
+                                                        'queue_depth_bytes': 0,
+                                                        'queue_id': '0x98',
+                                                        'share': 1,
+                                                        'sw_flags': '0x08000011',
+                                                        'sw_state': '0x00000c01',
+                                                        'tail_drops_bytes': 0,
+                                                        'tail_drops_packets': 0,
+                                                        'total_enqs_bytes': 0,
+                                                        'total_enqs_packets': 0,
+                                                        'wred': '0x88b169e2'}},
+                                        'num_queues': 1,
+                                        'qfp': '0.0'},
+               'GigabitEthernet0/1/4': {'if_h': 19,
+                                        'index': {'0': {'cache_queue_id': '0x00000099',
+                                                        'debug_name': 'GigabitEthernet0/1/4',
+                                                        'defer_obj_refcnt': 0,
+                                                        'interf_name': 'GigabitEthernet0/1/4',
+                                                        'lic_throughput_oversub_drops_bytes': 0,
+                                                        'lic_throughput_oversub_drops_packets': 0,
+                                                        'max': 0,
+                                                        'max_dflt': 0,
+                                                        'max_qos': 0,
+                                                        'min': 105000000,
+                                                        'min_dflt': 0,
+                                                        'min_qos': 0,
+                                                        'orig_max': 0,
+                                                        'orig_min': 0,
+                                                        'parent_sid': '0x275',
+                                                        'plevel': 0,
+                                                        'port_uidb': 245741,
+                                                        'priority': 65535,
+                                                        'qlimit_bytes': 3281312,
+                                                        'queue_depth_bytes': 0,
+                                                        'queue_id': '0x99',
+                                                        'share': 1,
+                                                        'sw_flags': '0x08000011',
+                                                        'sw_state': '0x00000c01',
+                                                        'tail_drops_bytes': 0,
+                                                        'tail_drops_packets': 0,
+                                                        'total_enqs_bytes': 0,
+                                                        'total_enqs_packets': 0,
+                                                        'wred': '0x88b169f2'}},
+                                        'num_queues': 1,
+                                        'qfp': '0.0'},
+               'GigabitEthernet0/1/5': {'if_h': 20,
+                                        'index': {'0': {'cache_queue_id': '0x0000009a',
+                                                        'debug_name': 'GigabitEthernet0/1/5',
+                                                        'defer_obj_refcnt': 0,
+                                                        'interf_name': 'GigabitEthernet0/1/5',
+                                                        'lic_throughput_oversub_drops_bytes': 0,
+                                                        'lic_throughput_oversub_drops_packets': 0,
+                                                        'max': 0,
+                                                        'max_dflt': 0,
+                                                        'max_qos': 0,
+                                                        'min': 105000000,
+                                                        'min_dflt': 0,
+                                                        'min_qos': 0,
+                                                        'orig_max': 0,
+                                                        'orig_min': 0,
+                                                        'parent_sid': '0x276',
+                                                        'plevel': 0,
+                                                        'port_uidb': 245740,
+                                                        'priority': 65535,
+                                                        'qlimit_bytes': 3281312,
+                                                        'queue_depth_bytes': 0,
+                                                        'queue_id': '0x9a',
+                                                        'share': 1,
+                                                        'sw_flags': '0x08000011',
+                                                        'sw_state': '0x00000c01',
+                                                        'tail_drops_bytes': 0,
+                                                        'tail_drops_packets': 0,
+                                                        'total_enqs_bytes': 0,
+                                                        'total_enqs_packets': 0,
+                                                        'wred': '0x88b16a02'}},
+                                        'num_queues': 1,
+                                        'qfp': '0.0'},
+               'GigabitEthernet0/1/6': {'if_h': 21,
+                                        'index': {'0': {'cache_queue_id': '0x0000009b',
+                                                        'debug_name': 'GigabitEthernet0/1/6',
+                                                        'defer_obj_refcnt': 0,
+                                                        'interf_name': 'GigabitEthernet0/1/6',
+                                                        'lic_throughput_oversub_drops_bytes': 0,
+                                                        'lic_throughput_oversub_drops_packets': 0,
+                                                        'max': 0,
+                                                        'max_dflt': 0,
+                                                        'max_qos': 0,
+                                                        'min': 105000000,
+                                                        'min_dflt': 0,
+                                                        'min_qos': 0,
+                                                        'orig_max': 0,
+                                                        'orig_min': 0,
+                                                        'parent_sid': '0x278',
+                                                        'plevel': 0,
+                                                        'port_uidb': 245739,
+                                                        'priority': 65535,
+                                                        'qlimit_bytes': 3281312,
+                                                        'queue_depth_bytes': 0,
+                                                        'queue_id': '0x9b',
+                                                        'share': 1,
+                                                        'sw_flags': '0x08000011',
+                                                        'sw_state': '0x00000c01',
+                                                        'tail_drops_bytes': 0,
+                                                        'tail_drops_packets': 0,
+                                                        'total_enqs_bytes': 0,
+                                                        'total_enqs_packets': 0,
+                                                        'wred': '0x88b16a12'}},
+                                        'num_queues': 1,
+                                        'qfp': '0.0'},
+               'GigabitEthernet0/1/7': {'if_h': 22,
+                                        'index': {'0': {'cache_queue_id': '0x0000009c',
+                                                        'debug_name': 'GigabitEthernet0/1/7',
+                                                        'defer_obj_refcnt': 0,
+                                                        'interf_name': 'GigabitEthernet0/1/7',
+                                                        'lic_throughput_oversub_drops_bytes': 0,
+                                                        'lic_throughput_oversub_drops_packets': 0,
+                                                        'max': 0,
+                                                        'max_dflt': 0,
+                                                        'max_qos': 0,
+                                                        'min': 105000000,
+                                                        'min_dflt': 0,
+                                                        'min_qos': 0,
+                                                        'orig_max': 0,
+                                                        'orig_min': 0,
+                                                        'parent_sid': '0x279',
+                                                        'plevel': 0,
+                                                        'port_uidb': 245738,
+                                                        'priority': 65535,
+                                                        'qlimit_bytes': 3281312,
+                                                        'queue_depth_bytes': 0,
+                                                        'queue_id': '0x9c',
+                                                        'share': 1,
+                                                        'sw_flags': '0x08000011',
+                                                        'sw_state': '0x00000c01',
+                                                        'tail_drops_bytes': 0,
+                                                        'tail_drops_packets': 0,
+                                                        'total_enqs_bytes': 0,
+                                                        'total_enqs_packets': 0,
+                                                        'wred': '0x88b16a22'}},
+                                        'num_queues': 1,
+                                        'qfp': '0.0'},
+               'GigabitEthernet1/0/0': {'if_h': 25,
+                                        'index': {'0': {'cache_queue_id': '0x0000009f',
+                                                        'debug_name': 'GigabitEthernet1/0/0',
+                                                        'defer_obj_refcnt': 0,
+                                                        'interf_name': 'GigabitEthernet1/0/0',
+                                                        'lic_throughput_oversub_drops_bytes': 0,
+                                                        'lic_throughput_oversub_drops_packets': 0,
+                                                        'max': 0,
+                                                        'max_dflt': 0,
+                                                        'max_qos': 0,
+                                                        'min': 105000000,
+                                                        'min_dflt': 0,
+                                                        'min_qos': 0,
+                                                        'orig_max': 0,
+                                                        'orig_min': 0,
+                                                        'parent_sid': '0x27c',
+                                                        'plevel': 0,
+                                                        'port_uidb': 245735,
+                                                        'priority': 65535,
+                                                        'qlimit_bytes': 3281312,
+                                                        'queue_depth_bytes': 0,
+                                                        'queue_id': '0x9f',
+                                                        'share': 1,
+                                                        'sw_flags': '0x08000011',
+                                                        'sw_state': '0x00000c01',
+                                                        'tail_drops_bytes': 0,
+                                                        'tail_drops_packets': 0,
+                                                        'total_enqs_bytes': 0,
+                                                        'total_enqs_packets': 0,
+                                                        'wred': '0x88b16a52'}},
+                                        'num_queues': 1,
+                                        'qfp': '0.0'},
+               'GigabitEthernet1/0/1': {'if_h': 26,
+                                        'index': {'0': {'cache_queue_id': '0x000000a0',
+                                                        'debug_name': 'GigabitEthernet1/0/1',
+                                                        'defer_obj_refcnt': 0,
+                                                        'interf_name': 'GigabitEthernet1/0/1',
+                                                        'lic_throughput_oversub_drops_bytes': 0,
+                                                        'lic_throughput_oversub_drops_packets': 0,
+                                                        'max': 0,
+                                                        'max_dflt': 0,
+                                                        'max_qos': 0,
+                                                        'min': 105000000,
+                                                        'min_dflt': 0,
+                                                        'min_qos': 0,
+                                                        'orig_max': 0,
+                                                        'orig_min': 0,
+                                                        'parent_sid': '0x27d',
+                                                        'plevel': 0,
+                                                        'port_uidb': 245734,
+                                                        'priority': 65535,
+                                                        'qlimit_bytes': 3281312,
+                                                        'queue_depth_bytes': 0,
+                                                        'queue_id': '0xa0',
+                                                        'share': 1,
+                                                        'sw_flags': '0x08000011',
+                                                        'sw_state': '0x00000c01',
+                                                        'tail_drops_bytes': 0,
+                                                        'tail_drops_packets': 0,
+                                                        'total_enqs_bytes': 0,
+                                                        'total_enqs_packets': 0,
+                                                        'wred': '0x88b16a62'}},
+                                        'num_queues': 1,
+                                        'qfp': '0.0'},
+               'GigabitEthernet1/0/2': {'if_h': 27,
+                                        'index': {'0': {'cache_queue_id': '0x000000a1',
+                                                        'debug_name': 'GigabitEthernet1/0/2',
+                                                        'defer_obj_refcnt': 0,
+                                                        'interf_name': 'GigabitEthernet1/0/2',
+                                                        'lic_throughput_oversub_drops_bytes': 0,
+                                                        'lic_throughput_oversub_drops_packets': 0,
+                                                        'max': 0,
+                                                        'max_dflt': 0,
+                                                        'max_qos': 0,
+                                                        'min': 105000000,
+                                                        'min_dflt': 0,
+                                                        'min_qos': 0,
+                                                        'orig_max': 0,
+                                                        'orig_min': 0,
+                                                        'parent_sid': '0x27e',
+                                                        'plevel': 0,
+                                                        'port_uidb': 245733,
+                                                        'priority': 65535,
+                                                        'qlimit_bytes': 3281312,
+                                                        'queue_depth_bytes': 0,
+                                                        'queue_id': '0xa1',
+                                                        'share': 1,
+                                                        'sw_flags': '0x08000011',
+                                                        'sw_state': '0x00000c01',
+                                                        'tail_drops_bytes': 0,
+                                                        'tail_drops_packets': 0,
+                                                        'total_enqs_bytes': 0,
+                                                        'total_enqs_packets': 0,
+                                                        'wred': '0x88b16a72'}},
+                                        'num_queues': 1,
+                                        'qfp': '0.0'},
+               'GigabitEthernet1/0/3': {'if_h': 28,
+                                        'index': {'0': {'cache_queue_id': '0x000000a2',
+                                                        'debug_name': 'GigabitEthernet1/0/3',
+                                                        'defer_obj_refcnt': 0,
+                                                        'interf_name': 'GigabitEthernet1/0/3',
+                                                        'lic_throughput_oversub_drops_bytes': 0,
+                                                        'lic_throughput_oversub_drops_packets': 0,
+                                                        'max': 0,
+                                                        'max_dflt': 0,
+                                                        'max_qos': 0,
+                                                        'min': 105000000,
+                                                        'min_dflt': 0,
+                                                        'min_qos': 0,
+                                                        'orig_max': 0,
+                                                        'orig_min': 0,
+                                                        'parent_sid': '0x280',
+                                                        'plevel': 0,
+                                                        'port_uidb': 245732,
+                                                        'priority': 65535,
+                                                        'qlimit_bytes': 3281312,
+                                                        'queue_depth_bytes': 0,
+                                                        'queue_id': '0xa2',
+                                                        'share': 1,
+                                                        'sw_flags': '0x08000011',
+                                                        'sw_state': '0x00000c01',
+                                                        'tail_drops_bytes': 0,
+                                                        'tail_drops_packets': 0,
+                                                        'total_enqs_bytes': 0,
+                                                        'total_enqs_packets': 0,
+                                                        'wred': '0x88b16a82'}},
+                                        'num_queues': 1,
+                                        'qfp': '0.0'},
+               'GigabitEthernet1/0/4': {'if_h': 29,
+                                        'index': {'0': {'cache_queue_id': '0x000000a3',
+                                                        'debug_name': 'GigabitEthernet1/0/4',
+                                                        'defer_obj_refcnt': 0,
+                                                        'interf_name': 'GigabitEthernet1/0/4',
+                                                        'lic_throughput_oversub_drops_bytes': 0,
+                                                        'lic_throughput_oversub_drops_packets': 0,
+                                                        'max': 0,
+                                                        'max_dflt': 0,
+                                                        'max_qos': 0,
+                                                        'min': 105000000,
+                                                        'min_dflt': 0,
+                                                        'min_qos': 0,
+                                                        'orig_max': 0,
+                                                        'orig_min': 0,
+                                                        'parent_sid': '0x281',
+                                                        'plevel': 0,
+                                                        'port_uidb': 245731,
+                                                        'priority': 65535,
+                                                        'qlimit_bytes': 3281312,
+                                                        'queue_depth_bytes': 0,
+                                                        'queue_id': '0xa3',
+                                                        'share': 1,
+                                                        'sw_flags': '0x08000011',
+                                                        'sw_state': '0x00000c01',
+                                                        'tail_drops_bytes': 0,
+                                                        'tail_drops_packets': 0,
+                                                        'total_enqs_bytes': 0,
+                                                        'total_enqs_packets': 0,
+                                                        'wred': '0x88b16a92'}},
+                                        'num_queues': 1,
+                                        'qfp': '0.0'},
+               'GigabitEthernet1/0/5': {'if_h': 30,
+                                        'index': {'0': {'cache_queue_id': '0x000000a4',
+                                                        'debug_name': 'GigabitEthernet1/0/5',
+                                                        'defer_obj_refcnt': 0,
+                                                        'interf_name': 'GigabitEthernet1/0/5',
+                                                        'lic_throughput_oversub_drops_bytes': 0,
+                                                        'lic_throughput_oversub_drops_packets': 0,
+                                                        'max': 0,
+                                                        'max_dflt': 0,
+                                                        'max_qos': 0,
+                                                        'min': 105000000,
+                                                        'min_dflt': 0,
+                                                        'min_qos': 0,
+                                                        'orig_max': 0,
+                                                        'orig_min': 0,
+                                                        'parent_sid': '0x282',
+                                                        'plevel': 0,
+                                                        'port_uidb': 245730,
+                                                        'priority': 65535,
+                                                        'qlimit_bytes': 3281312,
+                                                        'queue_depth_bytes': 0,
+                                                        'queue_id': '0xa4',
+                                                        'share': 1,
+                                                        'sw_flags': '0x08000011',
+                                                        'sw_state': '0x00000c01',
+                                                        'tail_drops_bytes': 0,
+                                                        'tail_drops_packets': 0,
+                                                        'total_enqs_bytes': 0,
+                                                        'total_enqs_packets': 0,
+                                                        'wred': '0x88b16aa2'}},
+                                        'num_queues': 1,
+                                        'qfp': '0.0'},
+               'GigabitEthernet1/0/6': {'if_h': 31,
+                                        'index': {'0': {'cache_queue_id': '0x000000a5',
+                                                        'debug_name': 'GigabitEthernet1/0/6',
+                                                        'defer_obj_refcnt': 0,
+                                                        'interf_name': 'GigabitEthernet1/0/6',
+                                                        'lic_throughput_oversub_drops_bytes': 0,
+                                                        'lic_throughput_oversub_drops_packets': 0,
+                                                        'max': 0,
+                                                        'max_dflt': 0,
+                                                        'max_qos': 0,
+                                                        'min': 105000000,
+                                                        'min_dflt': 0,
+                                                        'min_qos': 0,
+                                                        'orig_max': 0,
+                                                        'orig_min': 0,
+                                                        'parent_sid': '0x283',
+                                                        'plevel': 0,
+                                                        'port_uidb': 245729,
+                                                        'priority': 65535,
+                                                        'qlimit_bytes': 3281312,
+                                                        'queue_depth_bytes': 0,
+                                                        'queue_id': '0xa5',
+                                                        'share': 1,
+                                                        'sw_flags': '0x08000011',
+                                                        'sw_state': '0x00000c01',
+                                                        'tail_drops_bytes': 0,
+                                                        'tail_drops_packets': 0,
+                                                        'total_enqs_bytes': 0,
+                                                        'total_enqs_packets': 0,
+                                                        'wred': '0x88b16ab2'}},
+                                        'num_queues': 1,
+                                        'qfp': '0.0'},
+               'GigabitEthernet1/0/7': {'if_h': 32,
+                                        'index': {'0': {'cache_queue_id': '0x000000a6',
+                                                        'debug_name': 'GigabitEthernet1/0/7',
+                                                        'defer_obj_refcnt': 0,
+                                                        'interf_name': 'GigabitEthernet1/0/7',
+                                                        'lic_throughput_oversub_drops_bytes': 0,
+                                                        'lic_throughput_oversub_drops_packets': 0,
+                                                        'max': 0,
+                                                        'max_dflt': 0,
+                                                        'max_qos': 0,
+                                                        'min': 105000000,
+                                                        'min_dflt': 0,
+                                                        'min_qos': 0,
+                                                        'orig_max': 0,
+                                                        'orig_min': 0,
+                                                        'parent_sid': '0x284',
+                                                        'plevel': 0,
+                                                        'port_uidb': 245728,
+                                                        'priority': 65535,
+                                                        'qlimit_bytes': 3281312,
+                                                        'queue_depth_bytes': 0,
+                                                        'queue_id': '0xa6',
+                                                        'share': 1,
+                                                        'sw_flags': '0x08000011',
+                                                        'sw_state': '0x00000c01',
+                                                        'tail_drops_bytes': 0,
+                                                        'tail_drops_packets': 0,
+                                                        'total_enqs_bytes': 0,
+                                                        'total_enqs_packets': 0,
+                                                        'wred': '0x88b16ac2'}},
+                                        'num_queues': 1,
+                                        'qfp': '0.0'},
+               'Loopback0': {'if_h': 33, 'num_queues': 0, 'qfp': '0.0'},
+               'Loopback2': {'if_h': 34, 'num_queues': 0, 'qfp': '0.0'},
+               'Null0': {'if_h': 6, 'num_queues': 0, 'qfp': '0.0'},
+               'TenGigabitEthernet0/2/0': {'if_h': 23,
+                                           'index': {'0': {'cache_queue_id': '0x0000009d',
+                                                           'debug_name': 'TenGigabitEthernet0/2/0',
+                                                           'defer_obj_refcnt': 0,
+                                                           'interf_name': 'TenGigabitEthernet0/2/0',
+                                                           'lic_throughput_oversub_drops_bytes': 0,
+                                                           'lic_throughput_oversub_drops_packets': 0,
+                                                           'max': 0,
+                                                           'max_dflt': 0,
+                                                           'max_qos': 0,
+                                                           'min': 1050000000,
+                                                           'min_dflt': 0,
+                                                           'min_qos': 0,
+                                                           'orig_max': 0,
+                                                           'orig_min': 0,
+                                                           'parent_sid': '0x27a',
+                                                           'plevel': 0,
+                                                           'port_uidb': 245737,
+                                                           'priority': 65535,
+                                                           'qlimit_bytes': 32812544,
+                                                           'queue_depth_bytes': 0,
+                                                           'queue_id': '0x9d',
+                                                           'share': 1,
+                                                           'sw_flags': '0x08000011',
+                                                           'sw_state': '0x00000c01',
+                                                           'tail_drops_bytes': 0,
+                                                           'tail_drops_packets': 0,
+                                                           'total_enqs_bytes': 0,
+                                                           'total_enqs_packets': 0,
+                                                           'wred': '0x88b16a32'}},
+                                           'num_queues': 1,
+                                           'qfp': '0.0'},
+               'TenGigabitEthernet0/3/0': {'if_h': 24,
+                                           'index': {'0': {'cache_queue_id': '0x0000009e',
+                                                           'debug_name': 'TenGigabitEthernet0/3/0',
+                                                           'defer_obj_refcnt': 0,
+                                                           'interf_name': 'TenGigabitEthernet0/3/0',
+                                                           'lic_throughput_oversub_drops_bytes': 0,
+                                                           'lic_throughput_oversub_drops_packets': 0,
+                                                           'max': 0,
+                                                           'max_dflt': 0,
+                                                           'max_qos': 0,
+                                                           'min': 1050000000,
+                                                           'min_dflt': 0,
+                                                           'min_qos': 0,
+                                                           'orig_max': 0,
+                                                           'orig_min': 0,
+                                                           'parent_sid': '0x27b',
+                                                           'plevel': 0,
+                                                           'port_uidb': 245736,
+                                                           'priority': 65535,
+                                                           'qlimit_bytes': 32812544,
+                                                           'queue_depth_bytes': 0,
+                                                           'queue_id': '0x9e',
+                                                           'share': 1,
+                                                           'sw_flags': '0x08000011',
+                                                           'sw_state': '0x00000c01',
+                                                           'tail_drops_bytes': 0,
+                                                           'tail_drops_packets': 0,
+                                                           'total_enqs_bytes': 0,
+                                                           'total_enqs_packets': 0,
+                                                           'wred': '0x88b16a42'}},
+                                           'num_queues': 1,
+                                           'qfp': '0.0'},
+               'VPLS-2320.1020896': {'if_h': 4260,
+                                     'num_queues': 0,
+                                     'qfp': '0.0'},
+               'VPLS-2321.1020897': {'if_h': 4261,
+                                     'num_queues': 0,
+                                     'qfp': '0.0'},
+               'VPLS-2322.1020898': {'if_h': 4262,
+                                     'num_queues': 0,
+                                     'qfp': '0.0'},
+               'VPLS-2816.102080a': {'if_h': 4120,
+                                     'num_queues': 0,
+                                     'qfp': '0.0'},
+               'VPLS-2817.102080b': {'if_h': 4121,
+                                     'num_queues': 0,
+                                     'qfp': '0.0'},
+               'VPLS-2818.102080c': {'if_h': 4122,
+                                     'num_queues': 0,
+                                     'qfp': '0.0'},
+               'VPLS-2819.102080d': {'if_h': 4123,
+                                     'num_queues': 0,
+                                     'qfp': '0.0'},
+               'VPLS-2820.102080e': {'if_h': 4124,
+                                     'num_queues': 0,
+                                     'qfp': '0.0'},
+               'VPLS-2944.10207e2': {'if_h': 4080,
+                                     'num_queues': 0,
+                                     'qfp': '0.0'},
+               'VPLS-2945.10207e3': {'if_h': 4081,
+                                     'num_queues': 0,
+                                     'qfp': '0.0'},
+               'VPLS-2946.10207e4': {'if_h': 4082,
+                                     'num_queues': 0,
+                                     'qfp': '0.0'},
+               'VPLS-2974.10207fb': {'if_h': 4105,
+                                     'num_queues': 0,
+                                     'qfp': '0.0'},
+               'VPLS-2975.10207fc': {'if_h': 4106,
+                                     'num_queues': 0,
+                                     'qfp': '0.0'},
+               'VPLS-3049.1020890': {'if_h': 4254,
+                                     'num_queues': 0,
+                                     'qfp': '0.0'},
+               'VPLS-3050.1020891': {'if_h': 4255,
+                                     'num_queues': 0,
+                                     'qfp': '0.0'},
+               'VPLS_maint.1020a6b': {'if_h': 4729,
+                                      'num_queues': 0,
+                                      'qfp': '0.0'},
+               'internal0/0/crypto:0': {'if_h': 4,
+                                        'index': {'0': {'cache_queue_id': '0x0000008b',
+                                                        'debug_name': 'i2l_if_4_cpp_0_prio0',
+                                                        'defer_obj_refcnt': 0,
+                                                        'interf_name': 'i2l_if_4_cpp_0_prio0',
+                                                        'lic_throughput_oversub_drops_bytes': 0,
+                                                        'lic_throughput_oversub_drops_packets': 0,
+                                                        'max': 0,
+                                                        'max_dflt': 0,
+                                                        'max_qos': 0,
+                                                        'min': 0,
+                                                        'min_dflt': 0,
+                                                        'min_qos': 0,
+                                                        'orig_max': 0,
+                                                        'orig_min': 0,
+                                                        'parent_sid': '0x265',
+                                                        'plevel': 0,
+                                                        'port_uidb': 245756,
+                                                        'priority': 65535,
+                                                        'qlimit_bytes': 80000064,
+                                                        'queue_depth_bytes': 0,
+                                                        'queue_id': '0x8b',
+                                                        'share': 1,
+                                                        'sw_flags': '0x08001001',
+                                                        'sw_state': '0x00000c01',
+                                                        'tail_drops_bytes': 0,
+                                                        'tail_drops_packets': 0,
+                                                        'total_enqs_bytes': 0,
+                                                        'total_enqs_packets': 0,
+                                                        'wred': '0x88b168f1'},
+                                                  '1': {'cache_queue_id': '0x0000008c',
+                                                        'debug_name': 'i2l_if_4_cpp_0_prio1',
+                                                        'defer_obj_refcnt': 0,
+                                                        'interf_name': 'i2l_if_4_cpp_0_prio1',
+                                                        'lic_throughput_oversub_drops_bytes': 0,
+                                                        'lic_throughput_oversub_drops_packets': 0,
+                                                        'max': 0,
+                                                        'max_dflt': 0,
+                                                        'max_qos': 0,
+                                                        'min': 0,
+                                                        'min_dflt': 0,
+                                                        'min_qos': 0,
+                                                        'orig_max': 0,
+                                                        'orig_min': 0,
+                                                        'parent_sid': '0x266',
+                                                        'plevel': 1,
+                                                        'port_uidb': 245756,
+                                                        'priority': 0,
+                                                        'qlimit_bytes': 80000064,
+                                                        'queue_depth_bytes': 0,
+                                                        'queue_id': '0x8c',
+                                                        'share': 0,
+                                                        'sw_flags': '0x18001001',
+                                                        'sw_state': '0x00000c01',
+                                                        'tail_drops_bytes': 0,
+                                                        'tail_drops_packets': 0,
+                                                        'total_enqs_bytes': 0,
+                                                        'total_enqs_packets': 0,
+                                                        'wred': '0x88b16901'}},
+                                        'num_queues': 2,
+                                        'qfp': '0.0'},
+               'internal0/0/recycle:0': {'if_h': 1,
+                                         'num_queues': 0,
+                                         'qfp': '0.0'},
+               'internal0/0/rp:0': {'if_h': 2,
+                                    'index': {'0': {'cache_queue_id': '0x00000087',
+                                                    'debug_name': 'i2l_if_2_cpp_0_prio0',
+                                                    'defer_obj_refcnt': 0,
+                                                    'interf_name': 'i2l_if_2_cpp_0_prio0',
+                                                    'lic_throughput_oversub_drops_bytes': 0,
+                                                    'lic_throughput_oversub_drops_packets': 0,
+                                                    'max': 0,
+                                                    'max_dflt': 0,
+                                                    'max_qos': 0,
+                                                    'min': 0,
+                                                    'min_dflt': 0,
+                                                    'min_qos': 0,
+                                                    'orig_max': 0,
+                                                    'orig_min': 0,
+                                                    'parent_sid': '0x263',
+                                                    'plevel': 0,
+                                                    'port_uidb': 245758,
+                                                    'priority': 65535,
+                                                    'qlimit_bytes': 3125056,
+                                                    'queue_depth_bytes': 0,
+                                                    'queue_id': '0x87',
+                                                    'share': 1,
+                                                    'sw_flags': '0x08000001',
+                                                    'sw_state': '0x00000c01',
+                                                    'tail_drops_bytes': 0,
+                                                    'tail_drops_packets': 0,
+                                                    'total_enqs_bytes': 294475395,
+                                                    'total_enqs_packets': 4297477,
+                                                    'wred': '0x88b16872'},
+                                              '1': {'cache_queue_id': '0x00000088',
+                                                    'debug_name': 'i2l_if_2_cpp_0_prio1',
+                                                    'defer_obj_refcnt': 0,
+                                                    'interf_name': 'i2l_if_2_cpp_0_prio1',
+                                                    'lic_throughput_oversub_drops_bytes': 0,
+                                                    'lic_throughput_oversub_drops_packets': 0,
+                                                    'max': 0,
+                                                    'max_dflt': 0,
+                                                    'max_qos': 0,
+                                                    'min': 0,
+                                                    'min_dflt': 0,
+                                                    'min_qos': 0,
+                                                    'orig_max': 0,
+                                                    'orig_min': 0,
+                                                    'parent_sid': '0x263',
+                                                    'plevel': 1,
+                                                    'port_uidb': 245758,
+                                                    'priority': 0,
+                                                    'qlimit_bytes': 3125056,
+                                                    'queue_depth_bytes': 0,
+                                                    'queue_id': '0x88',
+                                                    'share': 0,
+                                                    'sw_flags': '0x18000001',
+                                                    'sw_state': '0x00000c01',
+                                                    'tail_drops_bytes': 0,
+                                                    'tail_drops_packets': 0,
+                                                    'total_enqs_bytes': 203225236,
+                                                    'total_enqs_packets': 1201820,
+                                                    'wred': '0x88b16882'}},
+                                    'num_queues': 2,
+                                    'qfp': '0.0'},
+               'internal0/0/rp:1': {'if_h': 3,
+                                    'index': {'0': {'cache_queue_id': '0x00000089',
+                                                    'debug_name': 'i2l_if_3_cpp_0_prio0',
+                                                    'defer_obj_refcnt': 0,
+                                                    'interf_name': 'i2l_if_3_cpp_0_prio0',
+                                                    'lic_throughput_oversub_drops_bytes': 0,
+                                                    'lic_throughput_oversub_drops_packets': 0,
+                                                    'max': 0,
+                                                    'max_dflt': 0,
+                                                    'max_qos': 0,
+                                                    'min': 0,
+                                                    'min_dflt': 0,
+                                                    'min_qos': 0,
+                                                    'orig_max': 0,
+                                                    'orig_min': 0,
+                                                    'parent_sid': '0x264',
+                                                    'plevel': 0,
+                                                    'port_uidb': 245757,
+                                                    'priority': 65535,
+                                                    'qlimit_bytes': 3125056,
+                                                    'queue_depth_bytes': 0,
+                                                    'queue_id': '0x89',
+                                                    'share': 1,
+                                                    'sw_flags': '0x08000001',
+                                                    'sw_state': '0x00000c01',
+                                                    'tail_drops_bytes': 0,
+                                                    'tail_drops_packets': 0,
+                                                    'total_enqs_bytes': 46447411,
+                                                    'total_enqs_packets': 670805,
+                                                    'wred': '0x88b168b2'},
+                                              '1': {'cache_queue_id': '0x0000008a',
+                                                    'debug_name': 'i2l_if_3_cpp_0_prio1',
+                                                    'defer_obj_refcnt': 0,
+                                                    'interf_name': 'i2l_if_3_cpp_0_prio1',
+                                                    'lic_throughput_oversub_drops_bytes': 0,
+                                                    'lic_throughput_oversub_drops_packets': 0,
+                                                    'max': 0,
+                                                    'max_dflt': 0,
+                                                    'max_qos': 0,
+                                                    'min': 0,
+                                                    'min_dflt': 0,
+                                                    'min_qos': 0,
+                                                    'orig_max': 0,
+                                                    'orig_min': 0,
+                                                    'parent_sid': '0x264',
+                                                    'plevel': 1,
+                                                    'port_uidb': 245757,
+                                                    'priority': 0,
+                                                    'qlimit_bytes': 3125056,
+                                                    'queue_depth_bytes': 0,
+                                                    'queue_id': '0x8a',
+                                                    'share': 0,
+                                                    'sw_flags': '0x18000001',
+                                                    'sw_state': '0x00000c01',
+                                                    'tail_drops_bytes': 0,
+                                                    'tail_drops_packets': 0,
+                                                    'total_enqs_bytes': 269658370,
+                                                    'total_enqs_packets': 1424992,
+                                                    'wred': '0x88b168c2'}},
+                                    'num_queues': 2,
+                                    'qfp': '0.0'}}}
+
+    golden_output_active = {'execute.return_value': '''\
+        Router#    show platform hardware qfp active infrastructure bqs queue output default all
+        Load for five secs: 2%/1%; one minute: 9%; five minutes: 8%
+        Time source is NTP, 07:47:13.438 JST Thu Sep 8 2016
+
+        Interface: internal0/0/recycle:0 QFP: 0.0 if_h: 1 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: internal0/0/rp:0 QFP: 0.0 if_h: 2 Num Queues/Schedules: 2
+          Queue specifics:
+            Index 0 (Queue ID:0x87, Name: i2l_if_2_cpp_0_prio0)
+            Software Control Info:
+              (cache) queue id: 0x00000087, wred: 0x88b16872, qlimit (bytes): 3125056
+              parent_sid: 0x263, debug_name: i2l_if_2_cpp_0_prio0
+              sw_flags: 0x08000001, sw_state: 0x00000c01, port_uidb: 245758
+              orig_min  : 0                   ,      min: 0                   
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 294475395           ,          (packets): 4297477             
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+          Queue specifics:
+            Index 1 (Queue ID:0x88, Name: i2l_if_2_cpp_0_prio1)
+            Software Control Info:
+              (cache) queue id: 0x00000088, wred: 0x88b16882, qlimit (bytes): 3125056
+              parent_sid: 0x263, debug_name: i2l_if_2_cpp_0_prio1
+              sw_flags: 0x18000001, sw_state: 0x00000c01, port_uidb: 245758
+              orig_min  : 0                   ,      min: 0                   
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 0
+              plevel    : 1, priority: 0
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 203225236           ,          (packets): 1201820             
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: internal0/0/rp:1 QFP: 0.0 if_h: 3 Num Queues/Schedules: 2
+          Queue specifics:
+            Index 0 (Queue ID:0x89, Name: i2l_if_3_cpp_0_prio0)
+            Software Control Info:
+              (cache) queue id: 0x00000089, wred: 0x88b168b2, qlimit (bytes): 3125056
+              parent_sid: 0x264, debug_name: i2l_if_3_cpp_0_prio0
+              sw_flags: 0x08000001, sw_state: 0x00000c01, port_uidb: 245757
+              orig_min  : 0                   ,      min: 0                   
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 46447411            ,          (packets): 670805              
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+          Queue specifics:
+            Index 1 (Queue ID:0x8a, Name: i2l_if_3_cpp_0_prio1)
+            Software Control Info:
+              (cache) queue id: 0x0000008a, wred: 0x88b168c2, qlimit (bytes): 3125056
+              parent_sid: 0x264, debug_name: i2l_if_3_cpp_0_prio1
+              sw_flags: 0x18000001, sw_state: 0x00000c01, port_uidb: 245757
+              orig_min  : 0                   ,      min: 0                   
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 0
+              plevel    : 1, priority: 0
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 269658370           ,          (packets): 1424992             
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: internal0/0/crypto:0 QFP: 0.0 if_h: 4 Num Queues/Schedules: 2
+          Queue specifics:
+            Index 0 (Queue ID:0x8b, Name: i2l_if_4_cpp_0_prio0)
+            Software Control Info:
+              (cache) queue id: 0x0000008b, wred: 0x88b168f1, qlimit (bytes): 80000064
+              parent_sid: 0x265, debug_name: i2l_if_4_cpp_0_prio0
+              sw_flags: 0x08001001, sw_state: 0x00000c01, port_uidb: 245756
+              orig_min  : 0                   ,      min: 0                   
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+          Queue specifics:
+            Index 1 (Queue ID:0x8c, Name: i2l_if_4_cpp_0_prio1)
+            Software Control Info:
+              (cache) queue id: 0x0000008c, wred: 0x88b16901, qlimit (bytes): 80000064
+              parent_sid: 0x266, debug_name: i2l_if_4_cpp_0_prio1
+              sw_flags: 0x18001001, sw_state: 0x00000c01, port_uidb: 245756
+              orig_min  : 0                   ,      min: 0                   
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 0
+              plevel    : 1, priority: 0
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: CPP_Null QFP: 0.0 if_h: 5 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: Null0 QFP: 0.0 if_h: 6 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/0 QFP: 0.0 if_h: 7 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x8d, Name: GigabitEthernet0/0/0)
+            Software Control Info:
+              (cache) queue id: 0x0000008d, wred: 0x88b16932, qlimit (bytes): 3281312
+              parent_sid: 0x268, debug_name: GigabitEthernet0/0/0
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245753
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 103120085           ,          (packets): 518314              
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet0/0/1 QFP: 0.0 if_h: 8 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x8e, Name: GigabitEthernet0/0/1)
+            Software Control Info:
+              (cache) queue id: 0x0000008e, wred: 0x88b16942, qlimit (bytes): 3281312
+              parent_sid: 0x269, debug_name: GigabitEthernet0/0/1
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245752
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 649104074           ,          (packets): 7688841             
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet0/0/2 QFP: 0.0 if_h: 9 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x8f, Name: GigabitEthernet0/0/2)
+            Software Control Info:
+              (cache) queue id: 0x0000008f, wred: 0x88b16952, qlimit (bytes): 3281312
+              parent_sid: 0x26a, debug_name: GigabitEthernet0/0/2
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245751
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 779830              ,          (packets): 10261               
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet0/0/3 QFP: 0.0 if_h: 10 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x90, Name: GigabitEthernet0/0/3)
+            Software Control Info:
+              (cache) queue id: 0x00000090, wred: 0x88b16962, qlimit (bytes): 3281312
+              parent_sid: 0x26b, debug_name: GigabitEthernet0/0/3
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245750
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 5698                ,          (packets): 74                  
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet0/0/4 QFP: 0.0 if_h: 11 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x91, Name: GigabitEthernet0/0/4)
+            Software Control Info:
+              (cache) queue id: 0x00000091, wred: 0x88b16972, qlimit (bytes): 3281312
+              parent_sid: 0x26c, debug_name: GigabitEthernet0/0/4
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245749
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 2754752998          ,          (packets): 2765893             
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet0/0/5 QFP: 0.0 if_h: 12 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x92, Name: GigabitEthernet0/0/5)
+            Software Control Info:
+              (cache) queue id: 0x00000092, wred: 0x88b16982, qlimit (bytes): 3281312
+              parent_sid: 0x26d, debug_name: GigabitEthernet0/0/5
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245748
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 2754752998          ,          (packets): 2765893             
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet0/0/6 QFP: 0.0 if_h: 13 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x93, Name: GigabitEthernet0/0/6)
+            Software Control Info:
+              (cache) queue id: 0x00000093, wred: 0x88b16992, qlimit (bytes): 3281312
+              parent_sid: 0x26e, debug_name: GigabitEthernet0/0/6
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245747
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 5998                ,          (packets): 79                  
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet0/0/7 QFP: 0.0 if_h: 14 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x94, Name: GigabitEthernet0/0/7)
+            Software Control Info:
+              (cache) queue id: 0x00000094, wred: 0x88b169a2, qlimit (bytes): 3281312
+              parent_sid: 0x270, debug_name: GigabitEthernet0/0/7
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245746
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet0/1/0 QFP: 0.0 if_h: 15 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x95, Name: GigabitEthernet0/1/0)
+            Software Control Info:
+              (cache) queue id: 0x00000095, wred: 0x88b169b2, qlimit (bytes): 3281312
+              parent_sid: 0x271, debug_name: GigabitEthernet0/1/0
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245745
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet0/1/1 QFP: 0.0 if_h: 16 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x96, Name: GigabitEthernet0/1/1)
+            Software Control Info:
+              (cache) queue id: 0x00000096, wred: 0x88b169c2, qlimit (bytes): 3281312
+              parent_sid: 0x272, debug_name: GigabitEthernet0/1/1
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245744
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet0/1/2 QFP: 0.0 if_h: 17 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x97, Name: GigabitEthernet0/1/2)
+            Software Control Info:
+              (cache) queue id: 0x00000097, wred: 0x88b169d2, qlimit (bytes): 3281312
+              parent_sid: 0x273, debug_name: GigabitEthernet0/1/2
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245743
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet0/1/3 QFP: 0.0 if_h: 18 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x98, Name: GigabitEthernet0/1/3)
+            Software Control Info:
+              (cache) queue id: 0x00000098, wred: 0x88b169e2, qlimit (bytes): 3281312
+              parent_sid: 0x274, debug_name: GigabitEthernet0/1/3
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245742
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet0/1/4 QFP: 0.0 if_h: 19 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x99, Name: GigabitEthernet0/1/4)
+            Software Control Info:
+              (cache) queue id: 0x00000099, wred: 0x88b169f2, qlimit (bytes): 3281312
+              parent_sid: 0x275, debug_name: GigabitEthernet0/1/4
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245741
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet0/1/5 QFP: 0.0 if_h: 20 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x9a, Name: GigabitEthernet0/1/5)
+            Software Control Info:
+              (cache) queue id: 0x0000009a, wred: 0x88b16a02, qlimit (bytes): 3281312
+              parent_sid: 0x276, debug_name: GigabitEthernet0/1/5
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245740
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet0/1/6 QFP: 0.0 if_h: 21 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x9b, Name: GigabitEthernet0/1/6)
+            Software Control Info:
+              (cache) queue id: 0x0000009b, wred: 0x88b16a12, qlimit (bytes): 3281312
+              parent_sid: 0x278, debug_name: GigabitEthernet0/1/6
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245739
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0        
+
+        Interface: GigabitEthernet0/1/7 QFP: 0.0 if_h: 22 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x9c, Name: GigabitEthernet0/1/7)
+            Software Control Info:
+              (cache) queue id: 0x0000009c, wred: 0x88b16a22, qlimit (bytes): 3281312
+              parent_sid: 0x279, debug_name: GigabitEthernet0/1/7
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245738
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: TenGigabitEthernet0/2/0 QFP: 0.0 if_h: 23 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x9d, Name: TenGigabitEthernet0/2/0)
+            Software Control Info:
+              (cache) queue id: 0x0000009d, wred: 0x88b16a32, qlimit (bytes): 32812544
+              parent_sid: 0x27a, debug_name: TenGigabitEthernet0/2/0
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245737
+              orig_min  : 0                   ,      min: 1050000000          
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: TenGigabitEthernet0/3/0 QFP: 0.0 if_h: 24 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x9e, Name: TenGigabitEthernet0/3/0)
+            Software Control Info:
+              (cache) queue id: 0x0000009e, wred: 0x88b16a42, qlimit (bytes): 32812544
+              parent_sid: 0x27b, debug_name: TenGigabitEthernet0/3/0
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245736
+              orig_min  : 0                   ,      min: 1050000000          
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet1/0/0 QFP: 0.0 if_h: 25 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x9f, Name: GigabitEthernet1/0/0)
+            Software Control Info:
+              (cache) queue id: 0x0000009f, wred: 0x88b16a52, qlimit (bytes): 3281312
+              parent_sid: 0x27c, debug_name: GigabitEthernet1/0/0
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245735
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet1/0/1 QFP: 0.0 if_h: 26 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0xa0, Name: GigabitEthernet1/0/1)
+            Software Control Info:
+              (cache) queue id: 0x000000a0, wred: 0x88b16a62, qlimit (bytes): 3281312
+              parent_sid: 0x27d, debug_name: GigabitEthernet1/0/1
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245734
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet1/0/2 QFP: 0.0 if_h: 27 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0xa1, Name: GigabitEthernet1/0/2)
+            Software Control Info:
+              (cache) queue id: 0x000000a1, wred: 0x88b16a72, qlimit (bytes): 3281312
+              parent_sid: 0x27e, debug_name: GigabitEthernet1/0/2
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245733
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet1/0/3 QFP: 0.0 if_h: 28 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0xa2, Name: GigabitEthernet1/0/3)
+            Software Control Info:
+              (cache) queue id: 0x000000a2, wred: 0x88b16a82, qlimit (bytes): 3281312
+              parent_sid: 0x280, debug_name: GigabitEthernet1/0/3
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245732
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet1/0/4 QFP: 0.0 if_h: 29 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0xa3, Name: GigabitEthernet1/0/4)
+            Software Control Info:
+              (cache) queue id: 0x000000a3, wred: 0x88b16a92, qlimit (bytes): 3281312
+              parent_sid: 0x281, debug_name: GigabitEthernet1/0/4
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245731
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet1/0/5 QFP: 0.0 if_h: 30 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0xa4, Name: GigabitEthernet1/0/5)
+            Software Control Info:
+              (cache) queue id: 0x000000a4, wred: 0x88b16aa2, qlimit (bytes): 3281312
+              parent_sid: 0x282, debug_name: GigabitEthernet1/0/5
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245730
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet1/0/6 QFP: 0.0 if_h: 31 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0xa5, Name: GigabitEthernet1/0/6)
+            Software Control Info:
+              (cache) queue id: 0x000000a5, wred: 0x88b16ab2, qlimit (bytes): 3281312
+              parent_sid: 0x283, debug_name: GigabitEthernet1/0/6
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245729
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet1/0/7 QFP: 0.0 if_h: 32 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0xa6, Name: GigabitEthernet1/0/7)
+            Software Control Info:
+              (cache) queue id: 0x000000a6, wred: 0x88b16ac2, qlimit (bytes): 3281312
+              parent_sid: 0x284, debug_name: GigabitEthernet1/0/7
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245728
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: Loopback0 QFP: 0.0 if_h: 33 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: Loopback2 QFP: 0.0 if_h: 34 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.2 QFP: 0.0 if_h: 35 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.EFP2054 QFP: 0.0 if_h: 36 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.11 QFP: 0.0 if_h: 37 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.12 QFP: 0.0 if_h: 38 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.13 QFP: 0.0 if_h: 39 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.14 QFP: 0.0 if_h: 40 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.15 QFP: 0.0 if_h: 41 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.16 QFP: 0.0 if_h: 42 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.17 QFP: 0.0 if_h: 43 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.18 QFP: 0.0 if_h: 44 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.19 QFP: 0.0 if_h: 45 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.20 QFP: 0.0 if_h: 46 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.21 QFP: 0.0 if_h: 47 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.22 QFP: 0.0 if_h: 48 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.23 QFP: 0.0 if_h: 49 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.24 QFP: 0.0 if_h: 50 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.25 QFP: 0.0 if_h: 51 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.26 QFP: 0.0 if_h: 52 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.27 QFP: 0.0 if_h: 53 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.28 QFP: 0.0 if_h: 54 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.29 QFP: 0.0 if_h: 55 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.30 QFP: 0.0 if_h: 56 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.31 QFP: 0.0 if_h: 57 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.32 QFP: 0.0 if_h: 58 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.33 QFP: 0.0 if_h: 59 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.34 QFP: 0.0 if_h: 60 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.35 QFP: 0.0 if_h: 61 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.36 QFP: 0.0 if_h: 62 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.37 QFP: 0.0 if_h: 63 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.38 QFP: 0.0 if_h: 64 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.57 QFP: 0.0 if_h: 83 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.58 QFP: 0.0 if_h: 84 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.59 QFP: 0.0 if_h: 85 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.60 QFP: 0.0 if_h: 86 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.61 QFP: 0.0 if_h: 87 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.62 QFP: 0.0 if_h: 88 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.63 QFP: 0.0 if_h: 89 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.400 QFP: 0.0 if_h: 426 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.401 QFP: 0.0 if_h: 427 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.402 QFP: 0.0 if_h: 428 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.403 QFP: 0.0 if_h: 429 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.404 QFP: 0.0 if_h: 430 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.405 QFP: 0.0 if_h: 431 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.406 QFP: 0.0 if_h: 432 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.407 QFP: 0.0 if_h: 433 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.408 QFP: 0.0 if_h: 434 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.409 QFP: 0.0 if_h: 435 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.410 QFP: 0.0 if_h: 436 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.411 QFP: 0.0 if_h: 437 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.412 QFP: 0.0 if_h: 438 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.413 QFP: 0.0 if_h: 439 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.414 QFP: 0.0 if_h: 440 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.415 QFP: 0.0 if_h: 441 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.416 QFP: 0.0 if_h: 442 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.417 QFP: 0.0 if_h: 443 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.418 QFP: 0.0 if_h: 444 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.419 QFP: 0.0 if_h: 445 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.420 QFP: 0.0 if_h: 446 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.421 QFP: 0.0 if_h: 447 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.422 QFP: 0.0 if_h: 448 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.423 QFP: 0.0 if_h: 449 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.424 QFP: 0.0 if_h: 450 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.425 QFP: 0.0 if_h: 451 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.426 QFP: 0.0 if_h: 452 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.427 QFP: 0.0 if_h: 453 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.428 QFP: 0.0 if_h: 454 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.429 QFP: 0.0 if_h: 455 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.430 QFP: 0.0 if_h: 456 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.431 QFP: 0.0 if_h: 457 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.432 QFP: 0.0 if_h: 458 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.433 QFP: 0.0 if_h: 459 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.434 QFP: 0.0 if_h: 460 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.720 QFP: 0.0 if_h: 746 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.721 QFP: 0.0 if_h: 747 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.722 QFP: 0.0 if_h: 748 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.723 QFP: 0.0 if_h: 749 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.724 QFP: 0.0 if_h: 750 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.725 QFP: 0.0 if_h: 751 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.726 QFP: 0.0 if_h: 752 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.727 QFP: 0.0 if_h: 753 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.728 QFP: 0.0 if_h: 754 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.729 QFP: 0.0 if_h: 755 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.730 QFP: 0.0 if_h: 756 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.731 QFP: 0.0 if_h: 757 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.732 QFP: 0.0 if_h: 758 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.733 QFP: 0.0 if_h: 759 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.734 QFP: 0.0 if_h: 760 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.735 QFP: 0.0 if_h: 761 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.736 QFP: 0.0 if_h: 762 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.737 QFP: 0.0 if_h: 763 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.738 QFP: 0.0 if_h: 764 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.1795 QFP: 0.0 if_h: 1821 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.1796 QFP: 0.0 if_h: 1822 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.1797 QFP: 0.0 if_h: 1823 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/3.EFP2051 QFP: 0.0 if_h: 2077 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/3.EFP2052 QFP: 0.0 if_h: 2078 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/3.EFP2053 QFP: 0.0 if_h: 2079 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/3.EFP2054 QFP: 0.0 if_h: 2080 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/3.EFP2055 QFP: 0.0 if_h: 2081 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/3.EFP2174 QFP: 0.0 if_h: 2200 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/3.EFP2175 QFP: 0.0 if_h: 2201 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/3.EFP2176 QFP: 0.0 if_h: 2202 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/3.EFP2177 QFP: 0.0 if_h: 2203 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/3.EFP2178 QFP: 0.0 if_h: 2204 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/3.EFP2179 QFP: 0.0 if_h: 2205 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: BG4048.10207e1 QFP: 0.0 if_h: 4079 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS-2944.10207e2 QFP: 0.0 if_h: 4080 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS-2945.10207e3 QFP: 0.0 if_h: 4081 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS-2946.10207e4 QFP: 0.0 if_h: 4082 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS-2974.10207fb QFP: 0.0 if_h: 4105 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS-2975.10207fc QFP: 0.0 if_h: 4106 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: BG4033.10207fd QFP: 0.0 if_h: 4107 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: BG4044.10207fe QFP: 0.0 if_h: 4108 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: BG4045.10207ff QFP: 0.0 if_h: 4109 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: BG4111.1020807 QFP: 0.0 if_h: 4117 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: BG4117.1020808 QFP: 0.0 if_h: 4118 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: BG4118.1020809 QFP: 0.0 if_h: 4119 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS-2816.102080a QFP: 0.0 if_h: 4120 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS-2817.102080b QFP: 0.0 if_h: 4121 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS-2818.102080c QFP: 0.0 if_h: 4122 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS-2819.102080d QFP: 0.0 if_h: 4123 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS-2820.102080e QFP: 0.0 if_h: 4124 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+        Interface: VPLS-3049.1020890 QFP: 0.0 if_h: 4254 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS-3050.1020891 QFP: 0.0 if_h: 4255 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: BG4001.1020892 QFP: 0.0 if_h: 4256 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: BG4002.1020893 QFP: 0.0 if_h: 4257 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: BG4006.1020894 QFP: 0.0 if_h: 4258 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: BG4010.1020895 QFP: 0.0 if_h: 4259 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS-2320.1020896 QFP: 0.0 if_h: 4260 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS-2321.1020897 QFP: 0.0 if_h: 4261 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS-2322.1020898 QFP: 0.0 if_h: 4262 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS_maint.1020a6b QFP: 0.0 if_h: 4729 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+    '''
+    }
+
+    def test_golden_active(self):
+        self.device = Mock(**self.golden_output_active)
+        obj = ShowPlatformHardware(device=self.device)
+        parsed_output = obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_active)
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowPlatformHardware(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
