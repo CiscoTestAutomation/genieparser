@@ -5,3 +5,12 @@
 | ------------------------|:-------------:|
 | ``genie.libs.parser``   |               |
 
+--------------------------------------------------------------------------------
+                                    PLATFORM
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowPlatformHardwarePlim for;
+    	'show platform hardware port <x/x/x> plim statistics'
+    	'show platform hardware slot <x> plim statistics'
+    	'show platform hardware slot <x> plim statistics internal'
+    	'show platform hardware subslot <x/x> plim statistics'

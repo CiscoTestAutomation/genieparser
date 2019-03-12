@@ -2753,33 +2753,33 @@ class ShowPlatformHardwarePlimSchema(MetaParser):
             Any(): {
                 'received': {
                     'low_priority': {
-                        'total_pkts': int,
+                        'pkts': int,
                         'dropped_pkts': int,
                         'errored_pkts': int,
-                        'total_bytes': int,
+                        'bytes': int,
                         'dropped_bytes': int,
                         'errored_bytes': int,
                     },
                     'high_priority': {
-                        'total_pkts': int,
+                        'pkts': int,
                         'dropped_pkts': int,
                         'errored_pkts': int,
-                        'total_bytes': int,
+                        'bytes': int,
                         'dropped_bytes': int,
                         'errored_bytes': int,
                     }
                 },
                 'transmitted': {
                     'low_priority': {
-                        'total_pkts': int,
+                        'pkts': int,
                         'dropped_pkts': int,
-                        'total_bytes': int,
+                        'bytes': int,
                         'dropped_bytes': int,
                     },
                     'high_priority': {
-                        'total_pkts': int,
+                        'pkts': int,
                         'dropped_pkts': int,
-                        'total_bytes': int,
+                        'bytes': int,
                         'dropped_bytes': int,
                     }
                 },
@@ -2835,85 +2835,115 @@ class ShowPlatformHardwarePlim(ShowPlatformHardwarePlimSchema):
                   show platform hardware slot <x> plim statistics internal
                   show platform hardware subslot <x/x> plim statistics"""
 
-    cli_command = 'show platform hardware'
+    cli_command = ['show platform hardware port {port} plim statistics',
+                   'show platform hardware slot {slot} plim statistics',
+                   'show platform hardware slot {slot} plim statistics internal',
+                   'show platform hardware subslot {subslot} plim statistics']
 
     def cli(self, port=None, slot=None, subslot=None, internal=False, output=None):
 
         if output is None:
             if port:
-                self.cli_command += ' port {port}'.format(port=port)
+                cmd = self.cli_command[0].format(port=port)
+            elif internal:
+                cmd = self.cli_command[2].format(slot=slot)
             elif slot:
-                self.cli_command += ' slot {slot}'.format(slot=slot)
+                cmd = self.cli_command[1].format(slot=slot)
             elif subslot:
-                self.cli_command += ' subslot {subslot}'.format(subslot=subslot)
-            self.cli_command += ' plim statistics'
-            if internal:
-                self.cli_command += ' internal'
-            out = self.device.execute(self.cli_command)
+                cmd = self.cli_command[3].format(subslot=subslot)
+            out = self.device.execute(cmd)
         else:
             out = output
 
         # initial return dictionary
         ret_dict = {}
 
+        # Interface 0/0/0
         p1 = re.compile(r'^Interface +(?P<port>[\d\/]+)$')
 
+        #   RX Low Priority
+        #   RX High Priority
         p2 = re.compile(r'^RX +(?P<direction>\w+) +Priority$')
 
+        #     RX Pkts      369         Bytes 27789 
         p3 = re.compile(r'^RX +Pkts +(?P<rx_total_pkts>\d+) +Bytes +(?P<rx_total_bytes>\d+)$')
 
+        #     RX Drop Pkts 0           Bytes 0  
         p4 = re.compile(r'^RX +Drop +Pkts +(?P<rx_dropped_pkts>\d+) +Bytes +(?P<rx_dropped_bytes>\d+)$')
 
+        #     RX Err  Pkts 0           Bytes 0
         p5 = re.compile(r'^RX +Err +Pkts +(?P<rx_errored_pkts>\d+) +Bytes +(?P<rx_errored_bytes>\d+)$')
 
+        #   TX Low Priority  
+        #   TX High Priority  
         p6 = re.compile(r'^TX +(?P<direction>\w+) +Priority$')
 
+        #     TX Pkts      1265574622  Bytes 250735325722 
         p7 = re.compile(r'^TX +Pkts +(?P<tx_total_pkts>\d+) +Bytes +(?P<tx_total_bytes>\d+)$')
 
+        #     TX Drop Pkts 0           Bytes 0     
         p8 = re.compile(r'^TX +Drop +Pkts +(?P<tx_dropped_pkts>\d+) +Bytes +(?P<tx_dropped_bytes>\d+)$')
 
+        # 0/3, SPA-1XTENGE-XFP-V2, Online
         p9 = re.compile(r'^(?P<slot>\d+)/(?P<subslot>\d+),'
                          ' +(?P<name>[\w\d\-]+),'
                          ' +(?P<status>\w+)$')
 
+        #   RX IPC Pkts 0           Bytes 0  
         p10 = re.compile(r'^RX +IPC +Pkts +(?P<rx_ipc_pkts>\d+) +Bytes +(?P<rx_ipc_bytes>\d+)$')
 
+        #   TX IPC Pkts 0           Bytes 0
         p11 = re.compile(r'^TX +IPC +Pkts +(?P<tx_ipc_pkts>\d+) +Bytes +(?P<tx_ipc_bytes>\d+)$')
 
+        #   RX IPC Err 0
         p12 = re.compile(r'^RX +IPC +Err +(?P<rx_ipc_err>\d+)$')
 
+        #   TX IPC Err 0  
         p13 = re.compile(r'^TX +IPC +Err +(?P<tx_ipc_err>\d+)$')
 
+        #   RX Spi4 Interrupt Counters   
+        #   TX Spi4 Interrupt Counters  
         p14 = re.compile(r'^(?P<tx_rx>\w+) +Spi4 +Interrupt +Counters$')
 
+        #     Out Of Frame 0    
         p15 = re.compile(r'^Out +Of +Frame +(?P<out_of_frame>\d+)$')
 
+        #     Dip4 Error 0   
         p16 = re.compile(r'^Dip4 +Error +(?P<rx_dip4_error>\d+)$')
 
+        #     Disabled 0
         p17 = re.compile(r'^Disabled +(?P<rx_disbaled>\d+)$')
 
+        #     Loss Of Sync 0
         p18 = re.compile(r'^Loss +Of +Sync +(?P<rx_loss_of_sync>\d+)$')
 
+        #     Sequence Error 0
         p19 = re.compile(r'^Sequence +Error +(?P<rx_sequence_error>\d+)$')
 
+        #     Burst Error 0
         p20 = re.compile(r'^Burst +Error +(?P<rx_burst_error>\d+)$')
 
+        #     EOP Abort 0 
         p21 = re.compile(r'^EOP +Abort +(?P<rx_eop_abort>\d+)$')
 
+        #     Packet Gap Error 0
         p22 = re.compile(r'^Packet +Gap +Error +(?P<rx_packet_gap_error>\d+)$')
 
+        #     Control Word Error 0 
         p23 = re.compile(r'^Control +Word +Error +(?P<rx_control_word_error>\d+)$')
 
+        #     Frame Error 0
         p24 = re.compile(r'^Frame +Error +(?P<tx_frame_error>\d+)$')
 
+        #     FIFO Over Flow 0
         p25 = re.compile(r'^FIFO +Over +Flow +(?P<tx_fifo_over_flow>\d+)$')
 
+        #     Dip2 Error 0  
         p26 = re.compile(r'^Dip2 +Error +(?P<tx_dip2_error>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
 
-            # Interface 0/0/0
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -2921,8 +2951,6 @@ class ShowPlatformHardwarePlim(ShowPlatformHardwarePlimSchema):
                 ret_dict.setdefault('port', {}).setdefault(port, {})
                 continue
 
-            #   RX Low Priority
-            #   RX High Priority
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -2936,38 +2964,42 @@ class ShowPlatformHardwarePlim(ShowPlatformHardwarePlimSchema):
                 ret_dict['port'][port]['received'].setdefault(low_high, {})
                 continue
 
-            #     RX Pkts      369         Bytes 27789 
             m = p3.match(line)
             if m:
                 group = m.groupdict()
                 if 'port' in ret_dict:
-                    ret_dict['port'][port]['received'][low_high]['total_pkts'] = int(group['rx_total_pkts'])
-                    ret_dict['port'][port]['received'][low_high]['total_bytes'] = int(group['rx_total_bytes'])
+                    ret_dict['port'][port]['received'][low_high]\
+                        ['pkts'] = int(group['rx_total_pkts'])
+                    ret_dict['port'][port]['received'][low_high]\
+                        ['bytes'] = int(group['rx_total_bytes'])
                 else:
                     if 'received' not in ret_dict['slot'][slot]['subslot'][subslot]:
-                        ret_dict['slot'][slot]['subslot'][subslot].setdefault('received', {})
-                    ret_dict['slot'][slot]['subslot'][subslot]['received']['pkts'] = int(group['rx_total_pkts'])
-                    ret_dict['slot'][slot]['subslot'][subslot]['received']['bytes'] = int(group['rx_total_bytes'])
+                        ret_dict['slot'][slot]['subslot'][subslot].\
+                            setdefault('received', {})
+                    ret_dict['slot'][slot]['subslot'][subslot]\
+                        ['received']['pkts'] = int(group['rx_total_pkts'])
+                    ret_dict['slot'][slot]['subslot'][subslot]\
+                        ['received']['bytes'] = int(group['rx_total_bytes'])
                 continue
 
-            #     RX Drop Pkts 0           Bytes 0  
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['port'][port]['received'][low_high]['dropped_pkts'] = int(group['rx_dropped_pkts'])
-                ret_dict['port'][port]['received'][low_high]['dropped_bytes'] = int(group['rx_dropped_bytes'])
+                ret_dict['port'][port]['received'][low_high]\
+                    ['dropped_pkts'] = int(group['rx_dropped_pkts'])
+                ret_dict['port'][port]['received'][low_high]\
+                    ['dropped_bytes'] = int(group['rx_dropped_bytes'])
                 continue
 
-            #     RX Err  Pkts 0           Bytes 0
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['port'][port]['received'][low_high]['errored_pkts'] = int(group['rx_errored_pkts'])
-                ret_dict['port'][port]['received'][low_high]['errored_bytes'] = int(group['rx_errored_bytes'])
+                ret_dict['port'][port]['received'][low_high]\
+                    ['errored_pkts'] = int(group['rx_errored_pkts'])
+                ret_dict['port'][port]['received'][low_high]\
+                    ['errored_bytes'] = int(group['rx_errored_bytes'])
                 continue
 
-            #   TX Low Priority  
-            #   TX High Priority  
             m = p6.match(line)
             if m:
                 group = m.groupdict()
@@ -2981,29 +3013,33 @@ class ShowPlatformHardwarePlim(ShowPlatformHardwarePlimSchema):
                 ret_dict['port'][port]['transmitted'].setdefault(low_high, {})
                 continue
 
-            #     TX Pkts      1265574622  Bytes 250735325722 
             m = p7.match(line)
             if m:
                 group = m.groupdict()
                 if 'port' in ret_dict:
-                    ret_dict['port'][port]['transmitted'][low_high]['total_pkts'] = int(group['tx_total_pkts'])
-                    ret_dict['port'][port]['transmitted'][low_high]['total_bytes'] = int(group['tx_total_bytes'])
+                    ret_dict['port'][port]['transmitted'][low_high]\
+                        ['pkts'] = int(group['tx_total_pkts'])
+                    ret_dict['port'][port]['transmitted'][low_high]\
+                        ['bytes'] = int(group['tx_total_bytes'])
                 else:
                     if 'transmitted' not in ret_dict['slot'][slot]['subslot'][subslot]:
-                        ret_dict['slot'][slot]['subslot'][subslot].setdefault('transmitted', {})
-                    ret_dict['slot'][slot]['subslot'][subslot]['transmitted']['pkts'] = int(group['tx_total_pkts'])
-                    ret_dict['slot'][slot]['subslot'][subslot]['transmitted']['bytes'] = int(group['tx_total_bytes'])
+                        ret_dict['slot'][slot]['subslot'][subslot].setdefault(
+                            'transmitted', {})
+                    ret_dict['slot'][slot]['subslot'][subslot]['transmitted']\
+                        ['pkts'] = int(group['tx_total_pkts'])
+                    ret_dict['slot'][slot]['subslot'][subslot]['transmitted']\
+                        ['bytes'] = int(group['tx_total_bytes'])
                 continue
-
-            #     TX Drop Pkts 0           Bytes 0       
+  
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['port'][port]['transmitted'][low_high]['dropped_pkts'] = int(group['tx_dropped_pkts'])
-                ret_dict['port'][port]['transmitted'][low_high]['dropped_bytes'] = int(group['tx_dropped_bytes'])
+                ret_dict['port'][port]['transmitted'][low_high]\
+                    ['dropped_pkts'] = int(group['tx_dropped_pkts'])
+                ret_dict['port'][port]['transmitted'][low_high]\
+                    ['dropped_bytes'] = int(group['tx_dropped_bytes'])
                 continue
 
-            # 0/3, SPA-1XTENGE-XFP-V2, Online
             m = p9.match(line)
             if m:
                 group = m.groupdict()
@@ -3013,48 +3049,54 @@ class ShowPlatformHardwarePlim(ShowPlatformHardwarePlimSchema):
                 if 'subslot' not in ret_dict['slot'][slot]:
                     ret_dict['slot'][slot].setdefault('subslot', {})
                 ret_dict['slot'][slot]['subslot'].setdefault(subslot,{})
-                ret_dict['slot'][slot]['subslot'][subslot]['name'] = group['name']
-                ret_dict['slot'][slot]['subslot'][subslot]['status'] = group['status']
+                ret_dict['slot'][slot]['subslot'][subslot]['name'] = \
+                    group['name']
+                ret_dict['slot'][slot]['subslot'][subslot]['status'] = \
+                    group['status']
                 continue
 
-            #   RX IPC Pkts 0           Bytes 0  
             m = p10.match(line)
             if m:
                 group = m.groupdict()
                 if 'received' not in ret_dict['slot'][slot]['subslot'][subslot]:
-                    ret_dict['slot'][slot]['subslot'][subslot].setdefault('received', {})
-                ret_dict['slot'][slot]['subslot'][subslot]['received']['ipc_pkts'] = int(group['rx_ipc_pkts'])
-                ret_dict['slot'][slot]['subslot'][subslot]['received']['ipc_bytes'] = int(group['rx_ipc_bytes'])
+                    ret_dict['slot'][slot]['subslot'][subslot].setdefault(
+                        'received', {})
+                ret_dict['slot'][slot]['subslot'][subslot]['received']\
+                    ['ipc_pkts'] = int(group['rx_ipc_pkts'])
+                ret_dict['slot'][slot]['subslot'][subslot]['received']\
+                    ['ipc_bytes'] = int(group['rx_ipc_bytes'])
                 continue
 
-            #   TX IPC Pkts 0           Bytes 0
             m = p11.match(line)
             if m:
                 group = m.groupdict()
                 if 'transmitted' not in ret_dict['slot'][slot]['subslot'][subslot]:
-                    ret_dict['slot'][slot]['subslot'][subslot].setdefault('transmitted', {})
-                ret_dict['slot'][slot]['subslot'][subslot]['transmitted']['ipc_pkts'] = int(group['tx_ipc_pkts'])
-                ret_dict['slot'][slot]['subslot'][subslot]['transmitted']['ipc_bytes'] = int(group['tx_ipc_bytes'])
+                    ret_dict['slot'][slot]['subslot'][subslot].setdefault(
+                        'transmitted', {})
+                ret_dict['slot'][slot]['subslot'][subslot]['transmitted']\
+                    ['ipc_pkts'] = int(group['tx_ipc_pkts'])
+                ret_dict['slot'][slot]['subslot'][subslot]['transmitted']\
+                    ['ipc_bytes'] = int(group['tx_ipc_bytes'])
                 continue
 
-            #   RX IPC Err 0
             m = p12.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['slot'][slot]['subslot'][subslot].setdefault('received', {})
-                ret_dict['slot'][slot]['subslot'][subslot]['received']['ipc_err'] = int(group['rx_ipc_err'])
+                ret_dict['slot'][slot]['subslot'][subslot].setdefault(
+                    'received', {})
+                ret_dict['slot'][slot]['subslot'][subslot]['received']\
+                    ['ipc_err'] = int(group['rx_ipc_err'])
                 continue
 
-            #   TX IPC Err 0  
             m = p13.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['slot'][slot]['subslot'][subslot].setdefault('transmitted', {})
-                ret_dict['slot'][slot]['subslot'][subslot]['transmitted']['ipc_err'] = int(group['tx_ipc_err'])
+                ret_dict['slot'][slot]['subslot'][subslot].setdefault(
+                    'transmitted', {})
+                ret_dict['slot'][slot]['subslot'][subslot]['transmitted']\
+                    ['ipc_err'] = int(group['tx_ipc_err'])
                 continue
 
-            #   RX Spi4 Interrupt Counters   
-            #   TX Spi4 Interrupt Counters  
             m = p14.match(line)
             if m:
                 group = m.groupdict()
@@ -3063,91 +3105,92 @@ class ShowPlatformHardwarePlim(ShowPlatformHardwarePlimSchema):
                     new_direction = 'received'
                 else:
                     new_direction = 'transmitted'
-                ret_dict['slot'][slot]['subslot'][subslot][new_direction].setdefault('spi4_interrupt_counters', {})
+                ret_dict['slot'][slot]['subslot'][subslot][new_direction].\
+                    setdefault('spi4_interrupt_counters', {})
                 continue
-
-            #     Out Of Frame 0                   
+               
             m = p15.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['out_of_frame'] = int(group['out_of_frame'])
+                ret_dict['slot'][slot]['subslot'][subslot][new_direction]\
+                    ['spi4_interrupt_counters']['out_of_frame'] = int(group['out_of_frame'])
                 continue
 
-            #     Dip4 Error 0   
             m = p16.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['dip4_error'] = int(group['rx_dip4_error'])
+                ret_dict['slot'][slot]['subslot'][subslot][new_direction]\
+                    ['spi4_interrupt_counters']['dip4_error'] = int(group['rx_dip4_error'])
                 continue
 
-            #     Disabled 0
             m = p17.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['disabled'] = int(group['rx_disbaled'])
+                ret_dict['slot'][slot]['subslot'][subslot][new_direction]\
+                    ['spi4_interrupt_counters']['disabled'] = int(group['rx_disbaled'])
                 continue
 
-            #     Loss Of Sync 0
             m = p18.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['loss_of_sync'] = int(group['rx_loss_of_sync'])
+                ret_dict['slot'][slot]['subslot'][subslot][new_direction]\
+                    ['spi4_interrupt_counters']['loss_of_sync'] = int(group['rx_loss_of_sync'])
                 continue
 
-            #     Sequence Error 0
             m = p19.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['sequence_error'] = int(group['rx_sequence_error'])
+                ret_dict['slot'][slot]['subslot'][subslot][new_direction]\
+                    ['spi4_interrupt_counters']['sequence_error'] = int(group['rx_sequence_error'])
                 continue
 
-            #     Burst Error 0
             m = p20.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['burst_error'] = int(group['rx_burst_error'])
+                ret_dict['slot'][slot]['subslot'][subslot][new_direction]\
+                    ['spi4_interrupt_counters']['burst_error'] = int(group['rx_burst_error'])
                 continue
 
-            #     EOP Abort 0 
             m = p21.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['eop_abort'] = int(group['rx_eop_abort'])
+                ret_dict['slot'][slot]['subslot'][subslot][new_direction]\
+                    ['spi4_interrupt_counters']['eop_abort'] = int(group['rx_eop_abort'])
                 continue
 
-            #     Packet Gap Error 0
             m = p22.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['packet_gap_error'] = int(group['rx_packet_gap_error'])
+                ret_dict['slot'][slot]['subslot'][subslot][new_direction]\
+                    ['spi4_interrupt_counters']['packet_gap_error'] = int(group['rx_packet_gap_error'])
                 continue
 
-            #     Control Word Error 0 
             m = p23.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['control_word_error'] = int(group['rx_control_word_error'])
+                ret_dict['slot'][slot]['subslot'][subslot][new_direction]\
+                    ['spi4_interrupt_counters']['control_word_error'] = int(group['rx_control_word_error'])
                 continue
 
-            #     Frame Error 0
             m = p24.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['frame_error'] = int(group['tx_frame_error'])
+                ret_dict['slot'][slot]['subslot'][subslot][new_direction]\
+                    ['spi4_interrupt_counters']['frame_error'] = int(group['tx_frame_error'])
                 continue
 
-            #     FIFO Over Flow 0
             m = p25.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['fifo_over_flow'] = int(group['tx_fifo_over_flow'])
+                ret_dict['slot'][slot]['subslot'][subslot][new_direction]\
+                    ['spi4_interrupt_counters']['fifo_over_flow'] = int(group['tx_fifo_over_flow'])
                 continue
 
-            #     Dip2 Error 0  
             m = p26.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['dip2_error'] = int(group['tx_dip2_error'])
+                ret_dict['slot'][slot]['subslot'][subslot][new_direction]\
+                    ['spi4_interrupt_counters']['dip2_error'] = int(group['tx_dip2_error'])
                 continue
 
         return ret_dict

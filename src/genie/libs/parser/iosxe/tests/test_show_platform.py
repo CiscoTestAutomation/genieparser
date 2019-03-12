@@ -14388,27 +14388,27 @@ class test_show_platform_hardware_plim(unittest.TestCase):
                         'dropped_pkts': 0,
                         'errored_bytes': 0,
                         'errored_pkts': 0,
-                        'total_bytes': 327940189,
-                        'total_pkts': 316215},
+                        'bytes': 327940189,
+                        'pkts': 316215},
                     'low_priority': {
                         'dropped_bytes': 0,
                         'dropped_pkts': 0,
                         'errored_bytes': 0,
                         'errored_pkts': 0,
-                        'total_bytes': 27789,
-                        'total_pkts': 369}
+                        'bytes': 27789,
+                        'pkts': 369}
                 },
                 'transmitted': {
                     'high_priority': {
                         'dropped_bytes': 0,
                         'dropped_pkts': 0,
-                        'total_bytes': 0,
-                        'total_pkts': 0},
+                        'bytes': 0,
+                        'pkts': 0},
                     'low_priority': {
                         'dropped_bytes': 0,
                         'dropped_pkts': 0,
-                        'total_bytes': 250735325722,
-                        'total_pkts': 1265574622}
+                        'bytes': 250735325722,
+                        'pkts': 1265574622}
                 }
             }
         }
