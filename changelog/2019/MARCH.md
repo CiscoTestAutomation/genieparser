@@ -3,6 +3,22 @@
 | ``genie.libs.parser``   | 19.0.1        |
 
 --------------------------------------------------------------------------------
+                                    OSPF
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added parsers:
+        * ShowIpOspfDatabase
+        * ShowIpOspfMaxMetric
+        * ShowIpOspfTraffic
+    * Updated parsers:
+        * ShowIpOspfMplsLdpInterface
+        * ShowIpOspfDatabaseRouter
+        * ShowIpOspfDatabaseExternal
+        * ShowIpOspfDatabaseNetwork
+        * ShowIpOspfDatabaseSummary
+        * ShowIpOspfDatabaseOpaqueArea
+
+--------------------------------------------------------------------------------
                                     ND
 --------------------------------------------------------------------------------
 * NXOS
