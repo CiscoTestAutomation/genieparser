@@ -9,7 +9,8 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, \
-                                            Optional
+                                            Optional, \
+                                            Any
 
 # ==================================================
 # Parser for 'show configuration lock'
@@ -20,15 +21,19 @@ class ShowConfigurationLockSchema(MetaParser):
     Schema for show configuration lock
     """
     
-    schema = {'owner': {
-                    'owner_pid': int,
-                    'tty_number': int,
-                    'tty_username': str,
-                    'user_debug_info': str,
-                    'lock_active_time_in_sec': int,
+    schema = {'config_session_lock': {
+                    'owner_pid': {
+                        Any():{
+                        'tty_number': int,
+                        'tty_username': str,
+                        'user_debug_info': str,
+                        'lock_active_time_in_sec': int,
+                        }
+                    }
                 },
                 Optional('parser_configure_lock'): {
-                        Optional('owner_pid'):int,
+                    Optional('owner_pid'): {
+                        Any():{
                         Optional('user'): str,
                         Optional('tty'): int,
                         Optional('type'): str,
@@ -37,7 +42,9 @@ class ShowConfigurationLockSchema(MetaParser):
                         Optional('count'): int,
                         Optional('pending_requests'): int,
                         Optional('user_debug_info'): int
+                        }
                     }
+                }
             }
 
 
@@ -97,36 +104,36 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                 m = p1.match(line)
                 if m:
                     group = m.groupdict()
-                    owner_dict = ret_dict.setdefault('owner',{})
-                    owner_dict.update({'owner_pid':int(group['owner_pid'])})
+                    pid = int(group['owner_pid'])
+                    config_session_lock = ret_dict.setdefault('config_session_lock',{}).setdefault('owner_pid', {}).setdefault(pid,{})
                     continue
                 
                 # TTY number : 2
                 m = p2.match(line)
                 if m:
                     group = m.groupdict()
-                    owner_dict.update({'tty_number':int(group['tty_number'])})
+                    config_session_lock.update({'tty_number':int(group['tty_number'])})
                     continue
                 
                 # TTY username : Test1
                 m = p3.match(line)
                 if m:
                     group = m.groupdict()
-                    owner_dict.update({'tty_username':group['tty_username']})
+                    config_session_lock.update({'tty_username':group['tty_username']})
                     continue
                 
                 # User debug info : CLI Session Lock
                 m = p4.match(line)
                 if m:
                     group = m.groupdict()
-                    owner_dict.update({'user_debug_info':group['user_debug_info']})
+                    config_session_lock.update({'user_debug_info':group['user_debug_info']})
                     continue
                 
                 # Lock Active time (in Sec) : 63
                 m = p5.match(line)
                 if m:
                     group = m.groupdict()
-                    owner_dict.update({'lock_active_time_in_sec':int(group['lock_active_time_in_sec'])})
+                    config_session_lock.update({'lock_active_time_in_sec':int(group['lock_active_time_in_sec'])})
                     continue
                 
                 # Parser Configure Lock
@@ -139,8 +146,8 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                 m = p7.match(line)
                 if m:
                     group = m.groupdict()
-                    parser_configure_lock = ret_dict.setdefault('parser_configure_lock', {})
-                    parser_configure_lock.update({'owner_pid':int(group['owner_pid'])})
+                    pid = int(group['owner_pid'])
+                    parser_configure_lock = ret_dict.setdefault('parser_configure_lock', {}).setdefault('owner_pid',{}).setdefault(pid,{})
                     continue
                 
                 # User                  : User1

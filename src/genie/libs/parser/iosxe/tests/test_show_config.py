@@ -27,33 +27,47 @@ class test_show_configuration_lock(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     
     golden_parsed_output = {
-            'owner': {
-                'owner_pid': 578,
+            'config_session_lock': {
+                'owner_pid': { 
+                    578: {
+                    'tty_number': 2,
+                    'tty_username': 'testuser',
+                    'user_debug_info': 'CLI Session Lock',
+                    'lock_active_time_in_sec': 17
+                    },
+                    5781: {
+                    'tty_number': 21,
+                    'tty_username': 'testuser1',
+                    'user_debug_info': 'CLI Session Lock',
+                    'lock_active_time_in_sec': 171
+                        }
+                }
+            }
+    } 
+    golden_parsed_output_optional = {
+        'config_session_lock': {
+            'owner_pid': {
+                578: {
                 'tty_number': 2,
                 'tty_username': 'testuser',
                 'user_debug_info': 'CLI Session Lock',
                 'lock_active_time_in_sec': 17
                 }
             }
-    
-    golden_parsed_output_optional = {
-        'owner': {
-            'owner_pid': 578,
-            'tty_number': 2,
-            'tty_username': 'testuser',
-            'user_debug_info': 'CLI Session Lock',
-            'lock_active_time_in_sec': 17
-            },
+        },
         'parser_configure_lock': {
-                'owner_pid': 10,
-                'user': 'User1',
-                'tty': 3,
-                'type': 'EXCLUSIVE',
-                'state': 'LOCKED',
-                'class': 'Exposed',
-                'count': 0,
-                'pending_requests': 0,
-                'user_debug_info': 0
+                'owner_pid': {
+                    10: {
+                    'user': 'User1',
+                    'tty': 3,
+                    'type': 'EXCLUSIVE',
+                    'state': 'LOCKED',
+                    'class': 'Exposed',
+                    'count': 0,
+                    'pending_requests': 0,
+                    'user_debug_info': 0
+                    }
+                }
             }
     }
 
@@ -65,6 +79,11 @@ class test_show_configuration_lock(unittest.TestCase):
             TTY username    : testuser
             User debug info : CLI Session Lock
             Lock Active time (in Sec)   : 17
+            Owner PID   : 5781
+            TTY number  : 21
+            TTY username    : testuser1
+            User debug info : CLI Session Lock
+            Lock Active time (in Sec)   : 171
             '''}
     
     golden_output_optional = {'execute.return_value': '''\
