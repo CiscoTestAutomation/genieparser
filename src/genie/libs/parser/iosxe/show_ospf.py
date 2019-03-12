@@ -3166,9 +3166,6 @@ class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
             'opaque': 10,
             }
 
-        # Load for five secs: 71%/0%; one minute: 11%; five minutes: 9%
-        # Time source is NTP, 20:29:26.348 JST Fri Nov 11 2016
-
         # OSPF Router with ID (203.152.187.214) (Process ID 9996)
         # OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
         p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
@@ -4657,7 +4654,7 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
                               ' +(?P<igp_sync>(Not required|Required))$')
             m = p4.match(line)
             if m:
-                if m.groupdict()['igp_sync'] is 'Required':
+                if m.groupdict()['igp_sync'] == 'Required':
                     intf_dict['igp_sync'] = True
                     mpls_ldp_dict['igp_sync'] = True
                 else:
@@ -5042,13 +5039,16 @@ class ShowIpOspfMaxMetricSchema(MetaParser):
                                     {Any():
                                         {'start_time': str,
                                         'time_elapsed': str,
-                                        'router_lsa_max_metric': bool,
-                                        Optional('condition'): str,
-                                        Optional('state'): str,
-                                        Optional('advertise_lsa_metric'): int,
-                                        Optional('unset_reason'): str,
-                                        Optional('unset_time'): str,
-                                        Optional('unset_time_elapsed'): str,
+                                        'router_lsa_max_metric':
+                                            {Any(): 
+                                                {Optional('condition'): str,
+                                                Optional('state'): str,
+                                                Optional('advertise_lsa_metric'): int,
+                                                Optional('unset_reason'): str,
+                                                Optional('unset_time'): str,
+                                                Optional('unset_time_elapsed'): str,
+                                                },
+                                            },
                                         },
                                     },
                                 },
@@ -5161,40 +5161,44 @@ class ShowIpOspfMaxMetric(ShowIpOspfMaxMetricSchema):
             # Originating router-LSAs with maximum metric
             m = p4_1.match(line)
             if m:
-                mtid_dict['router_lsa_max_metric'] = True
+                rtr_lsa_dict = mtid_dict.\
+                                    setdefault('router_lsa_max_metric', {}).\
+                                    setdefault(True, {})
                 continue
 
             # Router is not originating router-LSAs with maximum metric
             m = p4_2.match(line)
             if m:
-                mtid_dict['router_lsa_max_metric'] = False
+                rtr_lsa_dict = mtid_dict.\
+                                    setdefault('router_lsa_max_metric', {}).\
+                                    setdefault(False, {})
                 continue
 
             # Condition: on startup for 5 seconds, State: inactive
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                mtid_dict['condition'] = group['condition']
-                mtid_dict['state'] = group['state']
+                rtr_lsa_dict['condition'] = group['condition']
+                rtr_lsa_dict['state'] = group['state']
                 continue
 
             # Advertise summary-LSAs with metric 16711680
             m = p6.match(line)
             if m:
-                mtid_dict['advertise_lsa_metric'] = int(m.groupdict()['metric'])
+                rtr_lsa_dict['advertise_lsa_metric'] = int(m.groupdict()['metric'])
 
             # Unset reason: timer expired, Originated for 5 seconds
             m = p7.match(line)
             if m:
-                mtid_dict['unset_reason'] = m.groupdict()['reason']
+                rtr_lsa_dict['unset_reason'] = m.groupdict()['reason']
                 continue
 
             # Unset time: 00:02:03.314, Time elapsed: 00:54:38.858
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                mtid_dict['unset_time'] = group['time']
-                mtid_dict['unset_time_elapsed'] = group['elapsed']
+                rtr_lsa_dict['unset_time'] = group['time']
+                rtr_lsa_dict['unset_time_elapsed'] = group['elapsed']
                 continue
 
         return ret_dict
@@ -5234,17 +5238,100 @@ class ShowIpOspfTrafficSchema(MetaParser):
                             {Any():
                                 {'router_id': str,
                                 'ospf_queue_statistics':
-                                    {Any():
+                                    {'limit': 
                                         {'inputq': int,
-                                        'updateq': int,
                                         'outputq': int,
+                                        'updateq': int,
+                                        },
+                                    'drops': 
+                                        {'inputq': int,
+                                        'outputq': int,
+                                        'updateq': int,
+                                        },
+                                    'max_delay_msec': 
+                                        {'inputq': int,
+                                        'outputq': int,
+                                        'updateq': int,
+                                        },
+                                    'max_size': 
+                                        {'total': 
+                                            {'inputq': int,
+                                            'outputq': int,
+                                            'updateq': int,
+                                            },
+                                        'invalid':
+                                            {'inputq': int,
+                                            'outputq': int,
+                                            'updateq': int,
+                                            },
+                                        'hello':
+                                            {'inputq': int,
+                                            'outputq': int,
+                                            'updateq': int,
+                                            },
+                                        'db_des':
+                                            {'inputq': int,
+                                            'outputq': int,
+                                            'updateq': int,
+                                            },
+                                        'ls_req':
+                                            {'inputq': int,
+                                            'outputq': int,
+                                            'updateq': int,
+                                            },
+                                        'ls_upd':
+                                            {'inputq': int,
+                                            'outputq': int,
+                                            'updateq': int,
+                                            },
+                                        'ls_ack':
+                                            {'inputq': int,
+                                            'outputq': int,
+                                            'updateq': int,
+                                            },
+                                        },
+                                    'current_size': 
+                                        {'total': 
+                                            {'inputq': int,
+                                            'outputq': int,
+                                            'updateq': int,
+                                            },
+                                        'invalid':
+                                            {'inputq': int,
+                                            'outputq': int,
+                                            'updateq': int,
+                                            },
+                                        'hello':
+                                            {'inputq': int,
+                                            'outputq': int,
+                                            'updateq': int,
+                                            },
+                                        'db_des':
+                                            {'inputq': int,
+                                            'outputq': int,
+                                            'updateq': int,
+                                            },
+                                        'ls_req':
+                                            {'inputq': int,
+                                            'outputq': int,
+                                            'updateq': int,
+                                            },
+                                        'ls_upd':
+                                            {'inputq': int,
+                                            'outputq': int,
+                                            'updateq': int,
+                                            },
+                                        'ls_ack':
+                                            {'inputq': int,
+                                            'outputq': int,
+                                            'updateq': int,
+                                            },
                                         },
                                     },
                                 'interface_statistics':
                                     {'interfaces':
                                         {Any():
-                                            {'interface': str,
-                                            'last_clear_traffic_counters': str,
+                                            {'last_clear_traffic_counters': str,
                                             'ospf_packets_received_sent':
                                                 {'type': 
                                                     {Any():
@@ -5355,6 +5442,7 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
         address_family = 'ipv4'
         received = False ; sent = False
         interface_stats = False ; summary_stats = False
+        max_size_stats = False ; current_size_stats = False
 
         # OSPF statistics:
         p1 = re.compile(r'^OSPF +statistics:$')
@@ -5396,22 +5484,22 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
         # Limit             0        200          0
         # Drops             0          0          0
         # Max delay [msec] 49          2          2
-        # Max size         14         14          6
         # Invalid           0          0          0
         # Hello             0          0          0
         # DB des            0          0          0
         # LS req            0          0          0
         # LS upd            0          0          0
         # LS ack           14         14          6
+        p9_1 = re.compile(r'^(?P<item>(Limit|Drops|Max delay \[msec\]|Invalid|'
+                           'Hello|DB des|LS req|LS upd|LS ack))'
+                           ' +(?P<inputq>(\d+)) +(?P<updateq>(\d+))'
+                           ' +(?P<outputq>(\d+))$')
+
+        #                   InputQ   UpdateQ      OutputQ
+        # Max size         14         14          6
         # Current size      0          0          0
-        # Invalid           0          0          0
-        # Hello             0          0          0
-        # DB des            0          0          0
-        # LS req            0          0          0
-        # LS upd            0          0          0
-        # LS ack            0          0          0
-        p9 = re.compile(r'^(?P<item>([a-zA-Z\s\[\]]+)) +(?P<inputq>(\d+))'
-                         ' +(?P<updateq>(\d+)) +(?P<outputq>(\d+))$')
+        p9_2 = re.compile(r'^(?P<item>(Max size|Current size)) +(?P<inputq>(\d+))'
+                           ' +(?P<updateq>(\d+)) +(?P<outputq>(\d+))$')
 
         # Interface statistics:
         p10 = re.compile(r'^Interface +statistics:$')
@@ -5588,29 +5676,47 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
             # Limit             0        200          0
             # Drops             0          0          0
             # Max delay [msec] 49          2          2
-            # Max size         14         14          6
             # Invalid           0          0          0
             # Hello             0          0          0
             # DB des            0          0          0
             # LS req            0          0          0
             # LS upd            0          0          0
             # LS ack           14         14          6
-            # Current size      0          0          0
-            # Invalid           0          0          0
-            # Hello             0          0          0
-            # DB des            0          0          0
-            # LS req            0          0          0
-            # LS upd            0          0          0
-            # LS ack            0          0          0
-            m = p9.match(line)
+            m = p9_1.match(line)
             if m:
                 group = m.groupdict()
                 item = group['item'].strip().lower().replace(" ", "_").\
                                     replace("[", "").replace("]", "")
-                tmp_dict = queue_stats_dict.setdefault(item, {})
+                if max_size_stats:
+                    tmp_dict = max_size_queue_stats_dict.setdefault(item, {})
+                elif current_size_stats:
+                    tmp_dict = current_size_queue_stats_dict.setdefault(item, {})
+                else:
+                    tmp_dict = queue_stats_dict.setdefault(item, {})
                 tmp_dict['inputq'] = int(group['inputq'])
                 tmp_dict['updateq'] = int(group['updateq'])
                 tmp_dict['outputq'] = int(group['outputq'])
+                continue
+
+            #                   InputQ   UpdateQ      OutputQ
+            # Max size         14         14          6
+            # Current size      0          0          0
+            m = p9_2.match(line)
+            if m:
+                group = m.groupdict()
+                item = group['item'].strip().lower().replace(" ", "_")
+                tmp_dict = queue_stats_dict.setdefault(item, {})
+                if item == 'max_size':
+                    max_size_stats = True
+                    current_size_stats = False
+                    max_size_queue_stats_dict = tmp_dict
+                elif item == 'current_size':
+                    current_size_stats = True
+                    max_size_stats = False
+                    current_size_queue_stats_dict = tmp_dict
+                tmp_dict.setdefault('total', {})['inputq'] = int(group['inputq'])
+                tmp_dict.setdefault('total', {})['updateq'] = int(group['updateq'])
+                tmp_dict.setdefault('total', {})['outputq'] = int(group['outputq'])
                 continue
 
             # Interface statistics:
@@ -5625,7 +5731,6 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
                 intf = m.groupdict()['intf']
                 intf_dict = intf_stats_dict.setdefault('interfaces', {}).\
                                             setdefault(intf, {})
-                intf_dict['interface'] = intf
                 interface_stats = True ; summary_stats = False
                 continue
 

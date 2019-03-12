@@ -6053,7 +6053,7 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                         {'autoconfig': False,
                                                         'autoconfig_area_id': '0.0.0.8',
                                                         'holddown_timer': False,
-                                                        'igp_sync': False,
+                                                        'igp_sync': True,
                                                         'state': 'up'}}},
                                             'GigabitEthernet0/0/2': 
                                                 {'mpls': 
@@ -6061,7 +6061,7 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                         {'autoconfig': False,
                                                         'autoconfig_area_id': '0.0.0.8',
                                                         'holddown_timer': False,
-                                                        'igp_sync': False,
+                                                        'igp_sync': True,
                                                         'state': 'up'}}},
                                             'Loopback0': 
                                                 {'mpls': 
@@ -6075,7 +6075,7 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                     {'ldp': 
                                         {'autoconfig': False,
                                         'autoconfig_area_id': '0.0.0.8',
-                                        'igp_sync': False}}}}}}}}}
+                                        'igp_sync': True}}}}}}}}}
 
     golden_output2 = {'execute.return_value': '''
         Router#sh ip ospf mpls ldp interface
@@ -6339,22 +6339,27 @@ class test_show_ip_ospf_max_metric(unittest.TestCase):
                                 {'router_id': '1.1.1.1',
                                 'base_topology_mtid': 
                                     {'0': 
-                                        {'router_lsa_max_metric': False,
+                                        {'router_lsa_max_metric': 
+                                            {False: {},
+                                            },
                                         'start_time': '00:01:58.313',
                                         'time_elapsed': '00:54:43.859'}}},
                             '9996': 
                                 {'router_id': '103.152.187.164',
                                 'base_topology_mtid': 
                                     {'0': 
-                                        {'advertise_lsa_metric': 16711680,
-                                        'condition': 'on startup for 5 seconds',
-                                        'router_lsa_max_metric': True,
+                                        {'router_lsa_max_metric': 
+                                            {True: 
+                                                {'advertise_lsa_metric': 16711680,
+                                                'condition': 'on startup for 5 seconds',
+                                                'state': 'inactive',
+                                                'unset_reason': 'timer expired, Originated for 5 seconds',
+                                                'unset_time': '00:02:03.314',
+                                                'unset_time_elapsed': '00:54:38.858',
+                                                },
+                                            },
                                         'start_time': '00:01:58.314',
-                                        'state': 'inactive',
-                                        'time_elapsed': '00:54:43.858',
-                                        'unset_reason': 'timer expired, Originated for 5 seconds',
-                                        'unset_time': '00:02:03.314',
-                                        'unset_time_elapsed': '00:54:38.858'}}}}}}}}}
+                                        'time_elapsed': '00:54:43.858'}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         Router#sh ip ospf max-metric
@@ -6436,39 +6441,11 @@ class test_show_ip_ospf_traffic(unittest.TestCase):
                             {'9996': 
                                 {'router_id': '106.162.197.252',
                                 'ospf_queue_statistics': 
-                                    {'current_size': 
-                                        {'inputq': 0,
-                                        'outputq': 0,
-                                        'updateq': 0},
-                                    'db_des': 
-                                        {'inputq': 0,
-                                        'outputq': 0,
-                                        'updateq': 0},
-                                    'drops': 
-                                        {'inputq': 0,
-                                        'outputq': 0,
-                                        'updateq': 0},
-                                    'hello': 
-                                        {'inputq': 0,
-                                        'outputq': 0,
-                                        'updateq': 0},
-                                    'invalid': 
-                                        {'inputq': 0,
-                                        'outputq': 0,
-                                        'updateq': 0},
-                                    'limit': 
+                                    {'limit': 
                                         {'inputq': 0,
                                         'outputq': 0,
                                         'updateq': 200},
-                                    'ls_ack': 
-                                        {'inputq': 0,
-                                        'outputq': 0,
-                                        'updateq': 0},
-                                    'ls_req': 
-                                        {'inputq': 0,
-                                        'outputq': 0,
-                                        'updateq': 0},
-                                    'ls_upd': 
+                                    'drops': 
                                         {'inputq': 0,
                                         'outputq': 0,
                                         'updateq': 0},
@@ -6477,14 +6454,84 @@ class test_show_ip_ospf_traffic(unittest.TestCase):
                                         'outputq': 2,
                                         'updateq': 2},
                                     'max_size': 
-                                        {'inputq': 14,
-                                        'outputq': 6,
-                                        'updateq': 14}},
+                                        {'total': 
+                                            {'inputq': 14,
+                                            'outputq': 6,
+                                            'updateq': 14,
+                                            },
+                                        'invalid': 
+                                            {'inputq': 0,
+                                            'outputq': 0,
+                                            'updateq': 0,
+                                            },
+                                        'hello': 
+                                            {'inputq': 0,
+                                            'outputq': 0,
+                                            'updateq': 0,
+                                            },
+                                        'db_des': 
+                                            {'inputq': 0,
+                                            'outputq': 0,
+                                            'updateq': 0,
+                                            },
+                                        'ls_req': 
+                                            {'inputq': 0,
+                                            'outputq': 0,
+                                            'updateq': 0,
+                                            },
+                                        'ls_upd': 
+                                            {'inputq': 0,
+                                            'outputq': 0,
+                                            'updateq': 0,
+                                            },
+                                        'ls_ack': 
+                                            {'inputq': 14,
+                                            'outputq': 6,
+                                            'updateq': 14,
+                                            },
+                                        },
+                                    'current_size': 
+                                        {'total': 
+                                            {'inputq': 0,
+                                            'outputq': 0,
+                                            'updateq': 0,
+                                            },
+                                        'invalid': 
+                                            {'inputq': 0,
+                                            'outputq': 0,
+                                            'updateq': 0,
+                                            },
+                                        'hello': 
+                                            {'inputq': 0,
+                                            'outputq': 0,
+                                            'updateq': 0,
+                                            },
+                                        'db_des': 
+                                            {'inputq': 0,
+                                            'outputq': 0,
+                                            'updateq': 0,
+                                            },
+                                        'ls_req': 
+                                            {'inputq': 0,
+                                            'outputq': 0,
+                                            'updateq': 0,
+                                            },
+                                        'ls_upd': 
+                                            {'inputq': 0,
+                                            'outputq': 0,
+                                            'updateq': 0,
+                                            },
+                                        'ls_ack': 
+                                            {'inputq': 0,
+                                            'outputq': 0,
+                                            'updateq': 0,
+                                            },
+                                        },
+                                    },
                                 'interface_statistics': 
                                     {'interfaces': 
                                         {'GigabitEthernet0/0/0': 
-                                            {'interface': 'GigabitEthernet0/0/0',
-                                            'last_clear_traffic_counters': 'never',
+                                            {'last_clear_traffic_counters': 'never',
                                             'ospf_header_errors': 
                                                 {'adjacency_throttle': 0,
                                                 'area_mismatch': 0,
@@ -6543,8 +6590,7 @@ class test_show_ip_ospf_traffic(unittest.TestCase):
                                                     'tx_total': {'bytes': 44621820,
                                                                  'packets': 400949}}}},
                                         'GigabitEthernet0/0/1': 
-                                            {'interface': 'GigabitEthernet0/0/1',
-                                            'last_clear_traffic_counters': 'never',
+                                            {'last_clear_traffic_counters': 'never',
                                             'ospf_header_errors': 
                                                 {'adjacency_throttle': 0,
                                                 'area_mismatch': 0,
@@ -6603,8 +6649,7 @@ class test_show_ip_ospf_traffic(unittest.TestCase):
                                                     'tx_total': {'bytes': 58567200,
                                                                  'packets': 419986}}}},
                                         'GigabitEthernet0/0/3': 
-                                            {'interface': 'GigabitEthernet0/0/3',
-                                            'last_clear_traffic_counters': 'never',
+                                            {'last_clear_traffic_counters': 'never',
                                             'ospf_header_errors': 
                                                 {'adjacency_throttle': 0,
                                                 'area_mismatch': 0,
@@ -6663,8 +6708,7 @@ class test_show_ip_ospf_traffic(unittest.TestCase):
                                                     'tx_total': {'bytes': 47353792,
                                                                  'packets': 408334}}}},
                                         'GigabitEthernet0/0/4': 
-                                            {'interface': 'GigabitEthernet0/0/4',
-                                            'last_clear_traffic_counters': 'never',
+                                            {'last_clear_traffic_counters': 'never',
                                             'ospf_header_errors': 
                                                 {'adjacency_throttle': 0,
                                                 'area_mismatch': 0,
@@ -6723,8 +6767,7 @@ class test_show_ip_ospf_traffic(unittest.TestCase):
                                                     'tx_total': {'bytes': 35124220,
                                                                  'packets': 319572}}}},
                                         'GigabitEthernet0/0/5': 
-                                            {'interface': 'GigabitEthernet0/0/5',
-                                            'last_clear_traffic_counters': 'never',
+                                            {'last_clear_traffic_counters': 'never',
                                             'ospf_header_errors': 
                                                 {'adjacency_throttle': 0,
                                                 'area_mismatch': 0,
@@ -6783,8 +6826,7 @@ class test_show_ip_ospf_traffic(unittest.TestCase):
                                                     'tx_total': {'bytes': 27731564,
                                                                  'packets': 364889}}}},
                                         'GigabitEthernet0/0/6': 
-                                            {'interface': 'GigabitEthernet0/0/6',
-                                            'last_clear_traffic_counters': 'never',
+                                            {'last_clear_traffic_counters': 'never',
                                             'ospf_header_errors': 
                                                 {'adjacency_throttle': 0,
                                                 'area_mismatch': 0,
@@ -6843,8 +6885,7 @@ class test_show_ip_ospf_traffic(unittest.TestCase):
                                                     'tx_total': {'bytes': 26212884,
                                                                  'packets': 182893}}}},
                                         'GigabitEthernet0/0/7': 
-                                            {'interface': 'GigabitEthernet0/0/7',
-                                            'last_clear_traffic_counters': 'never',
+                                            {'last_clear_traffic_counters': 'never',
                                             'ospf_header_errors': 
                                                 {'adjacency_throttle': 0,
                                                 'area_mismatch': 0,
