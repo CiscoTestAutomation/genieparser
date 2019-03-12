@@ -2500,15 +2500,13 @@ class ShowPlatformHardwareSchema(MetaParser):
     """Schema for show platform hardware qfp active infrastructure bqs queue output default all"""
 
     schema = {
-        'interface': {
-            Any(): {
-                'qfp': str,
-                'if_h': int,
-                'num_queues': int,
-                Optional('index'): {
-                    Any(): {
-                        'queue_id': str,
-                        'interf_name': str,
+        Any(): {
+            'if_h': int,
+            Optional('index'): {
+                Any(): {
+                    'queue_id': str,
+                    'name': str,
+                    'software_control_info': {
                         'cache_queue_id': str,
                         'wred': str,
                         'qlimit_bytes': int,
@@ -2529,6 +2527,8 @@ class ShowPlatformHardwareSchema(MetaParser):
                         'plevel': int,
                         'priority': int,
                         'defer_obj_refcnt': int,
+                    },
+                    'statistics': {
                         'tail_drops_bytes': int,
                         'tail_drops_packets': int,
                         'total_enqs_bytes': int,
@@ -2536,9 +2536,9 @@ class ShowPlatformHardwareSchema(MetaParser):
                         'queue_depth_bytes': int,
                         'lic_throughput_oversub_drops_bytes': int,
                         'lic_throughput_oversub_drops_packets': int,
-                    },
-                }
-            },
+                    }
+                },
+            }
         },
     }
 
@@ -2575,8 +2575,11 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
                          ' +\(Queue +ID:(?P<queue_id>[\w\d]+),'
                          ' +Name: +(?P<interf_name>[\w\d\/\.\-\:]+)\)$')
 
+        #       Software Control Info:
+        p3_1 = re.compile(r'^Software Control Info:$')
+
         #       (cache) queue id: 0x000000a6, wred: 0x88b16ac2, qlimit (bytes): 3281312
-        p3 = re.compile(r'^\(cache\) +queue +id: +(?P<cache_queue_id>[\w\d]+),'
+        p3_2 = re.compile(r'^\(cache\) +queue +id: +(?P<cache_queue_id>[\w\d]+),'
                          ' +wred: +(?P<wred>[\w\d]+),'
                          ' +qlimit +\(bytes\): +(?P<qlimit_bytes>\d+)$')
 
@@ -2616,8 +2619,10 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
         p12 = re.compile(r'^defer_obj_refcnt: +(?P<defer_obj_refcnt>\d+)$')  
 
         #     Statistics:
+        p13_1 = re.compile(r'^Statistics:$')  
+
         #       tail drops  (bytes): 0                   ,          (packets): 0   
-        p13 = re.compile(r'^tail +drops  +\(bytes\): +(?P<tail_drops_bytes>\d+) +,'
+        p13_2 = re.compile(r'^tail +drops  +\(bytes\): +(?P<tail_drops_bytes>\d+) +,'
                          ' +\(packets\): +(?P<tail_drops_packets>\d+)$')  
 
         #       total enqs  (bytes): 0                   ,          (packets): 0   
@@ -2639,110 +2644,136 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
             if m:
                 group = m.groupdict()
                 interface = group['intf_name']
-                ret_dict.setdefault('interface', {}).setdefault(interface, {})
-                ret_dict['interface'][interface]['qfp'] = group['qfp']
-                ret_dict['interface'][interface]['if_h'] = int(group['if_h'])
-                ret_dict['interface'][interface]['num_queues'] = int(group['num_queues'])
+                ret_dict.setdefault(interface, {})
+                ret_dict[interface]['if_h'] = int(group['if_h'])
                 continue
 
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 index = group['index']
-                if 'index' not in ret_dict['interface'][interface]:
-                    ret_dict['interface'][interface].setdefault('index', {})
-                final_dict = ret_dict['interface'][interface]['index'].setdefault(index, {})
-                final_dict['queue_id'] = group['queue_id']
-                final_dict['interf_name'] = group['interf_name']
+                if 'index' not in ret_dict[interface]:
+                    ret_dict[interface].setdefault('index', {})
+                ret_dict[interface]['index'].setdefault(index, {})
+                ret_dict[interface]['index'][index]['queue_id'] = \
+                    group['queue_id']
+                ret_dict[interface]['index'][index]['name'] = \
+                    group['interf_name']
                 continue
 
-            m = p3.match(line)
+            m = p3_1.match(line)
+            if m:
+                ret_dict[interface]['index'][index].setdefault(
+                    'software_control_info', {})
+                continue
+
+            m = p3_2.match(line)
             if m:
                 group = m.groupdict()
-                final_dict['cache_queue_id'] = group['cache_queue_id']
-                final_dict['wred'] = group['wred']
-                final_dict['qlimit_bytes'] = int(group['qlimit_bytes'])
+                ret_dict[interface]['index'][index]['software_control_info']\
+                    ['cache_queue_id'] = group['cache_queue_id']
+                ret_dict[interface]['index'][index]['software_control_info']\
+                    ['wred'] = group['wred']
+                ret_dict[interface]['index'][index]['software_control_info']\
+                    ['qlimit_bytes'] = int(group['qlimit_bytes'])
                 continue
 
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                final_dict.update({k:v for k, v in group.items()})
+                ret_dict[interface]['index'][index]['software_control_info'].\
+                    update({k:v for k, v in group.items()})
                 continue
 
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                final_dict['sw_flags'] = group['sw_flags']
-                final_dict['sw_state'] = group['sw_state']
-                ret_dict['interface'][interface]['index'][index]\
+                ret_dict[interface]['index'][index]['software_control_info']\
+                    ['sw_flags'] = group['sw_flags']
+                ret_dict[interface]['index'][index]['software_control_info']\
+                    ['sw_state'] = group['sw_state']
+                ret_dict[interface]['index'][index]['software_control_info']\
                     ['port_uidb'] = int(group['port_uidb'])
                 continue
 
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                final_dict.update({k:int(v) for k, v in group.items()})
+                ret_dict[interface]['index'][index]['software_control_info'].\
+                    update({k:int(v) for k, v in group.items()})
                 continue
    
             m = p7.match(line)
             if m:
                 group = m.groupdict()
-                final_dict.update({k:int(v) for k, v in group.items()})
+                ret_dict[interface]['index'][index]['software_control_info'].\
+                    update({k:int(v) for k, v in group.items()})
                 continue
 
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                final_dict.update({k:int(v) for k, v in group.items()})
+                ret_dict[interface]['index'][index]['software_control_info'].\
+                    update({k:int(v) for k, v in group.items()})
                 continue
 
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                final_dict.update({k:int(v) for k, v in group.items()})
+                ret_dict[interface]['index'][index]['software_control_info'].\
+                    update({k:int(v) for k, v in group.items()})
                 continue
 
             m = p10.match(line)
             if m:
                 group = m.groupdict()
-                final_dict['share'] = int(group['share'])
+                ret_dict[interface]['index'][index]['software_control_info']\
+                    ['share'] = int(group['share'])
                 continue
 
             m = p11.match(line)
             if m:
                 group = m.groupdict()
-                final_dict.update({k:int(v) for k, v in group.items()})
+                ret_dict[interface]['index'][index]['software_control_info'].\
+                    update({k:int(v) for k, v in group.items()})
                 continue
 
             m = p12.match(line)
             if m:
                 group = m.groupdict()
-                final_dict['defer_obj_refcnt'] = int(group['defer_obj_refcnt'])
+                ret_dict[interface]['index'][index]['software_control_info']\
+                    ['defer_obj_refcnt'] = int(group['defer_obj_refcnt'])
                 continue
 
-            m = p13.match(line)
+            m = p13_1.match(line)
+            if m:
+                ret_dict[interface]['index'][index].setdefault('statistics', {})
+
+            m = p13_2.match(line)
             if m:
                 group = m.groupdict()
-                final_dict.update({k:int(v) for k, v in group.items()})
+                ret_dict[interface]['index'][index]['statistics'].update(
+                    {k:int(v) for k, v in group.items()})
                 continue
     
             m = p14.match(line)
             if m:
                 group = m.groupdict()
-                final_dict.update({k:int(v) for k, v in group.items()})
+                ret_dict[interface]['index'][index]['statistics'].update(
+                    {k:int(v) for k, v in group.items()})
                 continue
                
             m = p15.match(line)
             if m:
                 group = m.groupdict()
-                final_dict['queue_depth_bytes'] = int(group['queue_depth_bytes'])
+                ret_dict[interface]['index'][index]['statistics']\
+                    ['queue_depth_bytes'] = int(group['queue_depth_bytes'])
                 continue
 
             m = p16.match(line)
             if m:
                 group = m.groupdict()
-                final_dict.update({k:int(v) for k, v in group.items()})
+                ret_dict[interface]['index'][index]['statistics'].update(
+                    {k:int(v) for k, v in group.items()})
                 continue
-
         return ret_dict
