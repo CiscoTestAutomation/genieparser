@@ -5554,49 +5554,106 @@ class test_show_platform_power(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output = {'chassis': 'ASR1006-X', 'slot': {'0': {'type': 'ASR1000-SIP40', 'state': 'ok', 'allocation': '64'}, '0/0': {'type': 'SPA-8X1GE-V2', 'state': 'inserted', 'allocation': '14'}, '0/1': {'type': 'SPA-8X1GE-V2', 'state': 'inserted', 'allocation': '14'}, '0/2': {'type': 'SPA-1X10GE-L-V2', 'state': 'inserted', 'allocation': '17.40'}, '0/3': {'type': 'SPA-1X10GE-L-V2', 'state': 'inserted', 'allocation': '17.40'}, '1': {'type': 'ASR1000-SIP40', 'state': 'ok', 'allocation': '64'}, '1/0': {'type': 'SPA-8X1GE-V2', 'state': 'inserted', 'allocation': '14'}, 'R0': {'type': 'ASR1000-RP2', 'state': 'ok, active', 'allocation': '105'}, 'R1': {'type': 'ASR1000-RP2', 'state': 'ok, standby', 'allocation': '105'}, 'F0': {'type': 'ASR1000-ESP40', 'state': 'ok, active', 'allocation': '267'}, 'F1': {'type': 'ASR1000-ESP40', 'state': 'ok, standby', 'allocation': '267'}, 'P6': {'type': 'ASR1000X-FAN', 'state': 'ok', 'allocation': '125'}, 'P7': {'type': 'ASR1000X-FAN', 'state': 'ok', 'allocation': '125'}, 'P0': {'type': 'ASR1000X-AC-1100W', 'state': 'ok', 'allocation': '1100'}, 'P1': {'type': 'ASR1000X-AC-1100W', 'state': 'ok', 'allocation': '1100'}, 'P2': {'type': 'ASR1000X-AC-1100W', 'state': 'ok', 'allocation': '1100'}, 'P3': {'type': 'ASR1000X-AC-1100W', 'state': 'ok', 'allocation': '1100'}}, 'redundancy_mode': 'nplus1', 'allocation_status': 'Sufficient'}
-
+    golden_parsed_output = {
+        'allocation_status': 'Sufficient',
+        'chassis': 'ASR1006-X',
+        'excess_capacity_percent': 72,
+        'excess_power': 3201,
+        'fan_alc': 250,
+        'fru_alc': 949,
+        'load_capacity_percent': 15,
+        'power_capacity': 4400,
+        'redundancy_mode': 'nplus1',
+        'redundant_alc': 0,
+        'slot': {
+            '0': {'allocation': 64.0, 'state': 'ok', 'type': 'ASR1000-SIP40'},
+            '0/0': {'allocation': 14.0,
+                  'state': 'inserted',
+                  'type': 'SPA-8X1GE-V2'},
+            '0/1': {'allocation': 14.0,
+                  'state': 'inserted',
+                  'type': 'SPA-8X1GE-V2'},
+            '0/2': {'allocation': 17.4,
+                  'state': 'inserted',
+                  'type': 'SPA-1X10GE-L-V2'},
+            '0/3': {'allocation': 17.4,
+                  'state': 'inserted',
+                  'type': 'SPA-1X10GE-L-V2'},
+            '1': {'allocation': 64.0, 'state': 'ok', 'type': 'ASR1000-SIP40'},
+            '1/0': {'allocation': 14.0,
+                  'state': 'inserted',
+                  'type': 'SPA-8X1GE-V2'},
+            'F0': {'allocation': 267.0,
+                 'state': 'ok, active',
+                 'type': 'ASR1000-ESP40'},
+            'F1': {'allocation': 267.0,
+                 'state': 'ok, standby',
+                 'type': 'ASR1000-ESP40'},
+            'P0': {'allocation': 1100.0,
+                 'state': 'ok',
+                 'type': 'ASR1000X-AC-1100W'},
+            'P1': {'allocation': 1100.0,
+                 'state': 'ok',
+                 'type': 'ASR1000X-AC-1100W'},
+            'P2': {'allocation': 1100.0,
+                 'state': 'ok',
+                 'type': 'ASR1000X-AC-1100W'},
+            'P3': {'allocation': 1100.0,
+                 'state': 'ok',
+                 'type': 'ASR1000X-AC-1100W'},
+            'P6': {'allocation': 125.0, 'state': 'ok', 'type': 'ASR1000X-FAN'},
+            'P7': {'allocation': 125.0, 'state': 'ok', 'type': 'ASR1000X-FAN'},
+            'R0': {'allocation': 105.0,
+                 'state': 'ok, active',
+                 'type': 'ASR1000-RP2'},
+            'R1': {'allocation': 105.0,
+                 'state': 'ok, standby',
+                 'type': 'ASR1000-RP2'}
+        },
+        'total_capacity': 4400,
+        'total_load': 696
+    }
+    
     golden_output = {'execute.return_value': '''\
-Chassis type: ASR1006-X           
+        Chassis type: ASR1006-X           
 
-Slot      Type                State                 Allocation(W) 
---------- ------------------- --------------------- ------------- 
-0         ASR1000-SIP40       ok                    64
- 0/0      SPA-8X1GE-V2        inserted              14
- 0/1      SPA-8X1GE-V2        inserted              14
- 0/2      SPA-1X10GE-L-V2     inserted              17.40
- 0/3      SPA-1X10GE-L-V2     inserted              17.40
-1         ASR1000-SIP40       ok                    64
- 1/0      SPA-8X1GE-V2        inserted              14
-R0        ASR1000-RP2         ok, active            105
-R1        ASR1000-RP2         ok, standby           105
-F0        ASR1000-ESP40       ok, active            267
-F1        ASR1000-ESP40       ok, standby           267
-P6        ASR1000X-FAN        ok                    125        
-P7        ASR1000X-FAN        ok                    125        
+        Slot      Type                State                 Allocation(W) 
+        --------- ------------------- --------------------- ------------- 
+        0         ASR1000-SIP40       ok                    64
+         0/0      SPA-8X1GE-V2        inserted              14
+         0/1      SPA-8X1GE-V2        inserted              14
+         0/2      SPA-1X10GE-L-V2     inserted              17.40
+         0/3      SPA-1X10GE-L-V2     inserted              17.40
+        1         ASR1000-SIP40       ok                    64
+         1/0      SPA-8X1GE-V2        inserted              14
+        R0        ASR1000-RP2         ok, active            105
+        R1        ASR1000-RP2         ok, standby           105
+        F0        ASR1000-ESP40       ok, active            267
+        F1        ASR1000-ESP40       ok, standby           267
+        P6        ASR1000X-FAN        ok                    125        
+        P7        ASR1000X-FAN        ok                    125        
 
-Slot      Type                State                 Capacity (W) Load (W)     
---------- ------------------- --------------------- ------------ ------------ 
-P0        ASR1000X-AC-1100W   ok                    1100         132          
-P1        ASR1000X-AC-1100W   ok                    1100         204          
-P2        ASR1000X-AC-1100W   ok                    1100         180          
-P3        ASR1000X-AC-1100W   ok                    1100         180          
+        Slot      Type                State                 Capacity (W) Load (W)     
+        --------- ------------------- --------------------- ------------ ------------ 
+        P0        ASR1000X-AC-1100W   ok                    1100         132          
+        P1        ASR1000X-AC-1100W   ok                    1100         204          
+        P2        ASR1000X-AC-1100W   ok                    1100         180          
+        P3        ASR1000X-AC-1100W   ok                    1100         180          
 
-Total load: 696 W, total capacity: 4400 W. Load / Capacity is 15%
+        Total load: 696 W, total capacity: 4400 W. Load / Capacity is 15%
 
-Power capacity:       4400 W
-Redundant allocation: 0 W
-Fan allocation:       250 W
-FRU allocation:       949 W
---------------------------------------------
-Excess Power in Reserve:   3201 W
-Excess / (Capacity - Redundant) is 72%
+        Power capacity:       4400 W
+        Redundant allocation: 0 W
+        Fan allocation:       250 W
+        FRU allocation:       949 W
+        --------------------------------------------
+        Excess Power in Reserve:   3201 W
+        Excess / (Capacity - Redundant) is 72%
 
-Power Redundancy Mode: nplus1
+        Power Redundancy Mode: nplus1
 
-Power Allocation Status: Sufficient
-
-'''}
+        Power Allocation Status: Sufficient
+    '''}
 
 
     def test_empty(self):
