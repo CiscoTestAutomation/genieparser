@@ -35,49 +35,64 @@ class ShowMplsLdpNeighborSchema(MetaParser):
     schema = {
         'vrf': {
             Any(): {
-                'neighbor': {
+                'peers': {
                     Any(): {
-                        'local_ldp': str,
-                        'tcp_connection': list,
-                        'state': str,
-                        'msg_sent': int,
-                        'msg_rcvd': int,
-                        'downstream': bool,
-                        Optional('last_tib_rev_sent'): int,
-                        Optional('password'): str,
-                        'uptime': str,
-                        Optional('peer_holdtime_ms'): str,
-                        Optional('ka_interval_ms'): str,
-                        Optional('peer_state'): str,
-                        'ldp_source': {
-                            'interface': str,
-                            'src_ip_address': str,
-                            Optional('holdtime_ms'): int,
-                            Optional('hello_interval_ms'): int,
-                        },
-                        'address_bound': list,
-                        Optional('capabilities_sent'): {
-                            'iccp_type': str,
-                            'maj_version': int,
-                            'min_version': int,
-                            'dynamic_anouncement': str,
-                            'mldp_point_to_multipoint': str,
-                            'mldp_multipoint_to_multipoint': str,
-                            'typed_wildcard': str,
+                        'label_space_id':{
+                            Any():{
+                                'local_ldp_ident': str,
+                                'tcp_connection': str,
+                                'state': str,
+                                'msg_sent': int,
+                                'msg_rcvd': int,
+                                'downstream': bool,
+                                Optional('last_tib_rev_sent'): int,
+                                Optional('password'): str,
+                                'uptime': str,
+                                Optional('peer_holdtime_ms'): str,
+                                Optional('ka_interval_ms'): str,
+                                Optional('peer_state'): str,
+                                'ldp_discovery_sources': {
+                                    'interface':{
+                                          Any():{
+                                          'ip_address': {
+                                              Any(): {
+                                                  Optional('holdtime_ms'): int,
+                                                  Optional('hello_interval_ms'): int,
+                                              }
+                                          }
+                                        }
+                                    }
+                                },
+                                'address_bound': list,
+                                Optional('nsr'): str,
+                                Optional('capabilities'):{
+                                     'sent': {
+                                         'ICCP':{
+                                            'type': str,
+                                            'maj_ver': int,
+                                            'min_ver': int,
+                                         },
+                                        'dynamic_anouncement': str,
+                                        'mldp_point_to_multipoint': str,
+                                        'mldp_multipoint_to_multipoint': str,
+                                        'typed_wildcard': str,
+                                     },
+                                    Optional('received'): {
+                                        Optional('ICCP'):{
+                                            'type': str,
+                                            'maj_ver': int,
+                                            'min_ver': int,
+                                        },
+                                        Optional('dynamic_anouncement'): str,
+                                        Optional('mldp_point_to_multipoint'): str,
+                                        Optional('mldp_multipoint_to_multipoint'): str,
+                                        Optional('typed_wildcard'): str,
+                                    },
 
+                                },
+                            },
                         },
-                        Optional('nsr'): str,
-                        Optional('capabilities_received'): {
-                            Optional('iccp_type'): str,
-                            Optional('maj_version'): int,
-                            Optional('min_version'): int,
-                            Optional('dynamic_anouncement'): str,
-                            Optional('mldp_point_to_multipoint'): str,
-                            Optional('mldp_multipoint_to_multipoint'): str,
-                            Optional('typed_wildcard'): str,
-
-                        },
-                    },
+                    }
                 }
             }
         },
@@ -111,7 +126,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
         sent_flag = False
 
         # Peer LDP Ident: 106.162.197.252:0; Local LDP Ident 106.162.197.254:0
-        p1 = re.compile(r'^Peer +LDP +Ident: +(?P<peer_ldp>\S+); +Local +LDP +Ident +(?P<local_ldp>\S+)$')
+        p1 = re.compile(r'^Peer +LDP +Ident: +(?P<peer_ldp>[\d\.]+):(?P<label_space_id>\d+); +Local +LDP +Ident +(?P<local_ldp>\S+)$')
 
         #     TCP connection: 106.162.197.252.646 - 106.162.197.254.20170
         p2 = re.compile(r'^TCP +connection: +(?P<tcp_connection>[\S\s]+)$')
@@ -177,10 +192,12 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
                 group = m.groupdict()
                 address_bound_flag = False
                 peer_dict = result_dict.setdefault('vrf', {}).\
-                                        setdefault(vrf,{}).\
-                                        setdefault('neighbor',{}).\
-                                        setdefault(group['peer_ldp'] ,{})
-                peer_dict.update({'local_ldp':group['local_ldp']})
+                                        setdefault(vrf, {}).\
+                                        setdefault('peers', {}).\
+                                        setdefault(group['peer_ldp'], {}).\
+                                        setdefault('label_space_id', {}).\
+                                        setdefault(int(group['label_space_id']), {})
+                peer_dict.update({'local_ldp_ident':group['local_ldp']})
                 continue
 
             # TCP connection: 106.162.197.252.646 - 106.162.197.254.20170
@@ -188,12 +205,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
             if m:
                 group = m.groupdict()
                 tcpconnection = group['tcp_connection']
-                if '-' in tcpconnection:
-                    tcp_connection = [x.strip() for x in tcpconnection.split("-")]
-                else:
-                    tcp_connection = list(tcpconnection)
-
-                peer_dict.update({'tcp_connection': tcp_connection})
+                peer_dict.update({'tcp_connection': tcpconnection})
                 continue
 
             # State: Oper; Msgs sent/rcvd: 824/825; Downstream
@@ -220,17 +232,19 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                ldp_source_dict = peer_dict.setdefault('ldp_source',{})
-                ldp_source_dict.update({'interface': group['interface']})
-                ldp_source_dict.update({'src_ip_address': group['src_ip_address']})
+                ldp_source_dict = peer_dict.setdefault('ldp_discovery_sources',{}).\
+                                            setdefault('interface',{}).\
+                                            setdefault(group['interface'],{})
+                ldp_source_ip_address_dict = ldp_source_dict.setdefault('ip_address',{}).\
+                                                             setdefault(group['src_ip_address'],{})
                 continue
 
             # holdtime: 15000 ms, hello interval: 5000 ms
             m = p5_1.match(line)
             if m:
                 group = m.groupdict()
-                ldp_source_dict.update({'holdtime_ms': int(group['holdtime'])})
-                ldp_source_dict.update({'hello_interval_ms': int(group['hello_interval'])})
+                ldp_source_ip_address_dict.update({'holdtime_ms': int(group['holdtime'])})
+                ldp_source_ip_address_dict.update({'hello_interval_ms': int(group['hello_interval'])})
                 continue
 
             #  Addresses bound to peer LDP Ident:
@@ -279,16 +293,17 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
             if m:
                 received_flag = False
                 sent_flag = True
-                temp_dict = peer_dict.setdefault('capabilities_sent', {})
+                temp_dict = peer_dict.setdefault('capabilities', {}).setdefault('sent', {})
                 continue
 
             #   [ICCP (type 0x0405) MajVer 1 MinVer 0]
             m = p12.match(line)
             if m:
                 group = m.groupdict()
-                temp_dict.update({'iccp_type': group['type']})
-                temp_dict.update({'maj_version': int(group['maj_ver'])})
-                temp_dict.update({'min_version': int(group['min_ver'])})
+                iccp_dict = temp_dict.setdefault('ICCP',{})
+                iccp_dict.update({'type': group['type']})
+                iccp_dict.update({'maj_ver': int(group['maj_ver'])})
+                iccp_dict.update({'min_ver': int(group['min_ver'])})
 
                 continue
 
@@ -325,16 +340,16 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
             if m:
                 received_flag = True
                 sent_flag = False
-                temp_dict = peer_dict.setdefault('capabilities_received', {})
+                temp_dict = peer_dict.setdefault('capabilities', {}).setdefault('received', {})
                 continue
 
             # [None]
             m = p18.match(line)
             if m:
                 if received_flag:
-                    peer_dict.pop('capabilities_received')
+                    peer_dict['capabilities'].pop('received')
                 if sent_flag:
-                    peer_dict.pop('capabilities_sent')
+                    peer_dict['capabilities'].pop('sent')
                 continue
 
         return result_dict
@@ -357,51 +372,68 @@ class ShowMplsLdpBindingsSchema(MetaParser):
                show mpls ldp bindings all detail
     """
     schema = {
-        'lib_entry':{
-            Any():{
-                'rev': str,
-                Optional('checkpoint'): str,
-                'local_binding': {
-                    'label': str,
-                    Optional('owner'): str,
-                    Optional('advertised_to'): list,
-                },
-                'remote_binding': {
-                    'index':{
-                        Any():{
-                            'label': str,
-                            'lsr': str,
-                            Optional('checkpointed'): bool,
-                        }
-                    }
+        'vrf':{
+           Any():{
+                'lib_entry':{
+                    Any():{
+                        'rev': str,
+                        Optional('checkpoint'): str,
+                        'label_binding': {
+                            'label':{
+                                Any():{
+                                    Optional('owner'): str,
+                                    Optional('advertised_to'): list,
+                                },
+                            },
+                        },
+                        'remote_binding': {
+                            'label': {
+                                Any():{
+                                    'lsr_id':{
+                                        Any():{
+                                            'label_space_id':{
+                                                Any(): {
+                                                    Optional('checkpointed'): bool,
+                                                },
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                    },
                 },
             },
-        }
+        },
     }
 
 class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
     """
        Parser for show mpls ldp bindings
+                  show mpls ldp bindings vrf <vrf>
                   show mpls ldp bindings all
                   show mpls ldp bindings all detail
        """
-    cli_command = ['show mpls ldp bindings','show mpls ldp bindings {all} {detail}']
+    cli_command = ['show mpls ldp bindings','show mpls ldp bindings {all} {detail}','show mpls ldp bindings vrf <vrf>']
 
-    def cli(self, all="", detail="", output=None):
+    def cli(self, vrf="",all="", detail="", output=None):
         if output is None:
-            if not all and not detail:
-               cmd = self.cli_command[0]
-            if all and not detail:
-                cmd = self.cli_command[1].format(all=all)
-            if all and detail:
-                cmd = self.cli_command[1].format(all=all, detail=detail)
+            if vrf:
+                cmd = self.cli_command[2].format(vrf=vrf)
+            else:
+                vrf='default'
+                if not all and not detail:
+                    cmd = self.cli_command[0]
+                if all and not detail:
+                    cmd = self.cli_command[1].format(all=all)
+                if all and detail:
+                    cmd = self.cli_command[1].format(all=all, detail=detail)
             out = self.device.execute(cmd)
         else:
             out = output
 
         # initial return dictionary
         result_dict = {}
-        index_remote = 1
 
         # lib entry: 20.1.1.0/24, rev 1028
         # lib entry: 27.93.202.64/32, rev 12, chkpt: none
@@ -417,7 +449,8 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
 
         #  remote binding: lsr: 106.162.197.252:0, label: 508
         #  remote binding: lsr: 106.162.197.253:0, label: 308016 checkpointed
-        p4 = re.compile(r'^remote +binding: +lsr: +(?P<lsr>[\d\.\:]+), label: +(?P<remote_label>\S+)( +(?P<checkpointed>\w+))?$')
+        p4 = re.compile(r'^remote +binding: +lsr: +(?P<lsr>[\d\.]+):(?P<label_space_id>[\d]+),'
+                        ' +label: +(?P<remote_label>\S+)( +(?P<checkpointed>\w+))?$')
 
 
         for line in out.splitlines():
@@ -428,7 +461,10 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                lib_entry_dict = result_dict.setdefault('lib_entry', {}).setdefault(group['lib_entry'],{})
+                lib_entry_dict = result_dict.setdefault('vrf', {}).\
+                                            setdefault(vrf, {}).\
+                                            setdefault('lib_entry', {}).\
+                                            setdefault(group['lib_entry'],{})
                 lib_entry_dict.update({'rev': group['rev']})
                 if group['checkpoint']:
                     lib_entry_dict.update({'checkpoint': group['checkpoint']})
@@ -439,11 +475,10 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                local_dict = lib_entry_dict.setdefault('local_binding', {})
-                local_dict.update({'label': group['local_label']})
+                local_dict = lib_entry_dict.setdefault('label_binding', {}).setdefault('label',{}).\
+                                            setdefault(group['local_label'],{})
                 if group['owner']:
                     local_dict.update({'owner': group['owner']})
-                index_remote = 1
                 continue
 
             # 106.162.197.252:0      106.162.197.253:0
@@ -461,12 +496,398 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                index_dict = lib_entry_dict.setdefault('remote_binding', {}).setdefault('index',{}).setdefault(index_remote,{})
-                index_dict.update({'lsr': group['lsr']})
-                index_dict.update({'label': group['remote_label']})
+                index_dict = lib_entry_dict.setdefault('remote_binding', {}).\
+                                            setdefault('label',{}).\
+                                            setdefault(group['remote_label'], {}).\
+                                            setdefault('lsr_id', {}).\
+                                            setdefault(group['lsr'],{}).\
+                                            setdefault('label_space_id',{}).\
+                                            setdefault(int(group['label_space_id']),{})
                 if group['checkpointed']:
                     index_dict.update({'checkpointed': True})
-                index_remote +=1
                 continue
 
+        return result_dict
+
+# ==============================================
+#   Show mpls ldp capabilities
+# ==============================================
+class ShowMplsLdpCapabilitiesSchema(MetaParser):
+    """
+    Schema for show mpls ldp capabilities
+               show mpls ldp capabilities all
+    """
+    schema = {
+        'ldp_capabilities': {
+            Optional('iccp_type'): str,
+            Optional('maj_version'): int,
+            Optional('min_version'): int,
+            'dynamic_anouncement': str,
+            Optional('mldp_point_to_multipoint'): str,
+            Optional('mldp_multipoint_to_multipoint'): str,
+            'typed_wildcard': str,
+
+        }
+    }
+
+class ShowMplsLdpCapabilities(ShowMplsLdpCapabilitiesSchema):
+    """
+       Parser for show mpls ldp capabilities
+                  show mpls ldp capabilities all
+       """
+    cli_command = ['show mpls ldp capabilities','show mpls ldp capabilities {all}']
+
+    def cli(self, all="", output=None):
+        if output is None:
+            if not all:
+               cmd = self.cli_command[0]
+            else:
+                cmd = self.cli_command[1].format(all=all)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # initial return dictionary
+        result_dict = {}
+        # LDP Capabilities - [<description> (<type>)]
+        p0 = re.compile(r'^LDP +Capabilities +\- +\[\<description\> +\(\<type\>\)\]$')
+
+        #   [ICCP (type 0x0405) MajVer 1 MinVer 0]
+        p1 = re.compile(r'^\[ICCP \(type +(?P<type>\w+)\) +MajVer +(?P<maj_ver>\d+) +MinVer +(?P<min_ver>\d+)\]$')
+
+        #   [Dynamic Announcement (0x0506)]
+        p2 = re.compile(r'^\[Dynamic +Announcement \((?P<dynamic_anouncement>\w+)\)\]$')
+
+        #   [mLDP Point-to-Multipoint (0x0508)]
+        p3 = re.compile(r'^\[mLDP +Point\-to\-Multipoint \((?P<mldp_point_to_multipoint>\w+)\)\]$')
+        #   [mLDP Multipoint-to-Multipoint (0x0509)]
+        p4 = re.compile(r'^\[mLDP +Multipoint\-to\-Multipoint \((?P<mldp_multipoint_to_multipoint>\w+)\)\]$')
+        #   [Typed Wildcard (0x050B)]
+        p5 = re.compile(r'^\[Typed +Wildcard \((?P<typed_wildcard>\w+)\)\]$')
+
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p0.match(line)
+            if m:
+                ldp_dict = result_dict.setdefault('ldp_capabilities',{})
+                continue
+
+            #   [ICCP (type 0x0405) MajVer 1 MinVer 0]
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_dict.update({'iccp_type': group['type']})
+                ldp_dict.update({'maj_version': int(group['maj_ver'])})
+                ldp_dict.update({'min_version': int(group['min_ver'])})
+
+                continue
+
+            # [Dynamic Announcement (0x0506)]
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_dict.update({'dynamic_anouncement': group['dynamic_anouncement']})
+                continue
+
+            # [mLDP Point-to-Multipoint (0x0508)]
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_dict.update({'mldp_point_to_multipoint': group['mldp_point_to_multipoint']})
+                continue
+
+            # [mLDP Multipoint-to-Multipoint (0x0509)]
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_dict.update({'mldp_multipoint_to_multipoint': group['mldp_multipoint_to_multipoint']})
+                continue
+
+            # [Typed Wildcard (0x050B)]
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_dict.update({'typed_wildcard': group['typed_wildcard']})
+                continue
+
+        return result_dict
+
+
+# ==============================================
+#   Show mpls ldp discovery
+# ==============================================
+class ShowMplsLdpDiscoverySchema(MetaParser):
+    """
+    Schema for show mpls ldp discovery
+               show mpls ldp discovery all
+               show mpls ldp discovery all detail
+               show mpls ldp discovery detail
+               show mpls ldp discovery vrf <vrf>
+               show mpls ldp discovery vrf <vrf> detail
+    """
+    schema = {
+        'vrf':{
+            Any():{
+                'local_ldp_identifier':{
+                    Any():{
+                        'discovery_sources':{
+                            'interface':{
+                                Any():{
+                                    Optional('enabled'): bool,
+                                    Optional('hello_interval_ms'): int,
+                                    Optional('ip_address'): str,
+                                    'session': str,
+                                    Any():{
+                                       Any():{
+                                           Optional('ldp_id'): str,
+                                           Optional('tdp_id'): str,
+                                           Optional('transport_ip_address'): str,
+                                           Optional('source_ip_address'): str,
+                                           Optional('holdtime_sec'): int,
+                                           Optional('proposed_local'): int,
+                                           Optional('proposed_peer'): int,
+                                           Optional('reachable_via'): str,
+                                           Optional('password'): str,
+                                           Optional('clients'): str,
+                                       },
+                                    },
+                                },
+                            },
+                        },
+                        Optional('targeted_hellos'):{
+                            Any():{
+                                Any():{
+                                    'source': str,
+                                    'destination': str,
+                                    'session': str,
+                                    Optional('ldp_id'): str,
+                                    Optional('tdp_id'): str,
+                                    'active': bool,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+
+
+    }
+
+class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
+    """
+        Parser for show mpls ldp discovery
+                   show mpls ldp discovery all
+                   show mpls ldp discovery all detail
+                   show mpls ldp discovery detail
+                   show mpls ldp discovery vrf <vrf>
+                   show mpls ldp discovery vrf <vrf> detail
+       """
+    cli_command = ['show mpls ldp discovery',
+                   'show mpls ldp discovery {all}',
+                   'show mpls ldp discovery {detail}',
+                   'show mpls ldp discovery {all} {detail}',
+                   'show mpls ldp discovery vrf {vrf}',
+                   'show mpls ldp discovery vrf {vrf} {detail}']
+
+    def cli(self, all="",detail="",vrf="", output=None):
+        if output is None:
+            if vrf :
+                if detail:
+                    cmd = self.cli_command[5].format(vrf=vrf,detail=detail)
+                else:
+                    if detail:
+                        cmd = self.cli_command[4].format(vrf=vrf)
+            else:
+                if detail and all:
+                    cmd = self.cli_command[3].format(all=all,detail=detail)
+                if detail and not all:
+                    cmd = self.cli_command[2].format(all=all, detail=detail)
+                if not detail and all:
+                    cmd = self.cli_command[1].format(all=all, detail=detail)
+                else:
+                    cmd = self.cli_command[0]
+
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        if not vrf:
+            vrf = "default"
+        # initial return dictionary
+        result_dict = {}
+        discovery_flag = False
+        targeted_flag = False
+
+        # Local LDP Identifier:
+        # VRF vpn1:Local LDP Identifier:
+        p1 = re.compile(r'^(VRF +(?P<vrf>\S+):)?Local +LDP +Identifier:$')
+
+        # 106.162.197.254:0
+        p2 = re.compile(r'^(?P<local_ldp_identifier>[\d\.\:]+)$')
+        # Discovery Sources:
+        p2_1 = re.compile(r'^Discovery +Sources:$')
+
+        #     GigabitEthernet0/0/0 (ldp): xmit/recv
+        #     ATM1/1/0.1 (tdp):xmit/recv
+        p3 = re.compile(r'^(?P<interfce>\S+) +\((?P<session>[\w]+)\):(?P<space>\s{1})?xmit\/recv$')
+
+        #         Enabled: Interface config
+        p4 = re.compile(r'^(?P<Enabled>[\w]+): +Interface +config$')
+
+        #         Hello interval: 5000 ms; Transport IP addr: 106.162.197.254
+        p5 = re.compile(r'^Hello +interval: +(?P<hello_interval_ms>\d+) +ms;'
+                        ' +Transport +IP +addr: (?P<transport_ip_address>[\d\.]+)$')
+
+        #         LDP Id: 106.162.197.252:0
+        p6 = re.compile(r'^(?P<ldp_tdp>\w+) +Id:(?P<space>\s{1,2})?(?P<ldp_tdp_id>[\d\.\:]+)$')
+
+        #           Src IP addr: 106.162.197.93; Transport IP addr: 106.162.197.252
+        p7 = re.compile(r'^Src +IP +addr: +(?P<source_ip_address>[\d\.]+);'
+                        ' +Transport +IP +addr: +(?P<transport_ip_address>[\d\.]+)$')
+
+        #           Hold time: 15 sec; Proposed local/peer: 15/15 sec
+        p8 = re.compile(r'^Hold +time: +(?P<holdtime_sec>\d+) +sec; +Proposed +local\/peer:'
+                        ' +(?P<proposed_local>\d+)\/(?P<proposed_peer>\d+) +sec$')
+
+        #           Reachable via 106.162.197.252/32
+        p9 = re.compile(r'^Reachable +via +(?P<reachable_via>[\d\.\/]+)$')
+
+        #           Password: not required, none, in use
+        p10 = re.compile(r'^Password: +(?P<password>[\S\s]+)$')
+
+        #  Clients: IPv4, mLDP
+        p11 = re.compile(r'^Clients: +(?P<clients>[\S\s]+)$')
+
+        #  8.1.1.1 -> 133.0.0.33 (ldp): active, xmit/recv
+        #  8.1.1.1 -> 168.7.0.16 (tdp): passive, xmit/recv
+        p12 = re.compile(r'^(?P<source>[\d\.]+) +\-> +(?P<destination>[\d\.]+)'
+                         ' +\((?P<session>(ldp|tdp)+)\): +(?P<status>(active|passive)+), +xmit\/recv$')
+
+        # Targeted Hellos:
+        p13 = re.compile(r'^Targeted +Hellos:$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                if group['vrf']:
+                    vrf = group['vrf']
+                ldp_dict = result_dict.setdefault('vrf',{}).setdefault(vrf,{})
+                continue
+
+            #   106.162.197.254:0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                local_ldp_identifier_dict = ldp_dict.setdefault('local_ldp_identifier',{}).\
+                                                     setdefault(group['local_ldp_identifier'],{})
+                continue
+
+            # Discovery Sources:
+            m = p2_1.match(line)
+            if m:
+                discovery_flag = True
+                targeted_flag = False
+                continue
+
+            #  GigabitEthernet0/0/0 (ldp): xmit/recv
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict = local_ldp_identifier_dict.setdefault('discovery_sources',{})\
+                                                          .setdefault('interface',{})\
+                                                          .setdefault(group['interfce'],{})
+                interface_dict.update({'session': group['session']})
+                continue
+
+            #  Enabled: Interface config
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({'enabled': True})
+                continue
+
+            #  Hello interval: 5000 ms; Transport IP addr: 106.162.197.254
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({'hello_interval_ms': int(group['hello_interval_ms'])})
+                interface_dict.update({'ip_address': group['transport_ip_address']})
+                continue
+
+            # LDP Id: 106.162.197.252:0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_tdp = group['ldp_tdp'].lower()
+                if discovery_flag:
+                    ldp_dict = interface_dict.setdefault('{}_id'.format(ldp_tdp),{}).setdefault(group['ldp_tdp_id'],{})
+                    ldp_dict.update({'{}_id'.format(ldp_tdp): group['ldp_tdp_id']})
+
+                if targeted_flag:
+                    if targeted_dict:
+                        targeted_dict.update({'{}_id'.format(ldp_tdp): group['ldp_tdp_id']})
+                continue
+
+            # Src IP addr: 106.162.197.93; Transport IP addr: 106.162.197.252
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_dict.update({k:v for k,v in group.items() if v})
+                continue
+
+            # Hold time: 15 sec; Proposed local/peer: 15/15 sec
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_dict.update({k: int(v) for k, v in group.items() if v})
+                continue
+
+            # Reachable via 106.162.197.252/32
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_dict.update({'reachable_via': group['reachable_via']})
+                continue
+
+            #  Password: not required, none, in use
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_dict.update({'password': group['password']})
+                continue
+
+            # Clients: IPv4, mLDP
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_dict.update({'clients': group['clients']})
+                continue
+
+            # Targeted Hellos:
+            m = p13.match(line)
+            if m:
+                discovery_flag = False
+                targeted_flag = True
+                continue
+
+            #  8.1.1.1 -> 133.0.0.33 (ldp): active, xmit/recv
+            #  8.1.1.1 -> 168.7.0.16 (tdp): passive, xmit/recv
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                targeted_dict = local_ldp_identifier_dict.setdefault('targeted_hellos', {}).\
+                                                          setdefault(group['source'],{}).\
+                                                          setdefault(group['destination'], {})
+                targeted_dict.update({'source': group['source']})
+                targeted_dict.update({'destination': group['destination']})
+                targeted_dict.update({'session': group['session'].lower()})
+                targeted_dict.update({'active': True if group['status']=='active' else False})
+                continue
         return result_dict

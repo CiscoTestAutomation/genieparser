@@ -8,9 +8,9 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
 
 from genie.libs.parser.iosxe.show_mpls import ShowMplsLdpNeighbor,\
                                               ShowMplsLdpNeighborDetail,\
-                                              ShowMplsLdpBindings
-
-
+                                              ShowMplsLdpBindings,\
+                                              ShowMplsLdpCapabilities,\
+                                              ShowMplsLdpDiscovery
 
 class test_show_mpls_ldp_neighbor(unittest.TestCase):
     dev1 = Device(name='empty')
@@ -20,42 +20,58 @@ class test_show_mpls_ldp_neighbor(unittest.TestCase):
     golden_parsed_output = {
         'vrf': {
             'default': {
-                'neighbor': {
-                    '106.162.197.252:0':{
-                        'address_bound': ['106.162.197.252',
-                                          '27.93.202.49',
-                                          '106.162.197.101',
-                                          '113.146.190.254',
-                                          '106.162.197.93'],
-                        'downstream': True,
-                        'ldp_source': {
-                            'interface': 'GigabitEthernet0/0/0',
-                            'src_ip_address': '106.162.197.93'
+                'peers': {
+                    '106.162.197.252': {
+                        'label_space_id': {
+                            0: {
+                                'address_bound': ['106.162.197.252',
+                                                  '27.93.202.49',
+                                                  '106.162.197.101',
+                                                  '113.146.190.254',
+                                                  '106.162.197.93'],
+                                'downstream': True,
+                                'ldp_discovery_sources': {
+                                    'interface':{
+                                        'GigabitEthernet0/0/0':{
+                                            'ip_address': {
+                                                '106.162.197.93': {},
+                                            }
+                                        }
+                                    }
+                                },
+                                'local_ldp_ident': '106.162.197.254:0',
+                                'msg_rcvd': 852,
+                                'msg_sent': 851,
+                                'state': 'oper',
+                                'tcp_connection': "106.162.197.252.646 - 106.162.197.254.20170",
+                                'uptime': '04:50:30'
+                            },
                         },
-                        'local_ldp': '106.162.197.254:0',
-                        'msg_rcvd': 852,
-                        'msg_sent': 851,
-                        'state': 'oper',
-                        'tcp_connection': ['106.162.197.252.646',
-                                        '106.162.197.254.20170'],
-                        'uptime': '04:50:30'
                     },
-                    '106.162.197.253:0': {
-                        'address_bound': ['20.1.1.2',
-                                          '27.93.202.57',
-                                          '106.162.197.97'],
-                        'downstream': True,
-                        'ldp_source': {
-                            'interface': 'GigabitEthernet0/0/2',
-                            'src_ip_address': '106.162.197.97'
-                        },
-                        'local_ldp': '106.162.197.254:0',
-                        'msg_rcvd': 306,
-                        'msg_sent': 858,
-                        'state': 'oper',
-                        'tcp_connection': ['106.162.197.253.646',
-                                           '106.162.197.254.42450'],
-                        'uptime': '04:50:30'
+                    '106.162.197.253': {
+                        'label_space_id': {
+                            0:{
+                                'address_bound': ['20.1.1.2',
+                                                  '27.93.202.57',
+                                                  '106.162.197.97'],
+                                'downstream': True,
+                                'ldp_discovery_sources': {
+                                    'interface': {
+                                        'GigabitEthernet0/0/2':{
+                                            'ip_address': {
+                                                '106.162.197.97': {},
+                                            },
+                                        }
+                                    },
+                                },
+                                'local_ldp_ident': '106.162.197.254:0',
+                                'msg_rcvd': 306,
+                                'msg_sent': 858,
+                                'state': 'oper',
+                                'tcp_connection': '106.162.197.253.646 - 106.162.197.254.42450',
+                                'uptime': '04:50:30'
+                            }
+                        }
                     }
                 }
             }
@@ -89,78 +105,84 @@ Time source is NTP, 20:53:42.709 JST Fri Nov 11 2016
     golden_parsed_output_vrf = {
     "vrf": {
         "vpn10": {
-            "neighbor": {
-                "14.14.14.14:0": {
-                    "local_ldp": "30.29.0.2:0",
-                    "msg_sent": 1423,
-                    "downstream": True,
-                    "address_bound": [
-                        "3.3.36.9",
-                        "30.7.0.1",
-                        "14.14.14.14",
-                        "30.13.0.1",
-                        "30.15.0.1",
-                        "30.17.0.1",
-                        "30.19.0.1",
-                        "30.21.0.1",
-                        "30.23.0.1",
-                        "30.25.0.1",
-                        "30.27.0.1",
-                        "30.29.0.1",
-                        "30.31.0.1",
-                        "30.33.0.1",
-                        "30.35.0.1",
-                        "30.37.0.1",
-                        "30.39.0.1",
-                        "30.41.0.1",
-                        "30.43.0.1",
-                        "30.45.0.1",
-                        "30.47.0.1",
-                        "30.49.0.1",
-                        "30.51.0.1",
-                        "30.53.0.1",
-                        "30.55.0.1",
-                        "30.57.0.1",
-                        "30.59.0.1",
-                        "30.61.0.1",
-                        "30.63.0.1",
-                        "30.65.0.1",
-                        "30.67.0.1",
-                        "30.69.0.1",
-                        "30.71.0.1",
-                        "30.73.0.1",
-                        "30.75.0.1",
-                        "30.77.0.1",
-                        "30.79.0.1",
-                        "30.81.0.1",
-                        "30.83.0.1",
-                        "30.85.0.1",
-                        "30.87.0.1",
-                        "30.89.0.1",
-                        "30.91.0.1",
-                        "30.93.0.1",
-                        "30.95.0.1",
-                        "30.97.0.1",
-                        "30.99.0.1",
-                        "30.101.0.1",
-                        "30.103.0.1",
-                        "30.105.0.1",
-                        "30.107.0.1",
-                        "30.109.0.1",
-                        "30.4.0.2",
-                        "30.3.0.2"
-                    ],
-                    "ldp_source": {
-                        "interface": "ATM3/0/0.10",
-                        "src_ip_address": "14.14.14.10"
-                    },
-                    "msg_rcvd": 800,
-                    "state": "oper",
-                    "tcp_connection": [
-                        "14.14.14.14.646",
-                        "30.29.0.2.11384"
-                    ],
-                    "uptime": "02:38:11"
+            "peers": {
+                "14.14.14.14": {
+                    'label_space_id': {
+                        0:{
+                            "local_ldp_ident": "30.29.0.2:0",
+                            "msg_sent": 1423,
+                            "downstream": True,
+                            "address_bound": [
+                                "3.3.36.9",
+                                "30.7.0.1",
+                                "14.14.14.14",
+                                "30.13.0.1",
+                                "30.15.0.1",
+                                "30.17.0.1",
+                                "30.19.0.1",
+                                "30.21.0.1",
+                                "30.23.0.1",
+                                "30.25.0.1",
+                                "30.27.0.1",
+                                "30.29.0.1",
+                                "30.31.0.1",
+                                "30.33.0.1",
+                                "30.35.0.1",
+                                "30.37.0.1",
+                                "30.39.0.1",
+                                "30.41.0.1",
+                                "30.43.0.1",
+                                "30.45.0.1",
+                                "30.47.0.1",
+                                "30.49.0.1",
+                                "30.51.0.1",
+                                "30.53.0.1",
+                                "30.55.0.1",
+                                "30.57.0.1",
+                                "30.59.0.1",
+                                "30.61.0.1",
+                                "30.63.0.1",
+                                "30.65.0.1",
+                                "30.67.0.1",
+                                "30.69.0.1",
+                                "30.71.0.1",
+                                "30.73.0.1",
+                                "30.75.0.1",
+                                "30.77.0.1",
+                                "30.79.0.1",
+                                "30.81.0.1",
+                                "30.83.0.1",
+                                "30.85.0.1",
+                                "30.87.0.1",
+                                "30.89.0.1",
+                                "30.91.0.1",
+                                "30.93.0.1",
+                                "30.95.0.1",
+                                "30.97.0.1",
+                                "30.99.0.1",
+                                "30.101.0.1",
+                                "30.103.0.1",
+                                "30.105.0.1",
+                                "30.107.0.1",
+                                "30.109.0.1",
+                                "30.4.0.2",
+                                "30.3.0.2"
+                            ],
+                            "ldp_discovery_sources": {
+                                "interface": {
+                                    "ATM3/0/0.10":{
+                                        "ip_address": {
+                                            "14.14.14.10": {},
+                                        }
+                                    }
+                                },
+                            },
+                            "msg_rcvd": 800,
+                            "state": "oper",
+                            "tcp_connection": "14.14.14.14.646 - 30.29.0.2.11384",
+                            "uptime": "02:38:11"
+                        }
+                    }
                 }
             }
         }
@@ -222,89 +244,113 @@ class test_show_mpls_ldp_neighbor_detail(unittest.TestCase):
     golden_parsed_output = {
     "vrf": {
         "default": {
-            "neighbor": {
-                "106.162.197.252:0": {
-                    "msg_sent": 9981,
-                    "address_bound": [
-                        "106.162.197.252",
-                        "202.239.165.49",
-                        "27.93.202.49",
-                        "202.239.165.57",
-                        "106.162.197.101",
-                        "106.162.197.93",
-                        "111.111.111.2",
-                        "113.146.190.254"
-                    ],
-                    "nsr": "Not Ready",
-                    "capabilities_sent": {
-                        "typed_wildcard": "0x050B",
-                        "dynamic_anouncement": "0x0506",
-                        "min_version": 0,
-                        "mldp_point_to_multipoint": "0x0508",
-                        "maj_version": 1,
-                        "mldp_multipoint_to_multipoint": "0x0509",
-                        "iccp_type": "0x0405"
-                    },
-                    "local_ldp": "106.162.197.254:0",
-                    "password": "not required, none, in use",
-                    "last_tib_rev_sent": 4103,
-                    "ldp_source": {
-                        "src_ip_address": "106.162.197.93",
-                        "holdtime_ms": 15000,
-                        "interface": "GigabitEthernet0/0/0",
-                        "hello_interval_ms": 5000
-                    },
-                    "downstream": True,
-                    "capabilities_received": {
-                        "typed_wildcard": "0x050B",
-                        "dynamic_anouncement": "0x0506",
-                        "min_version": 0,
-                        "mldp_point_to_multipoint": "0x0508",
-                        "maj_version": 1,
-                        "mldp_multipoint_to_multipoint": "0x0509",
-                        "iccp_type": "0x0405"
-                    },
-                    "msg_rcvd": 10004,
-                    "tcp_connection": [
-                        "106.162.197.252.646",
-                        "106.162.197.254.44315"
-                    ],
-                    "state": "oper",
-                    "uptime": "3d21h"
+            "peers": {
+                "106.162.197.252": {
+                    'label_space_id': {
+                        0: {
+                            "msg_sent": 9981,
+                            "address_bound": [
+                                "106.162.197.252",
+                                "202.239.165.49",
+                                "27.93.202.49",
+                                "202.239.165.57",
+                                "106.162.197.101",
+                                "106.162.197.93",
+                                "111.111.111.2",
+                                "113.146.190.254"
+                            ],
+                            "nsr": "Not Ready",
+                            "capabilities": {
+                                "sent":{
+                                    "ICCP":{
+                                        "type": "0x0405",
+                                        "maj_ver": 1,
+                                        "min_ver": 0,
+                                    },
+                                    "typed_wildcard": "0x050B",
+                                    "dynamic_anouncement": "0x0506",
+                                    "mldp_point_to_multipoint": "0x0508",
+                                    "mldp_multipoint_to_multipoint": "0x0509",
+                                },
+                                'received':{
+                                    "ICCP": {
+                                        "min_ver": 0,
+                                        "type": "0x0405",
+                                        "maj_ver": 1,
+                                    },
+                                    "typed_wildcard": "0x050B",
+                                    "dynamic_anouncement": "0x0506",
+                                    "mldp_point_to_multipoint": "0x0508",
+                                    "mldp_multipoint_to_multipoint": "0x0509",
+                                }
+                            },
+                            "local_ldp_ident": "106.162.197.254:0",
+                            "password": "not required, none, in use",
+                            "last_tib_rev_sent": 4103,
+                            "ldp_discovery_sources": {
+                                "interface":{
+                                    "GigabitEthernet0/0/0":{
+                                        "ip_address": {
+                                            "106.162.197.93": {
+                                                "holdtime_ms": 15000,
+                                                "hello_interval_ms": 5000
+                                            }
+                                        },
+                                    }
+                                }
+                            },
+                            "downstream": True,
+                            "msg_rcvd": 10004,
+                            "tcp_connection": "106.162.197.252.646 - 106.162.197.254.44315",
+                            "state": "oper",
+                            "uptime": "3d21h"
+                        }
+                    }
                 },
-                "106.162.197.253:0": {
-                    "msg_sent": 9966,
-                    "address_bound": [
-                        "27.93.202.57",
-                        "106.162.197.97"
-                    ],
-                    "nsr": "Not Ready",
-                    "capabilities_sent": {
-                        "typed_wildcard": "0x050B",
-                        "dynamic_anouncement": "0x0506",
-                        "min_version": 0,
-                        "mldp_point_to_multipoint": "0x0508",
-                        "maj_version": 1,
-                        "mldp_multipoint_to_multipoint": "0x0509",
-                        "iccp_type": "0x0405"
-                    },
-                    "local_ldp": "106.162.197.254:0",
-                    "password": "not required, none, in use",
-                    "last_tib_rev_sent": 4103,
-                    "ldp_source": {
-                        "src_ip_address": "106.162.197.97",
-                        "holdtime_ms": 15000,
-                        "interface": "GigabitEthernet0/0/2",
-                        "hello_interval_ms": 5000
-                    },
-                    "downstream": True,
-                    "msg_rcvd": 9153,
-                    "tcp_connection": [
-                        "106.162.197.253.646",
-                        "106.162.197.254.34904"
-                    ],
-                    "state": "oper",
-                    "uptime": "3d21h"
+                "106.162.197.253": {
+                    'label_space_id': {
+                        0: {
+                            "msg_sent": 9966,
+                            "address_bound": [
+                                "27.93.202.57",
+                                "106.162.197.97"
+                            ],
+                            "nsr": "Not Ready",
+                            "capabilities": {
+                                "sent": {
+                                    "ICCP":{
+                                        "min_ver": 0,
+                                        "maj_ver": 1,
+                                        "type": "0x0405"
+                                    },
+                                    "typed_wildcard": "0x050B",
+                                    "dynamic_anouncement": "0x0506",
+                                    "mldp_point_to_multipoint": "0x0508",
+                                    "mldp_multipoint_to_multipoint": "0x0509",
+                                },
+                            },
+                            "local_ldp_ident": "106.162.197.254:0",
+                            "password": "not required, none, in use",
+                            "last_tib_rev_sent": 4103,
+                            "ldp_discovery_sources": {
+                                "interface":{
+                                    "GigabitEthernet0/0/2":{
+                                        "ip_address": {
+                                            "106.162.197.97": {
+                                                "holdtime_ms": 15000,
+                                                "hello_interval_ms": 5000
+                                            },
+                                        },
+                                    }
+                                },
+                            },
+                            "downstream": True,
+                            "msg_rcvd": 9153,
+                            "tcp_connection": "106.162.197.253.646 - 106.162.197.254.34904",
+                            "state": "oper",
+                            "uptime": "3d21h"
+                        }
+                    }
                 }
             }
         }
@@ -381,101 +427,157 @@ class test_show_mpls_ldp_bindings(unittest.TestCase):
     empty_output = {'execute.return_value': '      '}
 
     golden_parsed_output = {
-    "lib_entry": {
-        "27.93.202.64/32": {
-            "rev": "1020",
-            "remote_binding": {
-                "index": {
-                    1: {
-                        "lsr": "106.162.197.252:0",
-                        "label": "506"
-                    },
-                    2: {
-                        "lsr": "106.162.197.253:0",
-                        "label": "399712"
+            "vrf": {
+                "default": {
+                    "lib_entry": {
+                        "27.93.202.48/30": {
+                            "rev": "1034",
+                            "label_binding": {
+                                "label": {
+                                    "2539": {}
+                                }
+                            },
+                            "remote_binding": {
+                                "label": {
+                                    "imp-null": {
+                                        "lsr_id": {
+                                            "106.162.197.252": {
+                                                "label_space_id": {
+                                                    0: {}
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "106.162.197.96/30": {
+                            "rev": "4",
+                            "label_binding": {
+                                "label": {
+                                    "imp-null": {}
+                                }
+                            },
+                            "remote_binding": {
+                                "label": {
+                                    "1002": {
+                                        "lsr_id": {
+                                            "106.162.197.252": {
+                                                "label_space_id": {
+                                                    0: {}
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "27.93.202.56/30": {
+                            "rev": "1024",
+                            "label_binding": {
+                                "label": {
+                                    "2534": {}
+                                }
+                            },
+                            "remote_binding": {
+                                "label": {
+                                    "505": {
+                                        "lsr_id": {
+                                            "106.162.197.252": {
+                                                "label_space_id": {
+                                                    0: {}
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "106.162.197.92/30": {
+                            "rev": "2",
+                            "label_binding": {
+                                "label": {
+                                    "imp-null": {}
+                                }
+                            },
+                            "remote_binding": {
+                                "label": {
+                                    "736112": {
+                                        "lsr_id": {
+                                            "106.162.197.253": {
+                                                "label_space_id": {
+                                                    0: {}
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "imp-null": {
+                                        "lsr_id": {
+                                            "106.162.197.252": {
+                                                "label_space_id": {
+                                                    0: {}
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "27.93.202.64/32": {
+                            "rev": "1020",
+                            "label_binding": {
+                                "label": {
+                                    "2532": {}
+                                }
+                            },
+                            "remote_binding": {
+                                "label": {
+                                    "399712": {
+                                        "lsr_id": {
+                                            "106.162.197.253": {
+                                                "label_space_id": {
+                                                    0: {}
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "506": {
+                                        "lsr_id": {
+                                            "106.162.197.252": {
+                                                "label_space_id": {
+                                                    0: {}
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "20.1.1.0/24": {
+                            "rev": "1028",
+                            "label_binding": {
+                                "label": {
+                                    "2536": {}
+                                }
+                            },
+                            "remote_binding": {
+                                "label": {
+                                    "508": {
+                                        "lsr_id": {
+                                            "106.162.197.252": {
+                                                "label_space_id": {
+                                                    0: {}
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
-            },
-            "local_binding": {
-                "label": "2532"
-            }
-        },
-        "27.93.202.56/30": {
-            "rev": "1024",
-            "remote_binding": {
-                "index": {
-                    1: {
-                        "lsr": "106.162.197.252:0",
-                        "label": "505"
-                    }
-                }
-            },
-            "local_binding": {
-                "label": "2534"
-            }
-        },
-        "27.93.202.48/30": {
-            "rev": "1034",
-            "remote_binding": {
-                "index": {
-                    1: {
-                        "lsr": "106.162.197.252:0",
-                        "label": "imp-null"
-                    }
-                }
-            },
-            "local_binding": {
-                "label": "2539"
-            }
-        },
-        "20.1.1.0/24": {
-            "rev": "1028",
-            "remote_binding": {
-                "index": {
-                    1: {
-                        "lsr": "106.162.197.252:0",
-                        "label": "508"
-                    }
-                }
-            },
-            "local_binding": {
-                "label": "2536"
-            }
-        },
-        "106.162.197.96/30": {
-            "rev": "4",
-            "remote_binding": {
-                "index": {
-                    1: {
-                        "lsr": "106.162.197.252:0",
-                        "label": "1002"
-                    }
-                }
-            },
-            "local_binding": {
-                "label": "imp-null"
-            }
-        },
-        "106.162.197.92/30": {
-            "rev": "2",
-            "remote_binding": {
-                "index": {
-                    1: {
-                        "lsr": "106.162.197.252:0",
-                        "label": "imp-null"
-                    },
-                    2: {
-                        "lsr": "106.162.197.253:0",
-                        "label": "736112"
-                    }
-                }
-            },
-            "local_binding": {
-                "label": "imp-null"
             }
         }
-    }
-}
 
     golden_output = {'execute.return_value': '''\
        Router#show mpls ldp bindings
@@ -532,99 +634,145 @@ Time source is NTP, 16:10:10.910 JST Tue Nov 8 2016
         remote binding: lsr: 106.162.197.252:0, label: 126 checkpointed
     '''
     }
-    golden_parsed_output_all_detail ={
-   "lib_entry": {
-      "106.162.197.92/30": {
-         "local_binding": {
-            "advertised_to": [
-               "106.162.197.252:0",
-               "106.162.197.253:0"
-            ],
-            "owner": "LDP",
-            "label": "imp-null"
-         },
-         "checkpoint": "none",
-         "rev": "4",
-         "remote_binding": {
-            "index": {
-               1: {
-                  "checkpointed": True,
-                  "lsr": "106.162.197.252:0",
-                  "label": "126"
-               }
-            }
-         }
-      },
-      "27.93.202.56/30": {
-         "local_binding": {
-            "advertised_to": [
-               "106.162.197.252:0",
-               "106.162.197.253:0"
-            ],
-            "owner": "LDP",
-            "label": "6589"
-         },
-         "checkpoint": "none",
-         "rev": "1085",
-         "remote_binding": {
-            "index": {
-               1: {
-                  "checkpointed": True,
-                  "lsr": "106.162.197.252:0",
-                  "label": "1014"
-               }
-            }
-         }
-      },
-      "27.93.202.48/30": {
-         "local_binding": {
-            "advertised_to": [
-               "106.162.197.252:0",
-               "106.162.197.253:0"
-            ],
-            "owner": "LDP",
-            "label": "2030"
-         },
-         "checkpoint": "none",
-         "rev": "18",
-         "remote_binding": {
-            "index": {
-               1: {
-                  "checkpointed": True,
-                  "lsr": "106.162.197.252:0",
-                  "label": "imp-null"
-               }
-            }
-         }
-      },
-      "27.93.202.64/32": {
-         "local_binding": {
-            "advertised_to": [
-               "106.162.197.252:0",
-               "106.162.197.253:0"
-            ],
-            "owner": "LDP",
-            "label": "2027"
-         },
-         "checkpoint": "none",
-         "rev": "12",
-         "remote_binding": {
-            "index": {
-               1: {
-                  "checkpointed": True,
-                  "lsr": "106.162.197.252:0",
-                  "label": "516"
-               },
-               2: {
-                  "checkpointed": True,
-                  "lsr": "106.162.197.253:0",
-                  "label": "308016"
-               }
-            }
-         }
-      }
-   }
-}
+    golden_parsed_output_all_detail = {
+       "vrf": {
+          "default": {
+             "lib_entry": {
+                "106.162.197.92/30": {
+                   "rev": "4",
+                   "label_binding": {
+                      "label": {
+                         "imp-null": {
+                            "owner": "LDP",
+                            "advertised_to": [
+                               "106.162.197.252:0",
+                               "106.162.197.253:0"
+                            ]
+                         }
+                      }
+                   },
+                   "checkpoint": "none",
+                   "remote_binding": {
+                      "label": {
+                         "126": {
+                            "lsr_id": {
+                               "106.162.197.252": {
+                                  "label_space_id": {
+                                     0: {
+                                        "checkpointed": True
+                                     }
+                                  }
+                               }
+                            }
+                         }
+                      }
+                   }
+                },
+                "27.93.202.64/32": {
+                   "rev": "12",
+                   "label_binding": {
+                      "label": {
+                         "2027": {
+                            "owner": "LDP",
+                            "advertised_to": [
+                               "106.162.197.252:0",
+                               "106.162.197.253:0"
+                            ]
+                         }
+                      }
+                   },
+                   "checkpoint": "none",
+                   "remote_binding": {
+                      "label": {
+                         "308016": {
+                            "lsr_id": {
+                               "106.162.197.253": {
+                                  "label_space_id": {
+                                     0: {
+                                        "checkpointed": True
+                                     }
+                                  }
+                               }
+                            }
+                         },
+                         "516": {
+                            "lsr_id": {
+                               "106.162.197.252": {
+                                  "label_space_id": {
+                                     0: {
+                                        "checkpointed": True
+                                     }
+                                  }
+                               }
+                            }
+                         }
+                      }
+                   }
+                },
+                "27.93.202.56/30": {
+                   "rev": "1085",
+                   "label_binding": {
+                      "label": {
+                         "6589": {
+                            "owner": "LDP",
+                            "advertised_to": [
+                               "106.162.197.252:0",
+                               "106.162.197.253:0"
+                            ]
+                         }
+                      }
+                   },
+                   "checkpoint": "none",
+                   "remote_binding": {
+                      "label": {
+                         "1014": {
+                            "lsr_id": {
+                               "106.162.197.252": {
+                                  "label_space_id": {
+                                     0: {
+                                        "checkpointed": True
+                                     }
+                                  }
+                               }
+                            }
+                         }
+                      }
+                   }
+                },
+                "27.93.202.48/30": {
+                   "rev": "18",
+                   "label_binding": {
+                      "label": {
+                         "2030": {
+                            "owner": "LDP",
+                            "advertised_to": [
+                               "106.162.197.252:0",
+                               "106.162.197.253:0"
+                            ]
+                         }
+                      }
+                   },
+                   "checkpoint": "none",
+                   "remote_binding": {
+                      "label": {
+                         "imp-null": {
+                            "lsr_id": {
+                               "106.162.197.252": {
+                                  "label_space_id": {
+                                     0: {
+                                        "checkpointed": True
+                                     }
+                                  }
+                               }
+                            }
+                         }
+                      }
+                   }
+                }
+             }
+          }
+       }
+    }
 
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
@@ -636,7 +784,6 @@ Time source is NTP, 16:10:10.910 JST Tue Nov 8 2016
         self.maxDiff = None
         self.dev = Mock(**self.golden_output)
         obj = ShowMplsLdpBindings(device=self.dev)
-
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
@@ -646,6 +793,356 @@ Time source is NTP, 16:10:10.910 JST Tue Nov 8 2016
         obj = ShowMplsLdpBindings(device=self.dev)
         parsed_output = obj.parse(all='all',detail="detail")
         self.assertEqual(parsed_output, self.golden_parsed_output_all_detail)
+
+class test_show_mpls_ldp_capabilities(unittest.TestCase):
+    dev = Device(name='dev1')
+    empty_output = {'execute.return_value': '      '}
+
+    golden_parsed_output_all = {
+        "ldp_capabilities": {
+            "iccp_type": "0x0405",
+            "mldp_multipoint_to_multipoint": "0x0509",
+            "dynamic_anouncement": "0x0506",
+            "typed_wildcard": "0x050B",
+            "maj_version": 1,
+            "mldp_point_to_multipoint": "0x0508",
+            "min_version": 0
+            }
+        }
+    golden_output_all = {'execute.return_value':'''
+    Router#show mpls ldp capabilities all
+    Load for five secs: 2%/0%; one minute: 5%; five minutes: 5%
+    Time source is NTP, 16:10:10.481 JST Tue Nov 8 2016
+
+    LDP Capabilities - [<description> (<type>)]
+    ---------------------------------------------------------
+        [ICCP (type 0x0405) MajVer 1 MinVer 0]
+        [Dynamic Announcement (0x0506)]
+        [mLDP Point-to-Multipoint (0x0508)]
+        [mLDP Multipoint-to-Multipoint (0x0509)]
+        [Typed Wildcard (0x050B)]
+
+    '''}
+
+    golden_parsed_output = {
+        "ldp_capabilities": {
+            "typed_wildcard": "0x050B",
+            "dynamic_anouncement": "0x0506"
+        }
+    }
+
+    golden_output = {'execute.return_value':'''\
+    Router#show mpls ldp capabilities
+
+    LDP Capabilities - [<description> (<type>)]
+    ---------------------------------------------------------
+    [Dynamic Announcement (0x0506)]
+    [Typed Wildcard (0x050B)]
+
+    '''
+    }
+    def test_empty(self):
+        self.dev = Mock(**self.empty_output)
+        obj = ShowMplsLdpCapabilities(device=self.dev)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output_all)
+        obj = ShowMplsLdpCapabilities(device=self.dev)
+        parsed_output = obj.parse(all="all")
+        self.assertEqual(parsed_output, self.golden_parsed_output_all)
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output)
+        obj = ShowMplsLdpCapabilities(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+class test_show_mpls_ldp_discovery(unittest.TestCase):
+    dev = Device(name='dev1')
+    empty_output = {'execute.return_value': '      '}
+
+    golden_parsed_output_all_detail = {
+            "vrf": {
+                "default": {
+                    "local_ldp_identifier": {
+                        "106.162.197.254:0": {
+                            'discovery_sources':{
+                                "interface": {
+                                    "GigabitEthernet0/0/0": {
+                                        'session': 'ldp',
+                                        "hello_interval_ms": 5000,
+                                        "ip_address": "106.162.197.254",
+                                        "ldp_id": {
+                                            "106.162.197.252:0": {
+                                                "ldp_id": "106.162.197.252:0",
+                                                "reachable_via": "106.162.197.252/32",
+                                                "password": "not required, none, in use",
+                                                "holdtime_sec": 15,
+                                                "transport_ip_address": "106.162.197.252",
+                                                "proposed_peer": 15,
+                                                "clients": "IPv4, mLDP",
+                                                "source_ip_address": "106.162.197.93",
+                                                "proposed_local": 15
+                                            }
+                                        },
+                                        "enabled": True
+                                    },
+                                    "GigabitEthernet0/0/2": {
+                                        "hello_interval_ms": 5000,
+                                        "ip_address": "106.162.197.254",
+                                        'session': 'ldp',
+                                        "ldp_id": {
+                                            "106.162.197.253:0": {
+                                                "ldp_id": "106.162.197.253:0",
+                                                "reachable_via": "106.162.197.253/32",
+                                                "password": "not required, none, in use",
+                                                "holdtime_sec": 15,
+                                                "transport_ip_address": "106.162.197.253",
+                                                "proposed_peer": 15,
+                                                "clients": "IPv4, mLDP",
+                                                "source_ip_address": "106.162.197.97",
+                                                "proposed_local": 15
+                                            }
+                                        },
+                                        "enabled": True
+                                    }
+                                }
+                            },
+                        },
+                    }
+                }
+            }
+        }
+    golden_output_all_detail = {'execute.return_value': '''\
+
+    Router#show mpls ldp discovery all detail
+    Load for five secs: 2%/0%; one minute: 5%; five minutes: 5%
+    Time source is NTP, 16:10:10.682 JST Tue Nov 8 2016
+     Local LDP Identifier:
+        106.162.197.254:0
+        Discovery Sources:
+        Interfaces:
+            GigabitEthernet0/0/0 (ldp): xmit/recv
+                Enabled: Interface config
+                Hello interval: 5000 ms; Transport IP addr: 106.162.197.254
+                LDP Id: 106.162.197.252:0
+                  Src IP addr: 106.162.197.93; Transport IP addr: 106.162.197.252
+                  Hold time: 15 sec; Proposed local/peer: 15/15 sec
+                  Reachable via 106.162.197.252/32
+                  Password: not required, none, in use
+                Clients: IPv4, mLDP
+            GigabitEthernet0/0/2 (ldp): xmit/recv
+                Enabled: Interface config
+                Hello interval: 5000 ms; Transport IP addr: 106.162.197.254
+                LDP Id: 106.162.197.253:0
+                  Src IP addr: 106.162.197.97; Transport IP addr: 106.162.197.253
+                  Hold time: 15 sec; Proposed local/peer: 15/15 sec
+                  Reachable via 106.162.197.253/32
+                  Password: not required, none, in use
+                Clients: IPv4, mLDP
+    '''
+    }
+
+    golden_output = {'execute.return_value': '''\
+    https://www.cisco.com/c/en/us/td/docs/ios/12_0s/feature/guide/fsldp22.html#wp1360254
+    Router# show mpls ldp discovery
+
+     Local LDP Identifier:
+         8.1.1.1:0
+     Discovery Sources:
+         Interfaces:
+             Ethernet1/1/3 (ldp): xmit/recv
+                 LDP Id: 177.73.0.77:0
+                 LDP Id: 144.0.0.44:0
+                 LDP Id: 155.0.0.55:0
+             ATM3/0.1 (ldp): xmit/recv
+                 LDP Id: 203.0.7.7:2
+             ATM0/0.2 (tdp): xmit/recv
+                 TDP Id: 119.1.0.1:1
+     Targeted Hellos:
+             8.1.1.1 -> 133.0.0.33 (ldp): active, xmit/recv
+                 LDP Id: 133.0.0.33:0
+             8.1.1.1 -> 168.7.0.16 (tdp): passive, xmit/recv
+                 TDP Id: 133.0.0.33:0
+     Router#
+        '''
+                                }
+    golden_parsed_output = {
+        "vrf": {
+            "default": {
+                "local_ldp_identifier": {
+                    "8.1.1.1:0": {
+                        "targeted_hellos": {
+                            "8.1.1.1": {
+                                "168.7.0.16": {
+                                    "destination": "168.7.0.16",
+                                    "session": "tdp",
+                                    "active": False,
+                                    "tdp_id": "133.0.0.33:0",
+                                    "source": "8.1.1.1"
+                                },
+                                "133.0.0.33": {
+                                    "active": True,
+                                    "destination": "133.0.0.33",
+                                    "session": "ldp",
+                                    "ldp_id": "133.0.0.33:0",
+                                    "source": "8.1.1.1"
+                                }
+                            }
+                        },
+                        "discovery_sources": {
+                            "interface": {
+                                "Ethernet1/1/3": {
+                                    "session": "ldp",
+                                    "ldp_id": {
+                                        "177.73.0.77:0": {
+                                            "ldp_id": "177.73.0.77:0"
+                                        },
+                                        "155.0.0.55:0": {
+                                            "ldp_id": "155.0.0.55:0"
+                                        },
+                                        "144.0.0.44:0": {
+                                            "ldp_id": "144.0.0.44:0"
+                                        }
+                                    }
+                                },
+                                "ATM3/0.1": {
+                                    "session": "ldp",
+                                    "ldp_id": {
+                                        "203.0.7.7:2": {
+                                            "ldp_id": "203.0.7.7:2"
+                                        }
+                                    }
+                                },
+                                "ATM0/0.2": {
+                                    "session": "tdp",
+                                    "tdp_id": {
+                                        "119.1.0.1:1": {
+                                            "tdp_id": "119.1.0.1:1"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_parsed_output_all = {
+    "vrf": {
+        "default": {
+            "local_ldp_identifier": {
+                "12.12.12.12:0": {
+                    "discovery_sources": {
+                        "interface": {
+                            "ATM1/1/0.1": {
+                                "session": "tdp",
+                                "tdp_id": {
+                                    "11.11.11.11:0": {
+                                        "tdp_id": "11.11.11.11:0"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "vpn2": {
+            "local_ldp_identifier": {
+                "30.13.0.2:0": {
+                    "discovery_sources": {
+                        "interface": {
+                            "ATM3/0/0.2": {
+                                "session": "ldp",
+                                "ldp_id": {
+                                    "14.14.14.14:0": {
+                                        "ldp_id": "14.14.14.14:0"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "vpn1": {
+            "local_ldp_identifier": {
+                "30.7.0.2:0": {
+                    "discovery_sources": {
+                        "interface": {
+                            "ATM3/0/0.1": {
+                                "session": "ldp",
+                                "ldp_id": {
+                                    "14.14.14.14:0": {
+                                        "ldp_id": "14.14.14.14:0"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+    golden_output_all = {'execute.return_value':'''\
+    https://www.cisco.com/c/en/us/td/docs/ios/12_0s/feature/guide/fsldp22.html#wp1360254
+    Router# show mpls ldp discovery all
+
+     Local LDP Identifier:
+         12.12.12.12:0
+         Discovery Sources:
+         Interfaces:
+             ATM1/1/0.1 (tdp):xmit/recv
+                 TDP Id:11.11.11.11:0
+     VRF vpn1:Local LDP Identifier:
+         30.7.0.2:0
+         Discovery Sources:
+         Interfaces:
+             ATM3/0/0.1 (ldp):xmit/recv
+                 LDP Id:14.14.14.14:0
+     VRF vpn2:Local LDP Identifier:
+         30.13.0.2:0
+         Discovery Sources:
+         Interfaces:
+             ATM3/0/0.2 (ldp):xmit/recv
+                 LDP Id:14.14.14.14:0
+    '''}
+
+    def test_empty(self):
+        self.dev = Mock(**self.empty_output)
+        obj = ShowMplsLdpDiscovery(device=self.dev)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_all_detail(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output_all_detail)
+        obj = ShowMplsLdpDiscovery(device=self.dev)
+        parsed_output = obj.parse(all="all", detail="detail")
+        self.assertEqual(parsed_output, self.golden_parsed_output_all_detail)
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output)
+        obj = ShowMplsLdpDiscovery(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_all(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output_all)
+        obj = ShowMplsLdpDiscovery(device=self.dev)
+        parsed_output = obj.parse(all='all')
+        self.assertEqual(parsed_output, self.golden_parsed_output_all)
 
 if __name__ == '__main__':
     unittest.main()
