@@ -4,16 +4,16 @@ IOSXE parsers for the following show command
 '''
 
 # Python
-
 import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema
+from genie.metaparser.util.schemaengine import Schema, \
+                                            Optional
 
 
 # ==================================================
-# Parser for 'show configuration lock
+# Parser for 'show configuration lock'
 # ==================================================
 
 class ShowConfigurationLockSchema(MetaParser):
@@ -26,8 +26,19 @@ class ShowConfigurationLockSchema(MetaParser):
                     'tty_number': int,
                     'tty_username': str,
                     'user_debug_info': str,
-                    'lock_active_time_in_sec': int
-                }
+                    'lock_active_time_in_sec': int,
+                },
+                Optional('parser_configure_lock'): {
+                        Optional('owner_pid'):int,
+                        Optional('user'): str,
+                        Optional('tty'): int,
+                        Optional('type'): str,
+                        Optional('state'): str,
+                        Optional('class'): str,
+                        Optional('count'): int,
+                        Optional('pending_requests'): int,
+                        Optional('user_debug_info'): int
+                    }
             }
 
 
@@ -46,55 +57,148 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
         # initial variables
         ret_dict = {}
         
-            
-        # Owner PID         : 578
-        p1 = re.compile(r'^\s*Owner +PID +: *(?P<owner_pid>\d+)$')
+        parser_lock_found = False
         
-        # TTY number        : 2
+        # initial regex pattern
+        p1 = re.compile(r'^\s*Owner +PID +: *(?P<owner_pid>\d+)$')
+
         p2 = re.compile(r'^\s*TTY +number +: *(?P<tty_number>\d+)$')
         
-        # TTY username      : testuser
         p3 = re.compile(r'^\s*TTY +username +: *(?P<tty_username>.*)$')
 
-        # User debug info   : CLI Session Lock
         p4 = re.compile(r'^\s*User +debug +info +: *(?P<user_debug_info>.*)$')
 
-        # Lock Active time (in Sec)
-        p5 = re.compile(r'^\s*Lock +Active +time +\( *in +Sec *\) +: *(?P<lock_active_time_in_sec>\d+)')
+        p5 = re.compile(r'^\s*Lock +Active +time +\( *in +Sec *\) +: *(?P<lock_active_time_in_sec>\d+)$')
+        
+        p6 = re.compile(r'^\s*Parser +Configure +Lock$')
+
+        p7 = re.compile(r'^\s*Owner +PID +: *(?P<owner_pid>\d+)$')
+
+        p8 = re.compile(r'^\s*User +: *(?P<user>.*)$')
+
+        p9 = re.compile(r'^\s*TTY +: *(?P<tty>\d+)$')
+
+        p10 = re.compile(r'^\s*Type +: *(?P<type>.*)$')
+
+        p11 = re.compile(r'^\s*State +: *(?P<state>.*)$')
+
+        p12 = re.compile(r'^\s*Class +: *(?P<class_name>.*)$')
+
+        p13 = re.compile(r'^\s*Count +: *(?P<count>\d+)$')
+
+        p14 = re.compile(r'^\s*Pending +Requests +: *(?P<pending_requests>\d+)$')
+
+        p15 = re.compile(r'^\s*User +debug +info +: *(?P<user_debug_info>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
         
-            m = p1.match(line)
-            if m:
-                group = m.groupdict()
-                owner_dict = ret_dict.setdefault('owner',{})
-                owner_dict.update({'owner_pid':int(group['owner_pid'])})
-                continue
+            if not parser_lock_found:
+                # Owner PID : 543
+                m = p1.match(line)
+                if m:
+                    group = m.groupdict()
+                    owner_dict = ret_dict.setdefault('owner',{})
+                    owner_dict.update({'owner_pid':int(group['owner_pid'])})
+                    continue
+                
+                # TTY number : 2
+                m = p2.match(line)
+                if m:
+                    group = m.groupdict()
+                    owner_dict.update({'tty_number':int(group['tty_number'])})
+                    continue
+                
+                # TTY username : unknown
+                m = p3.match(line)
+                if m:
+                    group = m.groupdict()
+                    owner_dict.update({'tty_username':str(group['tty_username'])})
+                    continue
 
-            m = p2.match(line)
-            if m:
-                group = m.groupdict()
-                owner_dict.update({'tty_number':int(group['tty_number'])})
-                continue
+                # User debug info : CLI Session Lock
+                m = p4.match(line)
+                if m:
+                    group = m.groupdict()
+                    owner_dict.update({'user_debug_info':str(group['user_debug_info'])})
+                    continue
+                
+                # Lock Active time (in Sec) : 63
+                m = p5.match(line)
+                if m:
+                    group = m.groupdict()
+                    owner_dict.update({'lock_active_time_in_sec':int(group['lock_active_time_in_sec'])})
+                    continue
+                
+                # Parser Configure Lock
+                m = p6.match(line)
+                if m:
+                    parser_lock_found = True
+                    continue
+            else:
+                # Owner PID         : 10
+                m = p7.match(line)
+                if m:
+                    group = m.groupdict()
+                    parser_configure_lock = ret_dict.setdefault('parser_configure_lock', {})
+                    parser_configure_lock.update({'owner_pid':int(group['owner_pid'])})
+                    continue
+                
+                # User              : User1
+                m = p8.match(line)
+                if m:
+                    group = m.groupdict()
+                    parser_configure_lock.update({'user':str(group['user'])})
+                    continue
 
-            m = p3.match(line)
-            if m:
-                group = m.groupdict()
-                owner_dict.update({'tty_username':str(group['tty_username'])})
-                continue
+                # TTY               : 3
+                m = p9.match(line)
+                if m:
+                    group = m.groupdict()
+                    parser_configure_lock.update({'tty':int(group['tty'])})
+                    continue
 
-            m = p4.match(line)
-            if m:
-                group = m.groupdict()
-                owner_dict.update({'user_debug_info':str(group['user_debug_info'])})
-                continue
-
-            m = p5.match(line)
-            if m:
-                group = m.groupdict()
-                owner_dict.update({'lock_active_time_in_sec':int(group['lock_active_time_in_sec'])})
-                continue
+                # Type              : EXCLUSIVE
+                m = p10.match(line)
+                if m:
+                    group = m.groupdict()
+                    parser_configure_lock.update({'type':str(group['type'])})
+                    continue
+                
+                # State              : LOCKED
+                m = p11.match(line)
+                if m:
+                    group = m.groupdict()
+                    parser_configure_lock.update({'state':str(group['state'])})
+                    continue
+                
+                # Class             : Exposed
+                m = p12.match(line)
+                if m:
+                    group = m.groupdict()
+                    parser_configure_lock.update({'class':str(group['class_name'])})
+                    continue
+                
+                # Count             : 0
+                m = p13.match(line)
+                if m:
+                    group = m.groupdict()
+                    parser_configure_lock.update({'count':int(group['count'])})
+                    continue
+                
+                # Pending Requests  : 0
+                m = p14.match(line)
+                if m:
+                    group = m.groupdict()
+                    parser_configure_lock.update({'pending_requests':int(group['pending_requests'])})
+                    continue
+                
+                # User debug info   : 0
+                m = p15.match(line)
+                if m:
+                    group = m.groupdict()
+                    parser_configure_lock.update({'user_debug_info':int(group['user_debug_info'])})
+                    continue
 
         return ret_dict
         
