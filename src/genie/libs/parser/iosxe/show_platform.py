@@ -2351,32 +2351,38 @@ class ShowVersionRpSchema(MetaParser):
 
     schema = {
         'rp': {
-            Any(): {
-                Optional('active'): {
-                    'package': {
-                        Any(): {
-                            'version': str,
-                            'status': str,
-                            'file': str,
-                            'built_time': str,
-                            'built_by': str,
-                            'file_sha1_checksum': str,
-                        },
-                    }
-                },
-                Optional('standby'): {
-                    'package': {
-                        Any(): {
-                            'version': str,
-                            'status': str,
-                            'file': str,
-                            'built_time': str,
-                            'built_by': str,
-                            'file_sha1_checksum': str,
-                        },
-                    }
+            Optional('active'): {
+                'slot': {
+                    Any(): {
+                        'package': {
+                            Any(): {
+                                'version': str,
+                                'status': str,
+                                'file': str,
+                                'built_time': str,
+                                'built_by': str,
+                                'file_sha1_checksum': str,
+                            },
+                        }
+                    },
                 }
             },
+            Optional('standby'): {
+                'slot': {
+                    Any(): {
+                        'package': {
+                            Any(): {
+                                'version': str,
+                                'status': str,
+                                'file': str,
+                                'built_time': str,
+                                'built_by': str,
+                                'file_sha1_checksum': str,
+                            },
+                        }
+                    },
+                }
+            }
         }
     }
 
@@ -2385,13 +2391,13 @@ class ShowVersionRp(ShowVersionRpSchema):
     """Parser for show version RP active [running|provisioned|installed]
                   show version RP standby [running|provisioned|installed]"""
 
-    cli_command = 'show version RP'
+    cli_command = ['show version RP {rp} {status}']
 
     def cli(self, rp='active', status='running', output=None):
 
         if output is None:
-            self.cli_command += ' {rp} {status}'.format(rp=rp, status=status)
-            out = self.device.execute(self.cli_command)
+            cmd = self.cli_command[0].format(rp=rp, status=status)
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -2401,24 +2407,28 @@ class ShowVersionRp(ShowVersionRpSchema):
         rp_slot = ''
         built_time = ''
 
+        # Package: rpbase, version: 03.16.04a.S.155-3.S4a-ext, status: active
+        # Package: Provisioning File, version: n/a, status: active
         p1 = re.compile(r'^Package: +(?P<package_name>[\w\d\s]+),'
                          ' +version: +(?P<version>[\w\d\.\-\/]+),'
                          ' +status: +(?P<status>[\w\/]+)$')
 
+        #   File: consolidated:asr1000rp2-rpbase.03.16.04a.S.155-3.S4a-ext.pkg, on: RP0
         p2 = re.compile(r'^File: +consolidated:(?P<file>[\w\d\-\.]+),'
                          ' +on: +(?P<rp_slot>[\w\d\/]+)$')
 
+        # Built: 2016-10-04_12.28, by: mcpre
+        # Built: n/a, by: n/a
         p3 = re.compile(r'^Built: +(?P<built_time>[\w\d\:\.\_\/\-]+),'
                          ' +by: +(?P<built_by>[\w\d\/]+)$')
 
+        #   File SHA1 checksum: 79e234871520fd480dc1128058160b4e2acee9f7
         p4 = re.compile(r'^File +SHA1 +checksum:'
                          ' +(?P<file_sha1_checksum>[\w\d]+)$')
 
         for line in out.splitlines():
             line = line.strip()
 
-            # Package: rpbase, version: 03.16.04a.S.155-3.S4a-ext, status: active
-            # Package: Provisioning File, version: n/a, status: active
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -2427,7 +2437,6 @@ class ShowVersionRp(ShowVersionRpSchema):
                 status = group['status']
                 continue
 
-            #   File: consolidated:asr1000rp2-rpbase.03.16.04a.S.155-3.S4a-ext.pkg, on: RP0
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -2440,25 +2449,25 @@ class ShowVersionRp(ShowVersionRpSchema):
                 elif 'rp' not in ret_dict:
                     ret_dict.setdefault('rp', {})
 
-                if rp_slot not in ret_dict['rp']:
-                    ret_dict['rp'].setdefault(rp_slot, {})
-                if rp not in ret_dict['rp'][rp_slot]:
-                    ret_dict['rp'][rp_slot].setdefault(rp, {})
-                if 'package' not in ret_dict['rp'][rp_slot][rp]:
-                    ret_dict['rp'][rp_slot][rp].setdefault('package', {})
+                if rp not in ret_dict['rp']:
+                    ret_dict['rp'].setdefault(rp, {})
+                if 'slot' not in ret_dict['rp'][rp]:
+                    ret_dict['rp'][rp].setdefault('slot', {})
+                if rp_slot not in ret_dict['rp'][rp]['slot']:
+                    ret_dict['rp'][rp]['slot'].setdefault(rp_slot, {})
+                if 'package' not in ret_dict['rp'][rp]['slot'][rp_slot]:
+                    ret_dict['rp'][rp]['slot'][rp_slot].setdefault('package', {})
 
-                ret_dict['rp'][rp_slot][rp]['package'].setdefault(
+                ret_dict['rp'][rp]['slot'][rp_slot]['package'].setdefault(
                     package_name, {})
-                ret_dict['rp'][rp_slot][rp]['package'][package_name]\
+                ret_dict['rp'][rp]['slot'][rp_slot]['package'][package_name]\
                     ['version'] = version
-                ret_dict['rp'][rp_slot][rp]['package'][package_name]\
+                ret_dict['rp'][rp]['slot'][rp_slot]['package'][package_name]\
                     ['status'] = status
-                ret_dict['rp'][rp_slot][rp]['package'][package_name]\
+                ret_dict['rp'][rp]['slot'][rp_slot]['package'][package_name]\
                     ['file'] = file
                 continue
 
-            # Built: 2016-10-04_12.28, by: mcpre
-            # Built: n/a, by: n/a
             m = p3.match(line)
             if m:
                 # Safer, return empty dictionary instead of an error
@@ -2468,21 +2477,20 @@ class ShowVersionRp(ShowVersionRpSchema):
                 group = m.groupdict()
                 built_time = group['built_time']
 
-                ret_dict['rp'][rp_slot][rp]['package'][package_name]\
-                    ['built_time'] = built_time
-                ret_dict['rp'][rp_slot][rp]['package'][package_name]\
-                    ['built_by'] = group['built_by']
+                ret_dict['rp'][rp]['slot'][rp_slot]['package']\
+                    [package_name]['built_time'] = built_time
+                ret_dict['rp'][rp]['slot'][rp_slot]['package']\
+                    [package_name]['built_by'] = group['built_by']
                 continue
 
-            #   File SHA1 checksum: 79e234871520fd480dc1128058160b4e2acee9f7
             m = p4.match(line)
             if m:
                 # Safer, return empty dictionary instead of an error
                 if not package_name or not rp_slot:
                     return ret_dict
                 group = m.groupdict()
-                ret_dict['rp'][rp_slot][rp]['package'][package_name]\
-                    ['file_sha1_checksum'] = group['file_sha1_checksum']
+                ret_dict['rp'][rp]['slot'][rp_slot]['package']\
+                    [package_name]['file_sha1_checksum'] = group['file_sha1_checksum']
                 continue
 
         return ret_dict
@@ -2492,15 +2500,13 @@ class ShowPlatformHardwareSchema(MetaParser):
     """Schema for show platform hardware qfp active infrastructure bqs queue output default all"""
 
     schema = {
-        'interface': {
-            Any(): {
-                'qfp': str,
-                'if_h': int,
-                'num_queues': int,
-                Optional('index'): {
-                    Any(): {
-                        'queue_id': str,
-                        'interf_name': str,
+        Any(): {
+            'if_h': int,
+            Optional('index'): {
+                Any(): {
+                    'queue_id': str,
+                    'name': str,
+                    'software_control_info': {
                         'cache_queue_id': str,
                         'wred': str,
                         'qlimit_bytes': int,
@@ -2521,6 +2527,8 @@ class ShowPlatformHardwareSchema(MetaParser):
                         'plevel': int,
                         'priority': int,
                         'defer_obj_refcnt': int,
+                    },
+                    'statistics': {
                         'tail_drops_bytes': int,
                         'tail_drops_packets': int,
                         'total_enqs_bytes': int,
@@ -2528,9 +2536,9 @@ class ShowPlatformHardwareSchema(MetaParser):
                         'queue_depth_bytes': int,
                         'lic_throughput_oversub_drops_bytes': int,
                         'lic_throughput_oversub_drops_packets': int,
-                    },
-                }
-            },
+                    }
+                },
+            }
         },
     }
 
@@ -2550,193 +2558,223 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
         # initial return dictionary
         ret_dict = {}
 
+        # Interface: GigabitEthernet1/0/7 QFP: 0.0 if_h: 32 Num Queues/Schedules: 1
+        # Interface: Loopback2 QFP: 0.0 if_h: 34 Num Queues/Schedules: 0
+        # Interface: GigabitEthernet0/0/1.2 QFP: 0.0 if_h: 35 Num Queues/Schedules: 0
+        # Interface: GigabitEthernet0/0/1.EFP2054 QFP: 0.0 if_h: 36 Num Queues/Schedules: 0
+        # Interface: BG4048.10207e1 QFP: 0.0 if_h: 4079 Num Queues/Schedules: 0
+        # Interface: VPLS-2944.10207e2 QFP: 0.0 if_h: 4080 Num Queues/Schedules: 
+        # Interface: internal0/0/recycle:0 QFP: 0.0 if_h: 1 Num Queues/Schedules: 0
         p1 = re.compile(r'^Interface: +(?P<intf_name>[\w\d\/\.\-\:]+)'
                          ' +QFP: +(?P<qfp>[\d\.]+)'
                          ' +if_h: +(?P<if_h>\d+)'
                          ' +Num Queues/Schedules: +(?P<num_queues>\d+)$')
 
+        #     Index 0 (Queue ID:0xa6, Name: GigabitEthernet1/0/7)
         p2 = re.compile(r'^Index +(?P<index>\d+)'
                          ' +\(Queue +ID:(?P<queue_id>[\w\d]+),'
                          ' +Name: +(?P<interf_name>[\w\d\/\.\-\:]+)\)$')
 
-        p3 = re.compile(r'^\(cache\) +queue +id: +(?P<cache_queue_id>[\w\d]+),'
+        #       Software Control Info:
+        p3_1 = re.compile(r'^Software Control Info:$')
+
+        #       (cache) queue id: 0x000000a6, wred: 0x88b16ac2, qlimit (bytes): 3281312
+        p3_2 = re.compile(r'^\(cache\) +queue +id: +(?P<cache_queue_id>[\w\d]+),'
                          ' +wred: +(?P<wred>[\w\d]+),'
                          ' +qlimit +\(bytes\): +(?P<qlimit_bytes>\d+)$')
 
+        #       parent_sid: 0x284, debug_name: GigabitEthernet1/0/7
         p4 = re.compile(r'^parent_sid: +(?P<parent_sid>[\w\d]+),'
                          ' debug_name: +(?P<debug_name>[\w\d\/\.\-\:]+)$')
 
+        #       sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245728
         p5 = re.compile(r'^sw_flags: +(?P<sw_flags>[\w\d]+),'
                          ' +sw_state: +(?P<sw_state>[\w\d]+),'
                          ' +port_uidb: +(?P<port_uidb>\d+)$')
 
+        #       orig_min  : 0                   ,      min: 105000000    
         p6 = re.compile(r'^orig_min +: +(?P<orig_min>\d+) +,'
                          ' +min: +(?P<min>\d+)$')  
 
+        #       min_qos   : 0                   , min_dflt: 0    
         p7 = re.compile(r'^min_qos +: +(?P<min_qos>\d+) +,'
                          ' +min_dflt: +(?P<min_dflt>\d+)$')  
 
+        #       orig_max  : 0                   ,      max: 0    
         p8 = re.compile(r'^orig_max +: +(?P<orig_max>\d+) +,'
                          ' +max: +(?P<max>\d+)$')  
 
+        #       max_qos   : 0                   , max_dflt: 0  
         p9 = re.compile(r'^max_qos +: +(?P<max_qos>\d+) +,'
                          ' +max_dflt: +(?P<max_dflt>\d+)$')  
 
+        #       share     : 1
         p10 = re.compile(r'^share +: +(?P<share>\d+)$')  
 
+        #       plevel    : 0, priority: 65535
         p11 = re.compile(r'^plevel +: +(?P<plevel>\d+),'
                          ' +priority: +(?P<priority>\d+)$')  
 
+        #       defer_obj_refcnt: 0
         p12 = re.compile(r'^defer_obj_refcnt: +(?P<defer_obj_refcnt>\d+)$')  
 
-        p13 = re.compile(r'^tail +drops  +\(bytes\): +(?P<tail_drops_bytes>\d+) +,'
+        #     Statistics:
+        p13_1 = re.compile(r'^Statistics:$')  
+
+        #       tail drops  (bytes): 0                   ,          (packets): 0   
+        p13_2 = re.compile(r'^tail +drops  +\(bytes\): +(?P<tail_drops_bytes>\d+) +,'
                          ' +\(packets\): +(?P<tail_drops_packets>\d+)$')  
 
+        #       total enqs  (bytes): 0                   ,          (packets): 0   
         p14 = re.compile(r'^total +enqs  +\(bytes\): +(?P<total_enqs_bytes>\d+) +,'
                          ' +\(packets\): +(?P<total_enqs_packets>\d+)$')  
 
+        #       queue_depth (bytes): 0    
         p15 = re.compile(r'^queue_depth +\(bytes\): +(?P<queue_depth_bytes>\d+)$')  
 
+        #       licensed throughput oversubscription drops:
+        #                   (bytes): 0                   ,          (packets): 0  
         p16 = re.compile(r'^\(bytes\): +(?P<lic_throughput_oversub_drops_bytes>\d+) +,'
                          ' +\(packets\): +(?P<lic_throughput_oversub_drops_packets>\d+)$')  
 
         for line in out.splitlines():
             line = line.strip()
 
-            # Interface: GigabitEthernet1/0/7 QFP: 0.0 if_h: 32 Num Queues/Schedules: 1
-            # Interface: Loopback2 QFP: 0.0 if_h: 34 Num Queues/Schedules: 0
-            # Interface: GigabitEthernet0/0/1.2 QFP: 0.0 if_h: 35 Num Queues/Schedules: 0
-            # Interface: GigabitEthernet0/0/1.EFP2054 QFP: 0.0 if_h: 36 Num Queues/Schedules: 0
-            # Interface: BG4048.10207e1 QFP: 0.0 if_h: 4079 Num Queues/Schedules: 0
-            # Interface: VPLS-2944.10207e2 QFP: 0.0 if_h: 4080 Num Queues/Schedules: 
-            # Interface: internal0/0/recycle:0 QFP: 0.0 if_h: 1 Num Queues/Schedules: 0
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 interface = group['intf_name']
-                ret_dict.setdefault('interface', {}).setdefault(interface, {})
-                ret_dict['interface'][interface]['qfp'] = group['qfp']
-                ret_dict['interface'][interface]['if_h'] = int(group['if_h'])
-                ret_dict['interface'][interface]['num_queues'] = int(group['num_queues'])
+                ret_dict.setdefault(interface, {})
+                ret_dict[interface]['if_h'] = int(group['if_h'])
                 continue
 
-            #     Index 0 (Queue ID:0xa6, Name: GigabitEthernet1/0/7)
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 index = group['index']
-                if 'index' not in ret_dict['interface'][interface]:
-                    ret_dict['interface'][interface].setdefault('index', {})
-                final_dict = ret_dict['interface'][interface]['index'].setdefault(index, {})
-                final_dict['queue_id'] = group['queue_id']
-                final_dict['interf_name'] = group['interf_name']
+                if 'index' not in ret_dict[interface]:
+                    ret_dict[interface].setdefault('index', {})
+                ret_dict[interface]['index'].setdefault(index, {})
+                ret_dict[interface]['index'][index]['queue_id'] = \
+                    group['queue_id']
+                ret_dict[interface]['index'][index]['name'] = \
+                    group['interf_name']
                 continue
 
-            #       (cache) queue id: 0x000000a6, wred: 0x88b16ac2, qlimit (bytes): 3281312
-            m = p3.match(line)
+            m = p3_1.match(line)
+            if m:
+                ret_dict[interface]['index'][index].setdefault(
+                    'software_control_info', {})
+                continue
+
+            m = p3_2.match(line)
             if m:
                 group = m.groupdict()
-                final_dict['cache_queue_id'] = group['cache_queue_id']
-                final_dict['wred'] = group['wred']
-                final_dict['qlimit_bytes'] = int(group['qlimit_bytes'])
+                ret_dict[interface]['index'][index]['software_control_info']\
+                    ['cache_queue_id'] = group['cache_queue_id']
+                ret_dict[interface]['index'][index]['software_control_info']\
+                    ['wred'] = group['wred']
+                ret_dict[interface]['index'][index]['software_control_info']\
+                    ['qlimit_bytes'] = int(group['qlimit_bytes'])
                 continue
 
-            #       parent_sid: 0x284, debug_name: GigabitEthernet1/0/7
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                final_dict.update({k:v for k, v in group.items()})
-                # final_dict['parent_sid'] = group['parent_sid']
-                # final_dict['debug_name'] = group['debug_name']
+                ret_dict[interface]['index'][index]['software_control_info'].\
+                    update({k:v for k, v in group.items()})
                 continue
 
-            #       sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245728
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                final_dict['sw_flags'] = group['sw_flags']
-                final_dict['sw_state'] = group['sw_state']
-                ret_dict['interface'][interface]['index'][index]\
+                ret_dict[interface]['index'][index]['software_control_info']\
+                    ['sw_flags'] = group['sw_flags']
+                ret_dict[interface]['index'][index]['software_control_info']\
+                    ['sw_state'] = group['sw_state']
+                ret_dict[interface]['index'][index]['software_control_info']\
                     ['port_uidb'] = int(group['port_uidb'])
                 continue
 
-            #       orig_min  : 0                   ,      min: 105000000    
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                final_dict.update({k:int(v) for k, v in group.items()})
+                ret_dict[interface]['index'][index]['software_control_info'].\
+                    update({k:int(v) for k, v in group.items()})
                 continue
-
-            #       min_qos   : 0                   , min_dflt: 0       
+   
             m = p7.match(line)
             if m:
                 group = m.groupdict()
-                final_dict.update({k:int(v) for k, v in group.items()})
+                ret_dict[interface]['index'][index]['software_control_info'].\
+                    update({k:int(v) for k, v in group.items()})
                 continue
 
-            #       orig_max  : 0                   ,      max: 0    
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                final_dict.update({k:int(v) for k, v in group.items()})
+                ret_dict[interface]['index'][index]['software_control_info'].\
+                    update({k:int(v) for k, v in group.items()})
                 continue
 
-            #       max_qos   : 0                   , max_dflt: 0  
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                final_dict.update({k:int(v) for k, v in group.items()})
+                ret_dict[interface]['index'][index]['software_control_info'].\
+                    update({k:int(v) for k, v in group.items()})
                 continue
 
-            #       share     : 1
             m = p10.match(line)
             if m:
                 group = m.groupdict()
-                final_dict['share'] = int(group['share'])
+                ret_dict[interface]['index'][index]['software_control_info']\
+                    ['share'] = int(group['share'])
                 continue
 
-            #       plevel    : 0, priority: 65535
             m = p11.match(line)
             if m:
                 group = m.groupdict()
-                final_dict.update({k:int(v) for k, v in group.items()})
+                ret_dict[interface]['index'][index]['software_control_info'].\
+                    update({k:int(v) for k, v in group.items()})
                 continue
 
-            #       defer_obj_refcnt: 0
             m = p12.match(line)
             if m:
                 group = m.groupdict()
-                final_dict['defer_obj_refcnt'] = int(group['defer_obj_refcnt'])
+                ret_dict[interface]['index'][index]['software_control_info']\
+                    ['defer_obj_refcnt'] = int(group['defer_obj_refcnt'])
                 continue
 
-            #     Statistics:
-            #       tail drops  (bytes): 0                   ,          (packets): 0   
-            m = p13.match(line)
+            m = p13_1.match(line)
+            if m:
+                ret_dict[interface]['index'][index].setdefault('statistics', {})
+
+            m = p13_2.match(line)
             if m:
                 group = m.groupdict()
-                final_dict.update({k:int(v) for k, v in group.items()})
+                ret_dict[interface]['index'][index]['statistics'].update(
+                    {k:int(v) for k, v in group.items()})
                 continue
-
-            #       total enqs  (bytes): 0                   ,          (packets): 0       
+    
             m = p14.match(line)
             if m:
                 group = m.groupdict()
-                final_dict.update({k:int(v) for k, v in group.items()})
+                ret_dict[interface]['index'][index]['statistics'].update(
+                    {k:int(v) for k, v in group.items()})
                 continue
-
-            #       queue_depth (bytes): 0                   
+               
             m = p15.match(line)
             if m:
                 group = m.groupdict()
-                final_dict['queue_depth_bytes'] = int(group['queue_depth_bytes'])
+                ret_dict[interface]['index'][index]['statistics']\
+                    ['queue_depth_bytes'] = int(group['queue_depth_bytes'])
                 continue
 
-            #       licensed throughput oversubscription drops:
-            #                   (bytes): 0                   ,          (packets): 0  
             m = p16.match(line)
             if m:
                 group = m.groupdict()
-                final_dict.update({k:int(v) for k, v in group.items()})
+                ret_dict[interface]['index'][index]['statistics'].update(
+                    {k:int(v) for k, v in group.items()})
                 continue
 
         return ret_dict
