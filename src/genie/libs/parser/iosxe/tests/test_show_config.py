@@ -25,8 +25,18 @@ class test_show_configuration_lock(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
-
+    
     golden_parsed_output = {
+            'owner': {
+                'owner_pid': 578,
+                'tty_number': 2,
+                'tty_username': 'testuser',
+                'user_debug_info': 'CLI Session Lock',
+                'lock_active_time_in_sec': 17
+                }
+            }
+    
+    golden_parsed_output_optional = {
         'owner': {
             'owner_pid': 578,
             'tty_number': 2,
@@ -46,8 +56,18 @@ class test_show_configuration_lock(unittest.TestCase):
                 'user_debug_info': 0
             }
     }
-    
+
     golden_output = {'execute.return_value': '''\
+            Config Session Lock
+            ---------------------
+            Owner PID   : 578
+            TTY number  : 2
+            TTY username    : testuser
+            User debug info : CLI Session Lock
+            Lock Active time (in Sec)   : 17
+            '''}
+    
+    golden_output_optional = {'execute.return_value': '''\
             Config Session Lock
             ---------------------
             Owner PID   : 578
@@ -73,13 +93,17 @@ class test_show_configuration_lock(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
-
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         obj = ShowConfigurationLock(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
-
+    
+    def test_golden_optional(self):
+        self.device = Mock(**self.golden_output_optional)
+        obj = ShowConfigurationLock(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_optional)
 
 if __name__ == '__main__':
     unittest.main()
