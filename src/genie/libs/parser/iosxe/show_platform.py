@@ -2883,10 +2883,11 @@ class ShowPlatformHardwarePlim(ShowPlatformHardwarePlimSchema):
         if output is None:
             if port:
                 cmd = self.cli_command[0].format(port=port)
-            elif internal:
-                cmd = self.cli_command[2].format(slot=slot)
             elif slot:
-                cmd = self.cli_command[1].format(slot=slot)
+                if internal:
+                    cmd = self.cli_command[2].format(slot=slot)
+                else:
+                    cmd = self.cli_command[1].format(slot=slot)
             elif subslot:
                 cmd = self.cli_command[3].format(subslot=subslot)
             out = self.device.execute(cmd)
