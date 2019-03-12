@@ -3508,7 +3508,7 @@ class ShowBgpAllNeighborsReceivedRoutes(ShowBgpAllNeighborsReceivedRoutesSchema)
 
 
 
-class ShowIpbgpTemplatePeerSessionSchema(MetaParser):
+class ShowIpBgpTemplatePeerSessionSchema(MetaParser):
     """Schema show ip bgp template peer-session <WORD>"""
 
     schema = {
@@ -3554,7 +3554,7 @@ class ShowIpbgpTemplatePeerSessionSchema(MetaParser):
                     },
                 }
 
-class ShowIpBgpTemplatePeerSession(ShowIpbgpTemplatePeerSessionSchema):
+class ShowIpBgpTemplatePeerSession(ShowIpBgpTemplatePeerSessionSchema):
     """Parser for show ip bgp template peer-session <WORD>"""
 
     cli_command = 'show ip bgp template peer-session {template_name}'
