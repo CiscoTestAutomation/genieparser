@@ -3242,7 +3242,7 @@ class ShowPlatformPowerSchema(MetaParser):
         'total_capacity': int,
         'load_capacity_percent': int,
         'power_capacity': int,
-        'redundanct_alc': int,
+        'redundant_alc': int,
         'fan_alc': int,
         'fru_alc': int,
         'excess_power': int,
