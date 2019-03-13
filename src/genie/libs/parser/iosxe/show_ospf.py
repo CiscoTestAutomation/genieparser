@@ -3218,7 +3218,7 @@ class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
             'opaque': 10,
             }
 
-        # OSPF Router with ID (110.152.187.214) (Process ID 9996)
+        # OSPF Router with ID (172.152.187.214) (Process ID 9996)
         # OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
         p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
                          ' +\(Process +ID +(?P<instance>(\d+))'
@@ -5201,7 +5201,7 @@ class ShowIpOspfMaxMetric(ShowIpOspfMaxMetricSchema):
         # Load for five secs: 71%/0%; one minute: 11%; five minutes: 9%
         # Time source is NTP, 20:29:26.348 JST Fri Nov 11 2016
 
-        # OSPF Router with ID (110.152.187.214) (Process ID 9996)
+        # OSPF Router with ID (172.152.187.214) (Process ID 9996)
         # OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
         p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
                          ' +\(Process +ID +(?P<instance>(\d+))'
