@@ -3339,12 +3339,11 @@ class ShowPlatformPower(ShowPlatformPowerSchema):
                 slot = m.groupdict()['slot']
                 t = m.groupdict()['type']
                 state = m.groupdict()['state']
-                allocation = m.groupdict()['allocation']
-                ret_dict.setdefault('slot', {})  
-                ret_dict['slot'].setdefault(slot, {})
-                ret_dict['slot'][slot]['type'] = t
-                ret_dict['slot'][slot]['state'] = state
-                ret_dict['slot'][slot]['allocation'] = float(allocation)
+                allocation = float(m.groupdict()['allocation'])
+                slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot,{})
+                slot_dict.update({"type": t})
+                slot_dict.update({"state": state})
+                slot_dict.update({"allocation": allocation})
                 continue
 
             m = p5.match(line)
@@ -3352,14 +3351,13 @@ class ShowPlatformPower(ShowPlatformPowerSchema):
                 slot = m.groupdict()['slot']
                 t = m.groupdict()['type']
                 state = m.groupdict()['state']
-                capacity = m.groupdict()['capacity']
-                load = m.groupdict()['load']
-                ret_dict.setdefault('slot', {})
-                ret_dict['slot'].setdefault(slot, {})
-                ret_dict['slot'][slot]['type'] = t
-                ret_dict['slot'][slot]['state'] = state
-                ret_dict['slot'][slot]['capacity'] = int(capacity)
-                ret_dict['slot'][slot]['load'] = int(load)
+                capacity = int(m.groupdict()['capacity'])
+                load = int(m.groupdict()['load'])
+                slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot,{})
+                slot_dict.update({"type": t})
+                slot_dict.update({"state": state})
+                slot_dict.update({"capacity": capacity})
+                slot_dict.update({"load": load})
                 continue
 
             m = p6.match(line)
