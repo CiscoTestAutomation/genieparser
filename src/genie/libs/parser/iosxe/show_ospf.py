@@ -1,6 +1,7 @@
 ''' show_ospf.py
 
 IOSXE parsers for the following show commands:
+
     * show ip ospf
     * show ip ospf interface
     * show ip ospf sham-links
@@ -16,6 +17,7 @@ IOSXE parsers for the following show commands:
     * show ip ospf mpls traffic-eng link
     * show ip ospf max-metric
     * show ip ospf traffic
+
 '''
 
 # Python
@@ -29,12 +31,15 @@ from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
 from genie.libs.parser.utils.common import Common
 
 
-# =========================
-# Schema for 'show ip ospf'
-# =========================
+# ==================
+# Schema for:
+#   * 'show ip ospf'
+# ==================
 class ShowIpOspfSchema(MetaParser):
 
-    ''' Schema for "show ip ospf" '''
+    ''' Schema for:
+        * 'show ip ospf'
+    '''
 
     schema = {
         'vrf': 
@@ -200,12 +205,15 @@ class ShowIpOspfSchema(MetaParser):
         }
 
 
-# =========================
-# Parser for 'show ip ospf'
-# =========================
+# ==================
+# Parser for:
+#   * 'show ip ospf'
+# ==================
 class ShowIpOspf(ShowIpOspfSchema):
 
-    ''' Parser for "show ip ospf" '''
+    ''' Parser for:
+        * 'show ip ospf'
+    '''
 
     cli_command = 'show ip ospf'
 
@@ -1148,12 +1156,15 @@ class ShowIpOspf(ShowIpOspfSchema):
         return ret_dict
 
 
-# ===================================
-# Schema for 'show ip ospf interface'
-# ===================================
+# ============================
+# Schema for:
+#   * 'show ip ospf interface'
+# ============================
 class ShowIpOspfInterfaceSchema(MetaParser):
 
-    ''' Schema for "show ip ospf interface" '''
+    ''' Schema for:
+        * 'show ip ospf interface'
+    '''
 
     schema = {
         'vrf': 
@@ -1402,12 +1413,15 @@ class ShowIpOspfInterfaceSchema(MetaParser):
         }
 
 
-# ==================================================
-# Parser for 'show ospf vrf all-inclusive interface'
-# ==================================================
+# ===========================================
+# Parser for:
+#   * 'show ospf vrf all-inclusive interface'
+# ===========================================
 class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
 
-    ''' Parser for "show ip ospf interface" '''
+    ''' Parser for:
+        * 'show ip ospf interface'
+    '''
 
     cli_command = 'show ip ospf interface'
 
@@ -2059,12 +2073,17 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
         return ret_dict
 
 
-# ============================================
-# Super parser for 'show ip ospf <WORD>-links'
-# ============================================
+# ================================
+# Super parser for:
+#   * 'show ip ospf virtual-links'
+#   * 'show ip ospf sham-links'
+# ================================
 class ShowIpOspfLinksParser(MetaParser):
 
-    ''' Parser for "show ip ospf <WORD>-links" '''
+    ''' Parser for:
+        * 'show ip ospf virtual-links'
+        * 'show ip ospf sham-links'
+    '''
 
     def cli(self, cmd, link_type,output=None):
 
@@ -2444,168 +2463,191 @@ class ShowIpOspfLinksParser(MetaParser):
         return ret_dict
 
 
-# ====================================
-# Schema for 'show ip ospf sham-links'
-# ====================================
+# =============================
+# Schema for:
+#   * 'show ip ospf sham-links'
+# =============================
 class ShowIpOspfShamLinksSchema(MetaParser):
 
-    ''' Schema for 'show ip ospf sham-links' '''
+    ''' Schema for:
+        * 'show ip ospf sham-links'
+    '''
 
     schema = {
-    'vrf':
-        {Any():
-             {'address_family':
-                  {Any():
-                       {'instance':
+        'vrf':
+            {Any():
+                {'address_family':
+                    {Any():
+                        {'instance':
                             {Any():
-                                 {'areas':
-                                      {Any():
-                                           {'sham_links':
-                                                {Any():
-                                                     {'name': str,
-                                                      'link_state': str,
-                                                      'local_id': str,
-                                                      'remote_id': str,
-                                                      'transit_area_id': str,
-                                                      Optional('hello_interval'): int,
-                                                      Optional('dead_interval'): int,
-                                                      Optional('wait_interval'): int,
-                                                      Optional('retransmit_interval'): int,
-                                                      Optional('transmit_delay'): int,
-                                                      'cost': int,
-                                                      'state': str,
-                                                      Optional('hello_timer'): str,
-                                                      Optional('demand_circuit'): bool,
-                                                      Optional('dcbitless_lsa_count'): int,
-                                                      Optional('donotage_lsa'): str,
-                                                      Optional('adjacency_state'): str,
-                                                      Optional('ttl_security'):
-                                                          {'enable': bool,
-                                                           Optional('hops'): int},
-                                                      Optional('index'): str,
-                                                      Optional('first'): str,
-                                                      Optional('next'): str,
-                                                      Optional('last_retransmission_max_length'): int,
-                                                      Optional('last_retransmission_max_scan'): int,
-                                                      Optional('last_retransmission_scan_length'): int,
-                                                      Optional('last_retransmission_scan_time'): int,
-                                                      Optional('total_retransmission'): int,
-                                                      Optional('retrans_qlen'): int,
-                                                      Optional('topology'):
-                                                          {Any():
-                                                               {'cost': int,
-                                                                'disabled': bool,
-                                                                'shutdown': bool,
-                                                                'name': str}},
-                                                      },
-                                                 },
+                                {'areas':
+                                    {Any():
+                                        {'sham_links':
+                                            {Any():
+                                                {'name': str,
+                                                'link_state': str,
+                                                'local_id': str,
+                                                'remote_id': str,
+                                                'transit_area_id': str,
+                                                Optional('hello_interval'): int,
+                                                Optional('dead_interval'): int,
+                                                Optional('wait_interval'): int,
+                                                Optional('retransmit_interval'): int,
+                                                Optional('transmit_delay'): int,
+                                                'cost': int,
+                                                'state': str,
+                                                Optional('hello_timer'): str,
+                                                Optional('demand_circuit'): bool,
+                                                Optional('dcbitless_lsa_count'): int,
+                                                Optional('donotage_lsa'): str,
+                                                Optional('adjacency_state'): str,
+                                                Optional('ttl_security'):
+                                                    {'enable': bool,
+                                                    Optional('hops'): int},
+                                                    Optional('index'): str,
+                                                    Optional('first'): str,
+                                                    Optional('next'): str,
+                                                    Optional('last_retransmission_max_length'): int,
+                                                    Optional('last_retransmission_max_scan'): int,
+                                                    Optional('last_retransmission_scan_length'): int,
+                                                    Optional('last_retransmission_scan_time'): int,
+                                                    Optional('total_retransmission'): int,
+                                                    Optional('retrans_qlen'): int,
+                                                    Optional('topology'):
+                                                        {Any():
+                                                            {'cost': int,
+                                                            'disabled': bool,
+                                                            'shutdown': bool,
+                                                            'name': str,
+                                                            },
+                                                        },
+                                                    },
+                                                },
                                             },
-                                       },
-                                  },
-                             },
+                                        },
+                                    },
+                                },
+                            },
                         },
-                   },
-              },
-         },
-}
+                    },
+                },
+            }
 
 
-# ====================================
-# Parser for 'show ip ospf sham-links'
-# ====================================
+# =============================
+# Parser for:
+#   * 'show ip ospf sham-links'
+# =============================
 class ShowIpOspfShamLinks(ShowIpOspfShamLinksSchema, ShowIpOspfLinksParser):
 
-    ''' Parser for 'show ip ospf sham-links' '''
+    ''' Parser for:
+        * 'show ip ospf sham-links'
+    '''
+
     cli_command = 'show ip ospf sham-links'
-    def cli(self,output=None):
+
+    def cli(self, output=None):
 
         return super().cli(cmd=self.cli_command, link_type='sham_links',output=output)
 
 
-# =======================================
-# Schema for 'show ip ospf virtual-links'
-# =======================================
+# ================================
+# Schema for:
+#   * 'show ip ospf virtual-links'
+# ================================
 class ShowIpOspfVirtualLinksSchema(MetaParser):
 
-    ''' Schema for 'show ip ospf virtual-links' '''
+    ''' Schema for:
+        * 'show ip ospf virtual-links'
+    '''
+
     schema = {
         'vrf':
             {Any():
-                 {'address_family':
-                      {Any():
-                           {'instance':
-                                {Any():
-                                     {'areas':
-                                          {Any():
-                                               {'virtual_links':
-                                                    {Any():
-                                                         {'name': str,
-                                                          'link_state': str,
-                                                          'router_id': str,
-                                                          'transit_area_id': str,
-                                                          Optional('hello_interval'): int,
-                                                          Optional('dead_interval'): int,
-                                                          Optional('wait_interval'): int,
-                                                          Optional('retransmit_interval'): int,
-                                                          'transmit_delay': int,
-                                                          'state': str,
-                                                          'demand_circuit': bool,
-                                                          Optional('cost'): int,
-                                                          Optional('hello_timer'): str,
-                                                          Optional('interface'): str,
-                                                          Optional('dcbitless_lsa_count'): int,
-                                                          Optional('donotage_lsa'): str,
-                                                          Optional('adjacency_state'): str,
-                                                          Optional('ttl_security'):
-                                                              {'enable': bool,
-                                                               Optional('hops'): int},
-                                                          Optional('index'): str,
-                                                          Optional('first'): str,
-                                                          Optional('next'): str,
-                                                          Optional('last_retransmission_max_length'): int,
-                                                          Optional('last_retransmission_max_scan'): int,
-                                                          Optional('last_retransmission_scan_length'): int,
-                                                          Optional('last_retransmission_scan_time'): int,
-                                                          Optional('total_retransmission'): int,
-                                                          Optional('retrans_qlen'): int,
-                                                          Optional('topology'):
-                                                              {Any():
-                                                                   {'cost': int,
-                                                                    'disabled': bool,
-                                                                    'shutdown': bool,
-                                                                    'name': str}},
-                                                          },
-                                                     },
+                {'address_family':
+                    {Any():
+                        {'instance':
+                            {Any():
+                                {'areas':
+                                    {Any():
+                                        {'virtual_links':
+                                            {Any():
+                                                {'name': str,
+                                                'link_state': str,
+                                                'router_id': str,
+                                                'transit_area_id': str,
+                                                Optional('hello_interval'): int,
+                                                Optional('dead_interval'): int,
+                                                Optional('wait_interval'): int,
+                                                Optional('retransmit_interval'): int,
+                                                'transmit_delay': int,
+                                                'state': str,
+                                                'demand_circuit': bool,
+                                                Optional('cost'): int,
+                                                Optional('hello_timer'): str,
+                                                Optional('interface'): str,
+                                                Optional('dcbitless_lsa_count'): int,
+                                                Optional('donotage_lsa'): str,
+                                                Optional('adjacency_state'): str,
+                                                Optional('ttl_security'):
+                                                    {'enable': bool,
+                                                    Optional('hops'): int},
+                                                    Optional('index'): str,
+                                                    Optional('first'): str,
+                                                    Optional('next'): str,
+                                                    Optional('last_retransmission_max_length'): int,
+                                                    Optional('last_retransmission_max_scan'): int,
+                                                    Optional('last_retransmission_scan_length'): int,
+                                                    Optional('last_retransmission_scan_time'): int,
+                                                    Optional('total_retransmission'): int,
+                                                    Optional('retrans_qlen'): int,
+                                                    Optional('topology'):
+                                                        {Any():
+                                                            {'cost': int,
+                                                            'disabled': bool,
+                                                            'shutdown': bool,
+                                                            'name': str,
+                                                            },
+                                                        },
+                                                    },
                                                 },
-                                           },
-                                      },
-                                 },
+                                            },
+                                        },
+                                    },
+                                },
                             },
-                       },
-                  },
-             },
-    }
+                        },
+                    },
+                },
+            }
 
 
-# =======================================
-# Parser for 'show ip ospf virtual-links'
-# =======================================
+# ================================
+# Parser for:
+#   * 'show ip ospf virtual-links'
+# ================================
 class ShowIpOspfVirtualLinks(ShowIpOspfVirtualLinksSchema, ShowIpOspfLinksParser):
 
-    ''' Parser for 'show ip ospf virtual-links' '''
+    ''' Parser for:
+        * 'show ip ospf virtual-links'
+    '''
 
     cli_command = 'show ip ospf virtual-links'
-    def cli(self,output=None):
 
-        return super().cli(cmd=self.cli_command, link_type='virtual_links',output=output)
+    def cli(self, output=None):
+
+        return super().cli(cmd=self.cli_command, link_type='virtual_links', output=output)
 
 
-# =========================================
-# Schema for 'show ip ospf neighbor detail'
+# ==================================
+# Schema for:
+#   * 'show ip ospf neighbor detail'
 # =========================================
 class ShowIpOspfNeighborDetailSchema(MetaParser):
 
-    ''' Schema for "show ip ospf neighbor detail" '''
+    ''' Schema for:
+        * 'show ip ospf neighbor detail'
+    '''
 
     schema = {
         'vrf': 
@@ -2723,16 +2765,20 @@ class ShowIpOspfNeighborDetailSchema(MetaParser):
         }
 
 
-# =========================================
-# Parser for 'show ip ospf neighbor detail'
-# =========================================
+# ================================
+# Parser for:
+#   'show ip ospf neighbor detail'
+# ================================
 class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
 
-    ''' Parser for "show ip ospf neighbor detail" '''
+    ''' Parser for:
+        * 'show ip ospf neighbor detail'
+    '''
 
     cli_command = 'show ip ospf neighbor detail'
 
-    def cli(self,output=None):
+    def cli(self, output=None):
+
         if output is None:
             # Execute command on device
             out = self.device.execute(self.cli_command)
@@ -3076,12 +3122,15 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
         return ret_dict
 
 
-# ==================================
-# Schema for 'show ip ospf database'
-# ==================================
+# ===========================
+# Schema for:
+#   * 'show ip ospf database'
+# ===========================
 class ShowIpOspfDatabaseSchema(MetaParser):
     
-    ''' Schema for "show ip ospf database" '''
+    ''' Schema for:
+        * 'show ip ospf database'
+    '''
 
     schema = {
         'vrf':
@@ -3126,12 +3175,15 @@ class ShowIpOspfDatabaseSchema(MetaParser):
         }
 
 
-# ==================================
-# Parser for 'show ip ospf database'
-# ==================================
+# ==========================
+# Parser for:
+#    'show ip ospf database'
+# ==========================
 class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
 
-    ''' Parser for "show ip ospf database" '''
+    ''' Parser for:
+        * 'show ip ospf database'
+    '''
 
     cli_command = 'show ip ospf database'
 
@@ -3273,14 +3325,25 @@ class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
         return ret_dict
 
 
-# ===============================================
-# Super parser for 'show ip ospf database <WORD>'
-# ===============================================
+# =====================================
+# Super parser for:
+#   * 'show ip ospf database external'
+#   * 'show ip ospf database network'
+#   * 'show ip ospf database summary'
+#   * 'show ip ospf database router'
+#   * 'show ip ospf database opaque'
+# =====================================
 class ShowIpOspfDatabaseTypeParser(MetaParser):
 
-    ''' Parser for "show ip ospf database <WORD>" '''
+    ''' Parser for:
+        * 'show ip ospf database external'
+        * 'show ip ospf database network'
+        * 'show ip ospf database summary'
+        * 'show ip ospf database router'
+        * 'show ip ospf database opaque'
+    '''
 
-    def cli(self, cmd, db_type,output=None):
+    def cli(self, cmd, db_type, output=None):
 
         assert db_type in ['external', 'network', 'summary', 'router',
                            'opaque']
@@ -4025,12 +4088,15 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
         return ret_dict
 
 
-# =========================================
-# Schema for 'show ip ospf database router'
-# =========================================
+# ==================================
+# Schema for:
+#   * 'show ip ospf database router'
+# ==================================
 class ShowIpOspfDatabaseRouterSchema(MetaParser):
 
-    ''' Schema for "show ip ospf database router" '''
+    ''' Schema for:
+        * show ip ospf database router'
+    '''
 
     schema = {
         'vrf': 
@@ -4102,26 +4168,32 @@ class ShowIpOspfDatabaseRouterSchema(MetaParser):
         }
 
 
-# =========================================
-# Parser for 'show ip ospf database router'
-# =========================================
+# ==================================
+# Parser for:
+#   * 'show ip ospf database router'
+# ==================================
 class ShowIpOspfDatabaseRouter(ShowIpOspfDatabaseRouterSchema, ShowIpOspfDatabaseTypeParser):
 
-    ''' Parser for "show ip ospf database router" '''
+    ''' Parser for:
+        * 'show ip ospf database router'
+    '''
 
     cli_command = 'show ip ospf database router'
 
-    def cli(self,output=None):
+    def cli(self, output=None):
 
-        return super().cli(cmd=self.cli_command, db_type='router',output=output)
+        return super().cli(cmd=self.cli_command, db_type='router', output=output)
 
 
-# ===========================================
-# Schema for 'show ip ospf database external'
-# ===========================================
+# ====================================
+# Schema for:
+#   * 'show ip ospf database external'
+# ====================================
 class ShowIpOspfDatabaseExternalSchema(MetaParser):
 
-    ''' Schema for "show ip ospf database external" '''
+    ''' Schema for:
+        * 'show ip ospf database external'
+    '''
 
     schema = {
         'vrf': 
@@ -4183,25 +4255,32 @@ class ShowIpOspfDatabaseExternalSchema(MetaParser):
         }
 
 
-# ===========================================
-# Parser for 'show ip ospf database external'
-# ===========================================
+# ====================================
+# Parser for:
+#   * 'show ip ospf database external'
+# ====================================
 class ShowIpOspfDatabaseExternal(ShowIpOspfDatabaseExternalSchema, ShowIpOspfDatabaseTypeParser):
 
-    ''' Parser for "show ip ospf database external" '''
+    ''' Parser for:
+        * 'show ip ospf database external'
+    '''
 
     cli_command = 'show ip ospf database external'
-    def cli(self,output=None):
 
-        return super().cli(cmd=self.cli_command, db_type='external',output=output)
+    def cli(self, output=None):
+
+        return super().cli(cmd=self.cli_command, db_type='external', output=output)
 
 
-# ==========================================
-# Schema for 'show ip ospf database network'
-# ==========================================
+# ===================================
+# Schema for:
+#   * 'show ip ospf database network'
+# ===================================
 class ShowIpOspfDatabaseNetworkSchema(MetaParser):
 
-    ''' Schema for "show ospf vrf all-inclusive database network" '''
+    ''' Schema for:
+        * 'show ip ospf database network'
+    '''
 
     schema = {
         'vrf': 
@@ -4258,25 +4337,32 @@ class ShowIpOspfDatabaseNetworkSchema(MetaParser):
         }
 
 
-# ==========================================
-# Parser for 'show ip ospf database network'
-# ==========================================
+# ===================================
+# Parser for:
+#   * 'show ip ospf database network'
+# ===================================
 class ShowIpOspfDatabaseNetwork(ShowIpOspfDatabaseNetworkSchema, ShowIpOspfDatabaseTypeParser):
 
-    ''' Parser for "show ip ospf database network" '''
+    ''' Parser for:
+        * 'show ip ospf database network'
+    '''
+
     cli_command = 'show ip ospf database network'
 
-    def cli(self,output=None):
+    def cli(self, output=None):
 
-        return super().cli(cmd=self.cli_command, db_type='network',output=output)
+        return super().cli(cmd=self.cli_command, db_type='network', output=output)
 
 
-# ==========================================
-# Schema for 'show ip ospf database summary'
-# ==========================================
+# ===================================
+# Schema for:
+#   * 'show ip ospf database summary'
+# ===================================
 class ShowIpOspfDatabaseSummarySchema(MetaParser):
 
-    ''' Schema for "show ospf vrf all-inclusive database summary" '''
+    ''' Schema for:
+        * 'show ip ospf database summary'
+    '''
 
     schema = {
         'vrf': 
@@ -4335,25 +4421,32 @@ class ShowIpOspfDatabaseSummarySchema(MetaParser):
         }
 
 
-# ==========================================
-# Parser for 'show ip ospf database summary'
-# ==========================================
+# ===================================
+# Parser for:
+#   * 'show ip ospf database summary'
+# ===================================
 class ShowIpOspfDatabaseSummary(ShowIpOspfDatabaseSummarySchema, ShowIpOspfDatabaseTypeParser):
 
-    ''' Parser for "show ip ospf database summary" '''
+    ''' Parser for:
+        * 'show ip ospf database summary'
+    '''
+
     cli_command = 'show ip ospf database summary'
 
-    def cli(self,output=None):
+    def cli(self, output=None):
 
-        return super().cli(cmd=self.cli_command, db_type='summary',output=output)
+        return super().cli(cmd=self.cli_command, db_type='summary', output=output)
 
 
-# ==============================================
-# Schema for 'show ip ospf database opaque-area'
-# ==============================================
+# =======================================
+# Schema for:
+#   * 'show ip ospf database opaque-area'
+# =======================================
 class ShowIpOspfDatabaseOpaqueAreaSchema(MetaParser):
 
-    ''' Schema for "show ip ospf database opaque-area" '''
+    ''' Schema for:
+        * 'show ip ospf database opaque-area
+    '''
 
     schema = {
         'vrf': 
@@ -4444,25 +4537,32 @@ class ShowIpOspfDatabaseOpaqueAreaSchema(MetaParser):
         }
 
 
-# =============================================================
-# Parser for 'show ospf vrf all-inclusive database opaque-area'
-# =============================================================
+# =======================================
+# Parser for:
+#   * 'show ip ospf database opaque-area'
+# =======================================
 class ShowIpOspfDatabaseOpaqueArea(ShowIpOspfDatabaseOpaqueAreaSchema, ShowIpOspfDatabaseTypeParser):
 
-    ''' Parser for "show ip ospf database opaque-area" '''
+    ''' Parser for:
+        * 'show ip ospf database opaque-area'
+    '''
 
     cli_command = 'show ip ospf database opaque-area'
 
-    def cli(self,output=None):
-        return super().cli(cmd=self.cli_command, db_type='opaque',output=output)
+    def cli(self, output=None):
+
+        return super().cli(cmd=self.cli_command, db_type='opaque', output=output)
 
 
-# ============================================
-# Schema for 'show ip ospf mpls ldp interface'
-# ============================================
+# =====================================
+# Schema for:
+#   * 'show ip ospf mpls ldp interface'
+# =====================================
 class ShowIpOspfMplsLdpInterfaceSchema(MetaParser):
 
-    ''' Schema for "show ip ospf mpls ldp interface" '''
+    ''' Schema for:
+        * "show ip ospf mpls ldp interface" 
+    '''
 
     schema = {
         'vrf': 
@@ -4502,15 +4602,20 @@ class ShowIpOspfMplsLdpInterfaceSchema(MetaParser):
         }
 
 
-# ============================================
-# Parser for 'show ip ospf mpls ldp interface'
-# ============================================
+# =====================================
+# Parser for:
+#   * 'show ip ospf mpls ldp interface'
+# =====================================
 class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
 
-    ''' Parser for "show ip ospf mpls ldp interface" '''
+    ''' Parser for:
+        * 'show ip ospf mpls ldp interface'
+    '''
+
     cli_command = 'show ip ospf mpls ldp interface'
 
-    def cli(self,output=None):
+    def cli(self, output=None):
+
         if output is None:
             # Execute command on device
             out = self.device.execute(self.cli_command)
@@ -4682,12 +4787,15 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
         return ret_dict
 
 
-# ===============================================
-# Schema for 'show ip ospf mpls traffic-eng link'
-# ===============================================
+# ========================================
+# Schema for:
+#   * 'show ip ospf mpls traffic-eng link'
+# ========================================
 class ShowIpOspfMplsTrafficEngLinkSchema(MetaParser):
 
-    ''' Schema for "show ip ospf mpls traffic-eng link" '''
+    ''' Schema for:
+        * 'show ip ospf mpls traffic-eng link'
+    '''
 
     schema = {
         'vrf': 
@@ -4744,16 +4852,20 @@ class ShowIpOspfMplsTrafficEngLinkSchema(MetaParser):
         }
 
 
-# ===============================================
-# Parser for 'show ip ospf mpls traffic-eng link'
-# ===============================================
+# ========================================
+# Parser for:
+#   * 'show ip ospf mpls traffic-eng link'
+# ========================================
 class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
 
-    ''' Parser for "show ip ospf mpls traffic-eng link" '''
+    ''' Parser for:
+        * 'show ip ospf mpls traffic-eng link'
+    '''
 
     cli_command = 'show ip ospf mpls traffic-eng link'
 
-    def cli(self,output=None):
+    def cli(self, output=None):
+
         if output is None:
             # Execute command on device
             out = self.device.execute(self.cli_command)
@@ -5020,12 +5132,15 @@ class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
         return ret_dict
 
 
-# ====================================
-# Schema for 'show ip ospf max-metric'
-# ====================================
+# =============================
+# Schema for:
+#   * 'show ip ospf max-metric'
+# =============================
 class ShowIpOspfMaxMetricSchema(MetaParser):
     
-    ''' Schema for "show ip ospf max-metric" '''
+    ''' Schema for:
+        * 'show ip ospf max-metric'
+    '''
 
     schema = {
         'vrf':
@@ -5060,12 +5175,15 @@ class ShowIpOspfMaxMetricSchema(MetaParser):
         }
 
 
-# ====================================
-# Parser for 'show ip ospf max-metric'
-# ====================================
+# =============================
+# Parser for:
+#   * 'show ip ospf max-metric'
+# =============================
 class ShowIpOspfMaxMetric(ShowIpOspfMaxMetricSchema):
 
-    ''' Parser for "show ip ospf max-metric" '''
+    ''' Parser for:
+        * 'show ip ospf max-metric'
+    '''
 
     cli_command = 'show ip ospf max-metric'
 
@@ -5204,10 +5322,15 @@ class ShowIpOspfMaxMetric(ShowIpOspfMaxMetricSchema):
         return ret_dict
 
 
-# =================================
-# Schema for 'show ip ospf traffic'
-# =================================
+# ==========================
+# Schema for:
+#   * 'show ip ospf traffic'
+# ==========================
 class ShowIpOspfTrafficSchema(MetaParser):
+
+    ''' Schema for:
+        * 'show ip ospf traffic'
+    '''
 
     schema = {
         'ospf_statistics':
@@ -5420,12 +5543,15 @@ class ShowIpOspfTrafficSchema(MetaParser):
         }
 
 
-# =================================
-# Parser for 'show ip ospf traffic'
-# =================================
+# ==========================
+# Parser for:
+#   * 'show ip ospf traffic'
+# ==========================
 class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
 
-    ''' Parser for "show ip ospf traffic" '''
+    ''' Parser for:
+        * "show ip ospf traffic"
+    '''
 
     cli_command = 'show ip ospf traffic'
 
@@ -5872,3 +5998,4 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
                 continue
 
         return ret_dict
+
