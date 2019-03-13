@@ -3376,6 +3376,236 @@ class ShowPlatformHardwareQfpBqsIpmMapping(ShowPlatformHardwareQfpBqsMappingSche
 
         return ret_dict
 
+class ShowPlatformHardwareSerdesSchema(MetaParser):
+    """Schema for show platform hardware slot <x> serdes statistics
+                  show platform hardware slot <x> serdes statistics internal"""
+
+    schema = {
+        'interface': {
+            Any(): {
+                'channel': {
+                    Any(): {
+                        'name': str,
+                        'number': int,
+                        Optional('logical_channel'): int,
+                        Optional('drain_mode'): bool,
+                        Optional('port'): int,
+                        Optional('cfifo'): int,
+                    },
+                }
+            },
+        }
+    }
+
+
+class ShowPlatformHardwareSerdes(ShowPlatformHardwareSerdesSchema):
+    """Parser for show platform hardware slot <x> serdes statistics"""
+
+    cli_command = 'show platform hardware slot {slot} serdes statistics'
+
+    def cli(self, slot, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(slot=slot)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Router#show platform hardware slot F0 serdes statistics 
+        # Load for five secs: 22%/1%; one minute: 8%; five minutes: 9%
+        # Time source is NTP, 07:42:08.304 JST Thu Sep 8 2016
+        # From Slot R1-Link A
+        #   Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0         
+        #   Bytes High: 0          Low: 0          Bad: 0          Dropped: 0         
+        #   Pkts  Looped: 0          Error: 0         
+        #   Bytes Looped 0         
+        #   Qstat count: 0          Flow ctrl count: 3501      
+        # To Slot R1-Link A
+        #   Pkts  High: 0          Low: 0         
+
+        # From Slot R0-Link A
+        #   Pkts  High: 19461      Low: 2777099    Bad: 0          Dropped: 0         
+        #   Bytes High: 1614284    Low: 298734735  Bad: 0          Dropped: 0         
+        #   Pkts  Looped: 0          Error: 0         
+        #   Bytes Looped 0         
+        #   Qstat count: 0          Flow ctrl count: 3700      
+        # To Slot R0-Link A
+        #   Pkts  High: 1018101    Low: 1719353   
+
+        # From Slot F1-Link A
+        #   Pkts  High: 0          Low: 518        Bad: 0          Dropped: 0         
+        #   Bytes High: 0          Low: 18648      Bad: 0          Dropped: 0         
+        #   Pkts  Looped: 0          Error: 0         
+        #   Bytes Looped 0         
+        #   Qstat count: 0          Flow ctrl count: 3680      
+        # To Slot F1-Link A
+        #   Pkts  High: 0          Low: 518       
+
+        # From Slot 1-Link A
+        #   Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0         
+        #   Bytes High: 0          Low: 0          Bad: 0          Dropped: 0         
+        #   Pkts  Looped: 0          Error: 0         
+        #   Bytes Looped 0         
+        #   Qstat count: 294400     Flow ctrl count: 3680      
+        # To Slot 1-Link A
+        #   Pkts  High: 0          Low: 0         
+
+        # From Slot 0-Link A
+        #   Pkts  High: 63052      Low: 2703601    Bad: 0          Dropped: 0         
+        #   Bytes High: 53361379   Low: 199330758  Bad: 0          Dropped: 0         
+        #   Pkts  Looped: 0          Error: 0         
+        #   Bytes Looped 0         
+        #   Qstat count: 331199     Flow ctrl count: 3680      
+        # To Slot 0-Link A
+        #   Pkts  High: 0          Low: 2787636   
+
+        # From Slot 0-Link B
+        #   Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0         
+        #   Bytes High: 0          Low: 0          Bad: 0          Dropped: 0         
+        #   Pkts  Looped: 0          Error: 0         
+        #   Bytes Looped 0         
+        #   Qstat count: 331199     Flow ctrl count: 3680      
+        # To Slot 0-Link B
+        #   Pkts  High: 0          Low: 0         
+
+        # From Slot 1-Link B
+        #   Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0         
+        #   Bytes High: 0          Low: 0          Bad: 0          Dropped: 0         
+        #   Pkts  Looped: 0          Error: 0         
+        #   Bytes Looped 0         
+        #   Qstat count: 0          Flow ctrl count: 3680      
+        # To Slot 1-Link B
+        #   Pkts  High: 0          Low: 0         
+        p1 = re.compile(r'^(?P<number>\d+)(?P<drained>\*)? +(?P<name>[\w\-\s]+)'
+                         ' +(?P<interface>[\w\d]+) +(?P<logical_channel>\d+)$')
+
+        # 32       Unmapped                                         
+        p2 = re.compile(r'^(?P<number>\d+) +Unmapped$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group['interface']
+                number = group['number']
+                if group['drained']:
+                    drained = True
+                else:
+                    drained = False
+                final_dict = ret_dict.setdefault('interface', {}).\
+                    setdefault(interface, {}).setdefault('channel', {}).setdefault(number, {})
+                final_dict.update({'name':group['name'].strip()})
+                final_dict.update({'number':int(number)})
+                final_dict.update({'logical_channel':int(group['logical_channel'])})
+                final_dict.update({'drain_mode':drained})
+                continue
+
+            m = p2.match(line)
+            if m:
+                continue
+
+        return ret_dict
+
+class ShowPlatformHardwareSerdesInternal(ShowPlatformHardwareSerdesSchema):
+    """Parser for show platform hardware slot <x> serdes statistics internal"""
+
+    cli_command = 'show platform hardware slot {slot} serdes statistics internal'
+
+    def cli(self, slot, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(slot=slot)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Router#show platform hardware slot F0 serdes statistics internal 
+        # Load for five secs: 5%/1%; one minute: 8%; five minutes: 9%
+        # Time source is NTP, 07:42:13.752 JST Thu Sep 8 2016
+        # Warning: Clear option may not clear all the counters
+
+        # Network-Processor-0 Link:
+        #   Local TX in sync, Local RX in sync
+        #   From Network-Processor     Packets:    21259012  Bytes:  7397920802
+        #   To Network-Processor       Packets:    21763844  Bytes:  7343838083
+
+        # Encryption Processor Link:
+        #   Local TX in sync, Local RX in sync
+        #   Remote TX in sync, Remote RX in sync
+        #   To Encryption Processor   Packets:           0  Bytes:           0
+        #     Drops                   Packets:           0  Bytes:           0
+        #   From Encryption Processor Packets:           0  Bytes:           0
+        #     Drops                   Packets:           0  Bytes:           0
+        #     Errors                  Packets:           0  Bytes:           0
+        #   Errors:
+        #     RX/TX process: 0/0, RX/TX schedule: 0/0
+        #     RX/TX statistics: 0/0, RX parity: 0
+
+        # Serdes Exception Counts:
+        #   spi link:
+        #   cilink:
+        #     link 0: msgTypeError: 5
+        #     link 0: msgEccError: 5
+        #     link 0: chicoEvent: 5
+        #     link 1: msgTypeError: 1
+        #     link 1: msgEccError: 1
+        #     link 1: chicoEvent: 1
+        #     link 2: msgTypeError: 3
+        #     link 2: msgEccError: 3
+        #     link 2: chicoEvent: 3
+        #   ilak:
+        #   slb:
+        #   edm:
+        #   isch:
+        #   cfg:
+        #   c2w:
+        #   pcie:
+        #   eqs/fc:
+        #   idh-hi:
+        #   idh-lo:
+        #   idh-shared:
+        #   edh-hi:
+        #   edh-lo:        
+        # * - indicates the drain mode bit is set for this channel
+        p1 = re.compile(r'^(?P<number>\d+)(?P<drained>\*)? +(?P<name>[\w\-\s]+)'
+                         ' +(?P<interface>[\w\d]+) +(?P<logical_channel>\d+)$')
+
+        # 32       Unmapped                                         
+        p2 = re.compile(r'^(?P<number>\d+) +Unmapped$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group['interface']
+                number = group['number']
+                if group['drained']:
+                    drained = True
+                else:
+                    drained = False
+                final_dict = ret_dict.setdefault('interface', {}).\
+                    setdefault(interface, {}).setdefault('channel', {}).setdefault(number, {})
+                final_dict.update({'name':group['name'].strip()})
+                final_dict.update({'number':int(number)})
+                final_dict.update({'logical_channel':int(group['logical_channel'])})
+                final_dict.update({'drain_mode':drained})
+                continue
+
+            m = p2.match(line)
+            if m:
+                continue
+
+        return ret_dict
 
 class ShowPlatformPowerSchema(MetaParser):
     """Schema for show platform power"""
