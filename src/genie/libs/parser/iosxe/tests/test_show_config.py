@@ -66,6 +66,16 @@ class test_show_configuration_lock(unittest.TestCase):
                     'count': 0,
                     'pending_requests': 0,
                     'user_debug_info': 0
+                    },
+                    11 : {
+                        'user': 'User11',
+                        'tty': 31,
+                        'type': 'EXCLUSIVE',
+                        'state': 'LOCKED',
+                        'class': 'Exposed',
+                        'count': 0,
+                        'pending_requests': 0,
+                        'user_debug_info': 0
                     }
                 }
             }
@@ -104,6 +114,15 @@ class test_show_configuration_lock(unittest.TestCase):
             Count               :   0
             Pending Requests    :   0
             User debug info     :   0
+            Owner PID           : 11
+            User                : User11
+            TTY                 : 31
+            Type                : EXCLUSIVE
+            State               : LOCKED
+            Class               : Exposed
+            Count               : 0
+            Pending Requests    : 0
+            User debug info     : 0
             '''}
 
     def test_empty(self):

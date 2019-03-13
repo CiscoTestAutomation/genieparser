@@ -104,36 +104,37 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                 m = p1.match(line)
                 if m:
                     group = m.groupdict()
-                    pid = int(group['owner_pid'])
-                    config_session_lock = ret_dict.setdefault('config_session_lock',{}).setdefault('owner_pid', {}).setdefault(pid,{})
+                    config_session_lock = ret_dict.setdefault('config_session_lock',{}).\
+                            setdefault('owner_pid',{}).\
+                            setdefault(int(group['owner_pid']),{})
                     continue
                 
                 # TTY number : 2
                 m = p2.match(line)
                 if m:
                     group = m.groupdict()
-                    config_session_lock.update({'tty_number':int(group['tty_number'])})
+                    config_session_lock.update({'tty_number' : int(group['tty_number'])})
                     continue
                 
                 # TTY username : Test1
                 m = p3.match(line)
                 if m:
                     group = m.groupdict()
-                    config_session_lock.update({'tty_username':group['tty_username']})
+                    config_session_lock.update({'tty_username' : group['tty_username']})
                     continue
                 
                 # User debug info : CLI Session Lock
                 m = p4.match(line)
                 if m:
                     group = m.groupdict()
-                    config_session_lock.update({'user_debug_info':group['user_debug_info']})
+                    config_session_lock.update({'user_debug_info' : group['user_debug_info']})
                     continue
                 
                 # Lock Active time (in Sec) : 63
                 m = p5.match(line)
                 if m:
                     group = m.groupdict()
-                    config_session_lock.update({'lock_active_time_in_sec':int(group['lock_active_time_in_sec'])})
+                    config_session_lock.update({'lock_active_time_in_sec' : int(group['lock_active_time_in_sec'])})
                     continue
                 
                 # Parser Configure Lock
@@ -146,64 +147,64 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                 m = p7.match(line)
                 if m:
                     group = m.groupdict()
-                    pid = int(group['owner_pid'])
-                    parser_configure_lock = ret_dict.setdefault('parser_configure_lock', {}).setdefault('owner_pid',{}).setdefault(pid,{})
+                    parser_configure_lock = ret_dict.setdefault('parser_configure_lock',{}).\
+                            setdefault('owner_pid',{}).setdefault(int(group['owner_pid']),{})
                     continue
                 
                 # User                  : User1
                 m = p8.match(line)
                 if m:
                     group = m.groupdict()
-                    parser_configure_lock.update({'user':group['user']})
+                    parser_configure_lock.update({'user' : group['user']})
                     continue
                 
                 # TTY                   : 3
                 m = p9.match(line)
                 if m:
                     group = m.groupdict()
-                    parser_configure_lock.update({'tty':int(group['tty'])})
+                    parser_configure_lock.update({'tty' : int(group['tty'])})
                     continue
                 
                 # Type                  : Exclusive
                 m = p10.match(line)
                 if m:
                     group = m.groupdict()
-                    parser_configure_lock.update({'type':group['type']})
+                    parser_configure_lock.update({'type' : group['type']})
                     continue
                 
                 # State                 : Locked
                 m = p11.match(line)
                 if m:
                     group = m.groupdict()
-                    parser_configure_lock.update({'state':group['state']})
+                    parser_configure_lock.update({'state' : group['state']})
                     continue
                 
                 # Class                 : Exposed
                 m = p12.match(line)
                 if m:
                     group = m.groupdict()
-                    parser_configure_lock.update({'class':group['class_name']})
+                    parser_configure_lock.update({'class' : group['class_name']})
                     continue
                 
                 # Count                 : 0
                 m = p13.match(line)
                 if m:
                     group = m.groupdict()
-                    parser_configure_lock.update({'count':int(group['count'])})
+                    parser_configure_lock.update({'count' : int(group['count'])})
                     continue
                 
                 # Pending Requests      : 0
                 m = p14.match(line)
                 if m:
                     group = m.groupdict()
-                    parser_configure_lock.update({'pending_requests':int(group['pending_requests'])})
+                    parser_configure_lock.update({'pending_requests' : int(group['pending_requests'])})
                     continue
                 
                 # User debug info       : 0
                 m = p15.match(line)
                 if m:
                     group = m.groupdict()
-                    parser_configure_lock.update({'user_debug_info':int(group['user_debug_info'])})
+                    parser_configure_lock.update({'user_debug_info' : int(group['user_debug_info'])})
                     continue
 
         return ret_dict
