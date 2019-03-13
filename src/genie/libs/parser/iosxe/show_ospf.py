@@ -4575,7 +4575,8 @@ class ShowIpOspfMplsLdpInterfaceSchema(MetaParser):
                                     {'ldp': 
                                         {'autoconfig': bool,
                                         'autoconfig_area_id': str,
-                                        'igp_sync': bool}},
+                                        },
+                                    },
                                 'areas': 
                                     {Any(): 
                                         {'interfaces': 
@@ -4761,10 +4762,8 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
             if m:
                 if m.groupdict()['igp_sync'] == 'Required':
                     intf_dict['igp_sync'] = True
-                    mpls_ldp_dict['igp_sync'] = True
                 else:
                     intf_dict['igp_sync'] = False
-                    mpls_ldp_dict['igp_sync'] = False
                     continue
 
             # Holddown timer is disabled

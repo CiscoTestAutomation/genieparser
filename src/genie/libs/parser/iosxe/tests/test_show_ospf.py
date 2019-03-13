@@ -5954,8 +5954,7 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                 'mpls': 
                                     {'ldp': 
                                         {'autoconfig': False,
-                                        'autoconfig_area_id': '0.0.0.1',
-                                        'igp_sync': False}}}}}}},
+                                        'autoconfig_area_id': '0.0.0.1'}}}}}}},
             'default': 
                 {'address_family': 
                     {'ipv4': 
@@ -5999,8 +5998,7 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                 'mpls': 
                                     {'ldp': 
                                         {'autoconfig': False,
-                                        'autoconfig_area_id': '0.0.0.0',
-                                        'igp_sync': False}}}}}}}}}
+                                        'autoconfig_area_id': '0.0.0.0'}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         R1_ospf_xe#show ip ospf mpls ldp interface 
@@ -6079,8 +6077,7 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                 'mpls': 
                                     {'ldp': 
                                         {'autoconfig': False,
-                                        'autoconfig_area_id': '0.0.0.8',
-                                        'igp_sync': True}}}}}}}}}
+                                        'autoconfig_area_id': '0.0.0.8'}}}}}}}}}
 
     golden_output2 = {'execute.return_value': '''
         Router#sh ip ospf mpls ldp interface
