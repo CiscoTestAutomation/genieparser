@@ -3233,3 +3233,131 @@ class ShowPlatformHardwarePlim(ShowPlatformHardwarePlimSchema):
                 continue
 
         return ret_dict
+
+
+class ShowPlatformHardwareQfpBqsMappingSchema(MetaParser):
+    """Schema for show platform hardware qfp active bqs <x> ipm mapping
+                  show platform hardware qfp standby bqs <x> ipm mapping
+                  show platform hardware qfp active bqs <x> opm mapping
+                  show platform hardware qfp standby bqs <x> opm mapping"""
+
+    schema = {
+        'interface': {
+            Any(): {
+                'channel': {
+                    Any(): {
+                        'name': str,
+                        'number': int,
+                        Optional('logical_channel'): int,
+                        Optional('drain_mode'): bool,
+                        Optional('port'): int,
+                        Optional('cfifo'): int,
+                    },
+                }
+            },
+        }
+    }
+
+
+class ShowPlatformHardwareQfpBqsOpmMapping(ShowPlatformHardwareQfpBqsMappingSchema):
+    """Parser for show platform hardware qfp active bqs <x> opm mapping
+                  show platform hardware qfp standby bqs <x> opm mapping"""
+
+    cli_command = 'show platform hardware qfp {status} bqs {slot} opm mapping'
+
+    def cli(self, status, slot, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(status=status, slot=slot)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Chan     Name                          Interface      LogicalChannel
+        #  0       CC0 Low                       SPI0            0                                                        
+        # 24       Peer-FP Low                   SPI0           24                      
+        # 26       Nitrox Low                    SPI0           26                       
+        # 28       HT Pkt Low                    HT              0                      
+        # 38       HighNormal                    GPM             7                                             
+        # 55*      Drain Low                     GPM             0             
+        # * - indicates the drain mode bit is set for this channel
+        p1 = re.compile(r'^(?P<number>\d+)(?P<drained>\*)? +(?P<name>[\w\-\s]+)'
+                         ' +(?P<interface>[\w\d]+) +(?P<logical_channel>\d+)$')
+
+        # 32       Unmapped                                         
+        p2 = re.compile(r'^(?P<number>\d+) +Unmapped$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group['interface']
+                number = group['number']
+                if group['drained']:
+                    drained = True
+                else:
+                    drained = False
+                final_dict = ret_dict.setdefault('interface', {}).\
+                    setdefault(interface, {}).setdefault('channel', {}).setdefault(number, {})
+                final_dict.update({'name':group['name'].strip()})
+                final_dict.update({'number':int(number)})
+                final_dict.update({'logical_channel':int(group['logical_channel'])})
+                final_dict.update({'drain_mode':drained})
+                continue
+
+            m = p2.match(line)
+            if m:
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformHardwareQfpBqsIpmMapping(ShowPlatformHardwareQfpBqsMappingSchema):
+    """Parser for show platform hardware qfp active bqs <x> ipm mapping
+                  show platform hardware qfp standby bqs <x> ipm mapping"""
+
+    cli_command = 'show platform hardware qfp {status} bqs {slot} ipm mapping'
+
+    def cli(self, status, slot, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(status=status, slot=slot)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Chan   Name                Interface      Port     CFIFO
+        #  1     CC3 Low             SPI0           0        1         
+        # 13     Peer-FP Low         SPI0          12        3      
+        # 15     Nitrox Low          SPI0          14        1         
+        # 17     HT Pkt Low          HT             0        1         
+        # 21     CC4 Low             SPI0          16        1      
+        p1 = re.compile(r'^(?P<number>\d+) +(?P<name>[\w\-\s]+)'
+                         ' +(?P<interface>[\w\d]+) +(?P<port>\d+)'
+                         ' +(?P<cfifo>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group['interface']
+                number = group['number']
+                final_dict = ret_dict.setdefault('interface', {}).\
+                    setdefault(interface, {}).setdefault('channel', {}).setdefault(number, {})
+                final_dict.update({'name':group['name'].strip()})
+                final_dict.update({'number':int(number)})
+                final_dict.update({'port':int(group['port'])})
+                final_dict.update({'cfifo':int(group['cfifo'])})
+                continue
+
+        return ret_dict
