@@ -22,3 +22,4 @@
     	show version RP standby running
     	show version RP standby installed
     	show version RP standby provisioned
+    * Add ShowPlatformPower for 'show platform power'
