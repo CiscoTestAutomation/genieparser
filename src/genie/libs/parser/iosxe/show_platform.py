@@ -3233,3 +3233,168 @@ class ShowPlatformHardwarePlim(ShowPlatformHardwarePlimSchema):
                 continue
 
         return ret_dict
+
+class ShowPlatformPowerSchema(MetaParser):
+    """Schema for show platform power"""
+    schema = {
+        'chassis': str,
+        'total_load': int,
+        'total_capacity': int,
+        'load_capacity_percent': int,
+        'power_capacity': int,
+        'redundant_alc': int,
+        'fan_alc': int,
+        'fru_alc': int,
+        'excess_power': int,
+        'excess_capacity_percent': int,
+        'redundancy_mode': str,
+        'allocation_status': str,
+        'slot':{
+            Any(): {
+                'type': str,
+                'state': str,
+                Optional('allocation'): float,
+                Optional('capacity'): int,
+                Optional('load'): int,
+            },
+        }
+    }
+
+
+class ShowPlatformPower(ShowPlatformPowerSchema):
+    """Parser for show platform power"""
+    cli_command = 'show platform power'
+
+    def cli(self,output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+        
+        # Chassis type: ASR1006-X
+        p1 = re.compile(r'^\s*Chassis +type\: +(?P<chassis>[\w\-]+)')
+
+        # Power Redundancy Mode: nplus1
+        p2 = re.compile(r'^\s*Power +Redundancy +Mode\: +(?P<redundancy_mode>[\w]+)')
+
+        # Power Allocation Status: Sufficient
+        p3 = re.compile(r'^\s*Power +Allocation +Status\: +(?P<allocation_status>[\w]+)')
+
+        # Slot      Type                State                 Allocation(W) 
+        # 0         ASR1000-SIP40       ok                    64
+        #  0/0      SPA-8X1GE-V2        inserted              14
+        #  0/1      SPA-1X10GE-L-V2     inserted              17.40 
+        p4 = re.compile(r'^\s*(?P<slot>[\w\/]+) +(?P<type>[\w-]+) '
+                    '+(?P<state>\w+(?:\, \w+)?) +(?P<allocation>[\d.]+)$')
+
+        # Slot      Type                State                 Capacity (W) Load (W)     
+        # P0        ASR1000X-AC-1100W   ok                    1100         132    
+        p5 = re.compile(r'^\s*(?P<slot>[\w\/]+) +(?P<type>[\w\-]+) '
+                    '+(?P<state>\w+(?:\, \w+)?) +(?P<capacity>[\d.]+) +(?P<load>[\d.]+)')
+
+        # Total load: 696 W, total capacity: 4400 W. Load / Capacity is 15%
+        p6 = re.compile(r'^\s*Total +load\: +(?P<total_load>\d+) +W\, +total +capacity\: +(?P<total_capacity>\d+) +W\.'
+            ' +Load +\/ +Capacity +is +(?P<load_capacity_percent>\d+)\%$')
+
+        # Power capacity:       4400 W
+        p7 = re.compile(r'^\s*Power +capacity\: +(?P<power_capacity>\d+) +W$')
+
+        # Redundant allocation: 0 W
+        p8 = re.compile(r'^\s*Redundant +allocation\: +(?P<redundant_alc>\d+) +W$')
+
+        # Fan allocation:       250 W
+        p9 = re.compile(r'^\s*Fan +allocation\: +(?P<fan_alc>\d+) +W$')
+        
+        # FRU allocation:       949 W
+        p10 = re.compile(r'^\s*FRU +allocation\: +(?P<fru_alc>\d+) +W$')
+
+        # Excess Power in Reserve:   3201 W
+        p11 = re.compile(r'^\s*Excess +Power +in +Reserve\: +(?P<excess_power>\d+) +W$')
+
+        # Excess / (Capacity - Redundant) is 72%
+        p12 = re.compile(r'^\s*Excess +\/ +\(Capacity - Redundant\) +is +(?P<excess_capacity_percent>\d+)\%$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                ret_dict['chassis'] = m.groupdict()['chassis']
+                continue
+
+            m = p2.match(line)
+            if m:
+                ret_dict['redundancy_mode'] = m.groupdict()['redundancy_mode']
+                continue
+
+            m = p3.match(line)
+            if m:
+                ret_dict['allocation_status'] = m.groupdict()['allocation_status']
+
+            m = p4.match(line)
+            if m:
+                slot = m.groupdict()['slot']
+                t = m.groupdict()['type']
+                state = m.groupdict()['state']
+                allocation = float(m.groupdict()['allocation'])
+                slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot,{})
+                slot_dict.update({"type": t})
+                slot_dict.update({"state": state})
+                slot_dict.update({"allocation": allocation})
+                continue
+
+            m = p5.match(line)
+            if m:
+                slot = m.groupdict()['slot']
+                t = m.groupdict()['type']
+                state = m.groupdict()['state']
+                capacity = int(m.groupdict()['capacity'])
+                load = int(m.groupdict()['load'])
+                slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot,{})
+                slot_dict.update({"type": t})
+                slot_dict.update({"state": state})
+                slot_dict.update({"capacity": capacity})
+                slot_dict.update({"load": load})
+                continue
+
+            m = p6.match(line)
+            if m:
+                ret_dict['total_load'] = int(m.groupdict()['total_load'])
+                ret_dict['total_capacity'] = int(m.groupdict()['total_capacity'])
+                ret_dict['load_capacity_percent'] = int(m.groupdict()['load_capacity_percent'])
+                continue
+
+            m = p7.match(line)
+            if m:
+                ret_dict['power_capacity'] = int(m.groupdict()['power_capacity'])
+                continue
+
+            m = p8.match(line)
+            if m:
+                ret_dict['redundant_alc'] = int(m.groupdict()['redundant_alc'])
+                continue
+
+            m = p9.match(line)
+            if m:
+                ret_dict['fan_alc'] = int(m.groupdict()['fan_alc'])
+                continue
+
+            m = p10.match(line)
+            if m:
+                ret_dict['fru_alc'] = int(m.groupdict()['fru_alc'])
+                continue
+
+            m = p11.match(line)
+            if m:
+                ret_dict['excess_power'] = int(m.groupdict()['excess_power'])
+                continue
+
+            m = p12.match(line)
+            if m:
+                ret_dict['excess_capacity_percent'] = int(m.groupdict()['excess_capacity_percent'])
+                continue
+
+        return ret_dict
