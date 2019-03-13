@@ -3287,13 +3287,13 @@ class ShowPlatformPower(ShowPlatformPowerSchema):
         # 0         ASR1000-SIP40       ok                    64
         #  0/0      SPA-8X1GE-V2        inserted              14
         #  0/1      SPA-1X10GE-L-V2     inserted              17.40 
-        p4 = re.compile(r'^\s*(?P<slot>[\w\/]+) +(?P<type>[\w\-]+) '
-                    '+(?P<state>\w+(?:\, \w+)?) +(?P<allocation>[\d\.]+)')
+        p4 = re.compile(r'^\s*(?P<slot>[\w\/]+) +(?P<type>[\w-]+) '
+                    '+(?P<state>\w+(?:\, \w+)?) +(?P<allocation>[\d.]+)$')
 
         # Slot      Type                State                 Capacity (W) Load (W)     
         # P0        ASR1000X-AC-1100W   ok                    1100         132    
         p5 = re.compile(r'^\s*(?P<slot>[\w\/]+) +(?P<type>[\w\-]+) '
-                    '+(?P<state>\w+(?:\, \w+)?) +(?P<capacity>[\d\.]+) +(?P<load>[\d\.]+)')
+                    '+(?P<state>\w+(?:\, \w+)?) +(?P<capacity>[\d.]+) +(?P<load>[\d.]+)')
 
         # Total load: 696 W, total capacity: 4400 W. Load / Capacity is 15%
         p6 = re.compile(r'^\s*Total +load\: +(?P<total_load>\d+) +W\, +total +capacity\: +(?P<total_capacity>\d+) +W\.'
