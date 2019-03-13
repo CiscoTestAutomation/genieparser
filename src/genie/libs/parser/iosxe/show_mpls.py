@@ -891,3 +891,40 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
                 targeted_dict.update({'active': True if group['status']=='active' else False})
                 continue
         return result_dict
+
+# ================================================
+#   Show mpls ldp igp sync
+# ================================================
+class ShowMplsLdpIgpSyncSchema(MetaParser):
+    """
+    Schema for show mpls ldp igp sync
+               show mpls ldp igp sync all
+               show mpls ldp igp sync interface <interface>
+               show mpls ldp igp sync vrf <vrf>
+    """
+    schema = {
+        'vrf':{
+            Any():{
+                'interface': {
+                    Any(): {
+                        'ldp': {
+                            'configured': bool,
+                            'igp_synchronization_enabled': bool,
+                        },
+                        Optional('sync'): {
+                            'status': {
+                                'sync_achieved': bool,
+                                'peer_reachable': bool,
+                            },
+                            'delay_time': int,
+                            'time_left': int,
+                        },
+                        Optional('igp'): {
+                            'holddown_time': str,
+                            'enabled': str
+                        }
+                    },
+                },
+            },
+        }
+    }

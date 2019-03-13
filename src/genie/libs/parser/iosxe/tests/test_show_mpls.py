@@ -1144,6 +1144,71 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
         parsed_output = obj.parse(all='all')
         self.assertEqual(parsed_output, self.golden_parsed_output_all)
 
+
+
+class test_show_mpls_ldp_igp_sync(unittest.TestCase):
+    dev = Device(name='dev1')
+    empty_output = {'execute.return_value': '      '}
+
+    golden_parsed_output_all_detail = {}
+    golden_output_all_detail = {}
+
+    golden_output = {'execute.return_value': ''' '''}
+
+    golden_parsed_output = {}
+
+    golden_parsed_output_all = {
+        'vrf': {
+            'default': {
+                'interface':{
+                    'GigabitEthernet0/0/0':{
+                        'ldp':{
+                            'configured': True,
+                            'igp_synchronization_enabled':True,
+                        },
+                        'sync': {
+                            'status':{
+                                'sync_achieved': True,
+                                'peer_reachable': True,
+                            },
+                            'delay_time': 0,
+                            'time_left': 0,
+                        },
+                        'igp': {
+                            'holddown_time': 'infinite',
+                            'enabled': "ospf 9996"
+                        }
+                    },
+                    "GigabitEthernet0/0/2": {
+                        'ldp': {
+                            'configured': True,
+                            'igp_synchronization_enabled': False,
+                        },
+                    },
+                }
+            }
+        }
+    }
+    golden_output_all = {'execute.return_value':'''\
+    https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/mp_ldp/configuration/15-sy/mp-ldp-15-sy-book/mp-ldp-igp-synch.html
+
+    Router#show mpls ldp igp sync all
+    Load for five secs: 2%/0%; one minute: 5%; five minutes: 5%
+    Time source is NTP, 16:10:10.780 JST Tue Nov 8 2016
+
+    GigabitEthernet0/0/0:
+        LDP configured; LDP-IGP Synchronization enabled.
+        Sync status: sync achieved; peer reachable.
+        Sync delay time: 0 seconds (0 seconds left)
+        IGP holddown time: infinite.
+        Peer LDP Ident: 106.162.197.252:0
+        IGP enabled: OSPF 9996
+    GigabitEthernet0/0/2:
+        LDP configured; LDP-IGP Synchronization not enabled.
+Router#
+'''}
+
+
 if __name__ == '__main__':
     unittest.main()
 
