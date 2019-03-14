@@ -10,7 +10,8 @@ from genie.libs.parser.iosxe.show_mpls import ShowMplsLdpNeighbor,\
                                               ShowMplsLdpNeighborDetail,\
                                               ShowMplsLdpBindings,\
                                               ShowMplsLdpCapabilities,\
-                                              ShowMplsLdpDiscovery
+                                              ShowMplsLdpDiscovery,\
+                                              ShowMplsLdpIgpSync
 
 class test_show_mpls_ldp_neighbor(unittest.TestCase):
     dev1 = Device(name='empty')
@@ -1150,13 +1151,6 @@ class test_show_mpls_ldp_igp_sync(unittest.TestCase):
     dev = Device(name='dev1')
     empty_output = {'execute.return_value': '      '}
 
-    golden_parsed_output_all_detail = {}
-    golden_output_all_detail = {}
-
-    golden_output = {'execute.return_value': ''' '''}
-
-    golden_parsed_output = {}
-
     golden_parsed_output_all = {
         'vrf': {
             'default': {
@@ -1172,12 +1166,13 @@ class test_show_mpls_ldp_igp_sync(unittest.TestCase):
                                 'peer_reachable': True,
                             },
                             'delay_time': 0,
-                            'time_left': 0,
+                            'left_time': 0,
                         },
                         'igp': {
                             'holddown_time': 'infinite',
                             'enabled': "ospf 9996"
-                        }
+                        },
+                        'peer_ldp_ident': '106.162.197.252:0',
                     },
                     "GigabitEthernet0/0/2": {
                         'ldp': {
@@ -1205,9 +1200,66 @@ class test_show_mpls_ldp_igp_sync(unittest.TestCase):
         IGP enabled: OSPF 9996
     GigabitEthernet0/0/2:
         LDP configured; LDP-IGP Synchronization not enabled.
-Router#
-'''}
 
+    Router#
+    '''}
+    golden_parsed_output = {
+        "vrf": {
+            "default": {
+                "interface": {
+                    "FastEthernet0/0/0": {
+                        "sync": {
+                            "status": {
+                                "enabled": True,
+                                "sync_achieved": True,
+                                "peer_reachable": True
+                            }
+                        },
+                        "ldp": {
+                            "configured": True,
+                            "igp_synchronization_enabled": False
+                        },
+                        "igp": {
+                            "enabled": "ospf 1",
+                            "holddown_time": "infinite"
+                        },
+                        "peer_ldp_ident": "10.0.0.1:0"
+                    }
+                }
+            }
+        }
+    }
+    golden_output = {'execute.return_value': '''\
+
+    Router#show mpls ldp igp sync
+        FastEthernet0/0/0:
+            LDP configured;  SYNC enabled.
+            SYNC status: sync achieved; peer reachable.
+            IGP holddown time: infinite.
+            Peer LDP Ident: 10.0.0.1:0
+            IGP enabled: OSPF 1
+
+    '''}
+
+    def test_empty(self):
+        self.dev = Mock(**self.empty_output)
+        obj = ShowMplsLdpIgpSync(device=self.dev)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_all(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output_all)
+        obj = ShowMplsLdpIgpSync(device=self.dev)
+        parsed_output = obj.parse(all='all')
+        self.assertEqual(parsed_output, self.golden_parsed_output_all)
+
+    def test_golden_interface(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output)
+        obj = ShowMplsLdpIgpSync(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()

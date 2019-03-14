@@ -913,18 +913,155 @@ class ShowMplsLdpIgpSyncSchema(MetaParser):
                         },
                         Optional('sync'): {
                             'status': {
+                                Optional('enabled'): bool,
                                 'sync_achieved': bool,
                                 'peer_reachable': bool,
                             },
-                            'delay_time': int,
-                            'time_left': int,
+                            Optional('delay_time'): int,
+                            Optional('left_time'): int,
                         },
                         Optional('igp'): {
                             'holddown_time': str,
                             'enabled': str
-                        }
+                        },
+                        Optional('peer_ldp_ident'): str,
                     },
                 },
             },
         }
     }
+
+
+class ShowMplsLdpIgpSync(ShowMplsLdpIgpSyncSchema):
+    """
+        Parser for show mpls ldp igp sync
+                   show mpls ldp igp sync all
+                   show mpls ldp igp sync interface <interface>
+                   show mpls ldp igp sync vrf <vrf>
+       """
+    cli_command = ['show mpls ldp igp sync',
+                   'show mpls ldp igp sync {all}',
+                   'show mpls ldp igp sync interface <interface>',
+                   'show mpls ldp igp sync vrf {vrf}']
+
+    def cli(self, vrf="", all="", interface="", output=None):
+        if output is None:
+            if vrf :
+                cmd = self.cli_command[3].format(vrf=vrf)
+            else:
+                if all:
+                    cmd = self.cli_command[1].format(all=all)
+                if interface:
+                    cmd = self.cli_command[2].format(interface=interface)
+                if not interface and not all:
+                    cmd = self.cli_command[0]
+
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        if not vrf:
+            vrf = "default"
+
+        # initial return dictionary
+        result_dict = {}
+
+        # GigabitEthernet0/0/0:
+        p1 = re.compile(r'^(?P<interface>\S+):$')
+
+        #     LDP configured; LDP-IGP Synchronization enabled.
+        #     LDP configured; LDP-IGP Synchronization not enabled.
+        #     LDP configured;  SYNC enabled.
+        p2 = re.compile(r'^LDP +configured; +(LDP\-IGP +Synchronization( +(?P<state>\w+))?'
+                        ' +(?P<synchronization_enabled>(enabled)+))?(SYNC +(?P<enabled>\w+))?.$')
+
+        #     Sync status: sync achieved; peer reachable.
+        p3 = re.compile(r'^(Sync|SYNC) +status: +sync +achieved; +peer +reachable.$')
+
+        #     Sync delay time: 0 seconds (0 seconds left)
+        p4 = re.compile(r'^Sync +delay +time: +(?P<delay_time>\d+) +seconds \((?P<left_time>\d+) +seconds +left\)$')
+
+        #     IGP holddown time: infinite.
+        p5 = re.compile(r'^IGP +holddown +time: +(?P<holddown_time>\w+).?$')
+
+        #     Peer LDP Ident: 106.162.197.252:0
+        p6 = re.compile(r'^Peer +LDP +Ident: +(?P<peer_ldp_ident>\S+).?$')
+
+        #     IGP enabled: OSPF 9996
+        p7 = re.compile(r'^IGP +enabled: +(?P<igp_enabled>[\S\s]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # GigabitEthernet0/0/0:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict = result_dict.setdefault('vrf', {}).\
+                                       setdefault(vrf, {}).\
+                                       setdefault('interface', {}).\
+                                       setdefault(group['interface'],{})
+                continue
+
+            #   LDP configured; LDP-IGP Synchronization enabled.
+            #   LDP configured; LDP-IGP Synchronization not enabled.
+            #   LDP configured;  SYNC enabled.
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_dict = interface_dict.setdefault('ldp', {})
+                if group['state']:
+                    ldp_dict.update({'igp_synchronization_enabled': False})
+                else:
+                    if not group['synchronization_enabled']:
+                        ldp_dict.update({'igp_synchronization_enabled': False})
+                    if group['synchronization_enabled']:
+                        ldp_dict.update({'igp_synchronization_enabled': True})
+
+                if group['enabled']:
+                    enabled_dict = interface_dict.setdefault('sync', {}).setdefault('status', {})
+                    enabled_dict.update({'enabled': True})
+
+                ldp_dict.update({'configured': True})
+                continue
+
+            # Sync status: sync achieved; peer reachable.
+            m = p3.match(line)
+            if m:
+                sync_dict = interface_dict.setdefault('sync', {})
+                sync_status_dict = sync_dict.setdefault('status', {})
+                sync_status_dict.update({'sync_achieved': True})
+                sync_status_dict.update({'peer_reachable': True})
+                continue
+
+            #  Sync delay time: 0 seconds (0 seconds left)
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                sync_dict.update({'delay_time': int(group['delay_time'])})
+                sync_dict.update({'left_time': int(group['left_time'])})
+                continue
+
+            #   IGP holddown time: infinite.
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                igp_dict = interface_dict.setdefault('igp', {})
+                igp_dict.update({'holddown_time': group['holddown_time']})
+                continue
+
+            #  Peer LDP Ident: 106.162.197.252:0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({'peer_ldp_ident': group['peer_ldp_ident']})
+                continue
+
+            #  IGP enabled: OSPF 9996
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                igp_dict.update({'enabled': group['igp_enabled'].lower()})
+                continue
+
+        return result_dict
