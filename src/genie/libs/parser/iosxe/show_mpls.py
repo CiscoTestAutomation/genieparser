@@ -24,37 +24,38 @@
 import re
 
 from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import Schema, \
+                                         Any, \
+                                         Optional
 
 class ShowMplsLdpParametersSchema(MetaParser):
     """Schema for show mpls ldp Parameters"""
 
     schema = {
         'ldp_featureset_manager': {
-            'ldp': {
-                'features': list,
-                'backoff': {
-                    'initial': int,
-                    'maximum': int,
-                },
-                'state_initialized': bool,
-                'loop_detection': str,
-                'nsr_enabled': bool,
-                'version': int,
-                'holdtime': int,
-                'keepalive_interval': int,
-                'discovery_targeted_hello': {
-                    'holdtime': int,
-                    'interval': int,
-                },
-                'discovery_hello': {
-                    'holdtime': int,
-                    'interval': int,
-                },
-                'downstream': {
-                    'maxhop_count': int,
-                }
-            },
-        }
+            Any(): {
+                'ldp_features': list,
+            }
+        },
+        'ldp_backoff': {
+            'initial': int,
+            'maximum': int,
+        },
+        'ldp_loop_detection': str,
+        'ldp_nsr': str,
+        'version': int,
+        'session_hold_time': int,
+        'keep_alive_interval': int,
+        'ldp_for_targeted_sessions': bool,
+        'discovery_targeted_hello': {
+            'holdtime': int,
+            'interval': int,
+        },
+        'discovery_hello': {
+            'holdtime': int,
+            'interval': int,
+        },
+        'downstream_on_demand_max_hop_count': int,
     }
 
 class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
@@ -109,8 +110,8 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             # LDP Feature Set Manager: State Initialized
             m = p1.match(line)
             if m:
-                ldp_dict = result_dict.setdefault('ldp_featureset_manager', {}).setdefault('ldp', {})
-                ldp_dict.update({'state_initialized': True})
+                ldp_dict = result_dict
+                ldp_feature_dict = ldp_dict.setdefault('ldp_featureset_manager', {}).setdefault('State Initialized', {})
                 continue
 
             #  LDP features:
@@ -124,7 +125,7 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
                 group = m.groupdict()
                 if ldp_feature_flag:
                     ldp_feature_list.append(group['ldp_features'])
-                    ldp_dict.update({'features': ldp_feature_list})
+                    ldp_feature_dict.update({'ldp_features': ldp_feature_list})
                 continue
 
             # Protocol version: 1
@@ -140,8 +141,8 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             if m:
                 group = m.groupdict()
                 ldp_feature_flag = False
-                ldp_dict.update({'holdtime': int(group['session_holdtime'])})
-                ldp_dict.update({'keepalive_interval': int(group['keepalive_interval'])})
+                ldp_dict.update({'session_hold_time': int(group['session_holdtime'])})
+                ldp_dict.update({'keep_alive_interval': int(group['keepalive_interval'])})
                 continue
 
             # Discovery hello: holdtime: 15 sec; interval: 5 sec
@@ -169,7 +170,14 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             if m:
                 group = m.groupdict()
                 ldp_feature_flag = False
-                ldp_dict.setdefault('downstream', {}).update({'maxhop_count': int(group['maxhop_count'])})
+                ldp_dict.update({'downstream_on_demand_max_hop_count': int(group['maxhop_count'])})
+                continue
+
+            # LDP for targeted sessions
+            m = p8.match(line)
+            if m:
+                ldp_feature_flag = False
+                ldp_dict.update({'ldp_for_targeted_sessions': True})
                 continue
 
             # LDP initial/maximum backoff: 15/120 sec
@@ -177,7 +185,7 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             if m:
                 group = m.groupdict()
                 ldp_feature_flag = False
-                backoff_dict = ldp_dict.setdefault('backoff', {})
+                backoff_dict = ldp_dict.setdefault('ldp_backoff', {})
                 backoff_dict.update({'initial': int(group['initial'])})
                 backoff_dict.update({'maximum': int(group['maximum'])})
                 continue
@@ -187,7 +195,7 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             if m:
                 group = m.groupdict()
                 ldp_feature_flag = False
-                ldp_dict.update({'loop_detection': group['loop_detection']})
+                ldp_dict.update({'ldp_loop_detection': group['loop_detection']})
                 continue
 
             # LDP NSR: Disabled
@@ -195,7 +203,7 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             if m:
                 group = m.groupdict()
                 ldp_feature_flag = False
-                ldp_dict.update({'nsr_enabled': False if group['nsr'].lower() == 'disabled' else True})
+                ldp_dict.update({'ldp_nsr': group['nsr'].lower()})
                 continue
 
         return result_dict

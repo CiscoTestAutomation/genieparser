@@ -16,39 +16,38 @@ class test_show_mpls_ldp_parameters(unittest.TestCase):
 
     golden_parsed_output = {
         'ldp_featureset_manager': {
-            'ldp': {
-                'features': ['Auto-Configuration',
-                            'Basic',
-                            'ICPM',
-                            'IP-over-MPLS',
-                            'IGP-Sync',
-                            'LLAF',
-                            'TCP-MD5-Rollover',
-                            'TDP',
-                            'NSR'],
-                'backoff': {
-                    'initial': 15,
-                    'maximum': 120,
-                },
-                'state_initialized': True,
-                'loop_detection': "off",
-                'nsr_enabled': False,
-                'version': 1,
-                'holdtime': 180,
-                'keepalive_interval': 60,
-                'discovery_targeted_hello': {
-                    'holdtime': 90,
-                    'interval': 10,
-                },
-                'discovery_hello': {
-                    'holdtime': 15,
-                    'interval': 5,
-                },
-                'downstream': {
-                    'maxhop_count': 255
-                }
+            'State Initialized': {
+                'ldp_features': [
+                    'Auto-Configuration',
+                    'Basic',
+                    'ICPM',
+                    'IP-over-MPLS',
+                    'IGP-Sync',
+                    'LLAF',
+                    'TCP-MD5-Rollover',
+                    'TDP',
+                    'NSR'],
             },
-        }
+        },
+        'ldp_backoff': {
+            'initial': 15,
+            'maximum': 120,
+        },
+        'ldp_loop_detection': "off",
+        'ldp_nsr': 'disabled',
+        'ldp_for_targeted_sessions': True,
+        'version': 1,
+        'session_hold_time': 180,
+        'keep_alive_interval': 60,
+        'discovery_targeted_hello': {
+            'holdtime': 90,
+            'interval': 10,
+        },
+        'discovery_hello': {
+            'holdtime': 15,
+            'interval': 5,
+        },
+        'downstream_on_demand_max_hop_count': 255,
     }
 
 
