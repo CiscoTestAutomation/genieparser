@@ -9,6 +9,7 @@ IOSXE parsers for the following show commands:
     * show ip arp summary
     * show ip traffic
     * show arp application
+    * show arp summary
 '''
 
 # Python
