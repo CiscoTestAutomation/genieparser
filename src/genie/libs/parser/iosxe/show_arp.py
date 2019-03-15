@@ -1135,6 +1135,11 @@ class ShowIpTraffic(ShowIpTrafficSchema):
 
         return ret_dict
 
+
+# ===========================================================
+# Parser for 'show arp application'
+# ===========================================================
+
 class ShowArpApplicationSchema(MetaParser):
     """
     Schema for show arp application
@@ -1196,7 +1201,98 @@ class ShowArpApplication(ShowArpApplicationSchema):
                 group = m.groupdict()
                 applications[group['application_name'].rstrip()] = {'id':int(group['id']), 'num_of_subblocks': \
                         int(group['num_of_subblocks'])}
-                print(group['application_name'] + '-')
                 continue
         
+        return ret_dict
+
+
+# ========================================
+# Parser for 'show arp summary'
+# ========================================
+
+class ShowArpSummarySchema(MetaParser):
+    """
+    Schema for 'show arp summary'
+    """
+
+    schema = {
+            'total_num_of_entries':{
+                Any():{
+                    'total': int
+                }
+            },
+            'interfaces': {
+                Any(): {
+                    'entry_count': int
+                }
+            }
+    }
+
+class ShowArpSummary(ShowArpSummarySchema):
+    """ Parser for 'show arp summary'"""
+    
+    cli_command = "show arp summary"
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        # initial variables
+        ret_dict = {}
+        
+        # Total number of entries in the ARP table: 1233
+        p1 = re.compile(r'^Total +number +of +entries +in +the +ARP +table: +(?P<arp_table_entries>\d+)\.$')
+        
+        # Total number of Dynamic ARP entries: 1123
+        p2 = re.compile(r'^Total +number +of +(?P<entry_name>[\w *]+): +(?P<num_of_entries>\d+)\.$')
+
+        # Interface         Entry Count
+        p3 = re.compile(r'^Interface +Entry +Count$')
+
+        # GigabitEthernet0/0/4  4
+        p4 = re.compile(r'^(?P<interface_name>[\w\/\.]+) +(?P<entry_count>\d+)')
+        
+        # initial variables
+        ret_dict = {}
+        interface_found = False
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not interface_found:
+                # Total number of entries in the ARP table: 1233
+                m = p1.match(line)
+                if m:
+                    group = m.groupdict()
+                    total_num_of_entries = ret_dict.setdefault('total_num_of_entries',{})
+                    total_num_of_entries.update({'arp_table_entries': {}})
+                    total_num_of_entries['arp_table_entries']['total'] = int(group['arp_table_entries'])
+                    continue
+                
+                # Total number of Dynamic ARP entries: 1123
+                m = p2.match(line)
+                if m:
+                    group = m.groupdict()
+                    filter_space = re.sub('\s+','_',group['entry_name'].lower())
+                    total_num_of_entries.update({filter_space: {}})
+                    total_num_of_entries[filter_space]['total'] = int(group['num_of_entries'])
+                    continue
+                
+                # Interface     Entry Count
+                m = p3.match(line)
+                if m:
+                    interfaces = ret_dict.setdefault('interfaces', {})
+                    interface_found = True
+                    continue
+            else:
+
+                # GigabitEthernet0/0/4  4
+                m = p4.match(line)
+                if m:
+                    group = m.groupdict()
+                    interface = interfaces.setdefault(group['interface_name'], {})
+                    interface['entry_count'] = int(group['entry_count'])
+                    continue
+
         return ret_dict

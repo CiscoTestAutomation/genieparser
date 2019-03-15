@@ -12,7 +12,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
 # Parser
 from genie.libs.parser.iosxe.show_arp import ShowArp, ShowIpArpSummary,\
                                              ShowIpTraffic,\
-                                             ShowArpApplication
+                                             ShowArpApplication,\
+                                             ShowArpSummary
 
 
 # ============================================
@@ -504,6 +505,59 @@ class test_show_archive_application(unittest.TestCase):
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         obj = ShowArpApplication(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+# ==========================================
+# Parser for 'show arp summary'
+# ==========================================
+
+class test_show_arp_summary(unittest.TestCase):
+
+    device = Device('aDevice')
+    empty_output = {'execute.return_value':''}
+    
+    golden_parsed_output = {
+            'total_num_of_entries':{
+                'arp_table_entries':{'total': 100409},
+                'dynamic_arp_entries':{'total': 100204},
+                'incomplete_arp_entries':{'total': 0},
+                'interface_arp_entries':{'total': 205},
+                'static_arp_entries':{'total': 0},
+                'alias_arp_entries':{'total': 0},
+                'simple_application_arp_entries':{'total': 0}
+            },
+            'interfaces':{
+                'GigabitEthernet0':{'entry_count': 4},
+                'Te0/2/0':{'entry_count': 1},
+                'Gi0/0/1.1143':{'entry_count': 3}
+            }
+    }
+
+    golden_output = {'execute.return_value': '''\
+            Total number of entries in the ARP table: 100409.
+            Total number of Dynamic ARP entries: 100204.
+            Total number of Incomplete ARP entries: 0.
+            Total number of Interface ARP entries: 205.
+            Total number of Static ARP entries: 0.
+            Total number of Alias ARP entries: 0.
+            Total number of Simple Application ARP entries: 0.
+            Interface           Entry Count
+            GigabitEthernet0        4
+            Te0/2/0                 1
+            Gi0/0/1.1143            3
+            '''
+    }
+    
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowArpSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowArpSummary(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
