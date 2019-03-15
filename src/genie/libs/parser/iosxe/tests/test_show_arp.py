@@ -11,7 +11,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
 
 # Parser
 from genie.libs.parser.iosxe.show_arp import ShowArp, ShowIpArpSummary,\
-                                             ShowIpTraffic
+                                             ShowIpTraffic,\
+                                             ShowArpApplication
 
 
 # ============================================
@@ -426,6 +427,85 @@ class test_show_ip_traffic(unittest.TestCase):
 				obj = ShowIpTraffic(device=self.device)
 				parsed_output = obj.parse()
 				self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+# =================================================
+# Parser for 'show archive application'
+# =================================================
+class test_show_archive_application(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output = {
+        'num_of_clients_registered': 16,
+        'applications': {
+            'VRRS':{
+                'id': 200,
+                'num_of_subblocks': 0
+            },
+            'ARP Backup':{
+                'id': 201,
+                'num_of_subblocks': 0
+            },
+            'DHCPD':{
+                'id': 202,
+                'num_of_subblocks': 0
+            },
+            'ARP HA':{
+                'id': 203,
+                'num_of_subblocks': 0
+            },
+            'ASR1000-RP SPA Ethernet':{
+                'id': 204,
+                'num_of_subblocks': 0
+            },
+            'VRRS_L3CTRL':{
+                'id': 205,
+                'num_of_subblocks': 0
+            },
+            'IP ARP Adj Conn ID':{
+                'id': 206,
+                'num_of_subblocks': 0
+            },
+            'IP ARP VLAN ID':{
+                'id': 215,
+                'num_of_subblocks': 100204
+            },
+            'IP ARP Adjacency':{
+                'id': 214,
+                'num_of_subblocks': 100204
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''\
+            Number of clients registered: 16
+
+            Application                 ID      Num of Subblocks
+            VRRS                        200     0
+            ARP Backup                  201     0
+            DHCPD                       202     0
+            ARP HA                      203     0
+            ASR1000-RP SPA Ethernet     204     0
+            VRRS_L3CTRL                 205     0
+            IP ARP Adj Conn ID          206     0
+            IP ARP VLAN ID              215     100204
+            IP ARP Adjacency            214     100204
+        '''
+    }   
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowArpApplication(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowArpApplication(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
 		unittest.main()

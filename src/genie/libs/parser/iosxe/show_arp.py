@@ -8,6 +8,7 @@ IOSXE parsers for the following show commands:
     * show ip arp
     * show ip arp summary
     * show ip traffic
+    * show arp application
 '''
 
 # Python
@@ -1132,4 +1133,70 @@ class ShowIpTraffic(ShowIpTrafficSchema):
                     int(v) for k, v in groups.items()})
                 continue
 
+        return ret_dict
+
+class ShowArpApplicationSchema(MetaParser):
+    """
+    Schema for show arp application
+    """
+
+    schema = {
+            'num_of_clients_registered': int,
+            'applications':{
+                Any():{
+                        'id': int,
+                        'num_of_subblocks': int
+                    }
+                }
+        }
+
+class ShowArpApplication(ShowArpApplicationSchema):
+    """
+    Parser for show arp application
+    """
+    
+    cli_command = 'show arp application'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        # initial variables
+        ret_dict = {}
+        
+        # Number of clients registered: 16
+        p1 = re.compile(r'^\s*Number +of +clients +registered: +(?P<num_of_clients>\d+)$')
+        # Application ID Number of Subblocks
+        p2 = re.compile(r'^Application +ID +Num +of +Subblocks$')
+        # ASR1000-RP SPA Ethernet   215 10024
+        p3 = re.compile(r'^(?P<application_name>[\w\W]+) +(?P<id>\d+) +(?P<num_of_subblocks>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # Number of clients registered: 16
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('num_of_clients_registered', int(group['num_of_clients']))
+                continue
+            
+            # Application ID Number of Subblocks
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                applications = ret_dict.setdefault('applications', {})
+                continue
+            
+            # ASR1000-RP SPA Ethernet 215 10024
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                applications[group['application_name'].rstrip()] = {'id':int(group['id']), 'num_of_subblocks': \
+                        int(group['num_of_subblocks'])}
+                print(group['application_name'] + '-')
+                continue
+        
         return ret_dict
