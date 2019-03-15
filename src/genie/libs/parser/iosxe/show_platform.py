@@ -3398,3 +3398,78 @@ class ShowPlatformPower(ShowPlatformPowerSchema):
                 continue
 
         return ret_dict
+
+
+class ShowPlatformHardwareQfpBqsStatisticsChannelAllSchema(MetaParser):
+    """Schema for show platform hardware qfp active bqs <x> ipm statistics channel all
+                  show platform hardware qfp standby bqs <x> ipm statistics channel all
+                  show platform hardware qfp active bqs <x> opm statistics channel all
+                  show platform hardware qfp standby bqs <x> opm statistics channel all"""
+
+    schema = {
+        'channel':{
+            Any(): {
+                'goodpkts': str,
+                'goodbytes': str,
+                'badpkts': str,
+                'badbytes': str,
+                Optional('comment'): str,
+            },
+        }
+    }
+
+
+class ShowPlatformHardwareQfpBqsStatisticsChannelAll(ShowPlatformHardwareQfpBqsStatisticsChannelAllSchema):
+    """Parser for show platform hardware qfp active bqs <x> ipm statistics channel all
+                  show platform hardware qfp standby bqs <x> ipm statistics channel all
+                  show platform hardware qfp active bqs <x> opm statistics channel all
+                  show platform hardware qfp standby bqs <x> opm statistics channel all"""
+    
+    cli_command = 'show platform hardware qfp {status} bqs {slot} {iotype} statistics channel all'
+
+    def cli(self, status='active', slot='0', iotype='ipm', output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(status=status, slot=slot, iotype=iotype)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+        
+        # Chan   GoodPkts  GoodBytes    BadPkts   BadBytes
+        # 1 - 0000000000 0000000000 0000000000 0000000000
+        # 2 - 0000c40f64 016a5004b0 0000000000 0000000000
+        p1 = re.compile(r'^(?P<channel>\d+) +- +(?P<goodpkts>\w+) +(?P<goodbytes>\w+) +(?P<badpkts>\w+) +(?P<badbytes>\w+)$')
+
+        #  0-55: OPM Channels
+        # 56-59: Metapacket/Recycle Pools 0-3
+        #    60: Reassembled Packets Sent to QED
+        p2 = re.compile(r'^(?P<channel>\d+)-?(?P<end_channel>\d+)?: +(?P<comment>.+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                channel = int(group.pop('channel'))
+                chan_dict = ret_dict.setdefault('channel', {}).setdefault(channel, {})
+                chan_dict.update({k:v for k, v in group.items()})
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                channel = int(group['channel'])
+                comment = group['comment']
+                if group['end_channel']:
+                    end_channel = int(group['end_channel'])
+                    for i in range(channel, end_channel + 1):
+                        ret_dict['channel'][i].update({'comment': comment})
+                else:
+                    ret_dict['channel'][channel].update({'comment': comment})
+                
+                continue
+
+        return ret_dict
