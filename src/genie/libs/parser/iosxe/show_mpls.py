@@ -125,10 +125,10 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
         received_flag = False
         sent_flag = False
 
-        # Peer LDP Ident: 106.162.197.252:0; Local LDP Ident 106.162.197.254:0
+        # Peer LDP Ident: 10.169.197.252:0; Local LDP Ident 10.169.197.254:0
         p1 = re.compile(r'^Peer +LDP +Ident: +(?P<peer_ldp>[\d\.]+):(?P<label_space_id>\d+); +Local +LDP +Ident +(?P<local_ldp>\S+)$')
 
-        #     TCP connection: 106.162.197.252.646 - 106.162.197.254.20170
+        #     TCP connection: 10.169.197.252.646 - 10.169.197.254.20170
         p2 = re.compile(r'^TCP +connection: +(?P<tcp_connection>[\S\s]+)$')
 
         #     State: Oper; Msgs sent/rcvd: 824/825; Downstream
@@ -141,7 +141,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
         p4 = re.compile(r'^Up +time: +(?P<up_time>[\w\:]+)(; +UID: (?P<uid>\d+); +Peer +Id +(?P<peer_id>\d+))?$')
 
         #     LDP discovery sources:
-        #       GigabitEthernet0/0/0, Src IP addr: 106.162.197.93
+        #       GigabitEthernet0/0/0, Src IP addr: 10.169.197.93
         p5 = re.compile(r'^(?P<interface>[\S]+)(,|;) +Src +IP +addr: +(?P<src_ip_address>[\d\.]+)$')
 
         #       holdtime: 15000 ms, hello interval: 5000 ms
@@ -150,7 +150,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
         #     Addresses bound to peer LDP Ident:
         p6 = re.compile(r'^Addresses +bound +to +peer +LDP +Ident:$')
 
-        #       106.162.197.252 27.93.202.49    106.162.197.101 113.146.190.254
+        #       10.169.197.252 10.120.202.49    10.169.197.101 10.16.190.254
         p7 = re.compile(r'^(?P<address_bound_peer_ldp>[\d\.\s]+)$')
 
         # Peer holdtime: 180000 ms; KA interval: 60000 ms; Peer state: estab
@@ -186,7 +186,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
 
         for line in out.splitlines():
             line = line.strip()
-            # Peer LDP Ident: 106.162.197.252:0; Local LDP Ident 106.162.197.254:0
+            # Peer LDP Ident: 10.169.197.252:0; Local LDP Ident 10.169.197.254:0
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -200,7 +200,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
                 peer_dict.update({'local_ldp_ident':group['local_ldp']})
                 continue
 
-            # TCP connection: 106.162.197.252.646 - 106.162.197.254.20170
+            # TCP connection: 10.169.197.252.646 - 10.169.197.254.20170
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -228,7 +228,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
                 peer_dict.update({'uptime': group['up_time']})
                 continue
 
-            #  GigabitEthernet0/0/0, Src IP addr: 106.162.197.93
+            #  GigabitEthernet0/0/0, Src IP addr: 10.169.197.93
             m = p5.match(line)
             if m:
                 group = m.groupdict()
@@ -253,7 +253,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
                 address_bound_flag = True
                 continue
 
-            #  106.162.197.252 27.93.202.49    106.162.197.101 113.146.190.254
+            #  10.169.197.252 10.120.202.49    10.169.197.101 10.16.190.254
             m = p7.match(line)
             if m:
                 group = m.groupdict()
@@ -417,7 +417,7 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
     cli_command = ['show mpls ldp bindings',
                    'show mpls ldp bindings {all}',
                    'show mpls ldp bindings {all} {detail}',
-                   'show mpls ldp bindings vrf <vrf>']
+                   'show mpls ldp bindings vrf {vrf}']
 
     def cli(self, vrf="", all="", detail="", output=None):
         if output is None:
@@ -440,8 +440,8 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
 
         # VRF vrf1:
         p0 = re.compile(r'^VRF +(?P<vrf>\S+):$')
-        # lib entry: 20.1.1.0/24, rev 1028
-        # lib entry: 27.93.202.64/32, rev 12, chkpt: none
+        # lib entry: 10.186.1.0/24, rev 1028
+        # lib entry: 10.120.202.64/32, rev 12, chkpt: none
         p1 = re.compile(r'^lib +entry: +(?P<lib_entry>[\d\.\/]+), +rev +(?P<rev>\d+)(, +chkpt: +(?P<checkpoint>\S+))?$')
 
         #  local binding:  label: 2536
@@ -449,11 +449,11 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
         p2 = re.compile(r'^local +binding:  +label: +(?P<local_label>\S+)( +\(owner +(?P<owner>\w+)\))?$')
 
         #  Advertised to:
-        # 106.162.197.252:0      106.162.197.253:0
+        # 10.169.197.252:0      10.169.197.253:0
         p3 = re.compile(r'^(?P<advertised_to>[\d\.\:\s]+)$')
 
-        #  remote binding: lsr: 106.162.197.252:0, label: 508
-        #  remote binding: lsr: 106.162.197.253:0, label: 308016 checkpointed
+        #  remote binding: lsr: 10.169.197.252:0, label: 508
+        #  remote binding: lsr: 10.169.197.253:0, label: 308016 checkpointed
         p4 = re.compile(r'^remote +binding: +lsr: +(?P<lsr>[\d\.]+):(?P<label_space_id>[\d]+),'
                         ' +label: +(?P<remote_label>\S+)( +(?P<checkpointed>\w+))?$')
 
@@ -468,8 +468,8 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
                 vrf = group['vrf']
                 continue
 
-            # lib entry: 20.1.1.0/24, rev 1028
-            # lib entry: 27.93.202.64/32, rev 12, chkpt: none
+            # lib entry: 10.186.1.0/24, rev 1028
+            # lib entry: 10.120.202.64/32, rev 12, chkpt: none
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -493,7 +493,7 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
                     local_dict.update({'owner': group['owner']})
                 continue
 
-            # 106.162.197.252:0      106.162.197.253:0
+            # 10.169.197.252:0      10.169.197.253:0
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -503,8 +503,8 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
                     local_dict['advertised_to'].extend(group['advertised_to'].split())
                 continue
 
-            # remote binding: lsr: 106.162.197.252:0, label: 508
-            # remote binding: lsr: 106.162.197.253:0, label: 308016 checkpointed
+            # remote binding: lsr: 10.169.197.252:0, label: 508
+            # remote binding: lsr: 10.169.197.253:0, label: 308016 checkpointed
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -738,7 +738,7 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
         # VRF vpn1:Local LDP Identifier:
         p1 = re.compile(r'^(VRF +(?P<vrf>\S+):)?Local +LDP +Identifier:$')
 
-        # 106.162.197.254:0
+        # 10.169.197.254:0
         p2 = re.compile(r'^(?P<local_ldp_identifier>[\d\.\:]+)$')
         # Discovery Sources:
         p2_1 = re.compile(r'^Discovery +Sources:$')
@@ -750,14 +750,14 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
         #         Enabled: Interface config
         p4 = re.compile(r'^(?P<Enabled>[\w]+): +Interface +config$')
 
-        #         Hello interval: 5000 ms; Transport IP addr: 106.162.197.254
+        #         Hello interval: 5000 ms; Transport IP addr: 10.169.197.254
         p5 = re.compile(r'^Hello +interval: +(?P<hello_interval_ms>\d+) +ms;'
                         ' +Transport +IP +addr: (?P<transport_ip_address>[\d\.]+)$')
 
-        #         LDP Id: 106.162.197.252:0
+        #         LDP Id: 10.169.197.252:0
         p6 = re.compile(r'^(?P<ldp_tdp>\w+) +Id:(?P<space>\s{1,2})?(?P<ldp_tdp_id>[\d\.\:]+)$')
 
-        #           Src IP addr: 106.162.197.93; Transport IP addr: 106.162.197.252
+        #           Src IP addr: 10.169.197.93; Transport IP addr: 10.169.197.252
         p7 = re.compile(r'^Src +IP +addr: +(?P<source_ip_address>[\d\.]+);'
                         ' +Transport +IP +addr: +(?P<transport_ip_address>[\d\.]+)$')
 
@@ -765,7 +765,7 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
         p8 = re.compile(r'^Hold +time: +(?P<holdtime_sec>\d+) +sec; +Proposed +local\/peer:'
                         ' +(?P<proposed_local>\d+)\/(?P<proposed_peer>\d+) +sec$')
 
-        #           Reachable via 106.162.197.252/32
+        #           Reachable via 10.169.197.252/32
         p9 = re.compile(r'^Reachable +via +(?P<reachable_via>[\d\.\/]+)$')
 
         #           Password: not required, none, in use
@@ -774,8 +774,8 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
         #  Clients: IPv4, mLDP
         p11 = re.compile(r'^Clients: +(?P<clients>[\S\s]+)$')
 
-        #  8.1.1.1 -> 133.0.0.33 (ldp): active, xmit/recv
-        #  8.1.1.1 -> 168.7.0.16 (tdp): passive, xmit/recv
+        #  10.81.1.1 -> 172.16.94.33 (ldp): active, xmit/recv
+        #  10.81.1.1 -> 172.16.25.16 (tdp): passive, xmit/recv
         p12 = re.compile(r'^(?P<source>[\d\.]+) +\-> +(?P<destination>[\d\.]+)'
                          ' +\((?P<session>(ldp|tdp)+)\): +(?P<status>(active|passive)+), +xmit\/recv$')
 
@@ -793,7 +793,7 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
                 ldp_dict = result_dict.setdefault('vrf',{}).setdefault(vrf,{})
                 continue
 
-            #   106.162.197.254:0
+            #   10.169.197.254:0
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -825,7 +825,7 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
                 interface_dict.update({'enabled': True})
                 continue
 
-            #  Hello interval: 5000 ms; Transport IP addr: 106.162.197.254
+            #  Hello interval: 5000 ms; Transport IP addr: 10.169.197.254
             m = p5.match(line)
             if m:
                 group = m.groupdict()
@@ -833,7 +833,7 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
                 interface_dict.update({'ip_address': group['transport_ip_address']})
                 continue
 
-            # LDP Id: 106.162.197.252:0
+            # LDP Id: 10.169.197.252:0
             m = p6.match(line)
             if m:
                 group = m.groupdict()
@@ -847,7 +847,7 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
                         targeted_dict.update({'{}_id'.format(ldp_tdp): group['ldp_tdp_id']})
                 continue
 
-            # Src IP addr: 106.162.197.93; Transport IP addr: 106.162.197.252
+            # Src IP addr: 10.169.197.93; Transport IP addr: 10.169.197.252
             m = p7.match(line)
             if m:
                 group = m.groupdict()
@@ -861,7 +861,7 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
                 ldp_dict.update({k: int(v) for k, v in group.items() if v})
                 continue
 
-            # Reachable via 106.162.197.252/32
+            # Reachable via 10.169.197.252/32
             m = p9.match(line)
             if m:
                 group = m.groupdict()
@@ -889,8 +889,8 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
                 targeted_flag = True
                 continue
 
-            #  8.1.1.1 -> 133.0.0.33 (ldp): active, xmit/recv
-            #  8.1.1.1 -> 168.7.0.16 (tdp): passive, xmit/recv
+            #  10.81.1.1 -> 172.16.94.33 (ldp): active, xmit/recv
+            #  10.81.1.1 -> 172.16.25.16 (tdp): passive, xmit/recv
             m = p12.match(line)
             if m:
                 group = m.groupdict()
