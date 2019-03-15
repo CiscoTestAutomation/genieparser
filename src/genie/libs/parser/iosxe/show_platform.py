@@ -3242,18 +3242,14 @@ class ShowPlatformHardwareQfpBqsMappingSchema(MetaParser):
                   show platform hardware qfp standby bqs <x> opm mapping"""
 
     schema = {
-        'interface': {
+        'channel': {
             Any(): {
-                'channel': {
-                    Any(): {
-                        'name': str,
-                        'number': int,
-                        Optional('logical_channel'): int,
-                        Optional('drain_mode'): bool,
-                        Optional('port'): int,
-                        Optional('cfifo'): int,
-                    },
-                }
+                Optional('interface'): str,
+                'name': str,
+                Optional('logical_channel'): int,
+                Optional('drain_mode'): bool,
+                Optional('port'): int,
+                Optional('cfifo'): int,
             },
         }
     }
@@ -3288,7 +3284,7 @@ class ShowPlatformHardwareQfpBqsOpmMapping(ShowPlatformHardwareQfpBqsMappingSche
                          ' +(?P<interface>[\w\d]+) +(?P<logical_channel>\d+)$')
 
         # 32       Unmapped                                         
-        p2 = re.compile(r'^(?P<number>\d+) +Unmapped$')
+        p2 = re.compile(r'^(?P<unmapped_number>\d+) +Unmapped$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -3302,16 +3298,23 @@ class ShowPlatformHardwareQfpBqsOpmMapping(ShowPlatformHardwareQfpBqsMappingSche
                     drained = True
                 else:
                     drained = False
-                final_dict = ret_dict.setdefault('interface', {}).\
-                    setdefault(interface, {}).setdefault('channel', {}).setdefault(number, {})
+                if 'channel' not in ret_dict:
+                    final_dict = ret_dict.setdefault('channel', {})
+                final_dict = ret_dict['channel'].setdefault(number, {})
+                final_dict.update({'interface':group['interface'].strip()})
                 final_dict.update({'name':group['name'].strip()})
-                final_dict.update({'number':int(number)})
                 final_dict.update({'logical_channel':int(group['logical_channel'])})
                 final_dict.update({'drain_mode':drained})
                 continue
 
             m = p2.match(line)
             if m:
+                group = m.groupdict()
+                unmapped_number = group['unmapped_number']
+                if 'channel' not in ret_dict:
+                    ret_dict.setdefault('channel', {})
+                ret_dict['channel'].setdefault(unmapped_number, {})
+                ret_dict['channel'][unmapped_number].update({'name':'unmapped'})
                 continue
 
         return ret_dict
@@ -3344,20 +3347,31 @@ class ShowPlatformHardwareQfpBqsIpmMapping(ShowPlatformHardwareQfpBqsMappingSche
                          ' +(?P<interface>[\w\d]+) +(?P<port>\d+)'
                          ' +(?P<cfifo>\d+)$')
 
+        # 32       Unmapped                                         
+        p2 = re.compile(r'^(?P<unmapped_number>\d+) +Unmapped$')
+
         for line in out.splitlines():
             line = line.strip()
 
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                interface = group['interface']
                 number = group['number']
-                final_dict = ret_dict.setdefault('interface', {}).\
-                    setdefault(interface, {}).setdefault('channel', {}).setdefault(number, {})
+                final_dict = ret_dict.setdefault('channel', {}).setdefault(number, {})
+                final_dict.update({'interface':group['interface'].strip()})
                 final_dict.update({'name':group['name'].strip()})
-                final_dict.update({'number':int(number)})
                 final_dict.update({'port':int(group['port'])})
                 final_dict.update({'cfifo':int(group['cfifo'])})
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                unmapped_number = group['unmapped_number']
+                if 'channel' not in ret_dict:
+                    ret_dict.setdefault('channel', {})
+                ret_dict['channel'].setdefault(unmapped_number, {})
+                ret_dict['channel'][unmapped_number].update({'name':'unmapped'})
                 continue
 
         return ret_dict

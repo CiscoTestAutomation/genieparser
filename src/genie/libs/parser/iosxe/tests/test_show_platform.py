@@ -14515,261 +14515,299 @@ class test_show_platform_hardware_qfp_bqs_opm_mapping(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output_active_opm = {
-        'interface': {
-            'GPM': {
-                'channel': {
-                    '38': {
-                        'drain_mode': False,
-                        'logical_channel': 7,
-                        'name': 'HighNormal',
-                        'number': 38,
-                    },
-                    '39': {
-                        'drain_mode': False,
-                        'logical_channel': 6,
-                        'name': 'HighPriority',
-                        'number': 39,
-                    },
-                    '40': {
-                        'drain_mode': False,
-                        'logical_channel': 11,
-                        'name': 'LowNormal',
-                        'number': 40,
-                    },
-                    '41': {
-                        'drain_mode': False,
-                        'logical_channel': 10,
-                        'name': 'LowPriority',
-                        'number': 41,
-                    },
-                    '42': {
-                        'drain_mode': False,
-                        'logical_channel': 12,
-                        'name': 'InternalTrafficHiChannel',
-                        'number': 42,
-                    },
-                    '43': {
-                        'drain_mode': False,
-                        'logical_channel': 13,
-                        'name': 'InternalTrafficLoChannel',
-                        'number': 43,
-                    },
-                    '44': {'drain_mode': False,
-                          'logical_channel': 14,
-                          'name': 'AttnTrafficHiChannel',
-                          'number': 44},
-                    '45': {'drain_mode': False,
-                          'logical_channel': 15,
-                          'name': 'MetaPktTrafficChannel',
-                          'number': 45},
-                    '55': {'drain_mode': True,
-                          'logical_channel': 0,
-                          'name': 'Drain Low',
-                          'number': 55,
-                    }
-                }
+        'channel': {
+            '0': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 0,
+                'name': 'CC0 Low',
             },
-            'HT': {
-                'channel': {
-                    '28': {
-                        'drain_mode': False,
-                        'logical_channel': 0,
-                        'name': 'HT Pkt Low',
-                        'number': 28,
-                    },
-                    '29': {
-                        'drain_mode': False,
-                         'logical_channel': 1,
-                         'name': 'HT Pkt Hi',
-                         'number': 29,
-                    },
-                    '30': {
-                        'drain_mode': False,
-                        'logical_channel': 2,
-                        'name': 'HT IPC Low',
-                        'number': 30,
-                    },
-                    '31': {
-                        'drain_mode': False,
-                        'logical_channel': 3,
-                        'name': 'HT IPC Hi',
-                        'number': 31,
-                    }
-                }
+            '1': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 1,
+                'name': 'CC0 Hi',
             },
-            'SPI0': {
-                'channel': {
-                    '0': {
-                        'drain_mode': False,
-                        'logical_channel': 0,
-                        'name': 'CC0 Low',
-                        'number': 0,
-                    },
-                    '1': {
-                        'drain_mode': False,
-                        'logical_channel': 1,
-                        'name': 'CC0 Hi',
-                        'number': 1,
-                    },
-                    '10': {
-                        'drain_mode': False,
-                        'logical_channel': 10,
-                        'name': 'CC2B Low',
-                        'number': 10,
-                    },
-                    '11': {
-                        'drain_mode': False,
-                        'logical_channel': 11,
-                        'name': 'CC2B Hi',
-                        'number': 11,
-                    },
-                    '12': {
-                        'drain_mode': False,
-                        'logical_channel': 12,
-                        'name': 'CC3 Low',
-                        'number': 12,
-                    },
-                    '13': {
-                        'drain_mode': False,
-                        'logical_channel': 13,
-                        'name': 'CC3 Hi',
-                        'number': 13,
-                    },
-                    '14': {
-                        'drain_mode': False,
-                        'logical_channel': 14,
-                        'name': 'CC3B Low',
-                        'number': 14,
-                    },
-                    '15': {
-                        'drain_mode': False,
-                        'logical_channel': 15,
-                        'name': 'CC3B Hi',
-                        'number': 15,
-                    },
-                    '16': {
-                        'drain_mode': False,
-                        'logical_channel': 16,
-                        'name': 'CC4 Low',
-                        'number': 16,
-                    },
-                    '17': {
-                        'drain_mode': False,
-                        'logical_channel': 17,
-                        'name': 'CC4 Hi',
-                        'number': 17,
-                    },
-                    '18': {
-                        'drain_mode': False,
-                        'logical_channel': 18,
-                        'name': 'CC5 Low',
-                        'number': 18,
-                    },
-                    '19': {
-                        'drain_mode': False,
-                        'logical_channel': 19,
-                        'name': 'CC5 Hi',
-                        'number': 19,
-                    },
-                    '2': {
-                        'drain_mode': False,
-                        'logical_channel': 2,
-                        'name': 'CC0B Low',
-                        'number': 2,
-                    },
-                    '20': {
-                        'drain_mode': False,
-                        'logical_channel': 20,
-                        'name': 'RP0 Low',
-                        'number': 20,
-                    },
-                    '21': {
-                        'drain_mode': False,
-                        'logical_channel': 21,
-                        'name': 'RP0 Hi',
-                        'number': 21,
-                    },
-                    '22': {
-                        'drain_mode': False,
-                        'logical_channel': 22,
-                        'name': 'RP1 Low',
-                        'number': 22,
-                    },
-                    '23': {
-                        'drain_mode': False,
-                        'logical_channel': 23,
-                        'name': 'RP1 Hi',
-                        'number': 23,
-                    },
-                    '24': {
-                        'drain_mode': False,
-                        'logical_channel': 24,
-                        'name': 'Peer-FP Low',
-                        'number': 24,
-                    },
-                    '25': {
-                        'drain_mode': False,
-                        'logical_channel': 25,
-                        'name': 'Peer-FP Hi',
-                        'number': 25,
-                    },
-                    '26': {
-                        'drain_mode': False,
-                        'logical_channel': 26,
-                        'name': 'Nitrox Low',
-                        'number': 26,
-                    },
-                    '27': {
-                        'drain_mode': False,
-                        'logical_channel': 27,
-                        'name': 'Nitrox Hi',
-                        'number': 27,
-                    },
-                    '3': {
-                        'drain_mode': False,
-                        'logical_channel': 3,
-                        'name': 'CC0B Hi',
-                        'number': 3,
-                    },
-                    '4': {
-                        'drain_mode': False,
-                        'logical_channel': 4,
-                        'name': 'CC1 Low',
-                        'number': 4,
-                    },
-                    '5': {
-                        'drain_mode': False,
-                        'logical_channel': 5,
-                        'name': 'CC1 Hi',
-                        'number': 5,
-                    },
-                    '6': {
-                        'drain_mode': False,
-                        'logical_channel': 6,
-                        'name': 'CC1B Low',
-                        'number': 6,
-                    },
-                    '7': {
-                        'drain_mode': False,
-                        'logical_channel': 7,
-                        'name': 'CC1B Hi',
-                        'number': 7,
-                    },
-                    '8': {
-                        'drain_mode': False,
-                        'logical_channel': 8,
-                        'name': 'CC2 Low',
-                        'number': 8,
-                    },
-                    '9': {
-                        'drain_mode': False,
-                        'logical_channel': 9,
-                        'name': 'CC2 Hi',
-                        'number': 9,
-                    }
-                }
-            }
-        }
+            '10': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 10,
+                'name': 'CC2B Low',
+            },
+            '11': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 11,
+                'name': 'CC2B Hi',
+            },
+            '12': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 12,
+                'name': 'CC3 Low',
+            },
+            '13': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 13,
+                'name': 'CC3 Hi',
+            },
+            '14': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 14,
+                'name': 'CC3B Low',
+            },
+            '15': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 15,
+                'name': 'CC3B Hi',
+            },
+            '16': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 16,
+                'name': 'CC4 Low',
+            },
+            '17': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 17,
+                'name': 'CC4 Hi',
+            },
+            '18': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 18,
+                'name': 'CC5 Low',
+            },
+            '19': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 19,
+                'name': 'CC5 Hi',
+            },
+            '2': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 2,
+                'name': 'CC0B Low',
+            },
+            '20': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 20,
+                'name': 'RP0 Low',
+            },
+            '21': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 21,
+                'name': 'RP0 Hi',
+            },
+            '22': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 22,
+                'name': 'RP1 Low',
+            },
+            '23': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 23,
+                'name': 'RP1 Hi',
+            },
+            '24': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 24,
+                'name': 'Peer-FP Low',
+            },
+            '25': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 25,
+                'name': 'Peer-FP Hi',
+            },
+            '26': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 26,
+                'name': 'Nitrox Low',
+            },
+            '27': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 27,
+                'name': 'Nitrox Hi',
+            },
+            '28': {
+                'drain_mode': False,
+                'interface': 'HT',
+                'logical_channel': 0,
+                'name': 'HT Pkt Low',
+            },
+             '29': {
+                'drain_mode': False,
+                'interface': 'HT',
+                'logical_channel': 1,
+                'name': 'HT Pkt Hi',
+            },
+            '3': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 3,
+                'name': 'CC0B Hi',
+            },
+            '30': {
+                'drain_mode': False,
+                'interface': 'HT',
+                'logical_channel': 2,
+                'name': 'HT IPC Low',
+            },
+            '31': {
+                'drain_mode': False,
+                'interface': 'HT',
+                'logical_channel': 3,
+                'name': 'HT IPC Hi',
+            },
+            '32': {
+                'name': 'unmapped',
+            },
+            '33': {
+                'name': 'unmapped',
+            },
+            '34': {
+                'name': 'unmapped',
+            },
+            '35': {
+                'name': 'unmapped',
+            },
+            '36': {
+                'name': 'unmapped',
+            },
+            '37': {
+                'name': 'unmapped',
+            },
+            '38': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 7,
+                'name': 'HighNormal',
+            },
+            '39': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 6,
+                'name': 'HighPriority',
+            },
+            '4': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 4,
+                'name': 'CC1 Low',
+            },
+            '40': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 11,
+                'name': 'LowNormal',
+            },
+            '41': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 10,
+                'name': 'LowPriority',
+            },
+            '42': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 12,
+                'name': 'InternalTrafficHiChannel',
+            },
+            '43': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 13,
+                'name': 'InternalTrafficLoChannel',
+            },
+            '44': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 14,
+                'name': 'AttnTrafficHiChannel',
+            },
+            '45': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 15,
+                'name': 'MetaPktTrafficChannel',
+            },
+            '46': {
+                'name': 'unmapped',
+            },
+            '47': {
+                'name': 'unmapped',
+            },
+            '48': {
+                'name': 'unmapped',
+            },
+            '49': {
+                'name': 'unmapped',
+            },
+            '5': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 5,
+                'name': 'CC1 Hi',
+            },
+            '50': {
+                'name': 'unmapped',
+            },
+            '51': {
+                'name': 'unmapped',
+            },
+            '52': {
+                'name': 'unmapped',
+            },
+            '53': {
+                'name': 'unmapped',
+            },
+            '54': {
+                'name': 'unmapped',
+            },
+            '55': {
+                'drain_mode': True,
+                'interface': 'GPM',
+                'logical_channel': 0,
+                'name': 'Drain Low',
+            },
+            '6': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 6,
+                'name': 'CC1B Low',
+            },
+            '7': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 7,
+                'name': 'CC1B Hi',
+            },
+            '8': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 8,
+                'name': 'CC2 Low',
+            },
+            '9': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 9,
+                'name': 'CC2 Hi',
+            },
+        },
     }
 
     golden_output_active_opm = {'execute.return_value': '''\ 
@@ -14860,160 +14898,152 @@ class test_show_platform_hardware_qfp_bqs_ipm_mapping(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output_active_ipm = {
-        'interface': {
-            'HT': {
-                'channel': {
-                    '17': {
-                        'cfifo': 1,
-                        'name': 'HT Pkt Low',
-                        'number': 17,
-                        'port': 0,
-                    },
-                    '18': {
-                        'cfifo': 0,
-                        'name': 'HT Pkt Hi',
-                        'number': 18,
-                        'port': 1,
-                    },
-                    '19': {
-                        'cfifo': 3,
-                        'name': 'HT IPC Low',
-                        'number': 19,
-                        'port': 2,
-                    },
-                    '20': {
-                        'cfifo': 2,
-                        'name': 'HT IPC Hi',
-                        'number': 20,
-                        'port': 3,
-                    }
-                }
+        'channel': {
+            '1': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'CC3 Low',
+                'port': 0,
             },
-            'SPI0': {
-                'channel': {
-                    '1': {
-                        'cfifo': 1,
-                        'name': 'CC3 Low',
-                        'number': 1,
-                        'port': 0,
-                    },
-                    '10': {
-                        'cfifo': 0,
-                        'name': 'RP1 Hi',
-                        'number': 10,
-                        'port': 9,
-                    },
-                    '11': {
-                        'cfifo': 1,
-                        'name': 'RP0 Low',
-                        'number': 11,
-                        'port': 10,
-                    },
-                    '12': {
-                        'cfifo': 0,
-                        'name': 'RP0 Hi',
-                        'number': 12,
-                        'port': 11,
-                    },
-                    '13': {
-                        'cfifo': 3,
-                        'name': 'Peer-FP Low',
-                        'number': 13,
-                        'port': 12,
-                    },
-                    '14': {
-                        'cfifo': 2,
-                        'name': 'Peer-FP Hi',
-                        'number': 14,
-                        'port': 13,
-                    },
-                    '15': {
-                        'cfifo': 1,
-                        'name': 'Nitrox Low',
-                        'number': 15,
-                        'port': 14,
-                    },
-                    '16': {
-                        'cfifo': 0,
-                        'name': 'Nitrox Hi',
-                        'number': 16,
-                        'port': 15,
-                    },
-                    '2': {
-                        'cfifo': 0,
-                        'name': 'CC3 Hi',
-                        'number': 2,
-                        'port': 1,
-                    },
-                    '21': {
-                        'cfifo': 1,
-                        'name': 'CC4 Low',
-                        'number': 21,
-                        'port': 16,
-                    },
-                    '22': {
-                        'cfifo': 0,
-                        'name': 'CC4 Hi',
-                        'number': 22,
-                        'port': 17,
-                    },
-                    '23': {
-                        'cfifo': 1,
-                        'name': 'CC5 Low',
-                        'number': 23,
-                        'port': 18,
-                    },
-                    '24': {
-                        'cfifo': 0,
-                        'name': 'CC5 Hi',
-                        'number': 24,
-                        'port': 19,
-                    },
-                    '3': {
-                        'cfifo': 1,
-                        'name': 'CC2 Low',
-                        'number': 3,
-                        'port': 2,
-                    },
-                    '4': {
-                        'cfifo': 0,
-                        'name': 'CC2 Hi',
-                        'number': 4,
-                        'port': 3,
-                    },
-                    '5': {
-                        'cfifo': 1,
-                        'name': 'CC1 Low',
-                        'number': 5,
-                        'port': 4,
-                    },
-                    '6': {
-                        'cfifo': 0,
-                        'name': 'CC1 Hi',
-                        'number': 6,
-                        'port': 5,
-                    },
-                    '7': {
-                        'cfifo': 1,
-                        'name': 'CC0 Low',
-                        'number': 7,
-                        'port': 6,
-                    },
-                    '8': {
-                        'cfifo': 0,
-                        'name': 'CC0 Hi',
-                        'number': 8,
-                        'port': 7,
-                    },
-                    '9': {
-                        'cfifo': 1,
-                        'name': 'RP1 Low',
-                        'number': 9,
-                        'port': 8,
-                    }
-                }
-            }
-        }
+            '10': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'RP1 Hi',
+                'port': 9,
+            },
+            '11': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'RP0 Low',
+                'port': 10,
+            },
+            '12': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'RP0 Hi',
+                'port': 11,
+            },
+            '13': {
+                'cfifo': 3,
+                'interface': 'SPI0',
+                'name': 'Peer-FP Low',
+                'port': 12,
+            },
+            '14': {
+                'cfifo': 2,
+                'interface': 'SPI0',
+                'name': 'Peer-FP Hi',
+                'port': 13,
+            },
+            '15': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'Nitrox Low',
+                'port': 14,
+            },
+            '16': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'Nitrox Hi',
+                'port': 15,
+            },
+            '17': {
+                'cfifo': 1,
+                'interface': 'HT',
+                'name': 'HT Pkt Low',
+                'port': 0,
+            },
+            '18': {
+                'cfifo': 0,
+                'interface': 'HT',
+                'name': 'HT Pkt Hi',
+                'port': 1,
+            },
+            '19': {
+                'cfifo': 3,
+                'interface': 'HT',
+                'name': 'HT IPC Low',
+                'port': 2,
+            },
+            '2': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'CC3 Hi',
+                'port': 1,
+            },
+            '20': {
+                'cfifo': 2,
+                'interface': 'HT',
+                'name': 'HT IPC Hi',
+                'port': 3,
+            },
+            '21': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'CC4 Low',
+                'port': 16,
+            },
+            '22': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'CC4 Hi',
+                'port': 17,
+            },
+            '23': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'CC5 Low',
+                'port': 18,
+            },
+            '24': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'CC5 Hi',
+                'port': 19,
+            },
+            '3': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'CC2 Low',
+                'port': 2,
+            },
+            '4': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'CC2 Hi',
+                'port': 3,
+            },
+            '5': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'CC1 Low',
+                'port': 4,
+            },
+            '6': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'CC1 Hi',
+                'port': 5,
+            },
+            '7': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'CC0 Low',
+                'port': 6,
+            },
+            '8': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'CC0 Hi',
+                'port': 7,
+            },
+            '9': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'RP1 Low',
+                'port': 8,
+            },
+        },
     }
 
     golden_output_active_ipm = {'execute.return_value': '''\
