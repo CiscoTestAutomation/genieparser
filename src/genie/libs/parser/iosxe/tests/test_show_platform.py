@@ -29,7 +29,8 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   ShowPlatformHardwareQfpInterfaceIfnameStatistics, \
                                                   ShowPlatformHardwareQfpStatisticsDrop, \
                                                   ShowPlatformHardwareSerdes, \
-                                                  ShowPlatformHardwareSerdesInternal
+                                                  ShowPlatformHardwareSerdesInternal, \
+                                                  ShowPlatformPower
 
 
 class test_show_version(unittest.TestCase):
@@ -15104,7 +15105,199 @@ class test_show_platform_hardware_serdes_statistics(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output_serdes = {}
+    golden_parsed_output_serdes = {
+        'link': {
+            '0-Link A': {
+                'from': {
+                    'bytes': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'high': 53361379,
+                        'looped': 0,
+                        'low': 199330758,
+                    },
+                    'flow_ctrl_count': 3680,
+                    'pkts': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'errored': 0,
+                        'high': 63052,
+                        'looped': 0,
+                        'low': 2703601,
+                    },
+                    'qstat_count': 331199,
+                },
+                'to': {
+                    'pkts': {
+                        'high': 0,
+                        'low': 2787636,
+                    }
+                }
+            },
+            '0-Link B': {
+                'from': {
+                    'bytes': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 0,
+                    },
+                    'flow_ctrl_count': 3680,
+                    'pkts': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'errored': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 0,
+                    },
+                    'qstat_count': 331199,
+                },
+                'to': {
+                    'pkts': {
+                        'high': 0,
+                        'low': 0,
+                    }
+                }
+            },
+            '1-Link A': {
+                'from': {
+                    'bytes': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 0,
+                    },
+                    'flow_ctrl_count': 3680,
+                    'pkts': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'errored': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 0,
+                    },
+                    'qstat_count': 294400,
+                },
+                'to': {
+                    'pkts': {
+                        'high': 0,
+                        'low': 0,
+                    }
+                }
+            },
+            '1-Link B': {
+                'from': {
+                    'bytes': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 0,
+                    },
+                    'flow_ctrl_count': 3680,
+                    'pkts': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'errored': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 0,
+                    },
+                    'qstat_count': 0,
+                },
+                'to': {
+                    'pkts': {
+                        'high': 0,
+                        'low': 0,
+                    }
+                }
+            },
+            'F1-Link A': {
+                'from': {
+                    'bytes': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 18648,
+                    },
+                    'flow_ctrl_count': 3680,
+                    'pkts': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'errored': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 518,
+                    },
+                    'qstat_count': 0,
+                },
+                'to': {
+                    'pkts': {
+                        'high': 0,
+                        'low': 518,
+                    }
+                }
+            },
+            'R0-Link A': {
+                'from': {
+                    'bytes': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'high': 1614284,
+                        'looped': 0,
+                        'low': 298734735,
+                    },
+                    'flow_ctrl_count': 3700,
+                    'pkts': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'errored': 0,
+                        'high': 19461,
+                        'looped': 0,
+                        'low': 2777099,
+                    },
+                    'qstat_count': 0,
+                },
+                'to': {
+                    'pkts': {
+                        'high': 1018101,
+                        'low': 1719353,
+                    }
+                }
+            },
+            'R1-Link A': {
+                'from': {
+                    'bytes': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 0,
+                    },
+                    'flow_ctrl_count': 3501,
+                    'pkts': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'errored': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 0,
+                    },
+                    'qstat_count': 0,
+                },
+                'to': {
+                    'pkts': {
+                        'high': 0,
+                        'low': 0,
+                    }
+                }
+            }
+        }
+    }
 
     golden_output_serdes = {'execute.return_value': '''\
         Router#show platform hardware slot F0 serdes statistics 
@@ -15175,12 +15368,11 @@ class test_show_platform_hardware_serdes_statistics(unittest.TestCase):
     '''
     }
 
-    def test_golden(self):
+    def test_golden_serdes(self):
         self.device = Mock(**self.golden_output_serdes)
         obj = ShowPlatformHardwareSerdes(device=self.device)
         parsed_output = obj.parse(slot='0')
         self.maxDiff = None
-        import pdb; pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output_serdes)
 
     def test_empty(self):
@@ -15194,7 +15386,125 @@ class test_show_platform_hardware_serdes_statistics_internal(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output_serdes_internal = {}
+    golden_parsed_output_serdes_internal = {
+        'link': {
+            'Encryption Processor': {
+                'errors': {
+                    'rx_parity': '0',
+                    'rx_tx_process': '0/0',
+                    'rx_tx_schedule': '0/0',
+                    'rx_tx_statistics': '0/0',
+                },
+                'from': {
+                    'bytes': {
+                        'dropped': 0,
+                        'errored': 0,
+                        'total': 0},
+                    'pkts': {
+                        'dropped': 0,
+                        'errored': 0,
+                        'total': 0,
+                    },
+                },
+                'local_rx_in_sync': True,
+                'local_tx_in_sync': True,
+                'remote_rx_in_sync': True,
+                'remote_tx_in_sync': True,
+                'to': {
+                    'bytes': {
+                        'dropped': 0,
+                        'total': 0,
+                    },
+                    'pkts': {
+                        'dropped': 0,
+                        'total': 0,
+                    },
+                },
+            },
+            'Network-Processor-0': {
+                'from': {
+                    'bytes': {
+                        'total': 7397920802,
+                    },
+                    'pkts': {
+                        'total': 21259012,
+                    },
+                },
+                'local_rx_in_sync': True,
+                'local_tx_in_sync': True,
+                'to': {
+                    'bytes': {
+                        'total': 7343838083,
+                    },
+                    'pkts': {
+                        'total': 21763844,
+                    },
+                },
+            },
+            'c2w': {
+                'serdes_exception_counts': {},
+            },
+            'cfg': {'serdes_exception_counts': {},
+            },
+            'cilink': {
+                'serdes_exception_counts': {
+                    'link_number': {
+                        '0': {
+                            'chicoEvent': 5,
+                            'msgEccError': 5,
+                            'msgTypeError': 5,
+                        },
+                        '1': {
+                            'chicoEvent': 1,
+                            'msgEccError': 1,
+                            'msgTypeError': 1,
+                        },
+                        '2': {
+                            'chicoEvent': 3,
+                            'msgEccError': 3,
+                            'msgTypeError': 3,
+                        },
+                    },
+                },
+            },
+            'edh-hi': {
+                'serdes_exception_counts': {},
+            },
+            'edh-lo': {
+                'serdes_exception_counts': {},
+            },
+            'edm': {
+                'serdes_exception_counts': {},
+            },
+            'eqs/fc': {
+                'serdes_exception_counts': {},
+            },
+            'idh-hi': {
+                'serdes_exception_counts': {},
+            },
+            'idh-lo': {
+                'serdes_exception_counts': {},
+            },
+            'idh-shared': {
+                'serdes_exception_counts': {},
+            },
+            'ilak': {
+                'serdes_exception_counts': {},
+            },
+            'isch': {
+                'serdes_exception_counts': {},
+            },
+            'pcie': {
+                'serdes_exception_counts': {},
+            },
+            'slb': {
+                'serdes_exception_counts': {},
+            },
+            'spi link': {
+                'serdes_exception_counts': {},
+            },
+        },
+    }
 
     golden_output_serdes_internal = {'execute.return_value': '''\
         Router#show platform hardware slot F0 serdes statistics internal 
@@ -15252,7 +15562,6 @@ class test_show_platform_hardware_serdes_statistics_internal(unittest.TestCase):
         obj = ShowPlatformHardwareSerdesInternal(device=self.device)
         parsed_output = obj.parse(slot='0')
         self.maxDiff = None
-        import pdb; pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output_serdes_internal)
 
     def test_empty(self):
