@@ -10,7 +10,9 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
 # Parser
-from genie.libs.parser.iosxe.show_archive import ShowArchive
+from genie.libs.parser.iosxe.show_archive import ShowArchive, \
+						 ShowArchiveConfigDifferences, \
+                                                 ShowArchiveConfigIncrementalDiffs
 
 
 # ============================================
@@ -62,6 +64,135 @@ class test_show_archive(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
+#=====================================================
+# Parser for 'show archive config differences
+#=====================================================
+class test_show_archive_config_differences(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value' : ''}
+    
+    golden_parsed_output = {
+            'diff':{
+                'index': {
+                    1: {
+                        'before': ['hostname Router1'],
+                        'after': ['hostname Test1']
+                    },
+                    2: {
+                        'before': ['hostname Router2'],
+                        'after': ['hostname Test2']
+                    }
+                }
+        }
+    }
 
+    golden_parsed_output_optional = {
+                'diff':{
+                    'index': { 
+                        1: {
+                            'before': ['hostname Router1-1.12', 
+                                    'hostname Router2/2.1.1', 
+                                    'hostname Router3'],
+                            'after' : ['hostname Test1', 'hostname Test2',
+                                    'hostname Test3']
+                        }
+                    }
+            }
+    }
+
+    golden_parsed_output_incremental_diff = {
+                'diff':{
+                    'index': {
+                        1: {
+                        'after': ['ip subnet-zero', 'ip cef', 
+                                'ip name-server 10.4.4.4', 
+				'voice dnis-map1', 'dnis 111', 
+                                'interface FastEthernet1/0',
+				'no ip address', 'no ip route-cache', 
+                                'no ip mroute-cache','shutdown', 'duplex half',
+                                'ip default-gateway 10.5.5.5','ip classless', 
+                                'access-list 110 deny	ip any host 10.1.1.1',
+				'access-list 110 deny	ip any host 10.1.1.2',
+				'access-list 110 deny	ip any host 10.1.1.3',
+				'snmp-server community private RW'
+				]
+                        }
+                    }
+                }
+    }
+    
+    golden_output = {'execute.return_value': '''\
+            !Contextual Config Diffs:
+            -hostname Router1
+            +hostname Test1
+            -hostname Router2
+            +hostname Test2
+            '''
+    }
+
+    golden_output_optional = {'execute.return_value': '''\
+            !Contextual Config Diffs:
+            -hostname Router1-1.12
+            -hostname Router2/2.1.1
+            -hostname Router3
+            +hostname Test1
+            +hostname Test2
+            +hostname Test3
+            '''
+    }
+
+    golden_output_incremental_diff = {'execute.return_value': '''\
+            !List of commands:
+            ip subnet-zero
+            ip cef
+            ip name-server 10.4.4.4
+	    voice dnis-map1
+	     dnis 111
+	    interface FastEthernet1/0
+             no ip address
+             no ip route-cache
+             no ip mroute-cache
+             shutdown
+	     duplex half
+	    ip default-gateway 10.5.5.5
+            ip classless
+	    access-list 110 deny	ip any host 10.1.1.1
+            access-list 110 deny	ip any host 10.1.1.2
+	    access-list 110 deny	ip any host 10.1.1.3
+	    snmp-server community private RW
+            '''
+    }
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowArchiveConfigDifferences(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowArchiveConfigDifferences(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+    
+    def test_golden_one_file(self):
+        self.device = Mock(**self.golden_output_optional)
+        obj = ShowArchiveConfigDifferences(device=self.device)
+        parsed_output = obj.parse(fileA='file1.txt')
+        self.assertEqual(parsed_output, self.golden_parsed_output_optional)
+
+    def test_golden_two_files(self):
+        self.device = Mock(**self.golden_output_optional)
+        obj = ShowArchiveConfigDifferences(device=self.device)
+        parsed_output = obj.parse(fileA='file1.txt', fileB='file2.txt')
+        self.assertEqual(parsed_output, self.golden_parsed_output_optional)
+
+    def test_golden_incremental_diffs(self):
+        self.device = Mock(**self.golden_output_incremental_diff)
+        obj = ShowArchiveConfigIncrementalDiffs(device=self.device)
+        parsed_output = obj.parse(fileA='file1.txt')
+        self.assertEqual(parsed_output,self.golden_parsed_output_incremental_diff)
+    
 if __name__ == '__main__':
     unittest.main()

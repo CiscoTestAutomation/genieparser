@@ -2,6 +2,10 @@
 
 IOSXE parsers for the following show commands:
     * show archive
+    * show archive config differences
+    * show archive config differences <fileA> <fileB>
+    * show archive config differences <fileA>
+    * show archive config incremental-diffs <fileA>
 '''
 
 # Python
@@ -90,3 +94,125 @@ class ShowArchive(ShowArchiveSchema):
                 continue
 
         return ret_dict
+
+# ====================================================
+# Parser for 'show archive config differences'
+# ====================================================
+
+class ShowArchiveConfigDifferencesSchema(MetaParser):
+    """
+    Schema for show archive config differences
+    """
+    
+    schema = {
+            'diff': {
+                'index': { Any():{
+                    Optional('before'): list,
+                    'after': list
+                    }
+                }
+            }
+        }
+
+class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
+    """ Parser for show archive config differences"""
+
+    cli_command = ['show archive config differences', 
+                'show archive config differences {fileA} {fileB}',
+                'show archive config differences {fileA}'
+            ]
+
+    def cli(self, fileA='', fileB='', cmd='', output=None):
+        if output is None:
+            # execute command to get output
+            if fileA and fileB:
+                command = self.cli_command[1].format(fileA=fileA, fileB=fileB)
+            elif fileA:
+                if cmd:
+                    command = cmd.format(fileA=fileA)
+                else:
+                    command = self.cli_command[2].format(fileA=fileA)
+            else:
+                command = self.cli_command[0]
+            out = self.device.execute(command)
+        else:
+            out = output
+
+        # initial varaiables
+        ret_dict = {}
+        contextual_found = False
+        index = 0
+        is_new_index = ''
+        
+        # !Contextual Config Diffs:
+        p1 = re.compile(r'^\s*!Contextual +Config +Diffs:$')
+        # +hostname Router1
+        p2 = re.compile(r'^\s*\+(?P<line_info>[\w\W]+)$')
+        # -hostname Router2
+        p3 = re.compile(r'^\s*\-(?P<line_info>[\w\W]+)$')
+        # !List of commands:
+        p4 = re.compile(r'^\s*!List +of +commands:$')
+        # hostname Router3
+        p5 = re.compile(r'^\s*(?P<line_info>([\w\W]+))$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not cmd:
+                    if not contextual_found:
+                        #!Contextual Config Diffs
+                        m = p1.match(line)
+                        if m:
+                            contextual_found = True
+                            contextual_config_diffs = ret_dict.\
+                                                setdefault('diff',{}).\
+                                                setdefault('index',{})
+                            continue
+                    else:
+                        # +hostname Router1
+                        m = p2.match(line)
+                        if m:
+                            group = m.groupdict()
+                            if is_new_index == '':
+                                index+=1
+                                index_dict = contextual_config_diffs.setdefault\
+                                        (index, {'before': [],'after': []})
+                            index_dict['after'].append(group['line_info'])
+                            is_new_index = '+'
+                            continue
+                        # -hostname Router2
+                        m = p3.match(line)
+                        if m:
+                            group = m.groupdict()
+                            if is_new_index != '-':
+                                index+=1
+                                index_dict = contextual_config_diffs.setdefault\
+                                        (index, {"before": [],"after": []})
+                            index_dict['before'].append(group['line_info'])
+                            is_new_index = '-'
+                            continue
+            else:
+                # !List of commands:
+                m = p4.match(line)
+                if m:
+                    incremental_diffs = ret_dict.setdefault('diff',{}).\
+                                                setdefault('index',{}).\
+                                                setdefault(1, {}).\
+                                                setdefault('after',[])
+                    continue
+                # hostname router 192.168.5.2/22
+                # end
+                m = p5.match(line)
+                if m:
+                    group = m.groupdict()
+                    incremental_diffs.append(group['line_info'])
+                    continue
+        return ret_dict
+
+class ShowArchiveConfigIncrementalDiffs(ShowArchiveConfigDifferences):
+    """ Parser for show archive config incremental-diffs <fileA>"""
+    
+    cli_command = 'show archive config incremental-diffs {fileA}'
+    
+    def cli(self,fileA='', output=None):
+        return super().cli(fileA=fileA,cmd=self.cli_command,output=output)
+
