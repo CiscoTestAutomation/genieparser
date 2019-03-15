@@ -131,7 +131,10 @@ class Common():
             if int_type in convert.keys():
                 return(convert[int_type] + int_port)
             else:
-                return(intf)
+                # Unifying interface names
+                converted_intf = intf[0].capitalize()+intf[1:].replace(
+                    ' ','').replace('ethernet', 'Ethernet')
+                return(converted_intf)
         else:
             return(intf)
 
