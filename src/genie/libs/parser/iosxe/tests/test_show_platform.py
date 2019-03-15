@@ -22,7 +22,10 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   ShowVersionRp, \
                                                   ShowPlatformHardware, \
                                                   ShowPlatformHardwarePlim, \
-                                                  ShowPlatformPower
+                                                  ShowPlatformPower, \
+                                                  ShowPlatformHardwareQfpBqsStatisticsChannelAll, \
+                                                  ShowPlatformHardwareQfpStatisticsDrop
+
 
 
 class test_show_version(unittest.TestCase):
@@ -14628,6 +14631,596 @@ class test_show_platform_power(unittest.TestCase):
         platform_obj = ShowPlatformPower(device=self.device)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+class show_platform_hardware_qfp_bqs_statistics_channel_all(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_active_ipm = {
+        'channel': {
+             1: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             2: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             3: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             4: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             5: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             6: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             7: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'goodbytes': '016a5004b0',
+                 'goodpkts': '0000c40f64'},
+             8: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'goodbytes': '00153685bd',
+                 'goodpkts': '00000afbe9'},
+             9: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'goodbytes': '0012139723',
+                 'goodpkts': '0000288e4f'},
+             10: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '00000b2184',
+                  'goodpkts': '000000223f'},
+             11: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0023f74c7a',
+                  'goodpkts': '000053ff08'},
+             12: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000305734',
+                  'goodpkts': '0000009533'},
+             13: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000010ce4',
+                  'goodpkts': '0000000749'},
+             14: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             15: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             16: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             17: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             18: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             19: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '000aba8f64',
+                  'goodpkts': '00000d968e'},
+             20: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             21: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             22: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             23: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             24: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'}}}
+    
+    golden_parsed_output_active_opm = {
+        'channel': {
+             0: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '01787bc9e1',
+                 'goodpkts': '0000d18caf'},
+             1: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             2: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             3: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             4: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             5: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             6: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             7: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             8: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             9: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             10: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             11: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             12: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             13: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             14: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             15: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             16: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             17: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             18: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             19: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             20: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '001ab1e8ad',
+                  'goodpkts': '0000416122'},
+             21: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '000eac93b2',
+                  'goodpkts': '000012481d'},
+             22: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0004353727',
+                  'goodpkts': '00000a3c55'},
+             23: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '00131e7f90',
+                  'goodpkts': '000015b68d'},
+             24: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '00000b6ce8',
+                  'goodpkts': '0000000749'},
+             25: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             26: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             27: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             28: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             29: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             30: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0016872998',
+                  'goodpkts': '00000e35a9'},
+             31: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             32: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             33: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             34: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             35: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             36: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             37: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             38: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '00018a62d0',
+                  'goodpkts': '0000007f33'},
+             39: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '00000f3110',
+                  'goodpkts': '0000000fd2'},
+             40: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             41: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             42: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000300',
+                  'goodpkts': '0000000010'},
+             43: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0830f8d074',
+                  'goodpkts': '002f8bbd4a'},
+             44: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '002f7036c0',
+                  'goodpkts': '0001b1b8d0'},
+             45: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             46: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             47: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             48: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             49: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             50: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             51: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             52: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             53: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             54: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             55: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             56: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'Metapacket/Recycle Pools 0-3',
+                  'goodbytes': '0000000620',
+                  'goodpkts': '000000001c'},
+             57: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'Metapacket/Recycle Pools 0-3',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             58: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'Metapacket/Recycle Pools 0-3',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             59: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'Metapacket/Recycle Pools 0-3',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             60: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'Reassembled Packets Sent to QED',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'}}}
+
+
+    golden_output_active_ipm = {'execute.return_value': '''\
+        Router#show platform hardware qfp active bqs 0 ipm statistics channel all
+        Load for five secs: 25%/2%; one minute: 9%; five minutes: 9%
+        Time source is NTP, 07:43:10.431 JST Thu Sep 8 2016
+
+        BQS IPM Channel Statistics
+
+        Chan   GoodPkts  GoodBytes    BadPkts   BadBytes
+
+         1 - 0000000000 0000000000 0000000000 0000000000
+         2 - 0000000000 0000000000 0000000000 0000000000
+         3 - 0000000000 0000000000 0000000000 0000000000
+         4 - 0000000000 0000000000 0000000000 0000000000
+         5 - 0000000000 0000000000 0000000000 0000000000
+         6 - 0000000000 0000000000 0000000000 0000000000
+         7 - 0000c40f64 016a5004b0 0000000000 0000000000
+         8 - 00000afbe9 00153685bd 0000000000 0000000000
+         9 - 0000288e4f 0012139723 0000000000 0000000000
+        10 - 000000223f 00000b2184 0000000000 0000000000
+        11 - 000053ff08 0023f74c7a 0000000000 0000000000
+        12 - 0000009533 0000305734 0000000000 0000000000
+        13 - 0000000749 0000010ce4 0000000000 0000000000
+        14 - 0000000000 0000000000 0000000000 0000000000
+        15 - 0000000000 0000000000 0000000000 0000000000
+        16 - 0000000000 0000000000 0000000000 0000000000
+        17 - 0000000000 0000000000 0000000000 0000000000
+        18 - 0000000000 0000000000 0000000000 0000000000
+        19 - 00000d968e 000aba8f64 0000000000 0000000000
+        20 - 0000000000 0000000000 0000000000 0000000000
+        21 - 0000000000 0000000000 0000000000 0000000000
+        22 - 0000000000 0000000000 0000000000 0000000000
+        23 - 0000000000 0000000000 0000000000 0000000000
+        24 - 0000000000 0000000000 0000000000 0000000000
+    '''}
+
+    golden_output_active_opm = {'execute.return_value': '''\
+        Router#show platform hardware qfp active bqs 0 opm statistics channel all
+        Load for five secs: 6%/0%; one minute: 9%; five minutes: 9%
+        Time source is NTP, 07:45:18.968 JST Thu Sep 8 2016
+
+        BQS OPM Channel Statistics
+
+        Chan   GoodPkts  GoodBytes    BadPkts   BadBytes
+
+         0 - 0000d18caf 01787bc9e1 0000000000 0000000000
+         1 - 0000000000 0000000000 0000000000 0000000000
+         2 - 0000000000 0000000000 0000000000 0000000000
+         3 - 0000000000 0000000000 0000000000 0000000000
+         4 - 0000000000 0000000000 0000000000 0000000000
+         5 - 0000000000 0000000000 0000000000 0000000000
+         6 - 0000000000 0000000000 0000000000 0000000000
+         7 - 0000000000 0000000000 0000000000 0000000000
+         8 - 0000000000 0000000000 0000000000 0000000000
+         9 - 0000000000 0000000000 0000000000 0000000000
+        10 - 0000000000 0000000000 0000000000 0000000000
+        11 - 0000000000 0000000000 0000000000 0000000000
+        12 - 0000000000 0000000000 0000000000 0000000000
+        13 - 0000000000 0000000000 0000000000 0000000000
+        14 - 0000000000 0000000000 0000000000 0000000000
+        15 - 0000000000 0000000000 0000000000 0000000000
+        16 - 0000000000 0000000000 0000000000 0000000000
+        17 - 0000000000 0000000000 0000000000 0000000000
+        18 - 0000000000 0000000000 0000000000 0000000000
+        19 - 0000000000 0000000000 0000000000 0000000000
+        20 - 0000416122 001ab1e8ad 0000000000 0000000000
+        21 - 000012481d 000eac93b2 0000000000 0000000000
+        22 - 00000a3c55 0004353727 0000000000 0000000000
+        23 - 000015b68d 00131e7f90 0000000000 0000000000
+        24 - 0000000749 00000b6ce8 0000000000 0000000000
+        25 - 0000000000 0000000000 0000000000 0000000000
+        26 - 0000000000 0000000000 0000000000 0000000000
+        27 - 0000000000 0000000000 0000000000 0000000000
+        28 - 0000000000 0000000000 0000000000 0000000000
+        29 - 0000000000 0000000000 0000000000 0000000000
+        30 - 00000e35a9 0016872998 0000000000 0000000000
+        31 - 0000000000 0000000000 0000000000 0000000000
+        32 - 0000000000 0000000000 0000000000 0000000000
+        33 - 0000000000 0000000000 0000000000 0000000000
+        34 - 0000000000 0000000000 0000000000 0000000000
+        35 - 0000000000 0000000000 0000000000 0000000000
+        36 - 0000000000 0000000000 0000000000 0000000000
+        37 - 0000000000 0000000000 0000000000 0000000000
+        38 - 0000007f33 00018a62d0 0000000000 0000000000
+        39 - 0000000fd2 00000f3110 0000000000 0000000000
+        40 - 0000000000 0000000000 0000000000 0000000000
+        41 - 0000000000 0000000000 0000000000 0000000000
+        42 - 0000000010 0000000300 0000000000 0000000000
+        43 - 002f8bbd4a 0830f8d074 0000000000 0000000000
+        44 - 0001b1b8d0 002f7036c0 0000000000 0000000000
+        45 - 0000000000 0000000000 0000000000 0000000000
+        46 - 0000000000 0000000000 0000000000 0000000000
+        47 - 0000000000 0000000000 0000000000 0000000000
+        48 - 0000000000 0000000000 0000000000 0000000000
+        49 - 0000000000 0000000000 0000000000 0000000000
+        50 - 0000000000 0000000000 0000000000 0000000000
+        51 - 0000000000 0000000000 0000000000 0000000000
+        52 - 0000000000 0000000000 0000000000 0000000000
+        53 - 0000000000 0000000000 0000000000 0000000000
+        54 - 0000000000 0000000000 0000000000 0000000000
+        55 - 0000000000 0000000000 0000000000 0000000000
+        56 - 000000001c 0000000620 0000000000 0000000000
+        57 - 0000000000 0000000000 0000000000 0000000000
+        58 - 0000000000 0000000000 0000000000 0000000000
+        59 - 0000000000 0000000000 0000000000 0000000000
+        60 - 0000000000 0000000000 0000000000 0000000000
+         0-55: OPM Channels
+        56-59: Metapacket/Recycle Pools 0-3
+           60: Reassembled Packets Sent to QED
+    '''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        platform_obj = ShowPlatformHardwareQfpBqsStatisticsChannelAll(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse(status='active', slot='0', iotype='ipm')    
+
+    def test_golden_active_ipm(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_active_ipm)
+        platform_obj = ShowPlatformHardwareQfpBqsStatisticsChannelAll(device=self.device)
+        parsed_output = platform_obj.parse(status='active', slot='0', iotype='ipm')
+        self.assertEqual(parsed_output,self.golden_parsed_output_active_ipm)
+
+    def test_golden_active_opm(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_active_opm)
+        platform_obj = ShowPlatformHardwareQfpBqsStatisticsChannelAll(device=self.device)
+        parsed_output = platform_obj.parse(status='active', slot='0', iotype='opm')
+        self.assertEqual(parsed_output,self.golden_parsed_output_active_opm)
+
+
+class test_show_platform_hardware_qfp_statistics_drop(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_active = {
+        'global_drop_stats': {
+            'Ipv4NoAdj': {'octets': 296, 'packets': 7},
+            'Ipv4NoRoute': {'octets': 7964, 'packets': 181},
+            'PuntPerCausePolicerDrops': {'octets': 184230, 'packets': 2003},
+            'UidbNotCfgd': {'octets': 29312827, 'packets': 466391},
+            'UnconfiguredIpv4Fia': {'octets': 360, 'packets': 6}}}
+
+    golden_output_active = {'execute.return_value': '''\
+        Router#show platform hardware qfp active statistics drop | exclude _0_
+        Load for five secs: 2%/1%; one minute: 9%; five minutes: 8%
+        Time source is NTP, 07:47:11.317 JST Thu Sep 8 2016
+        -------------------------------------------------------------------------
+        Global Drop Stats                         Packets                  Octets  
+        -------------------------------------------------------------------------
+        Ipv4NoAdj                                       7                     296  
+        Ipv4NoRoute                                   181                    7964  
+        PuntPerCausePolicerDrops                     2003                  184230  
+        UidbNotCfgd                                466391                29312827  
+        UnconfiguredIpv4Fia                             6                     360  
+    '''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        platform_obj = ShowPlatformHardwareQfpStatisticsDrop(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse(status='active')    
+
+    def test_golden_active(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_active)
+        platform_obj = ShowPlatformHardwareQfpStatisticsDrop(device=self.device)
+        parsed_output = platform_obj.parse(status='active')
+        self.assertEqual(parsed_output,self.golden_parsed_output_active)
+
 
 if __name__ == '__main__':
     unittest.main()
