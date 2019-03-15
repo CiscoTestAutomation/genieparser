@@ -46,3 +46,10 @@
     	show version RP standby installed
     	show version RP standby provisioned
     * Add ShowPlatformPower for 'show platform power'
+
+--------------------------------------------------------------------------------
+                                    ACL
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated parsers:
+        * ShowAccessLists
