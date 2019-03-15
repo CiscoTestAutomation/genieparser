@@ -378,7 +378,7 @@ class ShowMplsLdpBindingsSchema(MetaParser):
                     Any():{
                         'rev': str,
                         Optional('checkpoint'): str,
-                        'label_binding': {
+                        Optional('label_binding'): {
                             'label':{
                                 Any():{
                                     Optional('owner'): str,
@@ -414,12 +414,15 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
                   show mpls ldp bindings all
                   show mpls ldp bindings all detail
        """
-    cli_command = ['show mpls ldp bindings','show mpls ldp bindings {all} {detail}','show mpls ldp bindings vrf <vrf>']
+    cli_command = ['show mpls ldp bindings',
+                   'show mpls ldp bindings {all}',
+                   'show mpls ldp bindings {all} {detail}',
+                   'show mpls ldp bindings vrf <vrf>']
 
-    def cli(self, vrf="",all="", detail="", output=None):
+    def cli(self, vrf="", all="", detail="", output=None):
         if output is None:
             if vrf:
-                cmd = self.cli_command[2].format(vrf=vrf)
+                cmd = self.cli_command[3].format(vrf=vrf)
             else:
                 vrf='default'
                 if not all and not detail:
@@ -427,7 +430,7 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
                 if all and not detail:
                     cmd = self.cli_command[1].format(all=all)
                 if all and detail:
-                    cmd = self.cli_command[1].format(all=all, detail=detail)
+                    cmd = self.cli_command[2].format(all=all, detail=detail)
             out = self.device.execute(cmd)
         else:
             out = output
@@ -435,6 +438,8 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
         # initial return dictionary
         result_dict = {}
 
+        # VRF vrf1:
+        p0 = re.compile(r'^VRF +(?P<vrf>\S+):$')
         # lib entry: 20.1.1.0/24, rev 1028
         # lib entry: 27.93.202.64/32, rev 12, chkpt: none
         p1 = re.compile(r'^lib +entry: +(?P<lib_entry>[\d\.\/]+), +rev +(?P<rev>\d+)(, +chkpt: +(?P<checkpoint>\S+))?$')
@@ -455,6 +460,13 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
 
         for line in out.splitlines():
             line = line.strip()
+
+            # VRF vrf1:
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                vrf = group['vrf']
+                continue
 
             # lib entry: 20.1.1.0/24, rev 1028
             # lib entry: 27.93.202.64/32, rev 12, chkpt: none

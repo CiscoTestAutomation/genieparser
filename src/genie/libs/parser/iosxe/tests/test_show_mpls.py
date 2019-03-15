@@ -634,6 +634,7 @@ Time source is NTP, 16:10:10.910 JST Tue Nov 8 2016
         remote binding: lsr: 106.162.197.252:0, label: 126 checkpointed
     '''
     }
+
     golden_parsed_output_all_detail = {
        "vrf": {
           "default": {
@@ -774,6 +775,131 @@ Time source is NTP, 16:10:10.910 JST Tue Nov 8 2016
        }
     }
 
+    golden_parsed_output_all = {
+    "vrf": {
+        "vrf1": {
+            "lib_entry": {
+                "10.11.0.0/24": {
+                    "rev": "7",
+                    "remote_binding": {
+                        "label": {
+                            "imp-null": {
+                                "lsr_id": {
+                                    "10.132.0.1": {
+                                        "label_space_id": {
+                                            0: {}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "10.12.0.0/24": {
+                    "label_binding": {
+                        "label": {
+                            "17": {}
+                        }
+                    },
+                    "rev": "8",
+                    "remote_binding": {
+                        "label": {
+                            "imp-null": {
+                                "lsr_id": {
+                                    "10.132.0.1": {
+                                        "label_space_id": {
+                                            0: {}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "10.0.0.0/24": {
+                    "rev": "6",
+                    "remote_binding": {
+                        "label": {
+                            "imp-null": {
+                                "lsr_id": {
+                                    "10.132.0.1": {
+                                        "label_space_id": {
+                                            0: {}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "default": {
+            "lib_entry": {
+                "10.11.0.0/24": {
+                    "label_binding": {
+                        "label": {
+                            "imp-null": {}
+                        }
+                    },
+                    "rev": "15",
+                    "remote_binding": {
+                        "label": {
+                            "imp-null": {
+                                "lsr_id": {
+                                    "10.131.0.1": {
+                                        "label_space_id": {
+                                            0: {}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "10.0.0.0/24": {
+                    "label_binding": {
+                        "label": {
+                            "imp-null": {}
+                        }
+                    },
+                    "rev": "4",
+                    "remote_binding": {
+                        "label": {
+                            "imp-null": {
+                                "lsr_id": {
+                                    "10.131.0.1": {
+                                        "label_space_id": {
+                                            0: {}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+    golden_output_all = {'execute.return_value': '''\
+         Router# show mpls ldp bindings all
+
+         lib entry: 10.0.0.0/24, rev 4
+               local binding:  label: imp-null
+               remote binding: lsr: 10.131.0.1:0, label: imp-null
+         lib entry: 10.11.0.0/24, rev 15
+               local binding:  label: imp-null
+               remote binding: lsr: 10.131.0.1:0, label: imp-null
+       VRF vrf1:
+         lib entry: 10.0.0.0/24, rev 6
+               remote binding: lsr: 10.132.0.1:0, label: imp-null
+         lib entry: 10.11.0.0/24, rev 7
+               remote binding: lsr: 10.132.0.1:0, label: imp-null
+         lib entry: 10.12.0.0/24, rev 8
+               local binding:  label: 17
+               remote binding: lsr: 10.132.0.1:0, label: imp-null
+     '''}
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowMplsLdpBindings(device=self.dev1)
@@ -793,6 +919,13 @@ Time source is NTP, 16:10:10.910 JST Tue Nov 8 2016
         obj = ShowMplsLdpBindings(device=self.dev)
         parsed_output = obj.parse(all='all',detail="detail")
         self.assertEqual(parsed_output, self.golden_parsed_output_all_detail)
+
+    def test_golden_all(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output_all)
+        obj = ShowMplsLdpBindings(device=self.dev)
+        parsed_output = obj.parse(all='all')
+        self.assertEqual(parsed_output, self.golden_parsed_output_all)
 
 class test_show_mpls_ldp_capabilities(unittest.TestCase):
     dev = Device(name='dev1')
