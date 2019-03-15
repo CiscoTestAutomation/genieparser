@@ -3367,18 +3367,65 @@ class ShowPlatformHardwareSerdesSchema(MetaParser):
                   show platform hardware slot <x> serdes statistics internal"""
 
     schema = {
-        'interface': {
+        'link': {
             Any(): {
-                'channel': {
-                    Any(): {
-                        'name': str,
-                        'number': int,
-                        Optional('logical_channel'): int,
-                        Optional('drain_mode'): bool,
-                        Optional('port'): int,
-                        Optional('cfifo'): int,
+                Optional('from'): {
+                    'pkts': {
+                        Optional('total'): int,
+                        Optional('high'): int,
+                        Optional('low'): int,
+                        Optional('dropped'): int,
+                        Optional('errored'): int,
+                        Optional('looped'): int,
+                        Optional('bad'): int,
                     },
-                }
+                    'bytes': {
+                        Optional('total'): int,
+                        Optional('high'): int,
+                        Optional('low'): int,
+                        Optional('dropped'): int,
+                        Optional('errored'): int,
+                        Optional('looped'): int,
+                        Optional('bad'): int,
+                    },
+                    Optional('qstat_count'): int,
+                    Optional('flow_ctrl_count'): int,
+                },
+                Optional('to'): {
+                    'pkts': {
+                        Optional('total'): int,
+                        Optional('high'): int,
+                        Optional('low'): int,
+                        Optional('dropped'): int,
+                        Optional('errored'): int,
+                    },
+                    Optional('bytes'): {
+                        Optional('total'): int,
+                        Optional('high'): int,
+                        Optional('low'): int,
+                        Optional('dropped'): int,
+                        Optional('errored'): int,
+                    }
+                },
+                Optional('serdes_exception_counts'):{
+                    Optional('link_number'): {
+                        Any(): {
+                            'msgTypeError': int,
+                            'msgEccError': int,
+                            'chicoEvent': int,
+                        },
+                    }
+                },
+                Optional('local_tx_in_sync'): bool,
+                Optional('local_rx_in_sync'): bool,
+                Optional('remote_tx_in_sync'): bool,
+                Optional('remote_rx_in_sync'): bool,
+                Optional('errors'):{
+                    'rx_tx_process': str,
+                    'rx_tx_schedule': str,
+                    'rx_tx_statistics': str,
+                    'rx_parity': str,
+                },
             },
         }
     }
@@ -3400,76 +3447,23 @@ class ShowPlatformHardwareSerdes(ShowPlatformHardwareSerdesSchema):
         # initial return dictionary
         ret_dict = {}
 
-        # Router#show platform hardware slot F0 serdes statistics 
-        # Load for five secs: 22%/1%; one minute: 8%; five minutes: 9%
-        # Time source is NTP, 07:42:08.304 JST Thu Sep 8 2016
-        # From Slot R1-Link A
-        #   Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0         
-        #   Bytes High: 0          Low: 0          Bad: 0          Dropped: 0         
+        # From Slot 1-Link B     
+        p1 = re.compile(r'^From +Slot +(?P<link>[\w\d\-\s]+)$')
+
+        #   Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0 
+        p2 = re.compile(r'^Pkts  +High: +(?P<high>\d+) +Low: +(?P<low>\d+)( +Bad: +(?P<bad>\d+) +Dropped: +(?P<dropped>\d+))?$')
+
+        #   Bytes High: 0          Low: 0          Bad: 0          Dropped: 0
+        p3 = re.compile(r'^Bytes +High: +(?P<high>\d+) +Low: +(?P<low>\d+) +Bad: +(?P<bad>\d+) +Dropped: +(?P<dropped>\d+)$')
+
         #   Pkts  Looped: 0          Error: 0         
+        p4 = re.compile(r'^Pkts +Looped: +(?P<looped>\d+) +Error: +(?P<errored>\d+)$')
+
         #   Bytes Looped 0         
+        p5 = re.compile(r'^Bytes +Looped +(?P<looped>\d+)$')
+
         #   Qstat count: 0          Flow ctrl count: 3501      
-        # To Slot R1-Link A
-        #   Pkts  High: 0          Low: 0         
-
-        # From Slot R0-Link A
-        #   Pkts  High: 19461      Low: 2777099    Bad: 0          Dropped: 0         
-        #   Bytes High: 1614284    Low: 298734735  Bad: 0          Dropped: 0         
-        #   Pkts  Looped: 0          Error: 0         
-        #   Bytes Looped 0         
-        #   Qstat count: 0          Flow ctrl count: 3700      
-        # To Slot R0-Link A
-        #   Pkts  High: 1018101    Low: 1719353   
-
-        # From Slot F1-Link A
-        #   Pkts  High: 0          Low: 518        Bad: 0          Dropped: 0         
-        #   Bytes High: 0          Low: 18648      Bad: 0          Dropped: 0         
-        #   Pkts  Looped: 0          Error: 0         
-        #   Bytes Looped 0         
-        #   Qstat count: 0          Flow ctrl count: 3680      
-        # To Slot F1-Link A
-        #   Pkts  High: 0          Low: 518       
-
-        # From Slot 1-Link A
-        #   Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0         
-        #   Bytes High: 0          Low: 0          Bad: 0          Dropped: 0         
-        #   Pkts  Looped: 0          Error: 0         
-        #   Bytes Looped 0         
-        #   Qstat count: 294400     Flow ctrl count: 3680      
-        # To Slot 1-Link A
-        #   Pkts  High: 0          Low: 0         
-
-        # From Slot 0-Link A
-        #   Pkts  High: 63052      Low: 2703601    Bad: 0          Dropped: 0         
-        #   Bytes High: 53361379   Low: 199330758  Bad: 0          Dropped: 0         
-        #   Pkts  Looped: 0          Error: 0         
-        #   Bytes Looped 0         
-        #   Qstat count: 331199     Flow ctrl count: 3680      
-        # To Slot 0-Link A
-        #   Pkts  High: 0          Low: 2787636   
-
-        # From Slot 0-Link B
-        #   Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0         
-        #   Bytes High: 0          Low: 0          Bad: 0          Dropped: 0         
-        #   Pkts  Looped: 0          Error: 0         
-        #   Bytes Looped 0         
-        #   Qstat count: 331199     Flow ctrl count: 3680      
-        # To Slot 0-Link B
-        #   Pkts  High: 0          Low: 0         
-
-        # From Slot 1-Link B
-        #   Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0         
-        #   Bytes High: 0          Low: 0          Bad: 0          Dropped: 0         
-        #   Pkts  Looped: 0          Error: 0         
-        #   Bytes Looped 0         
-        #   Qstat count: 0          Flow ctrl count: 3680      
-        # To Slot 1-Link B
-        #   Pkts  High: 0          Low: 0         
-        p1 = re.compile(r'^(?P<number>\d+)(?P<drained>\*)? +(?P<name>[\w\-\s]+)'
-                         ' +(?P<interface>[\w\d]+) +(?P<logical_channel>\d+)$')
-
-        # 32       Unmapped                                         
-        p2 = re.compile(r'^(?P<number>\d+) +Unmapped$')
+        p6 = re.compile(r'^Qstat +count: +(?P<qstat_count>\d+) +Flow +ctrl +count: +(?P<flow_ctrl_count>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -3477,22 +3471,45 @@ class ShowPlatformHardwareSerdes(ShowPlatformHardwareSerdesSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                interface = group['interface']
-                number = group['number']
-                if group['drained']:
-                    drained = True
-                else:
-                    drained = False
-                final_dict = ret_dict.setdefault('interface', {}).\
-                    setdefault(interface, {}).setdefault('channel', {}).setdefault(number, {})
-                final_dict.update({'name':group['name'].strip()})
-                final_dict.update({'number':int(number)})
-                final_dict.update({'logical_channel':int(group['logical_channel'])})
-                final_dict.update({'drain_mode':drained})
+                slot = group['link']
+                from_dict = ret_dict.setdefault('link', {}).setdefault(slot, {}).setdefault('from', {})
                 continue
 
             m = p2.match(line)
             if m:
+                group = m.groupdict()
+                if not group['bad']:
+                    to_dict= ret_dict['link'][slot].setdefault('to', {}).setdefault('pkts', {})
+                    to_dict.update({k:int(v) for k, v in group.items() if v})
+                    continue
+
+                pkts_dict = ret_dict['link'][slot]['from'].setdefault('pkts', {})
+                pkts_dict.update({k:int(v) for k, v in group.items()})
+                continue
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                bytes_dict = ret_dict['link'][slot]['from'].setdefault('bytes', {})
+                bytes_dict.update({k:int(v) for k, v in group.items()})
+                continue
+
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                pkts_dict.update({k:int(v) for k, v in group.items()})
+                continue
+
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                bytes_dict.update({k:int(v) for k, v in group.items()})
+                continue
+
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                from_dict.update({k:int(v) for k, v in group.items()})
                 continue
 
         return ret_dict
@@ -3513,31 +3530,45 @@ class ShowPlatformHardwareSerdesInternal(ShowPlatformHardwareSerdesSchema):
         # initial return dictionary
         ret_dict = {}
 
-        # Router#show platform hardware slot F0 serdes statistics internal 
-        # Load for five secs: 5%/1%; one minute: 8%; five minutes: 9%
-        # Time source is NTP, 07:42:13.752 JST Thu Sep 8 2016
-        # Warning: Clear option may not clear all the counters
-
         # Network-Processor-0 Link:
-        #   Local TX in sync, Local RX in sync
-        #   From Network-Processor     Packets:    21259012  Bytes:  7397920802
-        #   To Network-Processor       Packets:    21763844  Bytes:  7343838083
+        p1 = re.compile(r'^(?P<link>[\w\d\-\s]+) +Link:$')
 
-        # Encryption Processor Link:
-        #   Local TX in sync, Local RX in sync
-        #   Remote TX in sync, Remote RX in sync
-        #   To Encryption Processor   Packets:           0  Bytes:           0
+        #   Local TX in sync, Local RX in sync                                   
+        p2 = re.compile(r'^Local +TX +in +sync, +Local +RX +in +sync$')
+
+        #   Remote TX in sync, Remote RX in sync                                   
+        p3 = re.compile(r'^Remote +TX +in +sync, +Remote +RX +in +sync$')
+
+        #   To Network-Processor       Packets:    21763844  Bytes:  7343838083 
+        #   To Encryption Processor   Packets:           0  Bytes:           0                                   
+        p4 = re.compile(r'^To +(?P<link_name_1>[\w\-\d\s]+) +Packets: +(?P<to_packets>\d+) +Bytes: +(?P<to_bytes>\d+)$')
+
+        #   From Network-Processor     Packets:    21259012  Bytes:  7397920802                                  
+        p5 = re.compile(r'^From +(?P<link_name_2>[\w\-\d\s]+) +Packets: +(?P<from_packets>\d+) +Bytes: +(?P<from_bytes>\d+)$')
+
         #     Drops                   Packets:           0  Bytes:           0
-        #   From Encryption Processor Packets:           0  Bytes:           0
-        #     Drops                   Packets:           0  Bytes:           0
+        p6 = re.compile(r'^Drops +Packets: +(?P<dropped_packets>\d+) +Bytes: +(?P<dropped_bytes>\d+)$')
+
         #     Errors                  Packets:           0  Bytes:           0
-        #   Errors:
+        p7 = re.compile(r'^Errors +Packets: +(?P<errored_packets>\d+) +Bytes: +(?P<errored_bytes>\d+)$')
+
+        #     Errors:
+        p8 = re.compile(r'^Errors:$')
+
         #     RX/TX process: 0/0, RX/TX schedule: 0/0
+        p9 = re.compile(r'^RX/TX +process: +(?P<rx_tx_process>[\d\/]+), +RX/TX +schedule: +(?P<rx_tx_schedule>[\d\/]+)$')
+
         #     RX/TX statistics: 0/0, RX parity: 0
+        p10 = re.compile(r'^RX/TX +statistics: +(?P<rx_tx_statistics>[\d\/]+), +RX +parity: +(?P<rx_parity>\d+)$')
 
         # Serdes Exception Counts:
+        p11 = re.compile(r'^Serdes +Exception +Counts:$')
+
+        #   eqs/fc:
+        #   idh-hi:
         #   spi link:
-        #   cilink:
+        p12 = re.compile(r'^(?P<link>[\w\d\-\s\/]+):$')
+
         #     link 0: msgTypeError: 5
         #     link 0: msgEccError: 5
         #     link 0: chicoEvent: 5
@@ -3547,25 +3578,7 @@ class ShowPlatformHardwareSerdesInternal(ShowPlatformHardwareSerdesSchema):
         #     link 2: msgTypeError: 3
         #     link 2: msgEccError: 3
         #     link 2: chicoEvent: 3
-        #   ilak:
-        #   slb:
-        #   edm:
-        #   isch:
-        #   cfg:
-        #   c2w:
-        #   pcie:
-        #   eqs/fc:
-        #   idh-hi:
-        #   idh-lo:
-        #   idh-shared:
-        #   edh-hi:
-        #   edh-lo:        
-        # * - indicates the drain mode bit is set for this channel
-        p1 = re.compile(r'^(?P<number>\d+)(?P<drained>\*)? +(?P<name>[\w\-\s]+)'
-                         ' +(?P<interface>[\w\d]+) +(?P<logical_channel>\d+)$')
-
-        # 32       Unmapped                                         
-        p2 = re.compile(r'^(?P<number>\d+) +Unmapped$')
+        p13 = re.compile(r'^link +(?P<link_number>\d+): +(?P<error_event>\w+): +(?P<count>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -3573,25 +3586,107 @@ class ShowPlatformHardwareSerdesInternal(ShowPlatformHardwareSerdesSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                interface = group['interface']
-                number = group['number']
-                if group['drained']:
-                    drained = True
-                else:
-                    drained = False
-                final_dict = ret_dict.setdefault('interface', {}).\
-                    setdefault(interface, {}).setdefault('channel', {}).setdefault(number, {})
-                final_dict.update({'name':group['name'].strip()})
-                final_dict.update({'number':int(number)})
-                final_dict.update({'logical_channel':int(group['logical_channel'])})
-                final_dict.update({'drain_mode':drained})
+                link = group['link']
+                new_dict = ret_dict.setdefault('link', {}).setdefault(link, {})
                 continue
 
             m = p2.match(line)
             if m:
+                new_dict['local_tx_in_sync'] = True
+                new_dict['local_rx_in_sync'] = True
+                continue
+
+            m = p3.match(line)
+            if m:
+                new_dict['remote_tx_in_sync'] = True
+                new_dict['remote_rx_in_sync'] = True
+                continue
+
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                to_not_from = True
+                new_dict.setdefault('to', {}).setdefault('pkts', {})
+                new_dict['to'].setdefault('bytes', {})
+                new_dict['to']['pkts']['total'] = int(group['to_packets'])
+                new_dict['to']['bytes']['total'] = int(group['to_bytes'])
+                continue
+
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                to_not_from = False
+                new_dict.setdefault('from', {}).setdefault('pkts', {})
+                new_dict['from'].setdefault('bytes', {})
+                new_dict['from']['pkts']['total'] = int(group['from_packets'])
+                new_dict['from']['bytes']['total'] = int(group['from_bytes'])
+                continue
+
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                if to_not_from:
+                    new_dict['to']['pkts']['dropped'] = int(group['dropped_packets'])
+                    new_dict['to']['bytes']['dropped'] = int(group['dropped_bytes'])
+                else:
+                    new_dict['from']['pkts']['dropped'] = int(group['dropped_packets'])
+                    new_dict['from']['bytes']['dropped'] = int(group['dropped_bytes'])
+                continue
+
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                if to_not_from:
+                    new_dict['to']['pkts']['errored'] = int(group['errored_packets'])
+                    new_dict['to']['bytes']['errored'] = int(group['errored_bytes'])
+                else:
+                    new_dict['from']['pkts']['errored'] = int(group['errored_packets'])
+                    new_dict['from']['bytes']['errored'] = int(group['errored_bytes'])
+                continue
+
+            m = p8.match(line)
+            if m:
+                continue
+
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                new_dict.setdefault('errors', {})
+                new_dict['errors'].update({k:str(v) for k, v in group.items()})
+                continue
+
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                if 'errors' in ret_dict['link'][link]:
+                    new_dict['errors'].update({k:str(v) for k, v in group.items()})
+                continue
+
+            # import pdb; pdb.set_trace()
+            m = p11.match(line)
+            if m:
+                serdes_exception_counts = True
+                continue
+
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                link = group['link']
+                if serdes_exception_counts:
+                    ret_dict['link'].setdefault(link, {}).setdefault('serdes_exception_counts', {})
+                continue
+
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                link_number = group['link_number']
+                error_event = group['error_event']
+                ret_dict['link'][link]['serdes_exception_counts'].setdefault('link_number', {}).setdefault(link_number, {})
+                ret_dict['link'][link]['serdes_exception_counts']['link_number'][link_number][error_event] = int(group['count'])
                 continue
 
         return ret_dict
+
 
 class ShowPlatformPowerSchema(MetaParser):
     """Schema for show platform power"""
