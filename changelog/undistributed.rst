@@ -60,3 +60,10 @@
             show platform hardware qfp standby statistics drop
     * Add ShowPlatformHardwareSerdes for 'show platform hardware slot <x> serdes statistics'
     * Add ShowPlatformHardwareSerdesInternal for 'show platform hardware slot <x> serdes statistics internal'
+
+--------------------------------------------------------------------------------
+                                    MPLS LDP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowMplsLdpParameters for:
+        'show mpls ldp parameters'
