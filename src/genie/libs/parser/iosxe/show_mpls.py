@@ -414,7 +414,7 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
                   show mpls ldp bindings all
                   show mpls ldp bindings all detail
        """
-    cli_command = ['show mpls ldp bindings','show mpls ldp bindings {all} {detail}','show mpls ldp bindings vrf <vrf>']
+    cli_command = ['show mpls ldp bindings','show mpls ldp bindings {all} {detail}','show mpls ldp bindings vrf {vrf}']
 
     def cli(self, vrf="",all="", detail="", output=None):
         if output is None:
@@ -633,16 +633,16 @@ class ShowMplsLdpDiscoverySchema(MetaParser):
                 'local_ldp_identifier':{
                     Any():{
                         'discovery_sources':{
-                            'interface':{
+                            'interfaces':{
                                 Any():{
-                                    Optional('enabled'): bool,
+                                    Optional('enabled'): str,
                                     Optional('hello_interval_ms'): int,
-                                    Optional('ip_address'): str,
+                                    Optional('transport_ip_addr'): str,
                                     'session': str,
+                                    Optional('xmit'): bool,
+                                    Optional('recv'): bool,
                                     Any():{
                                        Any():{
-                                           Optional('ldp_id'): str,
-                                           Optional('tdp_id'): str,
                                            Optional('transport_ip_address'): str,
                                            Optional('source_ip_address'): str,
                                            Optional('holdtime_sec'): int,
@@ -664,6 +664,8 @@ class ShowMplsLdpDiscoverySchema(MetaParser):
                                     'session': str,
                                     Optional('ldp_id'): str,
                                     Optional('tdp_id'): str,
+                                    Optional('xmit'): bool,
+                                    Optional('recv'): bool,
                                     'active': bool,
                                 },
                             },
@@ -733,10 +735,10 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
 
         #     GigabitEthernet0/0/0 (ldp): xmit/recv
         #     ATM1/1/0.1 (tdp):xmit/recv
-        p3 = re.compile(r'^(?P<interfce>\S+) +\((?P<session>[\w]+)\):(?P<space>\s{1})?xmit\/recv$')
+        p3 = re.compile(r'^(?P<interface>\S+) +\((?P<session>[\w]+)\):(?P<space>\s{1})?xmit\/recv$')
 
         #         Enabled: Interface config
-        p4 = re.compile(r'^(?P<Enabled>[\w]+): +Interface +config$')
+        p4 = re.compile(r'^Enabled: +(?P<enabled>[\S\s]+)$')
 
         #         Hello interval: 5000 ms; Transport IP addr: 106.162.197.254
         p5 = re.compile(r'^Hello +interval: +(?P<hello_interval_ms>\d+) +ms;'
@@ -801,16 +803,18 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
             if m:
                 group = m.groupdict()
                 interface_dict = local_ldp_identifier_dict.setdefault('discovery_sources',{})\
-                                                          .setdefault('interface',{})\
-                                                          .setdefault(group['interfce'],{})
+                                                          .setdefault('interfaces',{})\
+                                                          .setdefault(group['interface'],{})
                 interface_dict.update({'session': group['session']})
+                interface_dict.update({'xmit': True})
+                interface_dict.update({'recv': True})
                 continue
 
             #  Enabled: Interface config
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                interface_dict.update({'enabled': True})
+                interface_dict.update({'enabled': group['enabled']})
                 continue
 
             #  Hello interval: 5000 ms; Transport IP addr: 106.162.197.254
@@ -818,7 +822,7 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
             if m:
                 group = m.groupdict()
                 interface_dict.update({'hello_interval_ms': int(group['hello_interval_ms'])})
-                interface_dict.update({'ip_address': group['transport_ip_address']})
+                interface_dict.update({'transport_ip_addr': group['transport_ip_address']})
                 continue
 
             # LDP Id: 106.162.197.252:0
@@ -828,7 +832,6 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
                 ldp_tdp = group['ldp_tdp'].lower()
                 if discovery_flag:
                     ldp_dict = interface_dict.setdefault('{}_id'.format(ldp_tdp),{}).setdefault(group['ldp_tdp_id'],{})
-                    ldp_dict.update({'{}_id'.format(ldp_tdp): group['ldp_tdp_id']})
 
                 if targeted_flag:
                     if targeted_dict:
@@ -888,6 +891,8 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
                 targeted_dict.update({'source': group['source']})
                 targeted_dict.update({'destination': group['destination']})
                 targeted_dict.update({'session': group['session'].lower()})
+                targeted_dict.update({'xmit': True})
+                targeted_dict.update({'recv': True})
                 targeted_dict.update({'active': True if group['status']=='active' else False})
                 continue
         return result_dict
@@ -941,7 +946,7 @@ class ShowMplsLdpIgpSync(ShowMplsLdpIgpSyncSchema):
        """
     cli_command = ['show mpls ldp igp sync',
                    'show mpls ldp igp sync {all}',
-                   'show mpls ldp igp sync interface <interface>',
+                   'show mpls ldp igp sync interface {interface}',
                    'show mpls ldp igp sync vrf {vrf}']
 
     def cli(self, vrf="", all="", interface="", output=None):

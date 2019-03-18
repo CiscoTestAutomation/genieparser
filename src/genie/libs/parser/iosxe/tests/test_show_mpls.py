@@ -873,14 +873,15 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
                     "local_ldp_identifier": {
                         "106.162.197.254:0": {
                             'discovery_sources':{
-                                "interface": {
+                                "interfaces": {
                                     "GigabitEthernet0/0/0": {
                                         'session': 'ldp',
                                         "hello_interval_ms": 5000,
-                                        "ip_address": "106.162.197.254",
+                                        "transport_ip_addr": "106.162.197.254",
+                                        "xmit": True,
+                                        "recv": True,
                                         "ldp_id": {
                                             "106.162.197.252:0": {
-                                                "ldp_id": "106.162.197.252:0",
                                                 "reachable_via": "106.162.197.252/32",
                                                 "password": "not required, none, in use",
                                                 "holdtime_sec": 15,
@@ -891,15 +892,16 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
                                                 "proposed_local": 15
                                             }
                                         },
-                                        "enabled": True
+                                        "enabled": "Interface config",
                                     },
                                     "GigabitEthernet0/0/2": {
                                         "hello_interval_ms": 5000,
-                                        "ip_address": "106.162.197.254",
+                                        "transport_ip_addr": "106.162.197.254",
                                         'session': 'ldp',
+                                        "xmit": True,
+                                        "recv": True,
                                         "ldp_id": {
                                             "106.162.197.253:0": {
-                                                "ldp_id": "106.162.197.253:0",
                                                 "reachable_via": "106.162.197.253/32",
                                                 "password": "not required, none, in use",
                                                 "holdtime_sec": 15,
@@ -910,7 +912,7 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
                                                 "proposed_local": 15
                                             }
                                         },
-                                        "enabled": True
+                                        "enabled": "Interface config",
                                     }
                                 }
                             },
@@ -984,47 +986,52 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
                                     "destination": "168.7.0.16",
                                     "session": "tdp",
                                     "active": False,
-                                    "tdp_id": "133.0.0.33:0",
-                                    "source": "8.1.1.1"
+                                    'tdp_id': '133.0.0.33:0',
+                                    "source": "8.1.1.1",
+                                    "xmit": True,
+                                    "recv": True,
                                 },
                                 "133.0.0.33": {
                                     "active": True,
                                     "destination": "133.0.0.33",
                                     "session": "ldp",
                                     "ldp_id": "133.0.0.33:0",
-                                    "source": "8.1.1.1"
+                                    "source": "8.1.1.1",
+                                    "xmit": True,
+                                    "recv": True,
                                 }
                             }
                         },
                         "discovery_sources": {
-                            "interface": {
+                            "interfaces": {
                                 "Ethernet1/1/3": {
                                     "session": "ldp",
+                                    "xmit": True,
+                                    "recv": True,
                                     "ldp_id": {
                                         "177.73.0.77:0": {
-                                            "ldp_id": "177.73.0.77:0"
                                         },
                                         "155.0.0.55:0": {
-                                            "ldp_id": "155.0.0.55:0"
                                         },
                                         "144.0.0.44:0": {
-                                            "ldp_id": "144.0.0.44:0"
                                         }
                                     }
                                 },
                                 "ATM3/0.1": {
                                     "session": "ldp",
+                                    "xmit": True,
+                                    "recv": True,
                                     "ldp_id": {
                                         "203.0.7.7:2": {
-                                            "ldp_id": "203.0.7.7:2"
                                         }
                                     }
                                 },
                                 "ATM0/0.2": {
                                     "session": "tdp",
+                                    "xmit": True,
+                                    "recv": True,
                                     "tdp_id": {
                                         "119.1.0.1:1": {
-                                            "tdp_id": "119.1.0.1:1"
                                         }
                                     }
                                 }
@@ -1042,12 +1049,13 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
             "local_ldp_identifier": {
                 "12.12.12.12:0": {
                     "discovery_sources": {
-                        "interface": {
+                        "interfaces": {
                             "ATM1/1/0.1": {
                                 "session": "tdp",
+                                "xmit": True,
+                                "recv": True,
                                 "tdp_id": {
                                     "11.11.11.11:0": {
-                                        "tdp_id": "11.11.11.11:0"
                                     }
                                 }
                             }
@@ -1060,12 +1068,13 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
             "local_ldp_identifier": {
                 "30.13.0.2:0": {
                     "discovery_sources": {
-                        "interface": {
+                        "interfaces": {
                             "ATM3/0/0.2": {
                                 "session": "ldp",
+                                "xmit": True,
+                                "recv": True,
                                 "ldp_id": {
                                     "14.14.14.14:0": {
-                                        "ldp_id": "14.14.14.14:0"
                                     }
                                 }
                             }
@@ -1078,12 +1087,13 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
             "local_ldp_identifier": {
                 "30.7.0.2:0": {
                     "discovery_sources": {
-                        "interface": {
+                        "interfaces": {
                             "ATM3/0/0.1": {
                                 "session": "ldp",
+                                "xmit": True,
+                                "recv": True,
                                 "ldp_id": {
                                     "14.14.14.14:0": {
-                                        "ldp_id": "14.14.14.14:0"
                                     }
                                 }
                             }
