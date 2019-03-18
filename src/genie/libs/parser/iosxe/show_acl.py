@@ -234,17 +234,17 @@ class ShowAccessLists(ShowAccessListsSchema):
         if output is None:
             if ip == 'ip' or ip == 'ipv4':
                 if acl:
-                    cmd = self.cli_command[3]
+                    cmd = self.cli_command[3].format(acl=acl)
                 else:
                     cmd = self.cli_command[2]
             if ip == 'ipv6':
                 if acl:
-                    cmd = self.cli_command[5]
+                    cmd = self.cli_command[5].format(acl=acl)
                 else:
                     cmd = self.cli_command[4]
             else:
                 if acl:
-                    cmd = self.cli_command[1]
+                    cmd = self.cli_command[1].format(acl=acl)
                 else:
                     cmd = self.cli_command[0]
             # get output from device
