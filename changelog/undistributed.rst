@@ -46,3 +46,10 @@
     	show version RP standby installed
     	show version RP standby provisioned
     * Add ShowPlatformPower for 'show platform power'
+
+--------------------------------------------------------------------------------
+                                   MPLS LDP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowMplsLdpNsrStatistics for:
+        'show mpls ldp nsr statistics'
