@@ -6,6 +6,22 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
+                                    OSPF
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added parsers:
+        * ShowIpOspfDatabase
+        * ShowIpOspfMaxMetric
+        * ShowIpOspfTraffic
+    * Updated parsers:
+        * ShowIpOspfMplsLdpInterface
+        * ShowIpOspfDatabaseRouter
+        * ShowIpOspfDatabaseExternal
+        * ShowIpOspfDatabaseNetwork
+        * ShowIpOspfDatabaseSummary
+        * ShowIpOspfDatabaseOpaqueArea
+
+--------------------------------------------------------------------------------
                                     SNMP
 --------------------------------------------------------------------------------
 * IOSXE
