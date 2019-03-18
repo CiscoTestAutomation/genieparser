@@ -21,7 +21,11 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   ShowProcessesCpu, \
                                                   ShowVersionRp, \
                                                   ShowPlatformHardware, \
-                                                  ShowPlatformHardwarePlim
+                                                  ShowPlatformHardwarePlim, \
+                                                  ShowPlatformHardwareQfpBqsOpmMapping, \
+                                                  ShowPlatformHardwareQfpBqsIpmMapping, \
+                                                  ShowPlatformPower, \
+                                                  ShowPlatformHardwareQfpBqsStatisticsChannelAll
 
 
 class test_show_version(unittest.TestCase):
@@ -14504,6 +14508,1261 @@ class test_show_platform_hardware_plim(unittest.TestCase):
         obj = ShowPlatformHardwarePlim(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(port='0/0/0')
+
+class test_show_platform_hardware_qfp_bqs_opm_mapping(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_active_opm = {
+        'channel': {
+            '0': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 0,
+                'name': 'CC0 Low',
+            },
+            '1': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 1,
+                'name': 'CC0 Hi',
+            },
+            '10': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 10,
+                'name': 'CC2B Low',
+            },
+            '11': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 11,
+                'name': 'CC2B Hi',
+            },
+            '12': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 12,
+                'name': 'CC3 Low',
+            },
+            '13': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 13,
+                'name': 'CC3 Hi',
+            },
+            '14': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 14,
+                'name': 'CC3B Low',
+            },
+            '15': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 15,
+                'name': 'CC3B Hi',
+            },
+            '16': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 16,
+                'name': 'CC4 Low',
+            },
+            '17': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 17,
+                'name': 'CC4 Hi',
+            },
+            '18': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 18,
+                'name': 'CC5 Low',
+            },
+            '19': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 19,
+                'name': 'CC5 Hi',
+            },
+            '2': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 2,
+                'name': 'CC0B Low',
+            },
+            '20': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 20,
+                'name': 'RP0 Low',
+            },
+            '21': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 21,
+                'name': 'RP0 Hi',
+            },
+            '22': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 22,
+                'name': 'RP1 Low',
+            },
+            '23': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 23,
+                'name': 'RP1 Hi',
+            },
+            '24': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 24,
+                'name': 'Peer-FP Low',
+            },
+            '25': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 25,
+                'name': 'Peer-FP Hi',
+            },
+            '26': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 26,
+                'name': 'Nitrox Low',
+            },
+            '27': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 27,
+                'name': 'Nitrox Hi',
+            },
+            '28': {
+                'drain_mode': False,
+                'interface': 'HT',
+                'logical_channel': 0,
+                'name': 'HT Pkt Low',
+            },
+             '29': {
+                'drain_mode': False,
+                'interface': 'HT',
+                'logical_channel': 1,
+                'name': 'HT Pkt Hi',
+            },
+            '3': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 3,
+                'name': 'CC0B Hi',
+            },
+            '30': {
+                'drain_mode': False,
+                'interface': 'HT',
+                'logical_channel': 2,
+                'name': 'HT IPC Low',
+            },
+            '31': {
+                'drain_mode': False,
+                'interface': 'HT',
+                'logical_channel': 3,
+                'name': 'HT IPC Hi',
+            },
+            '32': {
+                'name': 'unmapped',
+            },
+            '33': {
+                'name': 'unmapped',
+            },
+            '34': {
+                'name': 'unmapped',
+            },
+            '35': {
+                'name': 'unmapped',
+            },
+            '36': {
+                'name': 'unmapped',
+            },
+            '37': {
+                'name': 'unmapped',
+            },
+            '38': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 7,
+                'name': 'HighNormal',
+            },
+            '39': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 6,
+                'name': 'HighPriority',
+            },
+            '4': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 4,
+                'name': 'CC1 Low',
+            },
+            '40': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 11,
+                'name': 'LowNormal',
+            },
+            '41': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 10,
+                'name': 'LowPriority',
+            },
+            '42': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 12,
+                'name': 'InternalTrafficHiChannel',
+            },
+            '43': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 13,
+                'name': 'InternalTrafficLoChannel',
+            },
+            '44': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 14,
+                'name': 'AttnTrafficHiChannel',
+            },
+            '45': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 15,
+                'name': 'MetaPktTrafficChannel',
+            },
+            '46': {
+                'name': 'unmapped',
+            },
+            '47': {
+                'name': 'unmapped',
+            },
+            '48': {
+                'name': 'unmapped',
+            },
+            '49': {
+                'name': 'unmapped',
+            },
+            '5': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 5,
+                'name': 'CC1 Hi',
+            },
+            '50': {
+                'name': 'unmapped',
+            },
+            '51': {
+                'name': 'unmapped',
+            },
+            '52': {
+                'name': 'unmapped',
+            },
+            '53': {
+                'name': 'unmapped',
+            },
+            '54': {
+                'name': 'unmapped',
+            },
+            '55': {
+                'drain_mode': True,
+                'interface': 'GPM',
+                'logical_channel': 0,
+                'name': 'Drain Low',
+            },
+            '6': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 6,
+                'name': 'CC1B Low',
+            },
+            '7': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 7,
+                'name': 'CC1B Hi',
+            },
+            '8': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 8,
+                'name': 'CC2 Low',
+            },
+            '9': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 9,
+                'name': 'CC2 Hi',
+            },
+        },
+    }
+
+    golden_output_active_opm = {'execute.return_value': '''\ 
+        Router#show platform hardware qfp active bqs 0 opm mapping 
+        Load for five secs: 5%/3%; one minute: 7%; five minutes: 8%
+        Time source is NTP, 07:43:32.664 JST Thu Sep 8 2016
+
+        BQS OPM Channel Mapping
+
+        Chan     Name                          Interface      LogicalChannel
+
+         0       CC0 Low                       SPI0            0             
+         1       CC0 Hi                        SPI0            1             
+         2       CC0B Low                      SPI0            2             
+         3       CC0B Hi                       SPI0            3             
+         4       CC1 Low                       SPI0            4             
+         5       CC1 Hi                        SPI0            5             
+         6       CC1B Low                      SPI0            6             
+         7       CC1B Hi                       SPI0            7             
+         8       CC2 Low                       SPI0            8             
+         9       CC2 Hi                        SPI0            9             
+        10       CC2B Low                      SPI0           10             
+        11       CC2B Hi                       SPI0           11             
+        12       CC3 Low                       SPI0           12             
+        13       CC3 Hi                        SPI0           13             
+        14       CC3B Low                      SPI0           14             
+        15       CC3B Hi                       SPI0           15             
+        16       CC4 Low                       SPI0           16             
+        17       CC4 Hi                        SPI0           17             
+        18       CC5 Low                       SPI0           18             
+        19       CC5 Hi                        SPI0           19             
+        20       RP0 Low                       SPI0           20             
+        21       RP0 Hi                        SPI0           21             
+        22       RP1 Low                       SPI0           22             
+        23       RP1 Hi                        SPI0           23             
+        24       Peer-FP Low                   SPI0           24             
+        25       Peer-FP Hi                    SPI0           25             
+        26       Nitrox Low                    SPI0           26             
+        27       Nitrox Hi                     SPI0           27             
+        28       HT Pkt Low                    HT              0             
+        29       HT Pkt Hi                     HT              1             
+        30       HT IPC Low                    HT              2             
+        31       HT IPC Hi                     HT              3             
+        32       Unmapped                      
+        33       Unmapped                      
+        34       Unmapped                      
+        35       Unmapped                      
+        36       Unmapped                      
+        37       Unmapped                      
+        38       HighNormal                    GPM             7             
+        39       HighPriority                  GPM             6             
+        40       LowNormal                     GPM            11             
+        41       LowPriority                   GPM            10             
+        42       InternalTrafficHiChannel      GPM            12             
+        43       InternalTrafficLoChannel      GPM            13             
+        44       AttnTrafficHiChannel          GPM            14             
+        45       MetaPktTrafficChannel         GPM            15             
+        46       Unmapped                      
+        47       Unmapped                      
+        48       Unmapped                      
+        49       Unmapped                      
+        50       Unmapped                      
+        51       Unmapped                      
+        52       Unmapped                      
+        53       Unmapped                      
+        54       Unmapped                      
+        55*      Drain Low                     GPM             0             
+         * - indicates the drain mode bit is set for this channel
+    '''
+    }
+
+    def test_golden_active_opm(self):
+        self.device = Mock(**self.golden_output_active_opm)
+        obj = ShowPlatformHardwareQfpBqsOpmMapping(device=self.device)
+        parsed_output = obj.parse(status='active', slot='0')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_active_opm)
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowPlatformHardwareQfpBqsOpmMapping(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(status='active', slot='0')
+
+class test_show_platform_hardware_qfp_bqs_ipm_mapping(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_active_ipm = {
+        'channel': {
+            '1': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'CC3 Low',
+                'port': 0,
+            },
+            '10': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'RP1 Hi',
+                'port': 9,
+            },
+            '11': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'RP0 Low',
+                'port': 10,
+            },
+            '12': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'RP0 Hi',
+                'port': 11,
+            },
+            '13': {
+                'cfifo': 3,
+                'interface': 'SPI0',
+                'name': 'Peer-FP Low',
+                'port': 12,
+            },
+            '14': {
+                'cfifo': 2,
+                'interface': 'SPI0',
+                'name': 'Peer-FP Hi',
+                'port': 13,
+            },
+            '15': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'Nitrox Low',
+                'port': 14,
+            },
+            '16': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'Nitrox Hi',
+                'port': 15,
+            },
+            '17': {
+                'cfifo': 1,
+                'interface': 'HT',
+                'name': 'HT Pkt Low',
+                'port': 0,
+            },
+            '18': {
+                'cfifo': 0,
+                'interface': 'HT',
+                'name': 'HT Pkt Hi',
+                'port': 1,
+            },
+            '19': {
+                'cfifo': 3,
+                'interface': 'HT',
+                'name': 'HT IPC Low',
+                'port': 2,
+            },
+            '2': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'CC3 Hi',
+                'port': 1,
+            },
+            '20': {
+                'cfifo': 2,
+                'interface': 'HT',
+                'name': 'HT IPC Hi',
+                'port': 3,
+            },
+            '21': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'CC4 Low',
+                'port': 16,
+            },
+            '22': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'CC4 Hi',
+                'port': 17,
+            },
+            '23': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'CC5 Low',
+                'port': 18,
+            },
+            '24': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'CC5 Hi',
+                'port': 19,
+            },
+            '3': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'CC2 Low',
+                'port': 2,
+            },
+            '4': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'CC2 Hi',
+                'port': 3,
+            },
+            '5': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'CC1 Low',
+                'port': 4,
+            },
+            '6': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'CC1 Hi',
+                'port': 5,
+            },
+            '7': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'CC0 Low',
+                'port': 6,
+            },
+            '8': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'CC0 Hi',
+                'port': 7,
+            },
+            '9': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'RP1 Low',
+                'port': 8,
+            },
+        },
+    }
+
+    golden_output_active_ipm = {'execute.return_value': '''\
+        Router#show platform hardware qfp active bqs 0 ipm mapping 
+        Load for five secs: 29%/1%; one minute: 8%; five minutes: 9%
+        Time source is NTP, 07:42:52.908 JST Thu Sep 8 2016
+
+        BQS IPM Channel Mapping
+
+        Chan   Name                Interface      Port     CFIFO
+
+         1     CC3 Low             SPI0           0        1     
+         2     CC3 Hi              SPI0           1        0     
+         3     CC2 Low             SPI0           2        1     
+         4     CC2 Hi              SPI0           3        0     
+         5     CC1 Low             SPI0           4        1     
+         6     CC1 Hi              SPI0           5        0     
+         7     CC0 Low             SPI0           6        1     
+         8     CC0 Hi              SPI0           7        0     
+         9     RP1 Low             SPI0           8        1     
+        10     RP1 Hi              SPI0           9        0     
+        11     RP0 Low             SPI0          10        1     
+        12     RP0 Hi              SPI0          11        0     
+        13     Peer-FP Low         SPI0          12        3     
+        14     Peer-FP Hi          SPI0          13        2     
+        15     Nitrox Low          SPI0          14        1     
+        16     Nitrox Hi           SPI0          15        0     
+        17     HT Pkt Low          HT             0        1     
+        18     HT Pkt Hi           HT             1        0     
+        19     HT IPC Low          HT             2        3     
+        20     HT IPC Hi           HT             3        2     
+        21     CC4 Low             SPI0          16        1     
+        22     CC4 Hi              SPI0          17        0     
+        23     CC5 Low             SPI0          18        1     
+        24     CC5 Hi              SPI0          19        0   
+    '''
+    }
+
+    def test_golden_active_ipm(self):
+        self.device = Mock(**self.golden_output_active_ipm)
+        obj = ShowPlatformHardwareQfpBqsIpmMapping(device=self.device)
+        parsed_output = obj.parse(status='active', slot='0')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_active_ipm)
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowPlatformHardwareQfpBqsIpmMapping(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(status='active', slot='0')
+
+class test_show_platform_power(unittest.TestCase):
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'allocation_status': 'Sufficient',
+        'chassis': 'ASR1006-X',
+        'excess_capacity_percent': 72,
+        'excess_power': 3201,
+        'fan_alc': 250,
+        'fru_alc': 949,
+        'load_capacity_percent': 15,
+        'power_capacity': 4400,
+        'redundancy_mode': 'nplus1',
+        'redundant_alc': 0,
+        'slot': {'0': {'allocation': 64.0, 'state': 'ok', 'type': 'ASR1000-SIP40'},
+              '0/0': {'allocation': 14.0,
+                      'state': 'inserted',
+                      'type': 'SPA-8X1GE-V2'},
+              '0/1': {'allocation': 14.0,
+                      'state': 'inserted',
+                      'type': 'SPA-8X1GE-V2'},
+              '0/2': {'allocation': 17.4,
+                      'state': 'inserted',
+                      'type': 'SPA-1X10GE-L-V2'},
+              '0/3': {'allocation': 17.4,
+                      'state': 'inserted',
+                      'type': 'SPA-1X10GE-L-V2'},
+              '1': {'allocation': 64.0, 'state': 'ok', 'type': 'ASR1000-SIP40'},
+              '1/0': {'allocation': 14.0,
+                      'state': 'inserted',
+                      'type': 'SPA-8X1GE-V2'},
+              'F0': {'allocation': 267.0,
+                     'state': 'ok, active',
+                     'type': 'ASR1000-ESP40'},
+              'F1': {'allocation': 267.0,
+                     'state': 'ok, standby',
+                     'type': 'ASR1000-ESP40'},
+              'P0': {'capacity': 1100,
+                     'load': 132,
+                     'state': 'ok',
+                     'type': 'ASR1000X-AC-1100W'},
+              'P1': {'capacity': 1100,
+                     'load': 204,
+                     'state': 'ok',
+                     'type': 'ASR1000X-AC-1100W'},
+              'P2': {'capacity': 1100,
+                     'load': 180,
+                     'state': 'ok',
+                     'type': 'ASR1000X-AC-1100W'},
+              'P3': {'capacity': 1100,
+                     'load': 180,
+                     'state': 'ok',
+                     'type': 'ASR1000X-AC-1100W'},
+              'P6': {'allocation': 125.0, 'state': 'ok', 'type': 'ASR1000X-FAN'},
+              'P7': {'allocation': 125.0, 'state': 'ok', 'type': 'ASR1000X-FAN'},
+              'R0': {'allocation': 105.0,
+                     'state': 'ok, active',
+                     'type': 'ASR1000-RP2'},
+              'R1': {'allocation': 105.0,
+                     'state': 'ok, standby',
+                     'type': 'ASR1000-RP2'}},
+        'total_capacity': 4400,
+        'total_load': 696
+    }
+    
+    golden_output = {'execute.return_value': '''\
+        Chassis type: ASR1006-X           
+
+        Slot      Type                State                 Allocation(W) 
+        --------- ------------------- --------------------- ------------- 
+        0         ASR1000-SIP40       ok                    64
+         0/0      SPA-8X1GE-V2        inserted              14
+         0/1      SPA-8X1GE-V2        inserted              14
+         0/2      SPA-1X10GE-L-V2     inserted              17.40
+         0/3      SPA-1X10GE-L-V2     inserted              17.40
+        1         ASR1000-SIP40       ok                    64
+         1/0      SPA-8X1GE-V2        inserted              14
+        R0        ASR1000-RP2         ok, active            105
+        R1        ASR1000-RP2         ok, standby           105
+        F0        ASR1000-ESP40       ok, active            267
+        F1        ASR1000-ESP40       ok, standby           267
+        P6        ASR1000X-FAN        ok                    125        
+        P7        ASR1000X-FAN        ok                    125        
+
+        Slot      Type                State                 Capacity (W) Load (W)     
+        --------- ------------------- --------------------- ------------ ------------ 
+        P0        ASR1000X-AC-1100W   ok                    1100         132          
+        P1        ASR1000X-AC-1100W   ok                    1100         204          
+        P2        ASR1000X-AC-1100W   ok                    1100         180          
+        P3        ASR1000X-AC-1100W   ok                    1100         180          
+
+        Total load: 696 W, total capacity: 4400 W. Load / Capacity is 15%
+
+        Power capacity:       4400 W
+        Redundant allocation: 0 W
+        Fan allocation:       250 W
+        FRU allocation:       949 W
+        --------------------------------------------
+        Excess Power in Reserve:   3201 W
+        Excess / (Capacity - Redundant) is 72%
+
+        Power Redundancy Mode: nplus1
+
+        Power Allocation Status: Sufficient
+    '''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        platform_obj = ShowPlatformPower(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse()    
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        platform_obj = ShowPlatformPower(device=self.device)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+class show_platform_hardware_qfp_bqs_statistics_channel_all(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_active_ipm = {
+        'channel': {
+             1: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             2: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             3: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             4: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             5: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             6: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             7: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'goodbytes': '016a5004b0',
+                 'goodpkts': '0000c40f64'},
+             8: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'goodbytes': '00153685bd',
+                 'goodpkts': '00000afbe9'},
+             9: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'goodbytes': '0012139723',
+                 'goodpkts': '0000288e4f'},
+             10: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '00000b2184',
+                  'goodpkts': '000000223f'},
+             11: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0023f74c7a',
+                  'goodpkts': '000053ff08'},
+             12: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000305734',
+                  'goodpkts': '0000009533'},
+             13: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000010ce4',
+                  'goodpkts': '0000000749'},
+             14: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             15: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             16: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             17: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             18: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             19: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '000aba8f64',
+                  'goodpkts': '00000d968e'},
+             20: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             21: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             22: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             23: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             24: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'}}}
+    
+    golden_parsed_output_active_opm = {
+        'channel': {
+             0: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '01787bc9e1',
+                 'goodpkts': '0000d18caf'},
+             1: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             2: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             3: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             4: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             5: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             6: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             7: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             8: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             9: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             10: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             11: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             12: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             13: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             14: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             15: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             16: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             17: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             18: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             19: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             20: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '001ab1e8ad',
+                  'goodpkts': '0000416122'},
+             21: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '000eac93b2',
+                  'goodpkts': '000012481d'},
+             22: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0004353727',
+                  'goodpkts': '00000a3c55'},
+             23: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '00131e7f90',
+                  'goodpkts': '000015b68d'},
+             24: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '00000b6ce8',
+                  'goodpkts': '0000000749'},
+             25: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             26: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             27: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             28: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             29: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             30: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0016872998',
+                  'goodpkts': '00000e35a9'},
+             31: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             32: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             33: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             34: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             35: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             36: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             37: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             38: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '00018a62d0',
+                  'goodpkts': '0000007f33'},
+             39: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '00000f3110',
+                  'goodpkts': '0000000fd2'},
+             40: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             41: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             42: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000300',
+                  'goodpkts': '0000000010'},
+             43: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0830f8d074',
+                  'goodpkts': '002f8bbd4a'},
+             44: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '002f7036c0',
+                  'goodpkts': '0001b1b8d0'},
+             45: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             46: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             47: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             48: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             49: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             50: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             51: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             52: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             53: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             54: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             55: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             56: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'Metapacket/Recycle Pools 0-3',
+                  'goodbytes': '0000000620',
+                  'goodpkts': '000000001c'},
+             57: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'Metapacket/Recycle Pools 0-3',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             58: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'Metapacket/Recycle Pools 0-3',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             59: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'Metapacket/Recycle Pools 0-3',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             60: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'Reassembled Packets Sent to QED',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'}}}
+
+
+    golden_output_active_ipm = {'execute.return_value': '''\
+        Router#show platform hardware qfp active bqs 0 ipm statistics channel all
+        Load for five secs: 25%/2%; one minute: 9%; five minutes: 9%
+        Time source is NTP, 07:43:10.431 JST Thu Sep 8 2016
+
+        BQS IPM Channel Statistics
+
+        Chan   GoodPkts  GoodBytes    BadPkts   BadBytes
+
+         1 - 0000000000 0000000000 0000000000 0000000000
+         2 - 0000000000 0000000000 0000000000 0000000000
+         3 - 0000000000 0000000000 0000000000 0000000000
+         4 - 0000000000 0000000000 0000000000 0000000000
+         5 - 0000000000 0000000000 0000000000 0000000000
+         6 - 0000000000 0000000000 0000000000 0000000000
+         7 - 0000c40f64 016a5004b0 0000000000 0000000000
+         8 - 00000afbe9 00153685bd 0000000000 0000000000
+         9 - 0000288e4f 0012139723 0000000000 0000000000
+        10 - 000000223f 00000b2184 0000000000 0000000000
+        11 - 000053ff08 0023f74c7a 0000000000 0000000000
+        12 - 0000009533 0000305734 0000000000 0000000000
+        13 - 0000000749 0000010ce4 0000000000 0000000000
+        14 - 0000000000 0000000000 0000000000 0000000000
+        15 - 0000000000 0000000000 0000000000 0000000000
+        16 - 0000000000 0000000000 0000000000 0000000000
+        17 - 0000000000 0000000000 0000000000 0000000000
+        18 - 0000000000 0000000000 0000000000 0000000000
+        19 - 00000d968e 000aba8f64 0000000000 0000000000
+        20 - 0000000000 0000000000 0000000000 0000000000
+        21 - 0000000000 0000000000 0000000000 0000000000
+        22 - 0000000000 0000000000 0000000000 0000000000
+        23 - 0000000000 0000000000 0000000000 0000000000
+        24 - 0000000000 0000000000 0000000000 0000000000
+    '''}
+
+    golden_output_active_opm = {'execute.return_value': '''\
+        Router#show platform hardware qfp active bqs 0 opm statistics channel all
+        Load for five secs: 6%/0%; one minute: 9%; five minutes: 9%
+        Time source is NTP, 07:45:18.968 JST Thu Sep 8 2016
+
+        BQS OPM Channel Statistics
+
+        Chan   GoodPkts  GoodBytes    BadPkts   BadBytes
+
+         0 - 0000d18caf 01787bc9e1 0000000000 0000000000
+         1 - 0000000000 0000000000 0000000000 0000000000
+         2 - 0000000000 0000000000 0000000000 0000000000
+         3 - 0000000000 0000000000 0000000000 0000000000
+         4 - 0000000000 0000000000 0000000000 0000000000
+         5 - 0000000000 0000000000 0000000000 0000000000
+         6 - 0000000000 0000000000 0000000000 0000000000
+         7 - 0000000000 0000000000 0000000000 0000000000
+         8 - 0000000000 0000000000 0000000000 0000000000
+         9 - 0000000000 0000000000 0000000000 0000000000
+        10 - 0000000000 0000000000 0000000000 0000000000
+        11 - 0000000000 0000000000 0000000000 0000000000
+        12 - 0000000000 0000000000 0000000000 0000000000
+        13 - 0000000000 0000000000 0000000000 0000000000
+        14 - 0000000000 0000000000 0000000000 0000000000
+        15 - 0000000000 0000000000 0000000000 0000000000
+        16 - 0000000000 0000000000 0000000000 0000000000
+        17 - 0000000000 0000000000 0000000000 0000000000
+        18 - 0000000000 0000000000 0000000000 0000000000
+        19 - 0000000000 0000000000 0000000000 0000000000
+        20 - 0000416122 001ab1e8ad 0000000000 0000000000
+        21 - 000012481d 000eac93b2 0000000000 0000000000
+        22 - 00000a3c55 0004353727 0000000000 0000000000
+        23 - 000015b68d 00131e7f90 0000000000 0000000000
+        24 - 0000000749 00000b6ce8 0000000000 0000000000
+        25 - 0000000000 0000000000 0000000000 0000000000
+        26 - 0000000000 0000000000 0000000000 0000000000
+        27 - 0000000000 0000000000 0000000000 0000000000
+        28 - 0000000000 0000000000 0000000000 0000000000
+        29 - 0000000000 0000000000 0000000000 0000000000
+        30 - 00000e35a9 0016872998 0000000000 0000000000
+        31 - 0000000000 0000000000 0000000000 0000000000
+        32 - 0000000000 0000000000 0000000000 0000000000
+        33 - 0000000000 0000000000 0000000000 0000000000
+        34 - 0000000000 0000000000 0000000000 0000000000
+        35 - 0000000000 0000000000 0000000000 0000000000
+        36 - 0000000000 0000000000 0000000000 0000000000
+        37 - 0000000000 0000000000 0000000000 0000000000
+        38 - 0000007f33 00018a62d0 0000000000 0000000000
+        39 - 0000000fd2 00000f3110 0000000000 0000000000
+        40 - 0000000000 0000000000 0000000000 0000000000
+        41 - 0000000000 0000000000 0000000000 0000000000
+        42 - 0000000010 0000000300 0000000000 0000000000
+        43 - 002f8bbd4a 0830f8d074 0000000000 0000000000
+        44 - 0001b1b8d0 002f7036c0 0000000000 0000000000
+        45 - 0000000000 0000000000 0000000000 0000000000
+        46 - 0000000000 0000000000 0000000000 0000000000
+        47 - 0000000000 0000000000 0000000000 0000000000
+        48 - 0000000000 0000000000 0000000000 0000000000
+        49 - 0000000000 0000000000 0000000000 0000000000
+        50 - 0000000000 0000000000 0000000000 0000000000
+        51 - 0000000000 0000000000 0000000000 0000000000
+        52 - 0000000000 0000000000 0000000000 0000000000
+        53 - 0000000000 0000000000 0000000000 0000000000
+        54 - 0000000000 0000000000 0000000000 0000000000
+        55 - 0000000000 0000000000 0000000000 0000000000
+        56 - 000000001c 0000000620 0000000000 0000000000
+        57 - 0000000000 0000000000 0000000000 0000000000
+        58 - 0000000000 0000000000 0000000000 0000000000
+        59 - 0000000000 0000000000 0000000000 0000000000
+        60 - 0000000000 0000000000 0000000000 0000000000
+         0-55: OPM Channels
+        56-59: Metapacket/Recycle Pools 0-3
+           60: Reassembled Packets Sent to QED
+    '''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        platform_obj = ShowPlatformHardwareQfpBqsStatisticsChannelAll(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse(status='active', slot='0', iotype='ipm')    
+
+    def test_golden_active_ipm(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_active_ipm)
+        platform_obj = ShowPlatformHardwareQfpBqsStatisticsChannelAll(device=self.device)
+        parsed_output = platform_obj.parse(status='active', slot='0', iotype='ipm')
+        self.assertEqual(parsed_output,self.golden_parsed_output_active_ipm)
+
+    def test_golden_active_opm(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_active_opm)
+        platform_obj = ShowPlatformHardwareQfpBqsStatisticsChannelAll(device=self.device)
+        parsed_output = platform_obj.parse(status='active', slot='0', iotype='opm')
+        self.assertEqual(parsed_output,self.golden_parsed_output_active_opm)
+
 
 if __name__ == '__main__':
     unittest.main()

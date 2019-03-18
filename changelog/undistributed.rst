@@ -6,6 +6,29 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
+                                    OSPF
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added parsers:
+        * ShowIpOspfDatabase
+        * ShowIpOspfMaxMetric
+        * ShowIpOspfTraffic
+    * Updated parsers:
+        * ShowIpOspfMplsLdpInterface
+        * ShowIpOspfDatabaseRouter
+        * ShowIpOspfDatabaseExternal
+        * ShowIpOspfDatabaseNetwork
+        * ShowIpOspfDatabaseSummary
+        * ShowIpOspfDatabaseOpaqueArea
+
+--------------------------------------------------------------------------------
+                                    SNMP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowSnmpMib for:
+        'show snmp mib'
+
+--------------------------------------------------------------------------------
                                     PLATFORM
 --------------------------------------------------------------------------------
 * IOSXE
@@ -22,3 +45,10 @@
     	show version RP standby running
     	show version RP standby installed
     	show version RP standby provisioned
+    * Add ShowPlatformPower for 'show platform power'
+    * Add ShowPlatformHardwareQfpBqsOpmMapping for;
+        show platform hardware qfp active bqs <x> opm mapping
+        show platform hardware qfp standby bqs <x> opm mapping
+    * Add ShowPlatformHardwareQfpBqsIpmMapping for;
+        show platform hardware qfp active bqs <x> ipm mapping
+        show platform hardware qfp standby bqs <x> ipm mapping
