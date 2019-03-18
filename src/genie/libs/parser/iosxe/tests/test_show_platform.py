@@ -26,7 +26,8 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   ShowPlatformHardwareQfpBqsIpmMapping, \
                                                   ShowPlatformPower, \
                                                   ShowPlatformHardwareQfpBqsStatisticsChannelAll, \
-                                                  ShowPlatformHardwareQfpInterfaceIfnameStatistics
+                                                  ShowPlatformHardwareQfpInterfaceIfnameStatistics, \
+                                                  ShowPlatformHardwareQfpStatisticsDrop
 
 
 class test_show_version(unittest.TestCase):
@@ -15925,6 +15926,66 @@ class show_platform_hardware_qfp_interface(unittest.TestCase):
         platform_obj = ShowPlatformHardwareQfpInterfaceIfnameStatistics(device=self.device)
         parsed_output = platform_obj.parse(status='active', interface='gigabitEthernet 0/0/0')
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+class test_show_platform_hardware_qfp_statistics_drop(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_active = {
+      "global_drop_stats": {
+        "Ipv4NoAdj": {
+          "octets": 296,
+          "packets": 7
+        },
+        "Ipv4NoRoute": {
+          "octets": 7964,
+          "packets": 181
+        },
+        "PuntPerCausePolicerDrops": {
+          "octets": 184230,
+          "packets": 2003
+        },
+        "UidbNotCfgd": {
+          "octets": 29312827,
+          "packets": 466391
+        },
+        "UnconfiguredIpv4Fia": {
+          "octets": 360,
+          "packets": 6
+        }
+      }
+    }
+
+    golden_output_active = {'execute.return_value': '''\
+        Router#show platform hardware qfp active statistics drop | exclude _0_
+        Load for five secs: 2%/1%; one minute: 9%; five minutes: 8%
+        Time source is NTP, 07:47:11.317 JST Thu Sep 8 2016
+        -------------------------------------------------------------------------
+        Global Drop Stats                         Packets                  Octets  
+        -------------------------------------------------------------------------
+        Ipv4NoAdj                                       7                     296  
+        Ipv4NoRoute                                   181                    7964  
+        PuntPerCausePolicerDrops                     2003                  184230  
+        UidbNotCfgd                                466391                29312827  
+        UnconfiguredIpv4Fia                             6                     360  
+    '''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        platform_obj = ShowPlatformHardwareQfpStatisticsDrop(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse(status='active')    
+
+    def test_golden_active(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_active)
+        platform_obj = ShowPlatformHardwareQfpStatisticsDrop(device=self.device)
+        parsed_output = platform_obj.parse(status='active')
+        self.assertEqual(parsed_output,self.golden_parsed_output_active)
 
 
 if __name__ == '__main__':

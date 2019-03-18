@@ -55,3 +55,6 @@
     * Add ShowPlatformHardwareQfpInterfaceIfnameStatistics for;
         show platform hardware qfp active interface if-name <interface> statistics
         show platform hardware qfp standby interface if-name <interface> statistics
+    * Add ShowPlatformHardwareQfpStatisticsDrop for;
+            show platform hardware qfp active statistics drop
+            show platform hardware qfp standby statistics drop
