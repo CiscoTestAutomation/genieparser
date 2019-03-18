@@ -15390,10 +15390,13 @@ class test_show_platform_hardware_serdes_statistics_internal(unittest.TestCase):
         'link': {
             'Encryption Processor': {
                 'errors': {
-                    'rx_parity': '0',
-                    'rx_tx_process': '0/0',
-                    'rx_tx_schedule': '0/0',
-                    'rx_tx_statistics': '0/0',
+                    'rx_parity': 0,
+                    'rx_process': 0,
+                    'rx_schedule': 0,
+                    'rx_statistics': 0,
+                    'tx_process': 0,
+                    'tx_schedule': 0,
+                    'tx_statistics': 0,
                 },
                 'from': {
                     'bytes': {
@@ -15441,68 +15444,41 @@ class test_show_platform_hardware_serdes_statistics_internal(unittest.TestCase):
                     },
                 },
             },
-            'c2w': {
-                'serdes_exception_counts': {},
-            },
-            'cfg': {'serdes_exception_counts': {},
-            },
+        },
+        'serdes_exception_counts': {
+            'c2w': {},
+            'cfg': {},
             'cilink': {
-                'serdes_exception_counts': {
-                    'link_number': {
-                        '0': {
-                            'chicoEvent': 5,
-                            'msgEccError': 5,
-                            'msgTypeError': 5,
-                        },
-                        '1': {
-                            'chicoEvent': 1,
-                            'msgEccError': 1,
-                            'msgTypeError': 1,
-                        },
-                        '2': {
-                            'chicoEvent': 3,
-                            'msgEccError': 3,
-                            'msgTypeError': 3,
-                        },
+                'link': {
+                    '0': {
+                        'chicoEvent': 5,
+                        'msgEccError': 5,
+                        'msgTypeError': 5,
+                    },
+                    '1': {
+                        'chicoEvent': 1,
+                        'msgEccError': 1,
+                        'msgTypeError': 1,
+                    },
+                    '2': {
+                        'chicoEvent': 3,
+                        'msgEccError': 3,
+                        'msgTypeError': 3,
                     },
                 },
             },
-            'edh-hi': {
-                'serdes_exception_counts': {},
-            },
-            'edh-lo': {
-                'serdes_exception_counts': {},
-            },
-            'edm': {
-                'serdes_exception_counts': {},
-            },
-            'eqs/fc': {
-                'serdes_exception_counts': {},
-            },
-            'idh-hi': {
-                'serdes_exception_counts': {},
-            },
-            'idh-lo': {
-                'serdes_exception_counts': {},
-            },
-            'idh-shared': {
-                'serdes_exception_counts': {},
-            },
-            'ilak': {
-                'serdes_exception_counts': {},
-            },
-            'isch': {
-                'serdes_exception_counts': {},
-            },
-            'pcie': {
-                'serdes_exception_counts': {},
-            },
-            'slb': {
-                'serdes_exception_counts': {},
-            },
-            'spi link': {
-                'serdes_exception_counts': {},
-            },
+            'edh-hi': {},
+            'edh-lo': {},
+            'edm': {},
+            'eqs/fc': {},
+            'idh-hi': {},
+            'idh-lo': {},
+            'idh-shared': {},
+            'ilak': {},
+            'isch': {},
+            'pcie': {},
+            'slb': {},
+            'spi link': {},
         },
     }
 
