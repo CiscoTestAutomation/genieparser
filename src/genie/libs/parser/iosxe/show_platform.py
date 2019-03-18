@@ -3421,25 +3421,30 @@ class ShowPlatformHardwareSerdesSchema(MetaParser):
                         Optional('errored'): int,
                     }
                 },
-                Optional('serdes_exception_counts'):{
-                    Optional('link_number'): {
-                        Any(): {
-                            'msgTypeError': int,
-                            'msgEccError': int,
-                            'chicoEvent': int,
-                        },
-                    }
-                },
                 Optional('local_tx_in_sync'): bool,
                 Optional('local_rx_in_sync'): bool,
                 Optional('remote_tx_in_sync'): bool,
                 Optional('remote_rx_in_sync'): bool,
                 Optional('errors'):{
-                    'rx_tx_process': str,
-                    'rx_tx_schedule': str,
-                    'rx_tx_statistics': str,
-                    'rx_parity': str,
+                    'rx_process': int,
+                    'rx_schedule': int,
+                    'rx_statistics': int,
+                    'rx_parity': int,
+                    'tx_process': int,
+                    'tx_schedule': int,
+                    'tx_statistics': int,
                 },
+            },
+        },
+        Optional('serdes_exception_counts'):{
+            Any(): {
+                Optional('link'): {
+                    Any(): {
+                        'msgTypeError': int,
+                        'msgEccError': int,
+                        'chicoEvent': int,
+                    },
+                }
             },
         }
     }
@@ -3570,10 +3575,10 @@ class ShowPlatformHardwareSerdesInternal(ShowPlatformHardwareSerdesSchema):
         p8 = re.compile(r'^Errors:$')
 
         #     RX/TX process: 0/0, RX/TX schedule: 0/0
-        p9 = re.compile(r'^RX/TX +process: +(?P<rx_tx_process>[\d\/]+), +RX/TX +schedule: +(?P<rx_tx_schedule>[\d\/]+)$')
+        p9 = re.compile(r'^RX/TX +process: +(?P<rx_process>\d+)/(?P<tx_process>\d+), +RX/TX +schedule: +(?P<rx_schedule>\d+)/(?P<tx_schedule>\d+)$')
 
         #     RX/TX statistics: 0/0, RX parity: 0
-        p10 = re.compile(r'^RX/TX +statistics: +(?P<rx_tx_statistics>[\d\/]+), +RX +parity: +(?P<rx_parity>\d+)$')
+        p10 = re.compile(r'^RX/TX +statistics: +(?P<rx_statistics>\d+)/(?P<tx_statistics>\d+), +RX +parity: +(?P<rx_parity>\d+)$')
 
         # Serdes Exception Counts:
         p11 = re.compile(r'^Serdes +Exception +Counts:$')
@@ -3666,28 +3671,27 @@ class ShowPlatformHardwareSerdesInternal(ShowPlatformHardwareSerdesSchema):
             if m:
                 group = m.groupdict()
                 new_dict.setdefault('errors', {})
-                new_dict['errors'].update({k:str(v) for k, v in group.items()})
+                new_dict['errors'].update({k:int(v) for k, v in group.items()})
                 continue
 
             m = p10.match(line)
             if m:
                 group = m.groupdict()
                 if 'errors' in ret_dict['link'][link]:
-                    new_dict['errors'].update({k:str(v) for k, v in group.items()})
+                    new_dict['errors'].update({k:int(v) for k, v in group.items()})
                 continue
 
-            # import pdb; pdb.set_trace()
             m = p11.match(line)
             if m:
                 serdes_exception_counts = True
+                ret_dict.setdefault('serdes_exception_counts', {})
                 continue
 
             m = p12.match(line)
             if m:
                 group = m.groupdict()
                 link = group['link']
-                if serdes_exception_counts:
-                    ret_dict['link'].setdefault(link, {}).setdefault('serdes_exception_counts', {})
+                ret_dict['serdes_exception_counts'].setdefault(link, {})
                 continue
 
             m = p13.match(line)
@@ -3695,8 +3699,8 @@ class ShowPlatformHardwareSerdesInternal(ShowPlatformHardwareSerdesSchema):
                 group = m.groupdict()
                 link_number = group['link_number']
                 error_event = group['error_event']
-                ret_dict['link'][link]['serdes_exception_counts'].setdefault('link_number', {}).setdefault(link_number, {})
-                ret_dict['link'][link]['serdes_exception_counts']['link_number'][link_number][error_event] = int(group['count'])
+                ret_dict['serdes_exception_counts'][link].setdefault('link', {}).setdefault(link_number, {})
+                ret_dict['serdes_exception_counts'][link]['link'][link_number][error_event] = int(group['count'])
                 continue
 
         return ret_dict

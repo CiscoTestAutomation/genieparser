@@ -52,3 +52,5 @@
     * Add ShowPlatformHardwareQfpBqsIpmMapping for;
         show platform hardware qfp active bqs <x> ipm mapping
         show platform hardware qfp standby bqs <x> ipm mapping
+    * Add ShowPlatformHardwareSerdes for 'show platform hardware slot <x> serdes statistics'
+    * Add ShowPlatformHardwareSerdesInternal for 'show platform hardware slot <x> serdes statistics internal'
