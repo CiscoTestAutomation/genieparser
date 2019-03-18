@@ -27,7 +27,9 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   ShowPlatformHardwareSerdes, \
                                                   ShowPlatformHardwareSerdesInternal, \
                                                   ShowPlatformPower, \
-                                                  ShowPlatformHardwareQfpBqsStatisticsChannelAll
+                                                  ShowPlatformHardwareQfpBqsStatisticsChannelAll, \
+                                                  ShowPlatformHardwareQfpInterfaceIfnameStatistics, \
+                                                  ShowPlatformHardwareQfpStatisticsDrop
 
 
 class test_show_version(unittest.TestCase):
@@ -16211,6 +16213,228 @@ class show_platform_hardware_qfp_bqs_statistics_channel_all(unittest.TestCase):
         platform_obj = ShowPlatformHardwareQfpBqsStatisticsChannelAll(device=self.device)
         parsed_output = platform_obj.parse(status='active', slot='0', iotype='opm')
         self.assertEqual(parsed_output,self.golden_parsed_output_active_opm)
+
+class show_platform_hardware_qfp_interface(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output = {
+        'qfp': {
+            'active': {
+                'interface': {
+                    'GigabitEthernet0/0/0': {
+                        'egress_drop_stats': {},
+                        'ingress_drop_stats': {},
+                        'platform_handle': 7,
+                        'receive_stats': {
+                            'FragIpv4': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'FragIpv6': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'Ipv4': {
+                                'octets': 306,
+                                'packets': 4,
+                            },
+                            'Ipv6': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'McastIpv4': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'McastIpv6': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'Other': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'ReassIpv4': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'ReassIpv6': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'Tag': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                        },
+                        'transmit_stats': {
+                            'FragmentedIpv4': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'FragmentedIpv6': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'FragmentsIpv4': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'FragmentsIpv6': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'Ipv4': {
+                                'octets': 246,
+                                'packets': 3,
+                            },
+                            'Ipv6': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'McastIpv4': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'McastIpv6': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'Other': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'Tag': {
+                                'octets': 77,
+                                'packets': 1,
+                            },
+                        },
+                    },
+                }
+            }
+        },
+    }
+
+    golden_output = {'execute.return_value': '''\
+        Router#show platform hardware qfp active interface if-name gigabitEthernet 0/0/0 statistics
+        Load for five secs: 2%/0%; one minute: 8%; five minutes: 8%
+        Time source is NTP, 07:55:23.913 JST Thu Sep 8 2016
+        Platform Handle 7
+        ----------------------------------------------------------------
+        Receive Stats                             Packets        Octets
+        ----------------------------------------------------------------
+          Ipv4                                       4             306
+          Ipv6                                       0               0
+          Tag                                        0               0
+          McastIpv4                                  0               0
+          McastIpv6                                  0               0
+          FragIpv4                                   0               0
+          FragIpv6                                   0               0
+          ReassIpv4                                  0               0
+          ReassIpv6                                  0               0
+          Other                                      0               0
+
+        ----------------------------------------------------------------
+        Transmit Stats                            Packets        Octets
+        ----------------------------------------------------------------
+          Ipv4                                       3             246
+          Ipv6                                       0               0
+          Tag                                        1              77
+          McastIpv4                                  0               0
+          McastIpv6                                  0               0
+          FragmentsIpv4                              0               0
+          FragmentsIpv6                              0               0
+          FragmentedIpv4                             0               0
+          FragmentedIpv6                             0               0
+          Other                                      0               0
+
+        ----------------------------------------------------------------
+        Input Drop Stats                          Packets        Octets
+        ----------------------------------------------------------------
+          Ingress Drop stats are not enabled on this interface
+
+        ----------------------------------------------------------------
+        Output Drop Stats                         Packets        Octets
+        ----------------------------------------------------------------
+          The Egress Drop stats are not enabled on this interface
+    '''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        platform_obj = ShowPlatformHardwareQfpInterfaceIfnameStatistics(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse(status='active', interface='gigabitEthernet 0/0/0')  
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        platform_obj = ShowPlatformHardwareQfpInterfaceIfnameStatistics(device=self.device)
+        parsed_output = platform_obj.parse(status='active', interface='gigabitEthernet 0/0/0')
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+class test_show_platform_hardware_qfp_statistics_drop(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_active = {
+      "global_drop_stats": {
+        "Ipv4NoAdj": {
+          "octets": 296,
+          "packets": 7
+        },
+        "Ipv4NoRoute": {
+          "octets": 7964,
+          "packets": 181
+        },
+        "PuntPerCausePolicerDrops": {
+          "octets": 184230,
+          "packets": 2003
+        },
+        "UidbNotCfgd": {
+          "octets": 29312827,
+          "packets": 466391
+        },
+        "UnconfiguredIpv4Fia": {
+          "octets": 360,
+          "packets": 6
+        }
+      }
+    }
+
+    golden_output_active = {'execute.return_value': '''\
+        Router#show platform hardware qfp active statistics drop | exclude _0_
+        Load for five secs: 2%/1%; one minute: 9%; five minutes: 8%
+        Time source is NTP, 07:47:11.317 JST Thu Sep 8 2016
+        -------------------------------------------------------------------------
+        Global Drop Stats                         Packets                  Octets  
+        -------------------------------------------------------------------------
+        Ipv4NoAdj                                       7                     296  
+        Ipv4NoRoute                                   181                    7964  
+        PuntPerCausePolicerDrops                     2003                  184230  
+        UidbNotCfgd                                466391                29312827  
+        UnconfiguredIpv4Fia                             6                     360  
+    '''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        platform_obj = ShowPlatformHardwareQfpStatisticsDrop(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse(status='active')    
+
+    def test_golden_active(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_active)
+        platform_obj = ShowPlatformHardwareQfpStatisticsDrop(device=self.device)
+        parsed_output = platform_obj.parse(status='active')
+        self.assertEqual(parsed_output,self.golden_parsed_output_active)
 
 
 if __name__ == '__main__':
