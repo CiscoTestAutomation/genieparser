@@ -58,3 +58,10 @@
     * Add ShowPlatformHardwareQfpStatisticsDrop for;
             show platform hardware qfp active statistics drop
             show platform hardware qfp standby statistics drop
+
+--------------------------------------------------------------------------------
+                                    MPLS LDP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowMplsLdpParameters for:
+        'show mpls ldp parameters'
