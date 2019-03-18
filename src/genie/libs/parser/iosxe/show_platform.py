@@ -3758,3 +3758,165 @@ class ShowPlatformHardwareQfpBqsIpmMapping(ShowPlatformHardwareQfpBqsMappingSche
                 continue
 
         return ret_dict
+
+
+class ShowPlatformHardwareQfpInterfaceIfnameStatisticsSchema(MetaParser):
+    """Schema for show platform hardware qfp active interface if-name <interface> statistics
+                  show platform hardware qfp standby interface if-name <interface> statistics"""
+
+    schema = {
+        'qfp': {
+            'active': {
+                'interface': {
+                    Any(): {
+                        'platform_handle': int,
+                        'receive_stats': {
+                            Any(): {
+                                'packets': int,
+                                'octets': int,
+                            },
+                        },
+                        'transmit_stats': {
+                            Any(): {
+                                'packets': int,
+                                'octets': int,
+                            },
+                        },
+                        'ingress_drop_stats': {
+                            Optional(Any()): {
+                                'packets': int,
+                                'octets': int,
+                            },
+                        },
+                        'egress_drop_stats': {
+                            Optional(Any()): {
+                                'packets': int,
+                                'octets': int,
+                            },
+                        }
+                    },
+                }
+            }
+        }
+    }
+
+
+class ShowPlatformHardwareQfpInterfaceIfnameStatistics(ShowPlatformHardwareQfpInterfaceIfnameStatisticsSchema):
+    """Parser for show platform hardware qfp active interface if-name <interface> statistics
+                  show platform hardware qfp standby interface if-name <interface> statistics"""
+
+    cli_command = 'show platform hardware qfp {status} interface if-name {interface} statistics'
+
+    def cli(self, status, interface, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(status=status, interface=interface)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+        current_stats = None
+
+        # Platform Handle 7
+        p1 = re.compile(r'^Platform +Handle +(?P<platform_handle>\d+)$')
+
+        # Receive Stats                             Packets        Octets
+        # Transmit Stats                            Packets        Octets
+        # Input Drop Stats                          Packets        Octets
+        # Output Drop Stats                         Packets        Octets
+        p2 = re.compile(r'^(?P<transmit_receive>[\w\s]+) +Stats +Packets +Octets$')
+
+        #   FragmentedIpv6                             0               0
+        #   Other   
+        p3 = re.compile(r'^(?P<stats>[\w\d]+) +(?P<packets>[\w\d]+) +(?P<octets>[\w\d]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                converted_interface = Common.convert_intf_name(interface)
+                final_dict = ret_dict.setdefault('qfp', {}).setdefault(
+                    'active', {}).setdefault('interface', {}).setdefault(converted_interface, {})
+                final_dict['platform_handle'] = int(group['platform_handle'])
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                status = group['transmit_receive']
+                if 'Receive' in status:
+                    current_stats = 'receive_stats'
+                elif 'Transmit' in status:
+                    current_stats = 'transmit_stats'
+                elif 'Input Drop' in status:
+                    current_stats = 'ingress_drop_stats'
+                else:
+                    current_stats = 'egress_drop_stats'
+
+                final_dict.setdefault(current_stats, {})
+                continue
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                stats = group['stats']
+                final_dict[current_stats].setdefault(stats, {})
+                final_dict[current_stats][stats]['packets'] = int(group['packets'])
+                final_dict[current_stats][stats]['octets'] = int(group['octets'])
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformHardwareQfpStatisticsDropSchema(MetaParser):
+    """Schema for show platform hardware qfp active statistics drop
+                  show platform hardware qfp standby statistics drop"""
+
+    schema = {
+        'global_drop_stats':{
+            Any(): {
+                'packets': int,
+                'octets': int,
+            },
+        }
+    }
+
+
+class ShowPlatformHardwareQfpStatisticsDrop(ShowPlatformHardwareQfpStatisticsDropSchema):
+    """Parser for show platform hardware qfp active statistics drop
+                  show platform hardware qfp standby statistics drop"""
+    
+    cli_command = 'show platform hardware qfp {status} statistics drop | exclude _0_'
+
+    def cli(self, status='active', output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(status=status)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Global Drop Stats                         Packets                  Octets  
+        # -------------------------------------------------------------------------
+        # Ipv4NoAdj                                       7                     296  
+        # Ipv4NoRoute                                   181                    7964 
+        p1 = re.compile(r'^(?P<global_drop_stats>\w+) +(?P<packets>\d+) +(?P<octets>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                global_drop_stats = group.pop('global_drop_stats')
+                stats_dict = ret_dict.setdefault('global_drop_stats', {}).setdefault(global_drop_stats, {})
+                stats_dict.update({k:int(v) for k, v in group.items()})
+                continue
+
+        return ret_dict

@@ -225,22 +225,28 @@ class ShowAccessLists(ShowAccessListsSchema):
        'xdmcp':          177
     }
 
-    cli_command = ['show access-lists','show {ip} {access_list}','show {ip} {access_list} {acl}']
+    cli_command = [ 'show access-lists', 'show access-lists {acl}',
+                    'show ip access-lists','show ip access-lists {acl}',
+                    'show ipv6 access-list', 'show ipv6 access-list {acl}']
 
     def cli(self,ip="",acl="",output=None):
+        assert ip in ['ip', 'ipv4', 'ipv6', '']
         if output is None:
-            assert ip in ['ip','ipv6','']
-            if ip == 'ip':
-                access_list = 'access-lists'
+            if ip == 'ip' or ip == 'ipv4':
+                if acl:
+                    cmd = self.cli_command[3].format(acl=acl)
+                else:
+                    cmd = self.cli_command[2]
             if ip == 'ipv6':
-                access_list = 'access-list'
-
-            if ip and acl:
-                cmd = self.cli_command[2].format(ip=ip, acl=acl, access_list=access_list)
-            if ip and not acl:
-                cmd = self.cli_command[1].format(ip=ip, access_list=access_list)
-            if not ip and not acl:
-                cmd = self.cli_command[0]
+                if acl:
+                    cmd = self.cli_command[5].format(acl=acl)
+                else:
+                    cmd = self.cli_command[4]
+            else:
+                if acl:
+                    cmd = self.cli_command[1].format(acl=acl)
+                else:
+                    cmd = self.cli_command[0]
             # get output from device
             out = self.device.execute(cmd)
         else:
