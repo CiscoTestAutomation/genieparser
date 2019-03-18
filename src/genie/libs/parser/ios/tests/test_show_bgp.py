@@ -1,29 +1,34 @@
-import unittest
+
+# Python
 import unittest
 from unittest.mock import Mock
 
-from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
-                                       SchemaMissingKeyError
+# Metaparser
+from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
+                                             SchemaMissingKeyError
 
-from genie.libs.parser.ios.show_bgp import ShowBgpAllSummary, ShowBgpAllClusterIds, \
-                                  ShowBgpAllNeighborsAdvertisedRoutes, \
-                                  ShowBgpAllNeighborsReceivedRoutes, \
-                                  ShowIpBgpTemplatePeerPolicy, \
-                                  ShowBgpAllNeighbors, \
-                                  ShowIpBgpAllDampeningParameters, \
-                                  ShowIpBgpTemplatePeerSession, \
-                                  ShowBgpAllNeighborsRoutes, \
-                                  ShowBgpAllNeighborsPolicy, \
-                                  ShowBgpAll, \
-                                  ShowBgpAllDetail
+# ios show_bgp
+from genie.libs.parser.ios.show_bgp import ShowBgpAllSummary,\
+                                           ShowBgpAllClusterIds,\
+                                           ShowBgpAllNeighborsAdvertisedRoutes,\
+                                           ShowBgpAllNeighborsReceivedRoutes,\
+                                           ShowIpBgpTemplatePeerPolicy,\
+                                           ShowBgpAllNeighbors,\
+                                           ShowIpBgpAllDampeningParameters,\
+                                           ShowIpBgpTemplatePeerSession,\
+                                           ShowBgpAllNeighborsRoutes,\
+                                           ShowBgpAllNeighborsPolicy,\
+                                           ShowBgpAll,\
+                                           ShowBgpAllDetail
 
+# iosxe tests/test_show_bgp
 from genie.libs.parser.iosxe.tests.test_show_bgp import \
                                 test_show_bgp_all_detail as test_show_bgp_all_detail_iosxe,\
                                 test_show_bgp_all_neighbors_policy as test_show_bgp_all_neighbors_policy_iosxe,\
                                 test_show_bgp_all_neighbors_advertised_routes as test_show_bgp_all_neighbors_advertised_routes_iosxe,\
                                 test_show_bgp_all_summary as test_show_bgp_all_summary_iosxe,\
                                 test_show_bgp_all_cluster_ids as test_show_bgp_all_cluster_ids_iosxe,\
-                                test_show_bgp_all_neighbores as test_show_bgp_all_neighbores_iosxe,\
+                                test_show_bgp_all_neighbors as test_show_bgp_all_neighbors_iosxe,\
                                 test_show_bgp_neighbors_received_routes as test_show_bgp_neighbors_received_routes_iosxe,\
                                 test_show_ip_bgp_template_peer_session as test_show_ip_bgp_template_peer_session_iosxe,\
                                 test_show_bgp_all_neighbors_routes as test_show_bgp_all_neighbors_routes_iosxe,\
@@ -31,10 +36,12 @@ from genie.libs.parser.iosxe.tests.test_show_bgp import \
                                 test_show_ip_bgp_all_dampening_parameters as test_show_ip_bgp_all_dampening_parameters_iosxe,\
                                 test_show_bgp_all as test_show_bgp_all_iosxe
 
+
 # ===================================
 # Unit test for 'show bgp all detail'
 # ===================================
 class test_show_bgp_all_detail(test_show_bgp_all_detail_iosxe):
+
     def test_show_bgp_all_detail_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -59,6 +66,7 @@ class test_show_bgp_all_detail(test_show_bgp_all_detail_iosxe):
 # Unit test for 'show bgp all neighbors <WORD> policy'
 # ====================================================
 class test_show_bgp_all_neighbors_policy(test_show_bgp_all_neighbors_policy_iosxe):
+
     def test_show_bgp_all_neighbors_policy_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -176,7 +184,7 @@ class test_show_bgp_all_cluster_ids(test_show_bgp_all_cluster_ids_iosxe):
 # =============================================================
 # Unit test for 'show bgp all neighbors'
 # =============================================================
-class test_show_bgp_all_neighbores(test_show_bgp_all_neighbores_iosxe):
+class test_show_bgp_all_neighbors(test_show_bgp_all_neighbors_iosxe):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -184,12 +192,12 @@ class test_show_bgp_all_neighbores(test_show_bgp_all_neighbores_iosxe):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
-    def test_golden_1(self):
+    def test_golden1(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output_1)
+        self.device = Mock(**self.golden_output1)
         obj = ShowBgpAllNeighbors(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 # =============================================================
 # Unit test for 'show bgp all neighbors <WORD> received-routes'
@@ -227,23 +235,23 @@ class test_show_ip_bgp_template_peer_session(test_show_ip_bgp_template_peer_sess
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
-    def test_golden(self):
-        self.device = Mock(**self.golden_output)
+    def test_golden1(self):
+        self.device = Mock(**self.golden_output1)
         obj = ShowIpBgpTemplatePeerSession(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
-    def test_golden_1(self):
-        self.device = Mock(**self.golden_output_1)
+    def test_golden2(self):
+        self.device = Mock(**self.golden_output2)
         obj = ShowIpBgpTemplatePeerSession(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
-    def test_golden_2(self):
-        self.device = Mock(**self.golden_output_2)
+    def test_golden3(self):
+        self.device = Mock(**self.golden_output3)
         obj = ShowIpBgpTemplatePeerSession(device=self.device)
         parsed_output = obj.parse(template_name='PEER-SESSION')
-        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 # ====================================================
 # Unit test for 'show bgp all neighbors <WORD> routes'
@@ -314,6 +322,7 @@ class test_show_ip_bgp_template_peer_policy(test_show_ip_bgp_template_peer_polic
 #   unit test for show ip bgp all dampening parameters
 # ===================================================================
 class test_show_ip_bgp_all_dampening_parameters(test_show_ip_bgp_all_dampening_parameters_iosxe):
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpBgpAllDampeningParameters(device=self.device)
@@ -359,6 +368,7 @@ class test_show_ip_bgp_all_dampening_parameters(test_show_ip_bgp_all_dampening_p
 #   unit test for show bgp all
 # ===================================================================
 class test_show_bgp_all(test_show_bgp_all_iosxe):
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpAll(device=self.device)
