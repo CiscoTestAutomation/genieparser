@@ -435,6 +435,8 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
         else:
             out = output
 
+        if not vrf:
+            vrf = 'default'
         # initial return dictionary
         result_dict = {}
 
