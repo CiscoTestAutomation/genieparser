@@ -22,9 +22,10 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   ShowVersionRp, \
                                                   ShowPlatformHardware, \
                                                   ShowPlatformHardwarePlim, \
+                                                  ShowPlatformHardwareQfpBqsOpmMapping, \
+                                                  ShowPlatformHardwareQfpBqsIpmMapping, \
                                                   ShowPlatformPower, \
                                                   ShowPlatformHardwareQfpBqsStatisticsChannelAll
-
 
 
 class test_show_version(unittest.TestCase):
@@ -14508,6 +14509,591 @@ class test_show_platform_hardware_plim(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(port='0/0/0')
 
+class test_show_platform_hardware_qfp_bqs_opm_mapping(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_active_opm = {
+        'channel': {
+            '0': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 0,
+                'name': 'CC0 Low',
+            },
+            '1': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 1,
+                'name': 'CC0 Hi',
+            },
+            '10': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 10,
+                'name': 'CC2B Low',
+            },
+            '11': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 11,
+                'name': 'CC2B Hi',
+            },
+            '12': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 12,
+                'name': 'CC3 Low',
+            },
+            '13': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 13,
+                'name': 'CC3 Hi',
+            },
+            '14': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 14,
+                'name': 'CC3B Low',
+            },
+            '15': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 15,
+                'name': 'CC3B Hi',
+            },
+            '16': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 16,
+                'name': 'CC4 Low',
+            },
+            '17': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 17,
+                'name': 'CC4 Hi',
+            },
+            '18': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 18,
+                'name': 'CC5 Low',
+            },
+            '19': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 19,
+                'name': 'CC5 Hi',
+            },
+            '2': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 2,
+                'name': 'CC0B Low',
+            },
+            '20': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 20,
+                'name': 'RP0 Low',
+            },
+            '21': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 21,
+                'name': 'RP0 Hi',
+            },
+            '22': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 22,
+                'name': 'RP1 Low',
+            },
+            '23': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 23,
+                'name': 'RP1 Hi',
+            },
+            '24': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 24,
+                'name': 'Peer-FP Low',
+            },
+            '25': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 25,
+                'name': 'Peer-FP Hi',
+            },
+            '26': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 26,
+                'name': 'Nitrox Low',
+            },
+            '27': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 27,
+                'name': 'Nitrox Hi',
+            },
+            '28': {
+                'drain_mode': False,
+                'interface': 'HT',
+                'logical_channel': 0,
+                'name': 'HT Pkt Low',
+            },
+             '29': {
+                'drain_mode': False,
+                'interface': 'HT',
+                'logical_channel': 1,
+                'name': 'HT Pkt Hi',
+            },
+            '3': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 3,
+                'name': 'CC0B Hi',
+            },
+            '30': {
+                'drain_mode': False,
+                'interface': 'HT',
+                'logical_channel': 2,
+                'name': 'HT IPC Low',
+            },
+            '31': {
+                'drain_mode': False,
+                'interface': 'HT',
+                'logical_channel': 3,
+                'name': 'HT IPC Hi',
+            },
+            '32': {
+                'name': 'unmapped',
+            },
+            '33': {
+                'name': 'unmapped',
+            },
+            '34': {
+                'name': 'unmapped',
+            },
+            '35': {
+                'name': 'unmapped',
+            },
+            '36': {
+                'name': 'unmapped',
+            },
+            '37': {
+                'name': 'unmapped',
+            },
+            '38': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 7,
+                'name': 'HighNormal',
+            },
+            '39': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 6,
+                'name': 'HighPriority',
+            },
+            '4': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 4,
+                'name': 'CC1 Low',
+            },
+            '40': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 11,
+                'name': 'LowNormal',
+            },
+            '41': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 10,
+                'name': 'LowPriority',
+            },
+            '42': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 12,
+                'name': 'InternalTrafficHiChannel',
+            },
+            '43': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 13,
+                'name': 'InternalTrafficLoChannel',
+            },
+            '44': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 14,
+                'name': 'AttnTrafficHiChannel',
+            },
+            '45': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 15,
+                'name': 'MetaPktTrafficChannel',
+            },
+            '46': {
+                'name': 'unmapped',
+            },
+            '47': {
+                'name': 'unmapped',
+            },
+            '48': {
+                'name': 'unmapped',
+            },
+            '49': {
+                'name': 'unmapped',
+            },
+            '5': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 5,
+                'name': 'CC1 Hi',
+            },
+            '50': {
+                'name': 'unmapped',
+            },
+            '51': {
+                'name': 'unmapped',
+            },
+            '52': {
+                'name': 'unmapped',
+            },
+            '53': {
+                'name': 'unmapped',
+            },
+            '54': {
+                'name': 'unmapped',
+            },
+            '55': {
+                'drain_mode': True,
+                'interface': 'GPM',
+                'logical_channel': 0,
+                'name': 'Drain Low',
+            },
+            '6': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 6,
+                'name': 'CC1B Low',
+            },
+            '7': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 7,
+                'name': 'CC1B Hi',
+            },
+            '8': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 8,
+                'name': 'CC2 Low',
+            },
+            '9': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 9,
+                'name': 'CC2 Hi',
+            },
+        },
+    }
+
+    golden_output_active_opm = {'execute.return_value': '''\ 
+        Router#show platform hardware qfp active bqs 0 opm mapping 
+        Load for five secs: 5%/3%; one minute: 7%; five minutes: 8%
+        Time source is NTP, 07:43:32.664 JST Thu Sep 8 2016
+
+        BQS OPM Channel Mapping
+
+        Chan     Name                          Interface      LogicalChannel
+
+         0       CC0 Low                       SPI0            0             
+         1       CC0 Hi                        SPI0            1             
+         2       CC0B Low                      SPI0            2             
+         3       CC0B Hi                       SPI0            3             
+         4       CC1 Low                       SPI0            4             
+         5       CC1 Hi                        SPI0            5             
+         6       CC1B Low                      SPI0            6             
+         7       CC1B Hi                       SPI0            7             
+         8       CC2 Low                       SPI0            8             
+         9       CC2 Hi                        SPI0            9             
+        10       CC2B Low                      SPI0           10             
+        11       CC2B Hi                       SPI0           11             
+        12       CC3 Low                       SPI0           12             
+        13       CC3 Hi                        SPI0           13             
+        14       CC3B Low                      SPI0           14             
+        15       CC3B Hi                       SPI0           15             
+        16       CC4 Low                       SPI0           16             
+        17       CC4 Hi                        SPI0           17             
+        18       CC5 Low                       SPI0           18             
+        19       CC5 Hi                        SPI0           19             
+        20       RP0 Low                       SPI0           20             
+        21       RP0 Hi                        SPI0           21             
+        22       RP1 Low                       SPI0           22             
+        23       RP1 Hi                        SPI0           23             
+        24       Peer-FP Low                   SPI0           24             
+        25       Peer-FP Hi                    SPI0           25             
+        26       Nitrox Low                    SPI0           26             
+        27       Nitrox Hi                     SPI0           27             
+        28       HT Pkt Low                    HT              0             
+        29       HT Pkt Hi                     HT              1             
+        30       HT IPC Low                    HT              2             
+        31       HT IPC Hi                     HT              3             
+        32       Unmapped                      
+        33       Unmapped                      
+        34       Unmapped                      
+        35       Unmapped                      
+        36       Unmapped                      
+        37       Unmapped                      
+        38       HighNormal                    GPM             7             
+        39       HighPriority                  GPM             6             
+        40       LowNormal                     GPM            11             
+        41       LowPriority                   GPM            10             
+        42       InternalTrafficHiChannel      GPM            12             
+        43       InternalTrafficLoChannel      GPM            13             
+        44       AttnTrafficHiChannel          GPM            14             
+        45       MetaPktTrafficChannel         GPM            15             
+        46       Unmapped                      
+        47       Unmapped                      
+        48       Unmapped                      
+        49       Unmapped                      
+        50       Unmapped                      
+        51       Unmapped                      
+        52       Unmapped                      
+        53       Unmapped                      
+        54       Unmapped                      
+        55*      Drain Low                     GPM             0             
+         * - indicates the drain mode bit is set for this channel
+    '''
+    }
+
+    def test_golden_active_opm(self):
+        self.device = Mock(**self.golden_output_active_opm)
+        obj = ShowPlatformHardwareQfpBqsOpmMapping(device=self.device)
+        parsed_output = obj.parse(status='active', slot='0')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_active_opm)
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowPlatformHardwareQfpBqsOpmMapping(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(status='active', slot='0')
+
+class test_show_platform_hardware_qfp_bqs_ipm_mapping(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_active_ipm = {
+        'channel': {
+            '1': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'CC3 Low',
+                'port': 0,
+            },
+            '10': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'RP1 Hi',
+                'port': 9,
+            },
+            '11': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'RP0 Low',
+                'port': 10,
+            },
+            '12': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'RP0 Hi',
+                'port': 11,
+            },
+            '13': {
+                'cfifo': 3,
+                'interface': 'SPI0',
+                'name': 'Peer-FP Low',
+                'port': 12,
+            },
+            '14': {
+                'cfifo': 2,
+                'interface': 'SPI0',
+                'name': 'Peer-FP Hi',
+                'port': 13,
+            },
+            '15': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'Nitrox Low',
+                'port': 14,
+            },
+            '16': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'Nitrox Hi',
+                'port': 15,
+            },
+            '17': {
+                'cfifo': 1,
+                'interface': 'HT',
+                'name': 'HT Pkt Low',
+                'port': 0,
+            },
+            '18': {
+                'cfifo': 0,
+                'interface': 'HT',
+                'name': 'HT Pkt Hi',
+                'port': 1,
+            },
+            '19': {
+                'cfifo': 3,
+                'interface': 'HT',
+                'name': 'HT IPC Low',
+                'port': 2,
+            },
+            '2': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'CC3 Hi',
+                'port': 1,
+            },
+            '20': {
+                'cfifo': 2,
+                'interface': 'HT',
+                'name': 'HT IPC Hi',
+                'port': 3,
+            },
+            '21': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'CC4 Low',
+                'port': 16,
+            },
+            '22': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'CC4 Hi',
+                'port': 17,
+            },
+            '23': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'CC5 Low',
+                'port': 18,
+            },
+            '24': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'CC5 Hi',
+                'port': 19,
+            },
+            '3': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'CC2 Low',
+                'port': 2,
+            },
+            '4': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'CC2 Hi',
+                'port': 3,
+            },
+            '5': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'CC1 Low',
+                'port': 4,
+            },
+            '6': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'CC1 Hi',
+                'port': 5,
+            },
+            '7': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'CC0 Low',
+                'port': 6,
+            },
+            '8': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'CC0 Hi',
+                'port': 7,
+            },
+            '9': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'RP1 Low',
+                'port': 8,
+            },
+        },
+    }
+
+    golden_output_active_ipm = {'execute.return_value': '''\
+        Router#show platform hardware qfp active bqs 0 ipm mapping 
+        Load for five secs: 29%/1%; one minute: 8%; five minutes: 9%
+        Time source is NTP, 07:42:52.908 JST Thu Sep 8 2016
+
+        BQS IPM Channel Mapping
+
+        Chan   Name                Interface      Port     CFIFO
+
+         1     CC3 Low             SPI0           0        1     
+         2     CC3 Hi              SPI0           1        0     
+         3     CC2 Low             SPI0           2        1     
+         4     CC2 Hi              SPI0           3        0     
+         5     CC1 Low             SPI0           4        1     
+         6     CC1 Hi              SPI0           5        0     
+         7     CC0 Low             SPI0           6        1     
+         8     CC0 Hi              SPI0           7        0     
+         9     RP1 Low             SPI0           8        1     
+        10     RP1 Hi              SPI0           9        0     
+        11     RP0 Low             SPI0          10        1     
+        12     RP0 Hi              SPI0          11        0     
+        13     Peer-FP Low         SPI0          12        3     
+        14     Peer-FP Hi          SPI0          13        2     
+        15     Nitrox Low          SPI0          14        1     
+        16     Nitrox Hi           SPI0          15        0     
+        17     HT Pkt Low          HT             0        1     
+        18     HT Pkt Hi           HT             1        0     
+        19     HT IPC Low          HT             2        3     
+        20     HT IPC Hi           HT             3        2     
+        21     CC4 Low             SPI0          16        1     
+        22     CC4 Hi              SPI0          17        0     
+        23     CC5 Low             SPI0          18        1     
+        24     CC5 Hi              SPI0          19        0   
+    '''
+    }
+
+    def test_golden_active_ipm(self):
+        self.device = Mock(**self.golden_output_active_ipm)
+        obj = ShowPlatformHardwareQfpBqsIpmMapping(device=self.device)
+        parsed_output = obj.parse(status='active', slot='0')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_active_ipm)
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowPlatformHardwareQfpBqsIpmMapping(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(status='active', slot='0')
 
 class test_show_platform_power(unittest.TestCase):
     device = Device(name='aDevice')
