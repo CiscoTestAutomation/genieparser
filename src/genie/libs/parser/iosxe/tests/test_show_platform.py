@@ -24,6 +24,8 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   ShowPlatformHardwarePlim, \
                                                   ShowPlatformHardwareQfpBqsOpmMapping, \
                                                   ShowPlatformHardwareQfpBqsIpmMapping, \
+                                                  ShowPlatformHardwareSerdes, \
+                                                  ShowPlatformHardwareSerdesInternal, \
                                                   ShowPlatformPower, \
                                                   ShowPlatformHardwareQfpBqsStatisticsChannelAll, \
                                                   ShowPlatformHardwareQfpInterfaceIfnameStatistics, \
