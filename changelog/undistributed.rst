@@ -52,6 +52,9 @@
     * Add ShowPlatformHardwareQfpBqsIpmMapping for;
         show platform hardware qfp active bqs <x> ipm mapping
         show platform hardware qfp standby bqs <x> ipm mapping
+    * Add ShowPlatformHardwareQfpInterfaceIfnameStatistics for;
+        show platform hardware qfp active interface if-name <interface> statistics
+        show platform hardware qfp standby interface if-name <interface> statistics
 
 --------------------------------------------------------------------------------
                                     ACL
