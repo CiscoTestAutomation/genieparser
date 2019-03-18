@@ -56,11 +56,3 @@
         show platform hardware qfp active interface if-name <interface> statistics
         show platform hardware qfp standby interface if-name <interface> statistics
 
---------------------------------------------------------------------------------
-                                    ACL
---------------------------------------------------------------------------------
-* IOSXE
-    * Updated parsers:
-        * ShowAccessLists
-
-
