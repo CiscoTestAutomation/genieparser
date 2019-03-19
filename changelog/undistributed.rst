@@ -10,6 +10,7 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Added parsers:
+        * ShowIpOspfNeighbor
         * ShowIpOspfDatabase
         * ShowIpOspfMaxMetric
         * ShowIpOspfTraffic
