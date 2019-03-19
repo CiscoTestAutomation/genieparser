@@ -12,7 +12,10 @@ from genie.libs.parser.iosxe.show_lag import ShowLacpSysId,\
                                   ShowLacpNeighbor,\
                                   ShowPagpCounters, \
                                   ShowPagpNeighbor,\
-                                  ShowPagpInternal
+                                  ShowPagpInternal,\
+                                  ShowEtherChannelLoadBalancing,\
+                                  ShowLacpNeighborDetail
+
 
 ###################################################
 # unit test for show lacp sys-id
@@ -869,6 +872,168 @@ class test_show_etherchannel_summary(unittest.TestCase):
         obj = ShowEtherchannelSummary(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
+
+
+###################################################
+# unit test for show etherchannel load-balancing
+####################################################
+class test_show_etherchannel_loadbalancing(unittest.TestCase):
+    """unit test for show etherchannel load-balancing """
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        Router#sh etherchannel load-balancing
+        Load for five secs: 50%/2%; one minute: 38%; five minutes: 56%
+        Time source is NTP, *16:28:54.625 JST Sat Nov 12 2016
+        EtherChannel Load-Balancing Method: 
+        Global LB Method: flow-based
+        LB Algo type: Source Destination IP
+
+          Port-Channel:                       LB Method
+            Port-channel1                   :  flow-based (Source Destination IP)
+    '''}
+
+    golden_parsed_output = {
+        'etherchannel_lb_method': '',
+        'global_lb_method': 'flow-based',
+        'lb_algo_type': 'Source Destination IP',
+        'port_channel': {
+            'Port-channel1': {
+                'lb_method': 'flow-based (Source Destination IP)'
+            }
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowEtherChannelLoadBalancing(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowEtherChannelLoadBalancing(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+###################################################
+# unit test for show lacp neighbor detail
+####################################################
+class test_show_lacp_neighbor_detail(unittest.TestCase):
+    """unit test for show lacp neighbor detail"""
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        Router#show lacp neighbor detail
+        Load for five secs: 5%/1%; one minute: 6%; five minutes: 7%
+        Time source is NTP, 20:56:57.454 JST Fri Nov 11 2016
+
+        Flags:  S - Device is requesting Slow LACPDUs 
+                F - Device is requesting Fast LACPDUs
+                A - Device is in Active mode       P - Device is in Passive mode     
+
+        Channel group 1 neighbors
+
+        Partner's information:
+
+                  Partner               Partner                     Partner
+        Port           System ID             Port Number     Age         Flags
+        Gi0/0/1         00127,6487.88af.b840  0x2              18s        FA
+
+                  LACP Partner         Partner         Partner
+                  Port Priority        Oper Key        Port State
+                  100                  0x1             0x3F
+
+                  Port State Flags Decode:
+                  Activity:   Timeout:   Aggregation:   Synchronization:
+                  Active      Short      Yes            Yes
+
+                  Collecting:   Distributing:   Defaulted:   Expired:
+                  Yes           Yes             No           No 
+                  Partner               Partner                     Partner
+        Port           System ID             Port Number     Age         Flags
+        Gi0/0/7         00127,6487.88af.b840  0x1               0s        FA
+
+                  LACP Partner         Partner         Partner
+                  Port Priority        Oper Key        Port State
+                  200                  0x1             0xF 
+
+                  Port State Flags Decode:
+                  Activity:   Timeout:   Aggregation:   Synchronization:
+                  Active      Short      Yes            Yes
+
+                  Collecting:   Distributing:   Defaulted:   Expired:
+                  No            No              No           No 
+        '''}
+
+    golden_parsed_output = {
+        'interfaces': {
+            'Port-channel1': {
+                'name': 'Port-channel1',
+                'protocol': 'lacp',
+                'members': {
+                    'GigabitEthernet0/0/1': {
+                        'activity': 'Active',
+                        'age': 18,
+                        'aggregatable': True,
+                        'collecting': True,
+                        'defaulted': False,
+                        'distributing': True,
+                        'expired': False,
+                        'flags': 'FA',
+                        'interface': 'GigabitEthernet0/0/1',
+                        'lacp_port_priority': 100,
+                        'oper_key': 1,
+                        'port_num': 2,
+                        'port_state': 63,
+                        'synchronization': True,
+                        'system_id': '00127,6487.88af.b840',
+                        'timeout': 'Short'
+                    },
+                    'GigabitEthernet0/0/7': {
+                        'activity': 'Active',
+                        'age': 0,
+                        'aggregatable': True,
+                        'collecting': False,
+                        'defaulted': False,
+                        'distributing': False,
+                        'expired': False,
+                        'flags': 'FA',
+                        'interface': 'GigabitEthernet0/0/7',
+                        'lacp_port_priority': 200,
+                        'oper_key': 1,
+                        'port_num': 1,
+                        'port_state': 15,
+                        'synchronization': True,
+                        'system_id': '00127,6487.88af.b840',
+                        'timeout': 'Short'
+                    }
+                },
+            }
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowLacpNeighborDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowLacpNeighborDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
 
 if __name__ == '__main__':
     unittest.main()
