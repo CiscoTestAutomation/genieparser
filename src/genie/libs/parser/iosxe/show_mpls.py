@@ -21,6 +21,7 @@
         *  show mpls ldp statistics
        	*  show mpls ldp parameters
 """
+
 import re
 
 from genie.metaparser import MetaParser
