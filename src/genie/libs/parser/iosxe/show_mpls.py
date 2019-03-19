@@ -566,7 +566,7 @@ class ShowMplsLdpBindingsSchema(MetaParser):
                                 },
                             },
                         },
-                        'remote_binding': {
+                        Optional('remote_binding'): {
                             'label': {
                                 Any():{
                                     'lsr_id':{
