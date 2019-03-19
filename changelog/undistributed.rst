@@ -68,3 +68,4 @@
 * IOSXE
     * Add ShowMplsLdpParameters for:
         'show mpls ldp parameters'
+        'show mpls ldp nsr statistics'
