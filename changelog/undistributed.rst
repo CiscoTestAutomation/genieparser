@@ -61,6 +61,7 @@
             show platform hardware qfp standby statistics drop
     * Add ShowPlatformHardwareSerdes for 'show platform hardware slot <x> serdes statistics'
     * Add ShowPlatformHardwareSerdesInternal for 'show platform hardware slot <x> serdes statistics internal'
+    * Add ShowProcessesCpuHistory for 'show processes cpu history'
 
 --------------------------------------------------------------------------------
                                     MPLS LDP

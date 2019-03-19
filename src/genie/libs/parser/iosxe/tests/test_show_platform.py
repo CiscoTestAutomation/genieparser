@@ -32,7 +32,8 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   ShowPlatformHardwareQfpStatisticsDrop, \
                                                   ShowPlatformHardwareSerdes, \
                                                   ShowPlatformHardwareSerdesInternal, \
-                                                  ShowPlatformPower
+                                                  ShowPlatformPower, \
+                                                  ShowProcessesCpuHistory
 
 
 class test_show_version(unittest.TestCase):
@@ -16438,6 +16439,280 @@ class test_show_platform_hardware_qfp_statistics_drop(unittest.TestCase):
         platform_obj = ShowPlatformHardwareQfpStatisticsDrop(device=self.device)
         parsed_output = platform_obj.parse(status='active')
         self.assertEqual(parsed_output,self.golden_parsed_output_active)
+
+
+class test_show_processes_cpu_history(unittest.TestCase):
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+         '60m': {1: {'average': 10, 'maximum': 51},
+                 2: {'average': 20, 'maximum': 69},
+                 3: {'average': 10, 'maximum': 56},
+                 4: {'average': 10, 'maximum': 15},
+                 5: {'average': 20, 'maximum': 75},
+                 6: {'average': 10, 'maximum': 21},
+                 7: {'average': 30, 'maximum': 99},
+                 8: {'average': 50, 'maximum': 98},
+                 9: {'average': 80, 'maximum': 99},
+                 10: {'average': 20, 'maximum': 98},
+                 11: {'average': 80, 'maximum': 98},
+                 12: {'average': 20, 'maximum': 99},
+                 13: {'average': 30, 'maximum': 98},
+                 14: {'average': 0, 'maximum': 9},
+                 15: {'average': 0, 'maximum': 11},
+                 16: {'average': 0, 'maximum': 18},
+                 17: {'average': 40, 'maximum': 98},
+                 18: {'average': 0, 'maximum': 14},
+                 19: {'average': 10, 'maximum': 94},
+                 20: {'average': 10, 'maximum': 50},
+                 21: {'average': 0, 'maximum': 10},
+                 22: {'average': 0, 'maximum': 10},
+                 23: {'average': 0, 'maximum': 11},
+                 24: {'average': 0, 'maximum': 16},
+                 25: {'average': 0, 'maximum': 10},
+                 26: {'average': 0, 'maximum': 10},
+                 27: {'average': 10, 'maximum': 77},
+                 28: {'average': 0, 'maximum': 10},
+                 29: {'average': 0, 'maximum': 10},
+                 30: {'average': 0, 'maximum': 11},
+                 31: {'average': 0, 'maximum': 7},
+                 32: {'average': 0, 'maximum': 10},
+                 33: {'average': 0, 'maximum': 14},
+                 34: {'average': 0, 'maximum': 10},
+                 35: {'average': 0, 'maximum': 10},
+                 36: {'average': 0, 'maximum': 10},
+                 37: {'average': 0, 'maximum': 10},
+                 38: {'average': 10, 'maximum': 48},
+                 39: {'average': 10, 'maximum': 67},
+                 40: {'average': 0, 'maximum': 10},
+                 41: {'average': 0, 'maximum': 7},
+                 42: {'average': 0, 'maximum': 15},
+                 43: {'average': 0, 'maximum': 15},
+                 44: {'average': 0, 'maximum': 10},
+                 45: {'average': 0, 'maximum': 10},
+                 46: {'average': 0, 'maximum': 10},
+                 47: {'average': 0, 'maximum': 10},
+                 48: {'average': 0, 'maximum': 10},
+                 49: {'average': 0, 'maximum': 10},
+                 50: {'average': 0, 'maximum': 10},
+                 51: {'average': 0, 'maximum': 10},
+                 52: {'average': 0, 'maximum': 11},
+                 53: {'average': 0, 'maximum': 10},
+                 54: {'average': 0, 'maximum': 10},
+                 55: {'average': 0, 'maximum': 10},
+                 56: {'average': 0, 'maximum': 11},
+                 57: {'average': 0, 'maximum': 10},
+                 58: {'average': 0, 'maximum': 14},
+                 59: {'average': 0, 'maximum': 14},
+                 60: {'average': 0, 'maximum': 12}},
+         '60s': {1: {'average': 0, 'maximum': 7},
+                 2: {'average': 0, 'maximum': 7},
+                 3: {'average': 0, 'maximum': 7},
+                 4: {'average': 0, 'maximum': 7},
+                 5: {'average': 0, 'maximum': 7},
+                 6: {'average': 0, 'maximum': 5},
+                 7: {'average': 0, 'maximum': 5},
+                 8: {'average': 0, 'maximum': 5},
+                 9: {'average': 0, 'maximum': 5},
+                 10: {'average': 0, 'maximum': 5},
+                 11: {'average': 0, 'maximum': 89},
+                 12: {'average': 0, 'maximum': 89},
+                 13: {'average': 0, 'maximum': 89},
+                 14: {'average': 0, 'maximum': 89},
+                 15: {'average': 0, 'maximum': 89},
+                 16: {'average': 0, 'maximum': 66},
+                 17: {'average': 0, 'maximum': 66},
+                 18: {'average': 0, 'maximum': 66},
+                 19: {'average': 0, 'maximum': 66},
+                 20: {'average': 0, 'maximum': 66},
+                 21: {'average': 0, 'maximum': 14},
+                 22: {'average': 0, 'maximum': 14},
+                 23: {'average': 0, 'maximum': 14},
+                 24: {'average': 0, 'maximum': 14},
+                 25: {'average': 0, 'maximum': 14},
+                 26: {'average': 0, 'maximum': 6},
+                 27: {'average': 0, 'maximum': 6},
+                 28: {'average': 0, 'maximum': 6},
+                 29: {'average': 0, 'maximum': 6},
+                 30: {'average': 0, 'maximum': 6},
+                 31: {'average': 0, 'maximum': 3},
+                 32: {'average': 0, 'maximum': 3},
+                 33: {'average': 0, 'maximum': 3},
+                 34: {'average': 0, 'maximum': 3},
+                 35: {'average': 0, 'maximum': 3},
+                 36: {'average': 0, 'maximum': 5},
+                 37: {'average': 0, 'maximum': 5},
+                 38: {'average': 0, 'maximum': 5},
+                 39: {'average': 0, 'maximum': 5},
+                 40: {'average': 0, 'maximum': 5},
+                 41: {'average': 0, 'maximum': 4},
+                 42: {'average': 0, 'maximum': 4},
+                 43: {'average': 0, 'maximum': 4},
+                 44: {'average': 0, 'maximum': 4},
+                 45: {'average': 0, 'maximum': 4},
+                 46: {'average': 0, 'maximum': 16},
+                 47: {'average': 0, 'maximum': 16},
+                 48: {'average': 0, 'maximum': 16},
+                 49: {'average': 0, 'maximum': 16},
+                 50: {'average': 0, 'maximum': 16},
+                 51: {'average': 0, 'maximum': 7},
+                 52: {'average': 0, 'maximum': 7},
+                 53: {'average': 0, 'maximum': 7},
+                 54: {'average': 0, 'maximum': 7},
+                 55: {'average': 0, 'maximum': 7},
+                 56: {'average': 0, 'maximum': 7},
+                 57: {'average': 0, 'maximum': 7},
+                 58: {'average': 0, 'maximum': 7},
+                 59: {'average': 0, 'maximum': 7},
+                 60: {'average': 0, 'maximum': 7}},
+         '72h': {1: {'average': 0, 'maximum': 73},
+                 2: {'average': 0, 'maximum': 15},
+                 3: {'average': 0, 'maximum': 82},
+                 4: {'average': 0, 'maximum': 15},
+                 5: {'average': 0, 'maximum': 15},
+                 6: {'average': 0, 'maximum': 16},
+                 7: {'average': 0, 'maximum': 14},
+                 8: {'average': 0, 'maximum': 19},
+                 9: {'average': 0, 'maximum': 14},
+                 10: {'average': 0, 'maximum': 15},
+                 11: {'average': 0, 'maximum': 15},
+                 12: {'average': 0, 'maximum': 15},
+                 13: {'average': 0, 'maximum': 15},
+                 14: {'average': 0, 'maximum': 15},
+                 15: {'average': 0, 'maximum': 15},
+                 16: {'average': 0, 'maximum': 15},
+                 17: {'average': 0, 'maximum': 15},
+                 18: {'average': 0, 'maximum': 15},
+                 19: {'average': 0, 'maximum': 15},
+                 20: {'average': 0, 'maximum': 83},
+                 21: {'average': 0, 'maximum': 78},
+                 22: {'average': 0, 'maximum': 82},
+                 23: {'average': 0, 'maximum': 77},
+                 24: {'average': 0, 'maximum': 19},
+                 25: {'average': 0, 'maximum': 66},
+                 26: {'average': 0, 'maximum': 14},
+                 27: {'average': 0, 'maximum': 77},
+                 28: {'average': 10, 'maximum': 99},
+                 29: {'average': 10, 'maximum': 100},
+                 30: {'average': 0, 'maximum': 0},
+                 31: {'average': 0, 'maximum': 0},
+                 32: {'average': 0, 'maximum': 0},
+                 33: {'average': 0, 'maximum': 0},
+                 34: {'average': 0, 'maximum': 0},
+                 35: {'average': 0, 'maximum': 0},
+                 36: {'average': 0, 'maximum': 0},
+                 37: {'average': 0, 'maximum': 0},
+                 38: {'average': 0, 'maximum': 0},
+                 39: {'average': 0, 'maximum': 0},
+                 40: {'average': 0, 'maximum': 0},
+                 41: {'average': 0, 'maximum': 0},
+                 42: {'average': 0, 'maximum': 0},
+                 43: {'average': 0, 'maximum': 0},
+                 44: {'average': 0, 'maximum': 0},
+                 45: {'average': 0, 'maximum': 0},
+                 46: {'average': 0, 'maximum': 0},
+                 47: {'average': 0, 'maximum': 0},
+                 48: {'average': 0, 'maximum': 0},
+                 49: {'average': 0, 'maximum': 0},
+                 50: {'average': 0, 'maximum': 0},
+                 51: {'average': 0, 'maximum': 0},
+                 52: {'average': 0, 'maximum': 0},
+                 53: {'average': 0, 'maximum': 0},
+                 54: {'average': 0, 'maximum': 0},
+                 55: {'average': 0, 'maximum': 0},
+                 56: {'average': 0, 'maximum': 0},
+                 57: {'average': 0, 'maximum': 0},
+                 58: {'average': 0, 'maximum': 0},
+                 59: {'average': 0, 'maximum': 0},
+                 60: {'average': 0, 'maximum': 0},
+                 61: {'average': 0, 'maximum': 0},
+                 62: {'average': 0, 'maximum': 0},
+                 63: {'average': 0, 'maximum': 0},
+                 64: {'average': 0, 'maximum': 0},
+                 65: {'average': 0, 'maximum': 0},
+                 66: {'average': 0, 'maximum': 0},
+                 67: {'average': 0, 'maximum': 0},
+                 68: {'average': 0, 'maximum': 0},
+                 69: {'average': 0, 'maximum': 0},
+                 70: {'average': 0, 'maximum': 0},
+                 71: {'average': 0, 'maximum': 0},
+                 72: {'average': 0, 'maximum': 0}
+            }
+        }
+    
+    golden_output = {'execute.return_value': '''\
+Router#show processes cpu history 
+Load for five secs: 9%/1%; one minute: 18%; five minutes: 19%
+Time source is NTP, 15:54:30.599 JST Tue Oct 18 2016                                       
+                                                                  
+                888886666611111                    11111          
+      777775555599999666664444466666333335555544444666667777777777
+  100                                                           
+   90           *****                                           
+   80           *****                                           
+   70           **********                                      
+   60           **********                                      
+   50           **********                                      
+   40           **********                                      
+   30           **********                                      
+   20           **********                         *****        
+   10 ******************************     *****     *************
+     0....5....1....1....2....2....3....3....4....4....5....5....6
+               0    5    0    5    0    5    0    5    0    5    0
+               CPU% per second (last 60 seconds)
+                                         
+                                                                  
+      5651729999999 1191951111117111 111111461 1111111111111111111
+      196551989889891884400016007001704000087075500000000100010442
+  100       *******   *                                         
+   90       *******   * *                                       
+   80     * **#*#**   * *       *                               
+   70  *  * **#*#**   * *       *           *                   
+   60  ** * **#*#**   * *       *           *                   
+   50 *** * *##*#**   * **      *          **                   
+   40 *** * *##*#**   # **      *          **                   
+   30 *** * ###*#*#   # **      *          **                   
+   20 *#**#*#######  *# **   *  *          **  **               
+   10 #############***#*##******#**********##*******************
+     0....5....1....1....2....2....3....3....4....4....5....5....6
+               0    5    0    5    0    5    0    5    0    5    0
+               CPU% per minute (last 60 minutes)
+              * = maximum CPU%   # = average CPU%
+                                                     
+                                  1                                           
+      71811111111111111118787161790                                           
+      35255649455555555553827964790                                           
+  100                            **                                         
+   90                            **                                         
+   80   *                ****   ***                                         
+   70 * *                **** * ***                                         
+   60 * *                **** * ***                                         
+   50 * *                **** * ***                                         
+   40 * *                **** * ***                                         
+   30 * *                **** * ***                                         
+   20 ****** * **************** ***                                         
+   10 ***************************##                                         
+     0....5....1....1....2....2....3....3....4....4....5....5....6....6....7..
+               0    5    0    5    0    5    0    5    0    5    0    5    0  
+                   CPU% per hour (last 72 hours)
+                  * = maximum CPU%   # = average CPU%
+    '''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        platform_obj = ShowProcessesCpuHistory(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse()    
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        platform_obj = ShowProcessesCpuHistory(device=self.device)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
 if __name__ == '__main__':
