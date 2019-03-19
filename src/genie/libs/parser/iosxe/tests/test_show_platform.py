@@ -24,8 +24,15 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   ShowPlatformHardwarePlim, \
                                                   ShowPlatformHardwareQfpBqsOpmMapping, \
                                                   ShowPlatformHardwareQfpBqsIpmMapping, \
+                                                  ShowPlatformHardwareSerdes, \
+                                                  ShowPlatformHardwareSerdesInternal, \
                                                   ShowPlatformPower, \
-                                                  ShowPlatformHardwareQfpBqsStatisticsChannelAll
+                                                  ShowPlatformHardwareQfpBqsStatisticsChannelAll, \
+                                                  ShowPlatformHardwareQfpInterfaceIfnameStatistics, \
+                                                  ShowPlatformHardwareQfpStatisticsDrop, \
+                                                  ShowPlatformHardwareSerdes, \
+                                                  ShowPlatformHardwareSerdesInternal, \
+                                                  ShowPlatformPower
 
 
 class test_show_version(unittest.TestCase):
@@ -15095,6 +15102,453 @@ class test_show_platform_hardware_qfp_bqs_ipm_mapping(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(status='active', slot='0')
 
+class test_show_platform_hardware_serdes_statistics(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_serdes = {
+        'link': {
+            '0-Link A': {
+                'from': {
+                    'bytes': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'high': 53361379,
+                        'looped': 0,
+                        'low': 199330758,
+                    },
+                    'flow_ctrl_count': 3680,
+                    'pkts': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'errored': 0,
+                        'high': 63052,
+                        'looped': 0,
+                        'low': 2703601,
+                    },
+                    'qstat_count': 331199,
+                },
+                'to': {
+                    'pkts': {
+                        'high': 0,
+                        'low': 2787636,
+                    }
+                }
+            },
+            '0-Link B': {
+                'from': {
+                    'bytes': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 0,
+                    },
+                    'flow_ctrl_count': 3680,
+                    'pkts': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'errored': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 0,
+                    },
+                    'qstat_count': 331199,
+                },
+                'to': {
+                    'pkts': {
+                        'high': 0,
+                        'low': 0,
+                    }
+                }
+            },
+            '1-Link A': {
+                'from': {
+                    'bytes': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 0,
+                    },
+                    'flow_ctrl_count': 3680,
+                    'pkts': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'errored': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 0,
+                    },
+                    'qstat_count': 294400,
+                },
+                'to': {
+                    'pkts': {
+                        'high': 0,
+                        'low': 0,
+                    }
+                }
+            },
+            '1-Link B': {
+                'from': {
+                    'bytes': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 0,
+                    },
+                    'flow_ctrl_count': 3680,
+                    'pkts': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'errored': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 0,
+                    },
+                    'qstat_count': 0,
+                },
+                'to': {
+                    'pkts': {
+                        'high': 0,
+                        'low': 0,
+                    }
+                }
+            },
+            'F1-Link A': {
+                'from': {
+                    'bytes': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 18648,
+                    },
+                    'flow_ctrl_count': 3680,
+                    'pkts': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'errored': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 518,
+                    },
+                    'qstat_count': 0,
+                },
+                'to': {
+                    'pkts': {
+                        'high': 0,
+                        'low': 518,
+                    }
+                }
+            },
+            'R0-Link A': {
+                'from': {
+                    'bytes': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'high': 1614284,
+                        'looped': 0,
+                        'low': 298734735,
+                    },
+                    'flow_ctrl_count': 3700,
+                    'pkts': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'errored': 0,
+                        'high': 19461,
+                        'looped': 0,
+                        'low': 2777099,
+                    },
+                    'qstat_count': 0,
+                },
+                'to': {
+                    'pkts': {
+                        'high': 1018101,
+                        'low': 1719353,
+                    }
+                }
+            },
+            'R1-Link A': {
+                'from': {
+                    'bytes': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 0,
+                    },
+                    'flow_ctrl_count': 3501,
+                    'pkts': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'errored': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 0,
+                    },
+                    'qstat_count': 0,
+                },
+                'to': {
+                    'pkts': {
+                        'high': 0,
+                        'low': 0,
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_serdes = {'execute.return_value': '''\
+        Router#show platform hardware slot F0 serdes statistics 
+        Load for five secs: 22%/1%; one minute: 8%; five minutes: 9%
+        Time source is NTP, 07:42:08.304 JST Thu Sep 8 2016
+        From Slot R1-Link A
+          Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0         
+          Bytes High: 0          Low: 0          Bad: 0          Dropped: 0         
+          Pkts  Looped: 0          Error: 0         
+          Bytes Looped 0         
+          Qstat count: 0          Flow ctrl count: 3501      
+        To Slot R1-Link A
+          Pkts  High: 0          Low: 0         
+
+        From Slot R0-Link A
+          Pkts  High: 19461      Low: 2777099    Bad: 0          Dropped: 0         
+          Bytes High: 1614284    Low: 298734735  Bad: 0          Dropped: 0         
+          Pkts  Looped: 0          Error: 0         
+          Bytes Looped 0         
+          Qstat count: 0          Flow ctrl count: 3700      
+        To Slot R0-Link A
+          Pkts  High: 1018101    Low: 1719353   
+
+        From Slot F1-Link A
+          Pkts  High: 0          Low: 518        Bad: 0          Dropped: 0         
+          Bytes High: 0          Low: 18648      Bad: 0          Dropped: 0         
+          Pkts  Looped: 0          Error: 0         
+          Bytes Looped 0         
+          Qstat count: 0          Flow ctrl count: 3680      
+        To Slot F1-Link A
+          Pkts  High: 0          Low: 518       
+
+        From Slot 1-Link A
+          Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0         
+          Bytes High: 0          Low: 0          Bad: 0          Dropped: 0         
+          Pkts  Looped: 0          Error: 0         
+          Bytes Looped 0         
+          Qstat count: 294400     Flow ctrl count: 3680      
+        To Slot 1-Link A
+          Pkts  High: 0          Low: 0         
+
+        From Slot 0-Link A
+          Pkts  High: 63052      Low: 2703601    Bad: 0          Dropped: 0         
+          Bytes High: 53361379   Low: 199330758  Bad: 0          Dropped: 0         
+          Pkts  Looped: 0          Error: 0         
+          Bytes Looped 0         
+          Qstat count: 331199     Flow ctrl count: 3680      
+        To Slot 0-Link A
+          Pkts  High: 0          Low: 2787636   
+
+        From Slot 0-Link B
+          Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0         
+          Bytes High: 0          Low: 0          Bad: 0          Dropped: 0         
+          Pkts  Looped: 0          Error: 0         
+          Bytes Looped 0         
+          Qstat count: 331199     Flow ctrl count: 3680      
+        To Slot 0-Link B
+          Pkts  High: 0          Low: 0         
+
+        From Slot 1-Link B
+          Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0         
+          Bytes High: 0          Low: 0          Bad: 0          Dropped: 0         
+          Pkts  Looped: 0          Error: 0         
+          Bytes Looped 0         
+          Qstat count: 0          Flow ctrl count: 3680      
+        To Slot 1-Link B
+          Pkts  High: 0          Low: 0         
+    '''
+    }
+
+    def test_golden_serdes(self):
+        self.device = Mock(**self.golden_output_serdes)
+        obj = ShowPlatformHardwareSerdes(device=self.device)
+        parsed_output = obj.parse(slot='0')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_serdes)
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowPlatformHardwareSerdes(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(slot='0')
+
+class test_show_platform_hardware_serdes_statistics_internal(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_serdes_internal = {
+        'link': {
+            'Encryption Processor': {
+                'errors': {
+                    'rx_parity': 0,
+                    'rx_process': 0,
+                    'rx_schedule': 0,
+                    'rx_statistics': 0,
+                    'tx_process': 0,
+                    'tx_schedule': 0,
+                    'tx_statistics': 0,
+                },
+                'from': {
+                    'bytes': {
+                        'dropped': 0,
+                        'errored': 0,
+                        'total': 0},
+                    'pkts': {
+                        'dropped': 0,
+                        'errored': 0,
+                        'total': 0,
+                    },
+                },
+                'local_rx_in_sync': True,
+                'local_tx_in_sync': True,
+                'remote_rx_in_sync': True,
+                'remote_tx_in_sync': True,
+                'to': {
+                    'bytes': {
+                        'dropped': 0,
+                        'total': 0,
+                    },
+                    'pkts': {
+                        'dropped': 0,
+                        'total': 0,
+                    },
+                },
+            },
+            'Network-Processor-0': {
+                'from': {
+                    'bytes': {
+                        'total': 7397920802,
+                    },
+                    'pkts': {
+                        'total': 21259012,
+                    },
+                },
+                'local_rx_in_sync': True,
+                'local_tx_in_sync': True,
+                'to': {
+                    'bytes': {
+                        'total': 7343838083,
+                    },
+                    'pkts': {
+                        'total': 21763844,
+                    },
+                },
+            },
+        },
+        'serdes_exception_counts': {
+            'c2w': {},
+            'cfg': {},
+            'cilink': {
+                'link': {
+                    '0': {
+                        'chicoEvent': 5,
+                        'msgEccError': 5,
+                        'msgTypeError': 5,
+                    },
+                    '1': {
+                        'chicoEvent': 1,
+                        'msgEccError': 1,
+                        'msgTypeError': 1,
+                    },
+                    '2': {
+                        'chicoEvent': 3,
+                        'msgEccError': 3,
+                        'msgTypeError': 3,
+                    },
+                },
+            },
+            'edh-hi': {},
+            'edh-lo': {},
+            'edm': {},
+            'eqs/fc': {},
+            'idh-hi': {},
+            'idh-lo': {},
+            'idh-shared': {},
+            'ilak': {},
+            'isch': {},
+            'pcie': {},
+            'slb': {},
+            'spi link': {},
+        },
+    }
+
+    golden_output_serdes_internal = {'execute.return_value': '''\
+        Router#show platform hardware slot F0 serdes statistics internal 
+        Load for five secs: 5%/1%; one minute: 8%; five minutes: 9%
+        Time source is NTP, 07:42:13.752 JST Thu Sep 8 2016
+        Warning: Clear option may not clear all the counters
+
+        Network-Processor-0 Link:
+          Local TX in sync, Local RX in sync
+          From Network-Processor     Packets:    21259012  Bytes:  7397920802
+          To Network-Processor       Packets:    21763844  Bytes:  7343838083
+
+        Encryption Processor Link:
+          Local TX in sync, Local RX in sync
+          Remote TX in sync, Remote RX in sync
+          To Encryption Processor   Packets:           0  Bytes:           0
+            Drops                   Packets:           0  Bytes:           0
+          From Encryption Processor Packets:           0  Bytes:           0
+            Drops                   Packets:           0  Bytes:           0
+            Errors                  Packets:           0  Bytes:           0
+          Errors:
+            RX/TX process: 0/0, RX/TX schedule: 0/0
+            RX/TX statistics: 0/0, RX parity: 0
+
+        Serdes Exception Counts:
+          spi link:
+          cilink:
+            link 0: msgTypeError: 5
+            link 0: msgEccError: 5
+            link 0: chicoEvent: 5
+            link 1: msgTypeError: 1
+            link 1: msgEccError: 1
+            link 1: chicoEvent: 1
+            link 2: msgTypeError: 3
+            link 2: msgEccError: 3
+            link 2: chicoEvent: 3
+          ilak:
+          slb:
+          edm:
+          isch:
+          cfg:
+          c2w:
+          pcie:
+          eqs/fc:
+          idh-hi:
+          idh-lo:
+          idh-shared:
+          edh-hi:
+          edh-lo:
+    '''
+    }
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output_serdes_internal)
+        obj = ShowPlatformHardwareSerdesInternal(device=self.device)
+        parsed_output = obj.parse(slot='0')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_serdes_internal)
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowPlatformHardwareSerdesInternal(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(slot='0')
+
+
 class test_show_platform_power(unittest.TestCase):
     device = Device(name='aDevice')
 
@@ -15762,6 +16216,228 @@ class show_platform_hardware_qfp_bqs_statistics_channel_all(unittest.TestCase):
         platform_obj = ShowPlatformHardwareQfpBqsStatisticsChannelAll(device=self.device)
         parsed_output = platform_obj.parse(status='active', slot='0', iotype='opm')
         self.assertEqual(parsed_output,self.golden_parsed_output_active_opm)
+
+class show_platform_hardware_qfp_interface(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output = {
+        'qfp': {
+            'active': {
+                'interface': {
+                    'GigabitEthernet0/0/0': {
+                        'egress_drop_stats': {},
+                        'ingress_drop_stats': {},
+                        'platform_handle': 7,
+                        'receive_stats': {
+                            'FragIpv4': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'FragIpv6': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'Ipv4': {
+                                'octets': 306,
+                                'packets': 4,
+                            },
+                            'Ipv6': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'McastIpv4': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'McastIpv6': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'Other': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'ReassIpv4': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'ReassIpv6': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'Tag': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                        },
+                        'transmit_stats': {
+                            'FragmentedIpv4': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'FragmentedIpv6': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'FragmentsIpv4': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'FragmentsIpv6': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'Ipv4': {
+                                'octets': 246,
+                                'packets': 3,
+                            },
+                            'Ipv6': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'McastIpv4': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'McastIpv6': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'Other': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'Tag': {
+                                'octets': 77,
+                                'packets': 1,
+                            },
+                        },
+                    },
+                }
+            }
+        },
+    }
+
+    golden_output = {'execute.return_value': '''\
+        Router#show platform hardware qfp active interface if-name gigabitEthernet 0/0/0 statistics
+        Load for five secs: 2%/0%; one minute: 8%; five minutes: 8%
+        Time source is NTP, 07:55:23.913 JST Thu Sep 8 2016
+        Platform Handle 7
+        ----------------------------------------------------------------
+        Receive Stats                             Packets        Octets
+        ----------------------------------------------------------------
+          Ipv4                                       4             306
+          Ipv6                                       0               0
+          Tag                                        0               0
+          McastIpv4                                  0               0
+          McastIpv6                                  0               0
+          FragIpv4                                   0               0
+          FragIpv6                                   0               0
+          ReassIpv4                                  0               0
+          ReassIpv6                                  0               0
+          Other                                      0               0
+
+        ----------------------------------------------------------------
+        Transmit Stats                            Packets        Octets
+        ----------------------------------------------------------------
+          Ipv4                                       3             246
+          Ipv6                                       0               0
+          Tag                                        1              77
+          McastIpv4                                  0               0
+          McastIpv6                                  0               0
+          FragmentsIpv4                              0               0
+          FragmentsIpv6                              0               0
+          FragmentedIpv4                             0               0
+          FragmentedIpv6                             0               0
+          Other                                      0               0
+
+        ----------------------------------------------------------------
+        Input Drop Stats                          Packets        Octets
+        ----------------------------------------------------------------
+          Ingress Drop stats are not enabled on this interface
+
+        ----------------------------------------------------------------
+        Output Drop Stats                         Packets        Octets
+        ----------------------------------------------------------------
+          The Egress Drop stats are not enabled on this interface
+    '''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        platform_obj = ShowPlatformHardwareQfpInterfaceIfnameStatistics(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse(status='active', interface='gigabitEthernet 0/0/0')  
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        platform_obj = ShowPlatformHardwareQfpInterfaceIfnameStatistics(device=self.device)
+        parsed_output = platform_obj.parse(status='active', interface='gigabitEthernet 0/0/0')
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+class test_show_platform_hardware_qfp_statistics_drop(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_active = {
+      "global_drop_stats": {
+        "Ipv4NoAdj": {
+          "octets": 296,
+          "packets": 7
+        },
+        "Ipv4NoRoute": {
+          "octets": 7964,
+          "packets": 181
+        },
+        "PuntPerCausePolicerDrops": {
+          "octets": 184230,
+          "packets": 2003
+        },
+        "UidbNotCfgd": {
+          "octets": 29312827,
+          "packets": 466391
+        },
+        "UnconfiguredIpv4Fia": {
+          "octets": 360,
+          "packets": 6
+        }
+      }
+    }
+
+    golden_output_active = {'execute.return_value': '''\
+        Router#show platform hardware qfp active statistics drop | exclude _0_
+        Load for five secs: 2%/1%; one minute: 9%; five minutes: 8%
+        Time source is NTP, 07:47:11.317 JST Thu Sep 8 2016
+        -------------------------------------------------------------------------
+        Global Drop Stats                         Packets                  Octets  
+        -------------------------------------------------------------------------
+        Ipv4NoAdj                                       7                     296  
+        Ipv4NoRoute                                   181                    7964  
+        PuntPerCausePolicerDrops                     2003                  184230  
+        UidbNotCfgd                                466391                29312827  
+        UnconfiguredIpv4Fia                             6                     360  
+    '''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        platform_obj = ShowPlatformHardwareQfpStatisticsDrop(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse(status='active')    
+
+    def test_golden_active(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_active)
+        platform_obj = ShowPlatformHardwareQfpStatisticsDrop(device=self.device)
+        parsed_output = platform_obj.parse(status='active')
+        self.assertEqual(parsed_output,self.golden_parsed_output_active)
 
 
 if __name__ == '__main__':
