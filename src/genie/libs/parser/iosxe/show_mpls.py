@@ -22,12 +22,484 @@
         *  show mpls ldp statistics
        	*  show mpls ldp parameters
 """
+
 import re
 
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, \
                                                Any, \
                                                Optional
+
+class ShowMplsLdpParametersSchema(MetaParser):
+    """Schema for show mpls ldp Parameters"""
+
+    schema = {
+        'ldp_featureset_manager': {
+            Any(): {
+                'ldp_features': list,
+            }
+        },
+        'ldp_backoff': {
+            'initial': int,
+            'maximum': int,
+        },
+        'ldp_loop_detection': str,
+        'ldp_nsr': str,
+        'version': int,
+        'session_hold_time': int,
+        'keep_alive_interval': int,
+        'ldp_for_targeted_sessions': bool,
+        'discovery_targeted_hello': {
+            'holdtime': int,
+            'interval': int,
+        },
+        'discovery_hello': {
+            'holdtime': int,
+            'interval': int,
+        },
+        'downstream_on_demand_max_hop_count': int,
+    }
+
+class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
+    """Parser for show mpls ldp parameters"""
+
+    cli_command = 'show mpls ldp parameters'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial return dictionary
+        result_dict = {}
+        ldp_feature_flag = False
+        ldp_feature_list = []
+
+        # LDP Feature Set Manager: State Initialized
+        p1 = re.compile(r'^LDP +Feature +Set +Manager: +(S|s)tate +(?P<state_initialized>\w+)$')
+        #   LDP features:
+        p2 = re.compile(r'^LDP +features:$')
+        #  Auto-Configuration
+        p2_1 = re.compile(r'^(?P<ldp_features>[\w\-]+)?$')
+        # Protocol version: 1
+        p3 = re.compile(r'^Protocol version: +(?P<version>\d+)$')
+        # Session hold time: 180 sec; keep alive interval: 60 sec
+        p4 = re.compile(r'^Session +hold +time: +(?P<session_holdtime>\d+) +sec;'
+                        ' +keep +alive +interval: +(?P<keepalive_interval>\d+) +sec$')
+
+        # Discovery hello: holdtime: 15 sec; interval: 5 sec
+        p5 = re.compile(r'^Discovery +hello: +holdtime: +(?P<holdtime>\d+) +sec; +interval: +(?P<interval>\d+) +sec$')
+
+        # Discovery targeted hello: holdtime: 90 sec; interval: 10 sec
+        p6 = re.compile(r'^Discovery +targeted +hello: +holdtime: +(?P<targeted_holdtime>\d+) +sec; +interval:'
+                        ' +(?P<targeted_interval>\d+) +sec$')
+
+        # Downstream on Demand max hop count: 255
+        p7 = re.compile(r'^Downstream +on +Demand +max +hop +count: +(?P<maxhop_count>\d+)$')
+        # LDP for targeted sessions
+        p8 = re.compile(r'^LDP +for +targeted +sessions$')
+        # LDP initial/maximum backoff: 15/120 sec
+        p9 = re.compile(r'^LDP +initial\/maximum +backoff: +(?P<initial>\w+)/+(?P<maximum>\w+) sec$')
+        # LDP loop detection: off
+        p10 = re.compile(r'^LDP +loop +detection: +(?P<loop_detection>\w+)$')
+        # LDP NSR: Disabled
+        p11 = re.compile(r'^LDP +NSR: +(?P<nsr>\w+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # LDP Feature Set Manager: State Initialized
+            m = p1.match(line)
+            if m:
+                ldp_dict = result_dict
+                ldp_feature_dict = ldp_dict.setdefault('ldp_featureset_manager', {}).setdefault('State Initialized', {})
+                continue
+
+            #  LDP features:
+            m = p2.match(line)
+            if m:
+                ldp_feature_flag = True
+                continue
+
+            m = p2_1.match(line)
+            if m:
+                group = m.groupdict()
+                if ldp_feature_flag:
+                    ldp_feature_list.append(group['ldp_features'])
+                    ldp_feature_dict.update({'ldp_features': ldp_feature_list})
+                continue
+
+            # Protocol version: 1
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_feature_flag = False
+                ldp_dict.update({'version': int(group['version'])})
+                continue
+
+            # Session hold time: 180 sec; keep alive interval: 60 sec
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_feature_flag = False
+                ldp_dict.update({'session_hold_time': int(group['session_holdtime'])})
+                ldp_dict.update({'keep_alive_interval': int(group['keepalive_interval'])})
+                continue
+
+            # Discovery hello: holdtime: 15 sec; interval: 5 sec
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_feature_flag = False
+                discovery_hello = ldp_dict.setdefault('discovery_hello', {})
+                discovery_hello.update({'holdtime': int(group['holdtime'])})
+                discovery_hello.update({'interval': int(group['interval'])})
+                continue
+
+            # Discovery targeted hello: holdtime: 90 sec; interval: 10 sec
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_feature_flag = False
+                discovery_targeted_hello = ldp_dict.setdefault('discovery_targeted_hello', {})
+                discovery_targeted_hello.update({'holdtime': int(group['targeted_holdtime'])})
+                discovery_targeted_hello.update({'interval': int(group['targeted_interval'])})
+                continue
+
+            # Downstream on Demand max hop count: 255
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_feature_flag = False
+                ldp_dict.update({'downstream_on_demand_max_hop_count': int(group['maxhop_count'])})
+                continue
+
+            # LDP for targeted sessions
+            m = p8.match(line)
+            if m:
+                ldp_feature_flag = False
+                ldp_dict.update({'ldp_for_targeted_sessions': True})
+                continue
+
+            # LDP initial/maximum backoff: 15/120 sec
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_feature_flag = False
+                backoff_dict = ldp_dict.setdefault('ldp_backoff', {})
+                backoff_dict.update({'initial': int(group['initial'])})
+                backoff_dict.update({'maximum': int(group['maximum'])})
+                continue
+
+            # LDP loop detection: off
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_feature_flag = False
+                ldp_dict.update({'ldp_loop_detection': group['loop_detection']})
+                continue
+
+            # LDP NSR: Disabled
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_feature_flag = False
+                ldp_dict.update({'ldp_nsr': group['nsr'].lower()})
+                continue
+
+        return result_dict
+
+
+class ShowMplsLdpNsrStatisticsSchema(MetaParser):
+    """Schema for show mpls ldp nsr statistics"""
+    schema = {
+        'statistics': {
+            'peer': {
+                Any(): {
+                    'local_space_id': {
+                        Any(): {
+                            'in_label_request_records': {
+                                'created': int,
+                                'freed': int,
+                            },
+                            'in_label_withdraw_records': {
+                                'created': int,
+                                'freed': int,
+                            },
+                            'local_address_withdraw': {
+                                'set': int,
+                                'cleared': int,
+                            },
+                            'transmit_contexts': {
+                                'enqueued': int,
+                                'dequeued': int,
+                            },
+                        }
+                    }
+                },
+            },
+            'total_in_label_request_records': {
+                'created': int,
+                'freed': int,
+            },
+            'total_in_label_withdraw_records': {
+                'created': int,
+                'freed': int,
+            },
+            'total_local_address_withdraw_records': {
+                'created': int,
+                'freed': int,
+            },
+            'label_request_acks': {
+                'number_of_chkpt_messages': {
+                    'sent': int,
+                    'in_queue': int,
+                    'in_state_none': int,
+                    'in_state_send': int,
+                    'in_state_wait': int,
+                },
+            },
+            'label_withdraw_acks': {
+                'number_of_chkpt_messages': {
+                    'sent': int,
+                    'in_queue': int,
+                    'in_state_none': int,
+                    'in_state_send': int,
+                    'in_state_wait': int,
+                },
+            },
+            'address_withdraw_acks': {
+                'number_of_chkpt_messages': {
+                    'sent': int,
+                    'in_queue': int,
+                    'in_state_none': int,
+                    'in_state_send': int,
+                    'in_state_wait': int,
+                },
+            },
+            'session_sync': {
+                Any(): int,
+            }
+        }
+    }
+
+class ShowMplsLdpNsrStatistics(ShowMplsLdpNsrStatisticsSchema):
+    """Parser for show mpls ldp nsr statistics"""
+
+    cli_command = 'show mpls ldp nsr statistics'
+
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial return dictionary
+        result_dict = {}
+        session_sync_flag = False
+
+        # Peer: 106.162.197.253:0
+        p1 = re.compile(
+            r'^Peer: +(?P<peer>[\d\.]+):(?P<local_space_id>\d+)$')
+        #   In label Request Records created: 0, freed: 0
+        p2 = re.compile(
+            r'^In +label +Request +Records +created: +(?P<created>\d+), +freed: +(?P<freed>\d+)$')
+
+        #   In label Withdraw Records created: 0, freed: 0
+        p3 = re.compile(
+            r'^In +label +Withdraw +Records +created: +(?P<created>\d+), +freed: +(?P<freed>\d+)$')
+        #   Local Address Withdraw Set: 0, Cleared: 0
+        p4 = re.compile(
+            r'^Local +Address +Withdraw +Set: +(?P<set>\d+), +Cleared: +(?P<cleared>\d+)$')
+
+        #   Transmit contexts enqueued: 0, dequeued: 0
+        p5 = re.compile(
+            r'^Transmit +contexts +enqueued: +(?P<enqueued>\d+), +dequeued: +(?P<dequeued>\d+)$')
+        # Total In label Request Records created: 0, freed: 0
+        p6 = re.compile(
+            r'^Total +In +label +Request +Records +created: +(?P<created>\d+), +freed: +(?P<freed>\d+)$')
+
+        # Total In label Withdraw Records created: 0, freed: 0
+        p7 = re.compile(
+            r'^Total +In +label +Withdraw +Records +created: +(?P<created>\d+), +freed: +(?P<freed>\d+)$')
+        # Total Local Address Withdraw Records created: 0, freed: 0
+        p8 = re.compile(
+            r'^Total +Local +Address +Withdraw +Records +created: +(?P<created>\d+), +freed: +(?P<freed>\d+)$')
+        # Label Request Acks:
+        p9 = re.compile(r'^Label +Request +Acks:$')
+
+        #   Number of chkpt msg sent: 0
+        p10 = re.compile(r'^Number +of +chkpt +msg +sent: +(?P<msg_sent>\d+)$')
+        #   Number of chkpt msg in queue: 0
+        p11 = re.compile(r'^Number +of +chkpt +msg +in +queue: +(?P<queue>\d+)$')
+        #   Number of chkpt msg in state none: 0
+        p12 = re.compile(r'^Number +of +chkpt +msg +in +state +none: +(?P<state_none>\d+)$')
+        #   Number of chkpt msg in state send: 0
+        p13 = re.compile(r'^Number +of +chkpt +msg +in +state +send: +(?P<state_send>\d+)$')
+        #   Number of chkpt msg in state wait: 0
+        p14 = re.compile(r'^Number +of +chkpt +msg +in +state +wait: +(?P<state_wait>\d+)$')
+        # Label Withdraw Acks:
+        p15= re.compile(r'^Label +Withdraw +Acks:$')
+        # Address Withdraw Acks:
+        p16 = re.compile(r'^Address +Withdraw +Acks:$')
+        # Session Sync:
+        p17 = re.compile(r'^Session +Sync:$')
+
+        #   Number of session-sync msg sent: 0
+        p18 = re.compile(r'^(?P<session_sync_keys>^(Number)[\S\s]+): (?P<session_sync_values>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Peer: 106.162.197.253:0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                statistic_dict = result_dict.setdefault('statistics', {})
+                peer_dict = statistic_dict.setdefault('peer',{}).\
+                                           setdefault(group['peer'], {}).\
+                                           setdefault('local_space_id', {}).\
+                                           setdefault(int(group['local_space_id']), {})
+                continue
+
+            #   In label Request Records created: 0, freed: 0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                label_request = peer_dict.setdefault('in_label_request_records', {})
+                label_request.update({'created': int(group['created'])})
+                label_request.update({'freed': int(group['freed'])})
+                continue
+
+            #   In label Withdraw Records created: 0, freed: 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                label_withdraw = peer_dict.setdefault('in_label_withdraw_records', {})
+                label_withdraw.update({'created': int(group['created'])})
+                label_withdraw.update({'freed': int(group['freed'])})
+                continue
+
+            #   Local Address Withdraw Set: 0, Cleared: 0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                label_address_request = peer_dict.setdefault('local_address_withdraw', {})
+                label_address_request.update({'set': int(group['set'])})
+                label_address_request.update({'cleared': int(group['cleared'])})
+                continue
+
+            #   Transmit contexts enqueued: 0, dequeued: 0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                transmit_dict = peer_dict.setdefault('transmit_contexts', {})
+                transmit_dict.update({'enqueued': int(group['enqueued'])})
+                transmit_dict.update({'dequeued': int(group['dequeued'])})
+                continue
+
+            # Total In label Request Records created: 0, freed: 0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                total_label_dict = statistic_dict.setdefault('total_in_label_request_records', {})
+                total_label_dict.update({'created': int(group['created'])})
+                total_label_dict.update({'freed': int(group['freed'])})
+                continue
+
+            # Total In label Withdraw Records created: 0, freed: 0
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                total_withdraw_dict = statistic_dict.setdefault('total_in_label_withdraw_records', {})
+                total_withdraw_dict.update({'created': int(group['created'])})
+                total_withdraw_dict.update({'freed': int(group['freed'])})
+                continue
+
+            # Total Local Address Withdraw Records created: 0, freed: 0
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                total_local_address_dict = statistic_dict.setdefault('total_local_address_withdraw_records', {})
+                total_local_address_dict.update({'created': int(group['created'])})
+                total_local_address_dict.update({'freed': int(group['freed'])})
+                continue
+
+            # Label Request Acks:
+            m = p9.match(line)
+            if m:
+                # label_request_acks = True
+                temp_dict = statistic_dict.setdefault('label_request_acks', {})
+                continue
+
+            #   Number of chkpt msg sent: 0
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                temp_dict.setdefault('number_of_chkpt_messages',{}).update({'sent': int(group['msg_sent'])})
+                continue
+
+            #   Number of chkpt msg in queue: 0
+            m = p11.match(line)
+            if m:
+                session_sync_flag = False
+                group = m.groupdict()
+                temp_dict.setdefault('number_of_chkpt_messages', {}).update({'in_queue': int(group['queue'])})
+                continue
+
+            #   Number of chkpt msg in state none: 0
+            m = p12.match(line)
+            if m:
+                session_sync_flag = False
+                group = m.groupdict()
+                temp_dict.setdefault('number_of_chkpt_messages', {}).update({'in_state_none': int(group['state_none'])})
+                continue
+
+            #   Number of chkpt msg in state send: 0
+            m = p13.match(line)
+            if m:
+                session_sync_flag = False
+                group = m.groupdict()
+                temp_dict.setdefault('number_of_chkpt_messages', {}).update({'in_state_send': int(group['state_send'])})
+                continue
+
+            #   Number of chkpt msg in state wait: 0
+            m = p14.match(line)
+            if m:
+                session_sync_flag = False
+                group = m.groupdict()
+                temp_dict.setdefault('number_of_chkpt_messages', {}).update({'in_state_wait': int(group['state_wait'])})
+                continue
+
+            # Label Withdraw Acks:
+            m = p15.match(line)
+            if m:
+                temp_dict = statistic_dict.setdefault('label_withdraw_acks', {})
+                continue
+
+            # Address Withdraw Acks:
+            m = p16.match(line)
+            if m:
+                temp_dict = statistic_dict.setdefault('address_withdraw_acks', {})
+                continue
+
+            # Session Sync:
+            m = p17.match(line)
+            if m:
+                session_sync_flag = True
+                session_sync_dict = statistic_dict.setdefault('session_sync', {})
+                continue
+
+            #   Number of session-sync msg sent: 0
+            m = p18.match(line)
+            if m:
+                if session_sync_flag:
+                    group = m.groupdict()
+                    key = group['session_sync_keys'].lower().replace(' ','_')
+                    session_sync_dict.update({key.replace('-','_'): int(group['session_sync_values'])})
+                continue
+        return result_dict
 
 
 class ShowMplsLdpParametersSchema(MetaParser):
@@ -305,10 +777,10 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
         received_flag = False
         sent_flag = False
 
-        # Peer LDP Ident: 106.162.197.252:0; Local LDP Ident 106.162.197.254:0
+        # Peer LDP Ident: 10.169.197.252:0; Local LDP Ident 10.169.197.254:0
         p1 = re.compile(r'^Peer +LDP +Ident: +(?P<peer_ldp>[\d\.]+):(?P<label_space_id>\d+); +Local +LDP +Ident +(?P<local_ldp>\S+)$')
 
-        #     TCP connection: 106.162.197.252.646 - 106.162.197.254.20170
+        #     TCP connection: 10.169.197.252.646 - 10.169.197.254.20170
         p2 = re.compile(r'^TCP +connection: +(?P<tcp_connection>[\S\s]+)$')
 
         #     State: Oper; Msgs sent/rcvd: 824/825; Downstream
@@ -321,7 +793,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
         p4 = re.compile(r'^Up +time: +(?P<up_time>[\w\:]+)(; +UID: (?P<uid>\d+); +Peer +Id +(?P<peer_id>\d+))?$')
 
         #     LDP discovery sources:
-        #       GigabitEthernet0/0/0, Src IP addr: 106.162.197.93
+        #       GigabitEthernet0/0/0, Src IP addr: 10.169.197.93
         p5 = re.compile(r'^(?P<interface>[\S]+)(,|;) +Src +IP +addr: +(?P<src_ip_address>[\d\.]+)$')
 
         #       holdtime: 15000 ms, hello interval: 5000 ms
@@ -330,7 +802,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
         #     Addresses bound to peer LDP Ident:
         p6 = re.compile(r'^Addresses +bound +to +peer +LDP +Ident:$')
 
-        #       106.162.197.252 27.93.202.49    106.162.197.101 113.146.190.254
+        #       10.169.197.252 10.120.202.49    10.169.197.101 10.16.190.254
         p7 = re.compile(r'^(?P<address_bound_peer_ldp>[\d\.\s]+)$')
 
         # Peer holdtime: 180000 ms; KA interval: 60000 ms; Peer state: estab
@@ -366,7 +838,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
 
         for line in out.splitlines():
             line = line.strip()
-            # Peer LDP Ident: 106.162.197.252:0; Local LDP Ident 106.162.197.254:0
+            # Peer LDP Ident: 10.169.197.252:0; Local LDP Ident 10.169.197.254:0
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -380,7 +852,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
                 peer_dict.update({'local_ldp_ident':group['local_ldp']})
                 continue
 
-            # TCP connection: 106.162.197.252.646 - 106.162.197.254.20170
+            # TCP connection: 10.169.197.252.646 - 10.169.197.254.20170
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -408,7 +880,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
                 peer_dict.update({'uptime': group['up_time']})
                 continue
 
-            #  GigabitEthernet0/0/0, Src IP addr: 106.162.197.93
+            #  GigabitEthernet0/0/0, Src IP addr: 10.169.197.93
             m = p5.match(line)
             if m:
                 group = m.groupdict()
@@ -433,7 +905,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
                 address_bound_flag = True
                 continue
 
-            #  106.162.197.252 27.93.202.49    106.162.197.101 113.146.190.254
+            #  10.169.197.252 10.120.202.49    10.169.197.101 10.16.190.254
             m = p7.match(line)
             if m:
                 group = m.groupdict()
@@ -558,7 +1030,7 @@ class ShowMplsLdpBindingsSchema(MetaParser):
                     Any():{
                         'rev': str,
                         Optional('checkpoint'): str,
-                        'label_binding': {
+                        Optional('label_binding'): {
                             'label':{
                                 Any():{
                                     Optional('owner'): str,
@@ -566,7 +1038,7 @@ class ShowMplsLdpBindingsSchema(MetaParser):
                                 },
                             },
                         },
-                        'remote_binding': {
+                        Optional('remote_binding'): {
                             'label': {
                                 Any():{
                                     'lsr_id':{
@@ -594,12 +1066,15 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
                   show mpls ldp bindings all
                   show mpls ldp bindings all detail
        """
-    cli_command = ['show mpls ldp bindings','show mpls ldp bindings {all} {detail}','show mpls ldp bindings vrf {vrf}']
+    cli_command = ['show mpls ldp bindings',
+                   'show mpls ldp bindings {all}',
+                   'show mpls ldp bindings {all} {detail}',
+                   'show mpls ldp bindings vrf {vrf}']
 
-    def cli(self, vrf="",all="", detail="", output=None):
+    def cli(self, vrf="", all="", detail="", output=None):
         if output is None:
             if vrf:
-                cmd = self.cli_command[2].format(vrf=vrf)
+                cmd = self.cli_command[3].format(vrf=vrf)
             else:
                 vrf='default'
                 if not all and not detail:
@@ -607,16 +1082,20 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
                 if all and not detail:
                     cmd = self.cli_command[1].format(all=all)
                 if all and detail:
-                    cmd = self.cli_command[1].format(all=all, detail=detail)
+                    cmd = self.cli_command[2].format(all=all, detail=detail)
             out = self.device.execute(cmd)
         else:
             out = output
 
+        if not vrf:
+            vrf = 'default'
         # initial return dictionary
         result_dict = {}
 
-        # lib entry: 20.1.1.0/24, rev 1028
-        # lib entry: 27.93.202.64/32, rev 12, chkpt: none
+        # VRF vrf1:
+        p0 = re.compile(r'^VRF +(?P<vrf>\S+):$')
+        # lib entry: 10.186.1.0/24, rev 1028
+        # lib entry: 10.120.202.64/32, rev 12, chkpt: none
         p1 = re.compile(r'^lib +entry: +(?P<lib_entry>[\d\.\/]+), +rev +(?P<rev>\d+)(, +chkpt: +(?P<checkpoint>\S+))?$')
 
         #  local binding:  label: 2536
@@ -624,11 +1103,11 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
         p2 = re.compile(r'^local +binding:  +label: +(?P<local_label>\S+)( +\(owner +(?P<owner>\w+)\))?$')
 
         #  Advertised to:
-        # 106.162.197.252:0      106.162.197.253:0
+        # 10.169.197.252:0      10.169.197.253:0
         p3 = re.compile(r'^(?P<advertised_to>[\d\.\:\s]+)$')
 
-        #  remote binding: lsr: 106.162.197.252:0, label: 508
-        #  remote binding: lsr: 106.162.197.253:0, label: 308016 checkpointed
+        #  remote binding: lsr: 10.169.197.252:0, label: 508
+        #  remote binding: lsr: 10.169.197.253:0, label: 308016 checkpointed
         p4 = re.compile(r'^remote +binding: +lsr: +(?P<lsr>[\d\.]+):(?P<label_space_id>[\d]+),'
                         ' +label: +(?P<remote_label>\S+)( +(?P<checkpointed>\w+))?$')
 
@@ -636,8 +1115,15 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # lib entry: 20.1.1.0/24, rev 1028
-            # lib entry: 27.93.202.64/32, rev 12, chkpt: none
+            # VRF vrf1:
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                vrf = group['vrf']
+                continue
+
+            # lib entry: 10.186.1.0/24, rev 1028
+            # lib entry: 10.120.202.64/32, rev 12, chkpt: none
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -661,7 +1147,7 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
                     local_dict.update({'owner': group['owner']})
                 continue
 
-            # 106.162.197.252:0      106.162.197.253:0
+            # 10.169.197.252:0      10.169.197.253:0
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -671,8 +1157,8 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
                     local_dict['advertised_to'].extend(group['advertised_to'].split())
                 continue
 
-            # remote binding: lsr: 106.162.197.252:0, label: 508
-            # remote binding: lsr: 106.162.197.253:0, label: 308016 checkpointed
+            # remote binding: lsr: 10.169.197.252:0, label: 508
+            # remote binding: lsr: 10.169.197.253:0, label: 308016 checkpointed
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -903,7 +1389,7 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
         # VRF vpn1:Local LDP Identifier:
         p1 = re.compile(r'^(VRF +(?P<vrf>\S+):)?Local +LDP +Identifier:$')
 
-        # 106.162.197.254:0
+        # 10.169.197.254:0
         p2 = re.compile(r'^(?P<local_ldp_identifier>[\d\.\:]+)$')
         # Discovery Sources:
         p2_1 = re.compile(r'^Discovery +Sources:$')
@@ -915,14 +1401,14 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
         #         Enabled: Interface config
         p4 = re.compile(r'^Enabled: +(?P<enabled>[\S\s]+)$')
 
-        #         Hello interval: 5000 ms; Transport IP addr: 106.162.197.254
+        #         Hello interval: 5000 ms; Transport IP addr: 10.169.197.254
         p5 = re.compile(r'^Hello +interval: +(?P<hello_interval_ms>\d+) +ms;'
                         ' +Transport +IP +addr: (?P<transport_ip_address>[\d\.]+)$')
 
-        #         LDP Id: 106.162.197.252:0
+        #         LDP Id: 10.169.197.252:0
         p6 = re.compile(r'^(?P<ldp_tdp>\w+) +Id:(?P<space>\s{1,2})?(?P<ldp_tdp_id>[\d\.\:]+)$')
 
-        #           Src IP addr: 106.162.197.93; Transport IP addr: 106.162.197.252
+        #           Src IP addr: 10.169.197.93; Transport IP addr: 10.169.197.252
         p7 = re.compile(r'^Src +IP +addr: +(?P<source_ip_address>[\d\.]+);'
                         ' +Transport +IP +addr: +(?P<transport_ip_address>[\d\.]+)$')
 
@@ -930,7 +1416,7 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
         p8 = re.compile(r'^Hold +time: +(?P<holdtime_sec>\d+) +sec; +Proposed +local\/peer:'
                         ' +(?P<proposed_local>\d+)\/(?P<proposed_peer>\d+) +sec$')
 
-        #           Reachable via 106.162.197.252/32
+        #           Reachable via 10.169.197.252/32
         p9 = re.compile(r'^Reachable +via +(?P<reachable_via>[\d\.\/]+)$')
 
         #           Password: not required, none, in use
@@ -939,8 +1425,8 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
         #  Clients: IPv4, mLDP
         p11 = re.compile(r'^Clients: +(?P<clients>[\S\s]+)$')
 
-        #  8.1.1.1 -> 133.0.0.33 (ldp): active, xmit/recv
-        #  8.1.1.1 -> 168.7.0.16 (tdp): passive, xmit/recv
+        #  10.81.1.1 -> 172.16.94.33 (ldp): active, xmit/recv
+        #  10.81.1.1 -> 172.16.25.16 (tdp): passive, xmit/recv
         p12 = re.compile(r'^(?P<source>[\d\.]+) +\-> +(?P<destination>[\d\.]+)'
                          ' +\((?P<session>(ldp|tdp)+)\): +(?P<status>(active|passive)+), +xmit\/recv$')
 
@@ -958,7 +1444,7 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
                 ldp_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {})
                 continue
 
-            # 106.162.197.254:0
+            #   10.169.197.254:0
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -992,7 +1478,7 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
                 interface_dict.update({'enabled': group['enabled']})
                 continue
 
-            # Hello interval: 5000 ms; Transport IP addr: 106.162.197.254
+            #  Hello interval: 5000 ms; Transport IP addr: 10.169.197.254
             m = p5.match(line)
             if m:
                 group = m.groupdict()
@@ -1000,7 +1486,7 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
                 interface_dict.update({'transport_ip_addr': group['transport_ip_address']})
                 continue
 
-            # LDP Id: 106.162.197.252:0
+            # LDP Id: 10.169.197.252:0
             m = p6.match(line)
             if m:
                 group = m.groupdict()
@@ -1014,7 +1500,7 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
                         targeted_dict.update({'{}_id'.format(ldp_tdp): group['ldp_tdp_id']})
                 continue
 
-            # Src IP addr: 106.162.197.93; Transport IP addr: 106.162.197.252
+            # Src IP addr: 10.169.197.93; Transport IP addr: 10.169.197.252
             m = p7.match(line)
             if m:
                 group = m.groupdict()
@@ -1028,7 +1514,7 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
                 ldp_dict.update({k: int(v) for k, v in group.items() if v})
                 continue
 
-            # Reachable via 106.162.197.252/32
+            # Reachable via 10.169.197.252/32
             m = p9.match(line)
             if m:
                 group = m.groupdict()
@@ -1056,8 +1542,8 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
                 targeted_flag = True
                 continue
 
-            # 8.1.1.1 -> 133.0.0.33 (ldp): active, xmit/recv
-            #  8.1.1.1 -> 168.7.0.16 (tdp): passive, xmit/recv
+            #  10.81.1.1 -> 172.16.94.33 (ldp): active, xmit/recv
+            #  10.81.1.1 -> 172.16.25.16 (tdp): passive, xmit/recv
             m = p12.match(line)
             if m:
                 group = m.groupdict()
@@ -1070,6 +1556,7 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
                 targeted_dict.update({'active': True if group['status'] == 'active' else False})
                 continue
         return result_dict
+
 
 # ================================================
 #   Show mpls ldp igp sync
@@ -1243,3 +1730,4 @@ class ShowMplsLdpIgpSync(ShowMplsLdpIgpSyncSchema):
                 continue
 
         return result_dict
+
