@@ -4293,7 +4293,7 @@ class ShowProcessesCpuHistory(ShowProcessesCpuHistorySchema):
         p1 = re.compile(r'^ *\d+( +\d+)* *$')
 
         #          0    5    0    5    0    5    0    5    0    5    0
-        p2 = re.compile(r'^ *0( {4}5 {4}0){5,6} *$')
+        p2 = re.compile(r'^ *0( +5 +0){5,6} *$')
 
         # 80     * **#*#**   * *       *                               
         # 70  *  * **#*#**   * *       *           *                   
