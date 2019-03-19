@@ -10,6 +10,7 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Added parsers:
+        * ShowIpOspfNeighbor
         * ShowIpOspfDatabase
         * ShowIpOspfMaxMetric
         * ShowIpOspfTraffic
@@ -46,3 +47,24 @@
     	show version RP standby installed
     	show version RP standby provisioned
     * Add ShowPlatformPower for 'show platform power'
+    * Add ShowPlatformHardwareQfpBqsOpmMapping for;
+        show platform hardware qfp active bqs <x> opm mapping
+        show platform hardware qfp standby bqs <x> opm mapping
+    * Add ShowPlatformHardwareQfpBqsIpmMapping for;
+        show platform hardware qfp active bqs <x> ipm mapping
+        show platform hardware qfp standby bqs <x> ipm mapping
+    * Add ShowPlatformHardwareQfpInterfaceIfnameStatistics for;
+        show platform hardware qfp active interface if-name <interface> statistics
+        show platform hardware qfp standby interface if-name <interface> statistics
+    * Add ShowPlatformHardwareQfpStatisticsDrop for;
+            show platform hardware qfp active statistics drop
+            show platform hardware qfp standby statistics drop
+    * Add ShowPlatformHardwareSerdes for 'show platform hardware slot <x> serdes statistics'
+    * Add ShowPlatformHardwareSerdesInternal for 'show platform hardware slot <x> serdes statistics internal'
+
+--------------------------------------------------------------------------------
+                                    MPLS LDP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowMplsLdpParameters for:
+        'show mpls ldp parameters'

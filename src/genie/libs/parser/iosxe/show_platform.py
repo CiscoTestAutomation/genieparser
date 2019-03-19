@@ -3234,6 +3234,478 @@ class ShowPlatformHardwarePlim(ShowPlatformHardwarePlimSchema):
 
         return ret_dict
 
+
+class ShowPlatformHardwareQfpBqsMappingSchema(MetaParser):
+    """Schema for show platform hardware qfp active bqs <x> ipm mapping
+                  show platform hardware qfp standby bqs <x> ipm mapping
+                  show platform hardware qfp active bqs <x> opm mapping
+                  show platform hardware qfp standby bqs <x> opm mapping"""
+
+    schema = {
+        'channel': {
+            Any(): {
+                Optional('interface'): str,
+                'name': str,
+                Optional('logical_channel'): int,
+                Optional('drain_mode'): bool,
+                Optional('port'): int,
+                Optional('cfifo'): int,
+            },
+        }
+    }
+
+
+class ShowPlatformHardwareQfpBqsOpmMapping(ShowPlatformHardwareQfpBqsMappingSchema):
+    """Parser for show platform hardware qfp active bqs <x> opm mapping
+                  show platform hardware qfp standby bqs <x> opm mapping"""
+
+    cli_command = 'show platform hardware qfp {status} bqs {slot} opm mapping'
+
+    def cli(self, status, slot, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(status=status, slot=slot)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Chan     Name                          Interface      LogicalChannel
+        #  0       CC0 Low                       SPI0            0                                                        
+        # 24       Peer-FP Low                   SPI0           24                      
+        # 26       Nitrox Low                    SPI0           26                       
+        # 28       HT Pkt Low                    HT              0                      
+        # 38       HighNormal                    GPM             7                                             
+        # 55*      Drain Low                     GPM             0             
+        # * - indicates the drain mode bit is set for this channel
+        p1 = re.compile(r'^(?P<number>\d+)(?P<drained>\*)? +(?P<name>[\w\-\s]+)'
+                         ' +(?P<interface>[\w\d]+) +(?P<logical_channel>\d+)$')
+
+        # 32       Unmapped                                         
+        p2 = re.compile(r'^(?P<unmapped_number>\d+) +Unmapped$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group['interface']
+                number = group['number']
+                if group['drained']:
+                    drained = True
+                else:
+                    drained = False
+                if 'channel' not in ret_dict:
+                    final_dict = ret_dict.setdefault('channel', {})
+                final_dict = ret_dict['channel'].setdefault(number, {})
+                final_dict.update({'interface':group['interface'].strip()})
+                final_dict.update({'name':group['name'].strip()})
+                final_dict.update({'logical_channel':int(group['logical_channel'])})
+                final_dict.update({'drain_mode':drained})
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                unmapped_number = group['unmapped_number']
+                if 'channel' not in ret_dict:
+                    ret_dict.setdefault('channel', {})
+                ret_dict['channel'].setdefault(unmapped_number, {})
+                ret_dict['channel'][unmapped_number].update({'name':'unmapped'})
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformHardwareQfpBqsIpmMapping(ShowPlatformHardwareQfpBqsMappingSchema):
+    """Parser for show platform hardware qfp active bqs <x> ipm mapping
+                  show platform hardware qfp standby bqs <x> ipm mapping"""
+
+    cli_command = 'show platform hardware qfp {status} bqs {slot} ipm mapping'
+
+    def cli(self, status, slot, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(status=status, slot=slot)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Chan   Name                Interface      Port     CFIFO
+        #  1     CC3 Low             SPI0           0        1         
+        # 13     Peer-FP Low         SPI0          12        3      
+        # 15     Nitrox Low          SPI0          14        1         
+        # 17     HT Pkt Low          HT             0        1         
+        # 21     CC4 Low             SPI0          16        1      
+        p1 = re.compile(r'^(?P<number>\d+) +(?P<name>[\w\-\s]+)'
+                         ' +(?P<interface>[\w\d]+) +(?P<port>\d+)'
+                         ' +(?P<cfifo>\d+)$')
+
+        # 32       Unmapped                                         
+        p2 = re.compile(r'^(?P<unmapped_number>\d+) +Unmapped$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                number = group['number']
+                final_dict = ret_dict.setdefault('channel', {}).setdefault(number, {})
+                final_dict.update({'interface':group['interface'].strip()})
+                final_dict.update({'name':group['name'].strip()})
+                final_dict.update({'port':int(group['port'])})
+                final_dict.update({'cfifo':int(group['cfifo'])})
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                unmapped_number = group['unmapped_number']
+                if 'channel' not in ret_dict:
+                    ret_dict.setdefault('channel', {})
+                ret_dict['channel'].setdefault(unmapped_number, {})
+                ret_dict['channel'][unmapped_number].update({'name':'unmapped'})
+                continue
+
+        return ret_dict
+
+class ShowPlatformHardwareSerdesSchema(MetaParser):
+    """Schema for show platform hardware slot <x> serdes statistics
+                  show platform hardware slot <x> serdes statistics internal"""
+
+    schema = {
+        'link': {
+            Any(): {
+                Optional('from'): {
+                    'pkts': {
+                        Optional('total'): int,
+                        Optional('high'): int,
+                        Optional('low'): int,
+                        Optional('dropped'): int,
+                        Optional('errored'): int,
+                        Optional('looped'): int,
+                        Optional('bad'): int,
+                    },
+                    'bytes': {
+                        Optional('total'): int,
+                        Optional('high'): int,
+                        Optional('low'): int,
+                        Optional('dropped'): int,
+                        Optional('errored'): int,
+                        Optional('looped'): int,
+                        Optional('bad'): int,
+                    },
+                    Optional('qstat_count'): int,
+                    Optional('flow_ctrl_count'): int,
+                },
+                Optional('to'): {
+                    'pkts': {
+                        Optional('total'): int,
+                        Optional('high'): int,
+                        Optional('low'): int,
+                        Optional('dropped'): int,
+                        Optional('errored'): int,
+                    },
+                    Optional('bytes'): {
+                        Optional('total'): int,
+                        Optional('high'): int,
+                        Optional('low'): int,
+                        Optional('dropped'): int,
+                        Optional('errored'): int,
+                    }
+                },
+                Optional('local_tx_in_sync'): bool,
+                Optional('local_rx_in_sync'): bool,
+                Optional('remote_tx_in_sync'): bool,
+                Optional('remote_rx_in_sync'): bool,
+                Optional('errors'):{
+                    'rx_process': int,
+                    'rx_schedule': int,
+                    'rx_statistics': int,
+                    'rx_parity': int,
+                    'tx_process': int,
+                    'tx_schedule': int,
+                    'tx_statistics': int,
+                },
+            },
+        },
+        Optional('serdes_exception_counts'):{
+            Any(): {
+                Optional('link'): {
+                    Any(): {
+                        'msgTypeError': int,
+                        'msgEccError': int,
+                        'chicoEvent': int,
+                    },
+                }
+            },
+        }
+    }
+
+
+class ShowPlatformHardwareSerdes(ShowPlatformHardwareSerdesSchema):
+    """Parser for show platform hardware slot <x> serdes statistics"""
+
+    cli_command = 'show platform hardware slot {slot} serdes statistics'
+
+    def cli(self, slot, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(slot=slot)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # From Slot 1-Link B     
+        p1 = re.compile(r'^From +Slot +(?P<link>[\w\d\-\s]+)$')
+
+        #   Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0 
+        p2 = re.compile(r'^Pkts  +High: +(?P<high>\d+) +Low: +(?P<low>\d+)( +Bad: +(?P<bad>\d+) +Dropped: +(?P<dropped>\d+))?$')
+
+        #   Bytes High: 0          Low: 0          Bad: 0          Dropped: 0
+        p3 = re.compile(r'^Bytes +High: +(?P<high>\d+) +Low: +(?P<low>\d+) +Bad: +(?P<bad>\d+) +Dropped: +(?P<dropped>\d+)$')
+
+        #   Pkts  Looped: 0          Error: 0         
+        p4 = re.compile(r'^Pkts +Looped: +(?P<looped>\d+) +Error: +(?P<errored>\d+)$')
+
+        #   Bytes Looped 0         
+        p5 = re.compile(r'^Bytes +Looped +(?P<looped>\d+)$')
+
+        #   Qstat count: 0          Flow ctrl count: 3501      
+        p6 = re.compile(r'^Qstat +count: +(?P<qstat_count>\d+) +Flow +ctrl +count: +(?P<flow_ctrl_count>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                slot = group['link']
+                from_dict = ret_dict.setdefault('link', {}).setdefault(slot, {}).setdefault('from', {})
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                if not group['bad']:
+                    to_dict= ret_dict['link'][slot].setdefault('to', {}).setdefault('pkts', {})
+                    to_dict.update({k:int(v) for k, v in group.items() if v})
+                    continue
+
+                pkts_dict = ret_dict['link'][slot]['from'].setdefault('pkts', {})
+                pkts_dict.update({k:int(v) for k, v in group.items()})
+                continue
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                bytes_dict = ret_dict['link'][slot]['from'].setdefault('bytes', {})
+                bytes_dict.update({k:int(v) for k, v in group.items()})
+                continue
+
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                pkts_dict.update({k:int(v) for k, v in group.items()})
+                continue
+
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                bytes_dict.update({k:int(v) for k, v in group.items()})
+                continue
+
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                from_dict.update({k:int(v) for k, v in group.items()})
+                continue
+
+        return ret_dict
+
+class ShowPlatformHardwareSerdesInternal(ShowPlatformHardwareSerdesSchema):
+    """Parser for show platform hardware slot <x> serdes statistics internal"""
+
+    cli_command = 'show platform hardware slot {slot} serdes statistics internal'
+
+    def cli(self, slot, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(slot=slot)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Network-Processor-0 Link:
+        p1 = re.compile(r'^(?P<link>[\w\d\-\s]+) +Link:$')
+
+        #   Local TX in sync, Local RX in sync                                   
+        p2 = re.compile(r'^Local +TX +in +sync, +Local +RX +in +sync$')
+
+        #   Remote TX in sync, Remote RX in sync                                   
+        p3 = re.compile(r'^Remote +TX +in +sync, +Remote +RX +in +sync$')
+
+        #   To Network-Processor       Packets:    21763844  Bytes:  7343838083 
+        #   To Encryption Processor   Packets:           0  Bytes:           0                                   
+        p4 = re.compile(r'^To +(?P<link_name_1>[\w\-\d\s]+) +Packets: +(?P<to_packets>\d+) +Bytes: +(?P<to_bytes>\d+)$')
+
+        #   From Network-Processor     Packets:    21259012  Bytes:  7397920802                                  
+        p5 = re.compile(r'^From +(?P<link_name_2>[\w\-\d\s]+) +Packets: +(?P<from_packets>\d+) +Bytes: +(?P<from_bytes>\d+)$')
+
+        #     Drops                   Packets:           0  Bytes:           0
+        p6 = re.compile(r'^Drops +Packets: +(?P<dropped_packets>\d+) +Bytes: +(?P<dropped_bytes>\d+)$')
+
+        #     Errors                  Packets:           0  Bytes:           0
+        p7 = re.compile(r'^Errors +Packets: +(?P<errored_packets>\d+) +Bytes: +(?P<errored_bytes>\d+)$')
+
+        #     Errors:
+        p8 = re.compile(r'^Errors:$')
+
+        #     RX/TX process: 0/0, RX/TX schedule: 0/0
+        p9 = re.compile(r'^RX/TX +process: +(?P<rx_process>\d+)/(?P<tx_process>\d+), +RX/TX +schedule: +(?P<rx_schedule>\d+)/(?P<tx_schedule>\d+)$')
+
+        #     RX/TX statistics: 0/0, RX parity: 0
+        p10 = re.compile(r'^RX/TX +statistics: +(?P<rx_statistics>\d+)/(?P<tx_statistics>\d+), +RX +parity: +(?P<rx_parity>\d+)$')
+
+        # Serdes Exception Counts:
+        p11 = re.compile(r'^Serdes +Exception +Counts:$')
+
+        #   eqs/fc:
+        #   idh-hi:
+        #   spi link:
+        p12 = re.compile(r'^(?P<link>[\w\d\-\s\/]+):$')
+
+        #     link 0: msgTypeError: 5
+        #     link 0: msgEccError: 5
+        #     link 0: chicoEvent: 5
+        #     link 1: msgTypeError: 1
+        #     link 1: msgEccError: 1
+        #     link 1: chicoEvent: 1
+        #     link 2: msgTypeError: 3
+        #     link 2: msgEccError: 3
+        #     link 2: chicoEvent: 3
+        p13 = re.compile(r'^link +(?P<link_number>\d+): +(?P<error_event>\w+): +(?P<count>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                link = group['link']
+                new_dict = ret_dict.setdefault('link', {}).setdefault(link, {})
+                continue
+
+            m = p2.match(line)
+            if m:
+                new_dict['local_tx_in_sync'] = True
+                new_dict['local_rx_in_sync'] = True
+                continue
+
+            m = p3.match(line)
+            if m:
+                new_dict['remote_tx_in_sync'] = True
+                new_dict['remote_rx_in_sync'] = True
+                continue
+
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                to_not_from = True
+                new_dict.setdefault('to', {}).setdefault('pkts', {})
+                new_dict['to'].setdefault('bytes', {})
+                new_dict['to']['pkts']['total'] = int(group['to_packets'])
+                new_dict['to']['bytes']['total'] = int(group['to_bytes'])
+                continue
+
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                to_not_from = False
+                new_dict.setdefault('from', {}).setdefault('pkts', {})
+                new_dict['from'].setdefault('bytes', {})
+                new_dict['from']['pkts']['total'] = int(group['from_packets'])
+                new_dict['from']['bytes']['total'] = int(group['from_bytes'])
+                continue
+
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                if to_not_from:
+                    new_dict['to']['pkts']['dropped'] = int(group['dropped_packets'])
+                    new_dict['to']['bytes']['dropped'] = int(group['dropped_bytes'])
+                else:
+                    new_dict['from']['pkts']['dropped'] = int(group['dropped_packets'])
+                    new_dict['from']['bytes']['dropped'] = int(group['dropped_bytes'])
+                continue
+
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                if to_not_from:
+                    new_dict['to']['pkts']['errored'] = int(group['errored_packets'])
+                    new_dict['to']['bytes']['errored'] = int(group['errored_bytes'])
+                else:
+                    new_dict['from']['pkts']['errored'] = int(group['errored_packets'])
+                    new_dict['from']['bytes']['errored'] = int(group['errored_bytes'])
+                continue
+
+            m = p8.match(line)
+            if m:
+                continue
+
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                new_dict.setdefault('errors', {})
+                new_dict['errors'].update({k:int(v) for k, v in group.items()})
+                continue
+
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                if 'errors' in ret_dict['link'][link]:
+                    new_dict['errors'].update({k:int(v) for k, v in group.items()})
+                continue
+
+            m = p11.match(line)
+            if m:
+                serdes_exception_counts = True
+                ret_dict.setdefault('serdes_exception_counts', {})
+                continue
+
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                link = group['link']
+                ret_dict['serdes_exception_counts'].setdefault(link, {})
+                continue
+
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                link_number = group['link_number']
+                error_event = group['error_event']
+                ret_dict['serdes_exception_counts'][link].setdefault('link', {}).setdefault(link_number, {})
+                ret_dict['serdes_exception_counts'][link]['link'][link_number][error_event] = int(group['count'])
+                continue
+
+        return ret_dict
+
+
 class ShowPlatformPowerSchema(MetaParser):
     """Schema for show platform power"""
     schema = {
@@ -3470,6 +3942,310 @@ class ShowPlatformHardwareQfpBqsStatisticsChannelAll(ShowPlatformHardwareQfpBqsS
                 else:
                     ret_dict['channel'][channel].update({'comment': comment})
                 
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformHardwareQfpBqsMappingSchema(MetaParser):
+    """Schema for show platform hardware qfp active bqs <x> ipm mapping
+                  show platform hardware qfp standby bqs <x> ipm mapping
+                  show platform hardware qfp active bqs <x> opm mapping
+                  show platform hardware qfp standby bqs <x> opm mapping"""
+
+    schema = {
+        'channel': {
+            Any(): {
+                Optional('interface'): str,
+                'name': str,
+                Optional('logical_channel'): int,
+                Optional('drain_mode'): bool,
+                Optional('port'): int,
+                Optional('cfifo'): int,
+            },
+        }
+    }
+
+
+class ShowPlatformHardwareQfpBqsOpmMapping(ShowPlatformHardwareQfpBqsMappingSchema):
+    """Parser for show platform hardware qfp active bqs <x> opm mapping
+                  show platform hardware qfp standby bqs <x> opm mapping"""
+
+    cli_command = 'show platform hardware qfp {status} bqs {slot} opm mapping'
+
+    def cli(self, status, slot, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(status=status, slot=slot)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Chan     Name                          Interface      LogicalChannel
+        #  0       CC0 Low                       SPI0            0                                                        
+        # 24       Peer-FP Low                   SPI0           24                      
+        # 26       Nitrox Low                    SPI0           26                       
+        # 28       HT Pkt Low                    HT              0                      
+        # 38       HighNormal                    GPM             7                                             
+        # 55*      Drain Low                     GPM             0             
+        # * - indicates the drain mode bit is set for this channel
+        p1 = re.compile(r'^(?P<number>\d+)(?P<drained>\*)? +(?P<name>[\w\-\s]+)'
+                         ' +(?P<interface>[\w\d]+) +(?P<logical_channel>\d+)$')
+
+        # 32       Unmapped                                         
+        p2 = re.compile(r'^(?P<unmapped_number>\d+) +Unmapped$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group['interface']
+                number = group['number']
+                if group['drained']:
+                    drained = True
+                else:
+                    drained = False
+                if 'channel' not in ret_dict:
+                    final_dict = ret_dict.setdefault('channel', {})
+                final_dict = ret_dict['channel'].setdefault(number, {})
+                final_dict.update({'interface':group['interface'].strip()})
+                final_dict.update({'name':group['name'].strip()})
+                final_dict.update({'logical_channel':int(group['logical_channel'])})
+                final_dict.update({'drain_mode':drained})
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                unmapped_number = group['unmapped_number']
+                if 'channel' not in ret_dict:
+                    ret_dict.setdefault('channel', {})
+                ret_dict['channel'].setdefault(unmapped_number, {})
+                ret_dict['channel'][unmapped_number].update({'name':'unmapped'})
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformHardwareQfpBqsIpmMapping(ShowPlatformHardwareQfpBqsMappingSchema):
+    """Parser for show platform hardware qfp active bqs <x> ipm mapping
+                  show platform hardware qfp standby bqs <x> ipm mapping"""
+
+    cli_command = 'show platform hardware qfp {status} bqs {slot} ipm mapping'
+
+    def cli(self, status, slot, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(status=status, slot=slot)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Chan   Name                Interface      Port     CFIFO
+        #  1     CC3 Low             SPI0           0        1         
+        # 13     Peer-FP Low         SPI0          12        3      
+        # 15     Nitrox Low          SPI0          14        1         
+        # 17     HT Pkt Low          HT             0        1         
+        # 21     CC4 Low             SPI0          16        1      
+        p1 = re.compile(r'^(?P<number>\d+) +(?P<name>[\w\-\s]+)'
+                         ' +(?P<interface>[\w\d]+) +(?P<port>\d+)'
+                         ' +(?P<cfifo>\d+)$')
+
+        # 32       Unmapped                                         
+        p2 = re.compile(r'^(?P<unmapped_number>\d+) +Unmapped$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                number = group['number']
+                final_dict = ret_dict.setdefault('channel', {}).setdefault(number, {})
+                final_dict.update({'interface':group['interface'].strip()})
+                final_dict.update({'name':group['name'].strip()})
+                final_dict.update({'port':int(group['port'])})
+                final_dict.update({'cfifo':int(group['cfifo'])})
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                unmapped_number = group['unmapped_number']
+                if 'channel' not in ret_dict:
+                    ret_dict.setdefault('channel', {})
+                ret_dict['channel'].setdefault(unmapped_number, {})
+                ret_dict['channel'][unmapped_number].update({'name':'unmapped'})
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformHardwareQfpInterfaceIfnameStatisticsSchema(MetaParser):
+    """Schema for show platform hardware qfp active interface if-name <interface> statistics
+                  show platform hardware qfp standby interface if-name <interface> statistics"""
+
+    schema = {
+        'qfp': {
+            'active': {
+                'interface': {
+                    Any(): {
+                        'platform_handle': int,
+                        'receive_stats': {
+                            Any(): {
+                                'packets': int,
+                                'octets': int,
+                            },
+                        },
+                        'transmit_stats': {
+                            Any(): {
+                                'packets': int,
+                                'octets': int,
+                            },
+                        },
+                        'ingress_drop_stats': {
+                            Optional(Any()): {
+                                'packets': int,
+                                'octets': int,
+                            },
+                        },
+                        'egress_drop_stats': {
+                            Optional(Any()): {
+                                'packets': int,
+                                'octets': int,
+                            },
+                        }
+                    },
+                }
+            }
+        }
+    }
+
+
+class ShowPlatformHardwareQfpInterfaceIfnameStatistics(ShowPlatformHardwareQfpInterfaceIfnameStatisticsSchema):
+    """Parser for show platform hardware qfp active interface if-name <interface> statistics
+                  show platform hardware qfp standby interface if-name <interface> statistics"""
+
+    cli_command = 'show platform hardware qfp {status} interface if-name {interface} statistics'
+
+    def cli(self, status, interface, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(status=status, interface=interface)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+        current_stats = None
+
+        # Platform Handle 7
+        p1 = re.compile(r'^Platform +Handle +(?P<platform_handle>\d+)$')
+
+        # Receive Stats                             Packets        Octets
+        # Transmit Stats                            Packets        Octets
+        # Input Drop Stats                          Packets        Octets
+        # Output Drop Stats                         Packets        Octets
+        p2 = re.compile(r'^(?P<transmit_receive>[\w\s]+) +Stats +Packets +Octets$')
+
+        #   FragmentedIpv6                             0               0
+        #   Other   
+        p3 = re.compile(r'^(?P<stats>[\w\d]+) +(?P<packets>[\w\d]+) +(?P<octets>[\w\d]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                converted_interface = Common.convert_intf_name(interface)
+                final_dict = ret_dict.setdefault('qfp', {}).setdefault(
+                    'active', {}).setdefault('interface', {}).setdefault(converted_interface, {})
+                final_dict['platform_handle'] = int(group['platform_handle'])
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                status = group['transmit_receive']
+                if 'Receive' in status:
+                    current_stats = 'receive_stats'
+                elif 'Transmit' in status:
+                    current_stats = 'transmit_stats'
+                elif 'Input Drop' in status:
+                    current_stats = 'ingress_drop_stats'
+                else:
+                    current_stats = 'egress_drop_stats'
+
+                final_dict.setdefault(current_stats, {})
+                continue
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                stats = group['stats']
+                final_dict[current_stats].setdefault(stats, {})
+                final_dict[current_stats][stats]['packets'] = int(group['packets'])
+                final_dict[current_stats][stats]['octets'] = int(group['octets'])
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformHardwareQfpStatisticsDropSchema(MetaParser):
+    """Schema for show platform hardware qfp active statistics drop
+                  show platform hardware qfp standby statistics drop"""
+
+    schema = {
+        'global_drop_stats':{
+            Any(): {
+                'packets': int,
+                'octets': int,
+            },
+        }
+    }
+
+
+class ShowPlatformHardwareQfpStatisticsDrop(ShowPlatformHardwareQfpStatisticsDropSchema):
+    """Parser for show platform hardware qfp active statistics drop
+                  show platform hardware qfp standby statistics drop"""
+    
+    cli_command = 'show platform hardware qfp {status} statistics drop | exclude _0_'
+
+    def cli(self, status='active', output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(status=status)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # Global Drop Stats                         Packets                  Octets  
+        # -------------------------------------------------------------------------
+        # Ipv4NoAdj                                       7                     296  
+        # Ipv4NoRoute                                   181                    7964 
+        p1 = re.compile(r'^(?P<global_drop_stats>\w+) +(?P<packets>\d+) +(?P<octets>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                global_drop_stats = group.pop('global_drop_stats')
+                stats_dict = ret_dict.setdefault('global_drop_stats', {}).setdefault(global_drop_stats, {})
+                stats_dict.update({k:int(v) for k, v in group.items()})
                 continue
 
         return ret_dict

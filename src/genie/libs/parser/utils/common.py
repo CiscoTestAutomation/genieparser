@@ -64,7 +64,7 @@ def _find_command(command, data, device):
         for pattern in patterns:
             word = pattern.replace('{', '').replace('}', '')
             new_pattern = '(?P<{p}>.*)'.format(p=word)
-            reg = re.sub(pattern, new_pattern, key)
+            reg = re.sub(pattern, new_pattern, reg)
 
         match = re.match(reg, command)
         if match:
@@ -131,7 +131,10 @@ class Common():
             if int_type in convert.keys():
                 return(convert[int_type] + int_port)
             else:
-                return(intf)
+                # Unifying interface names
+                converted_intf = intf[0].capitalize()+intf[1:].replace(
+                    ' ','').replace('ethernet', 'Ethernet')
+                return(converted_intf)
         else:
             return(intf)
 
