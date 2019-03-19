@@ -4,7 +4,7 @@ from unittest.mock import Mock
 from ats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
-                                       SchemaMissingKeyError
+                                             SchemaMissingKeyError
 
 from genie.libs.parser.iosxe.show_mpls import ShowMplsLdpParameters,\
                                               ShowMplsLdpNeighbor,\
