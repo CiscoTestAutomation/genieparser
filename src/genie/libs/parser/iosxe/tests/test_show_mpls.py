@@ -18,11 +18,11 @@ class test_show_mpls_ldp_nsr_statistics(unittest.TestCase):
                    '106.162.197.252': {
                        'local_space_id':{
                            0: {
-                               'label_request_records':{
+                               'in_label_request_records':{
                                    'created': 0,
                                    'freed': 0,
                                },
-                               'label_withdraw_records': {
+                               'in_label_withdraw_records': {
                                    'created': 0,
                                    'freed': 0,
                                },
@@ -40,11 +40,11 @@ class test_show_mpls_ldp_nsr_statistics(unittest.TestCase):
                    '106.162.197.253': {
                        'local_space_id': {
                            0: {
-                               'label_request_records': {
+                               'in_label_request_records': {
                                    'created': 0,
                                    'freed': 0,
                                },
-                               'label_withdraw_records': {
+                               'in_label_withdraw_records': {
                                    'created': 0,
                                    'freed': 0,
                                },
@@ -75,28 +75,28 @@ class test_show_mpls_ldp_nsr_statistics(unittest.TestCase):
                'label_request_acks': {
                    'number_of_chkpt_messages':{
                        'sent': 0,
-                       'queue': 0,
-                       'state_none': 0,
-                       'state_send': 0,
-                       'state_wait': 0,
+                       'in_queue': 0,
+                       'in_state_none': 0,
+                       'in_state_send': 0,
+                       'in_state_wait': 0,
                    },
                },
                'label_withdraw_acks': {
                    'number_of_chkpt_messages': {
                        'sent': 0,
-                       'queue': 0,
-                       'state_none': 0,
-                       'state_send': 0,
-                       'state_wait': 0,
+                       'in_queue': 0,
+                       'in_state_none': 0,
+                       'in_state_send': 0,
+                       'in_state_wait': 0,
                    },
                },
                'address_withdraw_acks': {
                    'number_of_chkpt_messages': {
                        'sent': 0,
-                       'queue': 0,
-                       'state_none': 0,
-                       'state_send': 0,
-                       'state_wait': 0,
+                       'in_queue': 0,
+                       'in_state_none': 0,
+                       'in_state_send': 0,
+                       'in_state_wait': 0,
                    },
                },
                'session_sync':{

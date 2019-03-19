@@ -38,11 +38,11 @@ class ShowMplsLdpNsrStatisticsSchema(MetaParser):
                 Any(): {
                     'local_space_id': {
                         Any(): {
-                            'label_request_records': {
+                            'in_label_request_records': {
                                 'created': int,
                                 'freed': int,
                             },
-                            'label_withdraw_records': {
+                            'in_label_withdraw_records': {
                                 'created': int,
                                 'freed': int,
                             },
@@ -73,28 +73,28 @@ class ShowMplsLdpNsrStatisticsSchema(MetaParser):
             'label_request_acks': {
                 'number_of_chkpt_messages': {
                     'sent': int,
-                    'queue': int,
-                    'state_none': int,
-                    'state_send': int,
-                    'state_wait': int,
+                    'in_queue': int,
+                    'in_state_none': int,
+                    'in_state_send': int,
+                    'in_state_wait': int,
                 },
             },
             'label_withdraw_acks': {
                 'number_of_chkpt_messages': {
                     'sent': int,
-                    'queue': int,
-                    'state_none': int,
-                    'state_send': int,
-                    'state_wait': int,
+                    'in_queue': int,
+                    'in_state_none': int,
+                    'in_state_send': int,
+                    'in_state_wait': int,
                 },
             },
             'address_withdraw_acks': {
                 'number_of_chkpt_messages': {
                     'sent': int,
-                    'queue': int,
-                    'state_none': int,
-                    'state_send': int,
-                    'state_wait': int,
+                    'in_queue': int,
+                    'in_state_none': int,
+                    'in_state_send': int,
+                    'in_state_wait': int,
                 },
             },
             'session_sync': {
@@ -186,7 +186,7 @@ class ShowMplsLdpNsrStatistics(ShowMplsLdpNsrStatisticsSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                label_request = peer_dict.setdefault('label_request_records', {})
+                label_request = peer_dict.setdefault('in_label_request_records', {})
                 label_request.update({'created': int(group['created'])})
                 label_request.update({'freed': int(group['freed'])})
                 continue
@@ -195,7 +195,7 @@ class ShowMplsLdpNsrStatistics(ShowMplsLdpNsrStatisticsSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                label_withdraw = peer_dict.setdefault('label_withdraw_records', {})
+                label_withdraw = peer_dict.setdefault('in_label_withdraw_records', {})
                 label_withdraw.update({'created': int(group['created'])})
                 label_withdraw.update({'freed': int(group['freed'])})
                 continue
@@ -264,7 +264,7 @@ class ShowMplsLdpNsrStatistics(ShowMplsLdpNsrStatisticsSchema):
             if m:
                 session_sync_flag = False
                 group = m.groupdict()
-                temp_dict.setdefault('number_of_chkpt_messages', {}).update({'queue': int(group['queue'])})
+                temp_dict.setdefault('number_of_chkpt_messages', {}).update({'in_queue': int(group['queue'])})
                 continue
 
             #   Number of chkpt msg in state none: 0
@@ -272,7 +272,7 @@ class ShowMplsLdpNsrStatistics(ShowMplsLdpNsrStatisticsSchema):
             if m:
                 session_sync_flag = False
                 group = m.groupdict()
-                temp_dict.setdefault('number_of_chkpt_messages', {}).update({'state_none': int(group['state_none'])})
+                temp_dict.setdefault('number_of_chkpt_messages', {}).update({'in_state_none': int(group['state_none'])})
                 continue
 
             #   Number of chkpt msg in state send: 0
@@ -280,7 +280,7 @@ class ShowMplsLdpNsrStatistics(ShowMplsLdpNsrStatisticsSchema):
             if m:
                 session_sync_flag = False
                 group = m.groupdict()
-                temp_dict.setdefault('number_of_chkpt_messages', {}).update({'state_send': int(group['state_send'])})
+                temp_dict.setdefault('number_of_chkpt_messages', {}).update({'in_state_send': int(group['state_send'])})
                 continue
 
             #   Number of chkpt msg in state wait: 0
@@ -288,7 +288,7 @@ class ShowMplsLdpNsrStatistics(ShowMplsLdpNsrStatisticsSchema):
             if m:
                 session_sync_flag = False
                 group = m.groupdict()
-                temp_dict.setdefault('number_of_chkpt_messages', {}).update({'state_wait': int(group['state_wait'])})
+                temp_dict.setdefault('number_of_chkpt_messages', {}).update({'in_state_wait': int(group['state_wait'])})
                 continue
 
             # Label Withdraw Acks:
