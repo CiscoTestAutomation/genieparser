@@ -12,7 +12,92 @@ from genie.libs.parser.iosxe.show_mpls import ShowMplsLdpParameters,\
                                               ShowMplsLdpNeighborDetail,\
                                               ShowMplsLdpBindings,\
                                               ShowMplsLdpCapabilities,\
-                                              ShowMplsLdpDiscovery
+                                              ShowMplsLdpDiscovery,\
+                                              ShowMplsLdpIgpSync
+
+class test_show_mpls_ldp_parameters(unittest.TestCase):
+    dev1 = Device(name='empty')
+    dev = Device(name='dev1')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'ldp_featureset_manager': {
+            'State Initialized': {
+                'ldp_features': [
+                    'Auto-Configuration',
+                    'Basic',
+                    'ICPM',
+                    'IP-over-MPLS',
+                    'IGP-Sync',
+                    'LLAF',
+                    'TCP-MD5-Rollover',
+                    'TDP',
+                    'NSR'],
+            },
+        },
+        'ldp_backoff': {
+            'initial': 15,
+            'maximum': 120,
+        },
+        'ldp_loop_detection': "off",
+        'ldp_nsr': 'disabled',
+        'ldp_for_targeted_sessions': True,
+        'version': 1,
+        'session_hold_time': 180,
+        'keep_alive_interval': 60,
+        'discovery_targeted_hello': {
+            'holdtime': 90,
+            'interval': 10,
+        },
+        'discovery_hello': {
+            'holdtime': 15,
+            'interval': 5,
+        },
+        'downstream_on_demand_max_hop_count': 255,
+    }
+
+
+    golden_output = {'execute.return_value': '''\
+
+    Router#show mpls ldp parameters
+    Load for five secs: 2%/0%; one minute: 5%; five minutes: 5%
+    Time source is NTP, 16:10:10.454 JST Tue Nov 8 2016
+    LDP Feature Set Manager: State Initialized
+      LDP features:
+        Auto-Configuration
+        Basic
+        ICPM
+        IP-over-MPLS
+        IGP-Sync
+        LLAF
+        TCP-MD5-Rollover
+        TDP
+        NSR
+    Protocol version: 1
+    Session hold time: 180 sec; keep alive interval: 60 sec
+    Discovery hello: holdtime: 15 sec; interval: 5 sec
+    Discovery targeted hello: holdtime: 90 sec; interval: 10 sec
+    Downstream on Demand max hop count: 255
+    LDP for targeted sessions
+    LDP initial/maximum backoff: 15/120 sec
+    LDP loop detection: off
+    LDP NSR: Disabled
+    Router#
+    '''
+    }
+
+    def test_empty(self):
+        self.dev1 = Mock(**self.empty_output)
+        obj = ShowMplsLdpParameters(device=self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output)
+        obj = ShowMplsLdpParameters(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
 class test_show_mpls_ldp_parameters(unittest.TestCase):
@@ -1278,7 +1363,6 @@ class test_show_mpls_ldp_capabilities(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
-
 class test_show_mpls_ldp_discovery(unittest.TestCase):
     dev = Device(name='dev1')
     empty_output = {'execute.return_value': '      '}
@@ -1287,46 +1371,48 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
             "vrf": {
                 "default": {
                     "local_ldp_identifier": {
-                        "10.169.197.254:0": {
+                        "106.162.197.254:0": {
                             'discovery_sources':{
-                                "interface": {
+                                "interfaces": {
                                     "GigabitEthernet0/0/0": {
                                         'session': 'ldp',
                                         "hello_interval_ms": 5000,
-                                        "ip_address": "10.169.197.254",
+                                        "transport_ip_addr": "106.162.197.254",
+                                        "xmit": True,
+                                        "recv": True,
                                         "ldp_id": {
-                                            "10.169.197.252:0": {
-                                                "ldp_id": "10.169.197.252:0",
-                                                "reachable_via": "10.169.197.252/32",
+                                            "106.162.197.252:0": {
+                                                "reachable_via": "106.162.197.252/32",
                                                 "password": "not required, none, in use",
                                                 "holdtime_sec": 15,
-                                                "transport_ip_address": "10.169.197.252",
+                                                "transport_ip_address": "106.162.197.252",
                                                 "proposed_peer": 15,
                                                 "clients": "IPv4, mLDP",
-                                                "source_ip_address": "10.169.197.93",
+                                                "source_ip_address": "106.162.197.93",
                                                 "proposed_local": 15
                                             }
                                         },
-                                        "enabled": True
+                                        "enabled": "Interface config",
                                     },
                                     "GigabitEthernet0/0/2": {
                                         "hello_interval_ms": 5000,
-                                        "ip_address": "10.169.197.254",
+                                        "transport_ip_addr": "106.162.197.254",
                                         'session': 'ldp',
+                                        "xmit": True,
+                                        "recv": True,
                                         "ldp_id": {
-                                            "10.169.197.253:0": {
-                                                "ldp_id": "10.169.197.253:0",
-                                                "reachable_via": "10.169.197.253/32",
+                                            "106.162.197.253:0": {
+                                                "reachable_via": "106.162.197.253/32",
                                                 "password": "not required, none, in use",
                                                 "holdtime_sec": 15,
-                                                "transport_ip_address": "10.169.197.253",
+                                                "transport_ip_address": "106.162.197.253",
                                                 "proposed_peer": 15,
                                                 "clients": "IPv4, mLDP",
-                                                "source_ip_address": "10.169.197.97",
+                                                "source_ip_address": "106.162.197.97",
                                                 "proposed_local": 15
                                             }
                                         },
-                                        "enabled": True
+                                        "enabled": "Interface config",
                                     }
                                 }
                             },
@@ -1341,51 +1427,50 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
     Load for five secs: 2%/0%; one minute: 5%; five minutes: 5%
     Time source is NTP, 16:10:10.682 JST Tue Nov 8 2016
      Local LDP Identifier:
-        10.169.197.254:0
+        106.162.197.254:0
         Discovery Sources:
         Interfaces:
             GigabitEthernet0/0/0 (ldp): xmit/recv
                 Enabled: Interface config
-                Hello interval: 5000 ms; Transport IP addr: 10.169.197.254
-                LDP Id: 10.169.197.252:0
-                  Src IP addr: 10.169.197.93; Transport IP addr: 10.169.197.252
+                Hello interval: 5000 ms; Transport IP addr: 106.162.197.254
+                LDP Id: 106.162.197.252:0
+                  Src IP addr: 106.162.197.93; Transport IP addr: 106.162.197.252
                   Hold time: 15 sec; Proposed local/peer: 15/15 sec
-                  Reachable via 10.169.197.252/32
+                  Reachable via 106.162.197.252/32
                   Password: not required, none, in use
                 Clients: IPv4, mLDP
             GigabitEthernet0/0/2 (ldp): xmit/recv
                 Enabled: Interface config
-                Hello interval: 5000 ms; Transport IP addr: 10.169.197.254
-                LDP Id: 10.169.197.253:0
-                  Src IP addr: 10.169.197.97; Transport IP addr: 10.169.197.253
+                Hello interval: 5000 ms; Transport IP addr: 106.162.197.254
+                LDP Id: 106.162.197.253:0
+                  Src IP addr: 106.162.197.97; Transport IP addr: 106.162.197.253
                   Hold time: 15 sec; Proposed local/peer: 15/15 sec
-                  Reachable via 10.169.197.253/32
+                  Reachable via 106.162.197.253/32
                   Password: not required, none, in use
                 Clients: IPv4, mLDP
     '''
     }
 
     golden_output = {'execute.return_value': '''\
-    https://www.cisco.com/c/en/us/td/docs/ios/12_0s/feature/guide/fsldp22.html#wp1360254
     Router# show mpls ldp discovery
 
      Local LDP Identifier:
-         10.81.1.1:0
+         8.1.1.1:0
      Discovery Sources:
          Interfaces:
              Ethernet1/1/3 (ldp): xmit/recv
-                 LDP Id: 172.16.25.77:0
-                 LDP Id: 172.16.81.44:0
-                 LDP Id: 172.16.55.55:0
+                 LDP Id: 177.73.0.77:0
+                 LDP Id: 144.0.0.44:0
+                 LDP Id: 155.0.0.55:0
              ATM3/0.1 (ldp): xmit/recv
-                 LDP Id: 192.168.240.7:2
+                 LDP Id: 203.0.7.7:2
              ATM0/0.2 (tdp): xmit/recv
-                 TDP Id: 10.120.0.1:1
+                 TDP Id: 119.1.0.1:1
      Targeted Hellos:
-             10.81.1.1 -> 172.16.94.33 (ldp): active, xmit/recv
-                 LDP Id: 172.16.94.33:0
-             10.81.1.1 -> 172.16.25.16 (tdp): passive, xmit/recv
-                 TDP Id: 172.16.94.33:0
+             8.1.1.1 -> 133.0.0.33 (ldp): active, xmit/recv
+                 LDP Id: 133.0.0.33:0
+             8.1.1.1 -> 168.7.0.16 (tdp): passive, xmit/recv
+                 TDP Id: 133.0.0.33:0
      Router#
         '''
                                 }
@@ -1393,54 +1478,55 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
         "vrf": {
             "default": {
                 "local_ldp_identifier": {
-                    "10.81.1.1:0": {
+                    "8.1.1.1:0": {
                         "targeted_hellos": {
-                            "10.81.1.1": {
-                                "172.16.25.16": {
-                                    "destination": "172.16.25.16",
+                            "8.1.1.1": {
+                                "168.7.0.16": {
                                     "session": "tdp",
                                     "active": False,
-                                    "tdp_id": "172.16.94.33:0",
-                                    "source": "10.81.1.1"
+                                    'tdp_id': '133.0.0.33:0',
+                                    "xmit": True,
+                                    "recv": True,
                                 },
-                                "172.16.94.33": {
+                                "133.0.0.33": {
                                     "active": True,
-                                    "destination": "172.16.94.33",
                                     "session": "ldp",
-                                    "ldp_id": "172.16.94.33:0",
-                                    "source": "10.81.1.1"
+                                    "ldp_id": "133.0.0.33:0",
+                                    "xmit": True,
+                                    "recv": True,
                                 }
                             }
                         },
                         "discovery_sources": {
-                            "interface": {
+                            "interfaces": {
                                 "Ethernet1/1/3": {
                                     "session": "ldp",
+                                    "xmit": True,
+                                    "recv": True,
                                     "ldp_id": {
-                                        "172.16.25.77:0": {
-                                            "ldp_id": "172.16.25.77:0"
+                                        "177.73.0.77:0": {
                                         },
-                                        "172.16.55.55:0": {
-                                            "ldp_id": "172.16.55.55:0"
+                                        "155.0.0.55:0": {
                                         },
-                                        "172.16.81.44:0": {
-                                            "ldp_id": "172.16.81.44:0"
+                                        "144.0.0.44:0": {
                                         }
                                     }
                                 },
                                 "ATM3/0.1": {
                                     "session": "ldp",
+                                    "xmit": True,
+                                    "recv": True,
                                     "ldp_id": {
-                                        "192.168.240.7:2": {
-                                            "ldp_id": "192.168.240.7:2"
+                                        "203.0.7.7:2": {
                                         }
                                     }
                                 },
                                 "ATM0/0.2": {
                                     "session": "tdp",
+                                    "xmit": True,
+                                    "recv": True,
                                     "tdp_id": {
-                                        "10.120.0.1:1": {
-                                            "tdp_id": "10.120.0.1:1"
+                                        "119.1.0.1:1": {
                                         }
                                     }
                                 }
@@ -1456,14 +1542,15 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
     "vrf": {
         "default": {
             "local_ldp_identifier": {
-                "10.66.12.12:0": {
+                "12.12.12.12:0": {
                     "discovery_sources": {
-                        "interface": {
+                        "interfaces": {
                             "ATM1/1/0.1": {
                                 "session": "tdp",
+                                "xmit": True,
+                                "recv": True,
                                 "tdp_id": {
-                                    "10.229.11.11:0": {
-                                        "tdp_id": "10.229.11.11:0"
+                                    "11.11.11.11:0": {
                                     }
                                 }
                             }
@@ -1474,14 +1561,15 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
         },
         "vpn2": {
             "local_ldp_identifier": {
-                "10.64.0.2:0": {
+                "30.13.0.2:0": {
                     "discovery_sources": {
-                        "interface": {
+                        "interfaces": {
                             "ATM3/0/0.2": {
                                 "session": "ldp",
+                                "xmit": True,
+                                "recv": True,
                                 "ldp_id": {
-                                    "10.19.14.14:0": {
-                                        "ldp_id": "10.19.14.14:0"
+                                    "14.14.14.14:0": {
                                     }
                                 }
                             }
@@ -1492,14 +1580,15 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
         },
         "vpn1": {
             "local_ldp_identifier": {
-                "10.94.0.2:0": {
+                "30.7.0.2:0": {
                     "discovery_sources": {
-                        "interface": {
+                        "interfaces": {
                             "ATM3/0/0.1": {
                                 "session": "ldp",
+                                "xmit": True,
+                                "recv": True,
                                 "ldp_id": {
-                                    "10.19.14.14:0": {
-                                        "ldp_id": "10.19.14.14:0"
+                                    "14.14.14.14:0": {
                                     }
                                 }
                             }
@@ -1511,27 +1600,26 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
     }
 }
     golden_output_all = {'execute.return_value':'''\
-    https://www.cisco.com/c/en/us/td/docs/ios/12_0s/feature/guide/fsldp22.html#wp1360254
     Router# show mpls ldp discovery all
 
      Local LDP Identifier:
-         10.66.12.12:0
+         12.12.12.12:0
          Discovery Sources:
          Interfaces:
              ATM1/1/0.1 (tdp):xmit/recv
-                 TDP Id:10.229.11.11:0
+                 TDP Id:11.11.11.11:0
      VRF vpn1:Local LDP Identifier:
-         10.94.0.2:0
+         30.7.0.2:0
          Discovery Sources:
          Interfaces:
              ATM3/0/0.1 (ldp):xmit/recv
-                 LDP Id:10.19.14.14:0
+                 LDP Id:14.14.14.14:0
      VRF vpn2:Local LDP Identifier:
-         10.64.0.2:0
+         30.13.0.2:0
          Discovery Sources:
          Interfaces:
              ATM3/0/0.2 (ldp):xmit/recv
-                 LDP Id:10.19.14.14:0
+                 LDP Id:14.14.14.14:0
     '''}
 
     def test_empty(self):
@@ -1560,6 +1648,120 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
         obj = ShowMplsLdpDiscovery(device=self.dev)
         parsed_output = obj.parse(all='all')
         self.assertEqual(parsed_output, self.golden_parsed_output_all)
+
+
+class test_show_mpls_ldp_igp_sync(unittest.TestCase):
+    dev = Device(name='dev1')
+    empty_output = {'execute.return_value': '      '}
+
+    golden_parsed_output_all = {
+        'vrf': {
+            'default': {
+                'interface':{
+                    'GigabitEthernet0/0/0':{
+                        'ldp':{
+                            'configured': True,
+                            'igp_synchronization_enabled':True,
+                        },
+                        'sync': {
+                            'status':{
+                                'sync_achieved': True,
+                                'peer_reachable': True,
+                            },
+                            'delay_time': 0,
+                            'left_time': 0,
+                        },
+                        'igp': {
+                            'holddown_time': 'infinite',
+                            'enabled': "ospf 9996"
+                        },
+                        'peer_ldp_ident': '106.162.197.252:0',
+                    },
+                    "GigabitEthernet0/0/2": {
+                        'ldp': {
+                            'configured': True,
+                            'igp_synchronization_enabled': False,
+                        },
+                    },
+                }
+            }
+        }
+    }
+    golden_output_all = {'execute.return_value':'''\
+
+    Router#show mpls ldp igp sync all
+    Load for five secs: 2%/0%; one minute: 5%; five minutes: 5%
+    Time source is NTP, 16:10:10.780 JST Tue Nov 8 2016
+
+    GigabitEthernet0/0/0:
+        LDP configured; LDP-IGP Synchronization enabled.
+        Sync status: sync achieved; peer reachable.
+        Sync delay time: 0 seconds (0 seconds left)
+        IGP holddown time: infinite.
+        Peer LDP Ident: 106.162.197.252:0
+        IGP enabled: OSPF 9996
+    GigabitEthernet0/0/2:
+        LDP configured; LDP-IGP Synchronization not enabled.
+
+    Router#
+    '''}
+    golden_parsed_output = {
+        "vrf": {
+            "default": {
+                "interface": {
+                    "FastEthernet0/0/0": {
+                        "sync": {
+                            "status": {
+                                "enabled": True,
+                                "sync_achieved": True,
+                                "peer_reachable": True
+                            }
+                        },
+                        "ldp": {
+                            "configured": True,
+                            "igp_synchronization_enabled": False
+                        },
+                        "igp": {
+                            "enabled": "ospf 1",
+                            "holddown_time": "infinite"
+                        },
+                        "peer_ldp_ident": "10.0.0.1:0"
+                    }
+                }
+            }
+        }
+    }
+    golden_output = {'execute.return_value': '''\
+
+    Router#show mpls ldp igp sync
+        FastEthernet0/0/0:
+            LDP configured;  SYNC enabled.
+            SYNC status: sync achieved; peer reachable.
+            IGP holddown time: infinite.
+            Peer LDP Ident: 10.0.0.1:0
+            IGP enabled: OSPF 1
+
+    '''}
+
+    def test_empty(self):
+        self.dev = Mock(**self.empty_output)
+        obj = ShowMplsLdpIgpSync(device=self.dev)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_all(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output_all)
+        obj = ShowMplsLdpIgpSync(device=self.dev)
+        parsed_output = obj.parse(all='all')
+        self.assertEqual(parsed_output, self.golden_parsed_output_all)
+
+    def test_golden_interface(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output)
+        obj = ShowMplsLdpIgpSync(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
 if __name__ == '__main__':
