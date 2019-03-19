@@ -65,79 +65,61 @@ class test_show_archive(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 #=====================================================
-# Parser for 'show archive config differences
+# Parser for the following commands:
+# * show archive config differences
+# * show archive config differences {fileA} {fileB}
+# * show archive config differences {fileA}
+# * show archive config incremental-diff {fileA}
 #=====================================================
 class test_show_archive_config_differences(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value' : ''}
     
     golden_parsed_output = {
-            'diff':{
-                'index': {
-                    1: {
-                        'before': ['hostname Router1'],
-                        'after': ['hostname Test1']
-                    },
-                    2: {
-                        'before': ['hostname Router2'],
-                        'after': ['hostname Test2']
-                    }
+        'diff':{
+            'index': {
+                1: {
+                    'before': [],
+                    'after': ['hostname Router']
+                },
+                2: {
+                    'before': ['hostname Test4', 'archive', 'path bootflash:config', 'maximum 14', 'time-period 2'],
+                    'after': []
                 }
+            }
         }
     }
 
-    golden_parsed_output_optional = {
-                'diff':{
-                    'index': { 
-                        1: {
-                            'before': ['hostname Router1-1.12', 
-                                    'hostname Router2/2.1.1', 
-                                    'hostname Router3'],
-                            'after' : ['hostname Test1', 'hostname Test2',
-                                    'hostname Test3']
-                        }
-                    }
-            }
-    }
-
     golden_parsed_output_incremental_diff = {
-                'diff':{
-                    'index': {
-                        1: {
-                        'after': ['ip subnet-zero', 'ip cef', 
-                                'ip name-server 10.4.4.4', 
-				'voice dnis-map1', 'dnis 111', 
-                                'interface FastEthernet1/0',
-				'no ip address', 'no ip route-cache', 
-                                'no ip mroute-cache','shutdown', 'duplex half',
-                                'ip default-gateway 10.5.5.5','ip classless', 
-                                'access-list 110 deny	ip any host 10.1.1.1',
-				'access-list 110 deny	ip any host 10.1.1.2',
-				'access-list 110 deny	ip any host 10.1.1.3',
-				'snmp-server community private RW'
-				]
-                        }
-                    }
+        'diff':{
+            'index': {
+                1: {
+                'after': ['ip subnet-zero', 'ip cef', 
+                    'ip name-server 10.4.4.4', 
+		    'voice dnis-map1', 'dnis 111', 
+                    'interface FastEthernet1/0',
+		    'no ip address', 'no ip route-cache', 
+                    'no ip mroute-cache','shutdown', 'duplex half',
+                    'ip default-gateway 10.5.5.5','ip classless', 
+                    'access-list 110 deny	ip any host 10.1.1.1',
+		    'access-list 110 deny	ip any host 10.1.1.2',
+		    'access-list 110 deny	ip any host 10.1.1.3',
+		    'snmp-server community private RW']
                 }
+            }
+        }
     }
     
     golden_output = {'execute.return_value': '''\
+            Load for five secs: 14%/0%; one minute: 13%; five minutes: 19%
+            Time source is NTP, 11:58:48.301 JST Fri Oct 14 2016
             !Contextual Config Diffs:
-            -hostname Router1
-            +hostname Test1
-            -hostname Router2
-            +hostname Test2
-            '''
-    }
-
-    golden_output_optional = {'execute.return_value': '''\
-            !Contextual Config Diffs:
-            -hostname Router1-1.12
-            -hostname Router2/2.1.1
-            -hostname Router3
-            +hostname Test1
-            +hostname Test2
-            +hostname Test3
+            +hostname Router
+            -hostname Test4
+            -archive
+             -path bootflash:config
+             -maximum 14
+             -time-period 2
             '''
     }
 
@@ -163,31 +145,34 @@ class test_show_archive_config_differences(unittest.TestCase):
             '''
     }
 
-
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowArchiveConfigDifferences(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
-
+    
+    # Test case for 'show archive config differences'
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         obj = ShowArchiveConfigDifferences(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
     
+    # Test case for 'show archive config differences {fileA}'
     def test_golden_one_file(self):
-        self.device = Mock(**self.golden_output_optional)
+        self.device = Mock(**self.golden_output)
         obj = ShowArchiveConfigDifferences(device=self.device)
         parsed_output = obj.parse(fileA='file1.txt')
-        self.assertEqual(parsed_output, self.golden_parsed_output_optional)
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
+    # Test case for 'show archive config differences {fileA} {fileB}'
     def test_golden_two_files(self):
-        self.device = Mock(**self.golden_output_optional)
+        self.device = Mock(**self.golden_output)
         obj = ShowArchiveConfigDifferences(device=self.device)
         parsed_output = obj.parse(fileA='file1.txt', fileB='file2.txt')
-        self.assertEqual(parsed_output, self.golden_parsed_output_optional)
-
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+    
+    # Test case for 'show archive config incremental-diff {fileA}
     def test_golden_incremental_diffs(self):
         self.device = Mock(**self.golden_output_incremental_diff)
         obj = ShowArchiveConfigIncrementalDiffs(device=self.device)

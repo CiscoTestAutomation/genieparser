@@ -98,10 +98,13 @@ class ShowArchive(ShowArchiveSchema):
 # ====================================================
 # Parser for 'show archive config differences'
 # ====================================================
-
 class ShowArchiveConfigDifferencesSchema(MetaParser):
     """
-    Schema for show archive config differences
+    Schema for the following commands
+    * show archive config differences
+    * show archive config differences {fileA} {fileB}
+    * show archive config differences {fileA}
+    * show archive config incremental-diff {fileA}
     """
     
     schema = {
@@ -115,7 +118,11 @@ class ShowArchiveConfigDifferencesSchema(MetaParser):
         }
 
 class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
-    """ Parser for show archive config differences"""
+    """ Parser for the following commands:
+        * show archive config differences
+        * show archive config differences {fileA} {fileB}
+        * show archive config differences {fileA}
+    """
 
     cli_command = ['show archive config differences', 
                 'show archive config differences {fileA} {fileB}',
@@ -158,38 +165,37 @@ class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
         for line in out.splitlines():
             line = line.strip()
             if not cmd:
-                    if not contextual_found:
-                        #!Contextual Config Diffs
-                        m = p1.match(line)
-                        if m:
-                            contextual_found = True
-                            contextual_config_diffs = ret_dict.\
-                                                setdefault('diff',{}).\
+                if not contextual_found:
+                    #!Contextual Config Diffs
+                    m = p1.match(line)
+                    if m:
+                        contextual_found = True
+                        contextual_config_diffs = ret_dict.setdefault('diff',{}).\
                                                 setdefault('index',{})
-                            continue
-                    else:
-                        # +hostname Router1
-                        m = p2.match(line)
-                        if m:
-                            group = m.groupdict()
-                            if is_new_index == '':
-                                index+=1
-                                index_dict = contextual_config_diffs.setdefault\
+                        continue
+                else:
+                    # +hostname Router1
+                    m = p2.match(line)
+                    if m:
+                        group = m.groupdict()
+                        if is_new_index == '':
+                            index+=1
+                            index_dict = contextual_config_diffs.setdefault\
                                         (index, {'before': [],'after': []})
-                            index_dict['after'].append(group['line_info'])
-                            is_new_index = '+'
-                            continue
-                        # -hostname Router2
-                        m = p3.match(line)
-                        if m:
-                            group = m.groupdict()
-                            if is_new_index != '-':
-                                index+=1
-                                index_dict = contextual_config_diffs.setdefault\
+                        index_dict['after'].append(group['line_info'])
+                        is_new_index = '+'
+                        continue
+                    # -hostname Router2
+                    m = p3.match(line)
+                    if m:
+                        group = m.groupdict()
+                        if is_new_index != '-':
+                            index+=1
+                            index_dict = contextual_config_diffs.setdefault\
                                         (index, {"before": [],"after": []})
-                            index_dict['before'].append(group['line_info'])
-                            is_new_index = '-'
-                            continue
+                        index_dict['before'].append(group['line_info'])
+                        is_new_index = '-'
+                        continue
             else:
                 # !List of commands:
                 m = p4.match(line)
