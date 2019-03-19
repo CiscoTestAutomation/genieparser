@@ -11,8 +11,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
 
 # Parser
 from genie.libs.parser.iosxe.show_archive import ShowArchive, \
-						 ShowArchiveConfigDifferences, \
-                                                 ShowArchiveConfigIncrementalDiffs
+					    ShowArchiveConfigDifferences, \
+                                            ShowArchiveConfigIncrementalDiffs
 
 
 # ============================================
