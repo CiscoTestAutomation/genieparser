@@ -838,8 +838,6 @@ class ShowMplsLdpDiscoverySchema(MetaParser):
                         Optional('targeted_hellos'): {
                             Any(): {
                                 Any(): {
-                                    'source': str,
-                                    'destination': str,
                                     'session': str,
                                     Optional('ldp_id'): str,
                                     Optional('tdp_id'): str,
@@ -1066,8 +1064,6 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
                 targeted_dict = local_ldp_identifier_dict.setdefault('targeted_hellos', {}). \
                     setdefault(group['source'], {}). \
                     setdefault(group['destination'], {})
-                targeted_dict.update({'source': group['source']})
-                targeted_dict.update({'destination': group['destination']})
                 targeted_dict.update({'session': group['session'].lower()})
                 targeted_dict.update({'xmit': True})
                 targeted_dict.update({'recv': True})

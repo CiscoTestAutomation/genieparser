@@ -1068,20 +1068,16 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
                         "targeted_hellos": {
                             "8.1.1.1": {
                                 "168.7.0.16": {
-                                    "destination": "168.7.0.16",
                                     "session": "tdp",
                                     "active": False,
                                     'tdp_id': '133.0.0.33:0',
-                                    "source": "8.1.1.1",
                                     "xmit": True,
                                     "recv": True,
                                 },
                                 "133.0.0.33": {
                                     "active": True,
-                                    "destination": "133.0.0.33",
                                     "session": "ldp",
                                     "ldp_id": "133.0.0.33:0",
-                                    "source": "8.1.1.1",
                                     "xmit": True,
                                     "recv": True,
                                 }
