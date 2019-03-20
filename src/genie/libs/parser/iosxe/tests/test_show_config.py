@@ -12,12 +12,9 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
 # Parser
 from genie.libs.parser.iosxe.show_config import ShowConfigurationLock
 
-
 # ======================================================
 # Parser for 'show configuration lock'
 #=======================================================
-
-
 class test_show_configuration_lock(unittest.TestCase):
 
     device = Device(name='aDevice')
@@ -26,7 +23,7 @@ class test_show_configuration_lock(unittest.TestCase):
     golden_parsed_output = {
         'config_session_lock': {
 	    'owner_pid': { 
-	        578: {
+                578: {
                     'tty_number': 2,
                     'tty_username': 'testuser',
                     'user_debug_info': 'CLI Session Lock',

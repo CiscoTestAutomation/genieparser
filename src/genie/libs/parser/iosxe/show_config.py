@@ -111,7 +111,7 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                 if m:
                     group = m.groupdict()
                     config_session_lock = ret_dict.\
-			setdefault('config_session_lock',{}).\
+                        setdefault('config_session_lock',{}).\
                         setdefault('owner_pid',{}).\
                         setdefault(int(group['owner_pid']),{})
                     continue
@@ -120,8 +120,8 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                 m = p2.match(line)
                 if m:
                     group = m.groupdict()
-                    config_session_lock.update({'tty_number' : \
-			int(group['tty_number'])})
+                    config_session_lock.update({'tty_number' : \ 
+                        int(group['tty_number'])})
                     continue
                 
                 # TTY username : Test1
@@ -129,7 +129,7 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                 if m:
                     group = m.groupdict()
                     config_session_lock.update({'tty_username' : \
-			group['tty_username']})
+                        group['tty_username']})
                     continue
                 
                 # User debug info : CLI Session Lock
@@ -137,7 +137,7 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                 if m:
                     group = m.groupdict()
                     config_session_lock.update({'user_debug_info' : \
-			group['user_debug_info']})
+                        group['user_debug_info']})
                     continue
                 
                 # Lock Active time (in Sec) : 63
@@ -159,8 +159,9 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                 if m:
                     group = m.groupdict()
                     parser_configure_lock = ret_dict.\
-			setdefault('parser_configure_lock',{}).\
-                        setdefault('owner_pid',{}).setdefault(int(group['owner_pid']),{})
+                        setdefault('parser_configure_lock',{}).\
+                        setdefault('owner_pid',{}).setdefault( \
+                        int(group['owner_pid']),{})
                     continue
                 
                 # User                  : User1
@@ -196,7 +197,7 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                 if m:
                     group = m.groupdict()
                     parser_configure_lock.update({'class' : \
-			group['class_name']})
+                        group['class_name']})
                     continue
                 
                 # Count                 : 0
@@ -212,15 +213,15 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                 if m:
                     group = m.groupdict()
                     parser_configure_lock.update({'pending_requests' : \
-			int(group['pending_requests'])})
+                        int(group['pending_requests'])})
                     continue
                 
                 # User debug info       : 0
                 m = p15.match(line)
                 if m:
                     group = m.groupdict()
-                    parser_configure_lock.update({'user_debug_info' : 
-			int(group['user_debug_info'])})
+                    parser_configure_lock.update({'user_debug_info' : \ 
+                        int(group['user_debug_info'])})
                     continue
 
         return ret_dict
