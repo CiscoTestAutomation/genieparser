@@ -115,3 +115,12 @@
     * Add ShowEthernetServiceInstanceDetail for:
             show ethernet service instance detail
             show ethernet service instance interface <interface> detail
+
+--------------------------------------------------------------------------------
+                                  LAG
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowEtherChannelLoadBalancing for:
+        show etherchannel load-balancing
+    * Add ShowLacpNeighborDetail for:
+        show lacp neighbor detail
