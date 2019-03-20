@@ -13,7 +13,6 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
 from genie.libs.parser.iosxe.show_bfd import ShowBfdNeighborsDetails,\
 											 ShowBfdNeighborsClientOSPFDetails
 
-
 # ============================================
 # Parser for 'show bfd neighbors details
 # ============================================
@@ -86,9 +85,9 @@ class test_show_bfd(unittest.TestCase):
         }
 
 
-		golden_output = {'execute.return_value': '''\
-			IPv4 Sessions
-			NeighAddr	LD/RD	RH/RS 	State	Int
+		golden_output = {'execute.return_value': '''
+      IPv4 Sessions
+      NeighAddr   LD/RD   RH/RS   State   Int
 			106.162.197.93	4097/4097	Up	Up	Gi0/0/0
 			Session state is UP and using echo function with 500 ms interval.
 			Session Host: Software
