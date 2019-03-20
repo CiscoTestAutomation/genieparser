@@ -2787,3 +2787,76 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
                 continue
 
         return ret_dict
+
+
+# ====================================================
+#  schema for show interface stats
+# ====================================================
+class ShowInterfaceStatsSchema(MetaParser):
+    """Schema for:
+        show interface <interface> stats
+        show interface stats             """
+
+    schema = {
+        Any(): {
+            'switching_path': {
+                Any(): {
+                    'pkts_in': int, 
+                    'pkts_out': int, 
+                    'chars_in': int, 
+                    'chars_out': int, 
+                },
+            }
+        },
+    }
+
+
+# ====================================================
+#  parser for show interface stats
+# ====================================================
+class ShowInterfaceStats(ShowInterfaceStatsSchema):
+    """Parser for :
+        show interface <interface> stats
+        show interface stats            """
+
+    cli_command = ['show interface stats' ,'show interface {interface} stats']
+
+    def cli(self, interface="", output=None):
+        if output is None:
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # initialize result dict
+        result_dict = {}
+        
+        # GigabitEthernet0/0/0
+        p1 = re.compile(r'^\s*(?P<interface>[\w./]+)$')
+
+        #    Switching path    Pkts In   Chars In   Pkts Out  Chars Out
+        #         Processor         33       2507         33       2490
+        p2 = re.compile(r'^\s*(?P<path>[\w\- ]*?) +(?P<pkts_in>[\d]+) +(?P<chars_in>[\d]+)'
+                        ' +(?P<pkts_out>[\d]+) +(?P<chars_out>[\d]+)$')
+
+        for line in out.splitlines():
+            line = line.rstrip()
+
+            m = p1.match(line)
+            if m:
+                interface = m.groupdict()['interface']
+                path_dict = result_dict.setdefault(interface, {}).setdefault('switching_path', {})
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                path = group.pop('path')
+                tmp_dict = path_dict.setdefault(path, {})
+                tmp_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+        return result_dict

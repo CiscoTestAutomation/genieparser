@@ -28,7 +28,8 @@ from genie.libs.parser.iosxe.show_interface import ShowInterfacesSwitchport,\
                                         ShowInterfacesTrunk, \
                                         ShowInterfacesCounters, \
                                         ShowInterfacesAccounting, \
-                                        ShowIpInterfaceBriefPipeIp
+                                        ShowIpInterfaceBriefPipeIp,\
+                                        ShowInterfaceStats
 
 
 class test_show_interface_parsergen(unittest.TestCase):
@@ -2310,6 +2311,221 @@ No traffic sent or received on this interface.
         obj = ShowInterfacesAccounting(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+###################################################
+# unit test for show interface stats
+####################################################
+class test_show_interface_stats(unittest.TestCase):
+    """unit test for show interface stats """
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        Router#show interface stats
+        Load for five secs: 5%/1%; one minute: 8%; five minutes: 9%
+        Time source is NTP, 07:38:10.599 JST Thu Sep 8 2016
+
+        GigabitEthernet0/0
+                  Switching path    Pkts In   Chars In   Pkts Out  Chars Out
+                       Processor          0          0        225      77625
+                     Route cache          0          0          0          0
+          Multi-Processor Fwding        950     221250        500      57000
+                           Total        950     221250        725     134625
+        GigabitEthernet0/1
+                  Switching path    Pkts In   Chars In   Pkts Out  Chars Out
+                       Processor          1         60        226      77685
+                     Route cache          0          0          0          0
+          Multi-Processor Fwding        500      57000        500      57000
+                           Total        501      57060        726     134685
+        GigabitEthernet0/2
+                  Switching path    Pkts In   Chars In   Pkts Out  Chars Out
+                       Processor          1         60        226      77685
+                     Route cache          0          0          0          0
+          Multi-Processor Fwding          0          0          0          0
+                           Total          1         60        226      77685
+        FastEthernet1/0
+                  Switching path    Pkts In   Chars In   Pkts Out  Chars Out
+                       Processor      34015    5331012       1579     158190
+                     Route cache          0          0          0          0
+                           Total      34015    5331012       1579     158190
+    '''}
+
+    golden_parsed_output = {
+        "GigabitEthernet0/0": {
+            "switching_path": {
+                "Processor": {
+                    "pkts_in": 0,
+                    "chars_in": 0,
+                    "pkts_out": 225,
+                    "chars_out": 77625
+                },
+                "Route cache": {
+                    "pkts_in": 0,
+                    "chars_in": 0,
+                    "pkts_out": 0,
+                    "chars_out": 0
+                },
+                "Multi-Processor Fwding": {
+                    "pkts_in": 950,
+                    "chars_in": 221250,
+                    "pkts_out": 500,
+                    "chars_out": 57000
+                },
+                "Total": {
+                    "pkts_in": 950,
+                    "chars_in": 221250,
+                    "pkts_out": 725,
+                    "chars_out": 134625
+                }
+            }
+        },
+        "GigabitEthernet0/1": {
+            "switching_path": {
+                "Processor": {
+                    "pkts_in": 1,
+                    "chars_in": 60,
+                    "pkts_out": 226,
+                    "chars_out": 77685
+                },
+                "Route cache": {
+                    "pkts_in": 0,
+                    "chars_in": 0,
+                    "pkts_out": 0,
+                    "chars_out": 0
+                },
+                "Multi-Processor Fwding": {
+                    "pkts_in": 500,
+                    "chars_in": 57000,
+                    "pkts_out": 500,
+                    "chars_out": 57000
+                },
+                "Total": {
+                    "pkts_in": 501,
+                    "chars_in": 57060,
+                    "pkts_out": 726,
+                    "chars_out": 134685
+                }
+            }
+        },
+        "GigabitEthernet0/2": {
+            "switching_path": {
+                "Processor": {
+                    "pkts_in": 1,
+                    "chars_in": 60,
+                    "pkts_out": 226,
+                    "chars_out": 77685
+                },
+                "Route cache": {
+                    "pkts_in": 0,
+                    "chars_in": 0,
+                    "pkts_out": 0,
+                    "chars_out": 0
+                },
+                "Multi-Processor Fwding": {
+                    "pkts_in": 0,
+                    "chars_in": 0,
+                    "pkts_out": 0,
+                    "chars_out": 0
+                },
+                "Total": {
+                    "pkts_in": 1,
+                    "chars_in": 60,
+                    "pkts_out": 226,
+                    "chars_out": 77685
+                }
+            }
+        },
+        "FastEthernet1/0": {
+            "switching_path": {
+                "Processor": {
+                    "pkts_in": 34015,
+                    "chars_in": 5331012,
+                    "pkts_out": 1579,
+                    "chars_out": 158190
+                },
+                "Route cache": {
+                    "pkts_in": 0,
+                    "chars_in": 0,
+                    "pkts_out": 0,
+                    "chars_out": 0
+                },
+                "Total": {
+                    "pkts_in": 34015,
+                    "chars_in": 5331012,
+                    "pkts_out": 1579,
+                    "chars_out": 158190
+                }
+            }
+        }
+    }
+
+    golden_output_interface = {'execute.return_value': '''
+        Router#show interface gigabitEthernet 0/0/0 stats
+        Load for five secs: 5%/1%; one minute: 8%; five minutes: 9%
+        Time source is NTP, 07:38:10.599 JST Thu Sep 8 2016
+
+        GigabitEthernet0/0/0
+                  Switching path    Pkts In   Chars In   Pkts Out  Chars Out
+                       Processor         33       2507         33       2490
+                     Route cache          0          0          0          0
+               Distributed cache      62581   53049894     125156   29719204
+                           Total      62614   53052401     125189   29721694
+    '''}
+
+    golden_parsed_output_interface = {
+        "GigabitEthernet0/0/0": {
+            "switching_path": {
+                "Processor": {
+                    "pkts_in": 33,
+                    "chars_in": 2507,
+                    "pkts_out": 33,
+                    "chars_out": 2490
+                },
+                "Route cache": {
+                    "pkts_in": 0,
+                    "chars_in": 0,
+                    "pkts_out": 0,
+                    "chars_out": 0
+                },
+                "Distributed cache": {
+                    "pkts_in": 62581,
+                    "chars_in": 53049894,
+                    "pkts_out": 125156,
+                    "chars_out": 29719204
+                },
+                "Total": {
+                    "pkts_in": 62614,
+                    "chars_in": 53052401,
+                    "pkts_out": 125189,
+                    "chars_out": 29721694
+                }
+            }
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowInterfaceStats(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowInterfaceStats(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_show_interfaces(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_interface)
+        obj = ShowInterfaceStats(device=self.device)
+        parsed_output = obj.parse(interface='GigabitEthernet0/0/0')
+        self.assertEqual(parsed_output,self.golden_parsed_output_interface)
+
 
 if __name__ == '__main__':
     unittest.main()
