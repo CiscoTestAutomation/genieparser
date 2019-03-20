@@ -76,25 +76,12 @@ class test_show_archive_config_differences(unittest.TestCase):
     empty_output = {'execute.return_value' : ''}
     
     golden_parsed_output = {
-        'diff':{
-            'index': {
-                1: {
-                    'before': [],
-                    'after': ['hostname Router']
-                },
-                2: {
-                    'before': ['hostname Test4', 'archive', 'path bootflash:config', 'maximum 14', 'time-period 2'],
-                    'after': []
-                }
-            }
-        }
+        'diff': ['+hostname Router','-hostname Test4', '-archive', 
+            '-path bootflash:config', '-maximum 14', '-time-period 2']
     }
 
     golden_parsed_output_incremental_diff = {
-        'diff':{
-            'index': {
-                1: {
-                'after': ['ip subnet-zero', 'ip cef', 
+        'diff': ['ip subnet-zero', 'ip cef', 
                     'ip name-server 10.4.4.4', 
 		    'voice dnis-map1', 'dnis 111', 
                     'interface FastEthernet1/0',
@@ -105,9 +92,6 @@ class test_show_archive_config_differences(unittest.TestCase):
 		    'access-list 110 deny	ip any host 10.1.1.2',
 		    'access-list 110 deny	ip any host 10.1.1.3',
 		    'snmp-server community private RW']
-                }
-            }
-        }
     }
     
     golden_output = {'execute.return_value': '''\

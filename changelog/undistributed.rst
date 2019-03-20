@@ -23,3 +23,14 @@
     	show version RP standby installed
     	show version RP standby provisioned
     * Add ShowPlatformPower for 'show platform power'
+
+--------------------------------------------------------------------------------
+                                     CONFIG
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowArchiveConfigDifferences for:
+        show archive config differences
+        show archive config differences {fileA} {fileB}
+        show archive config differences {fileA}
+    * Add ShowArchiveConfigIncrementalDiffs for:   
+        show archive config incremental-diff {fileA}

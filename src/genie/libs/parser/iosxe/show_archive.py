@@ -108,13 +108,7 @@ class ShowArchiveConfigDifferencesSchema(MetaParser):
     """
     
     schema = {
-            'diff': {
-                'index': { Any():{
-                    Optional('before'): list,
-                    'after': list
-                    }
-                }
-            }
+            'diff': list
         }
 
 class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
@@ -153,10 +147,9 @@ class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
         
         # !Contextual Config Diffs:
         p1 = re.compile(r'^\s*!Contextual +Config +Diffs:$')
-        # +hostname Router1
-        p2 = re.compile(r'^\s*\+(?P<line_info>[\w\W]+)$')
-        # -hostname Router2
-        p3 = re.compile(r'^\s*\-(?P<line_info>[\w\W]+)$')
+        # +hostname Router
+        # -hostname Test4
+        p2 = re.compile(r'^\s*(?P<line_info>(\+|\-)[\w\W]+)$')
         # !List of commands:
         p4 = re.compile(r'^\s*!List +of +commands:$')
         # hostname Router3
@@ -170,47 +163,28 @@ class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
                     m = p1.match(line)
                     if m:
                         contextual_found = True
-                        contextual_config_diffs = ret_dict.setdefault('diff',{}).\
-                                                setdefault('index',{})
+                        contextual_config_diff = ret_dict.setdefault('diff',[])
                         continue
                 else:
-                    # +hostname Router1
+                    # +hostname Router
+                    # -hostname Test4
                     m = p2.match(line)
                     if m:
                         group = m.groupdict()
-                        if is_new_index == '':
-                            index+=1
-                            index_dict = contextual_config_diffs.setdefault\
-                                        (index, {'before': [],'after': []})
-                        index_dict['after'].append(group['line_info'])
-                        is_new_index = '+'
-                        continue
-                    # -hostname Router2
-                    m = p3.match(line)
-                    if m:
-                        group = m.groupdict()
-                        if is_new_index != '-':
-                            index+=1
-                            index_dict = contextual_config_diffs.setdefault\
-                                        (index, {"before": [],"after": []})
-                        index_dict['before'].append(group['line_info'])
-                        is_new_index = '-'
+                        contextual_config_diff.append(group['line_info'])
                         continue
             else:
                 # !List of commands:
                 m = p4.match(line)
                 if m:
-                    incremental_diffs = ret_dict.setdefault('diff',{}).\
-                                                setdefault('index',{}).\
-                                                setdefault(1, {}).\
-                                                setdefault('after',[])
+                    incremental_diff = ret_dict.setdefault('diff',[])
                     continue
                 # hostname router 192.168.5.2/22
                 # end
                 m = p5.match(line)
                 if m:
                     group = m.groupdict()
-                    incremental_diffs.append(group['line_info'])
+                    incremental_diff.append(group['line_info'])
                     continue
         return ret_dict
 
