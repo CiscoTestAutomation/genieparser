@@ -13,7 +13,9 @@ from genie.libs.parser.iosxe.show_mpls import ShowMplsLdpParameters,\
                                               ShowMplsLdpBindings,\
                                               ShowMplsLdpCapabilities,\
                                               ShowMplsLdpDiscovery,\
-                                              ShowMplsLdpIgpSync
+                                              ShowMplsLdpIgpSync,\
+                                              ShowMplsForwardingTable,\
+                                              ShowMplsInterface
 
 class test_show_mpls_ldp_parameters(unittest.TestCase):
     dev1 = Device(name='empty')
@@ -1762,6 +1764,142 @@ class test_show_mpls_ldp_igp_sync(unittest.TestCase):
         obj = ShowMplsLdpIgpSync(device=self.dev)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+class test_show_mpls_forwarding_table(unittest.TestCase):
+    dev1 = Device(name='empty')
+    dev = Device(name='dev')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'vrf': {
+            'L3VPN-0051': {
+                'interfaces': {
+                    'Port-channel1.51': {
+                        'local_label': 9301,
+                        'outgoing_label': 'No Label',
+                        'prefix_or_tunnel_id': '172.16.100.1/32[V]',
+                        'bytes_label_switched': 0,
+                        'next_hop': '192.168.10.253',
+                        'code': '00002440156384B261CB1480810000330800',
+                        'mac': 18,
+                        'encaps': 18,
+                        'mru': 1530,
+                        'label_stack': '{}',
+                        'vpn_route': 'L3VPN-0051',
+                        'output_feature_configured': False,
+                        'pre_destination': 'load-sharing',
+                        'slots': ['0', '2', '4', '6', '8', '10', '12', '14'],
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''\
+    Router#show mpls forwarding-table vrf L3VPN-0051 detail
+    Load for five secs: 71%/0%; one minute: 11%; five minutes: 9%
+    Time source is NTP, 20:29:27.645 JST Fri Nov 11 2016
+
+    Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop
+    Label      Label      or Tunnel Id     Switched      interface
+    9301       No Label   172.16.100.1/32[V]   \
+                                           0             Po1.51     192.168.10.253
+            MAC/Encaps=18/18, MRU=1530, Label Stack{}
+            00002440156384B261CB1480810000330800
+            VPN route: L3VPN-0051
+            No output feature configured
+        Per-destination load-sharing, slots: 0 2 4 6 8 10 12 14
+ '''
+                     }
+
+    def test_empty(self):
+        self.dev1 = Mock(**self.empty_output)
+        obj = ShowMplsForwardingTable(device=self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output)
+        obj = ShowMplsForwardingTable(device=self.dev)
+        parsed_output = obj.parse(vrf='L3VPN-0051')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+class test_show_mpls_interface(unittest.TestCase):
+    dev1 = Device(name='empty')
+    dev = Device(name='dev')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "interfaces": {
+            "GigabitEthernet6": {
+                "ip": "yes",
+                "tunnel": "no",
+                "session": 'ldp',
+                "bgp": "no",
+                "static": "no",
+                "operational": "yes"
+            }
+        }
+    }
+    golden_output = {'execute.return_value': '''\
+    PE1#show mpls interfaces
+    Interface              IP            Tunnel   BGP Static Operational
+    GigabitEthernet6       Yes (ldp)     No       No  No     Yes
+    '''
+                     }
+    golden_parsed_output_detail = {
+        "interfaces": {
+            "GigabitEthernet0/0/0": {
+                "type": "Unknown",
+                "session": "ldp",
+                "ip_labeling_enabled": "Interface config",
+                "lsp_tunnel_labeling_enabled": False,
+                "lp_frr_labeling_enabled": False,
+                "bgp_labeling_enabled": False,
+                "mtu": 1552,
+                "mpls": "operational"
+            }
+        }
+    }
+    golden_output_detail = {'execute.return_value': '''\
+    Router#show mpls interfaces detail
+    Load for five secs: 2%/0%; one minute: 5%; five minutes: 5%
+    Time source is NTP, 16:10:10.438 JST Tue Nov 8 2016
+
+    Interface GigabitEthernet0/0/0:
+            Type Unknown
+            IP labeling enabled (ldp) :
+              Interface config
+            LSP Tunnel labeling not enabled
+            IP FRR labeling not enabled
+            BGP labeling not enabled
+            MPLS operational
+            MTU = 1552
+    '''
+                            }
+
+    def test_empty(self):
+        self.dev1 = Mock(**self.empty_output)
+        obj = ShowMplsInterface(device=self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output)
+        obj = ShowMplsInterface(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_detail(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output_detail)
+        obj = ShowMplsInterface(device=self.dev)
+        parsed_output = obj.parse(detail='detail')
+        self.assertEqual(parsed_output, self.golden_parsed_output_detail)
 
 
 if __name__ == '__main__':
