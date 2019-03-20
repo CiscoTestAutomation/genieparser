@@ -15,7 +15,6 @@ from genie.metaparser.util.schemaengine import Schema, \
 # ==================================================
 # Parser for 'show configuration lock'
 # ==================================================
-
 class ShowConfigurationLockSchema(MetaParser):
     """
     Schema for show configuration lock
@@ -23,7 +22,7 @@ class ShowConfigurationLockSchema(MetaParser):
     
     schema = {
         Optional('config_session_lock'): {
-            'owner_pid': {
+            Optional('owner_pid'): {
                 Any(): {
                     'tty_number': int,
                     'tty_username': str,
@@ -120,7 +119,7 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                 m = p2.match(line)
                 if m:
                     group = m.groupdict()
-                    config_session_lock.update({'tty_number' : \ 
+                    config_session_lock.update({'tty_number' : 
                         int(group['tty_number'])})
                     continue
                 
@@ -128,7 +127,7 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                 m = p3.match(line)
                 if m:
                     group = m.groupdict()
-                    config_session_lock.update({'tty_username' : \
+                    config_session_lock.update({'tty_username' : 
                         group['tty_username']})
                     continue
                 
@@ -136,7 +135,7 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                 m = p4.match(line)
                 if m:
                     group = m.groupdict()
-                    config_session_lock.update({'user_debug_info' : \
+                    config_session_lock.update({'user_debug_info' : 
                         group['user_debug_info']})
                     continue
                 
@@ -144,7 +143,7 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                 m = p5.match(line)
                 if m:
                     group = m.groupdict()
-                    config_session_lock.update({'lock_active_time_in_sec' : \
+                    config_session_lock.update({'lock_active_time_in_sec' : 
 			int(group['lock_active_time_in_sec'])})
                     continue
                 
@@ -204,7 +203,7 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                 m = p13.match(line)
                 if m:
                     group = m.groupdict()
-                    parser_configure_lock.update({'count' : \
+                    parser_configure_lock.update({'count' : 
                         int(group['count'])})
                     continue
                 
@@ -212,7 +211,7 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                 m = p14.match(line)
                 if m:
                     group = m.groupdict()
-                    parser_configure_lock.update({'pending_requests' : \
+                    parser_configure_lock.update({'pending_requests' : 
                         int(group['pending_requests'])})
                     continue
                 
@@ -220,7 +219,7 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                 m = p15.match(line)
                 if m:
                     group = m.groupdict()
-                    parser_configure_lock.update({'user_debug_info' : \ 
+                    parser_configure_lock.update({'user_debug_info' :  
                         int(group['user_debug_info'])})
                     continue
 
