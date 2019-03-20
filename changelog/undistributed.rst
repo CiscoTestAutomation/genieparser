@@ -46,3 +46,12 @@
     	show version RP standby installed
     	show version RP standby provisioned
     * Add ShowPlatformPower for 'show platform power'
+
+--------------------------------------------------------------------------------
+                                    ARP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowArpApplication for:
+        show arp application
+    * Add ShowArpSummary for:
+        show arp summary

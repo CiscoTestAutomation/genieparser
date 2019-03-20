@@ -519,38 +519,18 @@ class test_show_arp_summary(unittest.TestCase):
     
     golden_parsed_output = {
         'total_num_of_entries': {
-            'arp_table_entries': {
-                'total': 100409
-            },
-            'dynamic_arp_entries': {
-                'total': 100204
-            },
-            'incomplete_arp_entries': {
-                'total': 0
-            },
-            'interface_arp_entries': {
-                'total': 205
-            },
-            'static_arp_entries': {
-                'total': 0
-            },
-            'alias_arp_entries': {
-                'total': 0
-            },
-            'simple_application_arp_entries': {
-                'total': 0
-            }
+            'arp_table_entries': 100409,
+            'dynamic_arp_entries': 100204,
+            'incomplete_arp_entries': 0,
+            'interface_arp_entries': 205,
+            'static_arp_entries': 0,
+            'alias_arp_entries': 0,
+            'simple_application_arp_entries': 0
         },
-        'interfaces': {
-            'GigabitEthernet0': {
-                'entry_count': 4
-            },
-            'Te0/2/0': {
-                'entry_count': 1
-            },
-            'Gi0/0/1.1143': {
-                'entry_count': 3
-            }
+        'interface_entries': {
+            'GigabitEthernet0': 4,
+            'TenGigabitEthernet0/2/0': 1,
+            'GigabitEthernet0/0/1.1143': 3
         }
     }
 

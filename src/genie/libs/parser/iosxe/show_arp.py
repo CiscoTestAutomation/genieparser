@@ -1144,7 +1144,7 @@ class ShowArpApplicationSchema(MetaParser):
     """
     Schema for show arp application
     """
-
+    
     schema = {
         'num_of_clients_registered': int,
         'applications': {
@@ -1190,7 +1190,7 @@ class ShowArpApplication(ShowArpApplicationSchema):
             if m:
                 group = m.groupdict()
                 ret_dict.setdefault('num_of_clients_registered', \
-                        int(group['num_of_clients']))
+                    int(group['num_of_clients']))
                 continue
             
             # Application ID Number of Subblocks
@@ -1222,14 +1222,10 @@ class ShowArpSummarySchema(MetaParser):
 
     schema = {
         'total_num_of_entries':{
-            Any(): {
-                'total': int
-            }
+            Any(): int
         },
-        'interfaces': {
-            Any(): {
-                'entry_count': int
-            }
+        'interface_entries': {
+            Any(): int
         }
     }
 
@@ -1252,7 +1248,7 @@ class ShowArpSummary(ShowArpSummarySchema):
                 '(?P<arp_table_entries>\d+)\.$')
         
         # Total number of Dynamic ARP entries: 1123
-        p2 = re.compile(r'^Total +number +of +(?P<entry_name>[\w *]+): +' \
+        p2 = re.compile(r'^Total +number +of +(?P<entry_name>[\S\s]+): +' \
                 '(?P<num_of_entries>\d+)\.$')
 
         # Interface         Entry Count
@@ -1273,27 +1269,23 @@ class ShowArpSummary(ShowArpSummarySchema):
                 if m:
                     group = m.groupdict()
                     total_num_of_entries = ret_dict.setdefault( \
-                            'total_num_of_entries', {})
-                    total_num_of_entries.update({'arp_table_entries': {}})
-                    total_num_of_entries['arp_table_entries']['total'] = \
-                        int(group['arp_table_entries'])
+                        'total_num_of_entries', {})
+                    total_num_of_entries.update({'arp_table_entries': 
+                        int(group['arp_table_entries'])})
                     continue
                 
                 # Total number of Dynamic ARP entries: 1123
                 m = p2.match(line)
                 if m:
                     group = m.groupdict()
-                    filter_space = re.sub('\s+','_', \
-                        group['entry_name'].lower())
-                    total_num_of_entries.update({filter_space: {}})
-                    total_num_of_entries[filter_space]['total'] = \
-                        int(group['num_of_entries'])
+                    key = group['entry_name'].replace(' ', '_').lower()
+                    total_num_of_entries.update({key: int(group['num_of_entries'])})
                     continue
                 
                 # Interface     Entry Count
                 m = p3.match(line)
                 if m:
-                    interfaces = ret_dict.setdefault('interfaces', {})
+                    interfaces = ret_dict.setdefault('interface_entries', {})
                     interface_found = True
                     continue
             else:
@@ -1301,9 +1293,8 @@ class ShowArpSummary(ShowArpSummarySchema):
                 m = p4.match(line)
                 if m:
                     group = m.groupdict()
-                    interface = interfaces.setdefault( \
-                            group['interface_name'], {})
-                    interface['entry_count'] = int(group['entry_count'])
+                    interfaces.update({Common.convert_intf_name(group['interface_name']) : 
+                        int(group['entry_count'])})
                     continue
 
         return ret_dict
