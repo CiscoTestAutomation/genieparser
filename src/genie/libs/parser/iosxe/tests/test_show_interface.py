@@ -2356,25 +2356,25 @@ class test_show_interface_stats(unittest.TestCase):
     golden_parsed_output = {
         "GigabitEthernet0/0": {
             "switching_path": {
-                "Processor": {
+                "processor": {
                     "pkts_in": 0,
                     "chars_in": 0,
                     "pkts_out": 225,
                     "chars_out": 77625
                 },
-                "Route cache": {
+                "route_cache": {
                     "pkts_in": 0,
                     "chars_in": 0,
                     "pkts_out": 0,
                     "chars_out": 0
                 },
-                "Multi-Processor Fwding": {
+                "multi_processor_fwding": {
                     "pkts_in": 950,
                     "chars_in": 221250,
                     "pkts_out": 500,
                     "chars_out": 57000
                 },
-                "Total": {
+                "total": {
                     "pkts_in": 950,
                     "chars_in": 221250,
                     "pkts_out": 725,
@@ -2384,25 +2384,25 @@ class test_show_interface_stats(unittest.TestCase):
         },
         "GigabitEthernet0/1": {
             "switching_path": {
-                "Processor": {
+                "processor": {
                     "pkts_in": 1,
                     "chars_in": 60,
                     "pkts_out": 226,
                     "chars_out": 77685
                 },
-                "Route cache": {
+                "route_cache": {
                     "pkts_in": 0,
                     "chars_in": 0,
                     "pkts_out": 0,
                     "chars_out": 0
                 },
-                "Multi-Processor Fwding": {
+                "multi_processor_fwding": {
                     "pkts_in": 500,
                     "chars_in": 57000,
                     "pkts_out": 500,
                     "chars_out": 57000
                 },
-                "Total": {
+                "total": {
                     "pkts_in": 501,
                     "chars_in": 57060,
                     "pkts_out": 726,
@@ -2412,25 +2412,25 @@ class test_show_interface_stats(unittest.TestCase):
         },
         "GigabitEthernet0/2": {
             "switching_path": {
-                "Processor": {
+                "processor": {
                     "pkts_in": 1,
                     "chars_in": 60,
                     "pkts_out": 226,
                     "chars_out": 77685
                 },
-                "Route cache": {
+                "route_cache": {
                     "pkts_in": 0,
                     "chars_in": 0,
                     "pkts_out": 0,
                     "chars_out": 0
                 },
-                "Multi-Processor Fwding": {
+                "multi_processor_fwding": {
                     "pkts_in": 0,
                     "chars_in": 0,
                     "pkts_out": 0,
                     "chars_out": 0
                 },
-                "Total": {
+                "total": {
                     "pkts_in": 1,
                     "chars_in": 60,
                     "pkts_out": 226,
@@ -2440,19 +2440,19 @@ class test_show_interface_stats(unittest.TestCase):
         },
         "FastEthernet1/0": {
             "switching_path": {
-                "Processor": {
+                "processor": {
                     "pkts_in": 34015,
                     "chars_in": 5331012,
                     "pkts_out": 1579,
                     "chars_out": 158190
                 },
-                "Route cache": {
+                "route_cache": {
                     "pkts_in": 0,
                     "chars_in": 0,
                     "pkts_out": 0,
                     "chars_out": 0
                 },
-                "Total": {
+                "total": {
                     "pkts_in": 34015,
                     "chars_in": 5331012,
                     "pkts_out": 1579,
@@ -2478,25 +2478,25 @@ class test_show_interface_stats(unittest.TestCase):
     golden_parsed_output_interface = {
         "GigabitEthernet0/0/0": {
             "switching_path": {
-                "Processor": {
+                "processor": {
                     "pkts_in": 33,
                     "chars_in": 2507,
                     "pkts_out": 33,
                     "chars_out": 2490
                 },
-                "Route cache": {
+                "route_cache": {
                     "pkts_in": 0,
                     "chars_in": 0,
                     "pkts_out": 0,
                     "chars_out": 0
                 },
-                "Distributed cache": {
+                "distributed_cache": {
                     "pkts_in": 62581,
                     "chars_in": 53049894,
                     "pkts_out": 125156,
                     "chars_out": 29719204
                 },
-                "Total": {
+                "total": {
                     "pkts_in": 62614,
                     "chars_in": 53052401,
                     "pkts_out": 125189,

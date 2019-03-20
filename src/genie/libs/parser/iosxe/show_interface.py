@@ -2854,7 +2854,7 @@ class ShowInterfaceStats(ShowInterfaceStatsSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                path = group.pop('path')
+                path = group.pop('path').replace(" ", "_").replace("-", "_").lower()
                 tmp_dict = path_dict.setdefault(path, {})
                 tmp_dict.update({k: int(v) for k, v in group.items()})
                 continue
