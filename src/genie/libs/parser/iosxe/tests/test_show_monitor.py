@@ -10,7 +10,7 @@ from ats.topology import loader
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,SchemaMissingKeyError
 
 # iosxe show_monitor
-from genie.libs.parser.iosxe.show_monitor import ShowMonitor
+from genie.libs.parser.iosxe.show_monitor import ShowMonitor,ShowMonitorCapture
 
 
 # ============================
@@ -142,6 +142,129 @@ class test_show_monitor(unittest.TestCase):
         obj = ShowMonitor(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+
+# ============================================
+# Unit test for 'show monitor capture '
+# ============================================
+class test_show_monitor_capture(unittest.TestCase):
+
+    '''Unit test for "show monitor capture" '''
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 ={
+              'status_information':
+                  {'CAPTURE':
+                      {'target_type':
+                          {'interface': 'Control Plane',
+                           'direction': 'both',
+                           'status': 'Inactive'
+                          },
+                      'filter_details': 'Capture all packets',
+                      'buffer_details':
+                          {'buffer_type': 'LINEAR',
+                            'buffer_size': 10
+                          },
+                      'limit_details':
+                          {'packets_number': 0,
+                           'packets_capture_duaration': 0,
+                           'packets_size': 0,
+                           'maximum_packets_number': 1000,
+                           'packet_sampling_rate': 0}}}}
+
+
+    golden_output1 = {'execute.return_value':'''
+                     Router#show monitor capture 
+                     Load for five secs: 2%/0%; one minute: 7%; five minutes: 8%
+                     Time source is NTP, 18:31:17.685 JST Thu Sep 8 2016
+
+                     Status Information for Capture CAPTURE
+                       Target Type: 
+                        Interface: Control Plane, Direction : both
+                        Status : Inactive
+                       Filter Details:
+                         Capture all packets
+                       Buffer Details: 
+                        Buffer Type: LINEAR (default)
+                        Buffer Size (in MB): 10
+                       Limit Details: 
+                        Number of Packets to capture: 0 (no limit)
+                        Packet Capture duration: 0 (no limit)
+                        Packet Size to capture: 0 (no limit)
+                        Maximum number of packets to capture per second: 1000
+                        Packet sampling rate: 0 (no sampling)
+                     Router#
+        
+        '''}
+
+    golden_parsed_output2 = {
+              'status_information':
+                  {'NTP':
+                      {'target_type':
+                          {'interface': 'GigabitEthernet0/0/0',
+                           'direction': 'both',
+                           'status': 'Active'
+                          },
+                      'filter_details': 'Capture all packets',
+                      'buffer_details':
+                          {'buffer_type': 'LINEAR',
+                           'buffer_size': 10
+                          },
+                      'limit_details':
+                          {'packets_number': 0,
+                           'packets_capture_duaration': 0,
+                           'packets_size': 0,
+                           'maximum_packets_number': 1000,
+                           'packet_sampling_rate': 0}}}}
+
+    golden_output2 = {'execute.return_value':'''
+                     Router#show monitor capture
+                     Load for five secs: 1%/0%; one minute: 17%; five minutes: 8%
+                     Time source is NTP, 16:22:09.994 JST Fri Oct 14 2016
+                     
+                     
+                     Status Information for Capture NTP
+                       Target Type: 
+                        Interface: GigabitEthernet0/0/0, Direction: both
+                        Status : Active
+                       Filter Details: 
+                         Capture all packets
+                       Buffer Details: 
+                        Buffer Type: LINEAR (default)
+                        Buffer Size (in MB): 10
+                       Limit Details: 
+                        Number of Packets to capture: 0 (no limit)
+                        Packet Capture duration: 0 (no limit)
+                        Packet Size to capture: 0 (no limit)
+                        Maximum number of packets to capture per second: 1000
+                        Packet sampling rate: 0 (no sampling)
+                     Router#
+         '''}
+
+    def test_show_monitor_capture_empty(self):
+        self.maxDiff= None
+        self.device = Mock(**self.empty_output)
+        obj = ShowMonitorCapture(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_monitor_capture_full1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowMonitorCapture(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_monitor_capture_full2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowMonitorCapture(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+
 
 if __name__ == '__main__':
     unittest.main()
