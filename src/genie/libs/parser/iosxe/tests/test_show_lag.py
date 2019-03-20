@@ -897,7 +897,6 @@ class test_show_etherchannel_loadbalancing(unittest.TestCase):
     '''}
 
     golden_parsed_output = {
-        'etherchannel_lb_method': '',
         'global_lb_method': 'flow-based',
         'lb_algo_type': 'Source Destination IP',
         'port_channel': {

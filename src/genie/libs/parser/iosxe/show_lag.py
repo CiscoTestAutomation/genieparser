@@ -801,7 +801,6 @@ class ShowEtherChannelLoadBalancingSchema(MetaParser):
         show etherchannel load-balancing"""
 
     schema = {
-        'etherchannel_lb_method': str,
         'global_lb_method': str,
         'lb_algo_type': str,
         'port_channel': {
@@ -830,38 +829,30 @@ class ShowEtherChannelLoadBalancing(ShowEtherChannelLoadBalancingSchema):
         # initialize result dict
         result_dict = {}
         
-        # EtherChannel Load-Balancing Method: 
         # Global LB Method: flow-based
         # LB Algo type: Source Destination IP
         #   Port-Channel:                       LB Method
         #     Port-channel1                   :  flow-based (Source Destination IP)
-        p1 = re.compile(r'^\s*EtherChannel +Load-Balancing +Method: *(?P<etherchannel_lb_method>.*)$')
-        p2 = re.compile(r'^\s*Global +LB +Method: *(?P<global_lb_method>[\w-]*)$')
-        p3 = re.compile(r'^\s*LB +Algo +type: *(?P<lb_algo_type>[\w\s]*)$')
-        p4 = re.compile(r'^\s*(?P<port_channel>[\w-]+) +: *(?P<lb_method>.+)$')
+        p1 = re.compile(r'^\s*Global +LB +Method: *(?P<global_lb_method>[\w-]*)$')
+        p2 = re.compile(r'^\s*LB +Algo +type: *(?P<lb_algo_type>[\w\s]*)$')
+        p3 = re.compile(r'^\s*(?P<port_channel>[\w-]+) +: *(?P<lb_method>.+)$')
 
         for line in out.splitlines():
             line = line.rstrip()
 
             m = p1.match(line)
             if m:
-                etherchannel_lb_method = m.groupdict()['etherchannel_lb_method']
-                result_dict.update({'etherchannel_lb_method': etherchannel_lb_method})
-                continue
-
-            m = p2.match(line)
-            if m:
                 global_lb_method = m.groupdict()['global_lb_method']
                 result_dict.update({'global_lb_method': global_lb_method})
                 continue
 
-            m = p3.match(line)
+            m = p2.match(line)
             if m:
                 lb_algo_type = m.groupdict()['lb_algo_type']
                 result_dict.update({'lb_algo_type': lb_algo_type})
                 continue
 
-            m = p4.match(line)
+            m = p3.match(line)
             if m:
                 port_channel = m.groupdict()['port_channel']
                 lb_method = m.groupdict()['lb_method']
@@ -954,7 +945,7 @@ class ShowLacpNeighborDetail(ShowLacpNeighborDetailSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                name = 'Port-channel' + group.pop("channel_group")
+                name = 'Port-channel' + group["channel_group"]
                 intf_dict = result_dict.setdefault('interfaces', {}).setdefault(name, {})
                 intf_dict.update({'name': name})
                 intf_dict.update({'protocol': 'lacp'})
@@ -963,39 +954,39 @@ class ShowLacpNeighborDetail(ShowLacpNeighborDetailSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                interface = Common.convert_intf_name(group.pop("interface"))
+                interface = Common.convert_intf_name(group["interface"])
                 member_dict = intf_dict.setdefault('members', {}).setdefault(interface, {})
                 member_dict.update({'interface': interface})
-                member_dict.update({'system_id': group.pop('system_id')})
-                member_dict.update({'port_num': int(group.pop('port_num'), 0)})
-                member_dict.update({'age': int(group.pop('age'))})
-                member_dict.update({'flags': group.pop('flags')})
+                member_dict.update({'system_id': group['system_id']})
+                member_dict.update({'port_num': int(group['port_num'], 0)})
+                member_dict.update({'age': int(group['age'])})
+                member_dict.update({'flags': group['flags']})
                 continue
 
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                member_dict.update({'lacp_port_priority': int(group.pop('lacp_port_priority'))})
-                member_dict.update({'oper_key': int(group.pop('oper_key'), 0)})
-                member_dict.update({'port_state': int(group.pop('port_state'), 0)})
+                member_dict.update({'lacp_port_priority': int(group['lacp_port_priority'])})
+                member_dict.update({'oper_key': int(group['oper_key'], 0)})
+                member_dict.update({'port_state': int(group['port_state'], 0)})
                 continue
 
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                member_dict.update({'activity': group.pop('activity')})
-                member_dict.update({'timeout': group.pop('timeout')})
-                member_dict.update({'aggregatable': group.pop('aggregatable') == 'Yes'})
-                member_dict.update({'synchronization': group.pop('synchronization') == 'Yes'})
+                member_dict.update({'activity': group['activity']})
+                member_dict.update({'timeout': group['timeout']})
+                member_dict.update({'aggregatable': group['aggregatable'] == 'Yes'})
+                member_dict.update({'synchronization': group['synchronization'] == 'Yes'})
                 continue
 
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                member_dict.update({'collecting': group.pop('collecting') == 'Yes'})
-                member_dict.update({'distributing': group.pop('distributing') == 'Yes'})
-                member_dict.update({'defaulted': group.pop('defaulted') == 'Yes'})
-                member_dict.update({'expired': group.pop('expired') == 'Yes'})
+                member_dict.update({'collecting': group['collecting'] == 'Yes'})
+                member_dict.update({'distributing': group['distributing'] == 'Yes'})
+                member_dict.update({'defaulted': group['defaulted'] == 'Yes'})
+                member_dict.update({'expired': group['expired'] == 'Yes'})
                 continue
 
         return result_dict
