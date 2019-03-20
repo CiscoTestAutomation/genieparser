@@ -126,7 +126,6 @@ class ShowBridgeDomain(ShowBridgeDomainSchema):
 
         for line in out.splitlines():
             line = line.strip()
-            # import pdb; pdb.set_trace()
 
             m = p1.match(line)
             if m:

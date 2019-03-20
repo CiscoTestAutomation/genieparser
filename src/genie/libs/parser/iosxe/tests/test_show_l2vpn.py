@@ -8,6 +8,9 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
 
 from genie.libs.parser.iosxe.show_l2vpn import ShowBridgeDomain
 
+# import parser utils
+from genie.libs.parser.utils.common import format_output
+
 
 class test_show_bridge_domain(unittest.TestCase):
 
@@ -15,83 +18,120 @@ class test_show_bridge_domain(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output_full = {'bridge_domain': {2051: {'aging_timer': 3600,
-                          'bd_domain_id': 2051,
-                          'mac_learning_state': 'Enabled',
-                          'mac_table': {'Port-channel1.EFP2051': {'mac_address': {'0000.A000.0027': {'aed': 0,
-                                                                                                     'age': 3142,
-                                                                                                     'mac_address': '0000.A000.0027',
-                                                                                                     'policy': 'forward',
-                                                                                                     'tag': 'dynamic'},
-                                                                                  '0000.A000.0097': {'aed': 0,
-                                                                                                     'age': 3153,
-                                                                                                     'mac_address': '0000.A000.0097',
-                                                                                                     'policy': 'forward',
-                                                                                                     'tag': 'dynamic'},
-                                                                                  '0000.A000.00BF': {'aed': 0,
-                                                                                                     'age': 3125,
-                                                                                                     'mac_address': '0000.A000.00BF',
-                                                                                                     'policy': 'forward',
-                                                                                                     'tag': 'dynamic'},
-                                                                                  '0000.A000.010C': {'aed': 0,
-                                                                                                     'age': 3133,
-                                                                                                     'mac_address': '0000.A000.010C',
-                                                                                                     'policy': 'forward',
-                                                                                                     'tag': 'dynamic'},
-                                                                                  '0000.A000.010F': {'aed': 0,
-                                                                                                     'age': 3133,
-                                                                                                     'mac_address': '0000.A000.010F',
-                                                                                                     'policy': 'forward',
-                                                                                                     'tag': 'dynamic'},
-                                                                                  '0000.A000.013A': {'aed': 0,
-                                                                                                     'age': 3137,
-                                                                                                     'mac_address': '0000.A000.013A',
-                                                                                                     'policy': 'forward',
-                                                                                                     'tag': 'dynamic'}},
-                                                                  'pseudoport': 'Port-channel1.EFP2051'},
-                                        'VPLS-2051.10200e6': {'mac_address': {'0000.57C4.A8D9': {'aed': 0,
-                                                                                                 'age': 3153,
-                                                                                                 'mac_address': '0000.57C4.A8D9',
-                                                                                                 'policy': 'forward',
-                                                                                                 'tag': 'dynamic'}},
-                                                              'pseudoport': 'VPLS-2051.10200e6'}},
-                          'member_ports': ['vfi VPLS-2051 neighbor '
-                                           '27.93.202.64 2051',
-                                           'Port-channel1 service '
-                                           'instance 2051'],
-                          'number_of_ports_in_all': 2,
-                          'split-horizon_group': {'0': {'interfaces': ['Port-channel1 '
-                                                                       'service '
-                                                                       'instance '
-                                                                       '2051'],
-                                                        'num_of_ports': '1'}},
-                          'state': 'UP'},
-                   2052: {'aging_timer': 3600,
-                          'bd_domain_id': 2052,
-                          'mac_learning_state': 'Enabled',
-                          'mac_table': {'Port-channel1.EFP2052': {'mac_address': {'0000.A000.0015': {'aed': 0,
-                                                                                                     'age': 3141,
-                                                                                                     'mac_address': '0000.A000.0015',
-                                                                                                     'policy': 'forward',
-                                                                                                     'tag': 'dynamic'},
-                                                                                  '0000.A000.002C': {'aed': 0,
-                                                                                                     'age': 3143,
-                                                                                                     'mac_address': '0000.A000.002C',
-                                                                                                     'policy': 'forward',
-                                                                                                     'tag': 'dynamic'}},
-                                                                  'pseudoport': 'Port-channel1.EFP2052'}},
-                          'member_ports': ['vfi VPLS-2052 neighbor '
-                                           '27.93.202.64 2052',
-                                           'Port-channel1 service '
-                                           'instance 2052'],
-                          'number_of_ports_in_all': 2,
-                          'split-horizon_group': {'0': {'interfaces': ['Port-channel1 '
-                                                                       'service '
-                                                                       'instance '
-                                                                       '2052'],
-                                                        'num_of_ports': '1'}},
-                          'state': 'UP'}}}
-
+    golden_parsed_output_full = {
+        'bridge_domain': {
+            2051: {
+                'state': 'UP',
+                'member_ports': ['vfi VPLS-2051 neighbor 27.93.202.64 2051', 'Port-channel1 service instance 2051'],
+                'bd_domain_id': 2051,
+                'aging_timer': 3600,
+                'mac_table': {
+                    'VPLS-2051.10200e6': {
+                        'pseudoport': 'VPLS-2051.10200e6',
+                        'mac_address': {
+                            '0000.57C4.A8D9': {
+                                'tag': 'dynamic',
+                                'mac_address': '0000.57C4.A8D9',
+                                'age': 3153,
+                                'policy': 'forward',
+                                'aed': 0,
+                                },
+                            },
+                        },
+                    'Port-channel1.EFP2051': {
+                        'pseudoport': 'Port-channel1.EFP2051',
+                        'mac_address': {
+                            '0000.A000.0027': {
+                                'tag': 'dynamic',
+                                'mac_address': '0000.A000.0027',
+                                'age': 3142,
+                                'policy': 'forward',
+                                'aed': 0,
+                                },
+                            '0000.A000.0097': {
+                                'tag': 'dynamic',
+                                'mac_address': '0000.A000.0097',
+                                'age': 3153,
+                                'policy': 'forward',
+                                'aed': 0,
+                                },
+                            '0000.A000.013A': {
+                                'tag': 'dynamic',
+                                'mac_address': '0000.A000.013A',
+                                'age': 3137,
+                                'policy': 'forward',
+                                'aed': 0,
+                                },
+                            '0000.A000.00BF': {
+                                'tag': 'dynamic',
+                                'mac_address': '0000.A000.00BF',
+                                'age': 3125,
+                                'policy': 'forward',
+                                'aed': 0,
+                                },
+                            '0000.A000.010C': {
+                                'tag': 'dynamic',
+                                'mac_address': '0000.A000.010C',
+                                'age': 3133,
+                                'policy': 'forward',
+                                'aed': 0,
+                                },
+                            '0000.A000.010F': {
+                                'tag': 'dynamic',
+                                'mac_address': '0000.A000.010F',
+                                'age': 3133,
+                                'policy': 'forward',
+                                'aed': 0,
+                                },
+                            },
+                        },
+                    },
+                'mac_learning_state': 'Enabled',
+                'split-horizon_group': {
+                    '0': {
+                        'interfaces': ['Port-channel1 service instance 2051'],
+                        'num_of_ports': '1',
+                        },
+                    },
+                'number_of_ports_in_all': 2,
+                },
+            2052: {
+                'state': 'UP',
+                'member_ports': ['vfi VPLS-2052 neighbor 27.93.202.64 2052', 'Port-channel1 service instance 2052'],
+                'bd_domain_id': 2052,
+                'aging_timer': 3600,
+                'mac_table': {
+                    'Port-channel1.EFP2052': {
+                        'pseudoport': 'Port-channel1.EFP2052',
+                        'mac_address': {
+                            '0000.A000.002C': {
+                                'tag': 'dynamic',
+                                'mac_address': '0000.A000.002C',
+                                'age': 3143,
+                                'policy': 'forward',
+                                'aed': 0,
+                                },
+                            '0000.A000.0015': {
+                                'tag': 'dynamic',
+                                'mac_address': '0000.A000.0015',
+                                'age': 3141,
+                                'policy': 'forward',
+                                'aed': 0,
+                                },
+                            },
+                        },
+                    },
+                'mac_learning_state': 'Enabled',
+                'split-horizon_group': {
+                    '0': {
+                        'interfaces': ['Port-channel1 service instance 2052'],
+                        'num_of_ports': '1',
+                        },
+                    },
+                'number_of_ports_in_all': 2,
+                },
+            },
+        }
 
     golden_output_full = {'execute.return_value': '''\
         Router#show bridge-domain
@@ -125,116 +165,164 @@ class test_show_bridge_domain(unittest.TestCase):
     '''
     }
 
-    golden_parsed_output_bridge_domain = {'bridge_domain': {3051: {'aging_timer': 3600,
-                          'bd_domain_id': 3051,
-                          'mac_learning_state': 'Enabled',
-                          'mac_table': {'GigabitEthernet0/0/3.EFP3051': {'mac_address': {'0000.A000.000F': {'aed': 0,
-                                                                                                            'age': 3415,
-                                                                                                            'mac_address': '0000.A000.000F',
-                                                                                                            'policy': 'forward',
-                                                                                                            'tag': 'dynamic'},
-                                                                                         '0000.A000.0010': {'aed': 0,
-                                                                                                            'age': 3415,
-                                                                                                            'mac_address': '0000.A000.0010',
-                                                                                                            'policy': 'forward',
-                                                                                                            'tag': 'dynamic'},
-                                                                                         '0000.A000.001F': {'aed': 0,
-                                                                                                            'age': 3416,
-                                                                                                            'mac_address': '0000.A000.001F',
-                                                                                                            'policy': 'forward',
-                                                                                                            'tag': 'dynamic'},
-                                                                                         '0000.A000.0068': {'aed': 0,
-                                                                                                            'age': 3424,
-                                                                                                            'mac_address': '0000.A000.0068',
-                                                                                                            'policy': 'forward',
-                                                                                                            'tag': 'dynamic'},
-                                                                                         '0000.A000.0077': {'aed': 0,
-                                                                                                            'age': 3426,
-                                                                                                            'mac_address': '0000.A000.0077',
-                                                                                                            'policy': 'forward',
-                                                                                                            'tag': 'dynamic'},
-                                                                                         '0000.A000.007B': {'aed': 0,
-                                                                                                            'age': 3426,
-                                                                                                            'mac_address': '0000.A000.007B',
-                                                                                                            'policy': 'forward',
-                                                                                                            'tag': 'dynamic'},
-                                                                                         '0000.A000.007F': {'aed': 0,
-                                                                                                            'age': 3426,
-                                                                                                            'mac_address': '0000.A000.007F',
-                                                                                                            'policy': 'forward',
-                                                                                                            'tag': 'dynamic'},
-                                                                                         '0000.A000.0087': {'aed': 0,
-                                                                                                            'age': 3427,
-                                                                                                            'mac_address': '0000.A000.0087',
-                                                                                                            'policy': 'forward',
-                                                                                                            'tag': 'dynamic'},
-                                                                                         '0000.A000.00AA': {'aed': 0,
-                                                                                                            'age': 3430,
-                                                                                                            'mac_address': '0000.A000.00AA',
-                                                                                                            'policy': 'forward',
-                                                                                                            'tag': 'dynamic'},
-                                                                                         '0000.A000.00C5': {'aed': 0,
-                                                                                                            'age': 3433,
-                                                                                                            'mac_address': '0000.A000.00C5',
-                                                                                                            'policy': 'forward',
-                                                                                                            'tag': 'dynamic'},
-                                                                                         '0000.A000.00D0': {'aed': 0,
-                                                                                                            'age': 3434,
-                                                                                                            'mac_address': '0000.A000.00D0',
-                                                                                                            'policy': 'forward',
-                                                                                                            'tag': 'dynamic'},
-                                                                                         '0000.A000.00F2': {'aed': 0,
-                                                                                                            'age': 3438,
-                                                                                                            'mac_address': '0000.A000.00F2',
-                                                                                                            'policy': 'forward',
-                                                                                                            'tag': 'dynamic'},
-                                                                                         '0000.A000.00F6': {'aed': 0,
-                                                                                                            'age': 3438,
-                                                                                                            'mac_address': '0000.A000.00F6',
-                                                                                                            'policy': 'forward',
-                                                                                                            'tag': 'dynamic'},
-                                                                                         '0000.A000.00F7': {'aed': 0,
-                                                                                                            'age': 3438,
-                                                                                                            'mac_address': '0000.A000.00F7',
-                                                                                                            'policy': 'forward',
-                                                                                                            'tag': 'dynamic'},
-                                                                                         '0000.A000.0108': {'aed': 0,
-                                                                                                            'age': 3440,
-                                                                                                            'mac_address': '0000.A000.0108',
-                                                                                                            'policy': 'forward',
-                                                                                                            'tag': 'dynamic'},
-                                                                                         '0000.A000.0118': {'aed': 0,
-                                                                                                            'age': 3441,
-                                                                                                            'mac_address': '0000.A000.0118',
-                                                                                                            'policy': 'forward',
-                                                                                                            'tag': 'dynamic'},
-                                                                                         '0000.A000.011C': {'aed': 0,
-                                                                                                            'age': 3442,
-                                                                                                            'mac_address': '0000.A000.011C',
-                                                                                                            'policy': 'forward',
-                                                                                                            'tag': 'dynamic'},
-                                                                                         '0000.A000.0129': {'aed': 0,
-                                                                                                            'age': 3443,
-                                                                                                            'mac_address': '0000.A000.0129',
-                                                                                                            'policy': 'forward',
-                                                                                                            'tag': 'dynamic'},
-                                                                                         '0000.A000.012C': {'aed': 0,
-                                                                                                            'age': 3443,
-                                                                                                            'mac_address': '0000.A000.012C',
-                                                                                                            'policy': 'forward',
-                                                                                                            'tag': 'dynamic'}},
-                                                                         'pseudoport': 'GigabitEthernet0/0/3.EFP3051'}},
-                          'member_ports': ['vfi VPLS-3051 neighbor '
-                                           '202.239.165.220 3051',
-                                           'GigabitEthernet0/0/3 service '
-                                           'instance 3051'],
-                          'number_of_ports_in_all': 2,
-                          'split-horizon_group': {'0': {'interfaces': ['GigabitEthernet0/0/3 '
-                                                                       'service '
-                                                                       'instance '
-                                                                       '3051'],
-                                                        'num_of_ports': '1'}},
-                          'state': 'UP'}}}
+    golden_parsed_output_bridge_domain = {
+        'bridge_domain': {
+            3051: {
+                'number_of_ports_in_all': 2,
+                'state': 'UP',
+                'member_ports': ['vfi VPLS-3051 neighbor 202.239.165.220 3051', 'GigabitEthernet0/0/3 service instance 3051'],
+                'mac_table': {
+                    'GigabitEthernet0/0/3.EFP3051': {
+                        'pseudoport': 'GigabitEthernet0/0/3.EFP3051',
+                        'mac_address': {
+                            '0000.A000.0118': {
+                                'tag': 'dynamic',
+                                'age': 3441,
+                                'aed': 0,
+                                'mac_address': '0000.A000.0118',
+                                'policy': 'forward',
+                                },
+                            '0000.A000.0077': {
+                                'tag': 'dynamic',
+                                'age': 3426,
+                                'aed': 0,
+                                'mac_address': '0000.A000.0077',
+                                'policy': 'forward',
+                                },
+                            '0000.A000.011C': {
+                                'tag': 'dynamic',
+                                'age': 3442,
+                                'aed': 0,
+                                'mac_address': '0000.A000.011C',
+                                'policy': 'forward',
+                                },
+                            '0000.A000.001F': {
+                                'tag': 'dynamic',
+                                'age': 3416,
+                                'aed': 0,
+                                'mac_address': '0000.A000.001F',
+                                'policy': 'forward',
+                                },
+                            '0000.A000.0068': {
+                                'tag': 'dynamic',
+                                'age': 3424,
+                                'aed': 0,
+                                'mac_address': '0000.A000.0068',
+                                'policy': 'forward',
+                                },
+                            '0000.A000.00C5': {
+                                'tag': 'dynamic',
+                                'age': 3433,
+                                'aed': 0,
+                                'mac_address': '0000.A000.00C5',
+                                'policy': 'forward',
+                                },
+                            '0000.A000.0108': {
+                                'tag': 'dynamic',
+                                'age': 3440,
+                                'aed': 0,
+                                'mac_address': '0000.A000.0108',
+                                'policy': 'forward',
+                                },
+                            '0000.A000.0010': {
+                                'tag': 'dynamic',
+                                'age': 3415,
+                                'aed': 0,
+                                'mac_address': '0000.A000.0010',
+                                'policy': 'forward',
+                                },
+                            '0000.A000.000F': {
+                                'tag': 'dynamic',
+                                'age': 3415,
+                                'aed': 0,
+                                'mac_address': '0000.A000.000F',
+                                'policy': 'forward',
+                                },
+                            '0000.A000.007F': {
+                                'tag': 'dynamic',
+                                'age': 3426,
+                                'aed': 0,
+                                'mac_address': '0000.A000.007F',
+                                'policy': 'forward',
+                                },
+                            '0000.A000.007B': {
+                                'tag': 'dynamic',
+                                'age': 3426,
+                                'aed': 0,
+                                'mac_address': '0000.A000.007B',
+                                'policy': 'forward',
+                                },
+                            '0000.A000.0087': {
+                                'tag': 'dynamic',
+                                'age': 3427,
+                                'aed': 0,
+                                'mac_address': '0000.A000.0087',
+                                'policy': 'forward',
+                                },
+                            '0000.A000.00AA': {
+                                'tag': 'dynamic',
+                                'age': 3430,
+                                'aed': 0,
+                                'mac_address': '0000.A000.00AA',
+                                'policy': 'forward',
+                                },
+                            '0000.A000.012C': {
+                                'tag': 'dynamic',
+                                'age': 3443,
+                                'aed': 0,
+                                'mac_address': '0000.A000.012C',
+                                'policy': 'forward',
+                                },
+                            '0000.A000.00D0': {
+                                'tag': 'dynamic',
+                                'age': 3434,
+                                'aed': 0,
+                                'mac_address': '0000.A000.00D0',
+                                'policy': 'forward',
+                                },
+                            '0000.A000.00F6': {
+                                'tag': 'dynamic',
+                                'age': 3438,
+                                'aed': 0,
+                                'mac_address': '0000.A000.00F6',
+                                'policy': 'forward',
+                                },
+                            '0000.A000.00F7': {
+                                'tag': 'dynamic',
+                                'age': 3438,
+                                'aed': 0,
+                                'mac_address': '0000.A000.00F7',
+                                'policy': 'forward',
+                                },
+                            '0000.A000.00F2': {
+                                'tag': 'dynamic',
+                                'age': 3438,
+                                'aed': 0,
+                                'mac_address': '0000.A000.00F2',
+                                'policy': 'forward',
+                                },
+                            '0000.A000.0129': {
+                                'tag': 'dynamic',
+                                'age': 3443,
+                                'aed': 0,
+                                'mac_address': '0000.A000.0129',
+                                'policy': 'forward',
+                                },
+                            },
+                        },
+                    },
+                'aging_timer': 3600,
+                'bd_domain_id': 3051,
+                'split-horizon_group': {
+                    '0': {
+                        'num_of_ports': '1',
+                        'interfaces': ['GigabitEthernet0/0/3 service instance 3051'],
+                        },
+                    },
+                'mac_learning_state': 'Enabled',
+                },
+            },
+        }
 
 
     golden_output_bridge_domain = {'execute.return_value': '''\
