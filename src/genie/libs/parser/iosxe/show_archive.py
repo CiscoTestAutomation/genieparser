@@ -142,8 +142,6 @@ class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
         # initial varaiables
         ret_dict = {}
         contextual_found = False
-        index = 0
-        is_new_index = ''
         
         # !Contextual Config Diffs:
         p1 = re.compile(r'^\s*!Contextual +Config +Diffs:$')
@@ -151,9 +149,9 @@ class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
         # -hostname Test4
         p2 = re.compile(r'^\s*(?P<line_info>(\+|\-)[\w\W]+)$')
         # !List of commands:
-        p4 = re.compile(r'^\s*!List +of +commands:$')
+        p3 = re.compile(r'^\s*!List +of +commands:$')
         # hostname Router3
-        p5 = re.compile(r'^\s*(?P<line_info>([\w\W]+))$')
+        p4 = re.compile(r'^\s*(?P<line_info>([\w\W]+))$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -175,13 +173,13 @@ class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
                         continue
             else:
                 # !List of commands:
-                m = p4.match(line)
+                m = p3.match(line)
                 if m:
                     incremental_diff = ret_dict.setdefault('diff',[])
                     continue
                 # hostname router 192.168.5.2/22
                 # end
-                m = p5.match(line)
+                m = p4.match(line)
                 if m:
                     group = m.groupdict()
                     incremental_diff.append(group['line_info'])
@@ -194,5 +192,5 @@ class ShowArchiveConfigIncrementalDiffs(ShowArchiveConfigDifferences):
     cli_command = 'show archive config incremental-diffs {fileA}'
     
     def cli(self,fileA='', output=None):
-        return super().cli(fileA=fileA,cmd=self.cli_command,output=output)
+        return super().cli(fileA=fileA, cmd=self.cli_command, output=output)
 
