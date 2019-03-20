@@ -1759,9 +1759,9 @@ class ShowMplsForwardingTableSchema(MetaParser):
                         'outgoing_label': str,
                         'prefix_or_tunnel_id': str,
                         'bytes_label_switched': int,
-                        'next_hop': str,
+                        Optional('next_hop'): str,
                         'mac': int,
-                        'code': str,
+                        Optional('code'): str,
                         'encaps': int,
                         'mru': int,
                         'label_stack': str,
@@ -1813,7 +1813,7 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         # 9301       No Label   172.16.100.1/32[V]   \
         #                                        0             Po1.51     192.168.10.253
         p2 = re.compile(r'^(?P<local_label>\d+) +(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>\S+)'
-            ' +(?P<bytes_label_switched>\d+) +(?P<interface>\S+) +(?P<next_hop>[\d\.]+)$')
+            ' +(?P<bytes_label_switched>\d+) +(?P<interface>\S+)( +(?P<next_hop>[\d\.]+))?$')
         #         MAC/Encaps=18/18, MRU=1530, Label Stack{}
         p3 = re.compile(r'^MAC/Encaps=(?P<mac>\d+)/(?P<encaps>\d+), +MRU=(?P<mru>[\d]+), +Label +Stack(?P<label_stack>[\S\s]+)$')
         #         00002440156384B261CB1480810000330800
