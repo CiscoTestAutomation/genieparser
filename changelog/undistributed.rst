@@ -96,3 +96,10 @@
           show mpls ldp igp sync all
           show mpls ldp igp sync interface <interface>
           show mpls ldp igp sync vrf <vrf>
+
+--------------------------------------------------------------------------------
+                                 CONFIG
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowConfigurationLock for:
+        show configuration lock
