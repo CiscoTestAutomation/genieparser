@@ -205,7 +205,7 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                 if m:
                     group = m.groupdict()
                     parser_configure_lock.update({'count' : \
-			int(group['count'])})
+                        int(group['count'])})
                     continue
                 
                 # Pending Requests      : 0
