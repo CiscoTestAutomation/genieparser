@@ -1140,21 +1140,20 @@ class ShowIpTraffic(ShowIpTrafficSchema):
 # ===========================================================
 # Parser for 'show arp application'
 # ===========================================================
-
 class ShowArpApplicationSchema(MetaParser):
     """
     Schema for show arp application
     """
 
     schema = {
-            'num_of_clients_registered': int,
-            'applications':{
-                Any():{
-                        'id': int,
-                        'num_of_subblocks': int
-                    }
-                }
+        'num_of_clients_registered': int,
+        'applications': {
+            Any(): {
+                'id': int,
+                'num_of_subblocks': int
+            }
         }
+    }
 
 class ShowArpApplication(ShowArpApplicationSchema):
     """
@@ -1173,11 +1172,15 @@ class ShowArpApplication(ShowArpApplicationSchema):
         ret_dict = {}
         
         # Number of clients registered: 16
-        p1 = re.compile(r'^\s*Number +of +clients +registered: +(?P<num_of_clients>\d+)$')
+        p1 = re.compile(r'^\s*Number +of +clients +registered: +' \
+                '(?P<num_of_clients>\d+)$')
+
         # Application ID Number of Subblocks
         p2 = re.compile(r'^Application +ID +Num +of +Subblocks$')
+        
         # ASR1000-RP SPA Ethernet   215 10024
-        p3 = re.compile(r'^(?P<application_name>[\w\W]+) +(?P<id>\d+) +(?P<num_of_subblocks>\d+)$')
+        p3 = re.compile(r'^(?P<application_name>[\w\W]+) +(?P<id>\d+) +' \
+                '(?P<num_of_subblocks>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1186,7 +1189,8 @@ class ShowArpApplication(ShowArpApplicationSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict.setdefault('num_of_clients_registered', int(group['num_of_clients']))
+                ret_dict.setdefault('num_of_clients_registered', \
+                        int(group['num_of_clients']))
                 continue
             
             # Application ID Number of Subblocks
@@ -1200,8 +1204,9 @@ class ShowArpApplication(ShowArpApplicationSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                applications[group['application_name'].rstrip()] = {'id':int(group['id']), 'num_of_subblocks': \
-                        int(group['num_of_subblocks'])}
+                applications[group['application_name'].rstrip()] = {'id': \
+                    int(group['id']), 'num_of_subblocks': \
+                    int(group['num_of_subblocks'])}
                 continue
         
         return ret_dict
@@ -1210,23 +1215,22 @@ class ShowArpApplication(ShowArpApplicationSchema):
 # ========================================
 # Parser for 'show arp summary'
 # ========================================
-
 class ShowArpSummarySchema(MetaParser):
     """
     Schema for 'show arp summary'
     """
 
     schema = {
-            'total_num_of_entries':{
-                Any():{
-                    'total': int
-                }
-            },
-            'interfaces': {
-                Any(): {
-                    'entry_count': int
-                }
+        'total_num_of_entries':{
+            Any(): {
+                'total': int
             }
+        },
+        'interfaces': {
+            Any(): {
+                'entry_count': int
+            }
+        }
     }
 
 class ShowArpSummary(ShowArpSummarySchema):
@@ -1244,10 +1248,12 @@ class ShowArpSummary(ShowArpSummarySchema):
         ret_dict = {}
         
         # Total number of entries in the ARP table: 1233
-        p1 = re.compile(r'^Total +number +of +entries +in +the +ARP +table: +(?P<arp_table_entries>\d+)\.$')
+        p1 = re.compile(r'^Total +number +of +entries +in +the +ARP +table: +' \
+                '(?P<arp_table_entries>\d+)\.$')
         
         # Total number of Dynamic ARP entries: 1123
-        p2 = re.compile(r'^Total +number +of +(?P<entry_name>[\w *]+): +(?P<num_of_entries>\d+)\.$')
+        p2 = re.compile(r'^Total +number +of +(?P<entry_name>[\w *]+): +' \
+                '(?P<num_of_entries>\d+)\.$')
 
         # Interface         Entry Count
         p3 = re.compile(r'^Interface +Entry +Count$')
@@ -1266,18 +1272,22 @@ class ShowArpSummary(ShowArpSummarySchema):
                 m = p1.match(line)
                 if m:
                     group = m.groupdict()
-                    total_num_of_entries = ret_dict.setdefault('total_num_of_entries',{})
+                    total_num_of_entries = ret_dict.setdefault( \
+                            'total_num_of_entries', {})
                     total_num_of_entries.update({'arp_table_entries': {}})
-                    total_num_of_entries['arp_table_entries']['total'] = int(group['arp_table_entries'])
+                    total_num_of_entries['arp_table_entries']['total'] = \
+                        int(group['arp_table_entries'])
                     continue
                 
                 # Total number of Dynamic ARP entries: 1123
                 m = p2.match(line)
                 if m:
                     group = m.groupdict()
-                    filter_space = re.sub('\s+','_',group['entry_name'].lower())
+                    filter_space = re.sub('\s+','_', \
+                        group['entry_name'].lower())
                     total_num_of_entries.update({filter_space: {}})
-                    total_num_of_entries[filter_space]['total'] = int(group['num_of_entries'])
+                    total_num_of_entries[filter_space]['total'] = \
+                        int(group['num_of_entries'])
                     continue
                 
                 # Interface     Entry Count
@@ -1287,12 +1297,12 @@ class ShowArpSummary(ShowArpSummarySchema):
                     interface_found = True
                     continue
             else:
-
                 # GigabitEthernet0/0/4  4
                 m = p4.match(line)
                 if m:
                     group = m.groupdict()
-                    interface = interfaces.setdefault(group['interface_name'], {})
+                    interface = interfaces.setdefault( \
+                            group['interface_name'], {})
                     interface['entry_count'] = int(group['entry_count'])
                     continue
 

@@ -431,9 +431,9 @@ class test_show_ip_traffic(unittest.TestCase):
 
 
 # =================================================
-# Parser for 'show archive application'
+# Parser for 'show arp application'
 # =================================================
-class test_show_archive_application(unittest.TestCase):
+class test_show_arp_application(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -441,39 +441,39 @@ class test_show_archive_application(unittest.TestCase):
     golden_parsed_output = {
         'num_of_clients_registered': 16,
         'applications': {
-            'VRRS':{
+            'VRRS': {
                 'id': 200,
                 'num_of_subblocks': 0
             },
-            'ARP Backup':{
+            'ARP Backup': {
                 'id': 201,
                 'num_of_subblocks': 0
             },
-            'DHCPD':{
+            'DHCPD': {
                 'id': 202,
                 'num_of_subblocks': 0
             },
-            'ARP HA':{
+            'ARP HA': {
                 'id': 203,
                 'num_of_subblocks': 0
             },
-            'ASR1000-RP SPA Ethernet':{
+            'ASR1000-RP SPA Ethernet': {
                 'id': 204,
                 'num_of_subblocks': 0
             },
-            'VRRS_L3CTRL':{
+            'VRRS_L3CTRL': {
                 'id': 205,
                 'num_of_subblocks': 0
             },
-            'IP ARP Adj Conn ID':{
+            'IP ARP Adj Conn ID': {
                 'id': 206,
                 'num_of_subblocks': 0
             },
-            'IP ARP VLAN ID':{
+            'IP ARP VLAN ID': {
                 'id': 215,
                 'num_of_subblocks': 100204
             },
-            'IP ARP Adjacency':{
+            'IP ARP Adjacency': {
                 'id': 214,
                 'num_of_subblocks': 100204
             }
@@ -481,18 +481,18 @@ class test_show_archive_application(unittest.TestCase):
     }
 
     golden_output = {'execute.return_value': '''\
-            Number of clients registered: 16
+        Number of clients registered: 16
 
-            Application                 ID      Num of Subblocks
-            VRRS                        200     0
-            ARP Backup                  201     0
-            DHCPD                       202     0
-            ARP HA                      203     0
-            ASR1000-RP SPA Ethernet     204     0
-            VRRS_L3CTRL                 205     0
-            IP ARP Adj Conn ID          206     0
-            IP ARP VLAN ID              215     100204
-            IP ARP Adjacency            214     100204
+        Application                 ID      Num of Subblocks
+        VRRS                        200     0
+        ARP Backup                  201     0
+        DHCPD                       202     0
+        ARP HA                      203     0
+        ASR1000-RP SPA Ethernet     204     0
+        VRRS_L3CTRL                 205     0
+        IP ARP Adj Conn ID          206     0
+        IP ARP VLAN ID              215     100204
+        IP ARP Adjacency            214     100204
         '''
     }   
 
@@ -518,35 +518,55 @@ class test_show_arp_summary(unittest.TestCase):
     empty_output = {'execute.return_value':''}
     
     golden_parsed_output = {
-            'total_num_of_entries':{
-                'arp_table_entries':{'total': 100409},
-                'dynamic_arp_entries':{'total': 100204},
-                'incomplete_arp_entries':{'total': 0},
-                'interface_arp_entries':{'total': 205},
-                'static_arp_entries':{'total': 0},
-                'alias_arp_entries':{'total': 0},
-                'simple_application_arp_entries':{'total': 0}
+        'total_num_of_entries': {
+            'arp_table_entries': {
+                'total': 100409
             },
-            'interfaces':{
-                'GigabitEthernet0':{'entry_count': 4},
-                'Te0/2/0':{'entry_count': 1},
-                'Gi0/0/1.1143':{'entry_count': 3}
+            'dynamic_arp_entries': {
+                'total': 100204
+            },
+            'incomplete_arp_entries': {
+                'total': 0
+            },
+            'interface_arp_entries': {
+                'total': 205
+            },
+            'static_arp_entries': {
+                'total': 0
+            },
+            'alias_arp_entries': {
+                'total': 0
+            },
+            'simple_application_arp_entries': {
+                'total': 0
             }
+        },
+        'interfaces': {
+            'GigabitEthernet0': {
+                'entry_count': 4
+            },
+            'Te0/2/0': {
+                'entry_count': 1
+            },
+            'Gi0/0/1.1143': {
+                'entry_count': 3
+            }
+        }
     }
 
     golden_output = {'execute.return_value': '''\
-            Total number of entries in the ARP table: 100409.
-            Total number of Dynamic ARP entries: 100204.
-            Total number of Incomplete ARP entries: 0.
-            Total number of Interface ARP entries: 205.
-            Total number of Static ARP entries: 0.
-            Total number of Alias ARP entries: 0.
-            Total number of Simple Application ARP entries: 0.
-            Interface           Entry Count
-            GigabitEthernet0        4
-            Te0/2/0                 1
-            Gi0/0/1.1143            3
-            '''
+        Total number of entries in the ARP table: 100409.
+        Total number of Dynamic ARP entries: 100204.
+        Total number of Incomplete ARP entries: 0.
+        Total number of Interface ARP entries: 205.
+        Total number of Static ARP entries: 0.
+        Total number of Alias ARP entries: 0.
+        Total number of Simple Application ARP entries: 0.
+        Interface           Entry Count
+        GigabitEthernet0        4
+        Te0/2/0                 1
+        Gi0/0/1.1143            3
+        '''
     }
     
     def test_empty(self):
@@ -562,4 +582,4 @@ class test_show_arp_summary(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
-		unittest.main()
+    unittest.main()
