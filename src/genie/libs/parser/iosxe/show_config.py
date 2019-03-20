@@ -21,31 +21,32 @@ class ShowConfigurationLockSchema(MetaParser):
     Schema for show configuration lock
     """
     
-    schema = {'config_session_lock': {
-                    'owner_pid': {
-                        Any():{
-                        'tty_number': int,
-                        'tty_username': str,
-                        'user_debug_info': str,
-                        'lock_active_time_in_sec': int,
-                        }
-                    }
-                },
-                Optional('parser_configure_lock'): {
-                    Optional('owner_pid'): {
-                        Any():{
-                        Optional('user'): str,
-                        Optional('tty'): int,
-                        Optional('type'): str,
-                        Optional('state'): str,
-                        Optional('class'): str,
-                        Optional('count'): int,
-                        Optional('pending_requests'): int,
-                        Optional('user_debug_info'): int
-                        }
-                    }
+    schema = {
+        Optional('config_session_lock'): {
+            'owner_pid': {
+                Any(): {
+                    'tty_number': int,
+                    'tty_username': str,
+                    'user_debug_info': str,
+                    'lock_active_time_in_sec': int,
                 }
             }
+        },
+        Optional('parser_configure_lock'): {
+            Optional('owner_pid'): {
+                Any(): {
+                    Optional('user'): str,
+                    Optional('tty'): int,
+                    Optional('type'): str,
+                    Optional('state'): str,
+                    Optional('class'): str,
+                    Optional('count'): int,
+                    Optional('pending_requests'): int,
+                    Optional('user_debug_info'): int
+                }
+            }
+        }
+    }
 
 
 class ShowConfigurationLock(ShowConfigurationLockSchema):
