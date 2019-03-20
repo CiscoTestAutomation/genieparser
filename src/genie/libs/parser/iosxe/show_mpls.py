@@ -1844,7 +1844,8 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                 feature_dict.update({'local_label': local_label})
                 feature_dict.update({'outgoing_label': outgoing_label.strip()})
                 feature_dict.update({'prefix_or_tunnel_id': prefix_or_tunnel_id})
-                feature_dict.update({'next_hop': group['next_hop']})
+                if group['next_hop']:
+                    feature_dict.update({'next_hop': group['next_hop']})
                 feature_dict.update({'bytes_label_switched': int(group['bytes_label_switched'])})
                 continue
 
