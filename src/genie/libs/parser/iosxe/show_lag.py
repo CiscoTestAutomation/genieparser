@@ -14,6 +14,8 @@
      *  show pagp internal
      *  show pagp <channel_group> internal
      *  show etherchannel summary
+     *  show etherchannel load-balancing
+     *  show lacp neighbor detail
 """
 # Python
 import re
