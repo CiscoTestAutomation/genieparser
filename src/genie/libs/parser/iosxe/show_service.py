@@ -149,6 +149,7 @@ class ShowServiceGroupStats(ShowServiceGroupStatsSchema):
 					group = m.groupdict()
 					group_statistics.update({k:
 						int(v) for k, v in group.items()})
+					group_statistics_found = False
 					continue
 
 				# Sub-Interface:         2
@@ -158,5 +159,5 @@ class ShowServiceGroupStats(ShowServiceGroupStatsSchema):
 					group_statistics.update(
 						{group['interface_name']: int(group['sub_interface'])})
 					continue
-				group_statistics_found = False
+				
 		return ret_dict

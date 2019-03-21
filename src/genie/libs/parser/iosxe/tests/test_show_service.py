@@ -48,7 +48,6 @@ class test_show_service_group_stats(unittest.TestCase):
           Sub-interface:       2
          Members joined:       103
          Members left:         101
-
     '''}
 
     def test_empty(self):
