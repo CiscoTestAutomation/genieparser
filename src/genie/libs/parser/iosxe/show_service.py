@@ -36,6 +36,7 @@ class ShowServiceGroupStatsSchema(MetaParser):
 	}
 
 class ShowServiceGroupStats(ShowServiceGroupStatsSchema):
+	""" Parser for 'show service-group stats"""
 
 	cli_command = 'show service-group stats'
 	
@@ -84,7 +85,7 @@ class ShowServiceGroupStats(ShowServiceGroupStatsSchema):
 				# Service Group global statistics:
 				m = p1.match(line)
 				if m:
-					global_statistics = ret_dict.setdefault(
+					global_statistics = ret_dict.setdefault( \
 						'global_statistics', {})
 					global_statistics_found = True
 					group_statistics_found = False
@@ -111,7 +112,7 @@ class ShowServiceGroupStats(ShowServiceGroupStatsSchema):
 				m = p4.match(line)
 				if m:
 					group = m.groupdict()
-					group_statistics = ret_dict.setdefault(
+					group_statistics = ret_dict.setdefault( \
 						group['group_statistics'], {})
 					group_statistics_found = True
 					global_statistics_found = False
