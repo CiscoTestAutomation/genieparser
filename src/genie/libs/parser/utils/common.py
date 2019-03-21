@@ -26,6 +26,21 @@ else:
     with open(parsers) as f:
         parser_data = json.load(f)
 
+def format_output(parser_data, tab=0):
+    '''Format the parsed output in an aligned intended structure'''
+
+    s = ['{\n']
+    if parser_data is None:
+        return parser_data
+    for k,v in parser_data.items():
+        if isinstance(v, dict):
+            v = format_output(v, tab+2)
+        else:
+            v = repr(v)
+        s.append('%s%r: %s,\n' % ('  '*tab, k, v))
+    s.append('%s}' % ('  '*tab))
+    return ''.join(s)
+
 def get_parser(command, device):
     '''From a show command and device, return parser class and kwargs if any'''
 
@@ -64,7 +79,7 @@ def _find_command(command, data, device):
         for pattern in patterns:
             word = pattern.replace('{', '').replace('}', '')
             new_pattern = '(?P<{p}>.*)'.format(p=word)
-            reg = re.sub(pattern, new_pattern, key)
+            reg = re.sub(pattern, new_pattern, reg)
 
         match = re.match(reg, command)
         if match:
@@ -131,7 +146,10 @@ class Common():
             if int_type in convert.keys():
                 return(convert[int_type] + int_port)
             else:
-                return(intf)
+                # Unifying interface names
+                converted_intf = intf[0].capitalize()+intf[1:].replace(
+                    ' ','').replace('ethernet', 'Ethernet')
+                return(converted_intf)
         else:
             return(intf)
 

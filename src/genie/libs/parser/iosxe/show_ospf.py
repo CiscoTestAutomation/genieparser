@@ -1,11 +1,13 @@
 ''' show_ospf.py
 
 IOSXE parsers for the following show commands:
+
     * show ip ospf
     * show ip ospf interface
     * show ip ospf sham-links
     * show ip ospf virtual-links
     * show ip ospf neighbor detail
+    * show ip ospf database
     * show ip ospf database router
     * show ip ospf database network
     * show ip ospf database summary
@@ -13,6 +15,9 @@ IOSXE parsers for the following show commands:
     * show ip ospf database opaque-area
     * show ip ospf mpls ldp interface
     * show ip ospf mpls traffic-eng link
+    * show ip ospf max-metric
+    * show ip ospf traffic
+
 '''
 
 # Python
@@ -26,12 +31,15 @@ from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
 from genie.libs.parser.utils.common import Common
 
 
-# =========================
-# Schema for 'show ip ospf'
-# =========================
+# ==================
+# Schema for:
+#   * 'show ip ospf'
+# ==================
 class ShowIpOspfSchema(MetaParser):
 
-    ''' Schema for "show ip ospf" '''
+    ''' Schema for:
+        * 'show ip ospf'
+    '''
 
     schema = {
         'vrf': 
@@ -197,12 +205,15 @@ class ShowIpOspfSchema(MetaParser):
         }
 
 
-# =========================
-# Parser for 'show ip ospf'
-# =========================
+# ==================
+# Parser for:
+#   * 'show ip ospf'
+# ==================
 class ShowIpOspf(ShowIpOspfSchema):
 
-    ''' Parser for "show ip ospf" '''
+    ''' Parser for:
+        * 'show ip ospf'
+    '''
 
     cli_command = 'show ip ospf'
 
@@ -1145,12 +1156,15 @@ class ShowIpOspf(ShowIpOspfSchema):
         return ret_dict
 
 
-# ===================================
-# Schema for 'show ip ospf interface'
-# ===================================
+# ============================
+# Schema for:
+#   * 'show ip ospf interface'
+# ============================
 class ShowIpOspfInterfaceSchema(MetaParser):
 
-    ''' Schema for "show ip ospf interface" '''
+    ''' Schema for:
+        * 'show ip ospf interface'
+    '''
 
     schema = {
         'vrf': 
@@ -1399,12 +1413,15 @@ class ShowIpOspfInterfaceSchema(MetaParser):
         }
 
 
-# ==================================================
-# Parser for 'show ospf vrf all-inclusive interface'
-# ==================================================
+# ===========================================
+# Parser for:
+#   * 'show ospf vrf all-inclusive interface'
+# ===========================================
 class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
 
-    ''' Parser for "show ip ospf interface" '''
+    ''' Parser for:
+        * 'show ip ospf interface'
+    '''
 
     cli_command = 'show ip ospf interface'
 
@@ -2056,12 +2073,17 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
         return ret_dict
 
 
-# ============================================
-# Super parser for 'show ip ospf <WORD>-links'
-# ============================================
+# ================================
+# Super parser for:
+#   * 'show ip ospf virtual-links'
+#   * 'show ip ospf sham-links'
+# ================================
 class ShowIpOspfLinksParser(MetaParser):
 
-    ''' Parser for "show ip ospf <WORD>-links" '''
+    ''' Parser for:
+        * 'show ip ospf virtual-links'
+        * 'show ip ospf sham-links'
+    '''
 
     def cli(self, cmd, link_type,output=None):
 
@@ -2441,165 +2463,191 @@ class ShowIpOspfLinksParser(MetaParser):
         return ret_dict
 
 
-# ====================================
-# Schema for 'show ip ospf sham-links'
-# ====================================
+# =============================
+# Schema for:
+#   * 'show ip ospf sham-links'
+# =============================
 class ShowIpOspfShamLinksSchema(MetaParser):
 
-    ''' Schema for 'show ip ospf sham-links' '''
+    ''' Schema for:
+        * 'show ip ospf sham-links'
+    '''
 
     schema = {
-    'vrf':
-        {Any():
-             {'address_family':
-                  {Any():
-                       {'instance':
+        'vrf':
+            {Any():
+                {'address_family':
+                    {Any():
+                        {'instance':
                             {Any():
-                                 {'areas':
-                                      {Any():
-                                           {'sham_links':
-                                                {Any():
-                                                     {'name': str,
-                                                      'link_state': str,
-                                                      'local_id': str,
-                                                      'remote_id': str,
-                                                      'transit_area_id': str,
-                                                      Optional('hello_interval'): int,
-                                                      Optional('dead_interval'): int,
-                                                      Optional('wait_interval'): int,
-                                                      Optional('retransmit_interval'): int,
-                                                      Optional('transmit_delay'): int,
-                                                      'cost': int,
-                                                      'state': str,
-                                                      Optional('hello_timer'): str,
-                                                      Optional('demand_circuit'): bool,
-                                                      Optional('dcbitless_lsa_count'): int,
-                                                      Optional('donotage_lsa'): str,
-                                                      Optional('adjacency_state'): str,
-                                                      Optional('ttl_security'):
-                                                          {'enable': bool,
-                                                           Optional('hops'): int},
-                                                      Optional('index'): str,
-                                                      Optional('first'): str,
-                                                      Optional('next'): str,
-                                                      Optional('last_retransmission_max_length'): int,
-                                                      Optional('last_retransmission_max_scan'): int,
-                                                      Optional('last_retransmission_scan_length'): int,
-                                                      Optional('last_retransmission_scan_time'): int,
-                                                      Optional('total_retransmission'): int,
-                                                      Optional('retrans_qlen'): int,
-                                                      Optional('topology'):
-                                                          {Any():
-                                                               {'cost': int,
-                                                                'disabled': bool,
-                                                                'shutdown': bool,
-                                                                'name': str}},
-                                                      },
-                                                 },
+                                {'areas':
+                                    {Any():
+                                        {'sham_links':
+                                            {Any():
+                                                {'name': str,
+                                                'link_state': str,
+                                                'local_id': str,
+                                                'remote_id': str,
+                                                'transit_area_id': str,
+                                                Optional('hello_interval'): int,
+                                                Optional('dead_interval'): int,
+                                                Optional('wait_interval'): int,
+                                                Optional('retransmit_interval'): int,
+                                                Optional('transmit_delay'): int,
+                                                'cost': int,
+                                                'state': str,
+                                                Optional('hello_timer'): str,
+                                                Optional('demand_circuit'): bool,
+                                                Optional('dcbitless_lsa_count'): int,
+                                                Optional('donotage_lsa'): str,
+                                                Optional('adjacency_state'): str,
+                                                Optional('ttl_security'):
+                                                    {'enable': bool,
+                                                    Optional('hops'): int},
+                                                    Optional('index'): str,
+                                                    Optional('first'): str,
+                                                    Optional('next'): str,
+                                                    Optional('last_retransmission_max_length'): int,
+                                                    Optional('last_retransmission_max_scan'): int,
+                                                    Optional('last_retransmission_scan_length'): int,
+                                                    Optional('last_retransmission_scan_time'): int,
+                                                    Optional('total_retransmission'): int,
+                                                    Optional('retrans_qlen'): int,
+                                                    Optional('topology'):
+                                                        {Any():
+                                                            {'cost': int,
+                                                            'disabled': bool,
+                                                            'shutdown': bool,
+                                                            'name': str,
+                                                            },
+                                                        },
+                                                    },
+                                                },
                                             },
-                                       },
-                                  },
-                             },
+                                        },
+                                    },
+                                },
+                            },
                         },
-                   },
-              },
-         },
-}
+                    },
+                },
+            }
 
-# ====================================
-# Parser for 'show ip ospf sham-links'
-# ====================================
+
+# =============================
+# Parser for:
+#   * 'show ip ospf sham-links'
+# =============================
 class ShowIpOspfShamLinks(ShowIpOspfShamLinksSchema, ShowIpOspfLinksParser):
 
-    ''' Parser for 'show ip ospf sham-links' '''
+    ''' Parser for:
+        * 'show ip ospf sham-links'
+    '''
+
     cli_command = 'show ip ospf sham-links'
-    def cli(self,output=None):
+
+    def cli(self, output=None):
 
         return super().cli(cmd=self.cli_command, link_type='sham_links',output=output)
 
 
-# =======================================
-# Schema for 'show ip ospf virtual-links'
-# =======================================
+# ================================
+# Schema for:
+#   * 'show ip ospf virtual-links'
+# ================================
 class ShowIpOspfVirtualLinksSchema(MetaParser):
 
-    ''' Schema for 'show ip ospf virtual-links' '''
+    ''' Schema for:
+        * 'show ip ospf virtual-links'
+    '''
+
     schema = {
         'vrf':
             {Any():
-                 {'address_family':
-                      {Any():
-                           {'instance':
-                                {Any():
-                                     {'areas':
-                                          {Any():
-                                               {'virtual_links':
-                                                    {Any():
-                                                         {'name': str,
-                                                          'link_state': str,
-                                                          'router_id': str,
-                                                          'transit_area_id': str,
-                                                          Optional('hello_interval'): int,
-                                                          Optional('dead_interval'): int,
-                                                          Optional('wait_interval'): int,
-                                                          Optional('retransmit_interval'): int,
-                                                          'transmit_delay': int,
-                                                          'state': str,
-                                                          'demand_circuit': bool,
-                                                          Optional('cost'): int,
-                                                          Optional('hello_timer'): str,
-                                                          Optional('interface'): str,
-                                                          Optional('dcbitless_lsa_count'): int,
-                                                          Optional('donotage_lsa'): str,
-                                                          Optional('adjacency_state'): str,
-                                                          Optional('ttl_security'):
-                                                              {'enable': bool,
-                                                               Optional('hops'): int},
-                                                          Optional('index'): str,
-                                                          Optional('first'): str,
-                                                          Optional('next'): str,
-                                                          Optional('last_retransmission_max_length'): int,
-                                                          Optional('last_retransmission_max_scan'): int,
-                                                          Optional('last_retransmission_scan_length'): int,
-                                                          Optional('last_retransmission_scan_time'): int,
-                                                          Optional('total_retransmission'): int,
-                                                          Optional('retrans_qlen'): int,
-                                                          Optional('topology'):
-                                                              {Any():
-                                                                   {'cost': int,
-                                                                    'disabled': bool,
-                                                                    'shutdown': bool,
-                                                                    'name': str}},
-                                                          },
-                                                     },
+                {'address_family':
+                    {Any():
+                        {'instance':
+                            {Any():
+                                {'areas':
+                                    {Any():
+                                        {'virtual_links':
+                                            {Any():
+                                                {'name': str,
+                                                'link_state': str,
+                                                'router_id': str,
+                                                'transit_area_id': str,
+                                                Optional('hello_interval'): int,
+                                                Optional('dead_interval'): int,
+                                                Optional('wait_interval'): int,
+                                                Optional('retransmit_interval'): int,
+                                                'transmit_delay': int,
+                                                'state': str,
+                                                'demand_circuit': bool,
+                                                Optional('cost'): int,
+                                                Optional('hello_timer'): str,
+                                                Optional('interface'): str,
+                                                Optional('dcbitless_lsa_count'): int,
+                                                Optional('donotage_lsa'): str,
+                                                Optional('adjacency_state'): str,
+                                                Optional('ttl_security'):
+                                                    {'enable': bool,
+                                                    Optional('hops'): int},
+                                                    Optional('index'): str,
+                                                    Optional('first'): str,
+                                                    Optional('next'): str,
+                                                    Optional('last_retransmission_max_length'): int,
+                                                    Optional('last_retransmission_max_scan'): int,
+                                                    Optional('last_retransmission_scan_length'): int,
+                                                    Optional('last_retransmission_scan_time'): int,
+                                                    Optional('total_retransmission'): int,
+                                                    Optional('retrans_qlen'): int,
+                                                    Optional('topology'):
+                                                        {Any():
+                                                            {'cost': int,
+                                                            'disabled': bool,
+                                                            'shutdown': bool,
+                                                            'name': str,
+                                                            },
+                                                        },
+                                                    },
                                                 },
-                                           },
-                                      },
-                                 },
+                                            },
+                                        },
+                                    },
+                                },
                             },
-                       },
-                  },
-             },
-    }
-# =======================================
-# Parser for 'show ip ospf virtual-links'
-# =======================================
+                        },
+                    },
+                },
+            }
+
+
+# ================================
+# Parser for:
+#   * 'show ip ospf virtual-links'
+# ================================
 class ShowIpOspfVirtualLinks(ShowIpOspfVirtualLinksSchema, ShowIpOspfLinksParser):
 
-    ''' Parser for 'show ip ospf virtual-links' '''
+    ''' Parser for:
+        * 'show ip ospf virtual-links'
+    '''
 
     cli_command = 'show ip ospf virtual-links'
-    def cli(self,output=None):
 
-        return super().cli(cmd=self.cli_command, link_type='virtual_links',output=output)
+    def cli(self, output=None):
+
+        return super().cli(cmd=self.cli_command, link_type='virtual_links', output=output)
 
 
-# =========================================
-# Schema for 'show ip ospf neighbor detail'
+# ==================================
+# Schema for:
+#   * 'show ip ospf neighbor detail'
 # =========================================
 class ShowIpOspfNeighborDetailSchema(MetaParser):
 
-    ''' Schema for "show ip ospf neighbor detail" '''
+    ''' Schema for:
+        * 'show ip ospf neighbor detail'
+    '''
 
     schema = {
         'vrf': 
@@ -2717,16 +2765,20 @@ class ShowIpOspfNeighborDetailSchema(MetaParser):
         }
 
 
-# =========================================
-# Parser for 'show ip ospf neighbor detail'
-# =========================================
+# ================================
+# Parser for:
+#   'show ip ospf neighbor detail'
+# ================================
 class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
 
-    ''' Parser for "show ip ospf neighbor detail" '''
+    ''' Parser for:
+        * 'show ip ospf neighbor detail'
+    '''
 
     cli_command = 'show ip ospf neighbor detail'
 
-    def cli(self,output=None):
+    def cli(self, output=None):
+
         if output is None:
             # Execute command on device
             out = self.device.execute(self.cli_command)
@@ -3070,14 +3122,228 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
         return ret_dict
 
 
-# ===============================================
-# Super parser for 'show ip ospf database <WORD>'
-# ===============================================
-class ShowIpOspfDatabaseParser(MetaParser):
+# ===========================
+# Schema for:
+#   * 'show ip ospf database'
+# ===========================
+class ShowIpOspfDatabaseSchema(MetaParser):
+    
+    ''' Schema for:
+        * 'show ip ospf database'
+    '''
 
-    ''' Parser for "show ip ospf database <WORD>" '''
+    schema = {
+        'vrf':
+            {Any():
+                {'address_family':
+                    {Any():
+                        {'instance':
+                            {Any():
+                                {Optional('areas'):
+                                    {Any():
+                                        {'database':
+                                            {'lsa_types':
+                                                {Any():
+                                                    {'lsa_type': int,
+                                                    'lsas':
+                                                        {Any():
+                                                            {'lsa_id': str,
+                                                            'adv_router': str,
+                                                            'ospfv2':
+                                                                {'header':
+                                                                    {'lsa_id': str,
+                                                                    'adv_router': str,
+                                                                    'age': int,
+                                                                    'seq_num': str,
+                                                                    'checksum': str,
+                                                                    Optional('link_count'): int,
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
 
-    def cli(self, cmd, db_type,output=None):
+
+# ==========================
+# Parser for:
+#    'show ip ospf database'
+# ==========================
+class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
+
+    ''' Parser for:
+        * 'show ip ospf database'
+    '''
+
+    cli_command = 'show ip ospf database'
+
+    def cli(self, output=None):
+
+        if output is None:
+            # Execute command on device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Init vars
+        ret_dict = {}
+        address_family = 'ipv4'
+        default_mt_id = 0
+
+        # 1: Router
+        # 2: Network Link
+        # 3: Summary
+        # 3: Summary Network
+        # 3: Summary Net
+        # 4: Summary ASB
+        # 5: Type-5 AS External
+        # 10: Opaque Area
+        lsa_type_mapping = {
+            'router': 1,
+            'net': 2,
+            'summary': 3,
+            'summary net': 3,
+            'summary asb': 4,
+            'external': 5,
+            'opaque': 10,
+            }
+
+        # OSPF Router with ID (172.152.187.214) (Process ID 9996)
+        # OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
+        p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
+                         ' +\(Process +ID +(?P<instance>(\d+))'
+                         '(?:, +VRF +(?P<vrf>(\S+)))?\)$')
+
+        # Router Link States (Area 0)
+        # Net Link States (Area 0)
+        # Summary Net Link States (Area 8)
+        # Summary ASB Link States (Area 8)
+        p2 = re.compile(r'^(?P<lsa_type>([a-zA-Z\s]+)) +Link +States +\(Area'
+                         ' +(?P<area>(\S+))\)$')
+
+        # Link ID         ADV Router      Age         Seq#       Checksum Link count
+        # 10.13.202.64    27.93.202.64    2794        0x80000043 0x002254 3
+        # 10.1.1.2        106.162.197.253 70          0x8000003F 0x0015EF
+        p3 = re.compile(r'^(?P<link_id>(\S+)) +(?P<adv_router>(\S+))'
+                         ' +(?P<age>(\d+)) +(?P<seq>(\S+)) +(?P<checksum>(\S+))'
+                         '(?: *(?P<link_count>(\d+)))?$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Load for five secs: 71%/0%; one minute: 11%; five minutes: 9%
+            # Time source is NTP, 20:29:26.348 JST Fri Nov 11 2016
+
+            # OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                router_id = str(group['router_id'])
+                instance = str(group['instance'])
+                if group['vrf']:
+                    vrf = str(group['vrf'])
+                else:
+                    vrf = 'default'
+                # Create dict
+                ospf_dict = ret_dict.setdefault('vrf', {}).\
+                                     setdefault(vrf, {}).\
+                                     setdefault('address_family', {}).\
+                                     setdefault(address_family, {}).\
+                                     setdefault('instance', {}).\
+                                     setdefault(instance, {})
+                continue
+
+            # Router Link States (Area 0)
+            # Net Link States (Area 0)
+            # Summary Net Link States (Area 8)
+            # Summary ASB Link States (Area 8)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                lsa_type_key = group['lsa_type'].lower()
+                if lsa_type_key in lsa_type_mapping:
+                    lsa_type = lsa_type_mapping[lsa_type_key]
+                else:
+                    continue
+
+                # Set area
+                if group['area']:
+                    try:
+                        int(group['area'])
+                        area = str(IPAddress(str(group['area'])))
+                    except Exception:
+                        area = str(group['area'])
+                else:
+                    area = '0.0.0.0'
+
+                # Create dict structure
+                lsa_type_dict = ospf_dict.setdefault('areas', {}).\
+                                          setdefault(area, {}).\
+                                          setdefault('database', {}).\
+                                          setdefault('lsa_types', {}).\
+                                          setdefault(lsa_type, {})
+                # Set lsa_type
+                lsa_type_dict['lsa_type'] = lsa_type
+                continue
+
+            # Link ID         ADV Router      Age         Seq#       Checksum Link count
+            # 10.13.202.64    27.93.202.64    2794        0x80000043 0x002254 3
+            # 10.1.1.2        106.162.197.253 70          0x8000003F 0x0015EF
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                lsa_id = group['link_id']
+
+                # Create dict
+                lsas_dict = lsa_type_dict.setdefault('lsas', {}).\
+                                          setdefault(lsa_id, {})
+                lsas_dict['lsa_id'] = lsa_id
+                lsas_dict['adv_router'] = group['adv_router']
+
+                # osfpv2 dict
+                ospfv2_dict = lsas_dict.setdefault('ospfv2', {}).\
+                                        setdefault('header', {})
+                ospfv2_dict['lsa_id'] = lsa_id
+                ospfv2_dict['adv_router'] = group['adv_router']
+                ospfv2_dict['age'] = int(group['age'])
+                ospfv2_dict['seq_num'] = group['seq']
+                ospfv2_dict['checksum'] = group['checksum']
+                if group['link_count']:
+                    ospfv2_dict['link_count'] = int(group['link_count'])
+                continue
+
+        return ret_dict
+
+
+# =====================================
+# Super parser for:
+#   * 'show ip ospf database external'
+#   * 'show ip ospf database network'
+#   * 'show ip ospf database summary'
+#   * 'show ip ospf database router'
+#   * 'show ip ospf database opaque'
+# =====================================
+class ShowIpOspfDatabaseTypeParser(MetaParser):
+
+    ''' Parser for:
+        * 'show ip ospf database external'
+        * 'show ip ospf database network'
+        * 'show ip ospf database summary'
+        * 'show ip ospf database router'
+        * 'show ip ospf database opaque'
+    '''
+
+    def cli(self, cmd, db_type, output=None):
 
         assert db_type in ['external', 'network', 'summary', 'router',
                            'opaque']
@@ -3822,12 +4088,15 @@ class ShowIpOspfDatabaseParser(MetaParser):
         return ret_dict
 
 
-# =========================================
-# Schema for 'show ip ospf database router'
-# =========================================
+# ==================================
+# Schema for:
+#   * 'show ip ospf database router'
+# ==================================
 class ShowIpOspfDatabaseRouterSchema(MetaParser):
 
-    ''' Schema for "show ip ospf database router" '''
+    ''' Schema for:
+        * show ip ospf database router'
+    '''
 
     schema = {
         'vrf': 
@@ -3899,26 +4168,32 @@ class ShowIpOspfDatabaseRouterSchema(MetaParser):
         }
 
 
-# =========================================
-# Parser for 'show ip ospf database router'
-# =========================================
-class ShowIpOspfDatabaseRouter(ShowIpOspfDatabaseRouterSchema, ShowIpOspfDatabaseParser):
+# ==================================
+# Parser for:
+#   * 'show ip ospf database router'
+# ==================================
+class ShowIpOspfDatabaseRouter(ShowIpOspfDatabaseRouterSchema, ShowIpOspfDatabaseTypeParser):
 
-    ''' Parser for "show ip ospf database router" '''
+    ''' Parser for:
+        * 'show ip ospf database router'
+    '''
 
     cli_command = 'show ip ospf database router'
 
-    def cli(self,output=None):
+    def cli(self, output=None):
 
-        return super().cli(cmd=self.cli_command, db_type='router',output=output)
+        return super().cli(cmd=self.cli_command, db_type='router', output=output)
 
 
-# ===========================================
-# Schema for 'show ip ospf database external'
-# ===========================================
+# ====================================
+# Schema for:
+#   * 'show ip ospf database external'
+# ====================================
 class ShowIpOspfDatabaseExternalSchema(MetaParser):
 
-    ''' Schema for "show ip ospf database external" '''
+    ''' Schema for:
+        * 'show ip ospf database external'
+    '''
 
     schema = {
         'vrf': 
@@ -3980,25 +4255,32 @@ class ShowIpOspfDatabaseExternalSchema(MetaParser):
         }
 
 
-# ===========================================
-# Parser for 'show ip ospf database external'
-# ===========================================
-class ShowIpOspfDatabaseExternal(ShowIpOspfDatabaseExternalSchema, ShowIpOspfDatabaseParser):
+# ====================================
+# Parser for:
+#   * 'show ip ospf database external'
+# ====================================
+class ShowIpOspfDatabaseExternal(ShowIpOspfDatabaseExternalSchema, ShowIpOspfDatabaseTypeParser):
 
-    ''' Parser for "show ip ospf database external" '''
+    ''' Parser for:
+        * 'show ip ospf database external'
+    '''
 
     cli_command = 'show ip ospf database external'
-    def cli(self,output=None):
 
-        return super().cli(cmd=self.cli_command, db_type='external',output=output)
+    def cli(self, output=None):
+
+        return super().cli(cmd=self.cli_command, db_type='external', output=output)
 
 
-# ==========================================
-# Schema for 'show ip ospf database network'
-# ==========================================
+# ===================================
+# Schema for:
+#   * 'show ip ospf database network'
+# ===================================
 class ShowIpOspfDatabaseNetworkSchema(MetaParser):
 
-    ''' Schema for "show ospf vrf all-inclusive database network" '''
+    ''' Schema for:
+        * 'show ip ospf database network'
+    '''
 
     schema = {
         'vrf': 
@@ -4055,24 +4337,32 @@ class ShowIpOspfDatabaseNetworkSchema(MetaParser):
         }
 
 
-# ==========================================
-# Parser for 'show ip ospf database network'
-# ==========================================
-class ShowIpOspfDatabaseNetwork(ShowIpOspfDatabaseNetworkSchema, ShowIpOspfDatabaseParser):
+# ===================================
+# Parser for:
+#   * 'show ip ospf database network'
+# ===================================
+class ShowIpOspfDatabaseNetwork(ShowIpOspfDatabaseNetworkSchema, ShowIpOspfDatabaseTypeParser):
 
-    ''' Parser for "show ip ospf database network" '''
+    ''' Parser for:
+        * 'show ip ospf database network'
+    '''
+
     cli_command = 'show ip ospf database network'
 
-    def cli(self,output=None):
+    def cli(self, output=None):
 
-        return super().cli(cmd=self.cli_command, db_type='network',output=output)
+        return super().cli(cmd=self.cli_command, db_type='network', output=output)
 
-# ==========================================
-# Schema for 'show ip ospf database summary'
-# ==========================================
+
+# ===================================
+# Schema for:
+#   * 'show ip ospf database summary'
+# ===================================
 class ShowIpOspfDatabaseSummarySchema(MetaParser):
 
-    ''' Schema for "show ospf vrf all-inclusive database summary" '''
+    ''' Schema for:
+        * 'show ip ospf database summary'
+    '''
 
     schema = {
         'vrf': 
@@ -4131,25 +4421,32 @@ class ShowIpOspfDatabaseSummarySchema(MetaParser):
         }
 
 
-# ==========================================
-# Parser for 'show ip ospf database summary'
-# ==========================================
-class ShowIpOspfDatabaseSummary(ShowIpOspfDatabaseSummarySchema, ShowIpOspfDatabaseParser):
+# ===================================
+# Parser for:
+#   * 'show ip ospf database summary'
+# ===================================
+class ShowIpOspfDatabaseSummary(ShowIpOspfDatabaseSummarySchema, ShowIpOspfDatabaseTypeParser):
 
-    ''' Parser for "show ip ospf database summary" '''
+    ''' Parser for:
+        * 'show ip ospf database summary'
+    '''
+
     cli_command = 'show ip ospf database summary'
 
-    def cli(self,output=None):
+    def cli(self, output=None):
 
-        return super().cli(cmd=self.cli_command, db_type='summary',output=output)
+        return super().cli(cmd=self.cli_command, db_type='summary', output=output)
 
 
-# ==============================================
-# Schema for 'show ip ospf database opaque-area'
-# ==============================================
+# =======================================
+# Schema for:
+#   * 'show ip ospf database opaque-area'
+# =======================================
 class ShowIpOspfDatabaseOpaqueAreaSchema(MetaParser):
 
-    ''' Schema for "show ip ospf database opaque-area" '''
+    ''' Schema for:
+        * 'show ip ospf database opaque-area
+    '''
 
     schema = {
         'vrf': 
@@ -4240,25 +4537,32 @@ class ShowIpOspfDatabaseOpaqueAreaSchema(MetaParser):
         }
 
 
-# =============================================================
-# Parser for 'show ospf vrf all-inclusive database opaque-area'
-# =============================================================
-class ShowIpOspfDatabaseOpaqueArea(ShowIpOspfDatabaseOpaqueAreaSchema, ShowIpOspfDatabaseParser):
+# =======================================
+# Parser for:
+#   * 'show ip ospf database opaque-area'
+# =======================================
+class ShowIpOspfDatabaseOpaqueArea(ShowIpOspfDatabaseOpaqueAreaSchema, ShowIpOspfDatabaseTypeParser):
 
-    ''' Parser for "show ip ospf database opaque-area" '''
+    ''' Parser for:
+        * 'show ip ospf database opaque-area'
+    '''
 
     cli_command = 'show ip ospf database opaque-area'
 
-    def cli(self,output=None):
-        return super().cli(cmd=self.cli_command, db_type='opaque',output=output)
+    def cli(self, output=None):
+
+        return super().cli(cmd=self.cli_command, db_type='opaque', output=output)
 
 
-# ============================================
-# Schema for 'show ip ospf mpls ldp interface'
-# ============================================
+# =====================================
+# Schema for:
+#   * 'show ip ospf mpls ldp interface'
+# =====================================
 class ShowIpOspfMplsLdpInterfaceSchema(MetaParser):
 
-    ''' Schema for "show ip ospf mpls ldp interface" '''
+    ''' Schema for:
+        * "show ip ospf mpls ldp interface" 
+    '''
 
     schema = {
         'vrf': 
@@ -4271,7 +4575,8 @@ class ShowIpOspfMplsLdpInterfaceSchema(MetaParser):
                                     {'ldp': 
                                         {'autoconfig': bool,
                                         'autoconfig_area_id': str,
-                                        'igp_sync': bool}},
+                                        },
+                                    },
                                 'areas': 
                                     {Any(): 
                                         {'interfaces': 
@@ -4298,15 +4603,20 @@ class ShowIpOspfMplsLdpInterfaceSchema(MetaParser):
         }
 
 
-# ============================================
-# Parser for 'show ip ospf mpls ldp interface'
-# ============================================
+# =====================================
+# Parser for:
+#   * 'show ip ospf mpls ldp interface'
+# =====================================
 class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
 
-    ''' Parser for "show ip ospf mpls ldp interface" '''
+    ''' Parser for:
+        * 'show ip ospf mpls ldp interface'
+    '''
+
     cli_command = 'show ip ospf mpls ldp interface'
 
-    def cli(self,output=None):
+    def cli(self, output=None):
+
         if output is None:
             # Execute command on device
             out = self.device.execute(self.cli_command)
@@ -4450,19 +4760,17 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
                               ' +(?P<igp_sync>(Not required|Required))$')
             m = p4.match(line)
             if m:
-                if m.groupdict()['igp_sync'] is 'Required':
+                if m.groupdict()['igp_sync'] == 'Required':
                     intf_dict['igp_sync'] = True
-                    mpls_ldp_dict['igp_sync'] = True
                 else:
                     intf_dict['igp_sync'] = False
-                    mpls_ldp_dict['igp_sync'] = False
                     continue
 
             # Holddown timer is disabled
-            p5 = re.compile(r'^Holddown +timer +is (?P<val>(disabled|enabled))$')
+            p5 = re.compile(r'^Holddown +timer +is (?P<val>([a-zA-Z\s]+))$')
             m = p5.match(line)
             if m:
-                if m.groupdict()['val'] is 'enabled':
+                if 'enabled' in m.groupdict()['val']:
                     intf_dict['holddown_timer'] = True
                 else:
                     intf_dict['holddown_timer'] = False
@@ -4478,12 +4786,15 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
         return ret_dict
 
 
-# ===============================================
-# Schema for 'show ip ospf mpls traffic-eng link'
-# ===============================================
+# ========================================
+# Schema for:
+#   * 'show ip ospf mpls traffic-eng link'
+# ========================================
 class ShowIpOspfMplsTrafficEngLinkSchema(MetaParser):
 
-    ''' Schema for "show ip ospf mpls traffic-eng link" '''
+    ''' Schema for:
+        * 'show ip ospf mpls traffic-eng link'
+    '''
 
     schema = {
         'vrf': 
@@ -4540,16 +4851,20 @@ class ShowIpOspfMplsTrafficEngLinkSchema(MetaParser):
         }
 
 
-# ===============================================
-# Parser for 'show ip ospf mpls traffic-eng link'
-# ===============================================
+# ========================================
+# Parser for:
+#   * 'show ip ospf mpls traffic-eng link'
+# ========================================
 class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
 
-    ''' Parser for "show ip ospf mpls traffic-eng link" '''
+    ''' Parser for:
+        * 'show ip ospf mpls traffic-eng link'
+    '''
 
     cli_command = 'show ip ospf mpls traffic-eng link'
 
-    def cli(self,output=None):
+    def cli(self, output=None):
+
         if output is None:
             # Execute command on device
             out = self.device.execute(self.cli_command)
@@ -4814,3 +5129,950 @@ class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
                 continue
 
         return ret_dict
+
+
+# =============================
+# Schema for:
+#   * 'show ip ospf max-metric'
+# =============================
+class ShowIpOspfMaxMetricSchema(MetaParser):
+    
+    ''' Schema for:
+        * 'show ip ospf max-metric'
+    '''
+
+    schema = {
+        'vrf':
+            {Any():
+                {'address_family':
+                    {Any():
+                        {'instance':
+                            {Any():
+                                {'router_id': str,
+                                'base_topology_mtid':
+                                    {Any():
+                                        {'start_time': str,
+                                        'time_elapsed': str,
+                                        'router_lsa_max_metric':
+                                            {Any(): 
+                                                {Optional('condition'): str,
+                                                Optional('state'): str,
+                                                Optional('advertise_lsa_metric'): int,
+                                                Optional('unset_reason'): str,
+                                                Optional('unset_time'): str,
+                                                Optional('unset_time_elapsed'): str,
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+
+# =============================
+# Parser for:
+#   * 'show ip ospf max-metric'
+# =============================
+class ShowIpOspfMaxMetric(ShowIpOspfMaxMetricSchema):
+
+    ''' Parser for:
+        * 'show ip ospf max-metric'
+    '''
+
+    cli_command = 'show ip ospf max-metric'
+
+    def cli(self, output=None):
+
+        if output is None:
+            # Execute command on device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Init vars
+        ret_dict = {}
+        address_family = 'ipv4'
+
+        # Load for five secs: 71%/0%; one minute: 11%; five minutes: 9%
+        # Time source is NTP, 20:29:26.348 JST Fri Nov 11 2016
+
+        # OSPF Router with ID (172.152.187.214) (Process ID 9996)
+        # OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
+        p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
+                         ' +\(Process +ID +(?P<instance>(\d+))'
+                         '(?:, +VRF +(?P<vrf>(\S+)))?\)$')
+
+        # Base Topology (MTID 0)
+        p2 = re.compile(r'^Base +Topology +\(MTID +(?P<mtid>(\d+))\)$')
+
+        # Start time: 00:01:58.314, Time elapsed: 00:54:43.858
+        p3 = re.compile(r'^Start +time: +(?P<start_time>(\S+)), +Time +elapsed:'
+                         ' +(?P<time_elapsed>(\S+))$')
+
+        # Originating router-LSAs with maximum metric
+        p4_1 = re.compile(r'^Originating +router-LSAs +with +maximum +metric$')
+
+        # Router is not originating router-LSAs with maximum metric
+        p4_2 = re.compile(r'^Router +is +not +originating +router-LSAs +with'
+                           ' +maximum +metric$')
+
+        # Condition: on startup for 5 seconds, State: inactive
+        p5 = re.compile(r'^Condition: +(?P<condition>(.*)), +State:'
+                          ' +(?P<state>([a-zA-Z\s]+))$')
+
+        # Advertise summary-LSAs with metric 16711680
+        p6 = re.compile(r'^Advertise +summary-LSAs +with +metric'
+                         ' +(?P<metric>(\d+))$')
+
+        # Unset reason: timer expired, Originated for 5 seconds
+        p7 = re.compile(r'^Unset +reason: (?P<reason>(.*))$')
+
+        # Unset time: 00:02:03.314, Time elapsed: 00:54:38.858
+        p8 = re.compile(r'^Unset +time: +(?P<time>(\S+)), +Time +elapsed:'
+                         ' +(?P<elapsed>(\S+))$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                router_id = str(group['router_id'])
+                instance = str(group['instance'])
+                if group['vrf']:
+                    vrf = str(group['vrf'])
+                else:
+                    vrf = 'default'
+                # Create dict
+                ospf_dict = ret_dict.setdefault('vrf', {}).\
+                                     setdefault(vrf, {}).\
+                                     setdefault('address_family', {}).\
+                                     setdefault(address_family, {}).\
+                                     setdefault('instance', {}).\
+                                     setdefault(instance, {})
+                ospf_dict['router_id'] = router_id
+                continue
+
+            # Base Topology (MTID 0)
+            m = p2.match(line)
+            if m:
+                mtid = m.groupdict()['mtid']
+                mtid_dict = ospf_dict.setdefault('base_topology_mtid', {}).\
+                                      setdefault(mtid, {})
+                continue
+
+            # Start time: 00:01:58.314, Time elapsed: 00:54:43.858
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                mtid_dict['start_time'] = group['start_time']
+                mtid_dict['time_elapsed'] = group['time_elapsed']
+                continue
+
+            # Originating router-LSAs with maximum metric
+            m = p4_1.match(line)
+            if m:
+                rtr_lsa_dict = mtid_dict.\
+                                    setdefault('router_lsa_max_metric', {}).\
+                                    setdefault(True, {})
+                continue
+
+            # Router is not originating router-LSAs with maximum metric
+            m = p4_2.match(line)
+            if m:
+                rtr_lsa_dict = mtid_dict.\
+                                    setdefault('router_lsa_max_metric', {}).\
+                                    setdefault(False, {})
+                continue
+
+            # Condition: on startup for 5 seconds, State: inactive
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                rtr_lsa_dict['condition'] = group['condition']
+                rtr_lsa_dict['state'] = group['state']
+                continue
+
+            # Advertise summary-LSAs with metric 16711680
+            m = p6.match(line)
+            if m:
+                rtr_lsa_dict['advertise_lsa_metric'] = int(m.groupdict()['metric'])
+
+            # Unset reason: timer expired, Originated for 5 seconds
+            m = p7.match(line)
+            if m:
+                rtr_lsa_dict['unset_reason'] = m.groupdict()['reason']
+                continue
+
+            # Unset time: 00:02:03.314, Time elapsed: 00:54:38.858
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                rtr_lsa_dict['unset_time'] = group['time']
+                rtr_lsa_dict['unset_time_elapsed'] = group['elapsed']
+                continue
+
+        return ret_dict
+
+
+# ==========================
+# Schema for:
+#   * 'show ip ospf traffic'
+# ==========================
+class ShowIpOspfTrafficSchema(MetaParser):
+
+    ''' Schema for:
+        * 'show ip ospf traffic'
+    '''
+
+    schema = {
+        'ospf_statistics':
+            {'last_clear_traffic_counters': str,
+            'rcvd':
+                {'total': int,
+                'checksum_errors': int,
+                'hello': int,
+                'database_desc': int,
+                'link_state_req': int,
+                'link_state_updates': int,
+                'link_state_acks': int,
+                },
+            'sent':
+                {'total': int,
+                'hello': int,
+                'database_desc': int,
+                'link_state_req': int,
+                'link_state_updates': int,
+                'link_state_acks': int,
+                },
+            },
+        'vrf':
+            {Any():
+                {'address_family':
+                    {Any():
+                        {'instance':
+                            {Any():
+                                {'router_id': str,
+                                'ospf_queue_statistics':
+                                    {'limit': 
+                                        {'inputq': int,
+                                        'outputq': int,
+                                        'updateq': int,
+                                        },
+                                    'drops': 
+                                        {'inputq': int,
+                                        'outputq': int,
+                                        'updateq': int,
+                                        },
+                                    'max_delay_msec': 
+                                        {'inputq': int,
+                                        'outputq': int,
+                                        'updateq': int,
+                                        },
+                                    'max_size': 
+                                        {'total': 
+                                            {'inputq': int,
+                                            'outputq': int,
+                                            'updateq': int,
+                                            },
+                                        'invalid':
+                                            {'inputq': int,
+                                            'outputq': int,
+                                            'updateq': int,
+                                            },
+                                        'hello':
+                                            {'inputq': int,
+                                            'outputq': int,
+                                            'updateq': int,
+                                            },
+                                        'db_des':
+                                            {'inputq': int,
+                                            'outputq': int,
+                                            'updateq': int,
+                                            },
+                                        'ls_req':
+                                            {'inputq': int,
+                                            'outputq': int,
+                                            'updateq': int,
+                                            },
+                                        'ls_upd':
+                                            {'inputq': int,
+                                            'outputq': int,
+                                            'updateq': int,
+                                            },
+                                        'ls_ack':
+                                            {'inputq': int,
+                                            'outputq': int,
+                                            'updateq': int,
+                                            },
+                                        },
+                                    'current_size': 
+                                        {'total': 
+                                            {'inputq': int,
+                                            'outputq': int,
+                                            'updateq': int,
+                                            },
+                                        'invalid':
+                                            {'inputq': int,
+                                            'outputq': int,
+                                            'updateq': int,
+                                            },
+                                        'hello':
+                                            {'inputq': int,
+                                            'outputq': int,
+                                            'updateq': int,
+                                            },
+                                        'db_des':
+                                            {'inputq': int,
+                                            'outputq': int,
+                                            'updateq': int,
+                                            },
+                                        'ls_req':
+                                            {'inputq': int,
+                                            'outputq': int,
+                                            'updateq': int,
+                                            },
+                                        'ls_upd':
+                                            {'inputq': int,
+                                            'outputq': int,
+                                            'updateq': int,
+                                            },
+                                        'ls_ack':
+                                            {'inputq': int,
+                                            'outputq': int,
+                                            'updateq': int,
+                                            },
+                                        },
+                                    },
+                                'interface_statistics':
+                                    {'interfaces':
+                                        {Any():
+                                            {'last_clear_traffic_counters': str,
+                                            'ospf_packets_received_sent':
+                                                {'type': 
+                                                    {Any():
+                                                        {'packets': int,
+                                                        'bytes': int,
+                                                        },
+                                                    },
+                                                },
+                                            'ospf_header_errors':
+                                                {'length': int,
+                                                'instance_id': int,
+                                                'checksum': int,
+                                                'auth_type': int,
+                                                'version': int,
+                                                'bad_source': int,
+                                                'no_virtual_link': int,
+                                                'area_mismatch': int,
+                                                'no_sham_link': int,
+                                                'self_originated': int,
+                                                'duplicate_id': int,
+                                                'hello': int,
+                                                'mtu_mismatch': int,
+                                                'nbr_ignored': int,
+                                                'lls': int,
+                                                'unknown_neighbor': int,
+                                                'authentication': int,
+                                                'ttl_check_fail': int,
+                                                'adjacency_throttle': int,
+                                                'bfd': int,
+                                                'test_discard': int,
+                                                },
+                                            'ospf_lsa_errors':
+                                                {'type': int,
+                                                'length': int,
+                                                'data': int,
+                                                'checksum': int,
+                                                },
+                                            },
+                                        },
+                                    },
+                                'summary_traffic_statistics':
+                                    {'ospf_packets_received_sent': 
+                                        {'type':
+                                            {Any():
+                                                {'packets': int,
+                                                'bytes': int,
+                                                },
+                                            },
+                                        },
+                                    'ospf_header_errors':
+                                        {'length': int,
+                                        'instance_id': int,
+                                        'checksum': int,
+                                        'auth_type': int,
+                                        'version': int,
+                                        'bad_source': int,
+                                        'no_virtual_link': int,
+                                        'area_mismatch': int,
+                                        'no_sham_link': int,
+                                        'self_originated': int,
+                                        'duplicate_id': int,
+                                        'hello': int,
+                                        'mtu_mismatch': int,
+                                        'nbr_ignored': int,
+                                        'lls': int,
+                                        'unknown_neighbor': int,
+                                        'authentication': int,
+                                        'ttl_check_fail': int,
+                                        'adjacency_throttle': int,
+                                        'bfd': int,
+                                        'test_discard': int,
+                                        },
+                                    'ospf_lsa_errors':
+                                        {'type': int,
+                                        'length': int,
+                                        'data': int,
+                                        'checksum': int,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+
+# ==========================
+# Parser for:
+#   * 'show ip ospf traffic'
+# ==========================
+class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
+
+    ''' Parser for:
+        * "show ip ospf traffic"
+    '''
+
+    cli_command = 'show ip ospf traffic'
+
+    def cli(self, output=None):
+
+        if output is None:
+            # Execute command on device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Init vars
+        ret_dict = {}
+        address_family = 'ipv4'
+        received = False ; sent = False
+        interface_stats = False ; summary_stats = False
+        max_size_stats = False ; current_size_stats = False
+
+        # OSPF statistics:
+        p1 = re.compile(r'^OSPF +statistics:$')
+
+        # Last clearing of OSPF traffic counters never
+        # Last clearing of interface traffic counters never
+        p2 = re.compile(r'^Last +clearing +of +(?P<type>(OSPF|interface)) +traffic'
+                         ' +counters +(?P<last_clear>([a-zA-Z0-9\:\s]+))$')
+
+        # Rcvd: 2112690 total, 0 checksum errors
+        p3 = re.compile(r'^Rcvd: +(?P<total>(\d+)) total, +(?P<csum_errors>(\d+))'
+                         ' +checksum +errors$')
+
+        # 2024732 hello, 938 database desc, 323 link state req
+        # 2381794 hello, 1176 database desc, 43 link state req
+        p4 = re.compile(r'^(?P<hello>(\d+)) +hello, +(?P<db_desc>(\d+))'
+                         ' +database +desc, +(?P<link_state_req>(\d+))'
+                         ' +link +state +req$')
+
+        # 11030 link state updates, 75666 link state acks
+        # 92224 link state updates, 8893 link state acks
+        p5 = re.compile(r'^(?P<link_state_updates>(\d+)) +link +state +updates,'
+                         ' +(?P<link_state_acks>(\d+)) +link +state +acks$')
+
+        # Sent: 2509472 total
+        p6 = re.compile(r'^Sent: +(?P<total>(\d+)) +total$')
+
+
+        # OSPF Router with ID (106.162.197.252) (Process ID 9996)
+        # OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
+        p7 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
+                         ' +\(Process +ID +(?P<instance>(\d+))'
+                         '(?:, +VRF +(?P<vrf>(\S+)))?\)$')
+
+        # OSPF queue statistics for process ID 9996:
+        p8 = re.compile(r'^OSPF +queue +statistics +for +process +ID +(?P<pid>(\d+)):$')
+
+        #                   InputQ   UpdateQ      OutputQ
+        # Limit             0        200          0
+        # Drops             0          0          0
+        # Max delay [msec] 49          2          2
+        # Invalid           0          0          0
+        # Hello             0          0          0
+        # DB des            0          0          0
+        # LS req            0          0          0
+        # LS upd            0          0          0
+        # LS ack           14         14          6
+        p9_1 = re.compile(r'^(?P<item>(Limit|Drops|Max delay \[msec\]|Invalid|'
+                           'Hello|DB des|LS req|LS upd|LS ack))'
+                           ' +(?P<inputq>(\d+)) +(?P<updateq>(\d+))'
+                           ' +(?P<outputq>(\d+))$')
+
+        #                   InputQ   UpdateQ      OutputQ
+        # Max size         14         14          6
+        # Current size      0          0          0
+        p9_2 = re.compile(r'^(?P<item>(Max size|Current size)) +(?P<inputq>(\d+))'
+                           ' +(?P<updateq>(\d+)) +(?P<outputq>(\d+))$')
+
+        # Interface statistics:
+        p10 = re.compile(r'^Interface +statistics:$')
+
+        # Interface GigabitEthernet0/0/6
+        p11 = re.compile(r'^Interface +(?P<intf>(\S+))$')
+
+        # OSPF packets received/sent
+        # Type          Packets              Bytes
+        # RX Invalid    0                    0
+        # RX Hello      169281               8125472
+        # RX DB des     36                   1232
+        # RX LS req     20                   25080
+        # RX LS upd     908                  76640
+        # RX LS ack     9327                 8733808
+        # RX Total      179572               16962232
+        # TX Failed     0                    0
+        # TX Hello      169411               13552440
+        # TX DB des     40                   43560
+        # TX LS req     4                    224
+        # TX LS upd     12539                12553264
+        # TX LS ack     899                  63396
+        # TX Total      182893               26212884
+        p12 = re.compile(r'^(?P<type>([a-zA-Z\s]+)) +(?P<packets>(\d+))'
+                          ' +(?P<bytes>(\d+))$')
+
+        # OSPF header errors
+        p13 = re.compile(r'^OSPF +header +errors$')
+
+        # Length 0, Instance ID 0, Checksum 0, Auth Type 0,
+        p14 = re.compile(r'^Length +(?P<len>(\d+)), +Instance +ID'
+                          ' +(?P<iid>(\d+)), +Checksum +(?P<csum>(\d+)),'
+                          ' +Auth +Type +(?P<auth>(\d+)),?$')
+
+        # Version 0, Bad Source 0, No Virtual Link 0,
+        p15 = re.compile(r'^Version +(?P<version>(\d+)), +Bad +Source'
+                          ' +(?P<bad_source>(\d+)), +No +Virtual +Link'
+                          ' +(?P<no_virtual_link>(\d+)),?$')
+
+        # Area Mismatch 0, No Sham Link 0, Self Originated 0,
+        p16 = re.compile(r'^Area +Mismatch +(?P<area_mismatch>(\d+)),'
+                          ' +No +Sham +Link +(?P<no_sham_link>(\d+)),'
+                          ' +Self +Originated +(?P<self_originated>(\d+)),?$')
+
+        # Duplicate ID 0, Hello 0, MTU Mismatch 0,
+        p17 = re.compile(r'^Duplicate +ID +(?P<duplicate_id>(\d+)),'
+                          ' +Hello +(?P<hello>(\d+)), +MTU +Mismatch'
+                          ' +(?P<mtu_mismatch>(\d+)),$')
+
+        # Nbr Ignored 0, LLS 0, Unknown Neighbor 0,
+        p18 = re.compile(r'^Nbr +Ignored +(?P<nbr_ignored>(\d+)), +LLS'
+                          ' +(?P<lls>(\d+)), +Unknown +Neighbor'
+                          ' +(?P<unknown_neighbor>(\d+)),?$')
+
+        # Authentication 0, TTL Check Fail 0, Adjacency Throttle 0,
+        p19 = re.compile(r'^Authentication +(?P<authentication>(\d+)), +TTL'
+                          ' +Check +Fail +(?P<ttl_check_fail>(\d+)), +Adjacency'
+                          ' +Throttle +(?P<adjacency_throttle>(\d+)),?$')
+
+        # BFD 0, Test discard 0
+        p20 = re.compile(r'^BFD +(?P<bfd>(\d+)), +Test +discard'
+                          ' +(?P<test_discard>(\d+))$')
+
+        # OSPF LSA errors
+        p21 = re.compile(r'^OSPF +LSA +errors$')
+
+        # Type 0, Length 0, Data 0, Checksum 0
+        p22 = re.compile(r'^Type +(?P<type>(\d+)), +Length +(?P<len>(\d+)),'
+                          ' +Data +(?P<data>(\d+)), +Checksum +(?P<csum>(\d+))$')
+
+        # Summary traffic statistics for process ID 9996:
+        p23 = re.compile(r'^Summary +traffic +statistics +for +process +ID'
+                          ' +(?P<pid>(\d+)):$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # OSPF statistics:
+            m = p1.match(line)
+            if m:
+                ospf_stats_dict = ret_dict.setdefault('ospf_statistics', {})
+                continue
+
+            # Last clearing of OSPF traffic counters never
+            # Last clearing of interface traffic counters never
+            m = p2.match(line)
+            if m:
+                if m.groupdict()['type'] == 'OSPF':
+                    ospf_stats_dict['last_clear_traffic_counters'] = \
+                                                m.groupdict()['last_clear']
+                if m.groupdict()['type'] == 'interface':
+                    intf_dict['last_clear_traffic_counters'] = \
+                                                m.groupdict()['last_clear']
+                continue
+
+            # Rcvd: 2112690 total, 0 checksum errors
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                rcvd_dict = ospf_stats_dict.setdefault('rcvd', {})
+                rcvd_dict['total'] = int(group['total'])
+                rcvd_dict['checksum_errors'] = int(group['csum_errors'])
+                received = True ; sent = False
+                continue
+
+            # 2024732 hello, 938 database desc, 323 link state req
+            # 2381794 hello, 1176 database desc, 43 link state req
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                if received:
+                    sdict = rcvd_dict
+                elif sent:
+                    sdict = sent_dict
+                else:
+                    continue
+                sdict['hello'] = int(group['hello'])
+                sdict['database_desc'] = int(group['db_desc'])
+                sdict['link_state_req'] = int(group['link_state_req'])
+                continue
+
+            # 11030 link state updates, 75666 link state acks
+            # 92224 link state updates, 8893 link state acks
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                if received:
+                    sdict = rcvd_dict
+                elif sent:
+                    sdict = sent_dict
+                else:
+                    continue
+                sdict['link_state_updates'] = int(group['link_state_updates'])
+                sdict['link_state_acks'] = int(group['link_state_acks'])
+                continue
+
+            # Sent: 2509472 total
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                sent_dict = ospf_stats_dict.setdefault('sent', {})
+                sent_dict['total'] = int(group['total'])
+                sent = True ; received = False
+                continue
+
+            # OSPF Router with ID (106.162.197.252) (Process ID 9996)
+            # OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                router_id = str(group['router_id'])
+                instance = str(group['instance'])
+                if group['vrf']:
+                    vrf = str(group['vrf'])
+                else:
+                    vrf = 'default'
+                # Create dict
+                ospf_dict = ret_dict.setdefault('vrf', {}).\
+                                     setdefault(vrf, {}).\
+                                     setdefault('address_family', {}).\
+                                     setdefault(address_family, {}).\
+                                     setdefault('instance', {}).\
+                                     setdefault(instance, {})
+                ospf_dict['router_id'] = router_id
+                continue
+
+            # OSPF queue statistics for process ID 9996:
+            m = p8.match(line)
+            if m:
+                queue_stats_dict = ospf_dict.setdefault('ospf_queue_statistics', {})
+                continue
+
+            #                   InputQ   UpdateQ      OutputQ
+            # Limit             0        200          0
+            # Drops             0          0          0
+            # Max delay [msec] 49          2          2
+            # Invalid           0          0          0
+            # Hello             0          0          0
+            # DB des            0          0          0
+            # LS req            0          0          0
+            # LS upd            0          0          0
+            # LS ack           14         14          6
+            m = p9_1.match(line)
+            if m:
+                group = m.groupdict()
+                item = group['item'].strip().lower().replace(" ", "_").\
+                                    replace("[", "").replace("]", "")
+                if max_size_stats:
+                    tmp_dict = max_size_queue_stats_dict.setdefault(item, {})
+                elif current_size_stats:
+                    tmp_dict = current_size_queue_stats_dict.setdefault(item, {})
+                else:
+                    tmp_dict = queue_stats_dict.setdefault(item, {})
+                tmp_dict['inputq'] = int(group['inputq'])
+                tmp_dict['updateq'] = int(group['updateq'])
+                tmp_dict['outputq'] = int(group['outputq'])
+                continue
+
+            #                   InputQ   UpdateQ      OutputQ
+            # Max size         14         14          6
+            # Current size      0          0          0
+            m = p9_2.match(line)
+            if m:
+                group = m.groupdict()
+                item = group['item'].strip().lower().replace(" ", "_")
+                tmp_dict = queue_stats_dict.setdefault(item, {})
+                if item == 'max_size':
+                    max_size_stats = True
+                    current_size_stats = False
+                    max_size_queue_stats_dict = tmp_dict
+                elif item == 'current_size':
+                    current_size_stats = True
+                    max_size_stats = False
+                    current_size_queue_stats_dict = tmp_dict
+                tmp_dict.setdefault('total', {})['inputq'] = int(group['inputq'])
+                tmp_dict.setdefault('total', {})['updateq'] = int(group['updateq'])
+                tmp_dict.setdefault('total', {})['outputq'] = int(group['outputq'])
+                continue
+
+            # Interface statistics:
+            m = p10.match(line)
+            if m:
+                intf_stats_dict = ospf_dict.setdefault('interface_statistics', {})
+                continue
+
+            # Interface GigabitEthernet0/0/6
+            m = p11.match(line)
+            if m:
+                intf = m.groupdict()['intf']
+                intf_dict = intf_stats_dict.setdefault('interfaces', {}).\
+                                            setdefault(intf, {})
+                interface_stats = True ; summary_stats = False
+                continue
+
+            # Type          Packets              Bytes
+            # RX Invalid    0                    0
+            # RX Hello      169281               8125472
+            # RX DB des     36                   1232
+            # RX LS req     20                   25080
+            # RX LS upd     908                  76640
+            # RX LS ack     9327                 8733808
+            # RX Total      179572               16962232
+            # TX Failed     0                    0
+            # TX Hello      169411               13552440
+            # TX DB des     40                   43560
+            # TX LS req     4                    224
+            # TX LS upd     12539                12553264
+            # TX LS ack     899                  63396
+            # TX Total      182893               26212884
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                if interface_stats:
+                    sdict = intf_dict
+                elif summary_stats:
+                    sdict = summary_stats_dict
+                else:
+                    continue
+                item_type = group['type'].strip().lower().replace(" ", "_")
+                tmp_dict = sdict.setdefault('ospf_packets_received_sent', {}).\
+                            setdefault('type', {}).setdefault(item_type, {})
+                tmp_dict['packets'] = int(group['packets'])
+                tmp_dict['bytes'] = int(group['bytes'])
+                continue
+
+            # OSPF header errors
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                if interface_stats:
+                    sdict = intf_dict
+                elif summary_stats:
+                    sdict = summary_stats_dict
+                else:
+                    continue
+                ospf_header_errors_dict = sdict.setdefault('ospf_header_errors', {})
+                continue
+
+            # Length 0, Instance ID 0, Checksum 0, Auth Type 0,
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_header_errors_dict['length'] = int(group['len'])
+                ospf_header_errors_dict['instance_id'] = int(group['iid'])
+                ospf_header_errors_dict['checksum'] = int(group['csum'])
+                ospf_header_errors_dict['auth_type'] = int(group['auth'])
+                continue
+
+            # Version 0, Bad Source 0, No Virtual Link 0,
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_header_errors_dict['version'] = int(group['version'])
+                ospf_header_errors_dict['bad_source'] = int(group['bad_source'])
+                ospf_header_errors_dict['no_virtual_link'] = int(group['no_virtual_link'])
+                continue
+
+            # Area Mismatch 0, No Sham Link 0, Self Originated 0,
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_header_errors_dict['area_mismatch'] = int(group['area_mismatch'])
+                ospf_header_errors_dict['no_sham_link'] = int(group['no_sham_link'])
+                ospf_header_errors_dict['self_originated'] = int(group['self_originated'])
+                continue
+
+            # Duplicate ID 0, Hello 0, MTU Mismatch 0,
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_header_errors_dict['duplicate_id'] = int(group['duplicate_id'])
+                ospf_header_errors_dict['hello'] = int(group['hello'])
+                ospf_header_errors_dict['mtu_mismatch'] = int(group['mtu_mismatch'])
+                continue
+
+            # Nbr Ignored 0, LLS 0, Unknown Neighbor 0,
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_header_errors_dict['nbr_ignored'] = int(group['nbr_ignored'])
+                ospf_header_errors_dict['lls'] = int(group['lls'])
+                ospf_header_errors_dict['unknown_neighbor'] = int(group['unknown_neighbor'])
+                continue
+
+            # Authentication 0, TTL Check Fail 0, Adjacency Throttle 0,
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_header_errors_dict['authentication'] = int(group['authentication'])
+                ospf_header_errors_dict['ttl_check_fail'] = int(group['ttl_check_fail'])
+                ospf_header_errors_dict['adjacency_throttle'] = int(group['adjacency_throttle'])
+                continue
+
+            # BFD 0, Test discard 0
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_header_errors_dict['bfd'] = int(group['bfd'])
+                ospf_header_errors_dict['test_discard'] = int(group['test_discard'])
+                continue
+
+            # OSPF LSA errors
+            m = p21.match(line)
+            if m:
+                if interface_stats:
+                    sdict = intf_dict
+                elif summary_stats:
+                    sdict = summary_stats_dict
+                else:
+                    continue
+                ospf_lsa_errors_dict = sdict.setdefault('ospf_lsa_errors', {})
+                continue
+
+            # Type 0, Length 0, Data 0, Checksum 0
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_lsa_errors_dict['type'] = int(group['type'])
+                ospf_lsa_errors_dict['length'] = int(group['len'])
+                ospf_lsa_errors_dict['data'] = int(group['data'])
+                ospf_lsa_errors_dict['checksum'] = int(group['csum'])
+                continue
+
+            # Summary traffic statistics for process ID 9996:
+            m = p23.match(line)
+            if m:
+                summary_stats_dict = ospf_dict.\
+                                setdefault('summary_traffic_statistics', {})
+                interface_stats = False ; summary_stats = True
+                continue
+
+        return ret_dict
+
+
+# ===========================
+# Schema for:
+#   * 'show ip ospf neighbor'
+# ===========================
+class ShowIpOspfNeighborSchema(MetaParser):
+
+    ''' Schema for:
+        * 'show ip ospf neighbor'
+    '''
+
+    schema = {
+        'interfaces':
+            {Any():
+                {'neighbors':
+                    {Any():
+                        {'priority': int,
+                        'state':str,
+                        'dead_time':str,
+                        'address':str,
+                        },
+                    },
+                },
+            },
+        }
+
+
+# ===========================
+# Parser for:
+#   * 'show ip ospf neighbor'
+# ===========================
+class ShowIpOspfNeighbor(ShowIpOspfNeighborSchema):
+
+    ''' Parser for:
+        * 'show ip ospf neighbor'
+    '''
+
+    cli_command = 'show ip ospf neighbor'
+
+    def cli(self, output=None):
+
+        if output is None:
+            # Execute command on device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Init vars
+        ret_dict = {}
+
+        # Neighbor ID     Pri   State           Dead Time   Address         Interface
+        # 172.16.197.253 128   FULL/DR         00:00:30    172.16.165.49  GigabitEthernet0/0/1
+        
+        p1=re.compile(r'^(?P<neighbor>\S+) +(?P<pri>\d+) +(?P<state>\S+) +(?P<dead_time>\S+)'
+                       ' +(?P<address>\S+) +(?P<interface>\S+)$')
+
+        for line in out.splitlines():
+
+            line = line.strip()
+            m = p1.match(line)
+            if m:
+                neighbor = m.groupdict()['neighbor']
+                interface = m.groupdict()['interface']
+
+                #Build Dict
+
+                intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(interface, {})
+                nbr_dict = intf_dict.setdefault('neighbors', {}).setdefault(neighbor, {})
+
+                # Set values
+                nbr_dict['priority'] = int(m.groupdict()['pri'])
+                nbr_dict['state'] = str(m.groupdict()['state'])
+                nbr_dict['dead_time'] = str(m.groupdict()['dead_time'])
+                nbr_dict['address'] = str(m.groupdict()['address'])
+                continue
+
+        return ret_dict
+
