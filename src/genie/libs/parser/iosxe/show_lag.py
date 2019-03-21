@@ -658,8 +658,8 @@ class ShowEtherchannelSummarySchema(MetaParser):
         show etherchannel summary"""
 
     schema = {
-        'number_of_lag_in_use': int,
-        'number_of_aggregators': int,
+        Optional('number_of_lag_in_use'): int,
+        Optional('number_of_aggregators'): int,
         Optional('interfaces'): {
             Any(): {
                 Optional('name'): str,
@@ -804,7 +804,7 @@ class ShowEtherChannelLoadBalancingSchema(MetaParser):
 
     schema = {
         'global_lb_method': str,
-        'lb_algo_type': str,
+        Optional('lb_algo_type'): str,
         'port_channel': {
             Any(): {
                 'lb_method': str,
