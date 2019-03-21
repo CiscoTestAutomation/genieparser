@@ -1762,7 +1762,7 @@ class ShowMplsForwardingTableSchema(MetaParser):
                             Optional('next_hop'): str,
                             Optional('mac'): int,
                             Optional('code'): str,
-                            Optional'encaps'): int,
+                            Optional('encaps'): int,
                             Optional('mru'): int,
                             Optional('label_stack'): str,
                             'vpn_route': str,
