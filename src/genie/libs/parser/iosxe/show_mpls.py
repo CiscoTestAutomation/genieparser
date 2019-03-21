@@ -1755,20 +1755,21 @@ class ShowMplsForwardingTableSchema(MetaParser):
             Any(): {
                 'interfaces': {
                     Any(): {
-                        'local_label': int,
-                        'outgoing_label': str,
-                        'prefix_or_tunnel_id': str,
-                        'bytes_label_switched': int,
-                        Optional('next_hop'): str,
-                        'mac': int,
-                        Optional('code'): str,
-                        'encaps': int,
-                        'mru': int,
-                        'label_stack': str,
-                        'vpn_route': str,
-                        'output_feature_configured': bool,
-                        'pre_destination': str,
-                        'slots': list,
+                        Any():{
+                            'outgoing_label': str,
+                            'prefix_or_tunnel_id': str,
+                            'bytes_label_switched': int,
+                            Optional('next_hop'): str,
+                            'mac': int,
+                            Optional('code'): str,
+                            'encaps': int,
+                            'mru': int,
+                            'label_stack': str,
+                            'vpn_route': str,
+                            'output_feature_configured': bool,
+                            Optional('pre_destination'): str,
+                            Optional('slots'): list,
+                        }
                     }
                 }
             }
@@ -1839,9 +1840,8 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                 interface = Common.convert_intf_name(group['interface'])
                 feature_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}). \
                                            setdefault('interfaces', {}).\
-                                           setdefault(interface, {})
+                                           setdefault(interface, {}).setdefault(local_label,{})
 
-                feature_dict.update({'local_label': local_label})
                 feature_dict.update({'outgoing_label': outgoing_label.strip()})
                 feature_dict.update({'prefix_or_tunnel_id': prefix_or_tunnel_id})
                 if group['next_hop']:
