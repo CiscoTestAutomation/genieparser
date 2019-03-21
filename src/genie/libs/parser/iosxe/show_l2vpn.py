@@ -5,6 +5,8 @@ IOSXE parsers for the following show commands:
     * show bridge-domain
     * show bridge-domain <WORD>
     * show bridge-domain | count <WORD>
+    * show ethernet service instance detail
+    * show ethernet service instance interface <interface> detail
 '''
 
 # Python
@@ -214,5 +216,208 @@ class ShowBridgeDomain(ShowBridgeDomainSchema):
 
         if 'interfaces' in ret_dict:
             del ret_dict['interfaces']
+
+        return ret_dict
+
+
+# ==================================================
+# Parser for 'show ethernet service instance detail'
+# ==================================================
+class ShowEthernetServiceInstanceDetailSchema(MetaParser):
+    """Schema for show ethernet service instance detail
+                  show ethernet service instance interface <interface> detail
+    """
+
+    schema = {
+        'service_instance': {
+            Any(): {
+                'id': int,
+                'type': str,
+                Optional('description'): str,
+                'associated_interface': str,
+                'associated_evc': str,
+                Optional('vlans'): str,
+                'encapsulation': str,
+                Optional('rewrite'): str,
+                Optional('control_policy'): str,
+                Optional('intiators'): str,
+                'dot1q_tunnel_ethertype': str,
+                'state': str,
+                'efp_statistics': {
+                    'pkts_in': int,
+                    'pkts_out': int,
+                    'bytes_in': int,
+                    'bytes_out': int,
+                }
+            },
+        }
+    }
+
+
+class ShowEthernetServiceInstanceDetail(ShowEthernetServiceInstanceDetailSchema):
+    """Parser for show ethernet service instance detail
+                  show ethernet service instance interface <interface> detail
+    """
+
+    cli_command = ['show ethernet service instance detail', 'show ethernet service instance interface {interface} detail']
+
+    def cli(self, interface=None, output=None):
+        cli = self.cli_command
+        if output is None:
+            if interface:
+                cli = self.cli_command[1].format(interface=interface)
+            else:
+                cli = self.cli_command[0]
+            out = self.device.execute(cli)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+        associated_evc = False
+
+        # initial regexp pattern
+        # Service Instance ID: 2051
+        p1 = re.compile(r'^Service +Instance +ID: +(?P<service_id>\d+)$')
+
+        # Service Instance Type: Static
+        # Service instance type: L2Context
+        p2 = re.compile(r'^Service +(i|I)nstance +(t|T)ype: +(?P<service_instance_type>\S+)$')
+
+        # Description: xxx
+        p3 = re.compile(r'^Description: +(?P<description>\S+)$')
+
+        # Associated Interface: GigabitEthernet0/0/3
+        p4 = re.compile(r'^Associated +Interface: +(?P<associated_interface>[\w\d\-\.\/]+)$')
+
+        # Associated EVC: 
+        p5 = re.compile(r'^Associated +EVC:$')
+
+        # L2protocol drop
+        p6 = re.compile(r'^(?P<associated_evc>[\S\s]+)$')
+
+        # CE-Vlans: 10-20                                                                        
+        p7 = re.compile(r'^CE-Vlans: +(?P<vlans>\S+)$')
+
+        # Encapsulation: dot1q 2051 vlan protocol type 0x8100
+        p8 = re.compile(r'^Encapsulation: +(?P<encapsulation>[\S\s]+)$')
+
+        # Rewrite: egress tag translate 1-to-1 dot1q 2051 vlan-type 0x8100
+        p9 = re.compile(r'^Rewrite: +(?P<rewrite>[\S\s]+)$')
+
+        # Interface Dot1q Tunnel Ethertype: 0x8100
+        p10 = re.compile(r'^Interface Dot1q Tunnel Ethertype: +(?P<dot1q_tunnel_ethertype>\S+)$')
+
+        # State: Up
+        p11 = re.compile(r'^State: +(?P<state>\w+)$')
+
+        # EFP Statistics:
+        p12 = re.compile(r'^EFP Statistics:$')
+
+        #    Pkts In   Bytes In   Pkts Out  Bytes Out
+        #          0          0          0          0
+        p13 = re.compile(r'^(?P<pkts_in>\d+) +(?P<bytes_in>\d+) +(?P<pkts_out>\d+) +(?P<bytes_out>\d+)$')
+
+        # Intiators: unclassified vlan
+        p14 = re.compile(r'^Intiators: +(?P<intiators>[\S\s]+)$')
+
+        # Control policy: ABC
+        p15 = re.compile(r'^Control +policy: +(?P<control_policy>[\S\s]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                service_id = int(group['service_id'])
+                final_dict = ret_dict.setdefault('service_instance', {}).\
+                    setdefault(service_id, {})
+                final_dict['id'] = service_id
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict['type'] = group['service_instance_type']
+                continue
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict['description'] = group['description']
+                continue
+
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict['associated_interface'] = group['associated_interface']
+                continue
+
+            m = p5.match(line)
+            if m:
+                associated_evc = True
+                continue
+
+            m = p6.match(line)
+            if m and associated_evc:
+                group = m.groupdict()
+                final_dict['associated_evc'] = group['associated_evc']
+                associated_evc = False
+                continue
+
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict['vlans'] = group['vlans']
+                continue
+
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict['encapsulation'] = group['encapsulation']
+                continue
+
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict['rewrite'] = group['rewrite']
+                continue
+
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict['dot1q_tunnel_ethertype'] = group['dot1q_tunnel_ethertype']
+                continue
+
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict['state'] = group['state']
+                continue
+
+            m = p12.match(line)
+            if m:
+                final_dict.setdefault('efp_statistics', {})
+                continue
+
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict['efp_statistics'].update({k: \
+                    int(v) for k, v in group.items()})
+                continue
+
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict['intiators'] = group['intiators']
+                continue
+
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict['control_policy'] = group['control_policy']
+                continue
 
         return ret_dict

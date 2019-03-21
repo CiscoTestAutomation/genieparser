@@ -105,3 +105,6 @@
             show bridge-domain
             show bridge-domain <WORD>
             show bridge-domain | count <WORD>
+    * Add ShowEthernetServiceInstanceDetail for:
+            show ethernet service instance detail
+            show ethernet service instance interface <interface> detail
