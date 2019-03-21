@@ -37,7 +37,6 @@ class test_show_service_group_state(unittest.TestCase):
             1       Up
     '''}
 
-
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         obj = ShowServiceGroupState(device=self.device1)

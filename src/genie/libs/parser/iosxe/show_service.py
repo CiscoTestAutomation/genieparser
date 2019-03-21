@@ -5,12 +5,12 @@ IOSXE parser for the following show command
 
 # Python
 import re
-import pprint
+
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, \
-						Optional,\
+from genie.metaparser.util.schemaengine import Schema,
 						Any
+
 # ==============================================================
 # Parser for 'show service-group state'
 # ==============================================================
@@ -28,6 +28,9 @@ class ShowServiceGroupStateSchema(MetaParser):
 	}
 
 class ShowServiceGroupState(ShowServiceGroupStateSchema):
+	"""
+	Parser for 'show service-group state'
+	"""
 
 	cli_command = 'show service-group state'
 	
