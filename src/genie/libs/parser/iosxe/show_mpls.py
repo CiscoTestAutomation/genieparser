@@ -1760,11 +1760,11 @@ class ShowMplsForwardingTableSchema(MetaParser):
                             'prefix_or_tunnel_id': str,
                             'bytes_label_switched': int,
                             Optional('next_hop'): str,
-                            Optional('mac'): int,
+                            'mac': int,
                             Optional('code'): str,
-                            Optional('encaps'): int,
-                            Optional('mru'): int,
-                            Optional('label_stack'): str,
+                            'encaps': int,
+                            'mru': int,
+                            'label_stack': str,
                             'vpn_route': str,
                             'output_feature_configured': bool,
                             Optional('pre_destination'): str,
@@ -1813,8 +1813,10 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         # Label      Label      or Tunnel Id     Switched      interface
         # 9301       No Label   172.16.100.1/32[V]   \
         #                                        0             Po1.51     192.168.10.253
-        p2 = re.compile(r'^(?P<local_label>\d+) +(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>\S+)'
-            ' +(?P<bytes_label_switched>\d+) +(?P<interface>\S+)( +(?P<next_hop>[\d\.]+))?$')
+        p1 = re.compile(r'^(?P<local_label>\d+) +(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>\S +\\$')
+        P2 = re.compile(r'^(?P<bytes_label_switched>\d+) +(?P<interface>\S+)( +(?P<next_hop>[\d\.]+))?$')
+        # p2 = re.compile(r'^(?P<local_label>\d+) +(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>\S+)'
+        #     ' +(?P<bytes_label_switched>\d+) +(?P<interface>\S+)( +(?P<next_hop>[\d\.]+))?$')
         #         MAC/Encaps=18/18, MRU=1530, Label Stack{}
         p3 = re.compile(r'^MAC/Encaps=(?P<mac>\d+)/(?P<encaps>\d+), +MRU=(?P<mru>[\d]+), +Label +Stack(?P<label_stack>[\S\s]+)$')
         #         00002440156384B261CB1480810000330800
@@ -1830,13 +1832,22 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
             line = line.strip()
 
             # 9301       No Label   172.16.100.1/32[V]   \
-            #                                        0             Po1.51     192.168.10.253
-            m = p2.match(line)
+            #
+            #                                       0             Po1.51     192.168.10.253
+            m = p1.match(line)
             if m:
                 group = m.groupdict()
                 local_label = int(group['local_label'])
                 outgoing_label = group['outgoing_label']
                 prefix_or_tunnel_id = group['prefix_or_tunnel_id']
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                # local_label = int(group['local_label'])
+                # outgoing_label = group['outgoing_label']
+                # prefix_or_tunnel_id = group['prefix_or_tunnel_id']
                 interface = Common.convert_intf_name(group['interface'])
                 feature_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}). \
                                            setdefault('interfaces', {}).\
