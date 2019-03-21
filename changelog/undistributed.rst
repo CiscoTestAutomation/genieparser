@@ -96,3 +96,11 @@
           show mpls ldp igp sync all
           show mpls ldp igp sync interface <interface>
           show mpls ldp igp sync vrf <vrf>
+
+
+--------------------------------------------------------------------------------
+                                    QOS
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowServiceGroupStats for:
+        show service-group stats
