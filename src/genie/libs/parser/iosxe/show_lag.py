@@ -909,7 +909,7 @@ class ShowLacpNeighborDetail(ShowLacpNeighborDetailSchema):
     """Parser for :
         show lacp neighbor detail"""
 
-    cli_command = 'show etherchannel load-balancing'
+    cli_command = 'show lacp neighbor detail'
 
     def cli(self, output=None):
         if output is None:
