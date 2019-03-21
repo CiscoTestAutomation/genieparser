@@ -8,8 +8,8 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema,
-						Any
+from genie.metaparser.util.schemaengine import Schema, \
+												Any
 
 # ==============================================================
 # Parser for 'show service-group state'
@@ -20,8 +20,8 @@ class ShowServiceGroupStateSchema(MetaParser):
 	"""
 
 	schema = {
-		'service_group_state':{
-			Any() : {
+		'service_group_state': {
+		Any() : {
 				'state' : str
 			}
 		}
