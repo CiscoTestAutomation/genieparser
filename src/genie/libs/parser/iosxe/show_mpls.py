@@ -1813,7 +1813,7 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         # Label      Label      or Tunnel Id     Switched      interface
         # 9301       No Label   172.16.100.1/32[V]   \
         #                                        0             Po1.51     192.168.10.253
-        p1 = re.compile(r'^(?P<local_label>\d+) +(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>\S +\\$')
+        p1 = re.compile(r'^(?P<local_label>\d+) +(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>\S+) +\\$')
         P2 = re.compile(r'^(?P<bytes_label_switched>\d+) +(?P<interface>\S+)( +(?P<next_hop>[\d\.]+))?$')
         # p2 = re.compile(r'^(?P<local_label>\d+) +(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>\S+)'
         #     ' +(?P<bytes_label_switched>\d+) +(?P<interface>\S+)( +(?P<next_hop>[\d\.]+))?$')
