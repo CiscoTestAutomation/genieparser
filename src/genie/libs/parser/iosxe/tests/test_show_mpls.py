@@ -1781,7 +1781,7 @@ class test_show_mpls_forwarding_table(unittest.TestCase):
                             'prefix_or_tunnel_id': '172.16.100.1/32[V]',
                             'bytes_label_switched': 0,
                             'next_hop': '192.168.10.253',
-                            'code': '00002440156384B261CB1480810000330800',
+                            'macstr': '00002440156384B261CB1480810000330800',
                             'mac': 18,
                             'encaps': 18,
                             'mru': 1530,
@@ -1800,7 +1800,8 @@ class test_show_mpls_forwarding_table(unittest.TestCase):
                             "encaps": 18,
                             "mru": 1530,
                             "label_stack": "{}",
-                            "code": "00002440156384B261CB1480810000330800",
+                            "macstr": "AABBCC032800AABBCC0325018847",
+                            "lstack": "00010000",
                             "vpn_route": "L3VPN-0051",
                             "output_feature_configured": False
                         }
@@ -1815,7 +1816,8 @@ class test_show_mpls_forwarding_table(unittest.TestCase):
                             "mru": 0,
                             "label_stack": "{}",
                             "vpn_route": "L3VPN-0051",
-                            "output_feature_configured": False
+                            "output_feature_configured": False,
+                            "broadcast": True,
                         }
                     }
                 }
@@ -1840,7 +1842,7 @@ class test_show_mpls_forwarding_table(unittest.TestCase):
     2641       No Label   172.16.100.100/32[V]   \
                                            0             Po1.51     192.168.10.253
         MAC/Encaps=18/18, MRU=1530, Label Stack{}
-        00002440156384B261CB1480810000330800
+        AABBCC032800AABBCC0325018847 00010000
         VPN route: L3VPN-0051
         No output feature configured
     2642       No Label   192.168.10.0/24[V]   \
@@ -1848,6 +1850,7 @@ class test_show_mpls_forwarding_table(unittest.TestCase):
         MAC/Encaps=0/0, MRU=0, Label Stack{}
         VPN route: L3VPN-0051
         No output feature configured
+        Broadcast
  '''
                      }
 

@@ -1761,7 +1761,8 @@ class ShowMplsForwardingTableSchema(MetaParser):
                             'bytes_label_switched': int,
                             Optional('next_hop'): str,
                             'mac': int,
-                            Optional('code'): str,
+                            Optional('macstr'): str,
+                            Optional('lstack'): str,
                             'encaps': int,
                             'mru': int,
                             'label_stack': str,
@@ -1769,6 +1770,7 @@ class ShowMplsForwardingTableSchema(MetaParser):
                             'output_feature_configured': bool,
                             Optional('pre_destination'): str,
                             Optional('slots'): list,
+                            Optional('broadcast'):bool,
                         }
                     }
                 }
@@ -1821,13 +1823,16 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         #         MAC/Encaps=18/18, MRU=1530, Label Stack{}
         p3 = re.compile(r'^MAC/Encaps=(?P<mac>\d+)/(?P<encaps>\d+), +MRU=(?P<mru>[\d]+), +Label +Stack(?P<label_stack>[\S\s]+)$')
         #         00002440156384B261CB1480810000330800
-        p4 = re.compile(r'^(?P<code>[0-9A-F]+)$')
+        #         AABBCC032800AABBCC0325018847 00010000
+        p4 = re.compile(r'^(?P<code>[0-9A-F]+)( +(?P<lstack>\d+))?$')
         #         VPN route: L3VPN-0051
         p5 = re.compile(r'^VPN +route: +(?P<vpn_route>\S+)$')
         #         No output feature configured
         p6 = re.compile(r'^No +output +feature +configured$')
         #     Per-destination load-sharing, slots: 0 2 4 6 8 10 12 14
         p7 = re.compile(r'^Per\-destination +(?P<pre_destination>[\S\s]+), +slots: +(?P<slots>[\d\s]+)$')
+        #      Broadcast
+        p8 = re.compile(r'^(B|b)roadcast$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1890,7 +1895,9 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                feature_dict.update({'code': group['code']})
+                feature_dict.update({'macstr': group['code']})
+                if group['lstack']:
+                    feature_dict.update({'lstack': group['lstack']})
                 continue
 
             #     VPN route: L3VPN-0051
@@ -1912,6 +1919,12 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                 group = m.groupdict()
                 feature_dict.update({'pre_destination': group['pre_destination']})
                 feature_dict.update({'slots': group['slots'].split()})
+                continue
+
+            #   Broadcast
+            m = p8.match(line)
+            if m:
+                feature_dict.update({'broadcast': True})
                 continue
 
         return result_dict
