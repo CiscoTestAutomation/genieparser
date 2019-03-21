@@ -26,7 +26,8 @@ from genie.libs.parser.iosxe.show_ospf import ShowIpOspf,\
                                               ShowIpOspfMplsLdpInterface,\
                                               ShowIpOspfMplsTrafficEngLink,\
                                               ShowIpOspfMaxMetric,\
-                                              ShowIpOspfTraffic
+                                              ShowIpOspfTraffic,\
+                                              ShowIpOspfNeighbor
 
 
 # ============================
@@ -7461,6 +7462,85 @@ class test_show_ip_ospf_traffic(unittest.TestCase):
         obj = ShowIpOspfTraffic(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+
+
+# ============================================
+# Unit test for 'show ip ospf neighbor '
+# ============================================
+class test_show_ip_ospf_neighbor(unittest.TestCase):
+
+    '''Unit test for "show ip ospf neighbor" '''
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'interfaces': 
+            {'GigabitEthernet0/0/0': 
+                {'neighbors':
+                    {'172.18.197.242':
+                        {'address': '172.19.197.93',
+                        'dead_time': '00:00:32',
+                        'priority': 1,
+                        'state': 'FULL/BDR'},
+                    '172.19.197.251':
+                        {'address': '172.19.197.91',
+                        'dead_time': '00:00:32',
+                        'priority': 1,
+                        'state': 'FULL/BDR'}}},
+            'GigabitEthernet0/0/2': 
+                {'neighbors':
+                    {'172.19.197.252': 
+                        {'address': '172.19.197.92',
+                        'dead_time': '00:00:32',
+                        'priority': 1,
+                        'state': 'FULL/BDR'}}},
+            'GigabitEthernet0/0/3': 
+                {'neighbors':
+                    {'172.19.197.253':
+                        {'address': '172.19.197.94',
+                        'dead_time': '00:00:32',
+                        'priority': 1,
+                        'state': 'FULL/BDR'}}},
+            'GigabitEthernet0/0/4': 
+                {'neighbors':
+                    {'172.19.197.254':
+                        {'address': '172.19.197.90',
+                        'dead_time': '00:00:32',
+                        'priority': 1,
+                        'state': 'FULL/BDR'}}}}}
+
+
+    golden_output = {'execute.return_value':'''
+        Router#show ip ospf neighbor
+        Load for five secs: 2%/0%; one minute: 9%; five minutes: 15%
+        Time source is NTP, 20:44:07.304 JST Wed Nov 2 2016
+
+
+        Neighbor ID     Pri   State           Dead Time   Address         Interface
+        172.18.197.242   1   FULL/BDR        00:00:32    172.19.197.93  GigabitEthernet0/0/0
+        172.19.197.251   1   FULL/BDR        00:00:32    172.19.197.91  GigabitEthernet0/0/0
+        172.19.197.252   1   FULL/BDR        00:00:32    172.19.197.92  GigabitEthernet0/0/2
+        172.19.197.253   1   FULL/BDR        00:00:32    172.19.197.94  GigabitEthernet0/0/3
+        172.19.197.254   1   FULL/BDR        00:00:32    172.19.197.90  GigabitEthernet0/0/4
+        Router#
+        '''}
+
+    def test_show_ip_ospf_neighbor_empty(self):
+        self.maxDiff= None
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpOspfNeighbor(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_ip_ospf_neighbor_full1(self):
+        self.maxDiff = None
+        self.device=Mock(**self.golden_output)
+        obj=ShowIpOspfNeighbor(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
 
 
 if __name__ == '__main__':

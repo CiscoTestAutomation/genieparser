@@ -5998,3 +5998,81 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
 
         return ret_dict
 
+
+# ===========================
+# Schema for:
+#   * 'show ip ospf neighbor'
+# ===========================
+class ShowIpOspfNeighborSchema(MetaParser):
+
+    ''' Schema for:
+        * 'show ip ospf neighbor'
+    '''
+
+    schema = {
+        'interfaces':
+            {Any():
+                {'neighbors':
+                    {Any():
+                        {'priority': int,
+                        'state':str,
+                        'dead_time':str,
+                        'address':str,
+                        },
+                    },
+                },
+            },
+        }
+
+
+# ===========================
+# Parser for:
+#   * 'show ip ospf neighbor'
+# ===========================
+class ShowIpOspfNeighbor(ShowIpOspfNeighborSchema):
+
+    ''' Parser for:
+        * 'show ip ospf neighbor'
+    '''
+
+    cli_command = 'show ip ospf neighbor'
+
+    def cli(self, output=None):
+
+        if output is None:
+            # Execute command on device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Init vars
+        ret_dict = {}
+
+        # Neighbor ID     Pri   State           Dead Time   Address         Interface
+        # 172.16.197.253 128   FULL/DR         00:00:30    172.16.165.49  GigabitEthernet0/0/1
+        
+        p1=re.compile(r'^(?P<neighbor>\S+) +(?P<pri>\d+) +(?P<state>\S+) +(?P<dead_time>\S+)'
+                       ' +(?P<address>\S+) +(?P<interface>\S+)$')
+
+        for line in out.splitlines():
+
+            line = line.strip()
+            m = p1.match(line)
+            if m:
+                neighbor = m.groupdict()['neighbor']
+                interface = m.groupdict()['interface']
+
+                #Build Dict
+
+                intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(interface, {})
+                nbr_dict = intf_dict.setdefault('neighbors', {}).setdefault(neighbor, {})
+
+                # Set values
+                nbr_dict['priority'] = int(m.groupdict()['pri'])
+                nbr_dict['state'] = str(m.groupdict()['state'])
+                nbr_dict['dead_time'] = str(m.groupdict()['dead_time'])
+                nbr_dict['address'] = str(m.groupdict()['address'])
+                continue
+
+        return ret_dict
+
