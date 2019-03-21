@@ -158,5 +158,4 @@ class ShowServiceGroupStats(ShowServiceGroupStatsSchema):
 						{group['interface_name']: int(group['sub_interface'])})
 					continue
 				group_statistics_found = False
-
 		return ret_dict
