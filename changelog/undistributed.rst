@@ -115,3 +115,11 @@
     * Add ShowEthernetServiceInstanceDetail for:
             show ethernet service instance detail
             show ethernet service instance interface <interface> detail
+
+--------------------------------------------------------------------------------
+                                    QOS
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowServiceGroupTrafficStats for:
+        show service-group traffic-stats
+        show service-group traffic-stats <group>
