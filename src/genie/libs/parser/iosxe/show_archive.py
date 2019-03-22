@@ -130,6 +130,7 @@ class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
                 command = self.cli_command[1].format(fileA=fileA, fileB=fileB)
             if fileA and not fileB:
                 if cmd:
+                    print('Command incremental - diff')
                     command = cmd.format(fileA=fileA)
                 else:
                     command = self.cli_command[2].format(fileA=fileA)
@@ -155,6 +156,7 @@ class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
 
         for line in out.splitlines():
             line = line.strip()
+            print(line, '-', cmd)
             if not cmd:
                 if not contextual_found:
                     #!Contextual Config Diffs
