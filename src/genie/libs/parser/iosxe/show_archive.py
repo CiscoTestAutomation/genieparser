@@ -156,7 +156,7 @@ class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
 
         for line in out.splitlines():
             line = line.strip()
-            print(line, '-', cmd)
+            
             if not cmd:
                 if not contextual_found:
                     #!Contextual Config Diffs
@@ -174,8 +174,9 @@ class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
                         contextual_config_diff.append(group['line_info'])
                         continue
             else:
-                print(line, '---')
+                print(line, '====================')
                 # !List of Commands:
+                print(line, '====================')
                 m = p3.match(line)
                 if m:
 
