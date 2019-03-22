@@ -979,9 +979,11 @@ class ShowInventory(ShowInventorySchema):
         name = descr = slot = subslot = pid = ''
         inventory_dict = {}
         for line in out.splitlines():
-            line = line.rstrip()
+            line = line.strip()
 
             # check 1st line and get slot number
+            # NAME: "subslot 0/0 transceiver 2", DESCR: "GE T"
+            # NAME: "NIM subslot 0/0", DESCR: "Front Panel 3 ports Gigabitethernet Module"
             p1 = re.compile(r'^\s*NAME\:\s+\"(?P<name>.*)\",\s+DESCR\:\s+\"(?P<descr>.*)\"')
             m = p1.match(line)
             if m:
@@ -1020,14 +1022,19 @@ class ShowInventory(ShowInventorySchema):
                 continue
 
             # check 2nd line
-            p2 = re.compile(r'^\s*PID\: +(?P<pid>\S+)\s+\,\s+VID\:\s+(?P<vid>\S+)\s+\,\s+SN\:\s+(?P<sn>.*)$')
+
+            # PID: SFP-GE-T            , VID: V02  , SN: MTC2139029X
+            # PID: ISR4331-3x1GE     , VID: V01  , SN:
+            # PID: ISR4331/K9        , VID:   , SN: FDO21520TGH
+            # PID: ISR4331/K9        , VID:      , SN:
+            p2 = re.compile(r'^\s*PID: +(?P<pid>\S+) +, +VID: +((?P<vid>\S+) +)?, +SN:( +(?P<sn>.*))?$')
             m = p2.match(line)
             if m:
                 if 'WS-C' in pid:
                     old_pid = pid
                 pid = m.groupdict()['pid']
-                vid = m.groupdict()['vid']
-                sn = m.groupdict()['sn']
+                vid = m.groupdict()['vid'] or ''
+                sn = m.groupdict()['sn'] or ''
                 if name:
                     if 'STACK' in pid:
                         inventory_dict['main'] = {}
@@ -1056,7 +1063,7 @@ class ShowInventory(ShowInventorySchema):
                                         inventory_dict['slot'][slot]['rp'][pid]['pid'] = pid
                                         inventory_dict['slot'][slot]['rp'][pid]['vid'] = vid
                                         inventory_dict['slot'][slot]['rp'][pid]['sn'] = sn
-                        elif 'SIP' in pid:
+                        elif 'SIP' in pid or 'ISR' in pid:
                             if 'lc' not in inventory_dict['slot'][slot]:
                                 inventory_dict['slot'][slot]['lc'] = {}
                                 if pid not in inventory_dict['slot'][slot]['lc']:
