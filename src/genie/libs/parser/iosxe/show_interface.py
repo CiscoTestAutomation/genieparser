@@ -2795,7 +2795,7 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
 class ShowInterfaceStatsSchema(MetaParser):
     """Schema for:
         show interface <interface> stats
-        show interface stats             """
+        show interface stats"""
 
     schema = {
         Any(): {
@@ -2817,7 +2817,7 @@ class ShowInterfaceStatsSchema(MetaParser):
 class ShowInterfaceStats(ShowInterfaceStatsSchema):
     """Parser for :
         show interface <interface> stats
-        show interface stats            """
+        show interface stats"""
 
     cli_command = ['show interface stats' ,'show interface {interface} stats']
 
