@@ -103,3 +103,13 @@
 * IOSXE
     * Add ShowConfigurationLock for:
         show configuration lock
+
+--------------------------------------------------------------------------------
+                                    L2VPN
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowBridgeDomain for:
+            show bridge-domain
+            show bridge-domain <WORD>
+            show bridge-domain | count <WORD>
+
