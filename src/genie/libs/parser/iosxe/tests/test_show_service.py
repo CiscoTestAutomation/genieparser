@@ -22,11 +22,9 @@ class test_show_service_group_state(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     
     golden_parsed_output = {
-        'service_group_state':{
-            'group': {
-                '1' : {
-                'state' : 'Up'
-                }
+        'group': {
+            '1' : {
+            'state' : 'Up'
             }
         }
     }

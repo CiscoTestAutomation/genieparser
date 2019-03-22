@@ -20,11 +20,9 @@ class ShowServiceGroupStateSchema(MetaParser):
 	"""
 
 	schema = {
-		'service_group_state': {
-			'group': {
-				Any() : {
-					'state' : str
-				}
+		'group': {
+			Any() : {
+				'state' : str
 			}
 		}
 	}
@@ -61,7 +59,6 @@ class ShowServiceGroupState(ShowServiceGroupStateSchema):
 				m = p1.match(line)
 				if m:
 					service_group_state = ret_dict.setdefault(
-						'service_group_state', {}).setdefault(
 						'group', {})
 					group_found = True
 				continue
@@ -74,5 +71,4 @@ class ShowServiceGroupState(ShowServiceGroupStateSchema):
 						group['group_number'], {}).setdefault(
 						'state' , group['state'])
 					continue
-
 		return ret_dict
