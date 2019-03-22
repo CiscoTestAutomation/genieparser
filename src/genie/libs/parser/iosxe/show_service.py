@@ -11,7 +11,8 @@ from genie.metaparser.util.schemaengine import Schema, \
                                          Any
 
 # import parser utils
-from genie.libs.parser.utils.common import Common
+from genie.libs.parser.utils.common import Common, \
+									 format_output
 
 # ==============================================================
 # Parser for 'show service-group stats'
@@ -29,8 +30,11 @@ class ShowServiceGroupStatsSchema(MetaParser):
 			},
 			Any() : {
 				'num_of_interfaces' : int,
-				'num_of_members' : int,
-				Any(): int,
+				'num_of_members' : {
+					int : {
+						Any() : int
+					}
+				},
 				'members_joined': int,
 				'members_left': int
 			}
@@ -73,7 +77,7 @@ class ShowServiceGroupStats(ShowServiceGroupStatsSchema):
 		p6 = re.compile(r'^\s*Number +of +members: +(?P<num_of_members>\d+)$')
 
 		#    Sub-interface:           2
-		p7 = re.compile(r'^\s*(?P<interface_name>[\S\s]+): +(?P<sub_interface>\d+)$')
+		p7 = re.compile(r'^\s*(?P<interface_name>[\w\W]+):? +(?P<sub_interface>\d+)$')
 
 		# Members joined:            103
 		p8 = re.compile(r'^\s*Members +joined: +(?P<members_joined>\d+)$')
@@ -83,6 +87,7 @@ class ShowServiceGroupStats(ShowServiceGroupStatsSchema):
 
 		for line in out.splitlines():
 			line = line.strip()
+
 			if not global_statistics_found:
 				# Service Group global statistics:
 				m = p1.match(line)
@@ -135,8 +140,9 @@ class ShowServiceGroupStats(ShowServiceGroupStatsSchema):
 				m = p6.match(line)
 				if m:
 					group = m.groupdict()
-					group_statistics.update({k:
-						int(v) for k, v in group.items()})
+					num_of_members = group_statistics. \
+						setdefault('num_of_members', {}). \
+						setdefault(int(group['num_of_members']), {})
 					continue
 
                 # Members joined:         103
@@ -160,8 +166,9 @@ class ShowServiceGroupStats(ShowServiceGroupStatsSchema):
 				m = p7.match(line)
 				if m:
 					group = m.groupdict()
-					group_statistics.update(
-						{group['interface_name']: int(group['sub_interface'])})
+					key = group['interface_name'].rstrip() \
+					.replace('-','_').replace(' ','_').lower()
+					num_of_members.update({key:int(group['sub_interface'])})
 					continue
-				
+		
 		return ret_dict
