@@ -172,9 +172,11 @@ class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
                         contextual_config_diff.append(group['line_info'])
                         continue
             else:
+                print(line, '---')
                 # !List of Commands:
                 m = p3.match(line)
                 if m:
+
                     incremental_diff = ret_dict.setdefault('diff',[])
                     continue
                 # hostname router 192.168.5.2/22
