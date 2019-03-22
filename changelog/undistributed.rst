@@ -96,3 +96,12 @@
           show mpls ldp igp sync all
           show mpls ldp igp sync interface <interface>
           show mpls ldp igp sync vrf <vrf>
+
+--------------------------------------------------------------------------------
+                                    L2VPN
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowBridgeDomain for:
+            show bridge-domain
+            show bridge-domain <WORD>
+            show bridge-domain | count <WORD>
