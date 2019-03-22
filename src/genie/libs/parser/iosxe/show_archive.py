@@ -130,7 +130,6 @@ class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
                 command = self.cli_command[1].format(fileA=fileA, fileB=fileB)
             if fileA and not fileB:
                 if cmd:
-                    print('Command incremental - diff')
                     command = cmd.format(fileA=fileA)
                 else:
                     command = self.cli_command[2].format(fileA=fileA)
@@ -150,9 +149,15 @@ class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
         # -hostname Test4
         p2 = re.compile(r'^\s*(?P<line_info>(\+|\-)[\w\W]+)$')
         # !List of commands:
-        p3 = re.compile(r'^\s*!List +of +(C|c)ommands:')
+        p3 = re.compile(r'^\s*!List +of +(C|c)ommands:$')
+        # Load for five secs: 16%/0%; one minute: 30%; five minutes: 23%
+        p4 = re.compile(r'^Load +for +five +secs: +\d+%\/\d+%; +one +minute: +\d+%; +five +minutes: +\d+%$')
+        # Time source is NTP, 19:16:19.992 JST Thu Sep 15 2016
+        p5 = re.compile(r'^Time +source +is +\w+, +\d+:\d+:\d+\.\d+ +\w+ +\w+ +\w+ +\d+ +\d+$')
+        # test#show archive config incremental-diffs bootflash:A.cfg
+        p6 = re.compile(r'^(test#|Device#|Router#)')
         # hostname Router3
-        p4 = re.compile(r'^\s*(?P<line_info>([\w\W]+))$')
+        p7 = re.compile(r'^\s*(?P<line_info>([\w\W]+))$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -174,19 +179,26 @@ class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
                         contextual_config_diff.append(group['line_info'])
                         continue
             else:
-                print(line, '====================')
                 # !List of Commands:
-                print(line, '====================')
                 m = p3.match(line)
                 if m:
-
                     incremental_diff = ret_dict.setdefault('diff',[])
+                    continue
+                m = p4.match(line)
+                if m:
+                    continue
+                m = p5.match(line)
+                if m:
+                    continue
+                m = p6.match(line)
+                if m:
                     continue
                 # hostname router 192.168.5.2/22
                 # end
-                m = p4.match(line)
+                m = p7.match(line)
                 if m:
                     group = m.groupdict()
+                    incremental_diff = ret_dict.setdefault('diff',[])
                     incremental_diff.append(group['line_info'])
                     continue
         return ret_dict
