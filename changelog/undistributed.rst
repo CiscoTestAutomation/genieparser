@@ -97,10 +97,29 @@
           show mpls ldp igp sync interface <interface>
           show mpls ldp igp sync vrf <vrf>
 
-
 --------------------------------------------------------------------------------
                                     QOS
 --------------------------------------------------------------------------------
 * IOSXE
     * Add ShowServiceGroupStats for:
         show service-group stats
+
+--------------------------------------------------------------------------------
+                                 CONFIG
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowConfigurationLock for:
+        show configuration lock
+
+--------------------------------------------------------------------------------
+                                    L2VPN
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowBridgeDomain for:
+            show bridge-domain
+            show bridge-domain <WORD>
+            show bridge-domain | count <WORD>
+    * Add ShowEthernetServiceInstanceDetail for:
+            show ethernet service instance detail
+            show ethernet service instance interface <interface> detail
+

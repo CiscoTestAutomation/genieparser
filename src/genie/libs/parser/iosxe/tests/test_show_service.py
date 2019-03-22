@@ -22,16 +22,18 @@ class test_show_service_group_stats(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     
     golden_parsed_output = {
-        'global_statistics': {
-            'num_of_groups' : 1,
-            'num_of_members' : 2
-        },
-        'Service Group 1 statistics' : {
-            'num_of_interfaces' : 1,
-            'num_of_members' : 2,
-            'Sub-interface': 2,
-            'members_joined': 103,
-            'members_left': 101
+        'service_group_statistics':{
+            'global': {
+                'num_of_groups' : 1,
+                'num_of_members' : 2
+            },
+            '1' : {
+                'num_of_interfaces' : 1,
+                'num_of_members' : 2,
+                'Sub-interface': 2,
+                'members_joined': 103,
+                'members_left': 101
+            }
         }
     }
 

@@ -22,16 +22,18 @@ class ShowServiceGroupStatsSchema(MetaParser):
 	"""
 
 	schema = {
-		'global_statistics': {
+		'service_group_statistics':{
+			'global': {
 			'num_of_groups' : int,
 			'num_of_members' : int
-		},
-		Any() : {
-			'num_of_interfaces' : int,
-			'num_of_members' : int,
-			Any(): int,
-			'members_joined': int,
-			'members_left': int
+			},
+			Any() : {
+				'num_of_interfaces' : int,
+				'num_of_members' : int,
+				Any(): int,
+				'members_joined': int,
+				'members_left': int
+			}
 		}
 	}
 
@@ -62,7 +64,7 @@ class ShowServiceGroupStats(ShowServiceGroupStatsSchema):
 		p3 = re.compile(r'^\s*Number +of +members: +(?P<num_of_members>\d+)$')
 
 		# Service Group 1 statistics:
-		p4 = re.compile(r'^\s*(?P<group_statistics>Service +Group +\d+ +statistics):$')
+		p4 = re.compile(r'^\s*Service +Group +(?P<group_statistics>\d+) +statistics:$')
 
 		# Number of Interfaces:      1
 		p5 = re.compile(r'^\s*Number +of +Interfaces: +(?P<num_of_interfaces>\d+)$')
@@ -85,8 +87,10 @@ class ShowServiceGroupStats(ShowServiceGroupStatsSchema):
 				# Service Group global statistics:
 				m = p1.match(line)
 				if m:
-					global_statistics = ret_dict.setdefault( \
-						'global_statistics', {})
+					service_group_statistics = ret_dict.setdefault( \
+						'service_group_statistics', {})
+					global_statistics = service_group_statistics.setdefault( \
+						'global', {})
 					global_statistics_found = True
 					group_statistics_found = False
 					continue
@@ -112,7 +116,7 @@ class ShowServiceGroupStats(ShowServiceGroupStatsSchema):
 				m = p4.match(line)
 				if m:
 					group = m.groupdict()
-					group_statistics = ret_dict.setdefault( \
+					group_statistics = service_group_statistics.setdefault( \
 						group['group_statistics'], {})
 					group_statistics_found = True
 					global_statistics_found = False
