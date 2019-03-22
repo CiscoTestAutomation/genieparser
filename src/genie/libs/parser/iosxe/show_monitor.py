@@ -204,26 +204,37 @@ class ShowMonitorCaptureSchema(MetaParser):
                 {'target_type':
                     {'interface': str,
                      'direction': str,
-                     'status': str
+                     'status': str,
                     },
-                'filter_details': str,
+                'filter_details':
+                    {'filter_details_type':str,
+                      Optional('source_ip'):str,
+                      Optional('destination_ip'): str,
+                      Optional('protocol'): str,
+                    },
                 'buffer_details':
                     {'buffer_type': str,
-                     'buffer_size': int
+                     Optional('buffer_size'): int,
+                    },
+                Optional('file_details'):
+                    {Optional('file_name'): str,
+                     Optional('file_size'): int,
+                     Optional('file_number'): int,
+                     Optional('size_of_buffer'): int
                     },
                 'limit_details':
                     {'packets_number': int,
                      'packets_capture_duaration': int,
                      'packets_size': int,
-                     'maximum_packets_number': int,
-                     'packet_sampling_rate': int
+                     Optional('maximum_packets_number'): int,
+                     Optional('packets_per_second'): int,
+                     'packet_sampling_rate': int,
                     },
                 },
             },
         }
 
-
-# =========================================
+    # =========================================
 # Parser for 'show monitor capture'
 # =========================================
 class ShowMonitorCapture(ShowMonitorCaptureSchema):
@@ -252,40 +263,71 @@ class ShowMonitorCapture(ShowMonitorCaptureSchema):
 
         # Interface: Control Plane, Direction : both
         # Interface: GigabitEthernet0/0/0, Direction: both
-        p3 = re.compile(r'^Interface: +(?P<interface>([\w\s\/]+)), +Direction *:+ (?P<direction>(\w+))$')
+        p2_1 = re.compile(r'^Interface: +(?P<interface>([\w\s\/]+)), +Direction *:+ (?P<direction>(\w+))$')
 
         # Status : Inactive
-        p4 = re.compile(r'^Status +: +(?P<status>(\w+))$')
+        p2_2 = re.compile(r'^Status +: +(?P<status>(\w+))$')
 
-        #Capture all packets
-        p5 = re.compile(r'^(?P<filter_details>([\w\s]+))$')
+        # Filter Details:
+        p3=re.compile(r'^Filter +Details:+$')
+
+        # Capture all packets
+        # IPv4
+        p3_1 = re.compile(r'^(?P<filter_details_type>([\w\s]+))$')
+
+        # Source IP:  any
+        p3_2=re.compile(r'^Source +IP: +(?P<source_ip>(\w+))$')
+
+        # Destination IP:  any
+        p3_3 = re.compile(r'^Destination +IP: +(?P<destination_ip>(\w+))$')
+
+        #Protocol: any
+        p3_4 = re.compile(r'^Protocol: +(?P<protocol>(\w+))$')
 
         # Buffer Details:
-        p6 = re.compile(r'^Buffer +Details:+$')
+        p4 = re.compile(r'^Buffer +Details:+$')
 
         # Buffer Type: LINEAR (default)
-        p7 = re.compile(r'^Buffer +Type: +(?P<buffer_type>(\w+))')
+        p4_1 = re.compile(r'^Buffer +Type: +(?P<buffer_type>(.*))$')
 
         # Buffer Size (in MB): 10
-        p8 = re.compile(r'^Buffer +Size +\(in MB\): +(?P<buffer_size>(\d+))$')
+        p4_2 = re.compile(r'^Buffer +Size +\(in MB\): +(?P<buffer_size>(\d+))$')
+
+        # File Details:
+        p5 = re.compile(r'^File +Details:+$')
+
+        # Associated file name: flash:mycap.pcap
+        p5_1 = re.compile(r'^Associated +file +name: +(?P<file_name>(.*))$')
+
+        # Total size of files(in MB): 5
+        p5_2 = re.compile(r'^Total +size +of +files+\(in MB\): +(?P<file_size>(\d+))$')
+
+        # Number of files in ring: 2
+        p5_3 = re.compile(r'^Number +of +files +in +ring: +(?P<file_number>(\d+))$')
+
+        # Size of buffer(in MB): 10
+        p5_4 = re.compile(r'^Size +of +buffer+\(in MB\): +(?P<size_of_buffer>(\d+))$')
 
         # Limit Details:
-        p9 = re.compile(r'^Limit +Details:+$')
+        p6 = re.compile(r'^Limit +Details:+$')
 
         # Number of Packets to capture: 0 (no limit)
-        p10 = re.compile(r'^Number +of +Packets +to +capture: +(?P<packets_number>(\d+))')
+        p6_1 = re.compile(r'^Number +of +Packets +to +capture: +(?P<packets_number>(\d+))')
 
         # Packet Capture duration: 0 (no limit)
-        p11 = re.compile(r'^Packet +Capture +duration: +(?P<packets_capture_duaration>(\d+))')
+        p6_2 = re.compile(r'^Packet +Capture +duration: +(?P<packets_capture_duaration>(\d+))')
 
         # Packet Size to capture: 0 (no limit)
-        p12 = re.compile(r'^Packet +Size +to +capture: +(?P<packets_size>(\d+))')
+        p6_3 = re.compile(r'^Packet +Size +to +capture: +(?P<packets_size>(\d+))')
 
         # Maximum number of packets to capture per second: 1000
-        p13 = re.compile(r'^Maximum +number +of +packets +to +capture +per +second: +(?P<maximum_packets_number>(\d+))$')
+        p6_4 = re.compile(r'^Maximum +number +of +packets +to +capture +per +second: +(?P<maximum_packets_number>(\d+))$')
+
+        # Packets per second: 0 (no limit)
+        p6_5=re.compile(r'Packets +per +second: +(?P<packets_per_second>(\d+))')
 
         # Packet sampling rate: 0 (no sampling)
-        p14 = re.compile(r'^Packet +sampling +rate: +(?P<packet_sampling_rate>(\d+))')
+        p6_6 = re.compile(r'^Packet +sampling +rate: +(?P<packet_sampling_rate>(\d+))')
 
         for line in out.splitlines():
             line = line.strip()
@@ -306,78 +348,136 @@ class ShowMonitorCapture(ShowMonitorCaptureSchema):
 
             # Interface: Control Plane, Direction : both
             # Interface: GigabitEthernet0/0/0, Direction: both
-            m = p3.match(line)
+            m = p2_1.match(line)
             if m:
                 target_type_dict['interface'] = str(m.groupdict()['interface'])
                 target_type_dict['direction'] = str(m.groupdict()['direction'])
                 continue
 
             # Status : Active
-            m = p4.match(line)
+            m = p2_2.match(line)
             if m:
                 target_type_dict['status'] = str(m.groupdict()['status'])
                 continue
 
             # Filter Details:
-            # Capture all packets
-            m = p5.match(line)
+            m=p3.match(line)
             if m:
-                status_dict['filter_details']=str(m.groupdict()['filter_details'])
+                filter_dict = status_dict.setdefault('filter_details',{})
+                continue
+
+            # Capture all packets
+            m = p3_1.match(line)
+            if m:
+                filter_dict['filter_details_type']=str(m.groupdict()['filter_details_type'])
+                continue
+
+            # Source IP:  any
+            m = p3_2.match(line)
+            if m:
+                filter_dict['source_ip'] = str(m.groupdict()['source_ip'])
+                continue
+
+            # Destination IP:  any
+            m = p3_3.match(line)
+            if m:
+                filter_dict['destination_ip'] = str(m.groupdict()['destination_ip'])
+                continue
+
+            # Protocol: any
+            m = p3_4.match(line)
+            if m:
+                filter_dict['protocol'] = str(m.groupdict()['protocol'])
                 continue
 
             # Buffer Details:
-            m = p6.match(line)
+            m = p4.match(line)
             if m:
                 buffer_dict = status_dict.setdefault('buffer_details',{})
                 continue
 
             # Buffer Type: LINEAR (default)
-            m = p7.match(line)
+            m = p4_1.match(line)
             if m:
                 buffer_dict['buffer_type'] = str(m.groupdict()['buffer_type'])
                 continue
 
             # Buffer Size (in MB): 10
-            m = p8.match(line)
+            m = p4_2.match(line)
             if m:
                 buffer_dict['buffer_size'] = int(m.groupdict()['buffer_size'])
                 continue
 
+            # File Details:
+            m = p5.match(line)
+            if m:
+                file_dict = status_dict.setdefault('file_details', {})
+                continue
+
+            # Associated file name: flash:mycap.pcap
+            m = p5_1.match(line)
+            if m:
+                file_dict['file_name'] = str(m.groupdict()['file_name'])
+                continue
+
+            # Total size of files(in MB): 5
+            m = p5_2.match(line)
+            if m:
+                file_dict['file_size'] = int(m.groupdict()['file_size'])
+                continue
+
+            # Number of files in ring: 2
+            m = p5_3.match(line)
+            if m:
+                file_dict['file_number'] = int(m.groupdict()['file_number'])
+                continue
+
+            # Size of buffer(in MB): 10
+            m = p5_4.match(line)
+            if m:
+                file_dict['size_of_buffer'] = int(m.groupdict()['size_of_buffer'])
+                continue
+
             # Limit Details:
-            m = p9.match(line)
+            m = p6.match(line)
             if m:
                 limit_dict = status_dict.setdefault('limit_details', {})
                 continue
 
             # Number of Packets to capture: 0 (no limit)
-            m = p10.match(line)
+            m = p6_1.match(line)
             if m:
                 limit_dict['packets_number'] = int(m.groupdict()['packets_number'])
                 continue
 
             # Packet Capture duration: 0 (no limit)
-            m = p11.match(line)
+            m = p6_2.match(line)
             if m:
                 limit_dict['packets_capture_duaration'] = int(m.groupdict()['packets_capture_duaration'])
                 continue
 
             # Packet Size to capture: 0 (no limit)
-            m = p12.match(line)
+            m = p6_3.match(line)
             if m:
                 limit_dict['packets_size'] = int(m.groupdict()['packets_size'])
                 continue
 
             # Maximum number of packets to capture per second: 1000
-            m = p13.match(line)
+            m = p6_4.match(line)
             if m:
                 limit_dict['maximum_packets_number'] = int(m.groupdict()['maximum_packets_number'])
                 continue
 
+            # Packets per second: 0 (no limit)
+            m = p6_5.match(line)
+            if m:
+                limit_dict['packets_per_second'] = int(m.groupdict()['packets_per_second'])
+                continue
+
             # Packet sampling rate: 0 (no sampling)
-            m = p14.match(line)
+            m = p6_6.match(line)
             if m:
                 limit_dict['packet_sampling_rate'] = int(m.groupdict()['packet_sampling_rate'])
                 continue
-
 
         return ret_dict
