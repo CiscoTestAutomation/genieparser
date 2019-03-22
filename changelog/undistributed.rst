@@ -61,6 +61,7 @@
             show platform hardware qfp standby statistics drop
     * Add ShowPlatformHardwareSerdes for 'show platform hardware slot <x> serdes statistics'
     * Add ShowPlatformHardwareSerdesInternal for 'show platform hardware slot <x> serdes statistics internal'
+    * Add ShowProcessesCpuHistory for 'show processes cpu history'
 
 --------------------------------------------------------------------------------
                                     MPLS LDP
@@ -106,4 +107,12 @@
           show mpls interfaces <interface> detail
           show mpls interfaces detail
 
+--------------------------------------------------------------------------------
+                                    L2VPN
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowBridgeDomain for:
+            show bridge-domain
+            show bridge-domain <WORD>
+            show bridge-domain | count <WORD>
 
