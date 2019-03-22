@@ -128,12 +128,12 @@ class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
             # execute command to get output
             if fileA and fileB:
                 command = self.cli_command[1].format(fileA=fileA, fileB=fileB)
-            elif fileA:
+            if fileA and not fileB:
                 if cmd:
                     command = cmd.format(fileA=fileA)
                 else:
                     command = self.cli_command[2].format(fileA=fileA)
-            else:
+            if not fileA and not fileB:
                 command = self.cli_command[0]
             out = self.device.execute(command)
         else:
@@ -149,7 +149,7 @@ class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
         # -hostname Test4
         p2 = re.compile(r'^\s*(?P<line_info>(\+|\-)[\w\W]+)$')
         # !List of commands:
-        p3 = re.compile(r'^\s*!List +of +commands:$')
+        p3 = re.compile(r'^\s*!List +of +(C|c)ommands:$')
         # hostname Router3
         p4 = re.compile(r'^\s*(?P<line_info>([\w\W]+))$')
 

@@ -108,7 +108,7 @@ class test_show_archive_config_differences(unittest.TestCase):
     }
 
     golden_output_incremental_diff = {'execute.return_value': '''\
-            !List of commands:
+            !List of Commands:
             ip subnet-zero
             ip cef
             ip name-server 10.4.4.4
