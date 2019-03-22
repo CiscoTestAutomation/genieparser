@@ -1768,8 +1768,10 @@ class ShowMplsForwardingTableSchema(MetaParser):
                             'label_stack': str,
                             'vpn_route': str,
                             'output_feature_configured': bool,
-                            Optional('pre_destination'): str,
-                            Optional('slots'): list,
+                            Optional('load_sharing'): {
+                                'method': str,
+                                Optional('slots'): list,
+                            },
                             Optional('broadcast'):bool,
                         }
                     }
@@ -1830,7 +1832,7 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         #         No output feature configured
         p6 = re.compile(r'^No +output +feature +configured$')
         #     Per-destination load-sharing, slots: 0 2 4 6 8 10 12 14
-        p7 = re.compile(r'^Per\-destination +(?P<pre_destination>[\S\s]+), +slots: +(?P<slots>[\d\s]+)$')
+        p7 = re.compile(r'^(?P<method>\S+) +load\-sharing, +slots: +(?P<slots>[\d\s]+)$')
         #      Broadcast
         p8 = re.compile(r'^(B|b)roadcast$')
 
@@ -1917,8 +1919,9 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
             m = p7.match(line)
             if m:
                 group = m.groupdict()
-                feature_dict.update({'pre_destination': group['pre_destination']})
-                feature_dict.update({'slots': group['slots'].split()})
+                load_dict = feature_dict.setdefault('load_sharing', {})
+                load_dict.update({'method': group['method'].lower()})
+                load_dict.update({'slots': group['slots'].split()})
                 continue
 
             #   Broadcast
@@ -1932,6 +1935,8 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
 class ShowMplsInterfaceSchema(MetaParser):
     """Schema for
         show mpls interfaces
+        show mpls interfaces <interface>
+        show mpls interfaces <interface> detail
         show mpls interfaces detail"""
 
     schema = {
@@ -1944,11 +1949,16 @@ class ShowMplsInterfaceSchema(MetaParser):
                 Optional('operational'): str,
                 Optional('type'): str,
                 'session': str,
-                Optional('ip_labeling_enabled'): str,
+                Optional('ip_labeling_enabled'):{
+                    Any():{
+                        'ldp': bool,
+                        'interface_config': bool,
+                    }
+                },
                 Optional('lsp_tunnel_labeling_enabled'): bool,
                 Optional('lp_frr_labeling_enabled'): bool,
                 Optional('bgp_labeling_enabled'): bool,
-                Optional('mpls'): str,
+                Optional('mpls_operational'): bool,
                 Optional('mtu'): int,
             }
         }
@@ -1958,6 +1968,7 @@ class ShowMplsInterfaceSchema(MetaParser):
 class ShowMplsInterface(ShowMplsInterfaceSchema):
     """Parser for
         show mpls interfaces
+        show mpls interfaces <interface>
         show mpls interfaces <interface> detail
         show mpls interfaces detail"""
 
@@ -2005,7 +2016,8 @@ class ShowMplsInterface(ShowMplsInterfaceSchema):
         #     BGP labeling not enabled
         p8 = re.compile(r'^BGP +labeling +((?P<bgp_labeling>\w+) )?enabled$')
         #     MPLS operational
-        p9 = re.compile(r'^MPLS +(?P<mpls_status>\w+)$')
+        #     MPLS not operational
+        p9 = re.compile(r'^MPLS +(?P<mpls_status>[\w\s]+)$')
         #     MTU = 1552
         p10 = re.compile(r'^MTU \= +(?P<mtu>\d+)$')
 
@@ -2045,12 +2057,14 @@ class ShowMplsInterface(ShowMplsInterfaceSchema):
             if m:
                 group = m.groupdict()
                 interface_dict.update({'session': group['session']})
+                labeling_dict = interface_dict.setdefault('ip_labeling_enabled',{}).setdefault(True, {})
+                labeling_dict.update({'ldp': True})
                 continue
 
             #     Interface config
             m = p5.match(line)
             if m:
-                interface_dict.update({'ip_labeling_enabled': 'Interface config'})
+                labeling_dict.update({'interface_config': True})
                 continue
 
             #     LSP Tunnel labeling not enabled
@@ -2090,7 +2104,11 @@ class ShowMplsInterface(ShowMplsInterfaceSchema):
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                interface_dict.update({'mpls': group['mpls_status']})
+                if 'not' in group['mpls_status']:
+                    mpls_flag = False
+                else:
+                    mpls_flag = True
+                interface_dict.update({'mpls_operational': mpls_flag})
                 continue
 
             #     MTU = 1552

@@ -1788,8 +1788,10 @@ class test_show_mpls_forwarding_table(unittest.TestCase):
                             'label_stack': '{}',
                             'vpn_route': 'L3VPN-0051',
                             'output_feature_configured': False,
-                            'pre_destination': 'load-sharing',
-                            'slots': ['0', '2', '4', '6', '8', '10', '12', '14'],
+                            'load_sharing':{
+                                'method': 'per-destination',
+                                'slots': ['0', '2', '4', '6', '8', '10', '12', '14'],
+                            }
                         },
                         2641: {
                             "outgoing_label": "No Label",
@@ -1896,12 +1898,17 @@ class test_show_mpls_interface(unittest.TestCase):
             "GigabitEthernet0/0/0": {
                 "type": "Unknown",
                 "session": "ldp",
-                "ip_labeling_enabled": "Interface config",
+                "ip_labeling_enabled": {
+                    True: {
+                        "ldp": True,
+                        "interface_config": True
+                    },
+                },
                 "lsp_tunnel_labeling_enabled": False,
                 "lp_frr_labeling_enabled": False,
                 "bgp_labeling_enabled": False,
                 "mtu": 1552,
-                "mpls": "operational"
+                "mpls_operational": True
             }
         }
     }
