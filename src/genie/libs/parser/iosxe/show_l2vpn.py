@@ -231,17 +231,17 @@ class ShowEthernetServiceInstanceDetailSchema(MetaParser):
     schema = {
         'service_instance': {
             Any(): {
-                'type': str,
+                Optional('type'): str,
                 Optional('description'): str,
                 'associated_interface': str,
                 Optional('associated_evc'): str,
-                'l2protocol_drop': bool,
+                Optional('l2protocol_drop'): bool,
                 Optional('ce_vlans'): str,
-                'encapsulation': str,
+                Optional('encapsulation'): str,
                 Optional('rewrite'): str,
                 Optional('control_policy'): str,
                 Optional('intiators'): str,
-                'dot1q_tunnel_ethertype': str,
+                Optional('dot1q_tunnel_ethertype'): str,
                 'state': str,
                 'efp_statistics': {
                     'pkts_in': int,
@@ -262,7 +262,6 @@ class ShowEthernetServiceInstanceDetail(ShowEthernetServiceInstanceDetailSchema)
     cli_command = ['show ethernet service instance detail', 'show ethernet service instance interface {interface} detail']
 
     def cli(self, interface=None, output=None):
-        cli = self.cli_command
         if output is None:
             if interface:
                 cli = self.cli_command[1].format(interface=interface)
@@ -274,7 +273,6 @@ class ShowEthernetServiceInstanceDetail(ShowEthernetServiceInstanceDetailSchema)
 
         # initial return dictionary
         ret_dict = {}
-        associated_evc = False
 
         # initial regexp pattern
         # Service Instance ID: 2051
@@ -291,7 +289,7 @@ class ShowEthernetServiceInstanceDetail(ShowEthernetServiceInstanceDetailSchema)
         p4 = re.compile(r'^Associated +Interface: +(?P<associated_interface>[\w\d\-\.\/]+)$')
 
         # Associated EVC: 
-        p5 = re.compile(r'^Associated +EVC: +(?P<associated_evc>[\S\s]+)$')
+        p5 = re.compile(r'^Associated +EVC: +(?P<associated_evc>\S+)$')
 
         # L2protocol drop
         p6 = re.compile(r'^L2protocol +drop$')
@@ -334,6 +332,8 @@ class ShowEthernetServiceInstanceDetail(ShowEthernetServiceInstanceDetailSchema)
                 final_dict = ret_dict.setdefault('service_instance', {}).\
                     setdefault(service_id, {})
                 final_dict['l2protocol_drop'] = False
+                final_dict['ce_vlans'] = ''
+                final_dict['associated_evc'] = ''
                 continue
 
             m = p2.match(line)
