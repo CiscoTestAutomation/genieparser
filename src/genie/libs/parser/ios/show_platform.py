@@ -26,7 +26,8 @@ from genie.libs.parser.iosxe.show_platform import \
         Dir as Dir_iosxe, \
         ShowInventorySchema as ShowInventorySchema_iosxe, \
         ShowRedundancy as ShowRedundancy_iosxe, \
-        ShowProcessesCpuSorted as ShowProcessesCpuSorted_iosxe
+        ShowProcessesCpuSorted as ShowProcessesCpuSorted_iosxe, \
+        ShowVersionRp as ShowVersionRp_iosxe
 
 
 class ShowVersion(ShowVersion_iosxe):
@@ -275,4 +276,10 @@ class ShowProcessesCpuSorted(ShowProcessesCpuSorted_iosxe):
                   show processes cpu sorted | include <WORD>
                   show processes cpu sorted <1min|5min|5sec> | include <WORD>
     """
+    pass
+
+
+class ShowVersionRp(ShowVersionRp_iosxe):
+    """Parser for show version RP active [running|provisioned|installed]
+                  show version RP standby [running|provisioned|installed]"""
     pass
