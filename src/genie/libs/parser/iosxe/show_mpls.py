@@ -1760,14 +1760,15 @@ class ShowMplsForwardingTableSchema(MetaParser):
                             'prefix_or_tunnel_id': str,
                             'bytes_label_switched': int,
                             Optional('next_hop'): str,
-                            'mac': int,
+                            Optional('mac'): int,
                             Optional('macstr'): str,
                             Optional('lstack'): str,
-                            'encaps': int,
-                            'mru': int,
-                            'label_stack': str,
-                            'vpn_route': str,
-                            'output_feature_configured': bool,
+                            Optional('via'): str,
+                            Optional('encaps'): int,
+                            Optional('mru'): int,
+                            Optional('label_stack'): str,
+                            Optional('vpn_route'): str,
+                            Optional('output_feature_configured'): bool,
                             Optional('load_sharing'): {
                                 'method': str,
                                 Optional('slots'): list,
@@ -1823,7 +1824,9 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         p2_2 = re.compile(r'^(?P<local_label>\d+) +(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>\S+)'
             ' +(?P<bytes_label_switched>\d+) +(?P<interface>\S+)( +(?P<next_hop>[\d\.]+))?$')
         #         MAC/Encaps=18/18, MRU=1530, Label Stack{}
-        p3 = re.compile(r'^MAC/Encaps=(?P<mac>\d+)/(?P<encaps>\d+), +MRU=(?P<mru>[\d]+), +Label +Stack(?P<label_stack>[\S\s]+)$')
+        #         MAC/Encaps=18/18, MRU=1530, Label Stack{}, via Ls0
+        p3 = re.compile(r'^MAC/Encaps=(?P<mac>\d+)/(?P<encaps>\d+), +MRU=(?P<mru>[\d]+), +Label'
+                        ' +Stack(?P<label_stack>[\S]+)(, via +(?P<via>\w+))?$')
         #         00002440156384B261CB1480810000330800
         #         AABBCC032800AABBCC0325018847 00010000
         p4 = re.compile(r'^(?P<code>[0-9A-F]+)( +(?P<lstack>\d+))?$')
@@ -1891,6 +1894,9 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                 feature_dict.update({'encaps': int(group['encaps'])})
                 feature_dict.update({'mru': int(group['mru'])})
                 feature_dict.update({'label_stack': group['label_stack']})
+                if group['via']:
+                    feature_dict.update({'via': group['via']})
+
                 continue
 
             #     00002440156384B261CB1480810000330800
@@ -1935,31 +1941,37 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
 class ShowMplsInterfaceSchema(MetaParser):
     """Schema for
         show mpls interfaces
+        show mpls interfaces all
+        show mpls interfaces vrf <vrf>
         show mpls interfaces <interface>
         show mpls interfaces <interface> detail
         show mpls interfaces detail"""
 
     schema = {
-        'interfaces': {
-            Any(): {
-                Optional('ip'): str,
-                Optional('tunnel'): str,
-                Optional('bgp'): str,
-                Optional('static'): str,
-                Optional('operational'): str,
-                Optional('type'): str,
-                'session': str,
-                Optional('ip_labeling_enabled'):{
-                    Any():{
-                        'ldp': bool,
-                        'interface_config': bool,
+        'vrf':{
+            Any():{
+                'interfaces': {
+                    Any(): {
+                        Optional('ip'): str,
+                        Optional('tunnel'): str,
+                        Optional('bgp'): str,
+                        Optional('static'): str,
+                        Optional('operational'): str,
+                        Optional('type'): str,
+                        Optional('session'): str,
+                        Optional('ip_labeling_enabled'):{
+                            Any():{
+                                'ldp': bool,
+                                'interface_config': bool,
+                            }
+                        },
+                        Optional('lsp_tunnel_labeling_enabled'): bool,
+                        Optional('lp_frr_labeling_enabled'): bool,
+                        Optional('bgp_labeling_enabled'): bool,
+                        Optional('mpls_operational'): bool,
+                        Optional('mtu'): int,
                     }
-                },
-                Optional('lsp_tunnel_labeling_enabled'): bool,
-                Optional('lp_frr_labeling_enabled'): bool,
-                Optional('bgp_labeling_enabled'): bool,
-                Optional('mpls_operational'): bool,
-                Optional('mtu'): int,
+                }
             }
         }
     }
@@ -1968,6 +1980,8 @@ class ShowMplsInterfaceSchema(MetaParser):
 class ShowMplsInterface(ShowMplsInterfaceSchema):
     """Parser for
         show mpls interfaces
+        show mpls interfaces all
+        show mpls interfaces vrf <vrf>
         show mpls interfaces <interface>
         show mpls interfaces <interface> detail
         show mpls interfaces detail"""
@@ -1975,9 +1989,11 @@ class ShowMplsInterface(ShowMplsInterfaceSchema):
     cli_command = ['show mpls interfaces',
                    'show mpls interfaces detail',
                    'show mpls interfaces {interface} detail',
-                   'show mpls interfaces {interface}']
+                   'show mpls interfaces {interface}',
+                   'show mpls interfaces {all}',
+                   'show mpls interfaces vrf {vrf} ']
 
-    def cli(self, detail="", interface="", output=None):
+    def cli(self, detail="", interface="",vrf="",all="", output=None):
         if output is None:
             if detail:
                 if interface:
@@ -1985,28 +2001,39 @@ class ShowMplsInterface(ShowMplsInterfaceSchema):
                 else:
                     cmd = self.cli_command[1]
             else:
-                if interface:
+                if interface and not vrf:
                     cmd = self.cli_command[3].format(interface=interface)
-                else:
+                if not interface and not vrf:
                     cmd = self.cli_command[0]
+                if vrf and not interface:
+                    cmd = self.cli_command[5].format(vrf=vrf)
+                if all:
+                    cmd = self.cli_command[4].format(all=all)
 
             out = self.device.execute(cmd)
         else:
             out = output
 
+        if not vrf:
+            vrf = 'default'
+
         # initial return dictionary
         result_dict = {}
 
+        # vrf vpn1:
+        p0 = re.compile(r'^VRF +(?P<vrf>\S+):$')
         # Interface              IP            Tunnel   BGP Static Operational
         # GigabitEthernet6       Yes (ldp)     No       No  No     Yes
-        p1 = re.compile(r'^(?P<interface>\S+) +(?P<ip>\w+) +\((?P<session>\w+)\) +(?P<tunnel>\w+)'
-                        ' +(?P<bgp>\w+) +(?P<static>\w+) +(?P<operational>\w+)$')
+        # Interface              IP            Tunnel   Operational
+        # GigabitEthernet6/0     Yes (ldp)     No       Yes
+        p1 = re.compile(r'^(?P<interface>(?!Interface)[\S]+) +(?P<ip>((Y|y)es|(N|n)o)+)( +\((?P<session>\w+)\))? +(?P<tunnel>\w+)'
+                        '( +(?P<bgp>\w+) +(?P<static>\w+))? +(?P<operational>\w+)$')
         # Interface GigabitEthernet0/0/0:
         p2 = re.compile(r'^Interface +(?P<interface>\S+):$')
         #     Type Unknown
         p3 = re.compile(r'^Type +(?P<type>\w+)$')
         #     IP labeling enabled (ldp) :
-        p4 = re.compile(r'^IP +labeling +enabled \(+(?P<session>\w+)\) +\:$')
+        p4 = re.compile(r'^IP +labeling +enabled \(+(?P<session>\w+)\)( +\:)?$')
         #       Interface config
         p5 = re.compile(r'^Interface +config$')
         #     LSP Tunnel labeling not enabled
@@ -2024,25 +2051,40 @@ class ShowMplsInterface(ShowMplsInterfaceSchema):
         for line in out.splitlines():
             line = line.strip()
 
+            # vrf vpn1:
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                vrf = group['vrf']
+                continue
+
             # Interface              IP            Tunnel   BGP Static Operational
             # GigabitEthernet6       Yes (ldp)     No       No  No     Yes
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                interface_dict = result_dict.setdefault('interfaces', {}).setdefault(group['interface'], {})
-                interface_dict.update({'ip': group['ip'].lower()})
-                interface_dict.update({'tunnel': group['tunnel'].lower()})
-                interface_dict.update({'bgp': group['bgp'].lower()})
-                interface_dict.update({'static': group['static'].lower()})
-                interface_dict.update({'session': group['session']})
-                interface_dict.update({'operational': group['operational'].lower()})
+                interface_dict_1 = result_dict.setdefault('vrf', {}).\
+                                             setdefault(vrf, {}).\
+                                             setdefault('interfaces', {}).\
+                                             setdefault(group['interface'], {})
+                interface_dict_1.update({'ip': group['ip'].lower()})
+                interface_dict_1.update({'tunnel': group['tunnel'].lower()})
+                if group['bgp']:
+                    interface_dict_1.update({'bgp': group['bgp'].lower()})
+                if group['static']:
+                    interface_dict_1.update({'static': group['static'].lower()})
+                if group['session']:
+                    interface_dict_1.update({'session': group['session']})
+                interface_dict_1.update({'operational': group['operational'].lower()})
                 continue
 
             # Interface GigabitEthernet0/0/0:
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                interface_dict = result_dict.setdefault('interfaces', {}).setdefault(group['interface'], {})
+                interface_dict = result_dict.setdefault('vrf', {}).\
+                                             setdefault(vrf, {}).\
+                                             setdefault('interfaces', {}).setdefault(group['interface'], {})
                 continue
 
             #    Type Unknown

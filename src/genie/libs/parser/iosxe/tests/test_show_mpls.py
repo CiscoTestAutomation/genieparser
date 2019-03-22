@@ -1801,6 +1801,7 @@ class test_show_mpls_forwarding_table(unittest.TestCase):
                             "mac": 18,
                             "encaps": 18,
                             "mru": 1530,
+                            "via": "Ls0",
                             "label_stack": "{}",
                             "macstr": "AABBCC032800AABBCC0325018847",
                             "lstack": "00010000",
@@ -1843,7 +1844,7 @@ class test_show_mpls_forwarding_table(unittest.TestCase):
         Per-destination load-sharing, slots: 0 2 4 6 8 10 12 14
     2641       No Label   172.16.100.100/32[V]   \
                                            0             Po1.51     192.168.10.253
-        MAC/Encaps=18/18, MRU=1530, Label Stack{}
+        MAC/Encaps=18/18, MRU=1530, Label Stack{}, via Ls0
         AABBCC032800AABBCC0325018847 00010000
         VPN route: L3VPN-0051
         No output feature configured
@@ -1876,14 +1877,18 @@ class test_show_mpls_interface(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-        "interfaces": {
-            "GigabitEthernet6": {
-                "ip": "yes",
-                "tunnel": "no",
-                "session": 'ldp',
-                "bgp": "no",
-                "static": "no",
-                "operational": "yes"
+        'vrf':{
+            'default':{
+                "interfaces": {
+                    "GigabitEthernet6": {
+                        "ip": "yes",
+                        "tunnel": "no",
+                        "session": 'ldp',
+                        "bgp": "no",
+                        "static": "no",
+                        "operational": "yes"
+                    }
+                }
             }
         }
     }
@@ -1894,21 +1899,25 @@ class test_show_mpls_interface(unittest.TestCase):
     '''
                      }
     golden_parsed_output_detail = {
-        "interfaces": {
-            "GigabitEthernet0/0/0": {
-                "type": "Unknown",
-                "session": "ldp",
-                "ip_labeling_enabled": {
-                    True: {
-                        "ldp": True,
-                        "interface_config": True
-                    },
-                },
-                "lsp_tunnel_labeling_enabled": False,
-                "lp_frr_labeling_enabled": False,
-                "bgp_labeling_enabled": False,
-                "mtu": 1552,
-                "mpls_operational": True
+        'vrf': {
+            'default': {
+                "interfaces": {
+                    "GigabitEthernet0/0/0": {
+                        "type": "Unknown",
+                        "session": "ldp",
+                        "ip_labeling_enabled": {
+                            True: {
+                                "ldp": True,
+                                "interface_config": True
+                            },
+                        },
+                        "lsp_tunnel_labeling_enabled": False,
+                        "lp_frr_labeling_enabled": False,
+                        "bgp_labeling_enabled": False,
+                        "mtu": 1552,
+                        "mpls_operational": True
+                    }
+                }
             }
         }
     }
@@ -1928,6 +1937,39 @@ class test_show_mpls_interface(unittest.TestCase):
             MTU = 1552
     '''
                             }
+
+    golden_parsed_output_all = {
+        "vrf": {
+            "default": {
+                "interfaces": {
+                    "GigabitEthernet6/0": {
+                        "ip": "yes",
+                        "tunnel": "no",
+                        "session": "ldp",
+                        "operational": "yes"
+                    }
+                }
+            },
+            "vpn1": {
+                "interfaces": {
+                    "Ethernet3/1": {
+                        "ip": "no",
+                        "tunnel": "no",
+                        "operational": "yes"
+                    }
+                }
+            }
+        }
+
+    }
+    golden_output_all = {'execute.return_value': '''\
+    Router# show mpls interfaces all
+
+    Interface              IP            Tunnel   Operational
+    GigabitEthernet6/0     Yes (ldp)     No       Yes
+    VRF vpn1:
+    Ethernet3/1            No            No       Yes
+    '''}
 
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
@@ -1949,6 +1991,12 @@ class test_show_mpls_interface(unittest.TestCase):
         parsed_output = obj.parse(detail='detail')
         self.assertEqual(parsed_output, self.golden_parsed_output_detail)
 
+    def test_golden_all(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output_all)
+        obj = ShowMplsInterface(device=self.dev)
+        parsed_output = obj.parse(all='all')
+        self.assertEqual(parsed_output, self.golden_parsed_output_all)
 
 if __name__ == '__main__':
     unittest.main()
