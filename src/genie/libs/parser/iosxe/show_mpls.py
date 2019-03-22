@@ -1820,9 +1820,9 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         #                                        0             Po1.51     192.168.10.253
         p1 = re.compile(r'^(?P<local_label>\d+) +(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>\S+) +\\$')
 
-        p2 = re.compile(r'^(?P<bytes_label_switched>\d+) +(?P<interface>\S+)( +(?P<next_hop>[\d\.]+))?$')
-        p2_2 = re.compile(r'^(?P<local_label>\d+) +(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>\S+)'
-            ' +(?P<bytes_label_switched>\d+) +(?P<interface>\S+)( +(?P<next_hop>[\d\.]+))?$')
+        p2 = re.compile(r'^(?P<bytes_label_switched>\d+) +(?P<interface>\S+)( +(?P<next_hop>[\w\.]+))?$')
+        p2_2 = re.compile(r'^(?P<local_label>\d+) +(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>[\S\s]+)'
+            ' +(?P<bytes_label_switched>\d+) +(?P<interface>\S+)( +(?P<next_hop>[\w\.]+))?$')
         #         MAC/Encaps=18/18, MRU=1530, Label Stack{}
         #         MAC/Encaps=18/18, MRU=1530, Label Stack{}, via Ls0
         p3 = re.compile(r'^MAC/Encaps=(?P<mac>\d+)/(?P<encaps>\d+), +MRU=(?P<mru>[\d]+), +Label'
@@ -1850,7 +1850,7 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                 group = m.groupdict()
                 local_label = int(group['local_label'])
                 outgoing_label = group['outgoing_label']
-                prefix_or_tunnel_id = group['prefix_or_tunnel_id']
+                prefix_or_tunnel_id = group['prefix_or_tunnel_id'].strip()
                 continue
 
             m = p2.match(line)
@@ -1873,7 +1873,7 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                 group = m.groupdict()
                 local_label = int(group['local_label'])
                 outgoing_label = group['outgoing_label']
-                prefix_or_tunnel_id = group['prefix_or_tunnel_id']
+                prefix_or_tunnel_id = group['prefix_or_tunnel_id'].strip()
 
                 interface = Common.convert_intf_name(group['interface'])
                 feature_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}). \
@@ -1962,7 +1962,7 @@ class ShowMplsInterfaceSchema(MetaParser):
                         Optional('ip_labeling_enabled'):{
                             Any():{
                                 'ldp': bool,
-                                'interface_config': bool,
+                                Optional('interface_config'): bool,
                             }
                         },
                         Optional('lsp_tunnel_labeling_enabled'): bool,
