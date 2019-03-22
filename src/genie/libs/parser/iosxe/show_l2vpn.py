@@ -231,12 +231,12 @@ class ShowEthernetServiceInstanceDetailSchema(MetaParser):
     schema = {
         'service_instance': {
             Any(): {
-                'id': int,
                 'type': str,
                 Optional('description'): str,
                 'associated_interface': str,
-                'associated_evc': str,
-                Optional('vlans'): str,
+                Optional('associated_evc'): str,
+                'l2protocol_drop': bool,
+                Optional('ce_vlans'): str,
                 'encapsulation': str,
                 Optional('rewrite'): str,
                 Optional('control_policy'): str,
@@ -291,10 +291,10 @@ class ShowEthernetServiceInstanceDetail(ShowEthernetServiceInstanceDetailSchema)
         p4 = re.compile(r'^Associated +Interface: +(?P<associated_interface>[\w\d\-\.\/]+)$')
 
         # Associated EVC: 
-        p5 = re.compile(r'^Associated +EVC:$')
+        p5 = re.compile(r'^Associated +EVC: +(?P<associated_evc>[\S\s]+)$')
 
         # L2protocol drop
-        p6 = re.compile(r'^(?P<associated_evc>[\S\s]+)$')
+        p6 = re.compile(r'^L2protocol +drop$')
 
         # CE-Vlans: 10-20                                                                        
         p7 = re.compile(r'^CE-Vlans: +(?P<vlans>\S+)$')
@@ -333,7 +333,7 @@ class ShowEthernetServiceInstanceDetail(ShowEthernetServiceInstanceDetailSchema)
                 service_id = int(group['service_id'])
                 final_dict = ret_dict.setdefault('service_instance', {}).\
                     setdefault(service_id, {})
-                final_dict['id'] = service_id
+                final_dict['l2protocol_drop'] = False
                 continue
 
             m = p2.match(line)
@@ -356,20 +356,19 @@ class ShowEthernetServiceInstanceDetail(ShowEthernetServiceInstanceDetailSchema)
 
             m = p5.match(line)
             if m:
-                associated_evc = True
+                group = m.groupdict()
+                final_dict['associated_evc'] = group['associated_evc']
                 continue
 
             m = p6.match(line)
-            if m and associated_evc:
-                group = m.groupdict()
-                final_dict['associated_evc'] = group['associated_evc']
-                associated_evc = False
+            if m:
+                final_dict['l2protocol_drop'] = True
                 continue
 
             m = p7.match(line)
             if m:
                 group = m.groupdict()
-                final_dict['vlans'] = group['vlans']
+                final_dict['ce_vlans'] = group['vlans']
                 continue
 
             m = p8.match(line)

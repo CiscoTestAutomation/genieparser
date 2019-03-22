@@ -402,81 +402,90 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output = {'service_instance': {2051: {'associated_evc': 'L2protocol drop',
-                             'associated_interface': 'GigabitEthernet0/0/3',
-                             'description': 'xxx',
-                             'dot1q_tunnel_ethertype': '0x8100',
-                             'efp_statistics': {'bytes_in': 0,
-                                                'bytes_out': 0,
-                                                'pkts_in': 0,
-                                                'pkts_out': 0},
-                             'encapsulation': 'dot1q 2051 vlan protocol '
-                                              'type 0x8100',
-                             'id': 2051,
-                             'rewrite': 'egress tag translate 1-to-1 dot1q '
-                                        '2051 vlan-type 0x8100',
-                             'state': 'Up',
-                             'type': 'Static'},
-                      2052: {'associated_evc': 'L2protocol drop',
-                             'associated_interface': 'GigabitEthernet0/0/3',
-                             'description': 'xxx',
-                             'dot1q_tunnel_ethertype': '0x8100',
-                             'efp_statistics': {'bytes_in': 0,
-                                                'bytes_out': 0,
-                                                'pkts_in': 0,
-                                                'pkts_out': 0},
-                             'encapsulation': 'dot1q 2052 vlan protocol '
-                                              'type 0x8100',
-                             'id': 2052,
-                             'rewrite': 'egress tag translate 1-to-1 dot1q '
-                                        '2052 vlan-type 0x8100',
-                             'state': 'Up',
-                             'type': 'Static'},
-                      2053: {'associated_evc': 'L2protocol drop',
-                             'associated_interface': 'GigabitEthernet0/0/3',
-                             'description': 'xxx',
-                             'dot1q_tunnel_ethertype': '0x8100',
-                             'efp_statistics': {'bytes_in': 0,
-                                                'bytes_out': 0,
-                                                'pkts_in': 0,
-                                                'pkts_out': 0},
-                             'encapsulation': 'dot1q 2053 vlan protocol '
-                                              'type 0x8100',
-                             'id': 2053,
-                             'rewrite': 'egress tag translate 1-to-1 dot1q '
-                                        '2053 vlan-type 0x8100',
-                             'state': 'Up',
-                             'type': 'Static'},
-                      2054: {'associated_evc': 'L2protocol drop',
-                             'associated_interface': 'GigabitEthernet0/0/3',
-                             'description': 'xxx',
-                             'dot1q_tunnel_ethertype': '0x8100',
-                             'efp_statistics': {'bytes_in': 0,
-                                                'bytes_out': 0,
-                                                'pkts_in': 0,
-                                                'pkts_out': 0},
-                             'encapsulation': 'dot1q 2054 vlan protocol '
-                                              'type 0x8100',
-                             'id': 2054,
-                             'rewrite': 'egress tag translate 1-to-1 dot1q '
-                                        '2054 vlan-type 0x8100',
-                             'state': 'Up',
-                             'type': 'Static'},
-                      2055: {'associated_evc': 'L2protocol drop',
-                             'associated_interface': 'GigabitEthernet0/0/3',
-                             'description': 'xxx',
-                             'dot1q_tunnel_ethertype': '0x8100',
-                             'efp_statistics': {'bytes_in': 0,
-                                                'bytes_out': 0,
-                                                'pkts_in': 0,
-                                                'pkts_out': 0},
-                             'encapsulation': 'dot1q 2055 vlan protocol '
-                                              'type 0x8100',
-                             'id': 2055,
-                             'rewrite': 'egress tag translate 1-to-1 dot1q '
-                                        '2055 vlan-type 0x8100',
-                             'state': 'Up',
-                             'type': 'Static'}}}
+    golden_parsed_output = {
+        'service_instance': {
+            2051: {
+                'encapsulation': 'dot1q 2051 vlan protocol type 0x8100',
+                'state': 'Up',
+                'l2protocol_drop': True,
+                'efp_statistics': {
+                    'pkts_in': 0,
+                    'bytes_out': 0,
+                    'pkts_out': 0,
+                    'bytes_in': 0,
+                    },
+                'type': 'Static',
+                'description': 'xxx',
+                'associated_interface': 'GigabitEthernet0/0/3',
+                'rewrite': 'egress tag translate 1-to-1 dot1q 2051 vlan-type 0x8100',
+                'dot1q_tunnel_ethertype': '0x8100',
+                },
+            2052: {
+                'encapsulation': 'dot1q 2052 vlan protocol type 0x8100',
+                'state': 'Up',
+                'l2protocol_drop': True,
+                'efp_statistics': {
+                    'pkts_in': 0,
+                    'bytes_out': 0,
+                    'pkts_out': 0,
+                    'bytes_in': 0,
+                    },
+                'type': 'Static',
+                'description': 'xxx',
+                'associated_interface': 'GigabitEthernet0/0/3',
+                'rewrite': 'egress tag translate 1-to-1 dot1q 2052 vlan-type 0x8100',
+                'dot1q_tunnel_ethertype': '0x8100',
+                },
+            2053: {
+                'encapsulation': 'dot1q 2053 vlan protocol type 0x8100',
+                'state': 'Up',
+                'l2protocol_drop': True,
+                'efp_statistics': {
+                    'pkts_in': 0,
+                    'bytes_out': 0,
+                    'pkts_out': 0,
+                    'bytes_in': 0,
+                    },
+                'type': 'Static',
+                'description': 'xxx',
+                'associated_interface': 'GigabitEthernet0/0/3',
+                'rewrite': 'egress tag translate 1-to-1 dot1q 2053 vlan-type 0x8100',
+                'dot1q_tunnel_ethertype': '0x8100',
+                },
+            2054: {
+                'encapsulation': 'dot1q 2054 vlan protocol type 0x8100',
+                'state': 'Up',
+                'l2protocol_drop': True,
+                'efp_statistics': {
+                    'pkts_in': 0,
+                    'bytes_out': 0,
+                    'pkts_out': 0,
+                    'bytes_in': 0,
+                    },
+                'type': 'Static',
+                'description': 'xxx',
+                'associated_interface': 'GigabitEthernet0/0/3',
+                'rewrite': 'egress tag translate 1-to-1 dot1q 2054 vlan-type 0x8100',
+                'dot1q_tunnel_ethertype': '0x8100',
+                },
+            2055: {
+                'encapsulation': 'dot1q 2055 vlan protocol type 0x8100',
+                'state': 'Up',
+                'l2protocol_drop': True,
+                'efp_statistics': {
+                    'pkts_in': 0,
+                    'bytes_out': 0,
+                    'pkts_out': 0,
+                    'bytes_in': 0,
+                    },
+                'type': 'Static',
+                'description': 'xxx',
+                'associated_interface': 'GigabitEthernet0/0/3',
+                'rewrite': 'egress tag translate 1-to-1 dot1q 2055 vlan-type 0x8100',
+                'dot1q_tunnel_ethertype': '0x8100',
+                },
+            },
+        }
 
     golden_output = {'execute.return_value': '''\
         Router#show ethernet service instance detail
@@ -560,47 +569,56 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
     '''
     }
 
-    golden_parsed_output_interface = {'service_instance': {1: {'associated_evc': 'L2protocol drop',
-                          'associated_interface': 'Ethernet0/0',
-                          'control_policy': 'ABC',
-                          'dot1q_tunnel_ethertype': '0x8100',
-                          'efp_statistics': {'bytes_in': 0,
-                                             'bytes_out': 0,
-                                             'pkts_in': 0,
-                                             'pkts_out': 0},
-                          'encapsulation': 'dot1q 200-300 vlan protocol '
-                                           'type 0x8100',
-                          'id': 1,
-                          'intiators': 'unclassified vlan',
-                          'state': 'Up',
-                          'type': 'L2Context'},
-                      2: {'associated_evc': 'L2protocol drop',
-                          'associated_interface': 'Ethernet0/0',
-                          'dot1q_tunnel_ethertype': '0x8100',
-                          'efp_statistics': {'bytes_in': 0,
-                                             'bytes_out': 0,
-                                             'pkts_in': 0,
-                                             'pkts_out': 0},
-                          'encapsulation': 'dot1q 201 vlan protocol type '
-                                           '0x8100',
-                          'id': 2,
-                          'state': 'Up',
-                          'type': 'Dynamic',
-                          'vlans': '10-20'},
-                      3: {'associated_evc': 'L2protocol drop',
-                          'associated_interface': 'Ethernet0/0',
-                          'dot1q_tunnel_ethertype': '0x8100',
-                          'efp_statistics': {'bytes_in': 0,
-                                             'bytes_out': 0,
-                                             'pkts_in': 0,
-                                             'pkts_out': 0},
-                          'encapsulation': 'dot1q 201 vlan protocol type '
-                                           '0x8100',
-                          'id': 3,
-                          'state': 'Up',
-                          'type': 'static',
-                          'vlans': '10-20'}}}
-
+    golden_parsed_output_interface = {
+        'service_instance': {
+            1: {
+                'associated_interface': 'Ethernet0/0',
+                'l2protocol_drop': True,
+                'encapsulation': 'dot1q 200-300 vlan protocol type 0x8100',
+                'intiators': 'unclassified vlan',
+                'state': 'Up',
+                'type': 'L2Context',
+                'dot1q_tunnel_ethertype': '0x8100',
+                'efp_statistics': {
+                    'bytes_out': 0,
+                    'pkts_out': 0,
+                    'bytes_in': 0,
+                    'pkts_in': 0,
+                    },
+                'control_policy': 'ABC',
+                },
+            2: {
+                'associated_interface': 'Ethernet0/0',
+                'l2protocol_drop': True,
+                'encapsulation': 'dot1q 201 vlan protocol type 0x8100',
+                'efp_statistics': {
+                    'bytes_out': 0,
+                    'pkts_out': 0,
+                    'bytes_in': 0,
+                    'pkts_in': 0,
+                    },
+                'state': 'Up',
+                'type': 'Dynamic',
+                'dot1q_tunnel_ethertype': '0x8100',
+                'ce_vlans': '10-20',
+                },
+            3: {
+                'associated_interface': 'Ethernet0/0',
+                'l2protocol_drop': True,
+                'encapsulation': 'dot1q 201 vlan protocol type 0x8100',
+                'efp_statistics': {
+                    'bytes_out': 0,
+                    'pkts_out': 0,
+                    'bytes_in': 0,
+                    'pkts_in': 0,
+                    },
+                'state': 'Up',
+                'type': 'static',
+                'dot1q_tunnel_ethertype': '0x8100',
+                'ce_vlans': '10-20',
+                },
+            },
+        }
 
     golden_output_interface = {'execute.return_value': '''\
         Device# show ethernet service instance interface ethernet 0/0 detail
