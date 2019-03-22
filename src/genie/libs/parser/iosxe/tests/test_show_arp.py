@@ -455,9 +455,9 @@ class test_show_arp_application(unittest.TestCase):
             },
             'ARP HA': {
                 'id': 203,
-                'num_of_subblocks': 0
+                'num_of_subblocks': 99789
             },
-            'ASR1000-RP SPA Ethernet': {
+            'ASR1000-RP SPA Ether': {
                 'id': 204,
                 'num_of_subblocks': 0
             },
@@ -469,30 +469,67 @@ class test_show_arp_application(unittest.TestCase):
                 'id': 206,
                 'num_of_subblocks': 0
             },
-            'IP ARP VLAN ID': {
-                'id': 215,
-                'num_of_subblocks': 100204
+            'IP ARP Probe': {
+                'id': 207,
+                'num_of_subblocks': 0
+            },
+            'ip arp retry': {
+                'id': 208,
+                'num_of_subblocks': 0
+            },
+            'IP Mobility': {
+                'id': 209,
+                'num_of_subblocks': 0
+            },
+            'IP Subscriber': {
+                'id': 210,
+                'num_of_subblocks': 0
+            },
+            'RG IM': {
+                'id': 211,
+                'num_of_subblocks': 0
+            },
+            'B2B NAT': {
+                'id': 212,
+                'num_of_subblocks': 0
+            },
+            'MANET INFRA ARP': {
+                'id': 213,
+                'num_of_subblocks': 0
             },
             'IP ARP Adjacency': {
                 'id': 214,
-                'num_of_subblocks': 100204
+                'num_of_subblocks': 99791
+            },
+            'IP ARP VLAN ID': {
+                'id': 215,
+                'num_of_subblocks': 99791
             }
         }
     }
 
     golden_output = {'execute.return_value': '''\
+        Load for five secs: 5%1%; one minute: 6%; five minutes: 7%
+        Time source is NTP, 21:20:36.100 JST Fri Nov 11 2016
         Number of clients registered: 16
 
-        Application                 ID      Num of Subblocks
-        VRRS                        200     0
-        ARP Backup                  201     0
-        DHCPD                       202     0
-        ARP HA                      203     0
-        ASR1000-RP SPA Ethernet     204     0
-        VRRS_L3CTRL                 205     0
-        IP ARP Adj Conn ID          206     0
-        IP ARP VLAN ID              215     100204
-        IP ARP Adjacency            214     100204
+        Application         ID      Num of Subblocks
+        VRRS                200     0
+        ARP Backup          201     0
+        DHCPD               202     0
+        ARP HA              203     99789
+        ASR1000-RP SPA Ether204     0
+        VRRS_L3CTRL         205     0
+        IP ARP Adj Conn ID  206     0
+        IP ARP Probe        207     0
+        ip arp retry        208     0
+        IP Mobility         209     0
+        IP Subscriber       210     0
+        RG IM               211     0
+        B2B NAT             212     0
+        MANET INFRA ARP     213     0
+        IP ARP Adjacency    214     99791
+        IP ARP VLAN ID      215     99791
         '''
     }   
 

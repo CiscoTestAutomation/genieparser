@@ -1175,16 +1175,11 @@ class ShowArpApplication(ShowArpApplicationSchema):
         p1 = re.compile(r'^\s*Number +of +clients +registered: +' \
                 '(?P<num_of_clients>\d+)$')
 
-        # Application ID Number of Subblocks
-        p2 = re.compile(r'^Application +ID +Num +of +Subblocks$')
-        
-        # ASR1000-RP SPA Ethernet   215 10024
-        p3 = re.compile(r'^(?P<application_name>[\w\W]+) +(?P<id>\d+) +' \
-                '(?P<num_of_subblocks>\d+)$')
+        # ASR1000-RP SPA Ether215 10024
+        p2 = re.compile(r'^(?P<application_name>[\w\W]{0,20})(?P<id>\d+)\s+(?P<num_of_subblocks>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
-            
             # Number of clients registered: 16
             m = p1.match(line)
             if m:
@@ -1193,22 +1188,15 @@ class ShowArpApplication(ShowArpApplicationSchema):
                     int(group['num_of_clients']))
                 continue
             
-            # Application ID Number of Subblocks
+            # ASR1000-RP SPA Ether215 10024
             m = p2.match(line)
             if m:
+                application = ret_dict.setdefault('applications', {})
                 group = m.groupdict()
-                applications = ret_dict.setdefault('applications', {})
-                continue
-            
-            # ASR1000-RP SPA Ethernet 215 10024
-            m = p3.match(line)
-            if m:
-                group = m.groupdict()
-                applications[group['application_name'].rstrip()] = {'id': \
+                application[group['application_name'].rstrip()] = {'id': \
                     int(group['id']), 'num_of_subblocks': \
                     int(group['num_of_subblocks'])}
                 continue
-        
         return ret_dict
 
 
@@ -1242,7 +1230,8 @@ class ShowArpSummary(ShowArpSummarySchema):
         
         # initial variables
         ret_dict = {}
-        
+        interface_found = False
+
         # Total number of entries in the ARP table: 1233
         p1 = re.compile(r'^Total +number +of +entries +in +the +ARP +table: +' \
                 '(?P<arp_table_entries>\d+)\.$')
@@ -1256,10 +1245,6 @@ class ShowArpSummary(ShowArpSummarySchema):
 
         # GigabitEthernet0/0/4  4
         p4 = re.compile(r'^(?P<interface_name>[\w\/\.]+) +(?P<entry_count>\d+)')
-        
-        # initial variables
-        ret_dict = {}
-        interface_found = False
 
         for line in out.splitlines():
             line = line.strip()
