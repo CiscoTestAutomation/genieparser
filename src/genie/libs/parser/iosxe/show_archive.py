@@ -149,7 +149,7 @@ class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
         # -hostname Test4
         p2 = re.compile(r'^\s*(?P<line_info>(\+|\-)[\w\W]+)$')
         # !List of commands:
-        p3 = re.compile(r'^\s*!List +of +(C|c)ommands:$')
+        p3 = re.compile(r'^\s*!List +of +(C|c)ommands:')
         # hostname Router3
         p4 = re.compile(r'^\s*(?P<line_info>([\w\W]+))$')
 
@@ -172,7 +172,7 @@ class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
                         contextual_config_diff.append(group['line_info'])
                         continue
             else:
-                # !List of commands:
+                # !List of Commands:
                 m = p3.match(line)
                 if m:
                     incremental_diff = ret_dict.setdefault('diff',[])
