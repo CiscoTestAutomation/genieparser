@@ -71,7 +71,7 @@ class ShowServiceGroupState(ShowServiceGroupStateSchema):
 				if m:
 					group = m.groupdict()
 					service_group_state.setdefault(
-						int(group['group_number']), {}).setdefault(
+						group['group_number'], {}).setdefault(
 						'state' , group['state'])
 					continue
 
