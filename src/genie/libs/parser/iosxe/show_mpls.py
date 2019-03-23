@@ -1823,12 +1823,12 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         #                                        0             Po1.51     192.168.10.253
 
         #       [T]  16130      40.40.40.40/32   0             Tu1        point2point
-        p1 = re.compile(r'^(?P<local_label>\d+)\s+(?P<outgoing_label>[\w\s]+)\s+(?P<prefix_or_tunnel_id>[\S\s]+)\s\\$')
+        p1 = re.compile(r'^(?P<local_label>\d+) +(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>[\S\s]+) +\\$')
 
-        p2 = re.compile(r'^(?P<bytes_label_switched>\d+)\s(?P<interface>\S+)(\s+(?P<next_hop>[\w\.]+))?$')
-        p2_2 = re.compile(r'^((?P<local_label>\d+)\s+)?(\[(?P<t>(T)+)\] +)?'
+        p2 = re.compile(r'^(?P<bytes_label_switched>\d+) +(?P<interface>\S+)( +(?P<next_hop>[\w\.]+))?$')
+        p2_2 = re.compile(r'^((?P<local_label>\d+) +)?(\[(?P<t>(T)+)\] +)?'
             '(?P<outgoing_label>(Untagged|(No|Pop) Label|(No|Pop) (T|t)ag|\d|\d\/)+) +(?P<prefix_or_tunnel_id>[\S]+)'
-            ' +(?P<bytes_label_switched>\d+)\s+(?P<interface>\S+)( +(?P<next_hop>[\w\.]+))?$')
+            ' +(?P<bytes_label_switched>\d+) +(?P<interface>\S+)( +(?P<next_hop>[\w\.]+))?$')
         p2_3 = re.compile(r'^((?P<local_label>\d+) +)?(\[(?P<t>(T)+)\] +)?'
             '(?P<outgoing_label>((No|Pop) Label|(No|Pop) tag|\d|\d\/)+) +(?P<prefix_or_tunnel_id>[\w\.\[\]\-\s]+)'
             ' +(?P<bytes_label_switched>\d+) +(?P<interface>\S+)( +(?P<next_hop>[\w\.]+))?$')
@@ -1851,6 +1851,7 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
 
         for line in out.splitlines():
             line = line.strip()
+            line = line.replace('\t',' ')
 
             # 9301       No Label   172.16.100.1/32[V]   \
             #
