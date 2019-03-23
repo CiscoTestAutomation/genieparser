@@ -1865,6 +1865,50 @@ class test_show_mpls_forwarding_table(unittest.TestCase):
  '''
                      }
 
+    golden_parsed_output_2 = {
+        "vrf": {
+            "default": {
+                "local_label": {
+                    201: {
+                        "outgoing_label_or_vc": {
+                            "Pop tag": {
+                                "outgoing_interface": "Port-channel1/1/0",
+                                "prefix_or_tunnel_id": "10.18.18.18/32",
+                                "next_hop": "point2point",
+                                "bytes_label_switched": 0
+                            },
+                            "2/35": {
+                                "outgoing_interface": "ATOM4/1/0.1",
+                                "prefix_or_tunnel_id": "10.18.18.18/32",
+                                "next_hop": "point2point",
+                                "bytes_label_switched": 0
+                            }
+                        }
+                    },
+                    251: {
+                        "outgoing_label_or_vc": {
+                            "18": {
+                                "outgoing_interface": "Port-channel1/1/0",
+                                "prefix_or_tunnel_id": "10.17.17.17/32",
+                                "next_hop": "point2point",
+                                "bytes_label_switched": 0
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+    golden_output_2 = {'execute.return_value':'''\
+    Router# show mpls forwarding-table
+Local  Outgoing    Prefix            Bytes tag  Outgoing   Next Hop
+tag    tag or VC   or Tunnel Id      switched   interface
+201    Pop tag     10.18.18.18/32    0          PO1/1/0    point2point
+       2/35        10.18.18.18/32    0          AT4/1/0.1  point2point
+251    18          10.17.17.17/32    0          PO1/1/0    point2point
+
+    '''}
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowMplsForwardingTable(device=self.dev1)
@@ -1878,6 +1922,12 @@ class test_show_mpls_forwarding_table(unittest.TestCase):
         parsed_output = obj.parse(vrf='L3VPN-0051')
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output_2)
+        obj = ShowMplsForwardingTable(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 class test_show_mpls_interface(unittest.TestCase):
     dev1 = Device(name='empty')

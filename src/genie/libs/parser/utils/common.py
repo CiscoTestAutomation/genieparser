@@ -133,6 +133,7 @@ class Common():
                    'Lo': 'Loopback',
                    'Fa': 'FastEthernet',
 	               'Po': 'Port-channel',
+	               'PO': 'Port-channel',
                    'Null': 'Null',
                    'Gi': 'GigabitEthernet',
                    'Te': 'TenGigabitEthernet',

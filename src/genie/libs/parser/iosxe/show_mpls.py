@@ -1823,12 +1823,10 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         #                                        0             Po1.51     192.168.10.253
 
         #       [T]  16130      40.40.40.40/32   0             Tu1        point2point
-        p1 = re.compile(r'^(?P<local_label>\d+) +(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>\S+) +\\$')
-        p1_2 = re.compile(r'^((?P<local_label>\d+) )?(\[(?P<t>(T)+)\])? +(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>[\w\/\.\s]+)'
-                          ' +(?P<bytes_label_switched>\d+) +(?P<interface>\S+)( +(?P<next_hop>[\w\.]+))?$')
+        p1 = re.compile(r'^(?P<local_label>\d+) +(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>[\S\s]+) +\\$')
 
         p2 = re.compile(r'^(?P<bytes_label_switched>\d+) +(?P<interface>\S+)( +(?P<next_hop>[\w\.]+))?$')
-        p2_2 = re.compile(r'^(?P<local_label>\d+) +(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>[\S\s]+)'
+        p2_2 = re.compile(r'^((?P<local_label>\d+) +)?(\[(?P<t>(T)+)\] +)?(?P<outgoing_label>((No|Pop) Label|(No|Pop) tag|\d|\d\/)+) +(?P<prefix_or_tunnel_id>[\S]+)'
             ' +(?P<bytes_label_switched>\d+) +(?P<interface>\S+)( +(?P<next_hop>[\w\.]+))?$')
         #         MAC/Encaps=18/18, MRU=1530, Label Stack{}
         #         MAC/Encaps=18/18, MRU=1530, Label Stack{}, via Ls0
@@ -1861,29 +1859,6 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                 prefix_or_tunnel_id = group['prefix_or_tunnel_id'].strip()
                 continue
 
-            m = p1_2.match(line)
-            if m:
-                group = m.groupdict()
-                if group['local_label']:
-                    local_label = int(group['local_label'])
-                outgoing_label = group['outgoing_label']
-
-                interface = Common.convert_intf_name(group['interface'])
-                feature_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}). \
-                    setdefault('label_local', {}). \
-                    setdefault(local_label, {}). \
-                    setdefault('outgoing_label_or_vc', {}). \
-                    setdefault(outgoing_label.strip(), {})
-
-                feature_dict.update({'prefix_or_tunnel_id': prefix_or_tunnel_id})
-                feature_dict.update({'outgoing_interface': interface})
-                if group['next_hop']:
-                    feature_dict.update({'next_hop': group['next_hop']})
-                if group['t']:
-                    feature_dict.update({'lsp_tunnel': True})
-                feature_dict.update({'bytes_label_switched': int(group['bytes_label_switched'])})
-                continue
-
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -1904,7 +1879,8 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
             m = p2_2.match(line)
             if m:
                 group = m.groupdict()
-                local_label = int(group['local_label'])
+                if group['local_label']:
+                    local_label = int(group['local_label'])
                 outgoing_label = group['outgoing_label']
                 prefix_or_tunnel_id = group['prefix_or_tunnel_id'].strip()
 
@@ -1919,8 +1895,11 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                 feature_dict.update({'prefix_or_tunnel_id': prefix_or_tunnel_id})
                 if group['next_hop']:
                     feature_dict.update({'next_hop': group['next_hop']})
+                if group['t']:
+                    feature_dict.update({'lsp_tunnel': True})
                 feature_dict.update({'bytes_label_switched': int(group['bytes_label_switched'])})
                 continue
+
             #     MAC/Encaps=18/18, MRU=1530, Label Stack{}
             m = p3.match(line)
             if m:
