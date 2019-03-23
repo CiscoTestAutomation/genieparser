@@ -96,8 +96,9 @@
           show mpls ldp igp sync all
           show mpls ldp igp sync interface <interface>
           show mpls ldp igp sync vrf <vrf>
+
 ----------------------------------------------------------------------------------
-                                CONFIG
+                                    CONFIG
 ----------------------------------------------------------------------------------
 * IOSXE
     * Add ShowArchiveConfigDifferences for:
@@ -106,3 +107,18 @@
         show archive config differences {fielA}
     * Add ShowArchiveConfigIncrementalDiffs for:
         show archive config incremental-diffs {fileA}
+    * Add ShowConfigurationLock for:
+        show configuration lock
+
+--------------------------------------------------------------------------------
+                                    L2VPN
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowBridgeDomain for:
+            show bridge-domain
+            show bridge-domain <WORD>
+            show bridge-domain | count <WORD>
+    * Add ShowEthernetServiceInstanceDetail for:
+            show ethernet service instance detail
+            show ethernet service instance interface <interface> detail
+
