@@ -137,7 +137,14 @@ class Common():
                    'Gi': 'GigabitEthernet',
                    'Te': 'TenGigabitEthernet',
                    'mgmt': 'mgmt',
-                   'Vl': 'Vlan'}
+                   'Vl': 'Vlan',
+                   'Tu': 'Tunnel',
+                   'Fe': '',
+                   'Hs': 'HSSI',
+                   'AT': 'ATOM',
+                   'Et': 'Ethernet',
+                   'BD': 'BridgeDomain',
+                   }
         m = re.search('([a-zA-Z]+)', intf) 
         m1 = re.search('([\d\/\.]+)', intf)
         if hasattr(m, 'group') and hasattr(m1, 'group'):
