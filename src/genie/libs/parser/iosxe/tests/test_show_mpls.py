@@ -2149,37 +2149,36 @@ tag    tag or VC   or Tunnel Id      switched   interface
     }
 }
 
-
-
     golden_output_4 = {'execute.return_value':'''\
     Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop
-Label      Label      or Tunnel Id     Switched      interface
-16         Pop Label  1.1.1.2-A        0             Et0/0      1.1.1.2
-17         Pop Label  1.1.1.2-A        0             Et0/0      1.1.1.2
-18         Pop Label  1.1.1.2-A        0             Et0/0      1.1.1.2
-19         Pop Label  15.15.15.2-A     0             Et0/1      15.15.15.2
-20         Pop Label  15.15.15.2-A     0             Et0/1      15.15.15.2
-21         Pop Label  15.15.15.2-A     0             Et0/1      15.15.15.2
-22    [T]  Pop Label  1/1[TE-Bind]     0             Tu1        point2point
-16110      Pop Label  20.20.20.20/32   0             Et0/0      1.1.1.2
-16120      16120      30.30.30.30/32   0             Et0/0      1.1.1.2
-16130      16130      40.40.40.40/32   0             Et0/0      1.1.1.2
-      [T]  16130      40.40.40.40/32   0             Tu1        point2point
-16140 [T]  Pop Label  50.50.50.50/32   0             Tu1        point2point
-16200      Pop Label  100.100.100.100/32   \
-                                       0             Et0/1      15.15.15.2
-17100      Pop Label  0-20.20.20.20/32-0   \
-                                       0             Et0/0      1.1.1.2
-17200      17200      0-30.30.30.30/32-0   \
-                                       0             Et0/0      1.1.1.2
-17300      17300      0-40.40.40.40/32-0   \
-                                       0             Et0/1      15.15.15.2
-17400      17400      0-50.50.50.50/32-0   \
-                                       0             Et0/1      15.15.15.2
-18000      Pop Label  0-100.100.100.100/32-0   \
-                                       0             Et0/1      15.15.15.2
+    Label      Label      or Tunnel Id     Switched      interface
+    16         Pop Label  1.1.1.2-A        0             Et0/0      1.1.1.2
+    17         Pop Label  1.1.1.2-A        0             Et0/0      1.1.1.2
+    18         Pop Label  1.1.1.2-A        0             Et0/0      1.1.1.2
+    19         Pop Label  15.15.15.2-A     0             Et0/1      15.15.15.2
+    20         Pop Label  15.15.15.2-A     0             Et0/1      15.15.15.2
+    21         Pop Label  15.15.15.2-A     0             Et0/1      15.15.15.2
+    22    [T]  Pop Label  1/1[TE-Bind]     0             Tu1        point2point
+    16110      Pop Label  20.20.20.20/32   0             Et0/0      1.1.1.2
+    16120      16120      30.30.30.30/32   0             Et0/0      1.1.1.2
+    16130      16130      40.40.40.40/32   0             Et0/0      1.1.1.2
+          [T]  16130      40.40.40.40/32   0             Tu1        point2point
+    16140 [T]  Pop Label  50.50.50.50/32   0             Tu1        point2point
+    16200      Pop Label  100.100.100.100/32   \
+                                           0             Et0/1      15.15.15.2
+    17100      Pop Label  0-20.20.20.20/32-0   \
+                                           0             Et0/0      1.1.1.2
+    17200      17200      0-30.30.30.30/32-0   \
+                                           0             Et0/0      1.1.1.2
+    17300      17300      0-40.40.40.40/32-0   \
+                                           0             Et0/1      15.15.15.2
+    17400      17400      0-50.50.50.50/32-0   \
+                                           0             Et0/1      15.15.15.2
+    18000      Pop Label  0-100.100.100.100/32-0   \
+                                           0             Et0/1      15.15.15.2
 
     '''}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowMplsForwardingTable(device=self.dev1)
