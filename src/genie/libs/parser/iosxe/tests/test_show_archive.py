@@ -81,53 +81,53 @@ class test_show_archive_config_differences(unittest.TestCase):
     }
 
     golden_parsed_output_incremental_diff = {
-        'diff': ['ip subnet-zero', 'ip cef', 
-                    'ip name-server 10.4.4.4', 
-		    'voice dnis-map1', 'dnis 111', 
-                    'interface FastEthernet1/0',
-		    'no ip address', 'no ip route-cache', 
-                    'no ip mroute-cache','shutdown', 'duplex half',
-                    'ip default-gateway 10.5.5.5','ip classless', 
-                    'access-list 110 deny	ip any host 10.1.1.1',
-		    'access-list 110 deny	ip any host 10.1.1.2',
-		    'access-list 110 deny	ip any host 10.1.1.3',
-		    'snmp-server community private RW']
+        'diff': [
+            'ip subnet-zero', 'ip cef', 
+            'ip name-server 10.4.4.4', 
+	    'voice dnis-map1', 'dnis 111', 
+            'interface FastEthernet1/0',
+	    'no ip address', 'no ip route-cache', 
+            'no ip mroute-cache','shutdown', 'duplex half',
+            'ip default-gateway 10.5.5.5','ip classless', 
+            'access-list 110 deny	ip any host 10.1.1.1',
+	    'access-list 110 deny	ip any host 10.1.1.2',
+	    'access-list 110 deny	ip any host 10.1.1.3',
+	    'snmp-server community private RW']
     }
     
     golden_output = {'execute.return_value': '''\
-            Load for five secs: 14%/0%; one minute: 13%; five minutes: 19%
-            Time source is NTP, 11:58:48.301 JST Fri Oct 14 2016
-            !Contextual Config Diffs:
-            +hostname Router
-            -hostname Test4
-            -archive
-             -path bootflash:config
-             -maximum 14
-             -time-period 2
-            '''
+        Load for five secs: 14%/0%; one minute: 13%; five minutes: 19%
+        Time source is NTP, 11:58:48.301 JST Fri Oct 14 2016
+        !Contextual Config Diffs:
+        +hostname Router
+        -hostname Test4
+        -archive
+        -path bootflash:config
+        -maximum 14
+        -time-period 2
+        '''
     }
 
     golden_output_incremental_diff = {'execute.return_value': '''\
-
-            !List of Commands:
-            ip subnet-zero
-            ip cef
-            ip name-server 10.4.4.4
-	    voice dnis-map1
-	     dnis 111
-	    interface FastEthernet1/0
-             no ip address
-             no ip route-cache
-             no ip mroute-cache
-             shutdown
-	     duplex half
-	    ip default-gateway 10.5.5.5
-            ip classless
-	    access-list 110 deny	ip any host 10.1.1.1
-            access-list 110 deny	ip any host 10.1.1.2
-	    access-list 110 deny	ip any host 10.1.1.3
-	    snmp-server community private RW
-            '''
+        !List of Commands:
+        ip subnet-zero
+        ip cef
+        ip name-server 10.4.4.4
+	voice dnis-map1
+	 dnis 111
+	interface FastEthernet1/0
+         no ip address
+         no ip route-cache
+         no ip mroute-cache
+         shutdown
+	 duplex half
+	ip default-gateway 10.5.5.5
+        ip classless
+	access-list 110 deny	ip any host 10.1.1.1
+        access-list 110 deny	ip any host 10.1.1.2
+	access-list 110 deny	ip any host 10.1.1.3
+	snmp-server community private RW
+        '''
     }
 
     def test_empty(self):
