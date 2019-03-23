@@ -1813,6 +1813,7 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
 
         if not vrf:
             vrf = 'default'
+        index = 0
 
         # initial return dictionary
         result_dict = {}
@@ -1823,12 +1824,14 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         #                                        0             Po1.51     192.168.10.253
 
         #       [T]  16130      40.40.40.40/32   0             Tu1        point2point
-        p1 = re.compile(r'^(?P<local_label>\d+) +(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>[\S\s]+) +\\$')
+        p1 = re.compile(r'^(?P<local_label>\d+) +(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>[\S]+) +\\$')
 
         p2 = re.compile(r'^(?P<bytes_label_switched>\d+) +(?P<interface>\S+)( +(?P<next_hop>[\w\.]+))?$')
+
         p2_2 = re.compile(r'^((?P<local_label>\d+) +)?(\[(?P<t>(T)+)\] +)?'
             '(?P<outgoing_label>(Untagged|(No|Pop) Label|(No|Pop) (T|t)ag|\d|\d\/)+) +(?P<prefix_or_tunnel_id>[\S]+)'
             ' +(?P<bytes_label_switched>\d+) +(?P<interface>\S+)( +(?P<next_hop>[\w\.]+))?$')
+
         p2_3 = re.compile(r'^((?P<local_label>\d+) +)?(\[(?P<t>(T)+)\] +)?'
             '(?P<outgoing_label>((No|Pop) Label|(No|Pop) tag|\d|\d\/)+) +(?P<prefix_or_tunnel_id>[\w\.\[\]\-\s]+)'
             ' +(?P<bytes_label_switched>\d+) +(?P<interface>\S+)( +(?P<next_hop>[\w\.]+))?$')
@@ -1854,7 +1857,6 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
             line = line.replace('\t',' ')
 
             # 9301       No Label   172.16.100.1/32[V]   \
-            #
             #                                       0             Po1.51     192.168.10.253
             m = p1.match(line)
             if m:
@@ -1866,11 +1868,15 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
 
             m = p2.match(line)
             if m:
+                print(local_label)
                 group = m.groupdict()
+                if not local_label:
+                    index = +1
+                    local_label = index
                 interface = Common.convert_intf_name(group['interface'])
                 feature_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}). \
                                            setdefault('label_local', {}).\
-                                           setdefault(local_label,{}).\
+                                           setdefault(local_label, {}).\
                                            setdefault('outgoing_label_or_vc', {}).\
                                            setdefault(outgoing_label.strip(), {})
 
