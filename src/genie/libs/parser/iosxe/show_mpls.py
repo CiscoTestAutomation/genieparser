@@ -1826,7 +1826,11 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         p1 = re.compile(r'^(?P<local_label>\d+) +(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>[\S\s]+) +\\$')
 
         p2 = re.compile(r'^(?P<bytes_label_switched>\d+) +(?P<interface>\S+)( +(?P<next_hop>[\w\.]+))?$')
-        p2_2 = re.compile(r'^((?P<local_label>\d+) +)?(\[(?P<t>(T)+)\] +)?(?P<outgoing_label>((No|Pop) Label|(No|Pop) tag|\d|\d\/)+) +(?P<prefix_or_tunnel_id>[\S]+)'
+        p2_2 = re.compile(r'^((?P<local_label>\d+) +)?(\[(?P<t>(T)+)\] +)?'
+            '(?P<outgoing_label>(Untagged|(No|Pop) Label|(No|Pop) (T|t)ag|\d|\d\/)+) +(?P<prefix_or_tunnel_id>[\S]+)'
+            ' +(?P<bytes_label_switched>\d+) +(?P<interface>\S+)( +(?P<next_hop>[\w\.]+))?$')
+        p2_3 = re.compile(r'^((?P<local_label>\d+) +)?(\[(?P<t>(T)+)\] +)?'
+            '(?P<outgoing_label>((No|Pop) Label|(No|Pop) tag|\d|\d\/)+) +(?P<prefix_or_tunnel_id>[\w\.\[\]\-\s]+)'
             ' +(?P<bytes_label_switched>\d+) +(?P<interface>\S+)( +(?P<next_hop>[\w\.]+))?$')
         #         MAC/Encaps=18/18, MRU=1530, Label Stack{}
         #         MAC/Encaps=18/18, MRU=1530, Label Stack{}, via Ls0
@@ -1890,6 +1894,29 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                                            setdefault(local_label, {}).\
                                            setdefault('outgoing_label_or_vc', {}).\
                                            setdefault(outgoing_label.strip(), {})
+
+                feature_dict.update({'outgoing_interface': interface})
+                feature_dict.update({'prefix_or_tunnel_id': prefix_or_tunnel_id})
+                if group['next_hop']:
+                    feature_dict.update({'next_hop': group['next_hop']})
+                if group['t']:
+                    feature_dict.update({'lsp_tunnel': True})
+                feature_dict.update({'bytes_label_switched': int(group['bytes_label_switched'])})
+                continue
+
+            m = p2_3.match(line)
+            if m:
+                group = m.groupdict()
+                local_label = int(group['local_label'])
+                outgoing_label = group['outgoing_label']
+                prefix_or_tunnel_id = group['prefix_or_tunnel_id'].strip()
+
+                interface = Common.convert_intf_name(group['interface'])
+                feature_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}). \
+                    setdefault('local_label', {}). \
+                    setdefault(local_label, {}). \
+                    setdefault('outgoing_label_or_vc', {}). \
+                    setdefault(outgoing_label.strip(), {})
 
                 feature_dict.update({'outgoing_interface': interface})
                 feature_dict.update({'prefix_or_tunnel_id': prefix_or_tunnel_id})

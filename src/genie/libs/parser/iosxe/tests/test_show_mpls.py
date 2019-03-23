@@ -1909,6 +1909,277 @@ tag    tag or VC   or Tunnel Id      switched   interface
 251    18          10.17.17.17/32    0          PO1/1/0    point2point
 
     '''}
+
+    golden_parsed_output_3 = {
+        "vrf": {
+            "default": {
+                "local_label": {
+                    16: {
+                        "outgoing_label_or_vc": {
+                            "16": {
+                                "outgoing_interface": "Ethernet1/0",
+                                "prefix_or_tunnel_id": "10.0.0.1 1 [19]",
+                                "next_hop": "10.0.1.30",
+                                "bytes_label_switched": 0,
+                                "mac": 14,
+                                "encaps": 18,
+                                "mru": 1500,
+                                "label_stack": "{16}",
+                                "macstr": "AABBCC032800AABBCC0325018847",
+                                "lstack": "00010000",
+                                "output_feature_configured": False,
+                                "broadcast": True
+                            }
+                        }
+                    },
+                    17: {
+                        "outgoing_label_or_vc": {
+                            "No Label": {
+                                "outgoing_interface": "aggregate",
+                                "prefix_or_tunnel_id": "10.0.0.1 1 [19]",
+                                "bytes_label_switched": 342,
+                                "mac": 0,
+                                "encaps": 0,
+                                "mru": 0,
+                                "label_stack": "{}",
+                                "via": "Ls0"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    golden_output_3 = {'execute.return_value': '''\
+    Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop
+    Label      Label      or Tunnel Id     Switched      interface
+    16         16         10.0.0.1 1 [19]  0             Et1/0      10.0.1.30
+            MAC/Encaps=14/18, MRU=1500, Label Stack{16}
+            AABBCC032800AABBCC0325018847 00010000
+            No output feature configured
+        Broadcast
+
+    Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop
+    Label      Label      or Tunnel Id     Switched      interface
+    17         No Label   10.0.0.1 1 [19]  342           aggregate
+        MAC/Encaps=0/0, MRU=0, Label Stack{}, via Ls0
+
+    '''
+    }
+
+    golden_parsed_output_4 = {
+    "vrf": {
+        "default": {
+            "local_label": {
+                16: {
+                    "outgoing_label_or_vc": {
+                        "Pop Label": {
+                            "outgoing_interface": "Ethernet0/0",
+                            "prefix_or_tunnel_id": "1.1.1.2-A",
+                            "next_hop": "1.1.1.2",
+                            "bytes_label_switched": 0
+                        }
+                    }
+                },
+                17: {
+                    "outgoing_label_or_vc": {
+                        "Pop Label": {
+                            "outgoing_interface": "Ethernet0/0",
+                            "prefix_or_tunnel_id": "1.1.1.2-A",
+                            "next_hop": "1.1.1.2",
+                            "bytes_label_switched": 0
+                        }
+                    }
+                },
+                18: {
+                    "outgoing_label_or_vc": {
+                        "Pop Label": {
+                            "outgoing_interface": "Ethernet0/0",
+                            "prefix_or_tunnel_id": "1.1.1.2-A",
+                            "next_hop": "1.1.1.2",
+                            "bytes_label_switched": 0
+                        }
+                    }
+                },
+                19: {
+                    "outgoing_label_or_vc": {
+                        "Pop Label": {
+                            "outgoing_interface": "Ethernet0/1",
+                            "prefix_or_tunnel_id": "15.15.15.2-A",
+                            "next_hop": "15.15.15.2",
+                            "bytes_label_switched": 0
+                        }
+                    }
+                },
+                20: {
+                    "outgoing_label_or_vc": {
+                        "Pop Label": {
+                            "outgoing_interface": "Ethernet0/1",
+                            "prefix_or_tunnel_id": "15.15.15.2-A",
+                            "next_hop": "15.15.15.2",
+                            "bytes_label_switched": 0
+                        }
+                    }
+                },
+                21: {
+                    "outgoing_label_or_vc": {
+                        "Pop Label": {
+                            "outgoing_interface": "Ethernet0/1",
+                            "prefix_or_tunnel_id": "15.15.15.2-A",
+                            "next_hop": "15.15.15.2",
+                            "bytes_label_switched": 0
+                        }
+                    }
+                },
+                22: {
+                    "outgoing_label_or_vc": {
+                        "Pop Label": {
+                            "outgoing_interface": "Tunnel1",
+                            "prefix_or_tunnel_id": "1/1[TE-Bind]",
+                            "next_hop": "point2point",
+                            "lsp_tunnel": True,
+                            "bytes_label_switched": 0
+                        }
+                    }
+                },
+                16110: {
+                    "outgoing_label_or_vc": {
+                        "Pop Label": {
+                            "outgoing_interface": "Ethernet0/0",
+                            "prefix_or_tunnel_id": "20.20.20.20/32",
+                            "next_hop": "1.1.1.2",
+                            "bytes_label_switched": 0
+                        }
+                    }
+                },
+                16120: {
+                    "outgoing_label_or_vc": {
+                        "16120": {
+                            "outgoing_interface": "Ethernet0/0",
+                            "prefix_or_tunnel_id": "30.30.30.30/32",
+                            "next_hop": "1.1.1.2",
+                            "bytes_label_switched": 0
+                        }
+                    }
+                },
+                16130: {
+                    "outgoing_label_or_vc": {
+                        "16130": {
+                            "outgoing_interface": "Tunnel1",
+                            "prefix_or_tunnel_id": "40.40.40.40/32",
+                            "next_hop": "point2point",
+                            "bytes_label_switched": 0,
+                            "lsp_tunnel": True
+                        }
+                    }
+                },
+                16140: {
+                    "outgoing_label_or_vc": {
+                        "Pop Label": {
+                            "outgoing_interface": "Tunnel1",
+                            "prefix_or_tunnel_id": "50.50.50.50/32",
+                            "next_hop": "point2point",
+                            "lsp_tunnel": True,
+                            "bytes_label_switched": 0
+                        }
+                    }
+                },
+                16200: {
+                    "outgoing_label_or_vc": {
+                        "Pop Label": {
+                            "outgoing_interface": "Ethernet0/1",
+                            "prefix_or_tunnel_id": "100.100.100.100/32",
+                            "next_hop": "15.15.15.2",
+                            "bytes_label_switched": 0
+                        }
+                    }
+                },
+                17100: {
+                    "outgoing_label_or_vc": {
+                        "Pop Label": {
+                            "outgoing_interface": "Ethernet0/0",
+                            "prefix_or_tunnel_id": "0-20.20.20.20/32-0",
+                            "next_hop": "1.1.1.2",
+                            "bytes_label_switched": 0
+                        }
+                    }
+                },
+                17200: {
+                    "outgoing_label_or_vc": {
+                        "17200": {
+                            "outgoing_interface": "Ethernet0/0",
+                            "prefix_or_tunnel_id": "0-30.30.30.30/32-0",
+                            "next_hop": "1.1.1.2",
+                            "bytes_label_switched": 0
+                        }
+                    }
+                },
+                17300: {
+                    "outgoing_label_or_vc": {
+                        "17300": {
+                            "outgoing_interface": "Ethernet0/1",
+                            "prefix_or_tunnel_id": "0-40.40.40.40/32-0",
+                            "next_hop": "15.15.15.2",
+                            "bytes_label_switched": 0
+                        }
+                    }
+                },
+                17400: {
+                    "outgoing_label_or_vc": {
+                        "17400": {
+                            "outgoing_interface": "Ethernet0/1",
+                            "prefix_or_tunnel_id": "0-50.50.50.50/32-0",
+                            "next_hop": "15.15.15.2",
+                            "bytes_label_switched": 0
+                        }
+                    }
+                },
+                18000: {
+                    "outgoing_label_or_vc": {
+                        "Pop Label": {
+                            "outgoing_interface": "Ethernet0/1",
+                            "prefix_or_tunnel_id": "0-100.100.100.100/32-0",
+                            "next_hop": "15.15.15.2",
+                            "bytes_label_switched": 0
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+    golden_output_4 = {'execute.return_value':'''\
+    Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop
+Label      Label      or Tunnel Id     Switched      interface
+16         Pop Label  1.1.1.2-A        0             Et0/0      1.1.1.2
+17         Pop Label  1.1.1.2-A        0             Et0/0      1.1.1.2
+18         Pop Label  1.1.1.2-A        0             Et0/0      1.1.1.2
+19         Pop Label  15.15.15.2-A     0             Et0/1      15.15.15.2
+20         Pop Label  15.15.15.2-A     0             Et0/1      15.15.15.2
+21         Pop Label  15.15.15.2-A     0             Et0/1      15.15.15.2
+22    [T]  Pop Label  1/1[TE-Bind]     0             Tu1        point2point
+16110      Pop Label  20.20.20.20/32   0             Et0/0      1.1.1.2
+16120      16120      30.30.30.30/32   0             Et0/0      1.1.1.2
+16130      16130      40.40.40.40/32   0             Et0/0      1.1.1.2
+      [T]  16130      40.40.40.40/32   0             Tu1        point2point
+16140 [T]  Pop Label  50.50.50.50/32   0             Tu1        point2point
+16200      Pop Label  100.100.100.100/32   \
+                                       0             Et0/1      15.15.15.2
+17100      Pop Label  0-20.20.20.20/32-0   \
+                                       0             Et0/0      1.1.1.2
+17200      17200      0-30.30.30.30/32-0   \
+                                       0             Et0/0      1.1.1.2
+17300      17300      0-40.40.40.40/32-0   \
+                                       0             Et0/1      15.15.15.2
+17400      17400      0-50.50.50.50/32-0   \
+                                       0             Et0/1      15.15.15.2
+18000      Pop Label  0-100.100.100.100/32-0   \
+                                       0             Et0/1      15.15.15.2
+
+    '''}
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowMplsForwardingTable(device=self.dev1)
@@ -1928,6 +2199,20 @@ tag    tag or VC   or Tunnel Id      switched   interface
         obj = ShowMplsForwardingTable(device=self.dev)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden_3(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output_3)
+        obj = ShowMplsForwardingTable(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
+
+    def test_golden_4(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output_4)
+        obj = ShowMplsForwardingTable(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
 class test_show_mpls_interface(unittest.TestCase):
     dev1 = Device(name='empty')
