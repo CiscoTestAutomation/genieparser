@@ -1868,11 +1868,7 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
 
             m = p2.match(line)
             if m:
-                print(local_label)
                 group = m.groupdict()
-                if not local_label:
-                    index = +1
-                    local_label = index
                 interface = Common.convert_intf_name(group['interface'])
                 feature_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}). \
                                            setdefault('label_local', {}).\
@@ -1885,6 +1881,7 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                 if group['next_hop']:
                     feature_dict.update({'next_hop': group['next_hop']})
                 feature_dict.update({'bytes_label_switched': int(group['bytes_label_switched'])})
+                print(result_dict)
                 continue
 
             m = p2_2.match(line)
@@ -1909,6 +1906,7 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                 if group['t']:
                     feature_dict.update({'lsp_tunnel': True})
                 feature_dict.update({'bytes_label_switched': int(group['bytes_label_switched'])})
+                print(result_dict)
                 continue
 
             m = p2_3.match(line)
