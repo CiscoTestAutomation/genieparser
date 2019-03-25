@@ -1834,7 +1834,7 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         p2 = re.compile(r'^(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
 
         p2_2 = re.compile(r'^((?P<local_label>\d+) +)?(\[(?P<t>(T)+)\] +)?'
-            '(?P<outgoing_label>((A|a)ggregate|Untagged|(No|Pop) Label|(No|Pop) (T|t)ag|\d\/\w*|\d|\d\/)+)(\[(?P<t1>(T)+)\] +)? +(?P<prefix_or_tunnel_id>[\S]+)'
+            '(?P<outgoing_label>((A|a)ggregate|Untagged|(No|Pop) Label|(No|Pop) (T|t)ag|\d\/\w*|\d|\d\/)+)(\[(?P<t1>(T)+)\] +)? +(?P<prefix_or_tunnel_id>[\w\(\)\:\ |\S]+)'
             ' +(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
 
         p2_3 = re.compile(r'^((?P<local_label>\d+) +)?(\[(?P<t>(T)+)\] +)?'
