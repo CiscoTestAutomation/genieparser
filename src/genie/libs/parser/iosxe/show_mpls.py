@@ -1819,7 +1819,6 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
 
         if not vrf:
             vrf = 'default'
-        index = 0
 
         # initial return dictionary
         result_dict = {}
@@ -1835,11 +1834,11 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         p2 = re.compile(r'^(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
 
         p2_2 = re.compile(r'^((?P<local_label>\d+) +)?(\[(?P<t>(T)+)\] +)?'
-            '(?P<outgoing_label>((A|a)ggregate|Untagged|(No|Pop) Label|(No|Pop) (T|t)ag|\d|\d\/|\d\/\a-z)+)?(\[(?P<t1>(T)+)\] +)? +(?P<prefix_or_tunnel_id>[\S\ ]+)'
+            '(?P<outgoing_label>((A|a)ggregate|Untagged|(No|Pop) Label|(No|Pop) (T|t)ag|\d\/\w*|\d|\d\/)+)(\[(?P<t1>(T)+)\] +)? +(?P<prefix_or_tunnel_id>[\S]+)'
             ' +(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
 
         p2_3 = re.compile(r'^((?P<local_label>\d+) +)?(\[(?P<t>(T)+)\] +)?'
-            '(?P<outgoing_label>((A|a)ggregate|(No|Pop) Label|(No|Pop) tag|\d|\d\/|\d\/\a-z)+)?(\[(?P<t1>(T)+)\] +)? +(?P<prefix_or_tunnel_id>[\w\.\[\]\-\s]+)'
+            '(?P<outgoing_label>((A|a)ggregate|(No|Pop) Label|(No|Pop) tag|\d|\d\/)+)?(\[(?P<t1>(T)+)\] +)? +(?P<prefix_or_tunnel_id>[\w\.\[\]\-\s]+)'
             ' +(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
         #         MAC/Encaps=18/18, MRU=1530, Label Stack{}
         #         MAC/Encaps=18/18, MRU=1530, Label Stack{}, via Ls0
@@ -1861,7 +1860,6 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         for line in out.splitlines():
             line = line.strip()
             line = line.replace('\t',' ')
-
 
             # 9301       No Label   172.16.100.1/32[V]   \
             #                                       0             Po1.51     192.168.10.253
