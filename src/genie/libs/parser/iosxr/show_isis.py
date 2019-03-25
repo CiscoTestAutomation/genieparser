@@ -57,7 +57,6 @@ class ShowIsisAdjacency(ShowIsisAdjacencySchema):
             out = output
         
         isis_adjacency_dict = {}
-        isis_adjacency_dict['isis'] = {}
         for line in out.splitlines():
             line = line.rstrip()
             
@@ -65,6 +64,7 @@ class ShowIsisAdjacency(ShowIsisAdjacencySchema):
             p1 = re.compile(r'^\s*IS-IS\s+(?P<isis_name>\S+)\s+(?P<level_name>\S+)\s*adjacencies:\s*$')
             m = p1.match(line)
             if m:
+                isis_adjacency_dict.setdefault('isis', {})
                 isis_name = m.groupdict()['isis_name']
                 level_name = m.groupdict()['level_name']
                 isis_adjacency_dict['isis'][isis_name] = {'adjacency': {level_name: {} } }
