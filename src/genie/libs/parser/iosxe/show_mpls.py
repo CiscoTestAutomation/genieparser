@@ -1886,10 +1886,12 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
 
                 if group['interface']:
                     interface = Common.convert_intf_name(group['interface'])
-                    feature_dict = base_feature_dict.setdefault('outgoing_interface',{}).setdefault(interface, {})
-                    if group['next_hop']:
-                        feature_dict.update({'next_hop': group['next_hop']})
-                    feature_dict.update({'bytes_label_switched': int(group['bytes_label_switched'])})
+                else:
+                    interface = outgoing_label.strip()
+                feature_dict = base_feature_dict.setdefault('outgoing_interface',{}).setdefault(interface, {})
+                if group['next_hop']:
+                    feature_dict.update({'next_hop': group['next_hop']})
+                feature_dict.update({'bytes_label_switched': int(group['bytes_label_switched'])})
 
                 continue
 
@@ -1911,12 +1913,15 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
 
                 if group['interface']:
                     interface = Common.convert_intf_name(group['interface'])
-                    feature_dict = base_feature_dict.setdefault('outgoing_interface', {}).setdefault(interface, {})
-                    if group['next_hop']:
-                        feature_dict.update({'next_hop': group['next_hop']})
-                    if group['t']:
-                        feature_dict.update({'lsp_tunnel': True})
-                    feature_dict.update({'bytes_label_switched': int(group['bytes_label_switched'])})
+                else:
+                    interface = outgoing_label.strip()
+
+                feature_dict = base_feature_dict.setdefault('outgoing_interface', {}).setdefault(interface, {})
+                if group['next_hop']:
+                    feature_dict.update({'next_hop': group['next_hop']})
+                if group['t']:
+                    feature_dict.update({'lsp_tunnel': True})
+                feature_dict.update({'bytes_label_switched': int(group['bytes_label_switched'])})
                 continue
 
             m = p2_3.match(line)
@@ -1937,12 +1942,14 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
 
                 if group['interface']:
                     interface = Common.convert_intf_name(group['interface'])
-                    feature_dict = base_feature_dict.setdefault('outgoing_interface', {}).setdefault(interface, {})
-                    if group['next_hop']:
-                        feature_dict.update({'next_hop': group['next_hop']})
-                    if group['t']:
-                        feature_dict.update({'lsp_tunnel': True})
-                    feature_dict.update({'bytes_label_switched': int(group['bytes_label_switched'])})
+                else:
+                    interface = outgoing_label.strip()
+                feature_dict = base_feature_dict.setdefault('outgoing_interface', {}).setdefault(interface, {})
+                if group['next_hop']:
+                    feature_dict.update({'next_hop': group['next_hop']})
+                if group['t']:
+                    feature_dict.update({'lsp_tunnel': True})
+                feature_dict.update({'bytes_label_switched': int(group['bytes_label_switched'])})
                 continue
 
             #     MAC/Encaps=18/18, MRU=1530, Label Stack{}

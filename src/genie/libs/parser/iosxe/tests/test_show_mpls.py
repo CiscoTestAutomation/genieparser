@@ -2375,8 +2375,6 @@ tag    tag or VC   or Tunnel Id      switched   interface
         self.dev = Mock(**self.golden_output_4)
         obj = ShowMplsForwardingTable(device=self.dev)
         parsed_output = obj.parse()
-        import pdb;pdb.set_trace()
-
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
 class test_show_mpls_interface(unittest.TestCase):
