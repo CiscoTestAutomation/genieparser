@@ -87,7 +87,7 @@ class test_show_archive_config_differences(unittest.TestCase):
     }
 
     golden_parsed_output_incremental_diff = {
-        'diff': [
+        'list_of_commands': [
             'ip subnet-zero', 'ip cef', 
             'ip name-server 10.4.4.4', 
 	    'voice dnis-map1', 'dnis 111', 

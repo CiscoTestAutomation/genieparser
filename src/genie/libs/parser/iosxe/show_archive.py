@@ -108,8 +108,9 @@ class ShowArchiveConfigDifferencesSchema(MetaParser):
     """
     
     schema = {
-            'diff': list
-        }
+            Optional('diff'): list,
+            Optional('list_of_commands'): list
+    }
 
 class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
     """ Parser for the following commands:
@@ -182,14 +183,17 @@ class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
                 # !List of Commands:
                 m = p3.match(line)
                 if m:
-                    incremental_diff = ret_dict.setdefault('diff',[])
+                    incremental_diff = ret_dict.setdefault('list_of_commands',[])
                     continue
+                # Load for five secs: 16%/0%; one minute: 30%; five minutes: 23%
                 m = p4.match(line)
                 if m:
                     continue
+                # Time source is NTP, 19:16:19.992 JST Thu Sep 15 2016
                 m = p5.match(line)
                 if m:
                     continue
+                #test#show archive config incremental-diffs bootflash:A.cfg
                 m = p6.match(line)
                 if m:
                     continue
@@ -198,7 +202,7 @@ class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
                 m = p7.match(line)
                 if m:
                     group = m.groupdict()
-                    incremental_diff = ret_dict.setdefault('diff',[])
+                    incremental_diff = ret_dict.setdefault('list_of_commands',[])
                     incremental_diff.append(group['line_info'])
                     continue
         return ret_dict
