@@ -432,9 +432,8 @@ class ShowEthernetServiceInstanceStatsSchema(MetaParser):
 
     schema = {
         Optional('max_num_of_service_instances'): int,
-        'service_instance': {
+        Optional('service_instance'): {
             Any(): {
-                'id': int,
                 'interface': str,
                 'pkts_in': int,
                 'pkts_out': int,
@@ -492,7 +491,6 @@ class ShowEthernetServiceInstanceStats(ShowEthernetServiceInstanceStatsSchema):
                 service_id = int(group['service_instance'])
                 final_dict = ret_dict.setdefault('service_instance', {}).\
                     setdefault(service_id, {})
-                final_dict['id'] = service_id
                 final_dict['interface'] = group['interface']
                 continue
 

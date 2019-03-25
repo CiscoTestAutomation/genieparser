@@ -740,7 +740,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2051,
                 },
             2052: {
                 'pkts_out': 0,
@@ -748,7 +747,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2052,
                 },
             2053: {
                 'pkts_out': 0,
@@ -756,7 +754,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2053,
                 },
             2054: {
                 'pkts_out': 0,
@@ -764,7 +761,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2054,
                 },
             2055: {
                 'pkts_out': 0,
@@ -772,7 +768,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2055,
                 },
             2056: {
                 'pkts_out': 0,
@@ -780,7 +775,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2056,
                 },
             2057: {
                 'pkts_out': 0,
@@ -788,7 +782,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2057,
                 },
             2058: {
                 'pkts_out': 0,
@@ -796,7 +789,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2058,
                 },
             2059: {
                 'pkts_out': 0,
@@ -804,7 +796,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2059,
                 },
             2060: {
                 'pkts_out': 0,
@@ -812,7 +803,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2060,
                 },
             2061: {
                 'pkts_out': 0,
@@ -820,7 +810,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2061,
                 },
             2062: {
                 'pkts_out': 0,
@@ -828,7 +817,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2062,
                 },
             2063: {
                 'pkts_out': 0,
@@ -836,7 +824,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2063,
                 },
             2064: {
                 'pkts_out': 0,
@@ -844,7 +831,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2064,
                 },
             2065: {
                 'pkts_out': 0,
@@ -852,7 +838,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2065,
                 },
             2066: {
                 'pkts_out': 0,
@@ -860,7 +845,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2066,
                 },
             2067: {
                 'pkts_out': 0,
@@ -868,7 +852,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2067,
                 },
             2068: {
                 'pkts_out': 0,
@@ -876,7 +859,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2068,
                 },
             2069: {
                 'pkts_out': 0,
@@ -884,7 +866,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2069,
                 },
             2070: {
                 'pkts_out': 0,
@@ -892,7 +873,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2070,
                 },
             2071: {
                 'pkts_out': 0,
@@ -900,7 +880,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2071,
                 },
             2072: {
                 'pkts_out': 0,
@@ -908,7 +887,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2072,
                 },
             2073: {
                 'pkts_out': 0,
@@ -916,7 +894,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2073,
                 },
             2074: {
                 'pkts_out': 0,
@@ -924,7 +901,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2074,
                 },
             2075: {
                 'pkts_out': 0,
@@ -932,7 +908,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2075,
                 },
             2076: {
                 'pkts_out': 0,
@@ -940,7 +915,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2076,
                 },
             2077: {
                 'pkts_out': 0,
@@ -948,7 +922,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2077,
                 },
             2078: {
                 'pkts_out': 0,
@@ -956,7 +929,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2078,
                 },
             2079: {
                 'pkts_out': 0,
@@ -964,7 +936,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2079,
                 },
             2080: {
                 'pkts_out': 0,
@@ -972,7 +943,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2080,
                 },
             2081: {
                 'pkts_out': 0,
@@ -980,7 +950,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2081,
                 },
             2082: {
                 'pkts_out': 0,
@@ -988,7 +957,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2082,
                 },
             2083: {
                 'pkts_out': 0,
@@ -996,7 +964,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2083,
                 },
             2084: {
                 'pkts_out': 0,
@@ -1004,7 +971,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2084,
                 },
             2085: {
                 'pkts_out': 0,
@@ -1012,7 +978,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2085,
                 },
             2086: {
                 'pkts_out': 0,
@@ -1020,7 +985,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2086,
                 },
             2087: {
                 'pkts_out': 0,
@@ -1028,7 +992,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2087,
                 },
             2088: {
                 'pkts_out': 0,
@@ -1036,7 +999,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2088,
                 },
             2089: {
                 'pkts_out': 0,
@@ -1044,7 +1006,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2089,
                 },
             2090: {
                 'pkts_out': 0,
@@ -1052,7 +1013,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2090,
                 },
             2091: {
                 'pkts_out': 0,
@@ -1060,7 +1020,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'interface': 'GigabitEthernet0/0/3',
                 'bytes_in': 0,
                 'bytes_out': 0,
-                'id': 2091,
                 },
             },
         }
@@ -1244,7 +1203,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'pkts_out': 97150,
                 'interface': 'GigabitEthernet0/0/13',
                 'pkts_in': 214,
-                'id': 1,
                 'bytes_out': 6994800,
                 },
             2: {
@@ -1252,7 +1210,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
                 'pkts_out': 9090,
                 'interface': 'GigabitEthernet0/0/13',
                 'pkts_in': 654,
-                'id': 2,
                 'bytes_out': 34565,
                 },
             },
@@ -1266,6 +1223,19 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
         Service Instance 2, Interface GigabitEthernet0/0/13
         Pkts In   Bytes In   Pkts Out  Bytes Out
                654      6768      9090    34565
+    '''
+    }
+
+    golden_parsed_output_shrinked = {
+        'max_num_of_service_instances': 32768,
+    }
+
+    golden_output_shrinked = {'execute.return_value': '''\
+        1006#show ethernet service instance stats
+        Load for five secs: 1%/0%; one minute: 0%; five minutes: 0%
+        Time source is NTP, 15:44:40.696 JST Fri Nov 11 2016
+
+        System maximum number of service instances: 32768
     '''
     }
 
@@ -1288,6 +1258,13 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
         platform_obj = ShowEthernetServiceInstanceStats(device=self.device)
         parsed_output = platform_obj.parse(interface='gigabitEthernet 0/0/13')
         self.assertEqual(parsed_output, self.golden_parsed_output_interface)
+
+    def test_golden_shrinked(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_shrinked)
+        platform_obj = ShowEthernetServiceInstanceStats(device=self.device)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_shrinked)
 
 if __name__ == '__main__':
     unittest.main()
