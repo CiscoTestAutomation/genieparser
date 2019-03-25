@@ -97,6 +97,15 @@
           show mpls ldp igp sync interface <interface>
           show mpls ldp igp sync vrf <vrf>
 
+----------------------------------------------------------------------------------
+                                 ARP
+----------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowArpApplication for:
+        show arp application
+    * Add ShowArpSummary for:
+        show arp summary
+
 --------------------------------------------------------------------------------
                                  CONFIG
 --------------------------------------------------------------------------------
@@ -124,3 +133,4 @@
         show etherchannel load-balancing
     * Add ShowLacpNeighborDetail for:
         show lacp neighbor detail
+
