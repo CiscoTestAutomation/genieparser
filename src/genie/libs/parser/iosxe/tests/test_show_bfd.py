@@ -22,65 +22,73 @@ class test_show_bfd(unittest.TestCase):
 		empty_output = {'execute.return_value': ''}
 		
 		golden_parsed_output =  {
-      'bfd_neighbors': {
-					'106.162.197.93': {
-            '106.162.197.94': {
-                        'ld_rd': '4097/4097',
-                        'rh_rs': '1',
-                        'holddown_mult': '0 (3 )',
-                        'state': 'Up',
-                        'interface': 'Gi0/0/0',
-                        'session': {
-                            'state': 'UP',
-                            'function_used': 'echo',
-                                 'interval_in_ms': 500
-                                 },
-                       'session_host': 'Software',
-                       'handle': 1,
-                       'local_diag': 0,
-                       'demand_mode': 0,
-                       'poll_bit': 0,
-                       'min_tx_interface': 1000000,
-                       'min_rx_interface': 1000000,
-                       'multiplier': 6,
-                       'received_min_rx_interface': 1000000,
-                     'received_multiplier': 6,
-                     'holddown_hits': '0(0)',
-                     'hello_hits': '1000(1939)',
-                     'rx': {'rx_count': 1916,
-                            'rx_min_interval_in_ms': 1,
-                            'rx_max_interval_in_ms': 1003,
-                            'rx_avg_interval_in_ms': 878,
-                            'rx_last_interval_in_ms': 207},
-                      'tx': {'tx_count': 1916,
-                            'tx_min_interval_in_ms': 1,
-                            'tx_max_interval_in_ms': 1003,
-                            'tx_avg_interval_in_ms': 878,
-                            'tx_last_interval_in_ms': 767},
-                     
-                     'elapsed_time_watermarks': '0 0',
-                     'elapsed_time_watermarks_last': 0,
-                          
-                      'registered_protocols': 'OSPF CEF',
-     
-                     'up_time': '00:28:03', 
-                      'last_packet': {'c_bit': 0,
-                                     'demand_bit': 0,
-                                     'diagnostic': 0,
-                                     'final_bit': 0,
-                                     'length': 24,
-                                     'min_echo_interval': 3000000,
-                                     'min_rx_interval': 1000000,
-                                     'min_tx_interval': 1000000,
-                                     'multiplier': 6,
-                                     'my_discr': 4097,
-                                     'poll_bit': 0,
-                                     'state_bit': 'Up',
-                                     'version': 1,
-                                     'your_discr': 4097}
-                }
-        }       
-      }      
+		  '106.162.197.93': {
+        'neighbor_address':{
+          '106.162.197.94': {
+            'ld_rd': '4097/4097',
+            'rh_rs': '1',
+            'holddown_mult': '0 (3 )',
+            'state': 'Up',
+            'interface': 'GigabitEthernet0/0/0',
+            'session': {
+              'state': 'UP',
+              'echo_function': True,
+              'echo_interval_ms': 500
+            },
+            'session_host': 'Software',
+            'handle': 1,
+            'local_diag': 0,
+            'demand_mode': 0,
+            'poll_bit': 0,
+            'min_tx_int': 1000000,
+            'min_rx_int': 1000000,
+            'multiplier': 6,
+            'received_min_rx_int': 1000000,
+            'received_multiplier': 6,
+            'holddown': 0,
+            'holddown_hits': 0,
+            'hello': 1000,
+            'hello_hits': 1939,
+            'rx': {
+              'count': 1916,
+              'min_int_ms': 1,
+              'max_int_ms': 1003,
+              'avg_int_ms': 878,
+              'last_ms_ago': 207
+            },
+            'tx': {
+              'count': 1916,
+              'min_int_ms': 1,
+              'max_int_ms': 1003,
+              'avg_int_ms': 878,
+              'last_ms_ago': 767
+            },
+            'elapsed_time_watermarks': '0 0',
+            'elapsed_time_watermarks_last': 0,                        
+            'registered_protocols': [
+              'OSPF', 
+              'CEF'
+            ],
+            'up_time': '00:28:03', 
+            'last_packet': {
+              'c_bit': 0,
+              'demand_bit': 0,
+              'diagnostic': 0,
+              'final_bit': 0,
+              'length': 24,
+              'min_echo_int': 3000000,
+              'min_rx_int': 1000000,
+              'min_tx_int': 1000000,
+              'multiplier': 6,
+              'my_discr': 4097,
+              'poll_bit': 0,
+              'state_bit': 'Up',
+              'version': 1,
+              'your_discr': 4097
+            }
+          }
+        }
+      }         
     }
 
 
@@ -112,72 +120,80 @@ class test_show_bfd(unittest.TestCase):
 
 
 		golden_parsed_output_client_osf_details =  {
-      'bfd_neighbors': {
-          '106.162.197.93': {
-            '106.162.197.94': {
-                        'ld_rd': '4097/4097',
-                        'rh_rs': '1',
-                        'holddown_mult': '0 (3 )',
-                        'state': 'Up',
-                        'interface': 'Gi0/0/0',
-                        'session': {
-                            'state': 'UP',
-                            'function_used': 'echo',
-                                 'interval_in_ms': 500
-                                 },
-                       'session_host': 'Software',
-                       'handle': 1,
-                       'local_diag': 0,
-                       'demand_mode': 0,
-                       'poll_bit': 0,
-                       'min_tx_interface': 1000000,
-                       'min_rx_interface': 1000000,
-                       'multiplier': 6,
-                       'received_min_rx_interface': 1000000,
-                     'received_multiplier': 6,
-                     'holddown_hits': '0(0)',
-                     'hello_hits': '1000(1939)',
-                     'rx': {'rx_count': 1916,
-                            'rx_min_interval_in_ms': 1,
-                            'rx_max_interval_in_ms': 1003,
-                            'rx_avg_interval_in_ms': 878,
-                            'rx_last_interval_in_ms': 207},
-                      'tx': {'tx_count': 1916,
-                            'tx_min_interval_in_ms': 1,
-                            'tx_max_interval_in_ms': 1003,
-                            'tx_avg_interval_in_ms': 878,
-                            'tx_last_interval_in_ms': 767},
-                     
-                     'elapsed_time_watermarks': '0 0',
-                     'elapsed_time_watermarks_last': 0,
-                          
-                      'registered_protocols': 'OSPF CEF',
-     
-                     'up_time': '00:28:03', 
-                      'last_packet': {'c_bit': 0,
-                                     'demand_bit': 0,
-                                     'diagnostic': 0,
-                                     'final_bit': 0,
-                                     'length': 24,
-                                     'min_echo_interval': 3000000,
-                                     'min_rx_interval': 1000000,
-                                     'min_tx_interval': 1000000,
-                                     'multiplier': 6,
-                                     'my_discr': 4097,
-                                     'poll_bit': 0,
-                                     'state_bit': 'Up',
-                                     'version': 1,
-                                     'your_discr': 4097}
-                }
-        }       
-      }      
+      '106.162.197.93': {
+        'neighbor_address':{
+          '106.162.197.94': {
+            'ld_rd': '4097/4097',
+            'rh_rs': '1',
+            'holddown_mult': '0 (3 )',
+            'state': 'Up',
+            'interface': 'GigabitEthernet0/0/0',
+            'session': {
+              'state': 'UP',
+              'echo_function': True,
+              'echo_interval_ms': 500
+            },
+            'session_host': 'Software',
+            'handle': 1,
+            'local_diag': 0,
+            'demand_mode': 0,
+            'poll_bit': 0,
+            'min_tx_int': 1000000,
+            'min_rx_int': 1000000,
+            'multiplier': 6,
+            'received_min_rx_int': 1000000,
+            'received_multiplier': 6,
+            'holddown': 0,
+            'holddown_hits': 0,
+            'hello': 1000,
+            'hello_hits': 1939,
+            'rx': {
+              'count': 1916,
+              'min_int_ms': 1,
+              'max_int_ms': 1003,
+              'avg_int_ms': 878,
+              'last_ms_ago': 207
+            },
+            'tx': {
+              'count': 1916,
+              'min_int_ms': 1,
+              'max_int_ms': 1003,
+              'avg_int_ms': 878,
+              'last_ms_ago': 767
+            },
+            'elapsed_time_watermarks': '0 0',
+            'elapsed_time_watermarks_last': 0,                        
+            'registered_protocols': [
+              'OSPF', 
+              'CEF'
+            ],
+            'up_time': '00:28:03', 
+            'last_packet': {
+              'c_bit': 0,
+              'demand_bit': 0,
+              'diagnostic': 0,
+              'final_bit': 0,
+              'length': 24,
+              'min_echo_int': 3000000,
+              'min_rx_int': 1000000,
+              'min_tx_int': 1000000,
+              'multiplier': 6,
+              'my_discr': 4097,
+              'poll_bit': 0,
+              'state_bit': 'Up',
+              'version': 1,
+              'your_discr': 4097
+            }
+          }
+        }
+      }         
     }
+
+
 		golden_output_client_osf_details = {'execute.return_value': '''
       IPv4 Sessions
-      OurAddr NeighAddr   
-      LD/RD   RH/RS Holdown(mult)  State   Int
-      106.162.197.93 106.162.197.94 
-      4097/4097  1 0 (3 )  Up  Gi0/0/0
+      OurAddr NeighAddr   LD/RD   RH/RS Holdown(mult) State   Int
+      106.162.197.93 106.162.197.94 4097/4097 1  0 (3 ) Up  Gi0/0/0
       Session state is UP and using echo function with 500 ms interval.
       Session Host: Software
       Handle: 1
@@ -199,7 +215,6 @@ class test_show_bfd(unittest.TestCase):
               Min tx interval: 1000000  - Min rx interval: 1000000
               Min Echo interval: 3000000
     '''}
-
 
 		def test_empty(self):
 			self.device = Mock(**self.empty_output)
