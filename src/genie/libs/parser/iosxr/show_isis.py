@@ -106,16 +106,15 @@ class ShowIsisNeighborsSchema(MetaParser):
     
     schema = {
         'isis': {
-            Optional(Any()): {
-                Optional('neighbors'): {
-                    Optional('total_neighbor_count'): int,
-                    Optional(Any()): {
-                        Optional('system_id'): str,
-                        Optional('interface'): str,
-                        Optional('snpa'): str,
-                        Optional('state'): str,
-                        Optional('holdtime'): str,
-                        Optional('type'): str,
+            Any(): {
+                'total_neighbor_count': int,
+                'neighbors': {
+                    Any(): {
+                        'interface': str,
+                        'snpa': str,
+                        'state': str,
+                        'holdtime': str,
+                        'type': str,
                         Optional('ietf_nsf'): str,
                     },
                 },
@@ -135,7 +134,6 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
             out = output
         
         isis_neighbors_dict = {}
-        isis_neighbors_dict['isis'] = {}
         for line in out.splitlines():
             line = line.rstrip()
         
@@ -144,7 +142,6 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
             m = p1.match(line)
             if m:
                 isis_name = m.groupdict()['isis_name']
-                isis_neighbors_dict['isis'][isis_name] = {'neighbors': {} }
                 continue
             
             # BKL-P-C9010-02 BE2              *PtoP*         Up    23       L2   Capable
@@ -152,7 +149,7 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
             m = p2.match(line)
             if m:
                 system_id = m.groupdict()['system_id']
-                isis_neighbors_dict['isis'][isis_name]['neighbors'][system_id] = {}
+                isis_neighbors_dict.setdefault('isis', {}).setdefault(isis_name, {}).setdefault('neighbors', {}).setdefault(system_id, {})
                 isis_neighbors_dict['isis'][isis_name]['neighbors'][system_id]['interface'] = m.groupdict()['interface']
                 isis_neighbors_dict['isis'][isis_name]['neighbors'][system_id]['snpa'] = m.groupdict()['snpa']
                 isis_neighbors_dict['isis'][isis_name]['neighbors'][system_id]['state'] = m.groupdict()['state']
@@ -165,7 +162,7 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
             p3 = re.compile(r'^\s*Total\sneighbor\scount:\s+(?P<neighbor_count>\S+)\s*$')
             m = p3.match(line)
             if m:
-                isis_neighbors_dict['isis'][isis_name]['neighbors']['total_neighbor_count'] = int(m.groupdict()['neighbor_count'])
+                isis_neighbors_dict['isis'][isis_name]['total_neighbor_count'] = int(m.groupdict()['neighbor_count'])
                 continue
         
         return isis_neighbors_dict
