@@ -2132,7 +2132,7 @@ tag    tag or VC   or Tunnel Id      switched   interface
                                              "outgoing_interface": {
                                                   "Tunnel1": {
                                                        "next_hop": "point2point",
-                                                       "lsp_tunnel": True,
+                                                       "tsp_tunnel": True,
                                                        "bytes_label_switched": 0
                                                   }
                                              }
@@ -2185,7 +2185,7 @@ tag    tag or VC   or Tunnel Id      switched   interface
                                                   },
                                                   "Tunnel1": {
                                                        "next_hop": "point2point",
-                                                       "lsp_tunnel": True,
+                                                       "tsp_tunnel": True,
                                                        "bytes_label_switched": 0
                                                   }
                                              }
@@ -2202,7 +2202,7 @@ tag    tag or VC   or Tunnel Id      switched   interface
                                              "outgoing_interface": {
                                                   "Tunnel1": {
                                                        "next_hop": "point2point",
-                                                       "lsp_tunnel": True,
+                                                       "tsp_tunnel": True,
                                                        "bytes_label_switched": 0
                                                   }
                                              }

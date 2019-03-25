@@ -1763,7 +1763,7 @@ class ShowMplsForwardingTableSchema(MetaParser):
                                             Any():{
                                                 'bytes_label_switched': int,
                                                 Optional('next_hop'): str,
-                                                Optional('lsp_tunnel'): bool,
+                                                Optional('tsp_tunnel'): bool,
                                                 Optional('mac'): int,
                                                 Optional('macstr'): str,
                                                 Optional('lstack'): str,
@@ -1920,9 +1920,9 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                 if group['next_hop']:
                     feature_dict.update({'next_hop': group['next_hop']})
                 if group['t']:
-                    feature_dict.update({'lsp_tunnel': True})
+                    feature_dict.update({'tsp_tunnel': True})
                 if group['t1']:
-                    feature_dict.update({'lsp_tunnel': True})
+                    feature_dict.update({'tsp_tunnel': True})
                 feature_dict.update({'bytes_label_switched': int(group['bytes_label_switched'])})
                 continue
 
@@ -1950,9 +1950,9 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                 if group['next_hop']:
                     feature_dict.update({'next_hop': group['next_hop']})
                 if group['t']:
-                    feature_dict.update({'lsp_tunnel': True})
+                    feature_dict.update({'tsp_tunnel': True})
                 if group['t1']:
-                    feature_dict.update({'lsp_tunnel': True})
+                    feature_dict.update({'tsp_tunnel': True})
                 feature_dict.update({'bytes_label_switched': int(group['bytes_label_switched'])})
                 continue
 
