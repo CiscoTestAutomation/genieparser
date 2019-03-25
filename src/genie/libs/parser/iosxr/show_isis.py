@@ -25,20 +25,22 @@ class ShowIsisAdjacencySchema(MetaParser):
         
     schema = {
         'isis': {
-            Optional(Any()): {
-                Optional('adjacency'): {
-                    Optional(Any()): {
-                        Optional('total_adjacency_count'): int,
-                        Optional(Any()): {
-                            Optional('interface'): str,
-                            Optional('snpa'): str,
-                            Optional('state'): str,
-                            Optional('hold'): str,
-                            Optional('changed'): str,
-                            Optional('nsf'): str,
-                            Optional('ipv4_bfd'): str,
-                            Optional('ipv6_bfd'): str,
-                        },
+            Any(): {
+                'level': {
+                    Any(): {
+                        'total_adjacency_count': int,
+                        'system_id': {
+                            Any(): {
+                                'interface': str,
+                                'snpa': str,
+                                'state': str,
+                                'hold': str,
+                                'changed': str,
+                                Optional('nsf'): str,
+                                Optional('ipv4_bfd'): str,
+                                Optional('ipv6_bfd'): str,
+                            },
+                        }
                     },
                 },
             },
@@ -75,15 +77,15 @@ class ShowIsisAdjacency(ShowIsisAdjacencySchema):
             m = p2.match(line)
             if m:
                 system_id = m.groupdict()['system_id']
-                isis_adjacency_dict['isis'][isis_name]['level'][level_name].setdefault('adjacency', {}).setdefault(system_id, {})
-                isis_adjacency_dict['isis'][isis_name]['level'][level_name]['adjacency'][system_id]['interface'] = m.groupdict()['interface']
-                isis_adjacency_dict['isis'][isis_name]['level'][level_name]['adjacency'][system_id]['snpa'] = m.groupdict()['snpa']
-                isis_adjacency_dict['isis'][isis_name]['level'][level_name]['adjacency'][system_id]['state'] = m.groupdict()['state']
-                isis_adjacency_dict['isis'][isis_name]['level'][level_name]['adjacency'][system_id]['hold'] = m.groupdict()['hold']
-                isis_adjacency_dict['isis'][isis_name]['level'][level_name]['adjacency'][system_id]['changed'] = m.groupdict()['changed']
-                isis_adjacency_dict['isis'][isis_name]['level'][level_name]['adjacency'][system_id]['nsf'] = m.groupdict()['nsf']
-                isis_adjacency_dict['isis'][isis_name]['level'][level_name]['adjacency'][system_id]['ipv4_bfd'] = m.groupdict()['ipv4_bfd']
-                isis_adjacency_dict['isis'][isis_name]['level'][level_name]['adjacency'][system_id]['ipv6_bfd'] = m.groupdict()['ipv6_bfd']
+                isis_adjacency_dict['isis'][isis_name]['level'][level_name].setdefault('system_id', {}).setdefault(system_id, {})
+                isis_adjacency_dict['isis'][isis_name]['level'][level_name]['system_id'][system_id]['interface'] = m.groupdict()['interface']
+                isis_adjacency_dict['isis'][isis_name]['level'][level_name]['system_id'][system_id]['snpa'] = m.groupdict()['snpa']
+                isis_adjacency_dict['isis'][isis_name]['level'][level_name]['system_id'][system_id]['state'] = m.groupdict()['state']
+                isis_adjacency_dict['isis'][isis_name]['level'][level_name]['system_id'][system_id]['hold'] = m.groupdict()['hold']
+                isis_adjacency_dict['isis'][isis_name]['level'][level_name]['system_id'][system_id]['changed'] = m.groupdict()['changed']
+                isis_adjacency_dict['isis'][isis_name]['level'][level_name]['system_id'][system_id]['nsf'] = m.groupdict()['nsf']
+                isis_adjacency_dict['isis'][isis_name]['level'][level_name]['system_id'][system_id]['ipv4_bfd'] = m.groupdict()['ipv4_bfd']
+                isis_adjacency_dict['isis'][isis_name]['level'][level_name]['system_id'][system_id]['ipv6_bfd'] = m.groupdict()['ipv6_bfd']
                 continue
             
             # Total adjacency count: 1
