@@ -21,26 +21,26 @@ class ShowMplsLdpNeighborBriefSchema(MetaParser):
     """Schema for show mpls ldp neighbor brief"""
 
     schema = {
-        'peer': 
-            {Any(): 
-                {Optional('gr'): str,
-                Optional('nsr'): str,
-                Optional('up_time'): str,
-                Optional('discovery'): 
-                    {Optional('ipv4'): int,
-                    Optional('ipv6'): int,
-                    },
-                Optional('addresses'): 
-                    {Optional('ipv4'): int,
-                    Optional('ipv6'): int,
-                    },
-                Optional('labels'): 
-                    {Optional('ipv4'): int,
-                    Optional('ipv6'): int,
-                    },
+        'peer': { 
+            Any(): { 
+                'gr': str,
+                'nsr': str,
+                'up_time': str,
+                'discovery': { 
+                    'ipv4': int,
+                    'ipv6': int,
+                },
+                'addresses': { 
+                    'ipv4': int,
+                    'ipv6': int,
+                },
+                'labels': { 
+                    'ipv4': int,
+                    'ipv6': int,
                 },
             },
-        }
+        },
+    }
 
 class ShowMplsLdpNeighborBrief(ShowMplsLdpNeighborBriefSchema):
 
@@ -56,7 +56,6 @@ class ShowMplsLdpNeighborBrief(ShowMplsLdpNeighborBriefSchema):
         
         # Init vars
         mpls_dict = {}
-        mpls_dict['peer'] = {}
         peer = ''
         
         for line in out.splitlines():
@@ -70,7 +69,7 @@ class ShowMplsLdpNeighborBrief(ShowMplsLdpNeighborBriefSchema):
             m = p1.match(line)
             if m:
                 peer = m.groupdict()['peer']
-                mpls_dict['peer'][peer] = {}
+                mpls_dict.setdefault('peer', {}).setdefault(peer, {})
                 mpls_dict['peer'][peer]['gr'] = m.groupdict()['gr']
                 mpls_dict['peer'][peer]['nsr'] = m.groupdict()['nsr']
                 mpls_dict['peer'][peer]['up_time'] = m.groupdict()['up_time']
