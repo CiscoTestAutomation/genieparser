@@ -561,7 +561,7 @@ class ShowInstallInactiveSummarySchema(MetaParser):
     schema = {
         'inactive_packages': Any(),
         Optional('num_inactive_packages'): int,
-        Optional('sdr'): str,
+        Optional('sdr'): list,
         }
 
 class ShowInstallInactiveSummary(ShowInstallInactiveSummarySchema):
@@ -590,7 +590,7 @@ class ShowInstallInactiveSummary(ShowInstallInactiveSummarySchema):
             
             if previous_line_sdr:
                 previous_line_sdr = False
-                install_inactive_dict['sdr'] = str(line).strip()
+                install_inactive_dict.setdefault('sdr', []).append(str(line).strip())
                 continue
             
             
