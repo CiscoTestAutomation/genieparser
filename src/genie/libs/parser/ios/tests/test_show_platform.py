@@ -4,14 +4,19 @@ from unittest.mock import Mock
 from ats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
-                                       SchemaMissingKeyError
+    SchemaMissingKeyError
 from genie.libs.parser.ios.show_platform import ShowVersion,\
-                                       Dir,\
-                                       ShowRedundancy,\
-                                       ShowInventory,\
-                                       ShowBootvar, \
-                                       ShowProcessesCpuSorted
+    Dir,\
+    ShowRedundancy,\
+    ShowInventory,\
+    ShowBootvar, \
+    ShowProcessesCpuSorted
 
+from genie.libs.parser.iosxe.tests.test_show_platform import test_show_platform as test_show_platform_iosxe,\
+                                                       test_show_platform_power as test_show_platform_power_iosxe,\
+                                                       test_show_version_rp as test_show_version_rp_iosxe,\
+                                                       test_show_processes_cpu as test_show_processes_cpu_iosxe,\
+                                                       test_show_processes_cpu_history as test_show_processes_cpu_history_iosxe
 
 
 class test_show_version(unittest.TestCase):
@@ -30,7 +35,7 @@ class test_show_version(unittest.TestCase):
             "os": "IOSv",
             "version_short": "15.6",
             "number_of_intfs": {
-               "Gigabit Ethernet": "6"
+                "Gigabit Ethernet": "6"
             },
             "version": "15.6(3)M2",
             "rtr_type": "IOSv",
@@ -42,7 +47,7 @@ class test_show_version(unittest.TestCase):
             "image_type": "production image",
             "main_mem": "435457",
             "mem_size": {
-               "non-volatile configuration": "256"
+                "non-volatile configuration": "256"
             },
             "system_image": "flash0:/vios-adventerprisek9-m",
             "curr_config_register": "0x0",
@@ -95,11 +100,11 @@ class test_show_version(unittest.TestCase):
 
 
         Configuration register is 0x0'''
-    }
+                          }
 
     golden_parsed_output_ios = {
         'version': {'bootldr': 'C3750E Boot Loader (C3750X-HBOOT-M) Version '
-                            '15.2(3r)E, RELEASE SOFTWARE (fc1)',
+                    '15.2(3r)E, RELEASE SOFTWARE (fc1)',
                     'chassis': 'WS-C3750X-24P',
                     'chassis_sn': 'FDO2028F1WK',
                     'curr_config_register': '0xF',
@@ -125,7 +130,7 @@ class test_show_version(unittest.TestCase):
                     'uptime': '9 weeks, 4 days, 2 hours, 3 minutes',
                     'version': '12.2(55)SE8',
                     'version_short': '12.2'
-        }
+                    }
     }
 
     golden_output_ios = {'execute.return_value': '''\
@@ -197,8 +202,7 @@ class test_show_version(unittest.TestCase):
         Configuration register is 0xF
 
     '''
-    }
-
+                         }
 
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
@@ -234,45 +238,45 @@ class test_dir(unittest.TestCase):
     semi_empty_output = {'execute.return_value': '''\
         Directory of flash:/
     '''
-    }
+                         }
 
     golden_parsed_output_iosv = {
         "dir": {
             "flash0:/": {
-               "files": {
+                "files": {
                     "e1000_bia.txt": {
-                         "last_modified_date": "Oct 17 2018 18:57:18 +00:00",
-                         "index": "269",
-                         "size": "119",
-                         "permissions": "-rw-"
+                        "last_modified_date": "Oct 17 2018 18:57:18 +00:00",
+                        "index": "269",
+                        "size": "119",
+                        "permissions": "-rw-"
                     },
                     "config": {
-                         "last_modified_date": "Oct 14 2013 00:00:00 +00:00",
-                         "index": "264",
-                         "size": "0",
-                         "permissions": "drw-"
+                        "last_modified_date": "Oct 14 2013 00:00:00 +00:00",
+                        "index": "264",
+                        "size": "0",
+                        "permissions": "drw-"
                     },
                     "nvram": {
-                         "last_modified_date": "Oct 17 2018 18:57:10 +00:00",
-                         "index": "268",
-                         "size": "524288",
-                         "permissions": "-rw-"
+                        "last_modified_date": "Oct 17 2018 18:57:10 +00:00",
+                        "index": "268",
+                        "size": "524288",
+                        "permissions": "-rw-"
                     },
                     "boot": {
-                         "last_modified_date": "Jan 30 2013 00:00:00 +00:00",
-                         "index": "1",
-                         "size": "0",
-                         "permissions": "drw-"
+                        "last_modified_date": "Jan 30 2013 00:00:00 +00:00",
+                        "index": "1",
+                        "size": "0",
+                        "permissions": "drw-"
                     },
                     "vios-adventerprisek9-m": {
-                         "last_modified_date": "Mar 29 2017 00:00:00 +00:00",
-                         "index": "267",
-                         "size": "147988420",
-                         "permissions": "-rw-"
+                        "last_modified_date": "Mar 29 2017 00:00:00 +00:00",
+                        "index": "267",
+                        "size": "147988420",
+                        "permissions": "-rw-"
                     }
-               },
-               "bytes_total": "2142715904",
-               "bytes_free": "1989595136"
+                },
+                "bytes_total": "2142715904",
+                "bytes_free": "1989595136"
             },
             "dir": "flash0:/"
         }
@@ -289,7 +293,7 @@ class test_dir(unittest.TestCase):
 
         2142715904 bytes total (1989595136 bytes free)
     '''
-    }
+                          }
 
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
@@ -318,21 +322,21 @@ class test_show_redundancy(unittest.TestCase):
 
     golden_parsed_output_iosv = {
         "red_sys_info": {
-        "last_switchover_reason": "unsupported",
-        "maint_mode": "Disabled",
-        "switchovers_system_experienced": "0",
-        "available_system_uptime": "0 minutes",
-        "communications": "Down",
-        "hw_mode": "Simplex",
-        "communications_reason": "Failure",
-        "standby_failures": "0"
+            "last_switchover_reason": "unsupported",
+            "maint_mode": "Disabled",
+            "switchovers_system_experienced": "0",
+            "available_system_uptime": "0 minutes",
+            "communications": "Down",
+            "hw_mode": "Simplex",
+            "communications_reason": "Failure",
+            "standby_failures": "0"
         },
         "slot": {
             "slot 0": {
-               "image_ver": "Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.6(3)M2, RELEASE SOFTWARE (fc2)",
-               "uptime_in_curr_state": "1 day, 16 hours, 42 minutes",
-               "config_register": "0x0",
-               "curr_sw_state": "ACTIVE"
+                "image_ver": "Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.6(3)M2, RELEASE SOFTWARE (fc2)",
+                "uptime_in_curr_state": "1 day, 16 hours, 42 minutes",
+                "config_register": "0x0",
+                "curr_sw_state": "ACTIVE"
             }
         }
     }
@@ -362,7 +366,7 @@ class test_show_redundancy(unittest.TestCase):
 
         Peer (slot: 0) information is not available because it is in 'DISABLED' state
     '''
-    }
+                          }
 
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
@@ -386,15 +390,15 @@ class test_show_inventory(unittest.TestCase):
     golden_parsed_output_iosv = {
         "slot": {
             "1": {
-               "rp": {
+                "rp": {
                     "IOSv": {
-                         "descr": "IOSv chassis, Hw Serial#: 9K66Z7TOKAACDEQA24N7S, Hw Revision: 1.0",
-                         "name": "IOSv",
-                         "pid": "IOSv",
-                         "sn": "9K66Z7TOKAACDEQA24N7S",
-                         "vid": "1.0"
+                        "descr": "IOSv chassis, Hw Serial#: 9K66Z7TOKAACDEQA24N7S, Hw Revision: 1.0",
+                        "name": "IOSv",
+                        "pid": "IOSv",
+                        "sn": "9K66Z7TOKAACDEQA24N7S",
+                        "vid": "1.0"
                     }
-               }
+                }
             }
         }
 
@@ -404,7 +408,7 @@ class test_show_inventory(unittest.TestCase):
         NAME: "IOSv", DESCR: "IOSv chassis, Hw Serial#: 9K66Z7TOKAACDEQA24N7S, Hw Revision: 1.0"
         PID: IOSv              , VID: 1.0, SN: 9K66Z7TOKAACDEQA24N7S
     '''
-    }
+                          }
 
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
@@ -417,7 +421,7 @@ class test_show_inventory(unittest.TestCase):
         self.dev_iosv = Mock(**self.golden_output_iosv)
         inventory_obj = ShowInventory(device=self.dev_iosv)
         parsed_output = inventory_obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output_iosv)
+        self.assertEqual(parsed_output, self.golden_parsed_output_iosv)
 
 
 class test_show_bootvar(unittest.TestCase):
@@ -427,8 +431,8 @@ class test_show_bootvar(unittest.TestCase):
 
     golden_parsed_output_iosv = {
         "active": {
-          "boot_variable": "disk0:s72033-adventerprisek9-mz.122-33.SRE0a-ssr-nxos-76k-1,12",
-          "configuration_register": "0x2012"
+            "boot_variable": "disk0:s72033-adventerprisek9-mz.122-33.SRE0a-ssr-nxos-76k-1,12",
+            "configuration_register": "0x2012"
         },
         "next_reload_boot_variable": "disk0:s72033-adventerprisek9-mz.122-33.SRE0a-ssr-nxos-76k-1,12"
     }
@@ -442,20 +446,20 @@ class test_show_bootvar(unittest.TestCase):
         Standby not ready to show bootvar
 
     '''
-    }
+                          }
 
     def test_empty(self):
         self.dev = Mock(**self.empty_output)
         platform_obj = ShowBootvar(device=self.dev)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = platform_obj.parse()    
+            parsed_output = platform_obj.parse()
 
     def test_golden(self):
         self.maxDiff = None
         self.dev_iosv = Mock(**self.golden_output_iosv)
         platform_obj = ShowBootvar(device=self.dev_iosv)
         parsed_output = platform_obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output_iosv)
+        self.assertEqual(parsed_output, self.golden_parsed_output_iosv)
 
 
 class test_show_processes_cpu_sorted_CPU(unittest.TestCase):
@@ -465,60 +469,60 @@ class test_show_processes_cpu_sorted_CPU(unittest.TestCase):
 
     golden_parsed_output = {
         "five_sec_cpu_total": 13,
-         "five_min_cpu": 15,
-         "one_min_cpu": 23,
-         "five_sec_cpu_interrupts": 0
+        "five_min_cpu": 15,
+        "one_min_cpu": 23,
+        "five_sec_cpu_interrupts": 0
     }
 
     golden_output = {'execute.return_value': '''\
         show processes cpu sorted 5min | inc CPU
         CPU utilization for five seconds: 13%/0%; one minute: 23%; five minutes: 15%
     '''
-    }
+                     }
 
     golden_parsed_output_1 = {
         "sort": {
             1: {
-               "invoked": 3321960,
-               "usecs": 109,
-               "tty": 0,
-               "one_min_cpu": 0.54,
-               "process": "PIM Process",
-               "five_min_cpu": 0.48,
-               "runtime": 362874,
-               "pid": 368,
-               "five_sec_cpu": 1.03
+                "invoked": 3321960,
+                "usecs": 109,
+                "tty": 0,
+                "one_min_cpu": 0.54,
+                "process": "PIM Process",
+                "five_min_cpu": 0.48,
+                "runtime": 362874,
+                "pid": 368,
+                "five_sec_cpu": 1.03
             },
             2: {
-               "invoked": 1466728,
-               "usecs": 2442,
-               "tty": 0,
-               "one_min_cpu": 0.87,
-               "process": "IOSv e1000",
-               "five_min_cpu": 2.77,
-               "runtime": 3582279,
-               "pid": 84,
-               "five_sec_cpu": 0.55
+                "invoked": 1466728,
+                "usecs": 2442,
+                "tty": 0,
+                "one_min_cpu": 0.87,
+                "process": "IOSv e1000",
+                "five_min_cpu": 2.77,
+                "runtime": 3582279,
+                "pid": 84,
+                "five_sec_cpu": 0.55
             },
             3: {
-               "invoked": 116196,
-               "usecs": 976,
-               "tty": 0,
-               "one_min_cpu": 0.07,
-               "process": "OSPF-1 Hello",
-               "five_min_cpu": 0.07,
-               "runtime": 113457,
-               "pid": 412,
-               "five_sec_cpu": 0.15
+                "invoked": 116196,
+                "usecs": 976,
+                "tty": 0,
+                "one_min_cpu": 0.07,
+                "process": "OSPF-1 Hello",
+                "five_min_cpu": 0.07,
+                "runtime": 113457,
+                "pid": 412,
+                "five_sec_cpu": 0.15
             }
         },
         "five_sec_cpu_total": 4,
         "five_min_cpu": 9,
         "one_min_cpu": 4,
         "nonzero_cpu_processes": [
-        "PIM Process",
-        "IOSv e1000",
-        "OSPF-1 Hello"
+            "PIM Process",
+            "IOSv e1000",
+            "OSPF-1 Hello"
         ],
         "five_sec_cpu_interrupts": 0
     }
@@ -552,6 +556,30 @@ class test_show_processes_cpu_sorted_CPU(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 
+class test_show_processes_cpu(test_show_processes_cpu_iosxe):
+
+    pass
+
+
+class test_show_version_rp(test_show_version_rp_iosxe):
+
+    pass
+
+
+class test_show_platform(test_show_platform_iosxe):
+
+    pass
+
+
+class test_show_platform_power(test_show_platform_power_iosxe):
+
+    pass
+
+
+class test_show_processes_cpu_history(test_show_processes_cpu_history_iosxe):
+
+    pass
+
+
 if __name__ == '__main__':
     unittest.main()
-

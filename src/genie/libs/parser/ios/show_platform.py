@@ -11,6 +11,9 @@
     * show processes cpu sorted <1min|5min|5sec>
     * show processes cpu sorted | include <WORD>
     * show processes cpu sorted <1min|5min|5sec> | include <WORD>
+    * show processes cpu
+    * show processes cpu | include <WORD>
+
 """
 # python
 import re
@@ -18,16 +21,20 @@ import re
 # genie
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, \
-                                         Any, Optional
+    Any, Optional
 
 # import iosxe parser
 from genie.libs.parser.iosxe.show_platform import \
-        ShowVersion as ShowVersion_iosxe, \
-        Dir as Dir_iosxe, \
-        ShowInventorySchema as ShowInventorySchema_iosxe, \
-        ShowRedundancy as ShowRedundancy_iosxe, \
-        ShowProcessesCpuSorted as ShowProcessesCpuSorted_iosxe, \
-        ShowVersionRp as ShowVersionRp_iosxe
+    ShowVersion as ShowVersion_iosxe, \
+    Dir as Dir_iosxe, \
+    ShowInventorySchema as ShowInventorySchema_iosxe, \
+    ShowRedundancy as ShowRedundancy_iosxe, \
+    ShowProcessesCpuSorted as ShowProcessesCpuSorted_iosxe, \
+    ShowProcessesCpu as ShowProcessesCpu_iosxe, \
+    ShowVersionRp as ShowVersionRp_iosxe, \
+    ShowPlatform as ShowPlatform_iosxe, \
+    ShowPlatformPower as ShowPlatformPower_iosxe, \
+    ShowProcessesCpuHistory as ShowProcessesCpuHistory_iosxe
 
 
 class ShowVersion(ShowVersion_iosxe):
@@ -45,30 +52,30 @@ class Dir(Dir_iosxe):
 class ShowRedundancyIosSchema(MetaParser):
     """Schema for show redundancy """
     schema = {
-                'red_sys_info': {
-                    'available_system_uptime': str,
-                    'switchovers_system_experienced': str,
-                    'standby_failures': str,
-                    'last_switchover_reason': str,
-                    'hw_mode': str,
-                    Optional('conf_red_mode'): str,
-                    Optional('oper_red_mode'): str,
-                    'maint_mode': str,
-                    'communications': str,
-                    Optional('communications_reason'): str,
-                    },
-                'slot': {
-                    Any(): {
-                        'curr_sw_state': str,
-                        'uptime_in_curr_state': str,
-                        'image_ver': str,
-                        Optional('boot'): str,
-                        Optional('config_file'): str,
-                        Optional('bootldr'): str,
-                        'config_register': str,
-                    }
-                }
+        'red_sys_info': {
+            'available_system_uptime': str,
+            'switchovers_system_experienced': str,
+            'standby_failures': str,
+            'last_switchover_reason': str,
+            'hw_mode': str,
+            Optional('conf_red_mode'): str,
+            Optional('oper_red_mode'): str,
+            'maint_mode': str,
+            'communications': str,
+            Optional('communications_reason'): str,
+        },
+        'slot': {
+            Any(): {
+                'curr_sw_state': str,
+                'uptime_in_curr_state': str,
+                'image_ver': str,
+                Optional('boot'): str,
+                Optional('config_file'): str,
+                Optional('bootldr'): str,
+                'config_register': str,
             }
+        }
+    }
 
 
 class ShowRedundancy(ShowRedundancyIosSchema, ShowRedundancy_iosxe):
@@ -81,7 +88,8 @@ class ShowInventory(ShowInventorySchema_iosxe):
     """Parser for show Inventory
     """
     cli_command = 'show inventory'
-    def cli(self,output=None):
+
+    def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command)
         else:
@@ -91,8 +99,9 @@ class ShowInventory(ShowInventorySchema_iosxe):
 
         # NAME: "CISCO2921/K9 chassis", DESCR: "CISCO2921/K9 chassis"
         # NAME: "IOSv", DESCR: "IOSv chassis, Hw Serial#: 1234567890, Hw Revision: 1.0"
-        p1 = re.compile(r'^NAME\:\s+\"(?P<name>.*)\",\s+DESCR\:\s+\"(?P<descr>.*)\"')
-        
+        p1 = re.compile(
+            r'^NAME\:\s+\"(?P<name>.*)\",\s+DESCR\:\s+\"(?P<descr>.*)\"')
+
         # IOSv
         p1_1 = re.compile(r'\w+')
 
@@ -106,7 +115,8 @@ class ShowInventory(ShowInventorySchema_iosxe):
         p1_4 = re.compile(r'\s*\S+ *\d+[ /]*(?P<subslot>\d+.*)$')
 
         # PID: IOSv              , VID: 1.0, SN: 9KLUMCXRGCYY7MZLRU14R
-        p2 = re.compile(r'^PID: +(?P<pid>\S+) *, +VID: +(?P<vid>\S+) *, +SN: +(?P<sn>.*)$')
+        p2 = re.compile(
+            r'^PID: +(?P<pid>\S+) *, +VID: +(?P<vid>\S+) *, +SN: +(?P<sn>.*)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -120,22 +130,26 @@ class ShowInventory(ShowInventorySchema_iosxe):
                 m = p1_1.match(name)
                 if m:
                     slot = '1'
-                    slot_dict = inventory_dict.setdefault('slot', {}).setdefault(slot, {})
+                    slot_dict = inventory_dict.setdefault(
+                        'slot', {}).setdefault(slot, {})
 
                 m = p1_2.match(name)
                 if m:
                     slot = m.groupdict()['slot']
-                    slot_dict = inventory_dict.setdefault('slot', {}).setdefault(slot, {})
+                    slot_dict = inventory_dict.setdefault(
+                        'slot', {}).setdefault(slot, {})
 
                 m = p1_3.match(name)
                 if m:
                     slot = m.groupdict()['slot']
                     subslot = m.groupdict()['subslot']
-                    slot_dict = inventory_dict.setdefault('slot', {}).setdefault(slot, {})
+                    slot_dict = inventory_dict.setdefault(
+                        'slot', {}).setdefault(slot, {})
 
                 if 'Power Supply Module' in name:
                     slot = name.replace('Power Supply Module ', 'P')
-                    slot_dict = inventory_dict.setdefault('slot', {}).setdefault(slot, {})
+                    slot_dict = inventory_dict.setdefault(
+                        'slot', {}).setdefault(slot, {})
 
                 m = p1_4.match(name)
                 if m:
@@ -155,16 +169,18 @@ class ShowInventory(ShowInventorySchema_iosxe):
                         chassis_dict = inventory_dict.setdefault('main', {})\
                             .setdefault('chassis', {}).setdefault(pid, {})
                         chassis_dict.update({'name': name, 'descr': descr,
-                                            'pid': pid, 'vid': vid, 'sn': sn})
+                                             'pid': pid, 'vid': vid, 'sn': sn})
                     if slot:
                         if 'WS-C' in pid or 'IOSv' in pid:
-                            rp_dict = slot_dict.setdefault('rp', {}).setdefault(pid, {})
+                            rp_dict = slot_dict.setdefault(
+                                'rp', {}).setdefault(pid, {})
                             rp_dict.update({'name': name, 'descr': descr,
-                                                'pid': pid, 'vid': vid, 'sn': sn})
+                                            'pid': pid, 'vid': vid, 'sn': sn})
                         else:
-                            other_dict = slot_dict.setdefault('other', {}).setdefault(pid, {})
+                            other_dict = slot_dict.setdefault(
+                                'other', {}).setdefault(pid, {})
                             other_dict.update({'name': name, 'descr': descr,
-                                                'pid': pid, 'vid': vid, 'sn': sn})
+                                               'pid': pid, 'vid': vid, 'sn': sn})
                 name = descr = slot = subslot = ''
                 continue
 
@@ -181,11 +197,11 @@ class ShowBootvarSchema(MetaParser):
               Optional('active'): {
                   'configuration_register': str,
                   Optional('boot_variable'): str,
-              },
-              Optional('standby'): {              
+    },
+        Optional('standby'): {
                   'configuration_register': str,
                   Optional('boot_variable'): str,
-              },
+    },
     }
 
 
@@ -214,18 +230,19 @@ class ShowBootvar(ShowBootvarSchema):
         p3 = re.compile(r'^Configuration +register +is +(?P<var>\w+)$')
 
         # Standby Configuration register is 0x2002
-        p4 = re.compile(r'^Standby +Configuration +register +is +(?P<var>\w+)$')
+        p4 = re.compile(
+            r'^Standby +Configuration +register +is +(?P<var>\w+)$')
 
-        # CONFIG_FILE variable = 
+        # CONFIG_FILE variable =
         p5 = re.compile(r'^CONFIG_FILE +variable += +(?P<var>\S+)$')
 
-        # BOOTLDR variable = 
+        # BOOTLDR variable =
         p6 = re.compile(r'^BOOTLDR +variable += +(?P<var>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
 
-            # BOOT variable = disk0:s72033-adventerprisek9-mz.122-33.SRE0a-ssr-nxos-76k-1,12;            
+            # BOOT variable = disk0:s72033-adventerprisek9-mz.122-33.SRE0a-ssr-nxos-76k-1,12;
             m = p1.match(line)
             if m:
                 boot = m.groupdict()['var']
@@ -245,27 +262,31 @@ class ShowBootvar(ShowBootvarSchema):
             # Configuration register is 0x2002
             m = p3.match(line)
             if m:
-                boot_dict.setdefault('active', {})['configuration_register'] = m.groupdict()['var']
+                boot_dict.setdefault('active', {})[
+                    'configuration_register'] = m.groupdict()['var']
                 continue
 
             # Standby Configuration register is 0x2002
             m = p4.match(line)
             if m:
-                boot_dict.setdefault('standby', {})['configuration_register'] = m.groupdict()['var']
+                boot_dict.setdefault('standby', {})[
+                    'configuration_register'] = m.groupdict()['var']
                 continue
 
-            # CONFIG_FILE variable = 
+            # CONFIG_FILE variable =
             m = p5.match(line)
             if m:
                 if m.groupdict()['var']:
-                    boot_dict.setdefault('active', {})['config_file'] = m.groupdict()['var']
+                    boot_dict.setdefault('active', {})[
+                        'config_file'] = m.groupdict()['var']
                 continue
 
-            # BOOTLDR variable = 
+            # BOOTLDR variable =
             m = p6.match(line)
             if m:
                 if m.groupdict()['var']:
-                    boot_dict.setdefault('standby', {})['bootldr'] = m.groupdict()['var']
+                    boot_dict.setdefault('standby', {})[
+                        'bootldr'] = m.groupdict()['var']
                 continue
         return boot_dict
 
@@ -279,7 +300,28 @@ class ShowProcessesCpuSorted(ShowProcessesCpuSorted_iosxe):
     pass
 
 
+class ShowProcessesCpu(ShowProcessesCpu_iosxe):
+    """Parser for show processes cpu
+                  show processes cpu | include <WORD>"""
+    pass
+
+
 class ShowVersionRp(ShowVersionRp_iosxe):
     """Parser for show version RP active [running|provisioned|installed]
                   show version RP standby [running|provisioned|installed]"""
+    pass
+
+
+class ShowPlatform(ShowPlatform_iosxe):
+    """Parser for Parser for show platform"""
+    pass
+
+
+class ShowPlatformPower(ShowPlatformPower_iosxe):
+    """Parser for Parser for show platform power"""
+    pass
+
+
+class ShowProcessesCpuHistory(ShowProcessesCpuHistory_iosxe):
+    """Parser for show processes cpu history"""
     pass
