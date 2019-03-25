@@ -142,7 +142,7 @@ class Common():
                    'Tu': 'Tunnel',
                    'Fe': '',
                    'Hs': 'HSSI',
-                   'AT': 'ATOM',
+                   'AT': 'ATM',
                    'Et': 'Ethernet',
                    'BD': 'BridgeDomain',
                    }

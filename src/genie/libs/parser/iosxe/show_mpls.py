@@ -1757,26 +1757,32 @@ class ShowMplsForwardingTableSchema(MetaParser):
                     Any(): {
                         'outgoing_label_or_vc':{
                             Any():{
-                                Optional('outgoing_interface'): str,
-                                'prefix_or_tunnel_id': str,
-                                'bytes_label_switched': int,
-                                Optional('next_hop'): str,
-                                Optional('lsp_tunnel'): bool,
-                                Optional('mac'): int,
-                                Optional('macstr'): str,
-                                Optional('lstack'): str,
-                                Optional('via'): str,
-                                Optional('encaps'): int,
-                                Optional('mru'): int,
-                                Optional('label_stack'): str,
-                                Optional('vpn_route'): str,
-                                Optional('output_feature_configured'): bool,
-                                Optional('load_sharing'): {
-                                    'method': str,
-                                    Optional('slots'): list,
-                                },
-                                Optional('broadcast'):bool,
-                            },
+                                'prefix_or_tunnel_id':{
+                                    Any(): {
+                                        Optional('outgoing_interface'):{
+                                            Any():{
+                                                'bytes_label_switched': int,
+                                                Optional('next_hop'): str,
+                                                Optional('lsp_tunnel'): bool,
+                                                Optional('mac'): int,
+                                                Optional('macstr'): str,
+                                                Optional('lstack'): str,
+                                                Optional('via'): str,
+                                                Optional('encaps'): int,
+                                                Optional('mru'): int,
+                                                Optional('label_stack'): str,
+                                                Optional('vpn_route'): str,
+                                                Optional('output_feature_configured'): bool,
+                                                Optional('load_sharing'): {
+                                                    'method': str,
+                                                    Optional('slots'): list,
+                                                },
+                                                Optional('broadcast'): bool,
+                                            }
+                                        }
+                                    },
+                                }
+                            }
                         }
                     }
                 }
@@ -1826,7 +1832,7 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         #       [T]  16130      40.40.40.40/32   0             Tu1        point2point
         p1 = re.compile(r'^(?P<local_label>\d+) +(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>[\S]+) +\\$')
 
-        p2 = re.compile(r'^(?P<bytes_label_switched>\d+) +(?P<interface>\S+)( +(?P<next_hop>[\w\.]+))?$')
+        p2 = re.compile(r'^(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
 
         p2_2 = re.compile(r'^((?P<local_label>\d+) +)?(\[(?P<t>(T)+)\] +)?'
             '(?P<outgoing_label>(Untagged|(No|Pop) Label|(No|Pop) (T|t)ag|\d|\d\/)+) +(?P<prefix_or_tunnel_id>[\S]+)'
@@ -1856,6 +1862,7 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
             line = line.strip()
             line = line.replace('\t',' ')
 
+
             # 9301       No Label   172.16.100.1/32[V]   \
             #                                       0             Po1.51     192.168.10.253
             m = p1.match(line)
@@ -1869,18 +1876,20 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                interface = Common.convert_intf_name(group['interface'])
-                feature_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}). \
+                base_feature_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}). \
                                            setdefault('local_label', {}).\
                                            setdefault(local_label, {}).\
                                            setdefault('outgoing_label_or_vc', {}).\
-                                           setdefault(outgoing_label.strip(), {})
+                                           setdefault(outgoing_label.strip(), {}).\
+                                           setdefault('prefix_or_tunnel_id', {}).\
+                                           setdefault(prefix_or_tunnel_id,{})
 
-                feature_dict.update({'prefix_or_tunnel_id': prefix_or_tunnel_id})
-                feature_dict.update({'outgoing_interface': interface})
-                if group['next_hop']:
-                    feature_dict.update({'next_hop': group['next_hop']})
-                feature_dict.update({'bytes_label_switched': int(group['bytes_label_switched'])})
+                if group['interface']:
+                    interface = Common.convert_intf_name(group['interface'])
+                    feature_dict = base_feature_dict.setdefault('outgoing_interface',{}).setdefault(interface, {})
+                    if group['next_hop']:
+                        feature_dict.update({'next_hop': group['next_hop']})
+                    feature_dict.update({'bytes_label_switched': int(group['bytes_label_switched'])})
 
                 continue
 
@@ -1892,20 +1901,22 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                 outgoing_label = group['outgoing_label']
                 prefix_or_tunnel_id = group['prefix_or_tunnel_id'].strip()
 
-                interface = Common.convert_intf_name(group['interface'])
-                feature_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}). \
+                base_feature_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}). \
                                            setdefault('local_label', {}). \
                                            setdefault(local_label, {}).\
                                            setdefault('outgoing_label_or_vc', {}).\
-                                           setdefault(outgoing_label.strip(), {})
+                                           setdefault(outgoing_label.strip(), {}). \
+                                           setdefault('prefix_or_tunnel_id', {}). \
+                                           setdefault(prefix_or_tunnel_id, {})
 
-                feature_dict.update({'outgoing_interface': interface})
-                feature_dict.update({'prefix_or_tunnel_id': prefix_or_tunnel_id})
-                if group['next_hop']:
-                    feature_dict.update({'next_hop': group['next_hop']})
-                if group['t']:
-                    feature_dict.update({'lsp_tunnel': True})
-                feature_dict.update({'bytes_label_switched': int(group['bytes_label_switched'])})
+                if group['interface']:
+                    interface = Common.convert_intf_name(group['interface'])
+                    feature_dict = base_feature_dict.setdefault('outgoing_interface', {}).setdefault(interface, {})
+                    if group['next_hop']:
+                        feature_dict.update({'next_hop': group['next_hop']})
+                    if group['t']:
+                        feature_dict.update({'lsp_tunnel': True})
+                    feature_dict.update({'bytes_label_switched': int(group['bytes_label_switched'])})
                 continue
 
             m = p2_3.match(line)
@@ -1915,20 +1926,23 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                 outgoing_label = group['outgoing_label']
                 prefix_or_tunnel_id = group['prefix_or_tunnel_id'].strip()
 
-                interface = Common.convert_intf_name(group['interface'])
-                feature_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}). \
-                    setdefault('local_label', {}). \
-                    setdefault(local_label, {}). \
-                    setdefault('outgoing_label_or_vc', {}). \
-                    setdefault(outgoing_label.strip(), {})
 
-                feature_dict.update({'outgoing_interface': interface})
-                feature_dict.update({'prefix_or_tunnel_id': prefix_or_tunnel_id})
-                if group['next_hop']:
-                    feature_dict.update({'next_hop': group['next_hop']})
-                if group['t']:
-                    feature_dict.update({'lsp_tunnel': True})
-                feature_dict.update({'bytes_label_switched': int(group['bytes_label_switched'])})
+                base_feature_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}). \
+                                           setdefault('local_label', {}). \
+                                           setdefault(local_label, {}). \
+                                           setdefault('outgoing_label_or_vc', {}). \
+                                           setdefault(outgoing_label.strip(), {}). \
+                                           setdefault('prefix_or_tunnel_id', {}). \
+                                           setdefault(prefix_or_tunnel_id, {})
+
+                if group['interface']:
+                    interface = Common.convert_intf_name(group['interface'])
+                    feature_dict = base_feature_dict.setdefault('outgoing_interface', {}).setdefault(interface, {})
+                    if group['next_hop']:
+                        feature_dict.update({'next_hop': group['next_hop']})
+                    if group['t']:
+                        feature_dict.update({'lsp_tunnel': True})
+                    feature_dict.update({'bytes_label_switched': int(group['bytes_label_switched'])})
                 continue
 
             #     MAC/Encaps=18/18, MRU=1530, Label Stack{}

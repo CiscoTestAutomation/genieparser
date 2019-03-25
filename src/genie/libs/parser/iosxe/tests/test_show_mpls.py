@@ -1772,62 +1772,87 @@ class test_show_mpls_forwarding_table(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-        'vrf': {
-            'L3VPN-0051': {
-                'local_label': {
-                        9301: {
-                            'outgoing_label_or_vc': {
-                                'No Label':{
-                                    'outgoing_interface': 'Port-channel1.51',
-                                    'prefix_or_tunnel_id': '172.16.100.1/32[V]',
-                                    'bytes_label_switched': 0,
-                                    'next_hop': '192.168.10.253',
-                                    'macstr': '00002440156384B261CB1480810000330800',
-                                    'mac': 18,
-                                    'encaps': 18,
-                                    'mru': 1530,
-                                    'label_stack': '{}',
-                                    'vpn_route': 'L3VPN-0051',
-                                    'output_feature_configured': False,
-                                    'load_sharing':{
-                                        'method': 'per-destination',
-                                        'slots': ['0', '2', '4', '6', '8', '10', '12', '14'],
+    "vrf": {
+        "L3VPN-0051": {
+            "local_label": {
+                9301: {
+                    "outgoing_label_or_vc": {
+                        "No Label": {
+                            "prefix_or_tunnel_id": {
+                                "172.16.100.1/32[V]": {
+                                    "outgoing_interface": {
+                                        "Port-channel1.51": {
+                                            "next_hop": "192.168.10.253",
+                                            "bytes_label_switched": 0,
+                                            "mac": 18,
+                                            "encaps": 18,
+                                            "mru": 1530,
+                                            "label_stack": "{}",
+                                            "macstr": "00002440156384B261CB1480810000330800",
+                                            "vpn_route": "L3VPN-0051",
+                                            "output_feature_configured": False,
+                                            "load_sharing": {
+                                                "method": "per-destination",
+                                                "slots": [
+                                                    "0",
+                                                    "2",
+                                                    "4",
+                                                    "6",
+                                                    "8",
+                                                    "10",
+                                                    "12",
+                                                    "14"
+                                                ]
+                                            }
+                                        }
                                     }
                                 }
                             }
-                        },
-                        2641: {
-                            'outgoing_label_or_vc': {
-                                'No Label': {
-                                    'outgoing_interface': 'Port-channel1.51',
-                                    "prefix_or_tunnel_id": "172.16.100.100/32[V]",
-                                    "next_hop": "192.168.10.253",
-                                    "bytes_label_switched": 0,
-                                    "mac": 18,
-                                    "encaps": 18,
-                                    "mru": 1530,
-                                    "via": "Ls0",
-                                    "label_stack": "{}",
-                                    "macstr": "AABBCC032800AABBCC0325018847",
-                                    "lstack": "00010000",
-                                    "vpn_route": "L3VPN-0051",
-                                    "output_feature_configured": False
+                        }
+                    }
+                },
+                2641: {
+                    "outgoing_label_or_vc": {
+                        "No Label": {
+                            "prefix_or_tunnel_id": {
+                                "172.16.100.100/32[V]": {
+                                    "outgoing_interface": {
+                                        "Port-channel1.51": {
+                                            "next_hop": "192.168.10.253",
+                                            "bytes_label_switched": 0,
+                                            "mac": 18,
+                                            "encaps": 18,
+                                            "mru": 1530,
+                                            "label_stack": "{}",
+                                            "via": "Ls0",
+                                            "macstr": "AABBCC032800AABBCC0325018847",
+                                            "lstack": "00010000",
+                                            "vpn_route": "L3VPN-0051",
+                                            "output_feature_configured": False
+                                        }
+                                    }
                                 }
                             }
-                        },
-                        2642: {
-                            'outgoing_label_or_vc': {
-                                'No Label': {
-                                    'outgoing_interface': 'Aggregate/L3VPN-0051',
-                                    "prefix_or_tunnel_id": "192.168.10.0/24[V]",
-                                    "bytes_label_switched": 12189672,
-                                    "mac": 0,
-                                    "encaps": 0,
-                                    "mru": 0,
-                                    "label_stack": "{}",
-                                    "vpn_route": "L3VPN-0051",
-                                    "output_feature_configured": False,
-                                    "broadcast": True,
+                        }
+                    }
+                },
+                2642: {
+                    "outgoing_label_or_vc": {
+                        "No Label": {
+                            "prefix_or_tunnel_id": {
+                                "192.168.10.0/24[V]": {
+                                    "outgoing_interface": {
+                                        "Aggregate/L3VPN-0051": {
+                                            "bytes_label_switched": 12189672,
+                                            "mac": 0,
+                                            "encaps": 0,
+                                            "mru": 0,
+                                            "label_stack": "{}",
+                                            "vpn_route": "L3VPN-0051",
+                                            "output_feature_configured": False,
+                                            "broadcast": True
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -1835,7 +1860,8 @@ class test_show_mpls_forwarding_table(unittest.TestCase):
                 }
             }
         }
-
+    }
+}
     golden_output = {'execute.return_value': '''\
     Router#show mpls forwarding-table vrf L3VPN-0051 detail
     Load for five secs: 71%/0%; one minute: 11%; five minutes: 9%
@@ -1872,26 +1898,44 @@ class test_show_mpls_forwarding_table(unittest.TestCase):
                     201: {
                         "outgoing_label_or_vc": {
                             "Pop tag": {
-                                "outgoing_interface": "Port-channel1/1/0",
-                                "prefix_or_tunnel_id": "10.18.18.18/32",
-                                "next_hop": "point2point",
-                                "bytes_label_switched": 0
+                                "prefix_or_tunnel_id":{
+                                    "10.18.18.18/32":{
+                                        "outgoing_interface":{
+                                            "Port-channel1/1/0":{
+                                                "next_hop": "point2point",
+                                                "bytes_label_switched": 0,
+                                            }
+                                        }
+                                    }
+                                }
                             },
                             "2/35": {
-                                "outgoing_interface": "ATOM4/1/0.1",
-                                "prefix_or_tunnel_id": "10.18.18.18/32",
-                                "next_hop": "point2point",
-                                "bytes_label_switched": 0
+                                "prefix_or_tunnel_id": {
+                                    "10.18.18.18/32":{
+                                        "outgoing_interface":{
+                                            "ATM4/1/0.1":{
+                                                "next_hop": "point2point",
+                                                "bytes_label_switched": 0
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     },
                     251: {
                         "outgoing_label_or_vc": {
                             "18": {
-                                "outgoing_interface": "Port-channel1/1/0",
-                                "prefix_or_tunnel_id": "10.17.17.17/32",
-                                "next_hop": "point2point",
-                                "bytes_label_switched": 0
+                                "prefix_or_tunnel_id": {
+                                    "10.17.17.17/32": {
+                                        "outgoing_interface": {
+                                            "Port-channel1/1/0": {
+                                                "next_hop": "point2point",
+                                                "bytes_label_switched": 0
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -1917,32 +1961,45 @@ tag    tag or VC   or Tunnel Id      switched   interface
                     16: {
                         "outgoing_label_or_vc": {
                             "16": {
-                                "outgoing_interface": "Ethernet1/0",
-                                "prefix_or_tunnel_id": "10.0.0.1 1 [19]",
-                                "next_hop": "10.0.1.30",
-                                "bytes_label_switched": 0,
-                                "mac": 14,
-                                "encaps": 18,
-                                "mru": 1500,
-                                "label_stack": "{16}",
-                                "macstr": "AABBCC032800AABBCC0325018847",
-                                "lstack": "00010000",
-                                "output_feature_configured": False,
-                                "broadcast": True
+                                "prefix_or_tunnel_id": {
+                                    "10.0.0.1 1 [19]": {
+                                        "outgoing_interface": {
+                                            "Ethernet1/0": {
+                                                "next_hop": "10.0.1.30",
+                                                "bytes_label_switched": 0,
+                                                "mac": 14,
+                                                "encaps": 18,
+                                                "mru": 1500,
+                                                "label_stack": "{16}",
+                                                "macstr": "AABBCC032800AABBCC0325018847",
+                                                "lstack": "00010000",
+                                                "output_feature_configured": False,
+                                                "broadcast": True
+
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     },
                     17: {
                         "outgoing_label_or_vc": {
                             "No Label": {
-                                "outgoing_interface": "aggregate",
-                                "prefix_or_tunnel_id": "10.0.0.1 1 [19]",
-                                "bytes_label_switched": 342,
-                                "mac": 0,
-                                "encaps": 0,
-                                "mru": 0,
-                                "label_stack": "{}",
-                                "via": "Ls0"
+                                "prefix_or_tunnel_id": {
+                                    "10.0.0.1 1 [19]": {
+                                        "outgoing_interface": {
+                                            "aggregate": {
+                                                "bytes_label_switched": 342,
+                                                "mac": 0,
+                                                "encaps": 0,
+                                                "mru": 0,
+                                                "label_stack": "{}",
+                                                "via": "Ls0"
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -1968,186 +2025,293 @@ tag    tag or VC   or Tunnel Id      switched   interface
     }
 
     golden_parsed_output_4 = {
-    "vrf": {
-        "default": {
-            "local_label": {
-                16: {
-                    "outgoing_label_or_vc": {
-                        "Pop Label": {
-                            "outgoing_interface": "Ethernet0/0",
-                            "prefix_or_tunnel_id": "1.1.1.2-A",
-                            "next_hop": "1.1.1.2",
-                            "bytes_label_switched": 0
-                        }
+     "vrf": {
+          "default": {
+               "local_label": {
+                    16: {
+                         "outgoing_label_or_vc": {
+                              "Pop Label": {
+                                   "prefix_or_tunnel_id": {
+                                        "1.1.1.2-A": {
+                                             "outgoing_interface": {
+                                                  "Ethernet0/0": {
+                                                       "next_hop": "1.1.1.2",
+                                                       "bytes_label_switched": 0
+                                                  }
+                                             }
+                                        }
+                                   }
+                              }
+                         }
+                    },
+                    17: {
+                         "outgoing_label_or_vc": {
+                              "Pop Label": {
+                                   "prefix_or_tunnel_id": {
+                                        "1.1.1.2-A": {
+                                             "outgoing_interface": {
+                                                  "Ethernet0/0": {
+                                                       "next_hop": "1.1.1.2",
+                                                       "bytes_label_switched": 0
+                                                  }
+                                             }
+                                        }
+                                   }
+                              }
+                         }
+                    },
+                    18: {
+                         "outgoing_label_or_vc": {
+                              "Pop Label": {
+                                   "prefix_or_tunnel_id": {
+                                        "1.1.1.2-A": {
+                                             "outgoing_interface": {
+                                                  "Ethernet0/0": {
+                                                       "next_hop": "1.1.1.2",
+                                                       "bytes_label_switched": 0
+                                                  }
+                                             }
+                                        }
+                                   }
+                              }
+                         }
+                    },
+                    19: {
+                         "outgoing_label_or_vc": {
+                              "Pop Label": {
+                                   "prefix_or_tunnel_id": {
+                                        "15.15.15.2-A": {
+                                             "outgoing_interface": {
+                                                  "Ethernet0/1": {
+                                                       "next_hop": "15.15.15.2",
+                                                       "bytes_label_switched": 0
+                                                  }
+                                             }
+                                        }
+                                   }
+                              }
+                         }
+                    },
+                    20: {
+                         "outgoing_label_or_vc": {
+                              "Pop Label": {
+                                   "prefix_or_tunnel_id": {
+                                        "15.15.15.2-A": {
+                                             "outgoing_interface": {
+                                                  "Ethernet0/1": {
+                                                       "next_hop": "15.15.15.2",
+                                                       "bytes_label_switched": 0
+                                                  }
+                                             }
+                                        }
+                                   }
+                              }
+                         }
+                    },
+                    21: {
+                         "outgoing_label_or_vc": {
+                              "Pop Label": {
+                                   "prefix_or_tunnel_id": {
+                                        "15.15.15.2-A": {
+                                             "outgoing_interface": {
+                                                  "Ethernet0/1": {
+                                                       "next_hop": "15.15.15.2",
+                                                       "bytes_label_switched": 0
+                                                  }
+                                             }
+                                        }
+                                   }
+                              }
+                         }
+                    },
+                    22: {
+                         "outgoing_label_or_vc": {
+                              "Pop Label": {
+                                   "prefix_or_tunnel_id": {
+                                        "1/1[TE-Bind]": {
+                                             "outgoing_interface": {
+                                                  "Tunnel1": {
+                                                       "next_hop": "point2point",
+                                                       "lsp_tunnel": True,
+                                                       "bytes_label_switched": 0
+                                                  }
+                                             }
+                                        }
+                                   }
+                              }
+                         }
+                    },
+                    16110: {
+                         "outgoing_label_or_vc": {
+                              "Pop Label": {
+                                   "prefix_or_tunnel_id": {
+                                        "20.20.20.20/32": {
+                                             "outgoing_interface": {
+                                                  "Ethernet0/0": {
+                                                       "next_hop": "1.1.1.2",
+                                                       "bytes_label_switched": 0
+                                                  }
+                                             }
+                                        }
+                                   }
+                              }
+                         }
+                    },
+                    16120: {
+                         "outgoing_label_or_vc": {
+                              "16120": {
+                                   "prefix_or_tunnel_id": {
+                                        "30.30.30.30/32": {
+                                             "outgoing_interface": {
+                                                  "Ethernet0/0": {
+                                                       "next_hop": "1.1.1.2",
+                                                       "bytes_label_switched": 0
+                                                  }
+                                             }
+                                        }
+                                   }
+                              }
+                         }
+                    },
+                    16130: {
+                         "outgoing_label_or_vc": {
+                              "16130": {
+                                   "prefix_or_tunnel_id": {
+                                        "40.40.40.40/32": {
+                                             "outgoing_interface": {
+                                                  "Ethernet0/0": {
+                                                       "next_hop": "1.1.1.2",
+                                                       "bytes_label_switched": 0
+                                                  },
+                                                  "Tunnel1": {
+                                                       "next_hop": "point2point",
+                                                       "lsp_tunnel": True,
+                                                       "bytes_label_switched": 0
+                                                  }
+                                             }
+                                        }
+                                   }
+                              }
+                         }
+                    },
+                    16140: {
+                         "outgoing_label_or_vc": {
+                              "Pop Label": {
+                                   "prefix_or_tunnel_id": {
+                                        "50.50.50.50/32": {
+                                             "outgoing_interface": {
+                                                  "Tunnel1": {
+                                                       "next_hop": "point2point",
+                                                       "lsp_tunnel": True,
+                                                       "bytes_label_switched": 0
+                                                  }
+                                             }
+                                        }
+                                   }
+                              }
+                         }
+                    },
+                    16200: {
+                         "outgoing_label_or_vc": {
+                              "Pop Label": {
+                                   "prefix_or_tunnel_id": {
+                                        "100.100.100.100/32": {
+                                             "outgoing_interface": {
+                                                  "Ethernet0/1": {
+                                                       "next_hop": "15.15.15.2",
+                                                       "bytes_label_switched": 0
+                                                  }
+                                             }
+                                        }
+                                   }
+                              }
+                         }
+                    },
+                    17100: {
+                         "outgoing_label_or_vc": {
+                              "Pop Label": {
+                                   "prefix_or_tunnel_id": {
+                                        "0-20.20.20.20/32-0": {
+                                             "outgoing_interface": {
+                                                  "Ethernet0/0": {
+                                                       "next_hop": "1.1.1.2",
+                                                       "bytes_label_switched": 0
+                                                  }
+                                             }
+                                        }
+                                   }
+                              }
+                         }
+                    },
+                    17200: {
+                         "outgoing_label_or_vc": {
+                              "17200": {
+                                   "prefix_or_tunnel_id": {
+                                        "0-30.30.30.30/32-0": {
+                                             "outgoing_interface": {
+                                                  "Ethernet0/0": {
+                                                       "next_hop": "1.1.1.2",
+                                                       "bytes_label_switched": 0
+                                                  }
+                                             }
+                                        }
+                                   }
+                              }
+                         }
+                    },
+                    17300: {
+                         "outgoing_label_or_vc": {
+                              "17300": {
+                                   "prefix_or_tunnel_id": {
+                                        "0-40.40.40.40/32-0": {
+                                             "outgoing_interface": {
+                                                  "Ethernet0/1": {
+                                                       "next_hop": "15.15.15.2",
+                                                       "bytes_label_switched": 0
+                                                  }
+                                             }
+                                        }
+                                   }
+                              }
+                         }
+                    },
+                    17400: {
+                         "outgoing_label_or_vc": {
+                              "17400": {
+                                   "prefix_or_tunnel_id": {
+                                        "0-50.50.50.50/32-0": {
+                                             "outgoing_interface": {
+                                                  "Ethernet0/1": {
+                                                       "next_hop": "15.15.15.2",
+                                                       "bytes_label_switched": 0
+                                                  }
+                                             }
+                                        }
+                                   }
+                              }
+                         }
+                    },
+                    18000: {
+                         "outgoing_label_or_vc": {
+                              "Pop Label": {
+                                   "prefix_or_tunnel_id": {
+                                        "0-100.100.100.100/32-0": {
+                                             "outgoing_interface": {
+                                                  "Ethernet0/1": {
+                                                       "next_hop": "15.15.15.2",
+                                                       "bytes_label_switched": 0
+                                                  }
+                                             }
+                                        }
+                                   }
+                              }
+                         }
                     }
-                },
-                17: {
-                    "outgoing_label_or_vc": {
-                        "Pop Label": {
-                            "outgoing_interface": "Ethernet0/0",
-                            "prefix_or_tunnel_id": "1.1.1.2-A",
-                            "next_hop": "1.1.1.2",
-                            "bytes_label_switched": 0
-                        }
-                    }
-                },
-                18: {
-                    "outgoing_label_or_vc": {
-                        "Pop Label": {
-                            "outgoing_interface": "Ethernet0/0",
-                            "prefix_or_tunnel_id": "1.1.1.2-A",
-                            "next_hop": "1.1.1.2",
-                            "bytes_label_switched": 0
-                        }
-                    }
-                },
-                19: {
-                    "outgoing_label_or_vc": {
-                        "Pop Label": {
-                            "outgoing_interface": "Ethernet0/1",
-                            "prefix_or_tunnel_id": "15.15.15.2-A",
-                            "next_hop": "15.15.15.2",
-                            "bytes_label_switched": 0
-                        }
-                    }
-                },
-                20: {
-                    "outgoing_label_or_vc": {
-                        "Pop Label": {
-                            "outgoing_interface": "Ethernet0/1",
-                            "prefix_or_tunnel_id": "15.15.15.2-A",
-                            "next_hop": "15.15.15.2",
-                            "bytes_label_switched": 0
-                        }
-                    }
-                },
-                21: {
-                    "outgoing_label_or_vc": {
-                        "Pop Label": {
-                            "outgoing_interface": "Ethernet0/1",
-                            "prefix_or_tunnel_id": "15.15.15.2-A",
-                            "next_hop": "15.15.15.2",
-                            "bytes_label_switched": 0
-                        }
-                    }
-                },
-                22: {
-                    "outgoing_label_or_vc": {
-                        "Pop Label": {
-                            "outgoing_interface": "Tunnel1",
-                            "prefix_or_tunnel_id": "1/1[TE-Bind]",
-                            "next_hop": "point2point",
-                            "lsp_tunnel": True,
-                            "bytes_label_switched": 0
-                        }
-                    }
-                },
-                16110: {
-                    "outgoing_label_or_vc": {
-                        "Pop Label": {
-                            "outgoing_interface": "Ethernet0/0",
-                            "prefix_or_tunnel_id": "20.20.20.20/32",
-                            "next_hop": "1.1.1.2",
-                            "bytes_label_switched": 0
-                        }
-                    }
-                },
-                16120: {
-                    "outgoing_label_or_vc": {
-                        "16120": {
-                            "outgoing_interface": "Ethernet0/0",
-                            "prefix_or_tunnel_id": "30.30.30.30/32",
-                            "next_hop": "1.1.1.2",
-                            "bytes_label_switched": 0
-                        }
-                    }
-                },
-                16130: {
-                    "outgoing_label_or_vc": {
-                        "16130": {
-                            "outgoing_interface": "Tunnel1",
-                            "prefix_or_tunnel_id": "40.40.40.40/32",
-                            "next_hop": "point2point",
-                            "bytes_label_switched": 0,
-                            "lsp_tunnel": True
-                        }
-                    }
-                },
-                16140: {
-                    "outgoing_label_or_vc": {
-                        "Pop Label": {
-                            "outgoing_interface": "Tunnel1",
-                            "prefix_or_tunnel_id": "50.50.50.50/32",
-                            "next_hop": "point2point",
-                            "lsp_tunnel": True,
-                            "bytes_label_switched": 0
-                        }
-                    }
-                },
-                16200: {
-                    "outgoing_label_or_vc": {
-                        "Pop Label": {
-                            "outgoing_interface": "Ethernet0/1",
-                            "prefix_or_tunnel_id": "100.100.100.100/32",
-                            "next_hop": "15.15.15.2",
-                            "bytes_label_switched": 0
-                        }
-                    }
-                },
-                17100: {
-                    "outgoing_label_or_vc": {
-                        "Pop Label": {
-                            "outgoing_interface": "Ethernet0/0",
-                            "prefix_or_tunnel_id": "0-20.20.20.20/32-0",
-                            "next_hop": "1.1.1.2",
-                            "bytes_label_switched": 0
-                        }
-                    }
-                },
-                17200: {
-                    "outgoing_label_or_vc": {
-                        "17200": {
-                            "outgoing_interface": "Ethernet0/0",
-                            "prefix_or_tunnel_id": "0-30.30.30.30/32-0",
-                            "next_hop": "1.1.1.2",
-                            "bytes_label_switched": 0
-                        }
-                    }
-                },
-                17300: {
-                    "outgoing_label_or_vc": {
-                        "17300": {
-                            "outgoing_interface": "Ethernet0/1",
-                            "prefix_or_tunnel_id": "0-40.40.40.40/32-0",
-                            "next_hop": "15.15.15.2",
-                            "bytes_label_switched": 0
-                        }
-                    }
-                },
-                17400: {
-                    "outgoing_label_or_vc": {
-                        "17400": {
-                            "outgoing_interface": "Ethernet0/1",
-                            "prefix_or_tunnel_id": "0-50.50.50.50/32-0",
-                            "next_hop": "15.15.15.2",
-                            "bytes_label_switched": 0
-                        }
-                    }
-                },
-                18000: {
-                    "outgoing_label_or_vc": {
-                        "Pop Label": {
-                            "outgoing_interface": "Ethernet0/1",
-                            "prefix_or_tunnel_id": "0-100.100.100.100/32-0",
-                            "next_hop": "15.15.15.2",
-                            "bytes_label_switched": 0
-                        }
-                    }
-                }
-            }
-        }
-    }
+               }
+          }
+     }
 }
+
 
     golden_output_4 = {'execute.return_value':'''\
     Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop
@@ -2211,6 +2375,8 @@ tag    tag or VC   or Tunnel Id      switched   interface
         self.dev = Mock(**self.golden_output_4)
         obj = ShowMplsForwardingTable(device=self.dev)
         parsed_output = obj.parse()
+        import pdb;pdb.set_trace()
+
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
 class test_show_mpls_interface(unittest.TestCase):
