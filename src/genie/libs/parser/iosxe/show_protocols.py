@@ -33,7 +33,7 @@ class ShowIpProtocolsSchema(MetaParser):
                                     Any(): {
                                         'distance': int,
                                         'maximum_paths': int,
-                                        'output_delay': int,
+                                        Optional('output_delay'): int,
                                         'send_version': int,
                                         'receive_version': int,
                                         Optional('automatic_network_summarization_in_effect'): bool,
@@ -1073,7 +1073,12 @@ class ShowIpProtocolsSectionRip(ShowIpProtocols):
     cli_command = ["show ip protocols | sec rip","show ip protocols vrf {vrf} | sec rip"]
 
     def cli(self, vrf="", cmd ="",output=None):
-        return super().cli(cmd=self.cli_command,vrf=vrf,output=output)
+        if vrf:
+            cmd = self.cli_command[1].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[0]
+
+        return super().cli(cmd=cmd, vrf=vrf,output=output)
 
 # ====================================================
 #  schema for show ipv6 protocols | sec rip
