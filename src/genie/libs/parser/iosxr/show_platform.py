@@ -625,7 +625,7 @@ class ShowInstallCommitSummarySchema(MetaParser):
     schema = {
         'committed_packages': Any(),
         Optional('num_committed_packages'): int,
-        Optional('sdr'): str,
+        Optional('sdr'): list,
         }
 
 class ShowInstallCommitSummary(ShowInstallCommitSummarySchema):
@@ -654,7 +654,7 @@ class ShowInstallCommitSummary(ShowInstallCommitSummarySchema):
             
             if previous_line_sdr:
                 previous_line_sdr = False
-                install_commit_dict['sdr'] = str(line).strip()
+                install_commit_dict.setdefault('sdr', []).append(str(line).strip())
                 continue
             
             
