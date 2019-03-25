@@ -3550,7 +3550,7 @@ class ShowPlatformHardwareSerdesInternal(ShowPlatformHardwareSerdesSchema):
         ret_dict = {}
 
         # Network-Processor-0 Link:
-        p1 = re.compile(r'^(?P<link>[\w\d\-\s]+) +Link:$')
+        p1 = re.compile(r'^(?P<link>[\w\d\-\s/]+) +Link:$')
 
         #   Local TX in sync, Local RX in sync                                   
         p2 = re.compile(r'^Local +TX +in +sync, +Local +RX +in +sync$')
@@ -3560,10 +3560,10 @@ class ShowPlatformHardwareSerdesInternal(ShowPlatformHardwareSerdesSchema):
 
         #   To Network-Processor       Packets:    21763844  Bytes:  7343838083 
         #   To Encryption Processor   Packets:           0  Bytes:           0                                   
-        p4 = re.compile(r'^To +(?P<link_name_1>[\w\-\d\s]+) +Packets: +(?P<to_packets>\d+) +Bytes: +(?P<to_bytes>\d+)$')
+        p4 = re.compile(r'^To +(?P<link_name_1>[\w\-\d\s/]+) +Packets: +(?P<to_packets>\d+) +Bytes: +(?P<to_bytes>\d+)$')
 
         #   From Network-Processor     Packets:    21259012  Bytes:  7397920802                                  
-        p5 = re.compile(r'^From +(?P<link_name_2>[\w\-\d\s]+) +Packets: +(?P<from_packets>\d+) +Bytes: +(?P<from_bytes>\d+)$')
+        p5 = re.compile(r'^From +(?P<link_name_2>[\w\-\d\s/]+) +Packets: +(?P<from_packets>\d+) +Bytes: +(?P<from_bytes>\d+)$')
 
         #     Drops                   Packets:           0  Bytes:           0
         p6 = re.compile(r'^Drops +Packets: +(?P<dropped_packets>\d+) +Bytes: +(?P<dropped_bytes>\d+)$')

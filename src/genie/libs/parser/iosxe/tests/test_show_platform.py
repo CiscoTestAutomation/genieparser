@@ -30,9 +30,6 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   ShowPlatformHardwareQfpBqsStatisticsChannelAll, \
                                                   ShowPlatformHardwareQfpInterfaceIfnameStatistics, \
                                                   ShowPlatformHardwareQfpStatisticsDrop, \
-                                                  ShowPlatformHardwareSerdes, \
-                                                  ShowPlatformHardwareSerdesInternal, \
-                                                  ShowPlatformPower, \
                                                   ShowProcessesCpuHistory
 
 

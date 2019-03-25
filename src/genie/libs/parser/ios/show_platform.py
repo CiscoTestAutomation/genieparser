@@ -34,7 +34,19 @@ from genie.libs.parser.iosxe.show_platform import \
     ShowVersionRp as ShowVersionRp_iosxe, \
     ShowPlatform as ShowPlatform_iosxe, \
     ShowPlatformPower as ShowPlatformPower_iosxe, \
-    ShowProcessesCpuHistory as ShowProcessesCpuHistory_iosxe
+    ShowProcessesCpuHistory as ShowProcessesCpuHistory_iosxe, \
+    ShowProcessesCpuPlatform as ShowProcessesCpuPlatform_iosxe, \
+    ShowPlatformSoftwareStatusControl as ShowPlatformSoftwareStatusControl_iosxe, \
+    ShowPlatformSoftwareSlotActiveMonitorMem as ShowPlatformSoftwareSlotActiveMonitorMem_iosxe, \
+    ShowPlatformHardware as ShowPlatformHardware_iosxe, \
+    ShowPlatformHardwarePlim as ShowPlatformHardwarePlim_iosxe, \
+    ShowPlatformHardwareQfpBqsOpmMapping as ShowPlatformHardwareQfpBqsOpmMapping_iosxe, \
+    ShowPlatformHardwareQfpBqsIpmMapping as ShowPlatformHardwareQfpBqsIpmMapping_iosxe, \
+    ShowPlatformHardwareSerdes as ShowPlatformHardwareSerdes_iosxe, \
+    ShowPlatformHardwareSerdesInternal as ShowPlatformHardwareSerdesInternal_iosxe, \
+    ShowPlatformHardwareQfpBqsStatisticsChannelAll as ShowPlatformHardwareQfpBqsStatisticsChannelAll_iosxe, \
+    ShowPlatformHardwareQfpInterfaceIfnameStatistics as ShowPlatformHardwareQfpInterfaceIfnameStatistics_iosxe, \
+    ShowPlatformHardwareQfpStatisticsDrop as ShowPlatformHardwareQfpStatisticsDrop_iosxe
 
 
 class ShowVersion(ShowVersion_iosxe):
@@ -324,4 +336,74 @@ class ShowPlatformPower(ShowPlatformPower_iosxe):
 
 class ShowProcessesCpuHistory(ShowProcessesCpuHistory_iosxe):
     """Parser for show processes cpu history"""
+    pass  
+
+
+class ShowProcessesCpuPlatform(ShowProcessesCpuPlatform_iosxe):
+    """Parser for show processes cpu platform"""
+    pass
+
+
+class ShowPlatformSoftwareStatusControl(ShowPlatformSoftwareStatusControl_iosxe):
+    """Parser for show platform software status control-processor brief"""
+    pass
+
+
+class ShowPlatformSoftwareSlotActiveMonitorMem(ShowPlatformSoftwareSlotActiveMonitorMem_iosxe):
+    """Parser for show platform software process slot switch active R0 monitor | inc Mem :|Swap:"""
+    pass
+
+
+class ShowPlatformHardware(ShowPlatformHardware_iosxe):
+    """Parser for show platform hardware qfp active infrastructure bqs queue output default all"""
+    pass
+
+
+class ShowPlatformHardwarePlim(ShowPlatformHardwarePlim_iosxe):
+    """Parser for show platform hardware port <x/x/x> plim statistics
+                  show platform hardware slot <x> plim statistics
+                  show platform hardware slot <x> plim statistics internal
+                  show platform hardware subslot <x/x> plim statistics"""
+    pass
+
+
+class ShowPlatformHardwareQfpBqsOpmMapping(ShowPlatformHardwareQfpBqsOpmMapping_iosxe):
+    """Parser for show platform hardware qfp active bqs <x> opm mapping
+                  show platform hardware qfp standby bqs <x> opm mapping"""
+    pass
+
+
+class ShowPlatformHardwareQfpBqsIpmMapping(ShowPlatformHardwareQfpBqsIpmMapping_iosxe):
+    """Parser for show platform hardware qfp active bqs <x> ipm mapping
+                  show platform hardware qfp standby bqs <x> ipm mapping"""
+    pass
+
+
+class ShowPlatformHardwareSerdes(ShowPlatformHardwareSerdes_iosxe):
+    """Parser for show platform hardware slot <x> serdes statistics"""
+    pass
+
+
+class ShowPlatformHardwareSerdesInternal(ShowPlatformHardwareSerdesInternal_iosxe):
+    """Parser for show platform hardware slot <x> serdes statistics internal"""
+    pass
+
+
+class ShowPlatformHardwareQfpBqsStatisticsChannelAll(ShowPlatformHardwareQfpBqsStatisticsChannelAll_iosxe):
+    """Parser for show platform hardware qfp active bqs <x> ipm statistics channel all
+                  show platform hardware qfp standby bqs <x> ipm statistics channel all
+                  show platform hardware qfp active bqs <x> opm statistics channel all
+                  show platform hardware qfp standby bqs <x> opm statistics channel all"""
+    pass
+
+
+class ShowPlatformHardwareQfpInterfaceIfnameStatistics(ShowPlatformHardwareQfpInterfaceIfnameStatistics_iosxe):
+    """Parser for show platform hardware qfp active interface if-name <interface> statistics
+                  show platform hardware qfp standby interface if-name <interface> statistics"""
+    pass
+
+
+class ShowPlatformHardwareQfpStatisticsDrop(ShowPlatformHardwareQfpStatisticsDrop_iosxe):
+    """Parser for show platform hardware qfp active statistics drop
+                  show platform hardware qfp standby statistics drop"""
     pass
