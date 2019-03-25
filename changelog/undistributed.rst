@@ -97,6 +97,15 @@
           show mpls ldp igp sync interface <interface>
           show mpls ldp igp sync vrf <vrf>
 
+----------------------------------------------------------------------------------
+                                 ARP
+----------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowArpApplication for:
+        show arp application
+    * Add ShowArpSummary for:
+        show arp summary
+
 --------------------------------------------------------------------------------
                                  CONFIG
 --------------------------------------------------------------------------------
@@ -115,3 +124,4 @@
     * Add ShowEthernetServiceInstanceDetail for:
             show ethernet service instance detail
             show ethernet service instance interface <interface> detail
+
