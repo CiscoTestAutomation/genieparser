@@ -67,7 +67,7 @@ class ShowIsisAdjacency(ShowIsisAdjacencySchema):
                 isis_adjacency_dict.setdefault('isis', {})
                 isis_name = m.groupdict()['isis_name']
                 level_name = m.groupdict()['level_name']
-                isis_adjacency_dict['isis'][isis_name] = {'adjacency': {level_name: {} } }
+                isis_adjacency_dict['isis'][isis_name] = {'level': {level_name: {} } }
                 continue
             
             # BKL-P-C9010-02 BE2              *PtoP*         Up    23   16w0d    Yes Up   None
@@ -75,22 +75,22 @@ class ShowIsisAdjacency(ShowIsisAdjacencySchema):
             m = p2.match(line)
             if m:
                 system_id = m.groupdict()['system_id']
-                isis_adjacency_dict['isis'][isis_name]['adjacency'][level_name][system_id] = {}
-                isis_adjacency_dict['isis'][isis_name]['adjacency'][level_name][system_id]['interface'] = m.groupdict()['interface']
-                isis_adjacency_dict['isis'][isis_name]['adjacency'][level_name][system_id]['snpa'] = m.groupdict()['snpa']
-                isis_adjacency_dict['isis'][isis_name]['adjacency'][level_name][system_id]['state'] = m.groupdict()['state']
-                isis_adjacency_dict['isis'][isis_name]['adjacency'][level_name][system_id]['hold'] = m.groupdict()['hold']
-                isis_adjacency_dict['isis'][isis_name]['adjacency'][level_name][system_id]['changed'] = m.groupdict()['changed']
-                isis_adjacency_dict['isis'][isis_name]['adjacency'][level_name][system_id]['nsf'] = m.groupdict()['nsf']
-                isis_adjacency_dict['isis'][isis_name]['adjacency'][level_name][system_id]['ipv4_bfd'] = m.groupdict()['ipv4_bfd']
-                isis_adjacency_dict['isis'][isis_name]['adjacency'][level_name][system_id]['ipv6_bfd'] = m.groupdict()['ipv6_bfd']
+                isis_adjacency_dict['isis'][isis_name]['level'][level_name].setdefault('adjacency', {}).setdefault(system_id, {})
+                isis_adjacency_dict['isis'][isis_name]['level'][level_name]['adjacency'][system_id]['interface'] = m.groupdict()['interface']
+                isis_adjacency_dict['isis'][isis_name]['level'][level_name]['adjacency'][system_id]['snpa'] = m.groupdict()['snpa']
+                isis_adjacency_dict['isis'][isis_name]['level'][level_name]['adjacency'][system_id]['state'] = m.groupdict()['state']
+                isis_adjacency_dict['isis'][isis_name]['level'][level_name]['adjacency'][system_id]['hold'] = m.groupdict()['hold']
+                isis_adjacency_dict['isis'][isis_name]['level'][level_name]['adjacency'][system_id]['changed'] = m.groupdict()['changed']
+                isis_adjacency_dict['isis'][isis_name]['level'][level_name]['adjacency'][system_id]['nsf'] = m.groupdict()['nsf']
+                isis_adjacency_dict['isis'][isis_name]['level'][level_name]['adjacency'][system_id]['ipv4_bfd'] = m.groupdict()['ipv4_bfd']
+                isis_adjacency_dict['isis'][isis_name]['level'][level_name]['adjacency'][system_id]['ipv6_bfd'] = m.groupdict()['ipv6_bfd']
                 continue
             
             # Total adjacency count: 1
             p3 = re.compile(r'^\s*Total\sadjacency\scount:\s+(?P<adjacency_count>\S+)\s*$')
             m = p3.match(line)
             if m:
-                isis_adjacency_dict['isis'][isis_name]['adjacency'][level_name]['total_adjacency_count'] = int(m.groupdict()['adjacency_count'])
+                isis_adjacency_dict['isis'][isis_name]['level'][level_name]['total_adjacency_count'] = int(m.groupdict()['adjacency_count'])
                 continue
         
         return isis_adjacency_dict
