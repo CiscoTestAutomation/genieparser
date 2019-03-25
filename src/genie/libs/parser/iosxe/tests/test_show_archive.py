@@ -76,8 +76,14 @@ class test_show_archive_config_differences(unittest.TestCase):
     empty_output = {'execute.return_value' : ''}
     
     golden_parsed_output = {
-        'diff': ['+hostname Router','-hostname Test4', '-archive', 
-            '-path bootflash:config', '-maximum 14', '-time-period 2']
+        'diff': [
+            '+hostname Router',
+            '-hostname Test4', 
+            '-archive', 
+            '-path bootflash:config', 
+            '-maximum 14', 
+            '-time-period 2'
+        ]
     }
 
     golden_parsed_output_incremental_diff = {
