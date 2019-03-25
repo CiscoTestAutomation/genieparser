@@ -11,7 +11,9 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
 
 # Parser
 from genie.libs.parser.iosxe.show_arp import ShowArp, ShowIpArpSummary,\
-                                             ShowIpTraffic
+                                             ShowIpTraffic,\
+                                             ShowArpApplication,\
+                                             ShowArpSummary
 
 
 # ============================================
@@ -427,5 +429,174 @@ class test_show_ip_traffic(unittest.TestCase):
 				parsed_output = obj.parse()
 				self.assertEqual(parsed_output, self.golden_parsed_output)
 
+
+# =================================================
+# Parser for 'show arp application'
+# =================================================
+class test_show_arp_application(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output = {
+        'num_of_clients_registered': 16,
+        'applications': {
+            'VRRS': {
+                'id': 200,
+                'num_of_subblocks': 0
+            },
+            'ARP Backup': {
+                'id': 201,
+                'num_of_subblocks': 0
+            },
+            'DHCPD': {
+                'id': 202,
+                'num_of_subblocks': 0
+            },
+            'ARP HA': {
+                'id': 203,
+                'num_of_subblocks': 99789
+            },
+            'ASR1000-RP SPA Ether': {
+                'id': 204,
+                'num_of_subblocks': 0
+            },
+            'VRRS_L3CTRL': {
+                'id': 205,
+                'num_of_subblocks': 0
+            },
+            'IP ARP Adj Conn ID': {
+                'id': 206,
+                'num_of_subblocks': 0
+            },
+            'IP ARP Probe': {
+                'id': 207,
+                'num_of_subblocks': 0
+            },
+            'ip arp retry': {
+                'id': 208,
+                'num_of_subblocks': 0
+            },
+            'IP Mobility': {
+                'id': 209,
+                'num_of_subblocks': 0
+            },
+            'IP Subscriber': {
+                'id': 210,
+                'num_of_subblocks': 0
+            },
+            'RG IM': {
+                'id': 211,
+                'num_of_subblocks': 0
+            },
+            'B2B NAT': {
+                'id': 212,
+                'num_of_subblocks': 0
+            },
+            'MANET INFRA ARP': {
+                'id': 213,
+                'num_of_subblocks': 0
+            },
+            'IP ARP Adjacency': {
+                'id': 214,
+                'num_of_subblocks': 99791
+            },
+            'IP ARP VLAN ID': {
+                'id': 215,
+                'num_of_subblocks': 99791
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''\
+        Load for five secs: 5%1%; one minute: 6%; five minutes: 7%
+        Time source is NTP, 21:20:36.100 JST Fri Nov 11 2016
+        Number of clients registered: 16
+
+        Application         ID      Num of Subblocks
+        VRRS                200     0
+        ARP Backup          201     0
+        DHCPD               202     0
+        ARP HA              203     99789
+        ASR1000-RP SPA Ether204     0
+        VRRS_L3CTRL         205     0
+        IP ARP Adj Conn ID  206     0
+        IP ARP Probe        207     0
+        ip arp retry        208     0
+        IP Mobility         209     0
+        IP Subscriber       210     0
+        RG IM               211     0
+        B2B NAT             212     0
+        MANET INFRA ARP     213     0
+        IP ARP Adjacency    214     99791
+        IP ARP VLAN ID      215     99791
+        '''
+    }   
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowArpApplication(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowArpApplication(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+# ==========================================
+# Parser for 'show arp summary'
+# ==========================================
+
+class test_show_arp_summary(unittest.TestCase):
+
+    device = Device('aDevice')
+    empty_output = {'execute.return_value':''}
+    
+    golden_parsed_output = {
+        'total_num_of_entries': {
+            'arp_table_entries': 100409,
+            'dynamic_arp_entries': 100204,
+            'incomplete_arp_entries': 0,
+            'interface_arp_entries': 205,
+            'static_arp_entries': 0,
+            'alias_arp_entries': 0,
+            'simple_application_arp_entries': 0
+        },
+        'interface_entries': {
+            'GigabitEthernet0': 4,
+            'TenGigabitEthernet0/2/0': 1,
+            'GigabitEthernet0/0/1.1143': 3
+        }
+    }
+
+    golden_output = {'execute.return_value': '''\
+        Total number of entries in the ARP table: 100409.
+        Total number of Dynamic ARP entries: 100204.
+        Total number of Incomplete ARP entries: 0.
+        Total number of Interface ARP entries: 205.
+        Total number of Static ARP entries: 0.
+        Total number of Alias ARP entries: 0.
+        Total number of Simple Application ARP entries: 0.
+        Interface           Entry Count
+        GigabitEthernet0        4
+        Te0/2/0                 1
+        Gi0/0/1.1143            3
+        '''
+    }
+    
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowArpSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowArpSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
 if __name__ == '__main__':
-		unittest.main()
+    unittest.main()
