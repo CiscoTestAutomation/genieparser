@@ -80,8 +80,6 @@ class ShowMribVrfRoute(ShowMribVrfRouteSchema):
         parsed_dict = {}
         rpf_nbr = ''
 
-        import pdb; pdb.set_trace()
-
         for line in out.splitlines():
             line = line.rstrip()
 
