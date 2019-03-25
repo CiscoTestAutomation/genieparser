@@ -78,7 +78,7 @@ class ShowIsisAdjacency(ShowIsisAdjacencySchema):
             if m:
                 system_id = m.groupdict()['system_id']
                 isis_adjacency_dict['isis'][isis_name]['level'][level_name].setdefault('system_id', {}).setdefault(system_id, {})
-                isis_adjacency_dict['isis'][isis_name]['level'][level_name]['system_id'][system_id]['interface'] = m.groupdict()['interface']
+                isis_adjacency_dict['isis'][isis_name]['level'][level_name]['system_id'][system_id]['interface'] = Common.convert_intf_name(m.groupdict()['interface'])
                 isis_adjacency_dict['isis'][isis_name]['level'][level_name]['system_id'][system_id]['snpa'] = m.groupdict()['snpa']
                 isis_adjacency_dict['isis'][isis_name]['level'][level_name]['system_id'][system_id]['state'] = m.groupdict()['state']
                 isis_adjacency_dict['isis'][isis_name]['level'][level_name]['system_id'][system_id]['hold'] = m.groupdict()['hold']
@@ -150,7 +150,7 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
             if m:
                 system_id = m.groupdict()['system_id']
                 isis_neighbors_dict.setdefault('isis', {}).setdefault(isis_name, {}).setdefault('neighbors', {}).setdefault(system_id, {})
-                isis_neighbors_dict['isis'][isis_name]['neighbors'][system_id]['interface'] = m.groupdict()['interface']
+                isis_neighbors_dict['isis'][isis_name]['neighbors'][system_id]['interface'] = Common.convert_intf_name(m.groupdict()['interface'])
                 isis_neighbors_dict['isis'][isis_name]['neighbors'][system_id]['snpa'] = m.groupdict()['snpa']
                 isis_neighbors_dict['isis'][isis_name]['neighbors'][system_id]['state'] = m.groupdict()['state']
                 isis_neighbors_dict['isis'][isis_name]['neighbors'][system_id]['holdtime'] = m.groupdict()['holdtime']
