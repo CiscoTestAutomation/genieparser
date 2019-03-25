@@ -98,8 +98,17 @@
           show mpls ldp igp sync vrf <vrf>
 
 ----------------------------------------------------------------------------------
-                                    CONFIG
+                                 ARP
 ----------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowArpApplication for:
+        show arp application
+    * Add ShowArpSummary for:
+        show arp summary
+
+--------------------------------------------------------------------------------
+                                 CONFIG
+--------------------------------------------------------------------------------
 * IOSXE
     * Add ShowArchiveConfigDifferences for:
         show archive config differences
