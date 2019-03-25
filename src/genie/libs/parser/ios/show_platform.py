@@ -111,8 +111,7 @@ class ShowInventory(ShowInventorySchema_iosxe):
 
         # NAME: "CISCO2921/K9 chassis", DESCR: "CISCO2921/K9 chassis"
         # NAME: "IOSv", DESCR: "IOSv chassis, Hw Serial#: 1234567890, Hw Revision: 1.0"
-        p1 = re.compile(
-            r'^NAME\:\s+\"(?P<name>.*)\",\s+DESCR\:\s+\"(?P<descr>.*)\"')
+        p1 = re.compile(r'^NAME\:\s+\"(?P<name>.*)\",\s+DESCR\:\s+\"(?P<descr>.*)\"')
 
         # IOSv
         p1_1 = re.compile(r'\w+')
@@ -127,8 +126,7 @@ class ShowInventory(ShowInventorySchema_iosxe):
         p1_4 = re.compile(r'\s*\S+ *\d+[ /]*(?P<subslot>\d+.*)$')
 
         # PID: IOSv              , VID: 1.0, SN: 9KLUMCXRGCYY7MZLRU14R
-        p2 = re.compile(
-            r'^PID: +(?P<pid>\S+) *, +VID: +(?P<vid>\S+) *, +SN: +(?P<sn>.*)$')
+        p2 = re.compile(r'^PID: +(?P<pid>\S+) *, +VID: +(?P<vid>\S+) *, +SN: +(?P<sn>.*)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -142,26 +140,22 @@ class ShowInventory(ShowInventorySchema_iosxe):
                 m = p1_1.match(name)
                 if m:
                     slot = '1'
-                    slot_dict = inventory_dict.setdefault(
-                        'slot', {}).setdefault(slot, {})
+                    slot_dict = inventory_dict.setdefault('slot', {}).setdefault(slot, {})
 
                 m = p1_2.match(name)
                 if m:
                     slot = m.groupdict()['slot']
-                    slot_dict = inventory_dict.setdefault(
-                        'slot', {}).setdefault(slot, {})
+                    slot_dict = inventory_dict.setdefault('slot', {}).setdefault(slot, {})
 
                 m = p1_3.match(name)
                 if m:
                     slot = m.groupdict()['slot']
                     subslot = m.groupdict()['subslot']
-                    slot_dict = inventory_dict.setdefault(
-                        'slot', {}).setdefault(slot, {})
+                    slot_dict = inventory_dict.setdefault('slot', {}).setdefault(slot, {})
 
                 if 'Power Supply Module' in name:
                     slot = name.replace('Power Supply Module ', 'P')
-                    slot_dict = inventory_dict.setdefault(
-                        'slot', {}).setdefault(slot, {})
+                    slot_dict = inventory_dict.setdefault('slot', {}).setdefault(slot, {})
 
                 m = p1_4.match(name)
                 if m:
@@ -189,8 +183,7 @@ class ShowInventory(ShowInventorySchema_iosxe):
                             rp_dict.update({'name': name, 'descr': descr,
                                             'pid': pid, 'vid': vid, 'sn': sn})
                         else:
-                            other_dict = slot_dict.setdefault(
-                                'other', {}).setdefault(pid, {})
+                            other_dict = slot_dict.setdefault('other', {}).setdefault(pid, {})
                             other_dict.update({'name': name, 'descr': descr,
                                                'pid': pid, 'vid': vid, 'sn': sn})
                 name = descr = slot = subslot = ''
@@ -202,18 +195,19 @@ class ShowInventory(ShowInventorySchema_iosxe):
 class ShowBootvarSchema(MetaParser):
     """Schema for show bootvar"""
 
-    schema = {Optional('current_boot_variable'): str,
-              Optional('next_reload_boot_variable'): str,
-              Optional('config_file'): str,
-              Optional('bootldr'): str,
-              Optional('active'): {
-                  'configuration_register': str,
-                  Optional('boot_variable'): str,
-    },
+    schema = {
+        Optional('current_boot_variable'): str,
+        Optional('next_reload_boot_variable'): str,
+        Optional('config_file'): str,
+        Optional('bootldr'): str,
+        Optional('active'): {
+            'configuration_register': str,
+            Optional('boot_variable'): str,
+        },
         Optional('standby'): {
-                  'configuration_register': str,
-                  Optional('boot_variable'): str,
-    },
+            'configuration_register': str,
+            Optional('boot_variable'): str,
+        },
     }
 
 
@@ -242,8 +236,7 @@ class ShowBootvar(ShowBootvarSchema):
         p3 = re.compile(r'^Configuration +register +is +(?P<var>\w+)$')
 
         # Standby Configuration register is 0x2002
-        p4 = re.compile(
-            r'^Standby +Configuration +register +is +(?P<var>\w+)$')
+        p4 = re.compile(r'^Standby +Configuration +register +is +(?P<var>\w+)$')
 
         # CONFIG_FILE variable =
         p5 = re.compile(r'^CONFIG_FILE +variable += +(?P<var>\S+)$')
@@ -274,31 +267,27 @@ class ShowBootvar(ShowBootvarSchema):
             # Configuration register is 0x2002
             m = p3.match(line)
             if m:
-                boot_dict.setdefault('active', {})[
-                    'configuration_register'] = m.groupdict()['var']
+                boot_dict.setdefault('active', {})['configuration_register'] = m.groupdict()['var']
                 continue
 
             # Standby Configuration register is 0x2002
             m = p4.match(line)
             if m:
-                boot_dict.setdefault('standby', {})[
-                    'configuration_register'] = m.groupdict()['var']
+                boot_dict.setdefault('standby', {})['configuration_register'] = m.groupdict()['var']
                 continue
 
             # CONFIG_FILE variable =
             m = p5.match(line)
             if m:
                 if m.groupdict()['var']:
-                    boot_dict.setdefault('active', {})[
-                        'config_file'] = m.groupdict()['var']
+                    boot_dict.setdefault('active', {})['config_file'] = m.groupdict()['var']
                 continue
 
             # BOOTLDR variable =
             m = p6.match(line)
             if m:
                 if m.groupdict()['var']:
-                    boot_dict.setdefault('standby', {})[
-                        'bootldr'] = m.groupdict()['var']
+                    boot_dict.setdefault('standby', {})['bootldr'] = m.groupdict()['var']
                 continue
         return boot_dict
 
@@ -336,7 +325,7 @@ class ShowPlatformPower(ShowPlatformPower_iosxe):
 
 class ShowProcessesCpuHistory(ShowProcessesCpuHistory_iosxe):
     """Parser for show processes cpu history"""
-    pass  
+    pass
 
 
 class ShowProcessesCpuPlatform(ShowProcessesCpuPlatform_iosxe):

@@ -126,10 +126,7 @@ class test_show_version(unittest.TestCase):
         0K bytes of ATA CompactFlash 2 (Read/Write)
         10080K bytes of ATA CompactFlash 3 (Read/Write)
 
-
-
-        Configuration register is 0x0'''
-                          }
+        Configuration register is 0x0'''}
 
     golden_parsed_output_ios = {
         'version': {'bootldr': 'C3750E Boot Loader (C3750X-HBOOT-M) Version '
@@ -230,8 +227,7 @@ class test_show_version(unittest.TestCase):
 
         Configuration register is 0xF
 
-    '''
-                         }
+    '''}
 
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
@@ -266,8 +262,7 @@ class test_dir(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     semi_empty_output = {'execute.return_value': '''\
         Directory of flash:/
-    '''
-                         }
+    '''}
 
     golden_parsed_output_iosv = {
         "dir": {
@@ -321,8 +316,7 @@ class test_dir(unittest.TestCase):
           269  -rw-         119  Oct 17 2018 18:57:18 +00:00  e1000_bia.txt
 
         2142715904 bytes total (1989595136 bytes free)
-    '''
-                          }
+    '''}
 
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
@@ -394,8 +388,7 @@ class test_show_redundancy(unittest.TestCase):
                 Configuration register = 0x0
 
         Peer (slot: 0) information is not available because it is in 'DISABLED' state
-    '''
-                          }
+    '''}
 
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
@@ -436,8 +429,7 @@ class test_show_inventory(unittest.TestCase):
     golden_output_iosv = {'execute.return_value': '''\
         NAME: "IOSv", DESCR: "IOSv chassis, Hw Serial#: 9K66Z7TOKAACDEQA24N7S, Hw Revision: 1.0"
         PID: IOSv              , VID: 1.0, SN: 9K66Z7TOKAACDEQA24N7S
-    '''
-                          }
+    '''}
 
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
@@ -474,8 +466,7 @@ class test_show_bootvar(unittest.TestCase):
 
         Standby not ready to show bootvar
 
-    '''
-                          }
+    '''}
 
     def test_empty(self):
         self.dev = Mock(**self.empty_output)
@@ -506,8 +497,7 @@ class test_show_processes_cpu_sorted_CPU(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         show processes cpu sorted 5min | inc CPU
         CPU utilization for five seconds: 13%/0%; one minute: 23%; five minutes: 15%
-    '''
-                     }
+    '''}
 
     golden_parsed_output_1 = {
         "sort": {
@@ -592,7 +582,7 @@ class test_show_processes_cpu(test_show_processes_cpu_iosxe):
         obj = ShowProcessesCpu(device=self.device)
         parsed_output = obj.parse()
         self.maxDiff = None
-        self.assertEqual(parsed_output,self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_golden_1(self):
         self.maxDiff = None
@@ -650,21 +640,21 @@ class test_show_platform(test_show_platform_iosxe):
         self.dev2 = Mock(**self.semi_empty_output)
         platform_obj = ShowPlatform(device=self.dev2)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = platform_obj.parse()       
+            parsed_output = platform_obj.parse()
 
     def test_golden_c3850(self):
         self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_c3850)
         platform_obj = ShowPlatform(device=self.dev_c3850)
         parsed_output = platform_obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
+        self.assertEqual(parsed_output, self.golden_parsed_output_c3850)
 
     def test_golden_asr1k(self):
         self.maxDiff = None
         self.dev_asr1k = Mock(**self.golden_output_asr1k)
         platform_obj = ShowPlatform(device=self.dev_asr1k)
         parsed_output = platform_obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output_asr1k)
+        self.assertEqual(parsed_output, self.golden_parsed_output_asr1k)
 
 
 class test_show_platform_power(test_show_platform_power_iosxe):
@@ -673,14 +663,14 @@ class test_show_platform_power(test_show_platform_power_iosxe):
         self.device = Mock(**self.empty_output)
         platform_obj = ShowPlatformPower(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = platform_obj.parse()    
+            parsed_output = platform_obj.parse()
 
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         platform_obj = ShowPlatformPower(device=self.device)
         parsed_output = platform_obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
 class test_show_processes_cpu_history(test_show_processes_cpu_history_iosxe):
@@ -689,14 +679,14 @@ class test_show_processes_cpu_history(test_show_processes_cpu_history_iosxe):
         self.device = Mock(**self.empty_output)
         platform_obj = ShowProcessesCpuHistory(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = platform_obj.parse()    
+            parsed_output = platform_obj.parse()
 
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         platform_obj = ShowProcessesCpuHistory(device=self.device)
         parsed_output = platform_obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
 class test_show_processes_cpu_platform(test_show_processes_cpu_platform_iosxe):
@@ -706,7 +696,7 @@ class test_show_processes_cpu_platform(test_show_processes_cpu_platform_iosxe):
         cpu_platform_obj = ShowProcessesCpuPlatform(device=self.device)
         parsed_output = cpu_platform_obj.parse()
         self.maxDiff = None
-        self.assertEqual(parsed_output,self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
@@ -791,7 +781,8 @@ class test_show_platform_hardware_plim(test_show_platform_hardware_plim_iosxe):
         obj = ShowPlatformHardwarePlim(device=self.device)
         parsed_output = obj.parse(slot='0', internal=True)
         self.maxDiff = None
-        self.assertEqual(parsed_output, self.golden_parsed_output_slot_internal)
+        self.assertEqual(
+            parsed_output, self.golden_parsed_output_slot_internal)
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
@@ -814,6 +805,7 @@ class test_show_platform_hardware_qfp_bqs_opm_mapping(test_show_platform_hardwar
         obj = ShowPlatformHardwareQfpBqsOpmMapping(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(status='active', slot='0')
+
 
 class test_show_platform_hardware_qfp_bqs_ipm_mapping(test_show_platform_hardware_qfp_bqs_ipm_mapping_iosxe):
 
@@ -854,7 +846,8 @@ class test_show_platform_hardware_serdes_statistics_internal(test_show_platform_
         obj = ShowPlatformHardwareSerdesInternal(device=self.device)
         parsed_output = obj.parse(slot='0')
         self.maxDiff = None
-        self.assertEqual(parsed_output, self.golden_parsed_output_serdes_internal)
+        self.assertEqual(
+            parsed_output, self.golden_parsed_output_serdes_internal)
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
@@ -867,55 +860,67 @@ class show_platform_hardware_qfp_bqs_statistics_channel_all(show_platform_hardwa
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        platform_obj = ShowPlatformHardwareQfpBqsStatisticsChannelAll(device=self.device)
+        platform_obj = ShowPlatformHardwareQfpBqsStatisticsChannelAll(
+            device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = platform_obj.parse(status='active', slot='0', iotype='ipm')    
+            parsed_output = platform_obj.parse(
+                status='active', slot='0', iotype='ipm')
 
     def test_golden_active_ipm(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_active_ipm)
-        platform_obj = ShowPlatformHardwareQfpBqsStatisticsChannelAll(device=self.device)
-        parsed_output = platform_obj.parse(status='active', slot='0', iotype='ipm')
-        self.assertEqual(parsed_output,self.golden_parsed_output_active_ipm)
+        platform_obj = ShowPlatformHardwareQfpBqsStatisticsChannelAll(
+            device=self.device)
+        parsed_output = platform_obj.parse(
+            status='active', slot='0', iotype='ipm')
+        self.assertEqual(parsed_output, self.golden_parsed_output_active_ipm)
 
     def test_golden_active_opm(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_active_opm)
-        platform_obj = ShowPlatformHardwareQfpBqsStatisticsChannelAll(device=self.device)
-        parsed_output = platform_obj.parse(status='active', slot='0', iotype='opm')
-        self.assertEqual(parsed_output,self.golden_parsed_output_active_opm)
+        platform_obj = ShowPlatformHardwareQfpBqsStatisticsChannelAll(
+            device=self.device)
+        parsed_output = platform_obj.parse(
+            status='active', slot='0', iotype='opm')
+        self.assertEqual(parsed_output, self.golden_parsed_output_active_opm)
 
 
 class show_platform_hardware_qfp_interface(show_platform_hardware_qfp_interface_iosxe):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        platform_obj = ShowPlatformHardwareQfpInterfaceIfnameStatistics(device=self.device)
+        platform_obj = ShowPlatformHardwareQfpInterfaceIfnameStatistics(
+            device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = platform_obj.parse(status='active', interface='gigabitEthernet 0/0/0')  
+            parsed_output = platform_obj.parse(
+                status='active', interface='gigabitEthernet 0/0/0')
 
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
-        platform_obj = ShowPlatformHardwareQfpInterfaceIfnameStatistics(device=self.device)
-        parsed_output = platform_obj.parse(status='active', interface='gigabitEthernet 0/0/0')
-        self.assertEqual(parsed_output,self.golden_parsed_output)
+        platform_obj = ShowPlatformHardwareQfpInterfaceIfnameStatistics(
+            device=self.device)
+        parsed_output = platform_obj.parse(
+            status='active', interface='gigabitEthernet 0/0/0')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
 class test_show_platform_hardware_qfp_statistics_drop(test_show_platform_hardware_qfp_statistics_drop_iosxe):
-    
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        platform_obj = ShowPlatformHardwareQfpStatisticsDrop(device=self.device)
+        platform_obj = ShowPlatformHardwareQfpStatisticsDrop(
+            device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = platform_obj.parse(status='active')    
+            parsed_output = platform_obj.parse(status='active')
 
     def test_golden_active(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_active)
-        platform_obj = ShowPlatformHardwareQfpStatisticsDrop(device=self.device)
+        platform_obj = ShowPlatformHardwareQfpStatisticsDrop(
+            device=self.device)
         parsed_output = platform_obj.parse(status='active')
-        self.assertEqual(parsed_output,self.golden_parsed_output_active)
+        self.assertEqual(parsed_output, self.golden_parsed_output_active)
 
 
 if __name__ == '__main__':
