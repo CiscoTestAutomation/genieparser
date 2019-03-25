@@ -2024,36 +2024,161 @@ Switch#   Role        Priority      State
                                 }
 
     golden_output_asr1k = {'execute.return_value': '''\
-Chassis type: ASR1006             
+        Chassis type: ASR1006             
 
-Slot      Type                State                 Insert time (ago) 
---------- ------------------- --------------------- ----------------- 
-0         ASR1000-SIP40       ok                    00:33:53      
- 0/0      SPA-1XCHSTM1/OC3    ok                    2d00h         
- 0/1      SPA-2XT3/E3         ok                    2d00h         
- 0/2      SPA-1XOC48POS/RPR   ok                    2d00h         
- 0/3      SPA-5X1GE-V2        ok                    2d00h        
-1         ASR1000-2T+20X1GE   ok                    2d00h         
- 1/0      BUILT-IN-2T+20X1GE  ok                    2d00h         
-2         ASR1000-6TGE        ok                    2d00h         
- 2/0      BUILT-IN-6TGE       ok                    2d00h         
-4                             unknown               2d00h         
-R0        ASR1000-RP2         ok, active            00:33:53      
-R1        ASR1000-RP2         ok, standby           00:33:53      
-F0        ASR1000-ESP20       ok, active            00:33:53      
-P0        ASR1006-PWR-AC      ok                    00:33:18      
-P1        ASR1006-PWR-AC      ps, fail              00:33:17      
+        Slot      Type                State                 Insert time (ago) 
+        --------- ------------------- --------------------- ----------------- 
+        0         ASR1000-SIP40       ok                    00:33:53      
+         0/0      SPA-1XCHSTM1/OC3    ok                    2d00h         
+         0/1      SPA-2XT3/E3         ok                    2d00h         
+         0/2      SPA-1XOC48POS/RPR   ok                    2d00h         
+         0/3      SPA-5X1GE-V2        ok                    2d00h        
+        1         ASR1000-2T+20X1GE   ok                    2d00h         
+         1/0      BUILT-IN-2T+20X1GE  ok                    2d00h         
+        2         ASR1000-6TGE        ok                    2d00h         
+         2/0      BUILT-IN-6TGE       ok                    2d00h         
+        4                             unknown               2d00h         
+        R0        ASR1000-RP2         ok, active            00:33:53      
+        R1        ASR1000-RP2         ok, standby           00:33:53      
+        F0        ASR1000-ESP20       ok, active            00:33:53      
+        P0        ASR1006-PWR-AC      ok                    00:33:18      
+        P1        ASR1006-PWR-AC      ps, fail              00:33:17      
 
-Slot      CPLD Version        Firmware Version                        
---------- ------------------- --------------------------------------- 
-0         00200800            16.2(1r)                            
-1         14011701            16.3(2r)                            
-2         14011701            16.3(2r)                            
-4         N/A                 N/A      
-R0        10021901            16.2(1r)                            
-R1        14111801            16.2(1r)                            
-F0        08041102            16.2(1r)        
-'''}
+        Slot      CPLD Version        Firmware Version                        
+        --------- ------------------- --------------------------------------- 
+        0         00200800            16.2(1r)                            
+        1         14011701            16.3(2r)                            
+        2         14011701            16.3(2r)                            
+        4         N/A                 N/A      
+        R0        10021901            16.2(1r)                            
+        R1        14111801            16.2(1r)                            
+        F0        08041102            16.2(1r)        
+        '''}
+
+    golden_parsed_output = {
+        'slot': {
+            '1': {
+                'lc': {
+                    'ISR4331/K9': {
+                        'insert_time': '3w5d',
+                        'slot': '1',
+                        'cpld_ver': '17100927',
+                        'fw_ver': '16.7(3r)',
+                        'name': 'ISR4331/K9',
+                        'state': 'ok',
+                        },
+                    },
+                },
+            'F0': {
+                'lc': {
+                    'ISR4331/K9': {
+                        'insert_time': '3w5d',
+                        'slot': 'F0',
+                        'cpld_ver': '17100927',
+                        'fw_ver': '16.7(3r)',
+                        'name': 'ISR4331/K9',
+                        'state': 'ok, active',
+                        },
+                    },
+                },
+            'P0': {
+                'other': {
+                    'PWR-4330-AC': {
+                        'state': 'ok',
+                        'slot': 'P0',
+                        'name': 'PWR-4330-AC',
+                        'insert_time': '3w5d',
+                        },
+                    },
+                },
+            'P2': {
+                'other': {
+                    'ACS-4330-FANASSY': {
+                        'state': 'ok',
+                        'slot': 'P2',
+                        'name': 'ACS-4330-FANASSY',
+                        'insert_time': '3w5d',
+                        },
+                    },
+                },
+            '0': {
+                'lc': {
+                    'ISR4331/K9': {
+                        'insert_time': '3w5d',
+                        'subslot': {
+                            '1': {
+                                'NIM-ES2-4': {
+                                    'state': 'ok',
+                                    'subslot': '1',
+                                    'name': 'NIM-ES2-4',
+                                    'insert_time': '3w5d',
+                                    },
+                                },
+                            '0': {
+                                'ISR4331-3x1GE': {
+                                    'state': 'ok',
+                                    'subslot': '0',
+                                    'name': 'ISR4331-3x1GE',
+                                    'insert_time': '3w5d',
+                                    },
+                                },
+                            '2': {
+                                'NIM-ES2-8': {
+                                    'state': 'ok',
+                                    'subslot': '2',
+                                    'name': 'NIM-ES2-8',
+                                    'insert_time': '3w5d',
+                                    },
+                                },
+                            },
+                        'cpld_ver': '17100927',
+                        'fw_ver': '16.7(3r)',
+                        'name': 'ISR4331/K9',
+                        'state': 'ok',
+                        'slot': '0',
+                        },
+                    },
+                },
+            'R0': {
+                'lc': {
+                    'ISR4331/K9': {
+                        'insert_time': '3w5d',
+                        'slot': 'R0',
+                        'cpld_ver': '17100927',
+                        'fw_ver': '16.7(3r)',
+                        'name': 'ISR4331/K9',
+                        'state': 'ok, active',
+                        },
+                    },
+                },
+            },
+        }
+
+    golden_output = {'execute.return_value': '''\
+        show platform
+        Chassis type: ISR4331/K9
+
+        Slot      Type                State                 Insert time (ago) 
+        --------- ------------------- --------------------- ----------------- 
+        0         ISR4331/K9          ok                    3w5d          
+         0/0      ISR4331-3x1GE       ok                    3w5d          
+         0/1      NIM-ES2-4           ok                    3w5d          
+         0/2      NIM-ES2-8           ok                    3w5d          
+        1         ISR4331/K9          ok                    3w5d          
+        R0        ISR4331/K9          ok, active            3w5d          
+        F0        ISR4331/K9          ok, active            3w5d          
+        P0        PWR-4330-AC         ok                    3w5d          
+        P2        ACS-4330-FANASSY    ok                    3w5d          
+
+        Slot      CPLD Version        Firmware Version                        
+        --------- ------------------- --------------------------------------- 
+        0         17100927            16.7(3r)                            
+        1         17100927            16.7(3r)                            
+        R0        17100927            16.7(3r)                            
+        F0        17100927            16.7(3r)                            
+
+        c4331a#      
+    '''}
 
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
@@ -2080,6 +2205,13 @@ F0        08041102            16.2(1r)
         platform_obj = ShowPlatform(device=self.dev_asr1k)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_asr1k)
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev_asr1k = Mock(**self.golden_output)
+        platform_obj = ShowPlatform(device=self.dev_asr1k)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
 class test_show_boot(unittest.TestCase):
