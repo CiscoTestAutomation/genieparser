@@ -1835,11 +1835,11 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         p2 = re.compile(r'^(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
 
         p2_2 = re.compile(r'^((?P<local_label>\d+) +)?(\[(?P<t>(T)+)\] +)?'
-            '(?P<outgoing_label>((A|a)ggregate|Untagged|(No|Pop) Label|(No|Pop) (T|t)ag|\d|\d\/)+) +(?P<prefix_or_tunnel_id>[\S]+)'
+            '(?P<outgoing_label>((A|a)ggregate|Untagged|(No|Pop) Label|(No|Pop) (T|t)ag|\d|\d\/|\d\/\a-z)+)?(\[(?P<t1>(T)+)\] +)? +(?P<prefix_or_tunnel_id>[\S\ ]+)'
             ' +(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
 
         p2_3 = re.compile(r'^((?P<local_label>\d+) +)?(\[(?P<t>(T)+)\] +)?'
-            '(?P<outgoing_label>((A|a)ggregate|(No|Pop) Label|(No|Pop) tag|\d|\d\/)+) +(?P<prefix_or_tunnel_id>[\w\.\[\]\-\s]+)'
+            '(?P<outgoing_label>((A|a)ggregate|(No|Pop) Label|(No|Pop) tag|\d|\d\/|\d\/\a-z)+)?(\[(?P<t1>(T)+)\] +)? +(?P<prefix_or_tunnel_id>[\w\.\[\]\-\s]+)'
             ' +(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
         #         MAC/Encaps=18/18, MRU=1530, Label Stack{}
         #         MAC/Encaps=18/18, MRU=1530, Label Stack{}, via Ls0
@@ -1921,6 +1921,8 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                     feature_dict.update({'next_hop': group['next_hop']})
                 if group['t']:
                     feature_dict.update({'lsp_tunnel': True})
+                if group['t1']:
+                    feature_dict.update({'lsp_tunnel': True})
                 feature_dict.update({'bytes_label_switched': int(group['bytes_label_switched'])})
                 continue
 
@@ -1948,6 +1950,8 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                 if group['next_hop']:
                     feature_dict.update({'next_hop': group['next_hop']})
                 if group['t']:
+                    feature_dict.update({'lsp_tunnel': True})
+                if group['t1']:
                     feature_dict.update({'lsp_tunnel': True})
                 feature_dict.update({'bytes_label_switched': int(group['bytes_label_switched'])})
                 continue

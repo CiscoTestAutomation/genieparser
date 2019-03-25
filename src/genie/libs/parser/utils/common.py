@@ -136,6 +136,7 @@ class Common():
 	               'PO': 'Port-channel',
                    'Null': 'Null',
                    'Gi': 'GigabitEthernet',
+                   'GE': 'GigabitEthernet',
                    'Te': 'TenGigabitEthernet',
                    'mgmt': 'mgmt',
                    'Vl': 'Vlan',
