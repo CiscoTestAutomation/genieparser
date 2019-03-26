@@ -54,9 +54,8 @@ class ShowServiceGroupState(ShowServiceGroupStateSchema):
 			if m:
 				group = m.groupdict()
 				service_group_state = ret_dict.setdefault(
-					'group', {})
-				service_group_state.setdefault(
-					group['group_number'], {}).setdefault(
-					'state' , group['state'])
+					'group', {}).setdefault(group['group_number'], {}). \
+					setdefault('state' , group['state'])
 				continue
+				service_group_state
 		return ret_dict
