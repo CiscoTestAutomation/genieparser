@@ -1272,7 +1272,7 @@ class test_show_ethernet_service_instance_summary(unittest.TestCase):
 
     golden_parsed_output = {
         'system_summary': {
-            'xconnect       ': {
+            'xconnect': {
                 'deleted': 0,
                 'down': 0,
                 'total': 0,
@@ -1282,7 +1282,7 @@ class test_show_ethernet_service_instance_summary(unittest.TestCase):
                 'unknown': 0,
                 'up': 0,
                 },
-            'bdomain      ': {
+            'bdomain': {
                 'deleted': 0,
                 'down': 0,
                 'total': 201,
@@ -1292,7 +1292,7 @@ class test_show_ethernet_service_instance_summary(unittest.TestCase):
                 'unknown': 0,
                 'up': 201,
                 },
-            'local sw       ': {
+            'local sw': {
                 'deleted': 0,
                 'down': 0,
                 'total': 0,
@@ -1302,7 +1302,7 @@ class test_show_ethernet_service_instance_summary(unittest.TestCase):
                 'unknown': 0,
                 'up': 0,
                 },
-            'other        ': {
+            'other': {
                 'deleted': 0,
                 'down': 0,
                 'total': 201,
@@ -1312,7 +1312,7 @@ class test_show_ethernet_service_instance_summary(unittest.TestCase):
                 'unknown': 0,
                 'up': 201,
                 },
-            'all          ': {
+            'all': {
                 'deleted': 0,
                 'down': 0,
                 'total': 402,
@@ -1324,7 +1324,7 @@ class test_show_ethernet_service_instance_summary(unittest.TestCase):
                 },
             },
         'GigabitEthernet0/0/3': {
-            'bdomain        ': {
+            'bdomain': {
                 'deleted': 0,
                 'down': 0,
                 'total': 0,
@@ -1334,7 +1334,7 @@ class test_show_ethernet_service_instance_summary(unittest.TestCase):
                 'unknown': 0,
                 'up': 0,
                 },
-            'local sw       ': {
+            'local sw': {
                 'deleted': 0,
                 'down': 0,
                 'total': 0,
@@ -1344,7 +1344,7 @@ class test_show_ethernet_service_instance_summary(unittest.TestCase):
                 'unknown': 0,
                 'up': 0,
                 },
-            'all          ': {
+            'all': {
                 'deleted': 0,
                 'down': 0,
                 'total': 201,
@@ -1354,7 +1354,7 @@ class test_show_ethernet_service_instance_summary(unittest.TestCase):
                 'unknown': 0,
                 'up': 201,
                 },
-            'other        ': {
+            'other': {
                 'deleted': 0,
                 'down': 0,
                 'total': 201,
@@ -1364,7 +1364,7 @@ class test_show_ethernet_service_instance_summary(unittest.TestCase):
                 'unknown': 0,
                 'up': 201,
                 },
-            'xconnect       ': {
+            'xconnect': {
                 'deleted': 0,
                 'down': 0,
                 'total': 0,
@@ -1376,7 +1376,7 @@ class test_show_ethernet_service_instance_summary(unittest.TestCase):
                 },
             },
         'Port-channel1': {
-            'xconnect       ': {
+            'xconnect': {
                 'deleted': 0,
                 'down': 0,
                 'total': 0,
@@ -1386,7 +1386,7 @@ class test_show_ethernet_service_instance_summary(unittest.TestCase):
                 'unknown': 0,
                 'up': 0,
                 },
-            'bdomain      ': {
+            'bdomain': {
                 'deleted': 0,
                 'down': 0,
                 'total': 201,
@@ -1396,7 +1396,7 @@ class test_show_ethernet_service_instance_summary(unittest.TestCase):
                 'unknown': 0,
                 'up': 201,
                 },
-            'local sw       ': {
+            'local sw': {
                 'deleted': 0,
                 'down': 0,
                 'total': 0,
@@ -1406,7 +1406,7 @@ class test_show_ethernet_service_instance_summary(unittest.TestCase):
                 'unknown': 0,
                 'up': 0,
                 },
-            'other          ': {
+            'other': {
                 'deleted': 0,
                 'down': 0,
                 'total': 0,
@@ -1416,7 +1416,7 @@ class test_show_ethernet_service_instance_summary(unittest.TestCase):
                 'unknown': 0,
                 'up': 0,
                 },
-            'all          ': {
+            'all': {
                 'deleted': 0,
                 'down': 0,
                 'total': 201,

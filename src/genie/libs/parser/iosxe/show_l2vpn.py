@@ -555,7 +555,9 @@ class ShowEthernetServiceInstanceSummary(ShowEthernetServiceInstanceSummarySchem
         # local sw        0        0        0        0        0        0        0        0  
         # other         201      201        0        0        0        0        0        0  
         # all           201      201        0        0        0        0        0        0  
-        p3 = re.compile(r'^(?P<service>[\w\s\d]+) +(?P<total>\d+) +(?P<up>\d+) +(?P<admin_do>\d+) +(?P<down>\d+) +(?P<error_di>\d+) +(?P<unknown>\d+) +(?P<deleted>\d+) +(?P<bd_adm_do>\d+)$')
+        p3 = re.compile(r'^(?P<service>[\w\s\d]+) +(?P<total>\d+) +(?P<up>\d+)'
+                         ' +(?P<admin_do>\d+) +(?P<down>\d+) +(?P<error_di>\d+)'
+                         ' +(?P<unknown>\d+) +(?P<deleted>\d+) +(?P<bd_adm_do>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -576,8 +578,8 @@ class ShowEthernetServiceInstanceSummary(ShowEthernetServiceInstanceSummarySchem
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                service = group.pop('service')
-                ret_dict[header].setdefault(service , {})
+                service = group.pop('service').strip()
+                ret_dict[header].setdefault(service, {})
                 ret_dict[header][service].update({k: int(v) for k, v in group.items()})
                 continue
 
