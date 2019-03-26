@@ -945,9 +945,11 @@ class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBrief):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
 
+    cli_command = "show ip interface brief | include Vlan"
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.cmd = 'show ip interface brief | include Vlan'.format()
+        self.cmd = self.cli_command
 
     def cli(self):
         super(ShowIpInterfaceBriefPipeVlan, self).cli()

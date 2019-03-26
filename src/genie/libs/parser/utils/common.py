@@ -4,11 +4,15 @@
 import re
 import os
 import json
+import sys
 import warnings
+import logging
 import importlib
 from genie.libs import parser
 from genie.abstract import Lookup
 
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+log = logging.getLogger(__name__)
 # Parser within Genie
 try:
     mod = importlib.import_module('genie.libs.parser')
