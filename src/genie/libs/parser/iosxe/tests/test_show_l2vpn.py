@@ -7,7 +7,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                              SchemaMissingKeyError
 
 from genie.libs.parser.iosxe.show_l2vpn import ShowBridgeDomain, \
-                                               ShowEthernetServiceInstanceDetail
+                                               ShowEthernetServiceInstanceDetail, \
+                                               ShowEthernetServiceInstanceStats
 
 
 class test_show_bridge_domain(unittest.TestCase):
