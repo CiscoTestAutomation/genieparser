@@ -1,12 +1,13 @@
 '''show_bfd.py
 IOSXE parser for the following show command
-	* show bfd neighbors client ospf details
 	* show bfd neighbors details
+	* show bfd neighbors client ospf details
 '''
 
 # Python
 import re
 import pprint
+
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, \
@@ -17,11 +18,15 @@ from genie.metaparser.util.schemaengine import Schema, \
 from genie.libs.parser.utils.common import Common
 
 # ==============================================================
-# Parser for 'show bfd neighbors details'
+# Parser for the following show commands:
+# 	* 'show bfd neighbors details'
+#	* 'show bfd neighbors client ospf details'
 # ==============================================================
 class ShowBfdNeighborsDetailsSchema(MetaParser):
 	"""
-	Schema for show bfd neighbors details
+	Schema for the following show commands:
+		* show bfd neighbors details
+		* show bfd neighbors client ospf details
 	"""
 
 	schema = {
@@ -112,7 +117,10 @@ class ShowBfdNeighborsDetailsSchema(MetaParser):
 
 
 class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
-	""" Parser for 'show bfd neighbors details' """
+	""" Parser for the following commands:
+			* 'show bfd neighbors details'
+			* 'show bfd neighbors client ospf details'
+	"""
 	
 	cli_command = ['show bfd neighbors details',
 		'show bfd neighbors client {client} details']
@@ -132,14 +140,19 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 		neighbors_found = False
 
 		# 172.16.10.1	172.16.10.2		1/2		1		532 (3 )		Up 		Gig0/0/0
-		p1 = re.compile(r'^(?P<our_address>[\d\.]+)\s+(?P<our_neighbor>[\d\.]+)\s+(?P<ld_rd>\d+\/\d+)\s+(?P<rh_rs>\S+)\s+(?P<holdown_timer>\d+)\s+\((?P<holdown_timer_multiplier>\d+)\s+\)\s+(?P<state>\w+)\s+(?P<interface>[\w\W]+)$')
+		p1 = re.compile(r'^(?P<our_address>[\d\.]+)\s+(?P<our_neighbor>[\d\.]+' \
+			')\s+(?P<ld_rd>\d+\/\d+)\s+(?P<rh_rs>\S+)\s+(?P<holdown_timer>\d+)' \
+			'\s+\((?P<holdown_timer_multiplier>\d+)\s+\)\s+(?P<state>\w+)' \
+			'\s+(?P<interface>[\w\W]+)$')
 
 		# 172.16.1.1	172.16.1.3
 		p2 = re.compile(r'^(?P<our_address>[\d\.]+) +(?P<our_neighbor>'\
 			'[\d\.]+)$')
 
 		# 		5/2		1(RH)	150 (3)		Up 		Gig0/0/1
-		p3 = re.compile(r'^(?P<ld_rd>\d+\/\d+)\s+(?P<rh_rs>\S+)\s+(?P<holdown_timer>\d+)\s+\((?P<holdown_timer_multiplier>\d+)\s+\)\s+(?P<state>\w+)\s+(?P<interface>[\w\W]+)')
+		p3 = re.compile(r'^(?P<ld_rd>\d+\/\d+)\s+(?P<rh_rs>\S+)\s+' \
+			'(?P<holdown_timer>\d+)\s+\((?P<holdown_timer_multiplier>\d+)\s+\)' \
+			'\s+(?P<state>\w+)\s+(?P<interface>[\w\W]+)')
 
 		# 106.162.197.93 					4097/4097		Up 		Up 	Gi0/0/0
 		p4 = re.compile(r'^(?P<our_neighbor>[\d\.]+)\s+(?P<ld_rd>\d+'\
