@@ -70,10 +70,77 @@
             show platform hardware qfp standby statistics drop
     * Add ShowPlatformHardwareSerdes for 'show platform hardware slot <x> serdes statistics'
     * Add ShowPlatformHardwareSerdesInternal for 'show platform hardware slot <x> serdes statistics internal'
+    * Add ShowProcessesCpuHistory for 'show processes cpu history'
 
 --------------------------------------------------------------------------------
                                     MPLS LDP
 --------------------------------------------------------------------------------
 * IOSXE
     * Add ShowMplsLdpParameters for:
-        'show mpls ldp parameters'
+          show mpls ldp parameters
+    * Add ShowMplsLdpNsrStatistic for:
+          show mpls ldp nsr statistics
+    * Add ShowMplsLdpNeighbor for:
+          show mpls ldp neighbor
+          show mpls ldp neighbor vrf <vrf>
+    * Add ShowMplsLdpNeighborDetail for:
+          show mpls ldp neighbor detail
+          show mpls ldp neighbor vrf <vrf> detail
+    * Add ShowMplsLdpBindings for:
+          show mpls ldp bindings
+          show mpls ldp bindings all
+          show mpls ldp bindings all detail
+    * Add ShowMplsLdpCapabilities for:
+          show mpls ldp capabilities
+          show mpls ldp capabilities all
+    * Add ShowMplsLdpDiscovery for:
+          show mpls ldp discovery
+          show mpls ldp discovery detail
+          show mpls ldp discovery all
+          show mpls ldp discovery all detail
+          show mpls ldp discovery vrf <vrf>
+          show mpls ldp discovery vrf <vrf> detail
+    * Add ShowMplsLdpIgpSync for:
+          show mpls ldp igp sync
+          show mpls ldp igp sync all
+          show mpls ldp igp sync interface <interface>
+          show mpls ldp igp sync vrf <vrf>
+    * Add ShowMplsForwardingTable for:
+          show mpls forwarding-table
+          show mpls forwarding-table detail
+          show mpls forwarding-table vrf <vrf>
+          show mpls forwarding-table vrf <vrf> detail
+    * Add ShowMplsInterface for:
+          show mpls interfaces
+          show mpls interfaces <interface>
+          show mpls interfaces <interface> detail
+          show mpls interfaces detail
+
+----------------------------------------------------------------------------------
+                                 ARP
+----------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowArpApplication for:
+        show arp application
+    * Add ShowArpSummary for:
+        show arp summary
+
+--------------------------------------------------------------------------------
+                                 CONFIG
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowConfigurationLock for:
+        show configuration lock
+
+--------------------------------------------------------------------------------
+                                    L2VPN
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowBridgeDomain for:
+            show bridge-domain
+            show bridge-domain <WORD>
+            show bridge-domain | count <WORD>
+    * Add ShowEthernetServiceInstanceDetail for:
+            show ethernet service instance detail
+            show ethernet service instance interface <interface> detail
+
