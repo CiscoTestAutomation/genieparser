@@ -584,3 +584,164 @@ class ShowEthernetServiceInstanceSummary(ShowEthernetServiceInstanceSummarySchem
                 continue
 
         return ret_dict
+
+
+# ===========================
+# Parser for 'show l2vpn vfi'
+# ===========================
+class ShowL2vpnVfiSchema(MetaParser):
+    """Schema for show l2vpn vfi
+    """
+
+    schema = {
+        'vfi': {
+            Any(): {
+                'bd_vfi_name': str,
+                Optional('bridge_group'): str,
+                'state': str,
+                'type': str,
+                'signaling': str,
+                'vpn_id': int,
+                've_id': int,
+                've_range': int,
+                'rd': str,
+                'rt': list,
+                'pseudo_port_interface': str,
+                'bridge_domain': {
+                    Any(): {
+                        'attachment_circuits': {
+                            Optional(Any()): {
+                                'name': str,
+                            }
+                        },
+                        'vfi': {
+                            Any(): {
+                                'pw_peer_id': str,
+                                Optional('pw_id'): int,
+                                'local_label': int,
+                                've_id': int,
+                                'remote_label': int,
+                                'split_horizon': bool,
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowL2vpnVfi(ShowL2vpnVfiSchema):
+    """Parser for show l2vpn vfi
+    """
+
+    cli_command = 'show l2vpn vfi'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # initial regexp pattern
+        # Legend: RT=Route-target, S=Split-horizon, Y=Yes, N=No
+
+        # VFI name: VPLS-2051, state: up, type: multipoint, signaling: BGP
+        p1 = re.compile(r'^VFI +name: +(?P<vfi>[\w\d\-]+), +state:'
+                         ' +(?P<state>\w+), type: +(?P<type>\w+), +signaling: +(?P<signaling>\w+)$')
+
+        #   VPN ID: 2051, VE-ID: 2, VE-SIZE: 10
+        p2 = re.compile(r'^VPN +ID: +(?P<vpn_id>\d+), +VE-ID: +(?P<ve_id>\d+),'
+                         ' VE-SIZE: +(?P<ve_range>\d+)$')
+
+        #   RD: 9996:2051, RT: 9996:2051, 9996:2051,
+        p3 = re.compile(r'^RD: +(?P<rd>[\d\:]+), +RT: +(?P<rt>[\S\s]+)$')
+
+        #   Bridge-Domain 2051 attachment circuits:
+        p4 = re.compile(r'^Bridge-Domain +(?P<bd_id>\d+)'
+                         ' +attachment +circuits:( +(?P<attachment_circuits>[\S\s]+))?$')
+
+        #   Pseudo-port interface: pseudowire100001
+        p5 = re.compile(r'^Pseudo-port +interface: +(?P<pseudo_port_interface>\S+)$')
+
+        #   Interface          Peer Address    VE-ID  Local Label  Remote Label    S
+        #   pseudowire100202   27.93.202.64    1      16           327810          Y
+        p6 = re.compile(r'^(?P<pw_intf>\S+) +(?P<pw_peer_id>[\d\.]+)'
+                         ' +(?P<ve_id>\d+) +(?P<local_label>\d+) +(?P<remote_label>\d+) +(?P<split_horizon>\w+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vfi = group['vfi']
+                final_dict = ret_dict.setdefault('vfi', {}).setdefault(vfi, {})
+                final_dict['bd_vfi_name'] = vfi
+                final_dict['state'] = group['state']
+                final_dict['type'] = group['type']
+                final_dict['signaling'] = group['signaling']
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict['rd'] = group['rd']
+                final_dict['rt'] = [x for x in group['rt'].split(',') if x]
+                continue
+
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                bd_id = group['bd_id']
+                new_final_dict = final_dict.setdefault('bridge_domain', {}).\
+                    setdefault(bd_id, {})
+                new_final_dict.setdefault('attachment_circuits', {})
+                if group['attachment_circuits']:
+                    new_final_dict['attachment_circuits'].setdefault(
+                        group['attachment_circuits'], {})
+                    new_final_dict['attachment_circuits']\
+                        [group['attachment_circuits']]['name'] = \
+                            group['attachment_circuits']
+                continue
+
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict['pseudo_port_interface'] = \
+                    group['pseudo_port_interface']
+                continue
+
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                pw_intf = group['pw_intf']
+                new_final_dict.setdefault('vfi', {}).\
+                    setdefault(pw_intf, {})
+                new_final_dict['vfi'][pw_intf]['pw_peer_id'] = \
+                    group['pw_peer_id']
+                new_final_dict['vfi'][pw_intf]['local_label'] = \
+                    int(group['local_label'])
+                new_final_dict['vfi'][pw_intf]['ve_id'] = \
+                    int(group['ve_id'])
+                new_final_dict['vfi'][pw_intf]['remote_label'] = \
+                    int(group['remote_label'])
+                if 'Y' in group['split_horizon'] or \
+                    'y' in group['split_horizon']:
+                    new_final_dict['vfi'][pw_intf]['split_horizon'] = \
+                        True
+                else:
+                    new_final_dict['vfi'][pw_intf]['split_horizon'] = \
+                        False
+                continue
+
+        return ret_dict

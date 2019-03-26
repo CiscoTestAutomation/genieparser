@@ -9,7 +9,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
 from genie.libs.parser.iosxe.show_l2vpn import ShowBridgeDomain, \
                                                ShowEthernetServiceInstanceDetail, \
                                                ShowEthernetServiceInstanceStats, \
-                                               ShowEthernetServiceInstanceSummary
+                                               ShowEthernetServiceInstanceSummary, \
+                                               ShowL2vpnVfi
 
 
 class test_show_bridge_domain(unittest.TestCase):
@@ -1469,6 +1470,216 @@ class test_show_ethernet_service_instance_summary(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         platform_obj = ShowEthernetServiceInstanceSummary(device=self.device)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+class test_show_l2vpn_vfi(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'vfi': {
+            'VPLS-2052': {
+                've_id': 2,
+                'rt': ['9996:2052', ' 9996:2052'],
+                'bridge_domain': {
+                    '2052': {
+                        'attachment_circuits': {
+                            },
+                        'vfi': {
+                            'pseudowire100203': {
+                                've_id': 1,
+                                'pw_peer_id': '27.93.202.64',
+                                'local_label': 26,
+                                'remote_label': 327818,
+                                'split_horizon': True,
+                                },
+                            },
+                        },
+                    },
+                've_range': 10,
+                'signaling': 'BGP',
+                'type': 'multipoint',
+                'bd_vfi_name': 'VPLS-2052',
+                'pseudo_port_interface': 'pseudowire100002',
+                'vpn_id': 2052,
+                'state': 'up',
+                'rd': '9996:2052',
+                },
+            'VPLS-2053': {
+                've_id': 2,
+                'rt': ['9996:2053', ' 9996:2053'],
+                'bridge_domain': {
+                    '2053': {
+                        'attachment_circuits': {
+                            },
+                        'vfi': {
+                            'pseudowire100204': {
+                                've_id': 1,
+                                'pw_peer_id': '27.93.202.64',
+                                'local_label': 36,
+                                'remote_label': 327826,
+                                'split_horizon': True,
+                                },
+                            },
+                        },
+                    },
+                've_range': 10,
+                'signaling': 'BGP',
+                'type': 'multipoint',
+                'bd_vfi_name': 'VPLS-2053',
+                'pseudo_port_interface': 'pseudowire100003',
+                'vpn_id': 2053,
+                'state': 'up',
+                'rd': '9996:2053',
+                },
+            'VPLS-2055': {
+                've_id': 2,
+                'rt': ['9996:2055', ' 9996:2055'],
+                'bridge_domain': {
+                    '2055': {
+                        'attachment_circuits': {
+                            },
+                        'vfi': {
+                            'pseudowire100206': {
+                                've_id': 1,
+                                'pw_peer_id': '27.93.202.64',
+                                'local_label': 56,
+                                'remote_label': 327842,
+                                'split_horizon': True,
+                                },
+                            },
+                        },
+                    },
+                've_range': 10,
+                'signaling': 'BGP',
+                'type': 'multipoint',
+                'bd_vfi_name': 'VPLS-2055',
+                'pseudo_port_interface': 'pseudowire100005',
+                'vpn_id': 2055,
+                'state': 'up',
+                'rd': '9996:2055',
+                },
+            'VPLS-2054': {
+                've_id': 2,
+                'rt': ['9996:2054', ' 9996:2054'],
+                'bridge_domain': {
+                    '2054': {
+                        'attachment_circuits': {
+                            },
+                        'vfi': {
+                            'pseudowire100205': {
+                                've_id': 1,
+                                'pw_peer_id': '27.93.202.64',
+                                'local_label': 46,
+                                'remote_label': 327834,
+                                'split_horizon': True,
+                                },
+                            },
+                        },
+                    },
+                've_range': 10,
+                'signaling': 'BGP',
+                'type': 'multipoint',
+                'bd_vfi_name': 'VPLS-2054',
+                'pseudo_port_interface': 'pseudowire100004',
+                'vpn_id': 2054,
+                'state': 'up',
+                'rd': '9996:2054',
+                },
+            'VPLS-2051': {
+                've_id': 2,
+                'rt': ['9996:2051', ' 9996:2051'],
+                'bridge_domain': {
+                    '2051': {
+                        'attachment_circuits': {
+                            },
+                        'vfi': {
+                            'pseudowire100202': {
+                                've_id': 1,
+                                'pw_peer_id': '27.93.202.64',
+                                'local_label': 16,
+                                'remote_label': 327810,
+                                'split_horizon': True,
+                                },
+                            },
+                        },
+                    },
+                've_range': 10,
+                'signaling': 'BGP',
+                'type': 'multipoint',
+                'bd_vfi_name': 'VPLS-2051',
+                'pseudo_port_interface': 'pseudowire100001',
+                'vpn_id': 2051,
+                'state': 'up',
+                'rd': '9996:2051',
+                },
+            },
+        }
+
+    golden_output = {'execute.return_value': '''\
+        Router#sh l2vpn vfi
+        Load for five secs: 20%/0%; one minute: 5%; five minutes: 5%
+        Time source is NTP, 11:33:13.680 JST Wed Nov 9 2016
+
+        Legend: RT=Route-target, S=Split-horizon, Y=Yes, N=No
+
+        VFI name: VPLS-2051, state: up, type: multipoint, signaling: BGP
+          VPN ID: 2051, VE-ID: 2, VE-SIZE: 10
+          RD: 9996:2051, RT: 9996:2051, 9996:2051,
+          Bridge-Domain 2051 attachment circuits:
+          Pseudo-port interface: pseudowire100001
+          Interface          Peer Address    VE-ID  Local Label  Remote Label    S
+          pseudowire100202   27.93.202.64    1      16           327810          Y
+
+        VFI name: VPLS-2052, state: up, type: multipoint, signaling: BGP
+          VPN ID: 2052, VE-ID: 2, VE-SIZE: 10
+          RD: 9996:2052, RT: 9996:2052, 9996:2052,
+          Bridge-Domain 2052 attachment circuits:
+          Pseudo-port interface: pseudowire100002
+          Interface          Peer Address    VE-ID  Local Label  Remote Label    S
+          pseudowire100203   27.93.202.64    1      26           327818          Y
+
+        VFI name: VPLS-2053, state: up, type: multipoint, signaling: BGP
+          VPN ID: 2053, VE-ID: 2, VE-SIZE: 10
+          RD: 9996:2053, RT: 9996:2053, 9996:2053,
+          Bridge-Domain 2053 attachment circuits:
+          Pseudo-port interface: pseudowire100003
+          Interface          Peer Address    VE-ID  Local Label  Remote Label    S
+          pseudowire100204   27.93.202.64    1      36           327826          Y
+
+        VFI name: VPLS-2054, state: up, type: multipoint, signaling: BGP
+          VPN ID: 2054, VE-ID: 2, VE-SIZE: 10
+          RD: 9996:2054, RT: 9996:2054, 9996:2054,
+          Bridge-Domain 2054 attachment circuits:
+          Pseudo-port interface: pseudowire100004
+          Interface          Peer Address    VE-ID  Local Label  Remote Label    S
+          pseudowire100205   27.93.202.64    1      46           327834          Y
+
+        VFI name: VPLS-2055, state: up, type: multipoint, signaling: BGP
+          VPN ID: 2055, VE-ID: 2, VE-SIZE: 10
+          RD: 9996:2055, RT: 9996:2055, 9996:2055,
+          Bridge-Domain 2055 attachment circuits:
+          Pseudo-port interface: pseudowire100005
+          Interface          Peer Address    VE-ID  Local Label  Remote Label    S
+          pseudowire100206   27.93.202.64    1      56           327842          Y
+    '''
+    }
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        platform_obj = ShowL2vpnVfi(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse()    
+
+    def test_golden_full(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        platform_obj = ShowL2vpnVfi(device=self.device)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
