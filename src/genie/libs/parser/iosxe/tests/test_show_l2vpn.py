@@ -7,10 +7,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                              SchemaMissingKeyError
 
 from genie.libs.parser.iosxe.show_l2vpn import ShowBridgeDomain, \
-                                               ShowEthernetServiceInstanceDetail
-
-# import parser utils
-from genie.libs.parser.utils.common import format_output
+                                               ShowEthernetServiceInstanceDetail, \
+                                               ShowEthernetServiceInstanceStats
 
 
 class test_show_bridge_domain(unittest.TestCase):
@@ -724,6 +722,547 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output_interface)
 
 
+class test_show_ethernet_service_instance_stats(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'max_num_of_service_instances': 32768,
+        'service_instance': {
+            2051: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2052: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2053: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2054: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2055: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2056: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2057: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2058: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2059: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2060: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2061: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2062: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2063: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2064: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2065: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2066: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2067: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2068: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2069: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2070: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2071: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2072: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2073: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2074: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2075: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2076: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2077: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2078: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2079: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2080: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2081: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2082: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2083: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2084: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2085: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2086: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2087: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2088: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2089: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2090: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            2091: {
+                'pkts_out': 0,
+                'pkts_in': 0,
+                'interface': 'GigabitEthernet0/0/3',
+                'bytes_in': 0,
+                'bytes_out': 0,
+                },
+            },
+        }
+
+    golden_output = {'execute.return_value': '''\
+        Router#show ethernet service instance stats
+        Load for five secs: 2%/0%; one minute: 5%; five minutes: 4%
+        Time source is NTP, 16:31:09.138 JST Tue Nov 8 2016
+
+        System maximum number of service instances: 32768
+        Service Instance 2051, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2052, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2053, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2054, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2055, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2056, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2057, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2058, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2059, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2060, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2061, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2062, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2063, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2064, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2065, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2066, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2067, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2068, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2069, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2070, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2071, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2072, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2073, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2074, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2075, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2076, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2077, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2078, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2079, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2080, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2081, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2082, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2083, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2084, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2085, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2086, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2087, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2088, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2089, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2090, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+
+        Service Instance 2091, Interface GigabitEthernet0/0/3
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+                 0          0          0          0
+    '''
+    }
+
+    golden_parsed_output_interface = {
+        'service_instance': {
+            1: {
+                'bytes_in': 15408,
+                'pkts_out': 97150,
+                'interface': 'GigabitEthernet0/0/13',
+                'pkts_in': 214,
+                'bytes_out': 6994800,
+                },
+            2: {
+                'bytes_in': 6768,
+                'pkts_out': 9090,
+                'interface': 'GigabitEthernet0/0/13',
+                'pkts_in': 654,
+                'bytes_out': 34565,
+                },
+            },
+        }
+
+    golden_output_interface = {'execute.return_value': '''\
+        Router# show ethernet service instance interface gigabitEthernet 0/0/13 stats
+        Service Instance 1, Interface GigabitEthernet0/0/13
+        Pkts In   Bytes In   Pkts Out  Bytes Out
+               214      15408      97150    6994800
+        Service Instance 2, Interface GigabitEthernet0/0/13
+        Pkts In   Bytes In   Pkts Out  Bytes Out
+               654      6768      9090    34565
+    '''
+    }
+
+    golden_parsed_output_shrinked = {
+        'max_num_of_service_instances': 32768,
+    }
+
+    golden_output_shrinked = {'execute.return_value': '''\
+        1006#show ethernet service instance stats
+        Load for five secs: 1%/0%; one minute: 0%; five minutes: 0%
+        Time source is NTP, 15:44:40.696 JST Fri Nov 11 2016
+
+        System maximum number of service instances: 32768
+    '''
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        platform_obj = ShowEthernetServiceInstanceStats(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse()    
+
+    def test_golden_full(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        platform_obj = ShowEthernetServiceInstanceStats(device=self.device)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_interface(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_interface)
+        platform_obj = ShowEthernetServiceInstanceStats(device=self.device)
+        parsed_output = platform_obj.parse(interface='gigabitEthernet 0/0/13')
+        self.assertEqual(parsed_output, self.golden_parsed_output_interface)
+
+    def test_golden_shrinked(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_shrinked)
+        platform_obj = ShowEthernetServiceInstanceStats(device=self.device)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_shrinked)
+
+
 if __name__ == '__main__':
     unittest.main()
-

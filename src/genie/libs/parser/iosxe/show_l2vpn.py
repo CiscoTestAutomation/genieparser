@@ -420,3 +420,84 @@ class ShowEthernetServiceInstanceDetail(ShowEthernetServiceInstanceDetailSchema)
                 continue
 
         return ret_dict
+
+
+# =================================================
+# Parser for 'show ethernet service instance stats'
+# =================================================
+class ShowEthernetServiceInstanceStatsSchema(MetaParser):
+    """Schema for show ethernet service instance stats
+                  show ethernet service instance interface <interface> stats
+    """
+
+    schema = {
+        Optional('max_num_of_service_instances'): int,
+        Optional('service_instance'): {
+            Any(): {
+                'interface': str,
+                'pkts_in': int,
+                'pkts_out': int,
+                'bytes_in': int,
+                'bytes_out': int,
+            },
+        }
+    }
+
+
+class ShowEthernetServiceInstanceStats(ShowEthernetServiceInstanceStatsSchema):
+    """Parser for show ethernet service instance stats
+                  show ethernet service instance interface <interface> stats
+    """
+
+    cli_command = ['show ethernet service instance stats', 'show ethernet service instance interface {interface} stats']
+
+    def cli(self, interface=None, output=None):
+        cli = self.cli_command
+        if output is None:
+            if interface:
+                cli = self.cli_command[1].format(interface=interface)
+            else:
+                cli = self.cli_command[0]
+            out = self.device.execute(cli)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # initial regexp pattern
+        # System maximum number of service instances: 32768
+        p1 = re.compile(r'^System +maximum +number +of +service +instances: +(?P<max_num_of_service_instances>\d+)$')
+
+        # Service Instance 2051, Interface GigabitEthernet0/0/3
+        p2 = re.compile(r'^Service +Instance +(?P<service_instance>\d+), Interface +(?P<interface>\S+)$')
+
+        #    Pkts In   Bytes In   Pkts Out  Bytes Out
+        #          0          0          0          0
+        p3 = re.compile(r'^(?P<pkts_in>\d+) +(?P<bytes_in>\d+) +(?P<pkts_out>\d+) +(?P<bytes_out>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['max_num_of_service_instances'] = int(group['max_num_of_service_instances'])
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                service_id = int(group['service_instance'])
+                final_dict = ret_dict.setdefault('service_instance', {}).\
+                    setdefault(service_id, {})
+                final_dict['interface'] = group['interface']
+                continue
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+        return ret_dict
