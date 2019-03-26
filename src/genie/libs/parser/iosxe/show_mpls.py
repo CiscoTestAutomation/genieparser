@@ -2306,52 +2306,6 @@ class ShowMplsL2TransportSchema(MetaParser):
     }
 
 
-class ShowMplsL2Transport(ShowMplsL2TransportSchema):
-    """
-    Parser for show mpls l2transport vc
-    """
-
-    cli_command = 'show mpls l2transport vc'
-
-    def cli(self, output=None):
-        if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
-
-        # initial return dictionary
-        ret_dict = {}
-
-        # Local intf   Local circuit          Dest address      VC ID      Status
-        # ---------    -------------          ------------      -----      ------
-        # ATM1/0       ATM AAL5 1/100         10.4.4.4           100        UP
-        # Gi4/0/0.1      Eth VLAN 2           10.1.1.1        2          UP
-        # Gi8/0/1        Ethernet             10.1.1.1        8          UP
-        # Fa2/1/1.2      Eth VLAN 2           10.2.2.2         1002       UP
-        # VFI test1      VFI                  209.165.201.3       201        UP
-        p1 = re.compile(r'^(?P<interface>[\S]+\s?[\S]+) +(?P<local_circuit>[\S\s]+)'
-                         ' +(?P<destination_address>[\d\.]+) +(?P<vc_id>\d+) +(?P<status>\S+)$')
-
-        for line in out.splitlines():
-            line = line.strip()
-
-            m = p1.match(line)
-            if m:
-                group = m.groupdict()
-                interface = group['interface']
-                destination_address = group['destination_address']
-                final_dict = ret_dict.setdefault('interface', {}).\
-                    setdefault(interface, {}).setdefault(
-                        'destination_address', {}).setdefault(destination_address, {})
-                ret_dict['interface'][interface]['local_circuit'] = \
-                    group['local_circuit'].strip()
-                final_dict['vc_id'] = int(group['vc_id'])
-                final_dict['vc_status'] = group['status']
-                continue
-
-        return ret_dict
-
-
 class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
     """
     Parser for show mpls l2transport vc detail
