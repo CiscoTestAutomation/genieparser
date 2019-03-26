@@ -79,7 +79,8 @@ def _find_command(command, data, device):
         for pattern in patterns:
             word = pattern.replace('{', '').replace('}', '')
             new_pattern = '(?P<{p}>.*)'.format(p=word)
-            reg = re.sub(pattern, new_pattern, reg)+'$'
+            reg = re.sub(pattern, new_pattern, reg)
+        reg += '$'
 
         match = re.match(reg, command)
         if match:
