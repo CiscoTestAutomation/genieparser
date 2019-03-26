@@ -68,11 +68,11 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Add ShowMplsLdpParameters for:
-        'show mpls ldp parameters'
+          show mpls ldp parameters
     * Add ShowMplsLdpNsrStatistic for:
-        'show mpls ldp nsr statistics'
+          show mpls ldp nsr statistics
     * Add ShowMplsLdpNeighbor for:
-         'show mpls ldp neighbor
+          show mpls ldp neighbor
           show mpls ldp neighbor vrf <vrf>
     * Add ShowMplsLdpNeighborDetail for:
           show mpls ldp neighbor detail
@@ -96,6 +96,16 @@
           show mpls ldp igp sync all
           show mpls ldp igp sync interface <interface>
           show mpls ldp igp sync vrf <vrf>
+    * Add ShowMplsForwardingTable for:
+          show mpls forwarding-table
+          show mpls forwarding-table detail
+          show mpls forwarding-table vrf <vrf>
+          show mpls forwarding-table vrf <vrf> detail
+    * Add ShowMplsInterface for:
+          show mpls interfaces
+          show mpls interfaces <interface>
+          show mpls interfaces <interface> detail
+          show mpls interfaces detail
 
 ----------------------------------------------------------------------------------
                                  ARP
