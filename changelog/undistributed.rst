@@ -146,3 +146,5 @@
     * Add ShowEthernetServiceInstanceStats for:
             show ethernet service instance stats
             show ethernet service instance interface <interface> stats
+    * Add ShowEthernetServiceInstanceSummary for:
+            show ethernet service instance summary

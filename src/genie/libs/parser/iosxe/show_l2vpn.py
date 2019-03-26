@@ -501,3 +501,84 @@ class ShowEthernetServiceInstanceStats(ShowEthernetServiceInstanceStatsSchema):
                 continue
 
         return ret_dict
+
+
+# ===================================================
+# Parser for 'show ethernet service instance summary'
+# ===================================================
+class ShowEthernetServiceInstanceSummarySchema(MetaParser):
+    """Schema for show ethernet service instance summary
+    """
+
+    schema = {
+        Any(): {
+            Any(): {
+                'total': int,
+                'up': int,
+                'admin_do': int,
+                'down': int,
+                'error_di': int,
+                'unknown': int,
+                'deleted': int,
+                'bd_adm_do': int,
+            },
+        },
+    }
+
+
+class ShowEthernetServiceInstanceSummary(ShowEthernetServiceInstanceSummarySchema):
+    """Parser for show ethernet service instance summary
+    """
+
+    cli_command = 'show ethernet service instance summary'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # initial regexp pattern
+        # System summary
+        p1 = re.compile(r'^System +summary$')
+ 
+        # Associated interface: GigabitEthernet0/0/3
+        # Associated interface: Port-channel1
+        p2 = re.compile(r'^Associated +interface: +(?P<interface>[\w\d\/\.\-]+)$')
+
+        #             Total       Up  AdminDo     Down  ErrorDi  Unknown  Deleted  BdAdmDo  
+        # bdomain         0        0        0        0        0        0        0        0  
+        # xconnect        0        0        0        0        0        0        0        0  
+        # local sw        0        0        0        0        0        0        0        0  
+        # other         201      201        0        0        0        0        0        0  
+        # all           201      201        0        0        0        0        0        0  
+        p3 = re.compile(r'^(?P<service>[\w\s\d]+) +(?P<total>\d+) +(?P<up>\d+) +(?P<admin_do>\d+) +(?P<down>\d+) +(?P<error_di>\d+) +(?P<unknown>\d+) +(?P<deleted>\d+) +(?P<bd_adm_do>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                header = 'system_summary'
+                ret_dict.setdefault(header, {})
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                header = group['interface']
+                ret_dict.setdefault(header, {})
+                continue
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                service = group.pop('service')
+                ret_dict[header].setdefault(service , {})
+                ret_dict[header][service].update({k: int(v) for k, v in group.items()})
+                continue
+
+        return ret_dict
