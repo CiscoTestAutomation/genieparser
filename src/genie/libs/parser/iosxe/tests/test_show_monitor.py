@@ -74,7 +74,6 @@ class test_show_monitor(unittest.TestCase):
         Router#
         '''}
 
-
     golden_parsed_output2 = {
         'session':
             {'1':
@@ -133,7 +132,6 @@ class test_show_monitor(unittest.TestCase):
                  'status': 'Admin Enabled',
                  'type': 'Remote Destination Session'}}}
 
-
     golden_output3 = {'execute.return_value': '''
         Router  # show monitor session 2
         Session 2
@@ -151,6 +149,21 @@ class test_show_monitor(unittest.TestCase):
         MTU                    : 1464
         Source RSPAN VLAN : 100
        
+        '''}
+
+    golden_output4 = {'execute.eturn_value': '''
+        Router#show monitor session 1
+
+        Session 1
+        ---------
+        Type: ERSPAN Source Session
+        Status: Admin Enabled
+        Source Subinterfaces:
+            Both: Gi2/2/0.100
+        Filter Access-Group: 100
+        Destination IP Address : 10.12.12.2
+        Destination ERSPAN ID  : 10
+        Origin IP Address: 10.12.12.1
         '''}
 
     def test_show_monitor_golden1(self):
@@ -173,6 +186,14 @@ class test_show_monitor(unittest.TestCase):
         obj = ShowMonitor(device=self.device)
         parsed_output = obj.parse(session='2')
         self.assertEqual(parsed_output, self.golden_parsed_output3)
+
+    def test_show_monitor_golden4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output4)
+        obj = ShowMonitor(device=self.device)
+        parsed_output = obj.parse(session='1')
+        import pdb ; pdb.set_trace()
+        self.assertEqual(parsed_output, self.golden_parsed_output4)
 
     def test_show_monitor_empty(self):
         self.maxDiff = None

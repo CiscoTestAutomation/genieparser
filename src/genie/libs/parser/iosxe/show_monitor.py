@@ -37,6 +37,9 @@ class ShowMonitorSchema(MetaParser):
                   Optional('source_ports'):
                       {Any(): str,
                       },
+                  Optional('source_subinterfaces'):
+                      {Any(): str,
+                      },
                   Optional('destination_ports'): str,
                   Optional('destination_ip_address'): str,
                   Optional('destination_erspan_id'): str,
@@ -88,6 +91,8 @@ class ShowMonitor(ShowMonitorSchema):
 
         # Source Ports           :
         p4_1 = re.compile(r'^Source +Ports +:$')
+
+        # Source Subinterfaces:
 
         #    TX Only            : Gi0/1/4
         #    Both               : Gi0/1/4
