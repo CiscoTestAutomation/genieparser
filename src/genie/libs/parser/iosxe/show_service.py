@@ -57,5 +57,4 @@ class ShowServiceGroupState(ShowServiceGroupStateSchema):
 					'group', {}).setdefault(group['group_number'], {})
 				service_group_state.update({'state' : group['state']})
 				continue
-				service_group_state
 		return ret_dict
