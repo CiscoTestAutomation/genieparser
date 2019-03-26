@@ -1147,12 +1147,12 @@ class test_show_inventory(unittest.TestCase):
     dev_c3850 = Device(name='c3850')
     empty_output = {'execute.return_value': ''}
     semi_empty_output = {'execute.return_value': '''/
-NAME: "c38xx Stack", DESCR: "c38xx Stack"
-PID: WS-C3850-24P-E    , VID: V01  , SN: FCW1932D0LB
+        NAME: "c38xx Stack", DESCR: "c38xx Stack"
+        PID: WS-C3850-24P-E    , VID: V01  , SN: FCW1932D0LB
 
-NAME: "Switch 1", DESCR: "WS-C3850-24P-E"
-PID: WS-C3850-24P-E    , VID: V01  ,
-'''}
+        NAME: "Switch 1", DESCR: "WS-C3850-24P-E"
+        PID: WS-C3850-24P-E    , VID: V01  ,
+    '''}
 
     golden_parsed_output_c3850 = {
                                     'main': {
@@ -1363,68 +1363,68 @@ PID: WS-C3850-24P-E    , VID: V01  ,
                                 }
 
     golden_output_c3850 = {'execute.return_value': '''\
-NAME: "c38xx Stack", DESCR: "c38xx Stack"
-PID: WS-C3850-24P-E    , VID: V01  , SN: FCW1932D0LB
+        NAME: "c38xx Stack", DESCR: "c38xx Stack"
+        PID: WS-C3850-24P-E    , VID: V01  , SN: FCW1932D0LB
 
-NAME: "Switch 1", DESCR: "WS-C3850-24P-E"
-PID: WS-C3850-24P-E    , VID: V01  , SN: FCW1932D0LB
+        NAME: "Switch 1", DESCR: "WS-C3850-24P-E"
+        PID: WS-C3850-24P-E    , VID: V01  , SN: FCW1932D0LB
 
-NAME: "StackPort1/1", DESCR: "StackPort1/1"
-PID: STACK-T1-50CM     , VID: V01  , SN: LCC1921G11G
+        NAME: "StackPort1/1", DESCR: "StackPort1/1"
+        PID: STACK-T1-50CM     , VID: V01  , SN: LCC1921G11G
 
-NAME: "StackPort1/2", DESCR: "StackPort1/2"
-PID: STACK-T1-50CM     , VID: V01  , SN: LCC1921G250
+        NAME: "StackPort1/2", DESCR: "StackPort1/2"
+        PID: STACK-T1-50CM     , VID: V01  , SN: LCC1921G250
 
-NAME: "Switch 1 - Power Supply A", DESCR: "Switch 1 - Power Supply A"
-PID: C3KX-PWR-715WAC   , VID: V01  , SN: LIT14291MTJ
+        NAME: "Switch 1 - Power Supply A", DESCR: "Switch 1 - Power Supply A"
+        PID: C3KX-PWR-715WAC   , VID: V01  , SN: LIT14291MTJ
 
-NAME: "Switch 2", DESCR: "WS-C3850-24P-E"
-PID: WS-C3850-24P-E    , VID: V04  , SN: FOC1932X0K1
+        NAME: "Switch 2", DESCR: "WS-C3850-24P-E"
+        PID: WS-C3850-24P-E    , VID: V04  , SN: FOC1932X0K1
 
-NAME: "StackPort2/1", DESCR: "StackPort2/1"
-PID: STACK-T1-50CM     , VID: V01  , SN: MOC1932A0BU
+        NAME: "StackPort2/1", DESCR: "StackPort2/1"
+        PID: STACK-T1-50CM     , VID: V01  , SN: MOC1932A0BU
 
-NAME: "StackPort2/2", DESCR: "StackPort2/2"
-PID: STACK-T1-50CM     , VID: V01  , SN: LCC1921G10J
+        NAME: "StackPort2/2", DESCR: "StackPort2/2"
+        PID: STACK-T1-50CM     , VID: V01  , SN: LCC1921G10J
 
-NAME: "Switch 2 - Power Supply A", DESCR: "Switch 2 - Power Supply A"
-PID: C3KX-PWR-715WAC   , VID: V01  , SN: LIT15090DUL
+        NAME: "Switch 2 - Power Supply A", DESCR: "Switch 2 - Power Supply A"
+        PID: C3KX-PWR-715WAC   , VID: V01  , SN: LIT15090DUL
 
-NAME: "Switch 3", DESCR: "WS-C3850-24P-E"
-PID: WS-C3850-24P-E    , VID: V04  , SN: FCW1932C0MA
+        NAME: "Switch 3", DESCR: "WS-C3850-24P-E"
+        PID: WS-C3850-24P-E    , VID: V04  , SN: FCW1932C0MA
 
-NAME: "StackPort3/1", DESCR: "StackPort3/1"
-PID: STACK-T1-50CM     , VID: V01  , SN: LCC1921G10J
+        NAME: "StackPort3/1", DESCR: "StackPort3/1"
+        PID: STACK-T1-50CM     , VID: V01  , SN: LCC1921G10J
 
-NAME: "StackPort3/2", DESCR: "StackPort3/2"
-PID: STACK-T1-50CM     , VID: V01  , SN: LCC1921G106
+        NAME: "StackPort3/2", DESCR: "StackPort3/2"
+        PID: STACK-T1-50CM     , VID: V01  , SN: LCC1921G106
 
-NAME: "Switch 3 - Power Supply A", DESCR: "Switch 3 - Power Supply A"
-PID: PWR-C1-715WAC     , VID: V01  , SN: LIT19220MG1
+        NAME: "Switch 3 - Power Supply A", DESCR: "Switch 3 - Power Supply A"
+        PID: PWR-C1-715WAC     , VID: V01  , SN: LIT19220MG1
 
-NAME: "Switch 4", DESCR: "WS-C3850-24P-E"
-PID: WS-C3850-24P-E    , VID: V04  , SN: FCW1932D0L0
+        NAME: "Switch 4", DESCR: "WS-C3850-24P-E"
+        PID: WS-C3850-24P-E    , VID: V04  , SN: FCW1932D0L0
 
-NAME: "StackPort4/1", DESCR: "StackPort4/1"
-PID: STACK-T1-50CM     , VID: V01  , SN: LCC1921G250
+        NAME: "StackPort4/1", DESCR: "StackPort4/1"
+        PID: STACK-T1-50CM     , VID: V01  , SN: LCC1921G250
 
-NAME: "StackPort4/2", DESCR: "StackPort4/2"
-PID: STACK-T1-50CM     , VID: V01  , SN: MOC1932A0BU
+        NAME: "StackPort4/2", DESCR: "StackPort4/2"
+        PID: STACK-T1-50CM     , VID: V01  , SN: MOC1932A0BU
 
-NAME: "Switch 4 - Power Supply A", DESCR: ""
-PID: C3KX-PWR-715WAC   , VID: V01  , SN: LIT15140DEP
+        NAME: "Switch 4 - Power Supply A", DESCR: ""
+        PID: C3KX-PWR-715WAC   , VID: V01  , SN: LIT15140DEP
 
-NAME: "Switch 5", DESCR: "WS-C3850-24P-E"
-PID: WS-C3850-24P-E    , VID: V04  , SN: FOC1932X0F9
+        NAME: "Switch 5", DESCR: "WS-C3850-24P-E"
+        PID: WS-C3850-24P-E    , VID: V04  , SN: FOC1932X0F9
 
-NAME: "StackPort5/1", DESCR: "StackPort5/1"
-PID: STACK-T1-50CM     , VID: V01  , SN: LCC1921G106
+        NAME: "StackPort5/1", DESCR: "StackPort5/1"
+        PID: STACK-T1-50CM     , VID: V01  , SN: LCC1921G106
 
-NAME: "StackPort5/2", DESCR: "StackPort5/2"
-PID: STACK-T1-50CM     , VID: V01  , SN: LCC1921G11G
+        NAME: "StackPort5/2", DESCR: "StackPort5/2"
+        PID: STACK-T1-50CM     , VID: V01  , SN: LCC1921G11G
 
-NAME: "Switch 5 - Power Supply A", DESCR: "Switch 5 - Power Supply A"
-PID: PWR-C1-715WAC     , VID: V01  , SN: LIT17130ZDU
+        NAME: "Switch 5 - Power Supply A", DESCR: "Switch 5 - Power Supply A"
+        PID: PWR-C1-715WAC     , VID: V01  , SN: LIT17130ZDU
 '''}
 
     golden_parsed_output_asr1k = {
@@ -1557,41 +1557,164 @@ PID: PWR-C1-715WAC     , VID: V01  , SN: LIT17130ZDU
                                 }
 
     golden_output_asr1k = {'execute.return_value': '''\
-NAME: "Chassis", DESCR: "Cisco ASR1006 Chassis"
-PID: ASR1006           , VID: V01  , SN: FOX1204G6WN
+        NAME: "Chassis", DESCR: "Cisco ASR1006 Chassis"
+        PID: ASR1006           , VID: V01  , SN: FOX1204G6WN
 
-NAME: "module 0", DESCR: "Cisco ASR1000 SPA Interface Processor 40"
-PID: ASR1000-SIP40     , VID: V02  , SN: JAE200609WP
+        NAME: "module 0", DESCR: "Cisco ASR1000 SPA Interface Processor 40"
+        PID: ASR1000-SIP40     , VID: V02  , SN: JAE200609WP
 
-NAME: "SPA subslot 0/0", DESCR: "5-port Gigabit Ethernet Shared Port Adapter"
-PID: SPA-5X1GE-V2      , VID: V02  , SN: JAE151203T2
+        NAME: "SPA subslot 0/0", DESCR: "5-port Gigabit Ethernet Shared Port Adapter"
+        PID: SPA-5X1GE-V2      , VID: V02  , SN: JAE151203T2
 
-NAME: "subslot 0/0 transceiver 0", DESCR: "GE T"
-PID: SP7041-E          , VID: E    , SN: MTC164204VE     
+        NAME: "subslot 0/0 transceiver 0", DESCR: "GE T"
+        PID: SP7041-E          , VID: E    , SN: MTC164204VE     
 
-NAME: "subslot 0/0 transceiver 1", DESCR: "GE T"
-PID: SP7041-E          , VID: E    , SN: MTC164204F0     
+        NAME: "subslot 0/0 transceiver 1", DESCR: "GE T"
+        PID: SP7041-E          , VID: E    , SN: MTC164204F0     
 
-NAME: "subslot 0/0 transceiver 2", DESCR: "GE T"
-PID: SP7041-E          , VID: E    , SN: MTC164206U2     
+        NAME: "subslot 0/0 transceiver 2", DESCR: "GE T"
+        PID: SP7041-E          , VID: E    , SN: MTC164206U2     
 
-NAME: "subslot 0/0 transceiver 3", DESCR: "GE T"
-PID: SP7041-E          , VID: E    , SN: MTC1644033S     
+        NAME: "subslot 0/0 transceiver 3", DESCR: "GE T"
+        PID: SP7041-E          , VID: E    , SN: MTC1644033S     
 
-NAME: "module R0", DESCR: "Cisco ASR1000 Route Processor 2"
-PID: ASR1000-RP2       , VID: V02  , SN: JAE153408NJ
+        NAME: "module R0", DESCR: "Cisco ASR1000 Route Processor 2"
+        PID: ASR1000-RP2       , VID: V02  , SN: JAE153408NJ
 
-NAME: "module R1", DESCR: "Cisco ASR1000 Route Processor 2"
-PID: ASR1000-RP2       , VID: V03  , SN: JAE1703094H
+        NAME: "module R1", DESCR: "Cisco ASR1000 Route Processor 2"
+        PID: ASR1000-RP2       , VID: V03  , SN: JAE1703094H
 
-NAME: "module F0", DESCR: "Cisco ASR1000 Embedded Services Processor, 20Gbps"
-PID: ASR1000-ESP20     , VID: V01  , SN: JAE1239W7G6
+        NAME: "module F0", DESCR: "Cisco ASR1000 Embedded Services Processor, 20Gbps"
+        PID: ASR1000-ESP20     , VID: V01  , SN: JAE1239W7G6
 
-NAME: "Power Supply Module 0", DESCR: "Cisco ASR1006 AC Power Supply"
-PID: ASR1006-PWR-AC    , VID: V01  , SN: ART1210Q049
+        NAME: "Power Supply Module 0", DESCR: "Cisco ASR1006 AC Power Supply"
+        PID: ASR1006-PWR-AC    , VID: V01  , SN: ART1210Q049
 
-NAME: "Power Supply Module 1", DESCR: "Cisco ASR1006 AC Power Supply"
-PID: ASR1006-PWR-AC    , VID: V01  , SN: ART1210Q04C
+        NAME: "Power Supply Module 1", DESCR: "Cisco ASR1006 AC Power Supply"
+        PID: ASR1006-PWR-AC    , VID: V01  , SN: ART1210Q04C
+'''}
+
+    golden_parsed_output = {
+        'slot': {
+            'F0': {
+                'lc': {
+                    'ISR4331/K9': {
+                        'sn': '',
+                        'pid': 'ISR4331/K9',
+                        'descr': 'Cisco ISR4331 Forwarding Processor',
+                        'name': 'module F0',
+                        'vid': '',
+                        },
+                    },
+                },
+            '1': {
+                'lc': {
+                    'ISR4331/K9': {
+                        'sn': '',
+                        'pid': 'ISR4331/K9',
+                        'descr': 'Cisco ISR4331 Built-In SM controller',
+                        'name': 'module 1',
+                        'vid': '',
+                        },
+                    },
+                },
+            '0': {
+                'lc': {
+                    'ISR4331/K9': {
+                        'descr': 'Cisco ISR4331 Built-In NIM controller',
+                        'name': 'module 0',
+                        'subslot': {
+                            '0 transceiver 2': {
+                                'SFP-GE-T': {
+                                    'sn': 'MTC2139029X',
+                                    'pid': 'SFP-GE-T',
+                                    'descr': 'GE T',
+                                    'name': 'subslot 0/0 transceiver 2',
+                                    'vid': 'V02',
+                                    },
+                                },
+                            },
+                        'sn': '',
+                        'pid': 'ISR4331/K9',
+                        'vid': '',
+                        },
+                    },
+                },
+            'P0': {
+                'other': {
+                    'PWR-4330-AC': {
+                        'sn': 'PST2150N1E2',
+                        'pid': 'PWR-4330-AC',
+                        'descr': '250W AC Power Supply for Cisco ISR 4330',
+                        'name': 'Power Supply Module 0',
+                        'vid': 'V02',
+                        },
+                    },
+                },
+            'R0': {
+                'lc': {
+                    'ISR4331/K9': {
+                        'sn': 'FDO21520TGH',
+                        'pid': 'ISR4331/K9',
+                        'descr': 'Cisco ISR4331 Route Processor',
+                        'name': 'module R0',
+                        'vid': 'V04',
+                        },
+                    },
+                },
+            },
+        'main': {
+            'chassis': {
+                'ISR4331/K9': {
+                    'sn': 'FDO2201A0SR',
+                    'pid': 'ISR4331/K9',
+                    'descr': 'Cisco ISR4331 Chassis',
+                    'name': 'Chassis',
+                    'vid': 'V04',
+                    },
+                },
+            },
+        }
+
+    golden_output = {'execute.return_value': '''\
+        show inventory
+
+        +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        INFO: Please use "show license UDI" to get serial number for licensing.
+        +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+        NAME: "Chassis", DESCR: "Cisco ISR4331 Chassis"
+        PID: ISR4331/K9        , VID: V04  , SN: FDO2201A0SR
+
+        NAME: "Power Supply Module 0", DESCR: "250W AC Power Supply for Cisco ISR 4330"
+        PID: PWR-4330-AC       , VID: V02  , SN: PST2150N1E2
+
+        NAME: "Fan Tray", DESCR: "Cisco ISR4330 Fan Assembly"
+        PID: ACS-4330-FANASSY  , VID:      , SN:            
+
+        NAME: "module 0", DESCR: "Cisco ISR4331 Built-In NIM controller"
+        PID: ISR4331/K9        , VID:      , SN:            
+
+        NAME: "NIM subslot 0/1", DESCR: "NIM-ES2-4"
+        PID: NIM-ES2-4         , VID: V01  , SN: FOC21486SRL
+
+        NAME: "NIM subslot 0/2", DESCR: "NIM-ES2-8"
+        PID: NIM-ES2-8         , VID: V01  , SN: FOC22384AXC
+
+        NAME: "NIM subslot 0/0", DESCR: "Front Panel 3 ports Gigabitethernet Module"
+        PID: ISR4331-3x1GE     , VID: V01  , SN:            
+
+        NAME: "subslot 0/0 transceiver 2", DESCR: "GE T"
+        PID: SFP-GE-T            , VID: V02  , SN: MTC2139029X     
+
+        NAME: "module 1", DESCR: "Cisco ISR4331 Built-In SM controller"
+        PID: ISR4331/K9        , VID:      , SN:            
+
+        NAME: "module R0", DESCR: "Cisco ISR4331 Route Processor"
+        PID: ISR4331/K9        , VID: V04  , SN: FDO21520TGH
+
+        NAME: "module F0", DESCR: "Cisco ISR4331 Forwarding Processor"
+        PID: ISR4331/K9        , VID:      , SN:            
 '''}
 
     def test_empty(self):
@@ -1606,6 +1729,13 @@ PID: ASR1006-PWR-AC    , VID: V01  , SN: ART1210Q04C
     #     inventory_obj = ShowInventory(device=self.dev2)
     #     with self.assertRaises(SchemaMissingKeyError):
     #         parsed_output = inventory_obj.parse()   
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev_asr1k = Mock(**self.golden_output)
+        inventory_obj = ShowInventory(device=self.dev_asr1k)
+        parsed_output = inventory_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_golden_c3850(self):
         self.maxDiff = None
@@ -1909,36 +2039,161 @@ Switch#   Role        Priority      State
                                 }
 
     golden_output_asr1k = {'execute.return_value': '''\
-Chassis type: ASR1006             
+        Chassis type: ASR1006             
 
-Slot      Type                State                 Insert time (ago) 
---------- ------------------- --------------------- ----------------- 
-0         ASR1000-SIP40       ok                    00:33:53      
- 0/0      SPA-1XCHSTM1/OC3    ok                    2d00h         
- 0/1      SPA-2XT3/E3         ok                    2d00h         
- 0/2      SPA-1XOC48POS/RPR   ok                    2d00h         
- 0/3      SPA-5X1GE-V2        ok                    2d00h        
-1         ASR1000-2T+20X1GE   ok                    2d00h         
- 1/0      BUILT-IN-2T+20X1GE  ok                    2d00h         
-2         ASR1000-6TGE        ok                    2d00h         
- 2/0      BUILT-IN-6TGE       ok                    2d00h         
-4                             unknown               2d00h         
-R0        ASR1000-RP2         ok, active            00:33:53      
-R1        ASR1000-RP2         ok, standby           00:33:53      
-F0        ASR1000-ESP20       ok, active            00:33:53      
-P0        ASR1006-PWR-AC      ok                    00:33:18      
-P1        ASR1006-PWR-AC      ps, fail              00:33:17      
+        Slot      Type                State                 Insert time (ago) 
+        --------- ------------------- --------------------- ----------------- 
+        0         ASR1000-SIP40       ok                    00:33:53      
+         0/0      SPA-1XCHSTM1/OC3    ok                    2d00h         
+         0/1      SPA-2XT3/E3         ok                    2d00h         
+         0/2      SPA-1XOC48POS/RPR   ok                    2d00h         
+         0/3      SPA-5X1GE-V2        ok                    2d00h        
+        1         ASR1000-2T+20X1GE   ok                    2d00h         
+         1/0      BUILT-IN-2T+20X1GE  ok                    2d00h         
+        2         ASR1000-6TGE        ok                    2d00h         
+         2/0      BUILT-IN-6TGE       ok                    2d00h         
+        4                             unknown               2d00h         
+        R0        ASR1000-RP2         ok, active            00:33:53      
+        R1        ASR1000-RP2         ok, standby           00:33:53      
+        F0        ASR1000-ESP20       ok, active            00:33:53      
+        P0        ASR1006-PWR-AC      ok                    00:33:18      
+        P1        ASR1006-PWR-AC      ps, fail              00:33:17      
 
-Slot      CPLD Version        Firmware Version                        
---------- ------------------- --------------------------------------- 
-0         00200800            16.2(1r)                            
-1         14011701            16.3(2r)                            
-2         14011701            16.3(2r)                            
-4         N/A                 N/A      
-R0        10021901            16.2(1r)                            
-R1        14111801            16.2(1r)                            
-F0        08041102            16.2(1r)        
-'''}
+        Slot      CPLD Version        Firmware Version                        
+        --------- ------------------- --------------------------------------- 
+        0         00200800            16.2(1r)                            
+        1         14011701            16.3(2r)                            
+        2         14011701            16.3(2r)                            
+        4         N/A                 N/A      
+        R0        10021901            16.2(1r)                            
+        R1        14111801            16.2(1r)                            
+        F0        08041102            16.2(1r)        
+        '''}
+
+    golden_parsed_output = {
+        'slot': {
+            '1': {
+                'lc': {
+                    'ISR4331/K9': {
+                        'insert_time': '3w5d',
+                        'slot': '1',
+                        'cpld_ver': '17100927',
+                        'fw_ver': '16.7(3r)',
+                        'name': 'ISR4331/K9',
+                        'state': 'ok',
+                        },
+                    },
+                },
+            'F0': {
+                'lc': {
+                    'ISR4331/K9': {
+                        'insert_time': '3w5d',
+                        'slot': 'F0',
+                        'cpld_ver': '17100927',
+                        'fw_ver': '16.7(3r)',
+                        'name': 'ISR4331/K9',
+                        'state': 'ok, active',
+                        },
+                    },
+                },
+            'P0': {
+                'other': {
+                    'PWR-4330-AC': {
+                        'state': 'ok',
+                        'slot': 'P0',
+                        'name': 'PWR-4330-AC',
+                        'insert_time': '3w5d',
+                        },
+                    },
+                },
+            'P2': {
+                'other': {
+                    'ACS-4330-FANASSY': {
+                        'state': 'ok',
+                        'slot': 'P2',
+                        'name': 'ACS-4330-FANASSY',
+                        'insert_time': '3w5d',
+                        },
+                    },
+                },
+            '0': {
+                'lc': {
+                    'ISR4331/K9': {
+                        'insert_time': '3w5d',
+                        'subslot': {
+                            '1': {
+                                'NIM-ES2-4': {
+                                    'state': 'ok',
+                                    'subslot': '1',
+                                    'name': 'NIM-ES2-4',
+                                    'insert_time': '3w5d',
+                                    },
+                                },
+                            '0': {
+                                'ISR4331-3x1GE': {
+                                    'state': 'ok',
+                                    'subslot': '0',
+                                    'name': 'ISR4331-3x1GE',
+                                    'insert_time': '3w5d',
+                                    },
+                                },
+                            '2': {
+                                'NIM-ES2-8': {
+                                    'state': 'ok',
+                                    'subslot': '2',
+                                    'name': 'NIM-ES2-8',
+                                    'insert_time': '3w5d',
+                                    },
+                                },
+                            },
+                        'cpld_ver': '17100927',
+                        'fw_ver': '16.7(3r)',
+                        'name': 'ISR4331/K9',
+                        'state': 'ok',
+                        'slot': '0',
+                        },
+                    },
+                },
+            'R0': {
+                'lc': {
+                    'ISR4331/K9': {
+                        'insert_time': '3w5d',
+                        'slot': 'R0',
+                        'cpld_ver': '17100927',
+                        'fw_ver': '16.7(3r)',
+                        'name': 'ISR4331/K9',
+                        'state': 'ok, active',
+                        },
+                    },
+                },
+            },
+        }
+
+    golden_output = {'execute.return_value': '''\
+        show platform
+        Chassis type: ISR4331/K9
+
+        Slot      Type                State                 Insert time (ago) 
+        --------- ------------------- --------------------- ----------------- 
+        0         ISR4331/K9          ok                    3w5d          
+         0/0      ISR4331-3x1GE       ok                    3w5d          
+         0/1      NIM-ES2-4           ok                    3w5d          
+         0/2      NIM-ES2-8           ok                    3w5d          
+        1         ISR4331/K9          ok                    3w5d          
+        R0        ISR4331/K9          ok, active            3w5d          
+        F0        ISR4331/K9          ok, active            3w5d          
+        P0        PWR-4330-AC         ok                    3w5d          
+        P2        ACS-4330-FANASSY    ok                    3w5d          
+
+        Slot      CPLD Version        Firmware Version                        
+        --------- ------------------- --------------------------------------- 
+        0         17100927            16.7(3r)                            
+        1         17100927            16.7(3r)                            
+        R0        17100927            16.7(3r)                            
+        F0        17100927            16.7(3r)                            
+
+        c4331a#      
+    '''}
 
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
@@ -1965,6 +2220,13 @@ F0        08041102            16.2(1r)
         platform_obj = ShowPlatform(device=self.dev_asr1k)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_asr1k)
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev_asr1k = Mock(**self.golden_output)
+        platform_obj = ShowPlatform(device=self.dev_asr1k)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
 class test_show_boot(unittest.TestCase):
