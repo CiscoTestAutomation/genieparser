@@ -8,7 +8,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
 
 from genie.libs.parser.iosxe.show_l2vpn import ShowBridgeDomain, \
                                                ShowEthernetServiceInstanceDetail, \
-                                               ShowEthernetServiceInstanceStats
+                                               ShowEthernetServiceInstanceStats, \
+                                               ShowEthernetServiceInstanceSummary
 
 
 class test_show_bridge_domain(unittest.TestCase):
@@ -1262,6 +1263,214 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
         platform_obj = ShowEthernetServiceInstanceStats(device=self.device)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_shrinked)
+
+class test_show_ethernet_service_instance_summary(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'system_summary': {
+            'xconnect': {
+                'deleted': 0,
+                'down': 0,
+                'total': 0,
+                'bd_adm_do': 0,
+                'admin_do': 0,
+                'error_di': 0,
+                'unknown': 0,
+                'up': 0,
+                },
+            'bdomain': {
+                'deleted': 0,
+                'down': 0,
+                'total': 201,
+                'bd_adm_do': 0,
+                'admin_do': 0,
+                'error_di': 0,
+                'unknown': 0,
+                'up': 201,
+                },
+            'local sw': {
+                'deleted': 0,
+                'down': 0,
+                'total': 0,
+                'bd_adm_do': 0,
+                'admin_do': 0,
+                'error_di': 0,
+                'unknown': 0,
+                'up': 0,
+                },
+            'other': {
+                'deleted': 0,
+                'down': 0,
+                'total': 201,
+                'bd_adm_do': 0,
+                'admin_do': 0,
+                'error_di': 0,
+                'unknown': 0,
+                'up': 201,
+                },
+            'all': {
+                'deleted': 0,
+                'down': 0,
+                'total': 402,
+                'bd_adm_do': 0,
+                'admin_do': 0,
+                'error_di': 0,
+                'unknown': 0,
+                'up': 402,
+                },
+            },
+        'GigabitEthernet0/0/3': {
+            'bdomain': {
+                'deleted': 0,
+                'down': 0,
+                'total': 0,
+                'bd_adm_do': 0,
+                'admin_do': 0,
+                'error_di': 0,
+                'unknown': 0,
+                'up': 0,
+                },
+            'local sw': {
+                'deleted': 0,
+                'down': 0,
+                'total': 0,
+                'bd_adm_do': 0,
+                'admin_do': 0,
+                'error_di': 0,
+                'unknown': 0,
+                'up': 0,
+                },
+            'all': {
+                'deleted': 0,
+                'down': 0,
+                'total': 201,
+                'bd_adm_do': 0,
+                'admin_do': 0,
+                'error_di': 0,
+                'unknown': 0,
+                'up': 201,
+                },
+            'other': {
+                'deleted': 0,
+                'down': 0,
+                'total': 201,
+                'bd_adm_do': 0,
+                'admin_do': 0,
+                'error_di': 0,
+                'unknown': 0,
+                'up': 201,
+                },
+            'xconnect': {
+                'deleted': 0,
+                'down': 0,
+                'total': 0,
+                'bd_adm_do': 0,
+                'admin_do': 0,
+                'error_di': 0,
+                'unknown': 0,
+                'up': 0,
+                },
+            },
+        'Port-channel1': {
+            'xconnect': {
+                'deleted': 0,
+                'down': 0,
+                'total': 0,
+                'bd_adm_do': 0,
+                'admin_do': 0,
+                'error_di': 0,
+                'unknown': 0,
+                'up': 0,
+                },
+            'bdomain': {
+                'deleted': 0,
+                'down': 0,
+                'total': 201,
+                'bd_adm_do': 0,
+                'admin_do': 0,
+                'error_di': 0,
+                'unknown': 0,
+                'up': 201,
+                },
+            'local sw': {
+                'deleted': 0,
+                'down': 0,
+                'total': 0,
+                'bd_adm_do': 0,
+                'admin_do': 0,
+                'error_di': 0,
+                'unknown': 0,
+                'up': 0,
+                },
+            'other': {
+                'deleted': 0,
+                'down': 0,
+                'total': 0,
+                'bd_adm_do': 0,
+                'admin_do': 0,
+                'error_di': 0,
+                'unknown': 0,
+                'up': 0,
+                },
+            'all': {
+                'deleted': 0,
+                'down': 0,
+                'total': 201,
+                'bd_adm_do': 0,
+                'admin_do': 0,
+                'error_di': 0,
+                'unknown': 0,
+                'up': 201,
+                },
+            },
+        }
+
+    golden_output = {'execute.return_value': '''\
+        Router#show ethernet service instance summary
+        Load for five secs: 2%/0%; one minute: 5%; five minutes: 4%
+        Time source is NTP, 16:31:09.005 JST Tue Nov 8 2016
+
+        System summary
+                    Total       Up  AdminDo     Down  ErrorDi  Unknown  Deleted  BdAdmDo  
+        bdomain       201      201        0        0        0        0        0        0  
+        xconnect        0        0        0        0        0        0        0        0  
+        local sw        0        0        0        0        0        0        0        0  
+        other         201      201        0        0        0        0        0        0  
+        all           402      402        0        0        0        0        0        0  
+        Associated interface: GigabitEthernet0/0/3
+                    Total       Up  AdminDo     Down  ErrorDi  Unknown  Deleted  BdAdmDo  
+        bdomain         0        0        0        0        0        0        0        0  
+        xconnect        0        0        0        0        0        0        0        0  
+        local sw        0        0        0        0        0        0        0        0  
+        other         201      201        0        0        0        0        0        0  
+        all           201      201        0        0        0        0        0        0  
+        Associated interface: Port-channel1
+                    Total       Up  AdminDo     Down  ErrorDi  Unknown  Deleted  BdAdmDo  
+        bdomain       201      201        0        0        0        0        0        0  
+        xconnect        0        0        0        0        0        0        0        0  
+        local sw        0        0        0        0        0        0        0        0  
+        other           0        0        0        0        0        0        0        0  
+        all           201      201        0        0        0        0        0        0  
+    '''
+    }
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        platform_obj = ShowEthernetServiceInstanceSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse()    
+
+    def test_golden_full(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        platform_obj = ShowEthernetServiceInstanceSummary(device=self.device)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
 if __name__ == '__main__':
