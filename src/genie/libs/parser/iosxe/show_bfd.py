@@ -10,8 +10,8 @@ import pprint
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, \
-						Optional,\
-						Any
+											Optional,\
+											Any
 
 # parser utils
 from genie.libs.parser.utils.common import Common
@@ -25,83 +25,85 @@ class ShowBfdNeighborsDetailsSchema(MetaParser):
 	"""
 
 	schema = {
-		Any(): {
-			'neighbor_address': {
-				Any(): {
-					'ld_rd': str,
-					'rh_rs': str,
-					Optional('holddown_mult'): Any(),
-					'state': str,
-					'interface': str,
-					Optional('session'): {
+		'our_address': {
+			Any(): {
+				'neighbor_address': {
+					Any(): {
+						'ld_rd': str,
+						'rh_rs': str,
+						Optional('holddown_mult'): Any(),
 						'state': str,
-						'echo_function': bool,
-						Optional('echo_interval_ms'): int
-					},
-					Optional('session_host'): str,
-					Optional('handle'): int,
-					Optional('local_diag'): int,
-					Optional('demand_mode'): int,
-					Optional('poll_bit'): int,
-					Optional('min_tx_int'): int,
-					Optional('min_rx_int'): int,
-					Optional('multiplier'): int,
-					Optional('received_min_rx_int'): int,
-					Optional('received_multiplier'): int,
-					Optional('holddown'): int,
-					Optional('holddown_hits'): int,
-					Optional('hello'): int,
-					Optional('hello_hits'): int,
-					Optional('rx'): {
-						Optional('count'): int,
-						Optional('min_int_ms'): int,
-						Optional('max_int_ms'): int,
-						Optional('avg_int_ms'): int,
-						Optional('last_ms_ago'): int
-					},
-					Optional('tx'): {
-						Optional('count'): int,
-						Optional('min_int_ms'): int,
-						Optional('max_int_ms'): int,
-						Optional('avg_int_ms'): int,
-						Optional('last_ms_ago'): int
-					},
-					Optional('elapsed_time_watermarks'): str,
-					Optional('elapsed_time_watermarks_last'): int,
-					Optional('registered_protocols'): list,
-					Optional('up_time'): str,
-					Optional('last_packet'): {
-						Optional('version'): int,
-						Optional('diagnostic'): int,
-						Optional('state_bit'): str,
-						Optional('i_hear_you_bit'): str,
-						Optional('demand_bit'): int,
+						'interface': str,
+						Optional('session'): {
+							'state': str,
+							'echo_function': bool,
+							Optional('echo_interval_ms'): int
+						},
+						Optional('session_host'): str,
+						Optional('handle'): int,
+						Optional('local_diag'): int,
+						Optional('demand_mode'): int,
 						Optional('poll_bit'): int,
-						Optional('final_bit'): int,
-						Optional('c_bit'): int,
-						Optional('multiplier'): int,
-						Optional('length'): int,
-						Optional('my_discr'): int,
-						Optional('your_discr'): int,
 						Optional('min_tx_int'): int,
 						Optional('min_rx_int'): int,
-						Optional('min_echo_int'): int			
-					},
-					Optional('cleanup_timer_hits'): int,
-					Optional('sso_cleanup_timer_called'): int,
-					Optional('sso_cleanup_action_taken'): int,
-					Optional('pseudo_preemtive_process'): {
-						Optional('count'): int,
-						Optional('min'): int,
-						Optional('max'): int,
-						Optional('avg'): int,
-						Optional('last_ms_ago'): int,
-					},
-					Optional('ipc_tx_failure_count'): int,
-					Optional('ipc_rx_failure_count'): int,
-					Optional('total_adjs_found'): int,
-					Optional('holddown_negotiated'): int,
-					Optional('holddown_adjusted'): int,
+						Optional('multiplier'): int,
+						Optional('received_min_rx_int'): int,
+						Optional('received_multiplier'): int,
+						Optional('holddown'): int,
+						Optional('holddown_hits'): int,
+						Optional('hello'): int,
+						Optional('hello_hits'): int,
+						Optional('rx'): {
+							Optional('count'): int,
+							Optional('min_int_ms'): int,
+							Optional('max_int_ms'): int,
+							Optional('avg_int_ms'): int,
+							Optional('last_ms_ago'): int
+						},
+						Optional('tx'): {
+							Optional('count'): int,
+							Optional('min_int_ms'): int,
+							Optional('max_int_ms'): int,
+							Optional('avg_int_ms'): int,
+							Optional('last_ms_ago'): int
+						},
+						Optional('elapsed_time_watermarks'): str,
+						Optional('elapsed_time_watermarks_last'): int,
+						Optional('registered_protocols'): list,
+						Optional('up_time'): str,
+						Optional('last_packet'): {
+							Optional('version'): int,
+							Optional('diagnostic'): int,
+							Optional('state_bit'): str,
+							Optional('i_hear_you_bit'): str,
+							Optional('demand_bit'): int,
+							Optional('poll_bit'): int,
+							Optional('final_bit'): int,
+							Optional('c_bit'): int,
+							Optional('multiplier'): int,
+							Optional('length'): int,
+							Optional('my_discr'): int,
+							Optional('your_discr'): int,
+							Optional('min_tx_int'): int,
+							Optional('min_rx_int'): int,
+							Optional('min_echo_int'): int			
+						},
+						Optional('cleanup_timer_hits'): int,
+						Optional('sso_cleanup_timer_called'): int,
+						Optional('sso_cleanup_action_taken'): int,
+						Optional('pseudo_preemtive_process'): {
+							Optional('count'): int,
+							Optional('min'): int,
+							Optional('max'): int,
+							Optional('avg'): int,
+							Optional('last_ms_ago'): int,
+						},
+						Optional('ipc_tx_failure_count'): int,
+						Optional('ipc_rx_failure_count'): int,
+						Optional('total_adjs_found'): int,
+						Optional('holddown_negotiated'): int,
+						Optional('holddown_adjusted'): int,
+					}
 				}
 			}
 		}
@@ -314,7 +316,8 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 			m = p1.match(line)
 			if m:
 				group = m.groupdict()
-				our_address = ret_dict.setdefault(group['our_address'], {})
+				our_address = ret_dict.setdefault('our_address', {}). \
+					setdefault(group['our_address'], {})
 				our_neighbor = our_address.setdefault('neighbor_address', \
 					{}).setdefault(group['our_neighbor'], {})
 				our_neighbor.update({'ld_rd' : group['ld_rd']})
@@ -329,7 +332,8 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 			m = p2.match(line)
 			if m:
 				group = m.groupdict()
-				our_address = ret_dict.setdefault(group['our_address'], {})
+				our_address = ret_dict.setdefault('our_address', {}). \
+					setdefault(group['our_address'], {})
 				our_neighbor = our_address.setdefault('neighbor_address', \
 					{}).setdefault(group['our_neighbor'], {})
 				continue
@@ -364,8 +368,9 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 			m = p5.match(line)
 			if m:
 				group = m.groupdict()
-				ret_dict.setdefault(group['our_address'], \
-					{}).setdefault('neighbor_address', neighbor)
+				our_address = ret_dict.setdefault('our_address', {}). \
+					setdefault(group['our_address'], {})
+				our_address.update({'neighbor_address' : neighbor})
 				continue
 			
 			# Session state is UP and using echo function with 500 ms interval.
