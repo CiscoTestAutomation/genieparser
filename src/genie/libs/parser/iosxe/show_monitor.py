@@ -2,6 +2,7 @@
 
 IOSXE parsers for the following show commands:
     * show monitor
+    * show monitor session {session}
     * show monitor session all
     * show monitor capture
 
@@ -42,6 +43,7 @@ class ShowMonitorSchema(MetaParser):
                   Optional('origin_ip_address'): str,
                   Optional('source_erspan_id'): str,
                   Optional('source_ip_address'): str,
+                  Optional('source_rspan_vlan'): int,
                   'mtu': int,
                   },
             },
@@ -54,15 +56,18 @@ class ShowMonitorSchema(MetaParser):
 class ShowMonitor(ShowMonitorSchema):
     ''' Parser for
       "show monitor"
+      "show monitor session {session}"
       "show monitor session all"
     '''
 
-    cli_command = ['show monitor', 'show monitor session {session}']
+    cli_command = ['show monitor', 'show monitor session {session}', 'show monitor session all']
 
-    def cli(self, session="", output=None):
+    def cli(self, session="", all="", output=None):
         if output is None:
-            if session:
-                cmd = self.cli_command[-1].format(session=session)
+            if all:
+                cmd = self.cli_command[2]
+            elif session:
+                cmd = self.cli_command[1].format(session=session)
             else:
                 cmd = self.cli_command[0]
             out = self.device.execute(cmd)
@@ -73,41 +78,44 @@ class ShowMonitor(ShowMonitorSchema):
         ret_dict = {}
 
         # Session 1
-        p1 = re.compile('Session +(?P<session>(\d+))')
+        p1 = re.compile(r'Session +(?P<session>(\d+))')
 
         # Type                   : ERSPAN Source Session
-        p2 = re.compile('^Type +: +(?P<type>([a-zA-Z\s]+))$')
+        p2 = re.compile(r'^Type +: +(?P<type>([a-zA-Z\s]+))$')
 
         # Status                 : Admin Enabled
-        p3 = re.compile('^Status +: +(?P<status>([a-zA-Z\s]+))$')
+        p3 = re.compile(r'^Status +: +(?P<status>([a-zA-Z\s]+))$')
 
         # Source Ports           :
-        p4_1 = re.compile('^Source +Ports +:$')
+        p4_1 = re.compile(r'^Source +Ports +:$')
 
         #    TX Only            : Gi0/1/4
         #    Both               : Gi0/1/4
-        p4_2 = re.compile('(?P<key>(TX Only|Both)) *: +(?P<intf>(\S+))$')
+        p4_2 = re.compile(r'(?P<key>(TX Only|Both)) *: +(?P<intf>(\S+))$')
 
         # Destination IP Address : 172.18.197.254
-        p5 = re.compile('^Destination +IP +Address +: +(?P<destination_ip_address>([0-9\.\:]+))$')
+        p5 = re.compile(r'^Destination +IP +Address +: +(?P<destination_ip_address>([0-9\.\:]+))$')
 
         # MTU                    : 1464
-        p6 = re.compile('^MTU +: +(?P<mtu>([0-9]+))$')
+        p6 = re.compile(r'^MTU +: +(?P<mtu>([0-9]+))$')
 
         # Destination ERSPAN ID  : 1
-        p7 = re.compile('^Destination +ERSPAN +ID +: +(?P<destination_erspan_Id>([0-9]+))$')
+        p7 = re.compile(r'^Destination +ERSPAN +ID +: +(?P<destination_erspan_Id>([0-9]+))$')
 
         # Origin IP Address      : 172.18.197.254
-        p8 = re.compile('^Origin +IP +Address +: +(?P<origin_ip_address>([0-9\.\:]+))$')
+        p8 = re.compile(r'^Origin +IP +Address +: +(?P<origin_ip_address>([0-9\.\:]+))$')
 
         # Destination Ports      : Gi0/1/6 Gi0/1/2
-        p9 = re.compile('^Destination +Ports +: +(?P<destination_ports>([a-zA-Z0-9\/\s]+))$')
+        p9 = re.compile(r'^Destination +Ports +: +(?P<destination_ports>([a-zA-Z0-9\/\s]+))$')
 
         # Source IP Address      : 172.18.197.254
-        p10 = re.compile('^Source +IP +Address +: +(?P<source_ip_address>([0-9\.\:]+))$')
+        p10 = re.compile(r'^Source +IP +Address +: +(?P<source_ip_address>([0-9\.\:]+))$')
 
         # Source ERSPAN ID       : 1
-        p11 = re.compile('^Source +ERSPAN +ID +: +(?P<source_erspan_Id>([0-9]+))$')
+        p11 = re.compile(r'^Source +ERSPAN +ID +: +(?P<source_erspan_Id>([0-9]+))$')
+
+        # Source RSPAN VLAN : 100
+        p12 = re.compile(r'^Source +RSPAN +VLAN :+ (?P<source_rspan_vlan>(\d+))$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -186,6 +194,12 @@ class ShowMonitor(ShowMonitorSchema):
             m = p11.match(line)
             if m:
                 session_dict['source_erspan_id'] = str(m.groupdict()['source_erspan_Id'])
+                continue
+
+            # Source RSPAN VLAN : 100
+            m = p12.match(line)
+            if m:
+                session_dict['source_rspan_vlan'] = int(m.groupdict()['source_rspan_vlan'])
                 continue
 
         return ret_dict

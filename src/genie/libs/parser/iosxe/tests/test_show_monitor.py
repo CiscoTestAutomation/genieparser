@@ -19,6 +19,7 @@ from genie.libs.parser.iosxe.show_monitor import ShowMonitor,ShowMonitorCapture
 class test_show_monitor(unittest.TestCase):
     '''Unit test for "show monitor"
                      "show monitor session all"
+                     "show monitor session {session}"
     '''
 
     device = Device(name='aDevice')
@@ -121,6 +122,37 @@ class test_show_monitor(unittest.TestCase):
             
         '''}
 
+    golden_parsed_output3 = {
+        'session':
+            {'2':
+                {'destination_ports': 'Gi0/0/1',
+                 'mtu': 1464,
+                 'source_ports':
+                     {'both': 'Gi0/0/1'},
+                 'source_rspan_vlan': 100,
+                 'status': 'Admin Enabled',
+                 'type': 'Remote Destination Session'}}}
+
+
+    golden_output3 = {'execute.return_value': '''
+        Router  # show monitor session 2
+        Session 2
+        ---------
+        Type                   : Remote Source Session
+        Status                 : Admin Enabled
+        Source Ports           :
+            Both               : Gi0/0/1
+        MTU                    : 1464
+        Session 2
+        ---------
+        Type                   : Remote Destination Session
+        Status                 : Admin Enabled
+        Destination Ports      : Gi0/0/1
+        MTU                    : 1464
+        Source RSPAN VLAN : 100
+       
+        '''}
+
     def test_show_monitor_golden1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
@@ -132,8 +164,15 @@ class test_show_monitor(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowMonitor(device=self.device)
-        parsed_output = obj.parse(session='all')
+        parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_show_monitor_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowMonitor(device=self.device)
+        parsed_output = obj.parse(session='2')
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
     def test_show_monitor_empty(self):
         self.maxDiff = None
