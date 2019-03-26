@@ -10,8 +10,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                              SchemaMissingKeyError
 
 # Parser
-from genie.libs.parser.iosxe.show_bfd import ShowBfdNeighborsDetails,\
-											 ShowBfdNeighborsClientOSPFDetails
+from genie.libs.parser.iosxe.show_bfd import ShowBfdNeighborsDetails
 
 # ============================================
 # Parser for 'show bfd neighbors details
@@ -230,14 +229,14 @@ class test_show_bfd(unittest.TestCase):
 
 		def test_empty_osf_details(self):
 			self.device = Mock(**self.empty_output)
-			obj = ShowBfdNeighborsClientOSPFDetails(device=self.device)
+			obj = ShowBfdNeighborsDetails(device=self.device)
 			with self.assertRaises(SchemaEmptyParserError):
-				parsed_output = obj.parse()
+				parsed_output = obj.parse(client='ospf')
 
 		def test_golden_osf_details(self):
 			self.device = Mock(**self.golden_output_client_osf_details)
-			obj = ShowBfdNeighborsClientOSPFDetails(device=self.device)
-			parsed_output = obj.parse()
+			obj = ShowBfdNeighborsDetails(device=self.device)
+			parsed_output = obj.parse(client='ospf')
 			self.assertEqual(parsed_output,self.golden_parsed_output_client_osf_details)
 
 

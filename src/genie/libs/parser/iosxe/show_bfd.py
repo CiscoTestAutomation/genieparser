@@ -111,15 +111,16 @@ class ShowBfdNeighborsDetailsSchema(MetaParser):
 class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 	""" Parser for 'show bfd neighbors details' """
 	
-	cli_command = 'show bfd neighbors details'
-	
-	def cli(self, cmd='', output= None):
+	cli_command = ['show bfd neighbors details',
+		'show bfd neighbors client {client} details']
+
+	def cli(self, client='', output= None):
 		if output is None:
 			#execute command to get output
-			if cmd:
-				out = self.device.execute(cmd)
+			if client:
+				out = self.device.execute(self.cli_command[1].format(client=client))
 			else:
-				out = self.device.execute(self.cli_command)
+				out = self.device.execute(self.cli_command[0])
 		else:
 			out = output
 
@@ -696,11 +697,3 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 				continue
 
 		return ret_dict
-
-
-class ShowBfdNeighborsClientOSPFDetails(ShowBfdNeighborsDetails):
-	""" Parser for 'show bfd neighbors client ospf details' """
-	
-	cli_command = 'show bfd neighbors client ospf details'
-	def cli(self, output=None):
-		return super().cli(cmd=self.cli_command, output=output)
