@@ -142,3 +142,14 @@
             show ethernet service instance detail
             show ethernet service instance interface <interface> detail
 
+----------------------------------------------------------------------------------
+                                 NTP
+----------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowNtpAssociationsDetail for:
+        show ntp associations detail
+
+* IOS
+    * Add ShowNtpAssociationsDetail for:
+        show ntp associations detail
+

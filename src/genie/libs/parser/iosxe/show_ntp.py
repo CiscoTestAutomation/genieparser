@@ -199,6 +199,7 @@ class ShowNtpStatus(ShowNtpStatusSchema):
         ret_dict = {}
 
         # Clock is synchronized, stratum 1, reference is .LOCL.
+        # Clock is synchronized, stratum 2, reference assoc id 1, reference is 192.0.2.1
         p1 = re.compile(r'^Clock +is +(?P<clock_state>\w+), +stratum +(?P<stratum>\d+),'
                          '(?: +reference +assoc +id +(?P<assoc_id>[\d]+),)? +reference +is +(?P<refid>[\w\.]+)$')
 
@@ -239,7 +240,8 @@ class ShowNtpStatus(ShowNtpStatusSchema):
                 clock_dict['status'] = groups['clock_state']
                 clock_dict['stratum'] = int(groups['stratum'])
                 clock_dict['refid'] = groups['refid']
-                clock_dict['assoc_id'] = int(groups['assoc_id'])
+                if groups['assoc_id']:
+                    clock_dict['assoc_id'] = int(groups['assoc_id'])
                 continue
 
             m = p1_1.match(line)
