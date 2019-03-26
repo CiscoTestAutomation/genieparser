@@ -79,7 +79,8 @@ def _find_command(command, data, device):
         for pattern in patterns:
             word = pattern.replace('{', '').replace('}', '')
             new_pattern = '(?P<{p}>.*)'.format(p=word)
-            reg = re.sub(pattern, new_pattern, reg)+'$'
+            reg = re.sub(pattern, new_pattern, reg)
+        reg += '$'
 
         match = re.match(reg, command)
         if match:
@@ -133,11 +134,20 @@ class Common():
                    'Lo': 'Loopback',
                    'Fa': 'FastEthernet',
 	               'Po': 'Port-channel',
+	               'PO': 'Port-channel',
                    'Null': 'Null',
                    'Gi': 'GigabitEthernet',
+                   'GE': 'GigabitEthernet',
                    'Te': 'TenGigabitEthernet',
                    'mgmt': 'mgmt',
-                   'Vl': 'Vlan'}
+                   'Vl': 'Vlan',
+                   'Tu': 'Tunnel',
+                   'Fe': '',
+                   'Hs': 'HSSI',
+                   'AT': 'ATM',
+                   'Et': 'Ethernet',
+                   'BD': 'BridgeDomain',
+                   }
         m = re.search('([a-zA-Z]+)', intf) 
         m1 = re.search('([\d\/\.]+)', intf)
         if hasattr(m, 'group') and hasattr(m1, 'group'):
