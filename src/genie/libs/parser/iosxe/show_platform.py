@@ -41,14 +41,14 @@ class ShowVersionSchema(MetaParser):
                     Optional('license_type'): str,
                     Optional('license_level'): str,
                     Optional('next_reload_license_level'): str,
-                    'chassis': str,
-                    'processor_type': str,
+                    Optional('chassis'): str,
+                    Optional('processor_type'): str,
                     Optional('chassis_sn'): str,
-                    'rtr_type': str,
+                    Optional('rtr_type'): str,
                     'os': str,
                     'curr_config_register': str,
                     Optional('next_config_register'): str,
-                    'main_mem': str,
+                    Optional('main_mem'): str,
                     Optional('number_of_intfs'): {
                         Any(): str,
                     },
@@ -116,7 +116,7 @@ class ShowVersion(ShowVersionSchema):
 
             # version
             p1 = re.compile(
-                r'^\s*[Cc]isco +IOS +[Ss]oftware.+, (?P<platform>.+) '
+                r'^\s*[Cc]isco +IOS +[Ss]oftware(.)?+, (?P<platform>.+) '
                  'Software +\((?P<image_id>.+)\).+[Vv]ersion +'
                  '(?P<version>\S+) +')
             m = p1.match(line)
