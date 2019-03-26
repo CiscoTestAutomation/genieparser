@@ -127,15 +127,16 @@ class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
     def cli(self, fileA='', fileB='', cmd='', output=None):
         if output is None:
             # execute command to get output
-            if fileA and fileB:
-                command = self.cli_command[1].format(fileA=fileA, fileB=fileB)
-            if fileA and not fileB:
-                if cmd:
-                    command = cmd.format(fileA=fileA)
-                else:
+            if not cmd:
+                if fileA and fileB:
+                    command = self.cli_command[1].format(fileA=fileA, fileB=fileB)
+                if fileA and not fileB:
                     command = self.cli_command[2].format(fileA=fileA)
-            if not fileA and not fileB:
-                command = self.cli_command[0]
+                if not fileA and not fileB:
+                    command = self.cli_command[0]
+            else:
+                if fileA and not fileB:
+                    command = cmd.format(fileA=fileA)
             out = self.device.execute(command)
         else:
             out = output
@@ -152,9 +153,11 @@ class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
         # !List of commands:
         p3 = re.compile(r'^\s*!List +of +(C|c)ommands:$')
         # Load for five secs: 16%/0%; one minute: 30%; five minutes: 23%
-        p4 = re.compile(r'^Load +for +five +secs: +\d+%\/\d+%; +one +minute: +\d+%; +five +minutes: +\d+%$')
+        p4 = re.compile(r'^Load +for +five +secs: +\d+%\/\d+%; +one +minute:' \
+            ' +\d+%; +five +minutes: +\d+%$')
         # Time source is NTP, 19:16:19.992 JST Thu Sep 15 2016
-        p5 = re.compile(r'^Time +source +is +\w+, +\d+:\d+:\d+\.\d+ +\w+ +\w+ +\w+ +\d+ +\d+$')
+        p5 = re.compile(r'^Time +source +is +\w+, +\d+:\d+:\d+\.\d+ +\w+ +' \
+            '\w+ +\w+ +\d+ +\d+$')
         # test#show archive config incremental-diffs bootflash:A.cfg
         p6 = re.compile(r'^(test#|Device#|Router#)')
         # hostname Router3
@@ -212,6 +215,6 @@ class ShowArchiveConfigIncrementalDiffs(ShowArchiveConfigDifferences):
     
     cli_command = 'show archive config incremental-diffs {fileA}'
     
-    def cli(self,fileA='', output=None):
+    def cli(self, fileA, output=None):
         return super().cli(fileA=fileA, cmd=self.cli_command, output=output)
 
