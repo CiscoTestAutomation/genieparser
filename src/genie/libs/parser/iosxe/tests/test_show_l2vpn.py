@@ -1484,7 +1484,7 @@ class test_show_l2vpn_vfi(unittest.TestCase):
         'vfi': {
             'VPLS-2052': {
                 've_id': 2,
-                'rt': ['9996:2052', ' 9996:2052'],
+                'rt': ['9996:2052', '9996:2052'],
                 'bridge_domain': {
                     '2052': {
                         'attachment_circuits': {
@@ -1511,7 +1511,7 @@ class test_show_l2vpn_vfi(unittest.TestCase):
                 },
             'VPLS-2053': {
                 've_id': 2,
-                'rt': ['9996:2053', ' 9996:2053'],
+                'rt': ['9996:2053', '9996:2053'],
                 'bridge_domain': {
                     '2053': {
                         'attachment_circuits': {
@@ -1538,7 +1538,7 @@ class test_show_l2vpn_vfi(unittest.TestCase):
                 },
             'VPLS-2055': {
                 've_id': 2,
-                'rt': ['9996:2055', ' 9996:2055'],
+                'rt': ['9996:2055', '9996:2055'],
                 'bridge_domain': {
                     '2055': {
                         'attachment_circuits': {
@@ -1565,7 +1565,7 @@ class test_show_l2vpn_vfi(unittest.TestCase):
                 },
             'VPLS-2054': {
                 've_id': 2,
-                'rt': ['9996:2054', ' 9996:2054'],
+                'rt': ['9996:2054', '9996:2054'],
                 'bridge_domain': {
                     '2054': {
                         'attachment_circuits': {
@@ -1592,7 +1592,7 @@ class test_show_l2vpn_vfi(unittest.TestCase):
                 },
             'VPLS-2051': {
                 've_id': 2,
-                'rt': ['9996:2051', ' 9996:2051'],
+                'rt': ['9996:2051', '9996:2051'],
                 'bridge_domain': {
                     '2051': {
                         'attachment_circuits': {

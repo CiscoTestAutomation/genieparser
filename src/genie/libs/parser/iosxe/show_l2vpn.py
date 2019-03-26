@@ -696,7 +696,7 @@ class ShowL2vpnVfi(ShowL2vpnVfiSchema):
             if m:
                 group = m.groupdict()
                 final_dict['rd'] = group['rd']
-                final_dict['rt'] = [x for x in group['rt'].split(',') if x]
+                final_dict['rt'] = [x.strip() for x in group['rt'].split(',') if x]
                 continue
 
             m = p4.match(line)
