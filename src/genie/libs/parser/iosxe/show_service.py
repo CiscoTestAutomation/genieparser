@@ -43,7 +43,6 @@ class ShowServiceGroupState(ShowServiceGroupStateSchema):
 
 		# initial variables
 		ret_dict = {}
-		group_found = False
 
 		#     1            Up
 		p1 = re.compile(r'^\s*(?P<group_number>\d+) +(?P<state>\S+)$')
