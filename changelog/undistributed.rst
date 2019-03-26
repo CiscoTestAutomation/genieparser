@@ -124,6 +124,9 @@
         show service-group state
     * Add ShowServiceGroupStats for:
         show service-group stats
+    * Add ShowServiceGroupTrafficStats for:
+        show service-group traffic-stats
+        show service-group traffic-stats <group>
 
 --------------------------------------------------------------------------------
                                  CONFIG
@@ -154,3 +157,5 @@
             show ethernet service instance interface <interface> stats
     * Add ShowEthernetServiceInstanceSummary for:
             show ethernet service instance summary
+
+
