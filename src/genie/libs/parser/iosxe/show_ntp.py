@@ -164,6 +164,7 @@ class ShowNtpStatusSchema(MetaParser):
                 'status': str,
                 Optional('stratum'): int,
                 Optional('refid'): str,
+                Optional('assoc_id'): int,
                 Optional('nom_freq'): float,
                 Optional('act_freq'): float,
                 Optional('precision'): Or(int,str),
@@ -198,13 +199,15 @@ class ShowNtpStatus(ShowNtpStatusSchema):
         ret_dict = {}
 
         # Clock is synchronized, stratum 1, reference is .LOCL.
-        p1 = re.compile(r'^Clock +is +(?P<clock_state>\w+), +stratum +(?P<stratum>\d+), +reference +is +(?P<refid>[\w\.]+)$')
+        p1 = re.compile(r'^Clock +is +(?P<clock_state>\w+), +stratum +(?P<stratum>\d+),'
+                         '(?: +reference +assoc +id +(?P<assoc_id>[\d]+),)? +reference +is +(?P<refid>[\w\.]+)$')
 
         # Clock is unsynchronized, stratum 16, no reference clock
         p1_1 = re.compile(r'^Clock +is +(?P<clock_state>\w+), +stratum +(?P<stratum>\d+), +no +reference +clock$')
 
         # nominal freq is 250.0000 Hz, actual freq is 250.0000 Hz, precision is 2**10
-        p2 = re.compile(r'^nominal +freq +is +(?P<nom_freq>[\d\.]+) +Hz, actual +freq +is +(?P<act_freq>[\d\.]+) +Hz, precision +is +(?P<precision>[\d\*]+)$')
+        p2 = re.compile(r'^nominal +freq +is +(?P<nom_freq>[\d\.]+) +Hz, actual +freq +is'
+                         ' +(?P<act_freq>[\d\.]+) +Hz, precision +is +(?P<precision>[\d\*]+)$')
 
         # ntp uptime is 1921500 (1/100 of seconds), resolution is 4000
         p3 = re.compile(r'^ntp +uptime +is +(?P<uptime>[\d\s\w\/\(\)]+), +resolution +is +(?P<resolution>[\d]+)$')
@@ -236,6 +239,7 @@ class ShowNtpStatus(ShowNtpStatusSchema):
                 clock_dict['status'] = groups['clock_state']
                 clock_dict['stratum'] = int(groups['stratum'])
                 clock_dict['refid'] = groups['refid']
+                clock_dict['assoc_id'] = int(groups['assoc_id'])
                 continue
 
             m = p1_1.match(line)
@@ -449,7 +453,7 @@ class ShowNtpAssociationsDetailSchema(MetaParser):
                                             'filterror': str,
                                             'filtoffset': str,
                                             'filtdelay': str,
-                                            'ntp_statistics': {
+                                            Optional('ntp_statistics'): {
                                                 'packet_sent': int,
                                                 Optional('packet_sent_fail'): int,
                                                 'packet_received': int,
