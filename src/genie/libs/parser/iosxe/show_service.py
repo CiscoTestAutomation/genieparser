@@ -37,7 +37,7 @@ class ShowServiceGroupState(ShowServiceGroupStateSchema):
 	def cli(self, output= None):
 		if output is None:
 			#execute command to get output
-				out = self.device.execute(self.cli_command)
+			out = self.device.execute(self.cli_command)
 		else:
 			out = output
 
@@ -45,30 +45,19 @@ class ShowServiceGroupState(ShowServiceGroupStateSchema):
 		ret_dict = {}
 		group_found = False
 
-		# Group         State
-		p1 = re.compile(r'^\s*Group +State$')
-
 		#     1            Up
-		p2 = re.compile(r'^\s*(?P<group_number>\d+) +(?P<state>\S+)$')
+		p1 = re.compile(r'^\s*(?P<group_number>\d+) +(?P<state>\S+)$')
 
 		for line in out.splitlines():
 			line = line.strip()
-
-			if not group_found:
-				# Group         State
-				m = p1.match(line)
-				if m:
-					service_group_state = ret_dict.setdefault(
-						'group', {})
-					group_found = True
+			#     1            Up
+			m = p1.match(line)
+			if m:
+				group = m.groupdict()
+				service_group_state = ret_dict.setdefault(
+					'group', {})
+				service_group_state.setdefault(
+					group['group_number'], {}).setdefault(
+					'state' , group['state'])
 				continue
-			else:
-				#     1            Up
-				m = p2.match(line)
-				if m:
-					group = m.groupdict()
-					service_group_state.setdefault(
-						group['group_number'], {}).setdefault(
-						'state' , group['state'])
-					continue
 		return ret_dict
