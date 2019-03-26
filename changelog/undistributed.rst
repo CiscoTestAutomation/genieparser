@@ -120,6 +120,8 @@
                                     QOS
 --------------------------------------------------------------------------------
 * IOSXE
+    * Add ShowServiceGroupState for:
+        show service-group state
     * Add ShowServiceGroupStats for:
         show service-group stats
 
@@ -127,6 +129,12 @@
                                  CONFIG
 --------------------------------------------------------------------------------
 * IOSXE
+    * Add ShowArchiveConfigDifferences for:
+        show archive config differences
+        show archive config differences {fileA} {fileB}
+        show archive config differences {fielA}
+    * Add ShowArchiveConfigIncrementalDiffs for:
+        show archive config incremental-diffs {fileA}
     * Add ShowConfigurationLock for:
         show configuration lock
 
@@ -141,6 +149,11 @@
     * Add ShowEthernetServiceInstanceDetail for:
             show ethernet service instance detail
             show ethernet service instance interface <interface> detail
+    * Add ShowEthernetServiceInstanceStats for:
+            show ethernet service instance stats
+            show ethernet service instance interface <interface> stats
+    * Add ShowEthernetServiceInstanceSummary for:
+            show ethernet service instance summary
 
 ----------------------------------------------------------------------------------
                                  NTP
@@ -152,4 +165,3 @@
 * IOS
     * Add ShowNtpAssociationsDetail for:
         show ntp associations detail
-
