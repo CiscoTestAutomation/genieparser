@@ -29,7 +29,7 @@ from genie.libs.parser.iosxe.show_interface import ShowInterfacesSwitchport,\
                                         ShowInterfacesCounters, \
                                         ShowInterfacesAccounting, \
                                         ShowIpInterfaceBriefPipeIp,\
-                                        ShowInterfaceStats
+                                        ShowInterfacesStats
 
 
 class test_show_interface_parsergen(unittest.TestCase):
@@ -2314,10 +2314,10 @@ No traffic sent or received on this interface.
 
 
 ###################################################
-# unit test for show interface stats
+# unit test for show interfaces stats
 ####################################################
-class test_show_interface_stats(unittest.TestCase):
-    """unit test for show interface stats """
+class test_show_interfaces_stats(unittest.TestCase):
+    """unit test for show interfaces stats """
 
     device = Device(name='aDevice')
 
@@ -2508,21 +2508,21 @@ class test_show_interface_stats(unittest.TestCase):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowInterfaceStats(device=self.device)
+        obj = ShowInterfacesStats(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
-        obj = ShowInterfaceStats(device=self.device)
+        obj = ShowInterfacesStats(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_show_interfaces(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_interface)
-        obj = ShowInterfaceStats(device=self.device)
+        obj = ShowInterfacesStats(device=self.device)
         parsed_output = obj.parse(interface='GigabitEthernet0/0/0')
         self.assertEqual(parsed_output,self.golden_parsed_output_interface)
 

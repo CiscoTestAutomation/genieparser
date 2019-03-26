@@ -2790,12 +2790,12 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
 
 
 # ====================================================
-#  schema for show interface stats
+#  schema for show interfaces stats
 # ====================================================
-class ShowInterfaceStatsSchema(MetaParser):
+class ShowInterfacesStatsSchema(MetaParser):
     """Schema for:
-        show interface <interface> stats
-        show interface stats"""
+        show interfaces <interface> stats
+        show interfaces stats"""
 
     schema = {
         Any(): {
@@ -2812,14 +2812,14 @@ class ShowInterfaceStatsSchema(MetaParser):
 
 
 # ====================================================
-#  parser for show interface stats
+#  parser for show interfaces stats
 # ====================================================
-class ShowInterfaceStats(ShowInterfaceStatsSchema):
+class ShowInterfacesStats(ShowInterfacesStatsSchema):
     """Parser for :
-        show interface <interface> stats
-        show interface stats"""
+        show interfaces <interface> stats
+        show interfaces stats"""
 
-    cli_command = ['show interface stats' ,'show interface {interface} stats']
+    cli_command = ['show interfaces stats' ,'show interfaces {interface} stats']
 
     def cli(self, interface="", output=None):
         if output is None:
