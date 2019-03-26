@@ -1,7 +1,7 @@
 '''show_bfd.py
 IOSXE parser for the following show command
 	* show bfd neighbors details
-	* show bfd neighbors client ospf details
+	* show bfd neighbors client {client} details
 '''
 
 # Python
@@ -20,13 +20,13 @@ from genie.libs.parser.utils.common import Common
 # ==============================================================
 # Parser for the following show commands:
 # 	* 'show bfd neighbors details'
-#	* 'show bfd neighbors client ospf details'
+#	* 'show bfd neighbors client {client} details'
 # ==============================================================
 class ShowBfdNeighborsDetailsSchema(MetaParser):
 	"""
 	Schema for the following show commands:
 		* show bfd neighbors details
-		* show bfd neighbors client ospf details
+		* show bfd neighbors client {client} details
 	"""
 
 	schema = {
@@ -119,7 +119,7 @@ class ShowBfdNeighborsDetailsSchema(MetaParser):
 class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 	""" Parser for the following commands:
 			* 'show bfd neighbors details'
-			* 'show bfd neighbors client ospf details'
+			* 'show bfd neighbors client {client} details'
 	"""
 	
 	cli_command = ['show bfd neighbors details',

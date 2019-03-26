@@ -15,7 +15,7 @@ from genie.libs.parser.iosxe.show_bfd import ShowBfdNeighborsDetails
 # ============================================
 # Parser for the following commands
 #   * 'show bfd neighbors details'
-#   * 'show bfd neighbors client ospf details'
+#   * 'show bfd neighbors client {client} details'
 # ============================================
 class test_show_bfd(unittest.TestCase):
   device = Device(name='aDevice')
