@@ -116,7 +116,7 @@ class ShowVersion(ShowVersionSchema):
 
             # version
             p1 = re.compile(
-                r'^\s*[Cc]isco +IOS +[Ss]oftware(.)?+, (?P<platform>.+) '
+                r'^\s*[Cc]isco +IOS +[Ss]oftware.+, (?P<platform>.+) '
                  'Software +\((?P<image_id>.+)\).+[Vv]ersion +'
                  '(?P<version>\S+) +')
             m = p1.match(line)
