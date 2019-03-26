@@ -414,11 +414,11 @@ class ShowNtpAssociationsDetailSchema(MetaParser):
                                             'isconfigured': bool,
                                             'stratum': int,
                                             'refid': str,
-                                            'authentication': str,
+                                            Optional('authentication'): str,
                                             Optional('prefer'): str,
                                             'peer_interface': str,
-                                            'minpoll': int,
-                                            'maxpoll': int,
+                                            Optional('minpoll'): int,
+                                            Optional('maxpoll'): int,
                                             Optional('port'): str,
                                             'version': int,
                                             'reach': str,
@@ -430,20 +430,22 @@ class ShowNtpAssociationsDetailSchema(MetaParser):
                                             'offset_msec': str,
                                             'delay_msec': str,
                                             'dispersion': str,
-                                            'jitter_msec': str,
+                                            Optional('jitter_msec'): str,
                                             'originate_time': str,
                                             'receive_time': str,
                                             'transmit_time': str,
                                             'input_time': str,
                                             'vrf': str,
-                                            'ip_type': str,
+                                            Optional('ip_type'): str,
                                             'sane': bool,
                                             'valid': bool,
-                                            'master': bool,
+                                            Optional('master'): bool,
+                                            Optional('selected'): bool,
+                                            Optional('unsynced'): bool,
                                             'sync_dist': str,
                                             'precision': str,
-                                            'assoc_id': int,
-                                            'assoc_name': str,
+                                            Optional('assoc_id'): int,
+                                            Optional('assoc_name'): str,
                                             'filterror': str,
                                             'filtoffset': str,
                                             'filtdelay': str,
@@ -493,10 +495,14 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
 
         # 192.168.255.254 configured, ipv4, authenticated, insane, invalid, stratum 
         # 172.16.255.254 configured, ipv4, authenticated, our_master, sane, valid, stratum 2
-        p1 = re.compile(r'^(?P<address>[\w\.\:]+) +(?P<configured>\w+),'
-                         ' +(?P<ip_type>\w+), +(?P<authenticated>\w+),'
-                         '( +(?P<our_master>\w+),)? +(?P<insane>\w+), +(?P<invalid>\w+),'
-                         ' +stratum +(?P<stratum>\d+)$')
+        # 192.168.13.33 configured, ipv6, insane, invalid, unsynced, stratum 16
+        # ios 172.31.32.2 configured, insane, invalid, stratum 5
+        # ios 192.168.13.33 configured, selected, sane, valid, stratum 3
+        # ios 192.168.13.57 configured, our_master, sane, valid, stratum 3
+        p1 = re.compile(r'^(?P<address>[\w\.\:]+) +(?P<configured>\w+),( +(?P<ip_type>ipv4|ipv6),)?'
+                         '( +(?P<authenticated>authenticated),)?( +(?P<our_master>our_master),)?'
+                         '( +(?P<selected>selected),)? +(?P<insane>\w+), +(?P<invalid>\w+),'
+                         '( +(?P<unsynced>unsynced),)? +stratum +(?P<stratum>\d+)$')
 
         # ref ID 172.16.255.254, time DBAB02D6.9E354130 (16:08:06.618 JST Fri Oct 14 2016)
         p2 = re.compile(r'^ref +ID +(?P<refid>[\w\.]+), +time +(?P<input_time>[\w\:\s\(\)\.]+)$')
@@ -514,15 +520,18 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
 
         # delay 0.00 msec, offset 0.0000 msec, dispersion 7.23, jitter 0.97 
         # delay 0.00 msec, offset -1.0000 msec, dispersion 5.64, jitter 0.97 msec
-        p5 = re.compile(r'^delay +(?P<delay_msec>[\d\.]+) +msec, +offset +(?P<offset_msec>[\d\.\-]+) +msec,'
-                         ' +dispersion +(?P<dispersion>[\d\.]+),'
-                         ' +jitter +(?P<jitter_msec>[\d\.]+)( +msec)?$')
+        # ios delay 7.86 msec, offset 11.176 msec, dispersion 3.62
+        p5 = re.compile(r'^delay +(?P<delay_msec>[\d\.]+) +msec, +offset +(?P<offset_msec>[\d\.\-]+)'
+                         ' +msec, +dispersion +(?P<dispersion>[\d\.]+)'
+                         '(, +jitter +(?P<jitter_msec>[\d\.]+)( +msec)?)?$')
 
         # precision 2**10, version 4
         p6 = re.compile(r'^precision +(?P<precision>[\d\*]+), +version +(?P<version>\d+)$')
 
         # assoc id 62758, assoc name 192.168.255.254
-        p7 = re.compile(r'^assoc +id +(?P<assoc_id>\d+), +assoc +name +(?P<assoc_name>[\d\.]+)$')
+        # ios assoc ID 2, assoc name myserver
+        # ios assoc ID 1, assoc name 192.168.1.55,
+        p7 = re.compile(r'^assoc +(id|ID) +(?P<assoc_id>\d+), +assoc +name +(?P<assoc_name>[\w\.]+),?$')
 
         # assoc in packets 27, assoc out packets 27, assoc error packets 0
         p8 = re.compile(r'^assoc +in +packets +(?P<assoc_in_packets>\d+),'
@@ -533,7 +542,8 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
         p9 = re.compile(r'^org +time +(?P<org_time>[\w\:\s\(\)\.]+)$')
 
         # rec time DBAB046D.A8B43B28 (16:14:53.659 JST Fri Oct 14 2016)
-        p10 = re.compile(r'^rec +time +(?P<rec_time>[\w\:\s\(\)\.]+)$')
+        #  ios rcv time AFE252E2.3D7E464D (00:12:34.240 PDT Mon Jan 1 1900)
+        p10 = re.compile(r'^(rec|rcv) +time +(?P<rec_time>[\w\:\s\(\)\.]+)$')
 
         # xmt time DBAB046D.A8B43B28 (16:14:53.659 JST Fri Oct 14 2016)
         p11 = re.compile(r'^xmt +time +(?P<xmt_time>[\w\:\s\(\)\.]+)$')
@@ -559,34 +569,23 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
             if m:
                 group = m.groupdict()
                 address = group['address']
-                ip_type = group['ip_type']
-                authentication = group['authenticated']
+                ip_type = str(group['ip_type'])
+                authentication = str(group['authenticated'])
                 stratum = int(group['stratum'])
-                if group['configured']:
-                    isconfigured = True
-                else:
-                    isconfigured = False
-
-                if group['insane'] == 'insane':
-                    sane = False
-                else:
-                    sane = True
-
-                if group['invalid'] == 'invalid':
-                    valid = False
-                else:
-                    valid = True
-
-                if group['our_master']:
-                    master = True
-                else:
-                    master = False
+                isconfigured = True if group['configured'] else False
+                sane = False if group['insane'] == 'insane' else True
+                valid = False if group['invalid'] == 'invalid' else True
+                master = True if group['our_master'] else False
+                selected = True if group['selected'] else False
+                unsynced = True if group['unsynced'] else False
+                continue
 
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 refid = group['refid']
                 input_time = group['input_time']
+                continue
 
             m = p3.match(line)
             if m:
@@ -600,6 +599,10 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
                     setdefault(local_mode, {}).setdefault('isconfigured', {}).\
                     setdefault(str(isconfigured), {})
 
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['selected'] = selected
+                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['unsynced'] = unsynced
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
                     [local_mode]['isconfigured'][str(isconfigured)]['address'] = address
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
@@ -639,6 +642,7 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
                     [local_mode]['isconfigured'][str(isconfigured)]['peer'][refid]['local_mode']\
                     [peer_mode]['local_mode'] = peer_mode
+                continue
 
             m = p4.match(line)
             if m:
@@ -653,12 +657,14 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
                 #     [local_mode]['isconfigured'][str(isconfigured)]['sync_dist'] = group['sync_dist']
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
                     [local_mode]['isconfigured'][str(isconfigured)].update({k:str(v) for k, v in group.items()})
+                continue
 
             m = p5.match(line)
             if m:
                 group = m.groupdict() 
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
                     [local_mode]['isconfigured'][str(isconfigured)].update({k:str(v) for k, v in group.items()})
+                continue
 
             m = p6.match(line)
             if m:
@@ -667,6 +673,7 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
                     [local_mode]['isconfigured'][str(isconfigured)]['precision'] = group['precision']
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
                     [local_mode]['isconfigured'][str(isconfigured)]['version'] = int(group['version'])
+                continue
 
             m = p7.match(line)
             if m:
@@ -675,6 +682,7 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
                     [local_mode]['isconfigured'][str(isconfigured)]['assoc_name'] = group['assoc_name']
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
                     [local_mode]['isconfigured'][str(isconfigured)]['assoc_id'] = int(group['assoc_id'])
+                continue
 
             m = p8.match(line)
             if m:
@@ -690,42 +698,49 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
                     [local_mode]['isconfigured'][str(isconfigured)]['ntp_statistics']['packet_dropped'] = \
                     int(group['assoc_error_packets'])
+                continue
 
             m = p9.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
                     [local_mode]['isconfigured'][str(isconfigured)]['originate_time'] = group['org_time']
+                continue
 
             m = p10.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
                     [local_mode]['isconfigured'][str(isconfigured)]['receive_time'] = group['rec_time']
+                continue
 
             m = p11.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
                     [local_mode]['isconfigured'][str(isconfigured)]['transmit_time'] = group['xmt_time']
+                continue
 
             m = p12.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
                     [local_mode]['isconfigured'][str(isconfigured)]['filtdelay'] = group['filtdelay']
+                continue
 
             m = p13.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
                     [local_mode]['isconfigured'][str(isconfigured)]['filtoffset'] = group['filtoffset']
+                continue
 
             m = p14.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
                     [local_mode]['isconfigured'][str(isconfigured)]['filterror'] = group['filterror']
+                continue
 
             m = p15.match(line)
             if m:

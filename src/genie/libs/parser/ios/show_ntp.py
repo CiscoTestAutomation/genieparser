@@ -14,7 +14,8 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or
-
+# import iosxe parser
+from genie.libs.parser.iosxe.show_ntp import ShowNtpAssociationsDetail as ShowNtpAssociationsDetail_iosxe
 
 # ==============================================
 #  Schema for show ntp associations
@@ -24,7 +25,7 @@ class ShowNtpAssociationsSchema(MetaParser):
 
     schema = {
         'peer': {
-            Any():{
+            Any(): {
                 'local_mode': {
                     Any(): {
                         'remote': str,
@@ -56,6 +57,7 @@ class ShowNtpAssociationsSchema(MetaParser):
         }
     }
 
+
 # ==============================================
 #  Parser for show ntp associations
 # ==============================================
@@ -72,7 +74,7 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
 
     cli_command = 'show ntp associations'
 
-    def cli(self,output=None):
+    def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command)
         else:
@@ -86,11 +88,10 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
         #  ~1.1.1.1         .INIT.          16      -   1024     0  0.000   0.000 15937.
         # +~2.2.2.2         127.127.1.1      8    137     64     1 15.917 556.786 7938.0
         p1 = re.compile(r'^(?P<mode_code>[x\*\#\+\- ])?(?P<configured>[\~])? *(?P<remote>[\w\.\:]+) +'
-                         '(?P<refid>[\w\.]+) +(?P<stratum>\d+) +'
-                         '(?P<receive_time>[\d\-]+) +(?P<poll>\d+) +'
-                         '(?P<reach>\d+) +(?P<delay>[\d\.]+) +'
-                         '(?P<offset>[\d\.\-]+) +(?P<disp>[\d\.\-]+)$')
-
+                        '(?P<refid>[\w\.]+) +(?P<stratum>\d+) +'
+                        '(?P<receive_time>[\d\-]+) +(?P<poll>\d+) +'
+                        '(?P<reach>\d+) +(?P<delay>[\d\.]+) +'
+                        '(?P<offset>[\d\.\-]+) +(?P<disp>[\d\.\-]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -112,7 +113,7 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
                     receive_time = int(groups['receive_time'])
                 except:
                     receive_time = str(groups['receive_time'])
-                    
+
                 peer_dict = ret_dict.setdefault('peer', {}).setdefault(peer, {})\
                     .setdefault('local_mode', {}).setdefault(local_mode, {})
                 peer_dict.update({'remote': peer,
@@ -142,7 +143,6 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
                     else:
                         clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
                         clock_dict['clock_state'] = 'unsynchronized'
-    
 
         # check if has synchronized peers, if no create unsynchronized entry
         if ret_dict and not ret_dict.get('clock_state'):
@@ -155,7 +155,6 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
 # ==============================================
 # Parser for 'show ntp status'
 # ==============================================
-
 class ShowNtpStatusSchema(MetaParser):
     """Schema for: show ntp status"""
 
@@ -167,7 +166,7 @@ class ShowNtpStatusSchema(MetaParser):
                 Optional('refid'): str,
                 Optional('nom_freq'): float,
                 Optional('act_freq'): float,
-                Optional('precision'): Or(int,str),
+                Optional('precision'): Or(int, str),
                 Optional('uptime'): str,
                 Optional('resolution'): int,
                 Optional('reftime'): str,
@@ -189,7 +188,7 @@ class ShowNtpStatus(ShowNtpStatusSchema):
 
     cli_command = 'show ntp status'
 
-    def cli(self,output=None):
+    def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command)
         else:
@@ -205,7 +204,8 @@ class ShowNtpStatus(ShowNtpStatusSchema):
         p1_1 = re.compile(r'^Clock +is +(?P<clock_state>\w+), +stratum +(?P<stratum>\d+), +no +reference +clock$')
 
         # nominal freq is 250.0000 Hz, actual freq is 250.0000 Hz, precision is 2**10
-        p2 = re.compile(r'^nominal +freq +is +(?P<nom_freq>[\d\.]+) +Hz, actual +freq +is +(?P<act_freq>[\d\.]+) +Hz, precision +is +(?P<precision>[\d\*]+)$')
+        p2 = re.compile(
+            r'^nominal +freq +is +(?P<nom_freq>[\d\.]+) +Hz, actual +freq +is +(?P<act_freq>[\d\.]+) +Hz, precision +is +(?P<precision>[\d\*]+)$')
 
         # ntp uptime is 1921500 (1/100 of seconds), resolution is 4000
         p3 = re.compile(r'^ntp +uptime +is +(?P<uptime>[\d\s\w\/\(\)]+), +resolution +is +(?P<resolution>[\d]+)$')
@@ -227,7 +227,7 @@ class ShowNtpStatus(ShowNtpStatusSchema):
 
         for line in out.splitlines():
             line = line.strip()
-            if not line: 
+            if not line:
                 continue
 
             m = p1.match(line)
@@ -312,7 +312,6 @@ class ShowNtpStatus(ShowNtpStatusSchema):
 # =========================================================
 # Parser for 'show ntp config'
 # =========================================================
-
 class ShowNtpConfigSchema(MetaParser):
     """Schema for: show ntp config"""
 
@@ -342,6 +341,7 @@ class ShowNtpConfigSchema(MetaParser):
         }
     }
 
+
 class ShowNtpConfig(ShowNtpConfigSchema):
     """Parser for: show ntp config"""
 
@@ -363,11 +363,11 @@ class ShowNtpConfig(ShowNtpConfigSchema):
         # ntp server 2.2.2.2 source Loopback0
 
         p1 = re.compile(r"^ntp +(?P<type>\w+)( +vrf +(?P<vrf>[\d\w]+))? "
-            "+(?P<address>[\w\.\:]+)( +source +(?P<source_interface>[\w]+))?$")
+                        "+(?P<address>[\w\.\:]+)( +source +(?P<source_interface>[\w]+))?$")
 
         for line in out.splitlines():
             line = line.strip()
-            if not line: 
+            if not line:
                 continue
 
             m = p1.match(line)
@@ -383,13 +383,21 @@ class ShowNtpConfig(ShowNtpConfigSchema):
                     .setdefault('address', {}).setdefault(address, {})
 
                 addr_dict.setdefault('type', {}).setdefault(ntp_type, {}).update({'address': address,
-                                                                                 'type': ntp_type,
-                                                                                 'vrf': vrf})
+                                                                                  'type': ntp_type,
+                                                                                  'vrf': vrf})
                 if source:
-                    addr_dict['type'][ntp_type]['source']= source
+                    addr_dict['type'][ntp_type]['source'] = source
 
                 addr_dict.setdefault('isconfigured', {}).\
                     setdefault(str(isconfigured), {}).update({'address': address,
                                                               'isconfigured': isconfigured})
 
         return ret_dict
+
+
+# ==============================================
+#  Parser for show ntp associations detail
+# ==============================================
+class ShowNtpAssociationsDetail(ShowNtpAssociationsDetail_iosxe):
+    """Parser for show ntp associations detail"""
+    pass
