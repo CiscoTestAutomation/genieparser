@@ -122,6 +122,8 @@
 * IOSXE
     * Add ShowServiceGroupState for:
         show service-group state
+    * Add ShowServiceGroupStats for:
+        show service-group stats
 
 --------------------------------------------------------------------------------
                                  CONFIG
