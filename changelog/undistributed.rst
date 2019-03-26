@@ -64,7 +64,7 @@
     * Add ShowProcessesCpuHistory for 'show processes cpu history'
 
 --------------------------------------------------------------------------------
-                                    MPLS LDP
+                                    MPLS
 --------------------------------------------------------------------------------
 * IOSXE
     * Add ShowMplsLdpParameters for:
@@ -106,6 +106,10 @@
           show mpls interfaces <interface>
           show mpls interfaces <interface> detail
           show mpls interfaces detail
+    * Add ShowMplsL2Transport for:
+          show mpls l2transport vc
+    * Add ShowMplsL2TransportDetail for:
+          show mpls l2transport vc detail
 
 ----------------------------------------------------------------------------------
                                  ARP

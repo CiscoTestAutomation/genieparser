@@ -15,7 +15,9 @@ from genie.libs.parser.iosxe.show_mpls import ShowMplsLdpParameters,\
                                               ShowMplsLdpDiscovery,\
                                               ShowMplsLdpIgpSync,\
                                               ShowMplsForwardingTable,\
-                                              ShowMplsInterface
+                                              ShowMplsInterface, \
+                                              ShowMplsL2Transport, \
+                                              ShowMplsL2TransportDetail
 
 class test_show_mpls_ldp_parameters(unittest.TestCase):
     dev1 = Device(name='empty')
@@ -2503,6 +2505,348 @@ class test_show_mpls_interface(unittest.TestCase):
         obj = ShowMplsInterface(device=self.dev)
         parsed_output = obj.parse(all='all')
         self.assertEqual(parsed_output, self.golden_parsed_output_all)
+
+class test_show_mpls_l2transport_vc(unittest.TestCase):
+    dev = Device(name='dev1')
+    empty_output = {'execute.return_value': '      '}
+
+    golden_parsed_output = {
+        'interface': {
+            'VFI test1': {
+                'destination_address': {
+                    '192.0.2.5': {
+                        'vc_status': 'UP',
+                        'vc_id': 201,
+                        },
+                    '209.165.201.2': {
+                        'vc_status': 'UP',
+                        'vc_id': 201,
+                        },
+                    '192.0.2.9': {
+                        'vc_status': 'UP',
+                        'vc_id': 201,
+                        },
+                    '209.165.201.1': {
+                        'vc_status': 'UP',
+                        'vc_id': 201,
+                        },
+                    '209.165.201.3': {
+                        'vc_status': 'UP',
+                        'vc_id': 201,
+                        },
+                    '192.0.2.1': {
+                        'vc_status': 'UP',
+                        'vc_id': 201,
+                        },
+                    },
+                'local_circuit': 'VFI',
+                },
+            },
+        }
+
+    golden_output = {'execute.return_value': '''\
+        Local intf     Local circuit        Dest address    VC ID      Status
+        -------------  -------------------- --------------- ---------- ----------
+        VFI test1      VFI                  192.0.2.1       201        UP
+        VFI test1      VFI                  192.0.2.5       201        UP
+        VFI test1      VFI                  192.0.2.9       201        UP
+
+
+        Local intf     Local circuit        Dest address       VC ID      Status
+        -------------  -------------------- ---------------  ---------- ----------
+        VFI test1      VFI                  209.165.201.1       201        UP
+        VFI test1      VFI                  209.165.201.2       201        UP
+        VFI test1      VFI                  209.165.201.3       201        UP
+    '''}
+
+    golden_parsed_output_2 = {
+        'interface': {
+            'Fa2/1/1.2': {
+                'local_circuit': 'Eth VLAN 2',
+                'destination_address': {
+                    '10.2.2.2': {
+                        'vc_status': 'UP',
+                        'vc_id': 1002,
+                        },
+                    },
+                },
+            'Gi8/0/1': {
+                'local_circuit': 'Ethernet',
+                'destination_address': {
+                    '10.1.1.1': {
+                        'vc_status': 'UP',
+                        'vc_id': 8,
+                        },
+                    },
+                },
+            'Gi4/0/0.1': {
+                'local_circuit': 'Eth VLAN 2',
+                'destination_address': {
+                    '10.1.1.1': {
+                        'vc_status': 'UP',
+                        'vc_id': 2,
+                        },
+                    },
+                },
+            'ATM1/0': {
+                'local_circuit': 'ATM AAL5 1/100',
+                'destination_address': {
+                    '10.4.4.4': {
+                        'vc_status': 'UP',
+                        'vc_id': 100,
+                        },
+                    },
+                },
+            },
+        }
+
+    golden_output_2 = {'execute.return_value': '''\
+        Device# show mpls l2transport vc
+
+        Local intf     Local circuit        Dest address    VC ID      Status
+        -------------  -------------------- --------------- ---------- ----------
+        Fa2/1/1.2      Eth VLAN 2           10.2.2.2         1002       UP
+
+        Local intf     Local circuit        Dest address    VC ID      Status
+        -------------  -------------------- --------------- ---------- ----------
+        Fa2/1/1.2      Eth VLAN 2           10.2.2.2         1002       RECOVERING
+
+        Local intf     Local circuit        Dest address    VC ID      Status
+        -------------  -------------------- --------------- ---------- ----------
+        Fa2/1/1.2      Eth VLAN 2           10.2.2.2         1002       UP
+
+        Local intf     Local circuit        Dest address    VC ID      Status
+        -------------  -------------------- --------------- ---------- ----------
+        ATM1/0       ATM AAL5 1/100         10.4.4.4           100        UP
+
+        Local intf     Local circuit        Dest address    VC ID      Status
+        -------------  -------------------- --------------- ---------- ----------
+        Gi4/0/0.1      Eth VLAN 2           10.1.1.1        2          UP
+        Gi8/0/1        Ethernet             10.1.1.1        8          UP
+    '''}
+
+    def test_empty(self):
+        self.dev = Mock(**self.empty_output)
+        obj = ShowMplsL2Transport(device=self.dev)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output)
+        obj = ShowMplsL2Transport(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output_2)
+        obj = ShowMplsL2Transport(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+
+class test_show_mpls_l2transport_vc_detail(unittest.TestCase):
+    dev = Device(name='dev1')
+    empty_output = {'execute.return_value': '      '}
+
+    golden_parsed_output = {
+        'interface': {
+            'Fa2/1/1.2': {
+                'destination_address': {
+                    '10.2.2.2': {
+                        'default_path': 'active',
+                        'output_interface': 'Se2/0/2',
+                        'vc_status': 'recovering',
+                        'preferred_path': 'not configured',
+                        'imposed_label_stack': 16,
+                        'vc_id': 1002,
+                        },
+                    },
+                'create_time': '1d00h',
+                'sequencing': {
+                    'sent': 'disabled',
+                    'received': 'disabled',
+                    },
+                'statistics': {
+                    'packets': {
+                        'sent': 28879,
+                        'received': 20040,
+                        },
+                    'bytes': {
+                        'sent': 25992388,
+                        'received': 25073016,
+                        },
+                    },
+                'last_status_change_time': '00:00:03',
+                'line_protocol_status': 'up',
+                'signaling_protocol': {
+                    'LDP': {
+                        'mtu': {
+                            'local': 1500,
+                            'remote': 1500,
+                            },
+                        'mpls_vc_labels': {
+                            'local': 21,
+                            'remote': 16,
+                            },
+                        'group_id': {
+                            'local': 0,
+                            'remote': 0,
+                            },
+                        'peer_state': 'down',
+                        'peer_id': '10.2.2.2:0',
+                        'remote_interface_description': 'xconnect to PE2',
+                        },
+                    },
+                'ethernet_vlan': {
+                    'status': 'up',
+                    'number': 2,
+                    },
+                },
+            },
+        }
+
+    golden_output = {'execute.return_value': '''\
+        Device# show mpls l2transport vc detail
+
+        ip cef distributed
+
+        Local interface: Fa2/1/1.2 up, line protocol up, Eth VLAN 2 up
+          Destination address: 10.2.2.2, VC ID: 1002, VC status: up
+            Preferred path: not configured
+            Default path: active
+            Tunnel label: imp-null, next hop point2point
+            Output interface: Se2/0/2, imposed label stack {16}
+          Create time: 1d00h, last status change time: 1d00h
+          Signaling protocol: LDP, peer 10.2.2.2:0 up
+            MPLS VC labels: local 21, remote 16
+            Group ID: local 0, remote 0
+            MTU: local 1500, remote 1500
+            Remote interface description: "xconnect to PE2"
+          Sequencing: receive disabled, send disabled
+          VC statistics:
+            packet totals: receive 3466, send 12286
+            byte totals:   receive 4322368, send 5040220
+            packet drops:  receive 0, send 0
+
+
+        Local interface: Fa2/1/1.2 up, line protocol up, Eth VLAN 2 up
+          Destination address: 10.2.2.2, VC ID: 1002, VC status: recovering
+            Preferred path: not configured
+            Default path: active
+            Tunnel label: imp-null, next hop point2point
+            Output interface: Se2/0/2, imposed label stack {16}
+          Create time: 1d00h, last status change time: 00:00:03
+          Signaling protocol: LDP, peer 10.2.2.2:0 down
+            MPLS VC labels: local 21, remote 16
+            Group ID: local 0, remote 0
+            MTU: local 1500, remote 1500
+            Remote interface description: "xconnect to PE2"
+          Sequencing: receive disabled, send disabled
+          VC statistics:
+            packet totals: receive 20040, send 28879
+            byte totals:   receive 25073016, send 25992388
+            packet drops:  receive 0, send 0
+    '''}
+
+    golden_parsed_output_2 = {
+        'interface': {
+            'Fa2/1/1.2': {
+                'statistics': {
+                    'packets': {
+                        'sent': 28879,
+                        'received': 20040,
+                        },
+                    'bytes': {
+                        'sent': 25992388,
+                        'received': 25073016,
+                        },
+                    },
+                'signaling_protocol': {
+                    'LDP': {
+                        'mpls_vc_labels': {
+                            'local': 21,
+                            'remote': 16,
+                            },
+                        'group_id': {
+                            'local': 0,
+                            'remote': 0,
+                            },
+                        'remote_interface_description': 'xconnect to PE2',
+                        'peer_state': 'down',
+                        'peer_id': '10.2.2.2:0',
+                        'mtu': {
+                            'local': 1500,
+                            'remote': 1500,
+                            },
+                        },
+                    },
+                'last_status_change_time': '00:00:03',
+                'sequencing': {
+                    'sent': 'disabled',
+                    'received': 'disabled',
+                    },
+                'line_protocol_status': 'up',
+                'destination_address': {
+                    '10.2.2.2': {
+                        'output_interface': 'Se2/0/2',
+                        'preferred_path': 'not configured',
+                        'default_path': 'active',
+                        'imposed_label_stack': 16,
+                        'vc_status': 'recovering',
+                        'vc_id': 1002,
+                        },
+                    },
+                'ethernet_vlan': {
+                    'number': 2,
+                    'status': 'up',
+                    },
+                'create_time': '1d00h',
+                },
+            },
+        }
+
+    golden_output_2 = {'execute.return_value': '''\
+        Device# show mpls l2transport vc detail
+
+        Local interface: VFI PE1-VPLS-A up
+          Destination address: 10.2.2.2, VC ID: 100, VC status: up
+            Tunnel label: imp-null, next hop point2point
+            Output interface: Se2/0, imposed label stack {18}
+          Create time: 3d15h, last status change time: 1d03h
+          Signaling protocol: LDP, peer 10.2.2.2:0 up
+            MPLS VC labels: local 18, remote 18
+            Group ID: local 0, remote 0
+            MTU: local 1500, remote 1500
+            Remote interface description:
+          Sequencing: receive disabled, send disabled
+          VC statistics:
+            packet totals: receive 0, send 0
+            byte totals:   receive 0, send 0
+            packet drops:  receive 0, send 0
+    '''}
+
+    def test_empty(self):
+        self.dev = Mock(**self.empty_output)
+        obj = ShowMplsL2TransportDetail(device=self.dev)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output)
+        obj = ShowMplsL2TransportDetail(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output_2)
+        obj = ShowMplsL2TransportDetail(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
 
 if __name__ == '__main__':
     unittest.main()
