@@ -128,14 +128,15 @@ class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
         if output is None:
             # execute command to get output
             if not cmd:
-                if fileA and fileB:
-                    command = self.cli_command[1].format(fileA=fileA, fileB=fileB)
-                if fileA and not fileB:
-                    command = self.cli_command[2].format(fileA=fileA)
-                if not fileA and not fileB:
+                if fileA:
+                    if fileB:
+                        command = self.cli_command[1].format(fileA=fileA, fileB=fileB)
+                    else:
+                        command = self.cli_command[2].format(fileA=fileA)
+                else:
                     command = self.cli_command[0]
             else:
-                if fileA and not fileB:
+                if fileA:
                     command = cmd.format(fileA=fileA)
             out = self.device.execute(command)
         else:
