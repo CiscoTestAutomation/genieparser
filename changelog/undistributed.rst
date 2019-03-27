@@ -107,6 +107,14 @@
           show mpls interfaces <interface> detail
           show mpls interfaces detail
 
+---------------------------------------------------------------------------------
+                                   BFD 
+---------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowBfdNeighborsDetails
+        show bfd neighbors client <client> details
+        show bfd neighbors details
+
 ----------------------------------------------------------------------------------
                                  ARP
 ----------------------------------------------------------------------------------
@@ -158,7 +166,6 @@
     * Add ShowEthernetServiceInstanceSummary for:
             show ethernet service instance summary
 
-
 --------------------------------------------------------------------------------
                                   LAG
 --------------------------------------------------------------------------------
@@ -168,3 +175,10 @@
     * Add ShowLacpNeighborDetail for:
         show lacp neighbor detail
 
+--------------------------------------------------------------------------------
+                                   INTERFACE
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowInterfaceStats for:
+        show interface <interface> stats
+        show interface stats
