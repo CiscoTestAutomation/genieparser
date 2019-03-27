@@ -79,14 +79,14 @@ class ShowPolicyMapControlPlaneSchema(MetaParser):
 # ===========================================
 class ShowPolicyMapControlPlane(ShowPolicyMapControlPlaneSchema):
     ''' Parser for
-      "show policy map control plane"
+        * "show policy map control plane"
     '''
 
-    cli_command = ['show policy-map {name}']
+    cli_command = 'show policy-map control-plane'
 
-    def cli(self, name='', output=None):
+    def cli(self, output=None):
         if output is None:
-            cmd = self.cli_command[0].format(name=name)
+            cmd = self.cli_command
             # Execute command on device
             out = self.device.execute(cmd)
         else:
@@ -273,3 +273,104 @@ class ShowPolicyMapControlPlane(ShowPolicyMapControlPlaneSchema):
                 continue
 
         return ret_dict
+
+
+# ===================================
+# Schema for:
+#   * 'show policy-map'
+#   * 'show policy-map {name}'
+# ===================================
+class ShowPolicyMapSchema(MetaParser):
+
+    schema = {
+        'policy_map': 
+            {Any(): # policy1
+                {'class': 
+                    {Any(): # police
+                        {Optional('police_cir'): int,
+                        Optional('conform_burst'): int,
+                        Optional('pir'): int,
+                        Optional('peak_burst'): int,
+                        }, 
+                    },
+                },
+            },
+        }
+
+
+# ===================================
+# Parser for:
+#   * 'show policy-map'
+#   * 'show policy-map {name}'
+# ===================================
+class ShowPolicyMap(ShowPolicyMapSchema):
+    
+    ''' Parser for
+        * "show policy-map"
+        * "show policy-map {name}"
+    '''
+
+    cli_command = ['show policy-map {name}', 'show policy-map']
+
+    def cli(self, name='', output=None):
+        if output is None:
+            if name:
+                cmd = self.cli_command[0].format(name=name)
+            else:
+                cmd = self.cli_command[1]
+            # Execute command on device
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # Policy Map policy1
+        p1 = {}
+        
+        # Class police
+        p2 = {}
+   
+        # police cir 500000 conform-burst 10000 pir 1000000 peak-burst 10000 conform-action transmit exceed-action set-prec-transmit 2 violate-action drop
+        p3 = {}
+
+        # continue parsing
+
+
+# ======================================
+# Schema for 'show policy-map interface'
+# ======================================
+class ShowPolicyMapInterfaceSchema(MetaParser):
+
+    schema = {}
+
+
+# ===================================
+# Parser for 'show policy map {name}'
+# ===================================
+class ShowPolicyMapInterface(ShowPolicyMapInterfaceSchema):
+
+    ''' Parser for
+        * 'show policy-map interface {interface} class {class_name}'
+        * 'show policy-map interface {interface}'
+        * 'show policy-map interface'
+    '''
+
+    cli_command = ['show policy-map interface {interface} class {class_name}',
+                   'show policy-map interface {interface}',
+                   'show policy-map interface',
+                   ]
+
+    def cli(self, interface='', class_name='', output=None):
+
+        if output is None:
+            if interface and class_name:
+                cmd = self.cli_command[0].format(interface=interface, class_name=class_name)
+            elif interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[2]
+            # Execute command on device
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # continue parsing

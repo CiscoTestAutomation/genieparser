@@ -430,13 +430,13 @@ class test_show_policy_map_control_plane(unittest.TestCase):
         self.device = Mock(**self.empty_output)
         obj = ShowPolicyMapControlPlane(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(name='control-plane')
+            parsed_output = obj.parse()
 
     def test_show_policy_map_control_plane_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowPolicyMapControlPlane(device=self.device)
-        parsed_output = obj.parse(name='control-plane')
+        parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 
