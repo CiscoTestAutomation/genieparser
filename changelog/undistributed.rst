@@ -6,11 +6,20 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
+                                    MONITOR
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowMonitor Parser for:
+       'show monitor'
+       'show monitor session all'
+       'show monitor capture'
+
+
+--------------------------------------------------------------------------------
                                     OSPF
 --------------------------------------------------------------------------------
 * IOSXE
     * Added parsers:
-        * ShowIpOspfNeighbor
         * ShowIpOspfDatabase
         * ShowIpOspfMaxMetric
         * ShowIpOspfTraffic
