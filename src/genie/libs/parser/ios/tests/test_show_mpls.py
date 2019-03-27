@@ -16,58 +16,62 @@ class test_show_mpls_l2transport_vc_detail(unittest.TestCase):
     golden_parsed_output = {
     'interface': {
         'VFI TEST VFI': {
-            'last_status_change_time': '00:04:15',
             'statistics': {
-                'bytes': {
-                    'sent': 0,
-                    'received': 0,
-                    },
                 'packets': {
                     'sent': 0,
                     'received': 0,
                     },
-                },
-            'create_time': '00:04:34',
-            'status': 'up',
-            'destination_address': {
-                '10.1.1.1': {
-                    'output_interface': 'Serial2/0',
-                    'preferred_path': 'not configured',
-                    'next_hop': 'point2point',
-                    'vc_status': 'up',
-                    'vc_id': 1000,
-                    'default_path': 'active',
-                    'imposed_label_stack': '{17}',
+                'bytes': {
+                    'sent': 0,
+                    'received': 0,
+                    },
+                'packets_drop': {
+                    'sent': 0,
+                    'received': 0,
                     },
                 },
-            'signaling_protocol': {
-                'LDP': {
-                    'mpls_vc_labels': {
-                        'local': 16,
-                        'remote': 17,
-                        },
-                    'peer_id': '10.1.1.1:0',
-                    'peer_state': 'up',
-                    'id': '10.1.1.1',
-                    'mac_withdraw': {
-                        'sent': 5,
-                        'received': 3,
-                        },
-                    'mtu': {
-                        'local': 1500,
-                        'remote': 1500,
-                        },
-                    'targeted_hello_ip': '10.1.1.1',
-                    'group_id': {
-                        'local': 0,
-                        'remote': 0,
-                        },
-                    },
-                },
+            'last_status_change_time': '00:04:15',
             'sequencing': {
                 'sent': 'disabled',
                 'received': 'disabled',
                 },
+            'signaling_protocol': {
+                'LDP': {
+                    'mpls_vc_labels': {
+                        'remote': 17,
+                        'local': 16,
+                        },
+                    'id': '10.1.1.1',
+                    'group_id': {
+                        'remote': 0,
+                        'local': 0,
+                        },
+                    'mac_withdraw': {
+                        'sent': 5,
+                        'received': 3,
+                        },
+                    'targeted_hello_ip': '10.1.1.1',
+                    'peer_id': '10.1.1.1:0',
+                    'mtu': {
+                        'remote': 1500,
+                        'local': 1500,
+                        },
+                    'peer_state': 'up',
+                    },
+                },
+            'status': 'up',
+            'destination_address': {
+                '10.1.1.1': {
+                    'vc_id': 1000,
+                    'vc_status': 'up',
+                    'imposed_label_stack': '{17}',
+                    'output_interface': 'Serial2/0',
+                    'next_hop': 'point2point',
+                    'default_path': 'active',
+                    'preferred_path': 'not configured',
+                    },
+                },
+            'create_time': '00:04:34',
             },
         },
     }
