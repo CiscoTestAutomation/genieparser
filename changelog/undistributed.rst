@@ -6,11 +6,20 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
+                                    MONITOR
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowMonitor Parser for:
+       'show monitor'
+       'show monitor session all'
+       'show monitor capture'
+
+
+--------------------------------------------------------------------------------
                                     OSPF
 --------------------------------------------------------------------------------
 * IOSXE
     * Added parsers:
-        * ShowIpOspfNeighbor
         * ShowIpOspfDatabase
         * ShowIpOspfMaxMetric
         * ShowIpOspfTraffic
@@ -107,6 +116,14 @@
           show mpls interfaces <interface> detail
           show mpls interfaces detail
 
+---------------------------------------------------------------------------------
+                                   BFD 
+---------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowBfdNeighborsDetails
+        show bfd neighbors client <client> details
+        show bfd neighbors details
+
 ----------------------------------------------------------------------------------
                                  ARP
 ----------------------------------------------------------------------------------
@@ -159,3 +176,11 @@
             show ethernet service instance summary
     * Add ShowL2vpnVfi for:
             show l2vpn vfi
+
+--------------------------------------------------------------------------------
+                                   INTERFACE
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowInterfaceStats for:
+        show interface <interface> stats
+        show interface stats
