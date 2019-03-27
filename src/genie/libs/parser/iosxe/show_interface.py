@@ -419,8 +419,9 @@ class ShowInterfaces(ShowInterfacesSchema):
             # Auto-duplex, 1000Mb/s, media type is 10/100/1000BaseTX
             # Full-duplex, 1000Mb/s, link type is auto, media type is
             # Full Duplex, 1000Mbps, link type is auto, media type is RJ45
+            # Full Duplex, Auto Speed, link type is auto, media type is RJ45
             p11 = re.compile(r'^(?P<duplex_mode>\w+)[\-\s]+[d|D]uplex, +'
-                              '(?P<port_speed>\d+|Auto-speed)(?: *(Mbps|Mb/s))?,'
+                              '(?P<port_speed>\d+|Auto-(S|s)peed|Auto (S|s)peed)(?: *(Mbps|Mb/s))?,'
                               '( *link +type +is +(?P<link_type>\w+),)?'
                               ' *media +type +is *(?P<media_type>[\w\/]+)?$')
             m = p11.match(line)
@@ -944,9 +945,11 @@ class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBrief):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
 
+    cli_command = "show ip interface brief | include Vlan"
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.cmd = 'show ip interface brief | include Vlan'.format()
+        self.cmd = self.cli_command
 
     def cli(self):
         super(ShowIpInterfaceBriefPipeVlan, self).cli()
