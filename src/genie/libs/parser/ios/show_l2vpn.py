@@ -19,7 +19,7 @@ from genie.metaparser.util.schemaengine import Schema, \
                                          Use
 
 # import iosxe parser
-from genie.libs.parser.iosxe.show_l2vp import ShowL2vpnVfi as ShowL2vpnVfi_iosxe
+from genie.libs.parser.iosxe.show_l2vpn import ShowL2vpnVfi as ShowL2vpnVfi_iosxe
 
 
 # ===========================
