@@ -606,9 +606,9 @@ class ShowL2vpnVfiSchema(MetaParser):
                 've_range': int,
                 'rd': str,
                 'rt': list,
-                'pseudo_port_interface': str,
                 'bridge_domain': {
                     Any(): {
+                        'pseudo_port_interface': str,
                         'attachment_circuits': {
                             Optional(Any()): {
                                 'name': str,
@@ -616,17 +616,20 @@ class ShowL2vpnVfiSchema(MetaParser):
                         },
                         'vfi': {
                             Any(): {
-                                'pw_peer_id': str,
-                                Optional('pw_id'): int,
-                                'local_label': int,
-                                've_id': int,
-                                'remote_label': int,
-                                'split_horizon': bool,
-                            }
+                                'pw_id': {
+                                    Any(): {
+                                        Optional('local_label'): int,
+                                        Optional('ve_id'): int,
+                                        Optional('vc_id'): int,
+                                        Optional('remote_label'): int,
+                                        'split_horizon': bool,
+                                    },
+                                }
+                            },
                         }
-                    }
+                    },
                 }
-            }
+            },
         }
     }
 
@@ -654,6 +657,7 @@ class ShowL2vpnVfi(ShowL2vpnVfiSchema):
                          ' +(?P<state>\w+), type: +(?P<type>\w+), +signaling: +(?P<signaling>\w+)$')
 
         #   VPN ID: 2051, VE-ID: 2, VE-SIZE: 10
+        #   VPN ID: 2000
         p2 = re.compile(r'^VPN +ID: +(?P<vpn_id>\d+), +VE-ID: +(?P<ve_id>\d+),'
                          ' VE-SIZE: +(?P<ve_range>\d+)$')
 
@@ -671,6 +675,13 @@ class ShowL2vpnVfi(ShowL2vpnVfiSchema):
         #   pseudowire100202   27.93.202.64    1      16           327810          Y
         p6 = re.compile(r'^(?P<pw_intf>\S+) +(?P<pw_peer_id>[\d\.]+)'
                          ' +(?P<ve_id>\d+) +(?P<local_label>\d+) +(?P<remote_label>\d+) +(?P<split_horizon>\w+)$')
+
+        # Interface          Peer Address     VC ID        S
+        # pseudowire3        4.4.4.4          14           Y
+        # pseudowire2        3.3.3.3          13           Y
+        # pseudowire1        2.2.2.2          12           Y
+        p6_1 = re.compile(r'^(?P<pw_intf>\S+) +(?P<pw_peer_id>[\d\.]+)'
+                         ' +(?P<vc_id>\d+) +(?P<split_horizon>\w+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -717,30 +728,49 @@ class ShowL2vpnVfi(ShowL2vpnVfiSchema):
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                final_dict['pseudo_port_interface'] = \
+                new_final_dict['pseudo_port_interface'] = \
                     group['pseudo_port_interface']
                 continue
 
             m = p6.match(line)
             if m:
                 group = m.groupdict()
+                pw_peer_id = group['pw_peer_id']
                 pw_intf = group['pw_intf']
-                new_final_dict.setdefault('vfi', {}).\
-                    setdefault(pw_intf, {})
-                new_final_dict['vfi'][pw_intf]['pw_peer_id'] = \
-                    group['pw_peer_id']
-                new_final_dict['vfi'][pw_intf]['local_label'] = \
+                pw_final_dict = new_final_dict.setdefault('vfi', {}).\
+                    setdefault(pw_peer_id, {}).setdefault('pw_id', {}).\
+                        setdefault(pw_intf, {})
+                pw_final_dict['local_label'] = \
                     int(group['local_label'])
-                new_final_dict['vfi'][pw_intf]['ve_id'] = \
+                pw_final_dict['ve_id'] = \
                     int(group['ve_id'])
-                new_final_dict['vfi'][pw_intf]['remote_label'] = \
+                pw_final_dict['remote_label'] = \
                     int(group['remote_label'])
                 if 'Y' in group['split_horizon'] or \
                     'y' in group['split_horizon']:
-                    new_final_dict['vfi'][pw_intf]['split_horizon'] = \
+                    pw_final_dict['split_horizon'] = \
                         True
                 else:
-                    new_final_dict['vfi'][pw_intf]['split_horizon'] = \
+                    pw_final_dict['split_horizon'] = \
+                        False
+                continue
+
+            m = p6_1.match(line)
+            if m:
+                group = m.groupdict()
+                pw_peer_id = group['pw_peer_id']
+                pw_intf = group['pw_intf']
+                pw_final_dict = new_final_dict.setdefault('vfi', {}).\
+                    setdefault(pw_peer_id, {}).setdefault('pw_id', {}).\
+                        setdefault(pw_intf, {})
+                pw_final_dict['vc_id'] = \
+                    int(group['vc_id'])
+                if 'Y' in group['split_horizon'] or \
+                    'y' in group['split_horizon']:
+                    pw_final_dict['split_horizon'] = \
+                        True
+                else:
+                    pw_final_dict['split_horizon'] = \
                         False
                 continue
 
