@@ -56,8 +56,6 @@ class test_show_access_lists(test_show_access_lists_iosxe):
             20 permit icmp any any
             30 permit ip host 10.34.2.2 host 10.2.54.2
             40 permit ip host 10.3.4.31 host 10.3.32.3 log
-        ip access-lists extended 101 
-            20 permit udp host 10.1.1.1 host 10.2.2.2
     '''}
 
     golden_parsed_output_ios = {
@@ -114,26 +112,10 @@ class test_show_access_lists(test_show_access_lists_iosxe):
                                         "destination_network": "any"
                                     }
                                 }
-                            },
-                            "udp": {
-                                "protocol": "udp",
-                                "source_network": {
-                                    "host 10.1.1.1": {
-                                        "source_network": "host 10.1.1.1"
-                                    }
-                                },
-                                "destination_network": {
-                                    "host 10.2.2.2": {
-                                        "destination_network": "host 10.2.2.2"
-                                    }
-                                }
                             }
                         },
                         "l4": {
                             "icmp": {
-                                "established": False
-                            },
-                            "udp": {
                                 "established": False
                             }
                         }
