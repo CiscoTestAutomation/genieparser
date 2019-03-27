@@ -272,12 +272,12 @@ class test_show_ntp_associations_detail(unittest.TestCase):
                                 "client": {
                                     "isconfigured": {
                                         "True": {
+                                            "ip_type": "ipv4",
                                             "selected": False,
                                             "unsynced": False,
                                             "address": "192.168.255.254",
                                             "isconfigured": True,
-                                            "ip_type": "ipv4",
-                                            "authentication": "authenticated",
+                                            "authenticated": True,
                                             "sane": False,
                                             "valid": False,
                                             "master": False,
@@ -333,12 +333,12 @@ class test_show_ntp_associations_detail(unittest.TestCase):
                                 "client": {
                                     "isconfigured": {
                                         "True": {
+                                            "ip_type": "ipv4",
                                             "selected": False,
                                             "unsynced": False,
                                             "address": "172.16.255.254",
                                             "isconfigured": True,
-                                            "ip_type": "ipv4",
-                                            "authentication": "authenticated",
+                                            "authenticated": True,
                                             "sane": True,
                                             "valid": True,
                                             "master": True,
@@ -394,6 +394,7 @@ class test_show_ntp_associations_detail(unittest.TestCase):
             }
         }
     }
+
 
     golden_output = {'execute.return_value': '''
         Router#show ntp associations detail

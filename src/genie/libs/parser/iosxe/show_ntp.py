@@ -161,7 +161,7 @@ class ShowNtpStatusSchema(MetaParser):
     schema = {
         'clock_state': {
             'system_status': {
-                'status': str,
+                Optional('status'): str,
                 Optional('stratum'): int,
                 Optional('refid'): str,
                 Optional('assoc_id'): int,
@@ -420,7 +420,7 @@ class ShowNtpAssociationsDetailSchema(MetaParser):
                                             'isconfigured': bool,
                                             'stratum': int,
                                             'refid': str,
-                                            Optional('authentication'): str,
+                                            Optional('authenticated'): bool,
                                             Optional('prefer'): str,
                                             'peer_interface': str,
                                             Optional('minpoll'): int,
@@ -575,9 +575,9 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
             if m:
                 group = m.groupdict()
                 address = group['address']
-                ip_type = str(group['ip_type'])
-                authentication = str(group['authenticated'])
+                ip_type = group['ip_type']
                 stratum = int(group['stratum'])
+                authenticated = True if group['authenticated'] else False
                 isconfigured = True if group['configured'] else False
                 sane = False if group['insane'] == 'insane' else True
                 valid = False if group['invalid'] == 'invalid' else True
@@ -605,6 +605,10 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
                     setdefault(local_mode, {}).setdefault('isconfigured', {}).\
                     setdefault(str(isconfigured), {})
 
+                if ip_type:
+                    ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
+                    [local_mode]['isconfigured'][str(isconfigured)]['ip_type'] = ip_type
+
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
                     [local_mode]['isconfigured'][str(isconfigured)]['selected'] = selected
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
@@ -614,9 +618,7 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
                     [local_mode]['isconfigured'][str(isconfigured)]['isconfigured'] = isconfigured
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
-                    [local_mode]['isconfigured'][str(isconfigured)]['ip_type'] = ip_type
-                ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
-                    [local_mode]['isconfigured'][str(isconfigured)]['authentication'] = authentication
+                    [local_mode]['isconfigured'][str(isconfigured)]['authenticated'] = authenticated
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\
                     [local_mode]['isconfigured'][str(isconfigured)]['sane'] = sane
                 ret_dict['vrf']['default']['associations']['address'][address]['local_mode']\

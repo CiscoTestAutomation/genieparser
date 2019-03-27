@@ -15,7 +15,8 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or
 # import iosxe parser
-from genie.libs.parser.iosxe.show_ntp import ShowNtpAssociationsDetail as ShowNtpAssociationsDetail_iosxe
+from genie.libs.parser.iosxe.show_ntp import ShowNtpAssociationsDetail as ShowNtpAssociationsDetail_iosxe,\
+                                             ShowNtpStatus as ShowNtpStatus_iosxe
 
 # ==============================================
 #  Schema for show ntp associations
@@ -155,158 +156,9 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
 # ==============================================
 # Parser for 'show ntp status'
 # ==============================================
-class ShowNtpStatusSchema(MetaParser):
-    """Schema for: show ntp status"""
-
-    schema = {
-        'clock_state': {
-            'system_status': {
-                'status': str,
-                Optional('stratum'): int,
-                Optional('refid'): str,
-                Optional('nom_freq'): float,
-                Optional('act_freq'): float,
-                Optional('precision'): Or(int, str),
-                Optional('uptime'): str,
-                Optional('resolution'): int,
-                Optional('reftime'): str,
-                Optional('offset'): float,
-                Optional('rootdelay'): float,
-                Optional('rootdispersion'): float,
-                Optional('peerdispersion'): float,
-                Optional('leap_status'): str,
-                Optional('drift'): str,
-                Optional('poll'): int,
-                Optional('last_update'): str,
-            }
-        }
-    }
-
-
-class ShowNtpStatus(ShowNtpStatusSchema):
+class ShowNtpStatus(ShowNtpStatus_iosxe):
     """Parser for: show ntp status"""
-
-    cli_command = 'show ntp status'
-
-    def cli(self, output=None):
-        if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
-
-        # initial variables
-        ret_dict = {}
-
-        # Clock is synchronized, stratum 1, reference is .LOCL.
-        p1 = re.compile(r'^Clock +is +(?P<clock_state>\w+), +stratum +(?P<stratum>\d+), +reference +is +(?P<refid>[\w\.]+)$')
-
-        # Clock is unsynchronized, stratum 16, no reference clock
-        p1_1 = re.compile(r'^Clock +is +(?P<clock_state>\w+), +stratum +(?P<stratum>\d+), +no +reference +clock$')
-
-        # nominal freq is 250.0000 Hz, actual freq is 250.0000 Hz, precision is 2**10
-        p2 = re.compile(
-            r'^nominal +freq +is +(?P<nom_freq>[\d\.]+) +Hz, actual +freq +is +(?P<act_freq>[\d\.]+) +Hz, precision +is +(?P<precision>[\d\*]+)$')
-
-        # ntp uptime is 1921500 (1/100 of seconds), resolution is 4000
-        p3 = re.compile(r'^ntp +uptime +is +(?P<uptime>[\d\s\w\/\(\)]+), +resolution +is +(?P<resolution>[\d]+)$')
-
-        # reference time is DF9FFBA0.8B020DC8 (15:43:28.543 UTC Wed Nov 21 2018)
-        p4 = re.compile(r'^reference +time +is +(?P<reftime>[\w\s\.\:\(\)]+)$')
-
-        # clock offset is 0.0000 msec, root delay is 0.00 msec
-        p5 = re.compile(r'^clock +offset +is +(?P<offset>[\d\.]+) +msec, +root +delay +is +(?P<rootdelay>[\d\.]+) +msec$')
-
-        # root dispersion is 2.31 msec, peer dispersion is 1.20 msec
-        p6 = re.compile(r'^root +dispersion +is +(?P<rootdispersion>[\d\.]+) +msec, +peer +dispersion +is +(?P<peerdispersion>[\d\.]+) +msec$')
-
-        # loopfilter state is 'CTRL' (Normal Controlled Loop), drift is 0.000000000 s/s
-        p7 = re.compile(r'^loopfilter +state +is +(?P<leap_status>[\'\s\w\(\)]+), +drift +is +(?P<drift>[\d\.\s\w\/]+)$')
-
-        # system poll interval is 16, last update was 9 sec ago.
-        p8 = re.compile(r'^system +poll +interval +is +(?P<poll>\d+), +last +update +was +(?P<last_update>[\d\s\w]+).*$')
-
-        for line in out.splitlines():
-            line = line.strip()
-            if not line:
-                continue
-
-            m = p1.match(line)
-            if m:
-                groups = m.groupdict()
-                clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
-                clock_dict['status'] = groups['clock_state']
-                clock_dict['stratum'] = int(groups['stratum'])
-                clock_dict['refid'] = groups['refid']
-                continue
-
-            m = p1_1.match(line)
-            if m:
-                groups = m.groupdict()
-                clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
-                clock_dict['status'] = groups['clock_state']
-                clock_dict['stratum'] = int(groups['stratum'])
-                continue
-
-            m = p2.match(line)
-            if m:
-                groups = m.groupdict()
-                clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
-                clock_dict['nom_freq'] = float(groups['nom_freq'])
-                clock_dict['act_freq'] = float(groups['act_freq'])
-                try:
-                    clock_dict['precision'] = int(groups['precision'])
-                except:
-                    clock_dict['precision'] = str(groups['precision'])
-                continue
-
-            m = p3.match(line)
-            if m:
-                groups = m.groupdict()
-                clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
-                clock_dict['uptime'] = groups['uptime']
-                clock_dict['resolution'] = int(groups['resolution'])
-                continue
-
-            m = p4.match(line)
-            if m:
-                groups = m.groupdict()
-                clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
-                clock_dict['reftime'] = groups['reftime']
-                continue
-
-            m = p5.match(line)
-            if m:
-                groups = m.groupdict()
-                clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
-                clock_dict['offset'] = float(groups['offset'])
-                clock_dict['rootdelay'] = float(groups['rootdelay'])
-                continue
-
-            m = p6.match(line)
-            if m:
-                groups = m.groupdict()
-                clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
-                clock_dict['rootdispersion'] = float(groups['rootdispersion'])
-                clock_dict['peerdispersion'] = float(groups['peerdispersion'])
-                continue
-
-            m = p7.match(line)
-            if m:
-                groups = m.groupdict()
-                clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
-                clock_dict['leap_status'] = groups['leap_status']
-                clock_dict['drift'] = groups['drift']
-                continue
-
-            m = p8.match(line)
-            if m:
-                groups = m.groupdict()
-                clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
-                clock_dict['poll'] = int(groups['poll'])
-                clock_dict['last_update'] = groups['last_update']
-                continue
-
-        return ret_dict
+    pass
 
 
 # =========================================================
