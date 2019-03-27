@@ -46,7 +46,6 @@ class ShowRunKeyChain(ShowRunKeyChainSchema):
             out = output
         
         key_chain_dict = {}
-        key_chain_dict['key_chains'] = {}
         for line in out.splitlines():
             line = line.rstrip()
         
@@ -54,6 +53,7 @@ class ShowRunKeyChain(ShowRunKeyChainSchema):
             p1 = re.compile(r'^key\schain\s+(?P<key_chain_name>.*)$')
             m = p1.match(line)
             if m:
+                key_chain_dict['key_chains'] = {}
                 key_chain_name = m.groupdict()['key_chain_name']
                 key_chain_dict['key_chains'][key_chain_name] = {}
                 key_chain_dict['key_chains'][key_chain_name]['keys'] = {}
@@ -179,7 +179,6 @@ class ShowRunRouterIsis(ShowRunRouterIsisSchema):
             out = output
         
         router_isis_dict = {}
-        router_isis_dict['isis'] = {}
         is_interface = False
         is_address_family = False
         isis_name = None
@@ -265,10 +264,11 @@ class ShowRunRouterIsis(ShowRunRouterIsisSchema):
                 continue
             
             
-            # router isis 4445
+            # router isis 65109
             p1 = re.compile(r'^\s*router\sisis\s+(?P<isis_name>.+)$')
             m = p1.match(line)
             if m:
+                router_isis_dict.setdefault('isis', {})
                 isis_name = m.groupdict()['isis_name']
                 router_isis_dict['isis'][isis_name] = {}
                 router_isis_dict['isis'][isis_name]['address_family'] = {}
@@ -345,7 +345,7 @@ class ShowRunRouterIsis(ShowRunRouterIsisSchema):
                         router_isis_dict['isis'][isis_name][m.groupdict()['generic_key'].replace('-', '_')] = m.groupdict()['generic_value']
                         continue
                     if is_interface:
-                        router_isis_dict['isis'][isis_name]['interfaces'][interface][m.groupdict()['generic_key'].replace('-', '_')] = m.groupdict()['generic_value']
+                        router_isis_dict['isis'][isis_name]['interfaces'].setdefault(interface, {}).setdefault(m.groupdict()['generic_key'].replace('-', '_'), m.groupdict()['generic_value'])
                         continue
         
         return router_isis_dict
