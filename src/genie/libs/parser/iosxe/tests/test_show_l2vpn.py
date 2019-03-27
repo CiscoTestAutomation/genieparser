@@ -1687,25 +1687,13 @@ class test_show_l2vpn_vfi(unittest.TestCase):
     golden_parsed_output_2 = {
     'vfi': {
         'vfi-sample': {
-            'state': 'up',
-            'signaling': 'BGP',
-            've_range': 15,
-            've_id': 1,
-            'rt': ['100:2000', '100:100'],
+            'bd_vfi_name': 'vfi-sample',
+            'signaling': 'LDP',
             'bridge_domain': {
                 '30': {
-                    'attachment_circuits': {
-                        },
-                    'pseudo_port_interface': 'pseudowire100004',
                     'vfi': {
                         '2.2.2.2': {
                             'pw_id': {
-                                'pseudowire100005': {
-                                    'split_horizon': True,
-                                    'remote_label': 24,
-                                    'local_label': 28,
-                                    've_id': 2,
-                                    },
                                 'pseudowire1': {
                                     'split_horizon': True,
                                     'vc_id': 12,
@@ -1718,12 +1706,6 @@ class test_show_l2vpn_vfi(unittest.TestCase):
                                     'split_horizon': True,
                                     'vc_id': 14,
                                     },
-                                'pseudowire100007': {
-                                    'split_horizon': True,
-                                    'remote_label': 24015,
-                                    'local_label': 30,
-                                    've_id': 4,
-                                    },
                                 },
                             },
                         '3.3.3.3': {
@@ -1732,20 +1714,16 @@ class test_show_l2vpn_vfi(unittest.TestCase):
                                     'split_horizon': True,
                                     'vc_id': 13,
                                     },
-                                'pseudowire100006': {
-                                    'split_horizon': True,
-                                    'remote_label': 20,
-                                    'local_label': 29,
-                                    've_id': 3,
-                                    },
                                 },
                             },
                         },
+                    'pseudo_port_interface': 'pseudowire100004',
+                    'attachment_circuits': {
+                        },
                     },
                 },
-            'rd': '100:2000',
             'vpn_id': 2000,
-            'bd_vfi_name': 'vfi-sample',
+            'state': 'up',
             'type': 'multipoint',
             },
         },
@@ -1763,8 +1741,64 @@ class test_show_l2vpn_vfi(unittest.TestCase):
       pseudowire3        4.4.4.4          14           Y
       pseudowire2        3.3.3.3          13           Y
       pseudowire1        2.2.2.2          12           Y
+    '''
+    }
 
-    (VPLS BGP AD)
+    golden_parsed_output_3 = {
+    'vfi': {
+        'vfi-sample': {
+            've_range': 15,
+            've_id': 1,
+            'type': 'multipoint',
+            'bd_vfi_name': 'vfi-sample',
+            'state': 'up',
+            'bridge_domain': {
+                '30': {
+                    'vfi': {
+                        '3.3.3.3': {
+                            'pw_id': {
+                                'pseudowire100006': {
+                                    'local_label': 29,
+                                    'remote_label': 20,
+                                    've_id': 3,
+                                    'split_horizon': True,
+                                    },
+                                },
+                            },
+                        '4.4.4.4': {
+                            'pw_id': {
+                                'pseudowire100007': {
+                                    'local_label': 30,
+                                    'remote_label': 24015,
+                                    've_id': 4,
+                                    'split_horizon': True,
+                                    },
+                                },
+                            },
+                        '2.2.2.2': {
+                            'pw_id': {
+                                'pseudowire100005': {
+                                    'local_label': 28,
+                                    'remote_label': 24,
+                                    've_id': 2,
+                                    'split_horizon': True,
+                                    },
+                                },
+                            },
+                        },
+                    'attachment_circuits': {
+                        },
+                    },
+                },
+            'rt': ['100:2000', '100:100'],
+            'vpn_id': 2000,
+            'signaling': 'BGP',
+            'rd': '100:2000',
+            },
+        },
+    }
+
+    golden_output_3 = {'execute.return_value': '''\
     R1_csr1kv#show l2vpn vfi
     Legend: RT=Route-target, S=Split-horizon, Y=Yes, N=No
 
@@ -1779,6 +1813,7 @@ class test_show_l2vpn_vfi(unittest.TestCase):
       pseudowire100005   2.2.2.2         2      28           24              Y
     '''
     }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         platform_obj = ShowL2vpnVfi(device=self.device)
@@ -1792,12 +1827,19 @@ class test_show_l2vpn_vfi(unittest.TestCase):
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
-    def test_golden_full(self):
+    def test_golden_full_2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_2)
         platform_obj = ShowL2vpnVfi(device=self.device)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
+    def test_golden_full_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_3)
+        platform_obj = ShowL2vpnVfi(device=self.device)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_3)
 
 
 if __name__ == '__main__':

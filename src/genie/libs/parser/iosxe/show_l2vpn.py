@@ -606,11 +606,11 @@ class ShowL2vpnVfiSchema(MetaParser):
                 Optional('ve_id'): int,
                 Optional('vpls_id'): str,
                 Optional('ve_range'): int,
-                'rd': str,
-                'rt': list,
+                Optional('rd'): str,
+                Optional('rt'): list,
                 'bridge_domain': {
                     Any(): {
-                        'pseudo_port_interface': str,
+                        Optional('pseudo_port_interface'): str,
                         Optional('attachment_circuits'): {
                             Optional(Any()): {
                                 'name': str,
@@ -664,8 +664,8 @@ class ShowL2vpnVfi(ShowL2vpnVfiSchema):
 
         #   VPN ID: 2051, VE-ID: 2, VE-SIZE: 10
         #   VPN ID: 2000
-        p2 = re.compile(r'^VPN +ID: +(?P<vpn_id>\d+), +VE-ID: +(?P<ve_id>\d+),'
-                         ' VE-SIZE: +(?P<ve_range>\d+)$')
+        p2 = re.compile(r'^VPN +ID: +(?P<vpn_id>\d+)(, +VE-ID: +(?P<ve_id>\d+),'
+                         ' VE-SIZE: +(?P<ve_range>\d+))?$')
 
         #   VPN ID: 100, VPLS-ID: 9:10, Bridge-domain vlan: 100
         p2_1 = re.compile(r'^VPN +ID: +(?P<vpn_id>\d+), +VPLS-ID: +(?P<vpls_id>\S+),'
@@ -720,7 +720,11 @@ class ShowL2vpnVfi(ShowL2vpnVfiSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                final_dict.update({k: int(v) for k, v in group.items()})
+                final_dict['vpn_id'] = int(group['vpn_id'])
+                if group['ve_id']:
+                    final_dict['ve_id'] = int(group['ve_id'])
+                if group['ve_range']:
+                    final_dict['ve_range'] = int(group['ve_range'])
                 continue
 
             m = p2_1.match(line)
