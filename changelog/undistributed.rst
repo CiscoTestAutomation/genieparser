@@ -182,6 +182,15 @@
     * Add ShowL2vpnVfi for:
             show l2vpn vfi
 --------------------------------------------------------------------------------
+                                  LAG
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowEtherChannelLoadBalancing for:
+        show etherchannel load-balancing
+    * Add ShowLacpNeighborDetail for:
+        show lacp neighbor detail
+
+--------------------------------------------------------------------------------
                                    INTERFACE
 --------------------------------------------------------------------------------
 * IOSXE
