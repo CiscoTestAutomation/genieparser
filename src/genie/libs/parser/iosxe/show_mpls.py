@@ -2571,7 +2571,7 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
                 statistics_final_dict['bytes']['sent'] = int(group['byte_send'])
                 continue
 
-            m = p16.match(line)
+            m = p17.match(line)
             if m:
                 group = m.groupdict()
                 statistics_final_dict.setdefault('packets_drop', {})
