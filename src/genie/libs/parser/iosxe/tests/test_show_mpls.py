@@ -2538,7 +2538,7 @@ class test_show_mpls_l2transport_vc_detail(unittest.TestCase):
                     'preferred_path': 'not configured',
                     'tunnel_label': 'imp-null',
                     'vc_id': 1002,
-                    'output_interface': 'SerialEthernet2/0/2',
+                    'output_interface': 'Serial2/0/2',
                     'vc_status': 'recovering',
                     'imposed_label_stack': '{16}',
                     'next_hop': 'point2point',
@@ -2638,7 +2638,7 @@ class test_show_mpls_l2transport_vc_detail(unittest.TestCase):
                 '10.2.2.2': {
                     'imposed_label_stack': '{18}',
                     'tunnel_label': 'imp-null',
-                    'output_interface': 'SerialEthernet2/0',
+                    'output_interface': 'Serial2/0',
                     'vc_status': 'up',
                     'vc_id': 100,
                     'next_hop': 'point2point',

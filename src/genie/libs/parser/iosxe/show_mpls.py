@@ -2280,9 +2280,16 @@ class ShowMplsL2TransportSchema(MetaParser):
                             'local': int,
                             'remote': int,
                         },
+                        Optional('mac_withdraw'): {
+                            'sent': int,
+                            'received': int,
+                        },
                         Optional('remote_interface_description'): str,
                         Optional('peer_id'): str,
                         Optional('peer_state'): str,
+                        Optional('id'): str,
+                        Optional('status'): str,
+                        Optional('targeted_hello_ip'): str,
                     },
                 },
                 Optional('sequencing'): {
@@ -2343,6 +2350,9 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
         p5 = re.compile(r'^Tunnel +label: +(?P<tunnel_label>\S+),'
                          ' +next +hop +(?P<next_hop>[\S\s]+)$')
 
+        #   Next hop: point2point
+        p5_1 = re.compile(r'^Next +hop: +(?P<next_hop>[\S\s]+)$')
+
         #   Output interface: Se2/0/2, imposed label stack {16}
         p6 = re.compile(r'^Output +interface: +(?P<output_interface>\S+),'
                          ' +imposed +label +stack +(?P<imposed_label_stack>\S+)$')
@@ -2370,6 +2380,16 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
         #   Remote interface description: "xconnect to PE2"
         p12 = re.compile(r'^Remote +interface +description:'
                           ' \"+(?P<remote_interface_description>[\S\s]+)\"$')
+
+        # Targeted Hello: 10.1.1.4(LDP Id) -> 10.1.1.1, LDP is UP
+        # Targeted Hello: 10.1.1.1(LDP Id) -> 10.1.1.1
+        p12_1 = re.compile(r'^Targeted +Hello: +(?P<targeted_hello_ip>\S+)\([A-Z]+ +Id\)'
+                            ' +\-\> +(?P<id>[\d\.]+)(,'
+                            ' +[A-Z]+ +is +(?P<status>\S+))?$')
+
+        # MAC Withdraw: sent 5, received 3
+        p12_2 = re.compile(r'^MAC Withdraw: +sent +(?P<sent>\d+),'
+                            ' +received +(?P<received>\d+)$')
 
         #   Sequencing: receive disabled, send disabled
         p13 = re.compile(r'^Sequencing: +receive +(?P<receive>\S+),'
@@ -2438,6 +2458,12 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
                 new_final_dict.update({k:v for k, v in group.items()})
                 continue
 
+            m = p5_1.match(line)
+            if m:
+                group = m.groupdict()
+                new_final_dict.update({k:v for k, v in group.items()})
+                continue
+
             m = p6.match(line)
             if m:
                 group = m.groupdict()
@@ -2493,6 +2519,26 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
                 group = m.groupdict()
                 signaling_final_dict['remote_interface_description'] = \
                     group['remote_interface_description']
+                continue
+
+            m = p12_1.match(line)
+            if m:
+                group = m.groupdict()
+                signaling_final_dict['targeted_hello_ip'] = \
+                    group['targeted_hello_ip']
+                signaling_final_dict['id'] = group['id']
+                if group['status']:
+                    signaling_final_dict['status'] = group['status']
+                continue
+
+            m = p12_2.match(line)
+            if m:
+                group = m.groupdict()
+                signaling_final_dict.setdefault('mac_withdraw', {})
+                signaling_final_dict['mac_withdraw']['sent'] = \
+                    int(group['sent'])
+                signaling_final_dict['mac_withdraw']['received'] = \
+                    int(group['received'])
                 continue
 
             m = p13.match(line)
