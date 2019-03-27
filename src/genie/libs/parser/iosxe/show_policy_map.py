@@ -9,6 +9,7 @@ IOSXE parsers for the following show commands:
 # Python
 import re
 import xmltodict
+import collections
 from netaddr import IPAddress, IPNetwork
 
 # Metaparser
@@ -27,39 +28,46 @@ class ShowPolicyMapControlPlaneSchema(MetaParser):
     ''' Schema for "show policy map control plane" '''
 
     schema = {
-        'service_policy_input':
-            {Any():
-                {'class_map':
-                    {Any():
-                        {'match_all': bool,
-                         'packets': int,
-                         'bytes': int,
-                         'minute': int,
-                         'offered_rate': int,
-                         'drop_rate': int,
-                         'match': str,
-                         Optional('qos_set'):
-                             {'ip_precedence': int,
-                              'marker_statistics': str,
-                             },
-                         Optional('police'):
-                             {'cir_bps': int,
-                              'bc_bytes': int,
-                              'conformed':
-                                  {'packets': int,
-                                   'bytes': int,
-                                   'bps': int,
-                                   'actions': str,
-                                  },
-                              'exceeded':
-                                  {'packets': int,
-                                   'bytes': int,
-                                   'bps': int,
-                                   'actions': str,
-                                  },
-
-                             },
-                         },
+        Any(): # Control Plane
+            {'service_policy': 
+                {Any(): # input/output
+                    {'policy_name': 
+                        {Any(): # Control_Plane_in 
+                            {'class_map': 
+                                {Any(): # Ping_Class
+                                    {'match_all': bool,
+                                    'packets': int,
+                                    'bytes': int,
+                                    'rate': 
+                                        {'interval': int,
+                                        'offered_rate_bps': int,
+                                        'drop_rate_bps': int,
+                                        },
+                                    'match': str,
+                                    Optional('qos_set'):
+                                        {'ip_precedence': int,
+                                        'marker_statistics': str,
+                                        },
+                                    Optional('police'):
+                                        {'cir_bps': int,
+                                        'bc_bytes': int,
+                                        'conformed':
+                                            {'packets': int,
+                                            'bytes': int,
+                                            'bps': int,
+                                            'actions': str,
+                                            },
+                                        'exceeded':
+                                            {'packets': int,
+                                            'bytes': int,
+                                            'bps': int,
+                                            'actions': str,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
                     },
                 },
             },
@@ -74,20 +82,28 @@ class ShowPolicyMapControlPlane(ShowPolicyMapControlPlaneSchema):
       "show policy map control plane"
     '''
 
-    cli_command = 'show policy-map control-plane'
+    cli_command = ['show policy-map {name}']
 
-    def cli(self, output=None):
+    def cli(self, name='', output=None):
         if output is None:
+            cmd = self.cli_command[0].format(name=name)
             # Execute command on device
-            out = self.device.execute(self.cli_command)
+            out = self.device.execute(cmd)
         else:
             out = output
 
         # Init vars
         ret_dict = {}
+        ret_dict = collections.OrderedDict(ret_dict)
+
+        # Control Plane
+        # Interface
+        # Something else
+        p0 = re.compile(r'^(?P<top_level>(Control Plane|Interface))$')
 
         # Service-policy input: Control_Plane_In
-        p1 = re.compile(r'^Service-policy +input: +(?P<service_policy_input>(\w+))$')
+        # Service-policy output: Control_Plane_Out
+        p1 = re.compile(r'^Service-policy +(?P<service_policy>(input|output)): +(?P<policy_name>(\w+))$')
 
         # Class-map: Ping_Class (match-all)
         p2 = re.compile(r'^Class-map: +(?P<class_map>([\s\w\-]+)) +(?P<match_all>(.*))$')
@@ -96,7 +112,7 @@ class ShowPolicyMapControlPlane(ShowPolicyMapControlPlaneSchema):
         p3 = re.compile(r'^(?P<packets>(\d+)) packets, (?P<bytes>(\d+)) +bytes')
 
         # 5 minute offered rate 0000 bps, drop rate 0000 bps
-        p4 = re.compile(r'^(?P<minute>(\d+)) +minute +offered +rate +(?P<offered_rate>(\d+)) bps, +drop +rate +(?P<drop_rate>(\d+)) bps$')
+        p4 = re.compile(r'^(?P<interval>(\d+)) +minute +offered +rate +(?P<offered_rate>(\d+)) bps, +drop +rate +(?P<drop_rate>(\d+)) bps$')
 
         # Match: access-group name Ping_Option
         p5 = re.compile(r'^Match: +(?P<match>([\w\-\s]+))$')
@@ -133,11 +149,25 @@ class ShowPolicyMapControlPlane(ShowPolicyMapControlPlaneSchema):
         for line in out.splitlines():
             line = line.strip()
 
+            # Control Plane 
+            m = p0.match(line)
+            if m:
+                top_level = m.groupdict()['top_level']
+                top_level_dict = ret_dict.setdefault(top_level, {})
+                continue
+
             # Service-policy input: Control_Plane_In
+            # Service-policy output: Control_Plane_Out
             m = p1.match(line)
             if m:
-                service_policy_input = m.groupdict()['service_policy_input']
-                service_dict = ret_dict.setdefault('service_policy_input', {}).setdefault(service_policy_input, {})
+                group = m.groupdict()
+                service_policy = group['service_policy']
+                policy_name = group['policy_name']
+                # Set dict
+                service_dict = top_level_dict.setdefault('service_policy', {}).\
+                                              setdefault(service_policy, {}).\
+                                              setdefault('policy_name', {}).\
+                                              setdefault(policy_name, {})
                 continue
 
             # Class-map: Ping_Class (match-all)
@@ -161,9 +191,10 @@ class ShowPolicyMapControlPlane(ShowPolicyMapControlPlaneSchema):
             # 5 minute offered rate 0000 bps, drop rate 0000 bps
             m = p4.match(line)
             if m:
-                class_map_dict['minute'] = int(m.groupdict()['minute'])
-                class_map_dict['offered_rate'] = int(m.groupdict()['offered_rate'])
-                class_map_dict['drop_rate'] = int(m.groupdict()['drop_rate'])
+                rate_dict = class_map_dict.setdefault('rate', {})
+                rate_dict['interval'] = int(m.groupdict()['interval']) * 60
+                rate_dict['offered_rate_bps'] = int(m.groupdict()['offered_rate'])
+                rate_dict['drop_rate_bps'] = int(m.groupdict()['drop_rate'])
                 continue
 
             # Match: access-group name Ping_Option
