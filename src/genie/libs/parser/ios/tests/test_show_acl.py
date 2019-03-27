@@ -49,36 +49,18 @@ class test_show_access_lists(test_show_access_lists_iosxe):
         }
     }
 
-    golden_output_duplicate = {'execute.return_value': '''\
+    golden_output_ios = {'execute.return_value': '''\
         Router# show access-lists 101
         Extended IP access list 101
-            10 permit ip host 10.0.0.0 host 10.5.5.34
-            20 permit icmp any any
-            30 permit ip host 10.0.0.0 host 10.2.54.2
-            40 permit ip host 10.0.0.0 host 10.3.32.3 log
-        ip access-list extended 101
-         100 permit icmp any any
-        Extended IP access list 101
             10 permit ip host 10.3.3.3 host 10.5.5.34
             20 permit icmp any any
             30 permit ip host 10.34.2.2 host 10.2.54.2
             40 permit ip host 10.3.4.31 host 10.3.32.3 log
-        Extended IP access lists 101
-            10 permit ip host 10.3.3.3 host 10.5.5.34
-            20 permit icmp any any
-            30 permit ip host 10.34.2.2 host 10.2.54.2
-            40 permit ip host 10.3.4.31 host 10.3.32.3 log
-        ip access-lists extended 101
-         20 permit udp host 10.1.1.1 host 10.2.2.2
-        %Duplicate sequence number.
-        Extended IP access lists 101
-            10 permit ip host 10.3.3.3 host 10.5.5.34
-            20 permit icmp any any
-            30 permit ip host 10.34.2.2 host 10.2.54.2
-            40 permit ip host 10.3.4.31 host 10.3.32.3 log
+        ip access-lists extended 101 
+            20 permit udp host 10.1.1.1 host 10.2.2.2
     '''}
 
-    golden_parsed_output_duplicate = {
+    golden_parsed_output_ios = {
         "101": {
             "name": "101",
             "type": "ipv4-acl-type",
@@ -94,9 +76,6 @@ class test_show_access_lists(test_show_access_lists_iosxe):
                             "ipv4": {
                                 "protocol": "ipv4",
                                 "source_network": {
-                                    "host 10.0.0.0": {
-                                        "source_network": "host 10.0.0.0"
-                                    },
                                     "host 10.3.3.3": {
                                         "source_network": "host 10.3.3.3"
                                     }
@@ -171,9 +150,6 @@ class test_show_access_lists(test_show_access_lists_iosxe):
                             "ipv4": {
                                 "protocol": "ipv4",
                                 "source_network": {
-                                    "host 10.0.0.0": {
-                                        "source_network": "host 10.0.0.0"
-                                    },
                                     "host 10.34.2.2": {
                                         "source_network": "host 10.34.2.2"
                                     }
@@ -203,9 +179,6 @@ class test_show_access_lists(test_show_access_lists_iosxe):
                             "ipv4": {
                                 "protocol": "ipv4",
                                 "source_network": {
-                                    "host 10.0.0.0": {
-                                        "source_network": "host 10.0.0.0"
-                                    },
                                     "host 10.3.4.31": {
                                         "source_network": "host 10.3.4.31"
                                     }
@@ -223,52 +196,10 @@ class test_show_access_lists(test_show_access_lists_iosxe):
                             }
                         }
                     }
-                },
-                "100": {
-                    "name": "100",
-                    "actions": {
-                        "forwarding": "permit",
-                        "logging": "log-none"
-                    },
-                    "matches": {
-                        "l3": {
-                            "icmp": {
-                                "protocol": "icmp",
-                                "source_network": {
-                                    "any": {
-                                        "source_network": "any"
-                                    }
-                                },
-                                "destination_network": {
-                                    "any": {
-                                        "destination_network": "any"
-                                    }
-                                }
-                            }
-                        },
-                        "l4": {
-                            "icmp": {
-                                "established": False
-                            }
-                        }
-                    }
                 }
             }
         }
     }
-
-    def test_empty(self):
-        self.dev1 = Mock(**self.empty_output)
-        obj = ShowAccessLists(device=self.dev1)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
-
-    def test_golden(self):
-        self.maxDiff = None
-        self.dev_c3850 = Mock(**self.golden_output)
-        obj = ShowAccessLists(device=self.dev_c3850)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_golden_standard(self):
         self.maxDiff = None
@@ -277,12 +208,12 @@ class test_show_access_lists(test_show_access_lists_iosxe):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_standard)
 
-    def test_golden_duplicate(self):
+    def test_golden_ios(self):
         self.maxDiff = None
-        self.dev1 = Mock(**self.golden_output_duplicate)
+        self.dev1 = Mock(**self.golden_output_ios)
         obj = ShowAccessLists(device=self.dev1)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output_duplicate)
+        self.assertEqual(parsed_output,self.golden_parsed_output_ios)
 
 
 if __name__ == '__main__':
