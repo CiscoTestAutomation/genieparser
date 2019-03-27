@@ -124,6 +124,9 @@
         show service-group state
     * Add ShowServiceGroupStats for:
         show service-group stats
+    * Add ShowServiceGroupTrafficStats for:
+        show service-group traffic-stats
+        show service-group traffic-stats <group>
 
 --------------------------------------------------------------------------------
                                  CONFIG
@@ -165,3 +168,4 @@
 * IOS
     * Add ShowNtpAssociationsDetail for:
         show ntp associations detail
+
