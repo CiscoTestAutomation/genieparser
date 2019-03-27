@@ -183,6 +183,12 @@ class test_show_access_lists(test_show_access_lists_iosxe):
         }
     }
 
+    def test_empty(self):
+        self.dev1 = Mock(**self.empty_output)
+        obj = ShowAccessLists(device=self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
     def test_golden_standard(self):
         self.maxDiff = None
         self.dev1 = Mock(**self.golden_output_standard)
