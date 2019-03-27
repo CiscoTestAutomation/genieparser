@@ -40,6 +40,10 @@ class ShowMonitorSchema(MetaParser):
                   Optional('source_subinterfaces'):
                       {Any(): str,
                       },
+                  Optional('source_vlans'):
+                      {Any():str,
+                      },
+                  Optional('filter_access_group'): int,
                   Optional('destination_ports'): str,
                   Optional('destination_ip_address'): str,
                   Optional('destination_erspan_id'): str,
@@ -47,7 +51,8 @@ class ShowMonitorSchema(MetaParser):
                   Optional('source_erspan_id'): str,
                   Optional('source_ip_address'): str,
                   Optional('source_rspan_vlan'): int,
-                  'mtu': int,
+                  Optional('dest_rspan_vlan'): int,
+                  Optional('mtu'): int,
                   },
             },
         }
@@ -79,52 +84,72 @@ class ShowMonitor(ShowMonitorSchema):
 
         # Init vars
         ret_dict = {}
+        src_ports = False
+        source_subintfs = False
 
         # Session 1
         p1 = re.compile(r'Session +(?P<session>(\d+))')
 
         # Type                   : ERSPAN Source Session
-        p2 = re.compile(r'^Type +: +(?P<type>([a-zA-Z\s]+))$')
+        # Type: ERSPAN Source Session
+        p2 = re.compile(r'^Type *: +(?P<type>([a-zA-Z\s]+))$')
 
         # Status                 : Admin Enabled
-        p3 = re.compile(r'^Status +: +(?P<status>([a-zA-Z\s]+))$')
+        # Status: Admin Enabled
+        p3 = re.compile(r'^Status *: +(?P<status>([a-zA-Z\s]+))$')
 
         # Source Ports           :
         p4_1 = re.compile(r'^Source +Ports +:$')
 
-        # Source Subinterfaces:
-
         #    TX Only            : Gi0/1/4
         #    Both               : Gi0/1/4
-        p4_2 = re.compile(r'(?P<key>(TX Only|Both)) *: +(?P<intf>(\S+))$')
+        p4_2 = re.compile(r'(?P<key>(TX Only|Both)) *: +(?P<src_val>(\S+))$')
 
-        # Destination IP Address : 172.18.197.254
-        p5 = re.compile(r'^Destination +IP +Address +: +(?P<destination_ip_address>([0-9\.\:]+))$')
+        # Source Subinterfaces:
+        p5_1 = re.compile(r'^Source +Subinterfaces:$')
 
-        # MTU                    : 1464
-        p6 = re.compile(r'^MTU +: +(?P<mtu>([0-9]+))$')
+        # Both: Gi2/2/0.100
+        #p5_2 = re.compile(r'^(?P<key>(Both)) *: +(?P<val>([\w\/\.]+))$')
 
-        # Destination ERSPAN ID  : 1
-        p7 = re.compile(r'^Destination +ERSPAN +ID +: +(?P<destination_erspan_Id>([0-9]+))$')
+        # Source VLANs           :
+        p6_1 = re.compile(r'^Source +VLANs +:$')
 
-        # Origin IP Address      : 172.18.197.254
-        p8 = re.compile(r'^Origin +IP +Address +: +(?P<origin_ip_address>([0-9\.\:]+))$')
+        # RX Only            : 20
+        p6_2 = re.compile(r'^(?P<key>(RX Only)) *: +(?P<rx_val>(\d+))$')
+
+        # Filter Access-Group: 100
+        p7 = re.compile(r'^Filter +Access-Group: +(?P<filter_access_group>(\d+))$')
 
         # Destination Ports      : Gi0/1/6 Gi0/1/2
-        p9 = re.compile(r'^Destination +Ports +: +(?P<destination_ports>([a-zA-Z0-9\/\s]+))$')
+        p8 = re.compile(r'^Destination +Ports +: +(?P<destination_ports>([a-zA-Z0-9\/\s]+))$')
 
-        # Source IP Address      : 172.18.197.254
-        p10 = re.compile(r'^Source +IP +Address +: +(?P<source_ip_address>([0-9\.\:]+))$')
+        # Destination IP Address : 172.18.197.254
+        p9 = re.compile(r'^Destination +IP +Address +: +(?P<destination_ip_address>([0-9\.\:]+))$')
+
+        # Destination ERSPAN ID  : 1
+        p10 = re.compile(r'^Destination +ERSPAN +ID +: +(?P<destination_erspan_Id>([0-9]+))$')
+
+        # Origin IP Address      : 172.18.197.254
+        p11 = re.compile(r'^Origin +IP +Address *: +(?P<origin_ip_address>([0-9\.\:]+))$')
 
         # Source ERSPAN ID       : 1
-        p11 = re.compile(r'^Source +ERSPAN +ID +: +(?P<source_erspan_Id>([0-9]+))$')
+        p12 = re.compile(r'^Source +ERSPAN +ID +: +(?P<source_erspan_Id>([0-9]+))$')
+
+        # Source IP Address      : 172.18.197.254
+        p13 = re.compile(r'^Source +IP +Address +: +(?P<source_ip_address>([0-9\.\:]+))$')
 
         # Source RSPAN VLAN : 100
-        p12 = re.compile(r'^Source +RSPAN +VLAN :+ (?P<source_rspan_vlan>(\d+))$')
+        p14 = re.compile(r'^Source +RSPAN +VLAN :+ (?P<source_rspan_vlan>(\d+))$')
+
+        # Dest RSPAN VLAN : 100
+        p15 = re.compile(r'^Dest +RSPAN +VLAN :+ (?P<dest_rspan_vlan>(\d+))$')
+
+        # MTU                    : 1464
+        p16 = re.compile(r'^MTU +: +(?P<mtu>([0-9]+))$')
 
         for line in out.splitlines():
-            line = line.strip()
 
+            line = line.strip()
             # Session 1
             m = p1.match(line)
             if m:
@@ -148,6 +173,8 @@ class ShowMonitor(ShowMonitorSchema):
             m = p4_1.match(line)
             if m:
                 src_ports_dict = session_dict.setdefault('source_ports', {})
+                src_ports = True
+                source_subintfs = False
                 continue
 
             #    TX Only            : Gi0/1/4
@@ -157,54 +184,92 @@ class ShowMonitor(ShowMonitorSchema):
                 group = m.groupdict()
                 key = group['key'].lower().replace(" ", "_")
                 # Set keys
-                src_ports_dict[key] = group['intf']
+                if src_ports:
+                    src_ports_dict[key] = group['src_val']
+                elif source_subintfs:
+                    source_sub_dict[key] = group['src_val']
+                continue
+
+            # Source Subinterfaces:
+            m = p5_1.match(line)
+            if m:
+                source_sub_dict = session_dict.setdefault('source_subinterfaces', {})
+                src_ports = False
+                source_subintfs = True
+                continue
+
+            # Source VLANs           :
+            m = p6_1.match(line)
+            if m:
+                source_vlan_dict = session_dict.setdefault('source_vlans', {})
+                continue
+
+            # RX Only            : 20
+            m = p6_2.match(line)
+            if m:
+                group = m.groupdict()
+                key = group['key'].lower().replace(" ", "_")
+                source_vlan_dict[key] = group['rx_val']
+                continue
+
+            # Filter Access-Group: 100
+            m = p7.match(line)
+            if m:
+                session_dict['filter_access_group'] = int(m.groupdict()['filter_access_group'])
+                continue
+
+            # Destination Ports      : Gi0/1/6 Gi0/1/2
+            m = p8.match(line)
+            if m:
+                session_dict['destination_ports'] = str(m.groupdict()['destination_ports'])
                 continue
 
             # Destination IP Address : 172.18.197.254
-            m = p5.match(line)
+            m = p9.match(line)
             if m:
                 session_dict['destination_ip_address'] = str(m.groupdict()['destination_ip_address'])
                 continue
 
-            # MTU                    : 1464
-            m = p6.match(line)
-            if m:
-                session_dict['mtu'] = int(m.groupdict()['mtu'])
-                continue
-
             # Destination ERSPAN ID  : 1
-            m = p7.match(line)
+            m = p10.match(line)
             if m:
                 session_dict['destination_erspan_id'] = str(m.groupdict()['destination_erspan_Id'])
                 continue
 
             # Origin IP Address      : 172.18.197.254
-            m = p8.match(line)
+            m = p11.match(line)
             if m:
                 session_dict['origin_ip_address'] = str(m.groupdict()['origin_ip_address'])
                 continue
 
-            # Destination Ports      : Gi0/1/6 Gi0/1/2
-            m = p9.match(line)
-            if m:
-                session_dict['destination_ports'] = str(m.groupdict()['destination_ports'])
-                continue
-            # Source IP Address      : 172.18.197.254
-            m = p10.match(line)
-            if m:
-                session_dict['source_ip_address'] = str(m.groupdict()['source_ip_address'])
-                continue
-
             # Source ERSPAN ID       : 1
-            m = p11.match(line)
+            m = p12.match(line)
             if m:
                 session_dict['source_erspan_id'] = str(m.groupdict()['source_erspan_Id'])
                 continue
 
+            # Source IP Address      : 172.18.197.254
+            m = p13.match(line)
+            if m:
+                session_dict['source_ip_address'] = str(m.groupdict()['source_ip_address'])
+                continue
+
             # Source RSPAN VLAN : 100
-            m = p12.match(line)
+            m = p14.match(line)
             if m:
                 session_dict['source_rspan_vlan'] = int(m.groupdict()['source_rspan_vlan'])
+                continue
+
+            # Dest RSPAN VLAN : 100
+            m = p15.match(line)
+            if m:
+                session_dict['dest_rspan_vlan'] = int(m.groupdict()['dest_rspan_vlan'])
+                continue
+
+            # MTU                    : 1464
+            m = p16.match(line)
+            if m:
+                session_dict['mtu'] = int(m.groupdict()['mtu'])
                 continue
 
         return ret_dict

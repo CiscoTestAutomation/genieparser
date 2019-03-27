@@ -151,7 +151,19 @@ class test_show_monitor(unittest.TestCase):
        
         '''}
 
-    golden_output4 = {'execute.eturn_value': '''
+    golden_parsed_output4 = {
+        'session': 
+            {'1': 
+                {'destination_erspan_id': '10',
+                'destination_ip_address': '10.12.12.2',
+                'filter_access_group': 100,
+                'origin_ip_address': '10.12.12.1',
+                'source_subinterfaces': 
+                    {'both': 'Gi2/2/0.100'},
+                'status': 'Admin Enabled',
+                'type': 'ERSPAN Source Session'}}}
+
+    golden_output4 = {'execute.return_value': '''
         Router#show monitor session 1
 
         Session 1
@@ -192,7 +204,6 @@ class test_show_monitor(unittest.TestCase):
         self.device = Mock(**self.golden_output4)
         obj = ShowMonitor(device=self.device)
         parsed_output = obj.parse(session='1')
-        import pdb ; pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output4)
 
     def test_show_monitor_empty(self):
