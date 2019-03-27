@@ -33,7 +33,7 @@ class ShowIpProtocolsSchema(MetaParser):
                                     Any(): {
                                         'distance': int,
                                         'maximum_paths': int,
-                                        'output_delay': int,
+                                        Optional('output_delay'): int,
                                         'send_version': int,
                                         'receive_version': int,
                                         Optional('automatic_network_summarization_in_effect'): bool,
