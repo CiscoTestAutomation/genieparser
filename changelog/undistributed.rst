@@ -72,6 +72,7 @@
     * Add ShowPlatformHardwareSerdesInternal for 'show platform hardware slot <x> serdes statistics internal'
     * Add ShowProcessesCpuHistory for 'show processes cpu history'
 
+    * Update ShowVersion to support more output
 --------------------------------------------------------------------------------
                                     MPLS LDP
 --------------------------------------------------------------------------------
@@ -174,7 +175,12 @@
             show ethernet service instance interface <interface> stats
     * Add ShowEthernetServiceInstanceSummary for:
             show ethernet service instance summary
+    * Add ShowL2vpnVfi for:
+            show l2vpn vfi
 
+* IOS
+    * Add ShowL2vpnVfi for:
+            show l2vpn vfi
 --------------------------------------------------------------------------------
                                    INTERFACE
 --------------------------------------------------------------------------------
@@ -182,3 +188,6 @@
     * Add ShowInterfaceStats for:
         show interface <interface> stats
         show interface stats
+
+    * Update ShowIpInterface to support more output
+    * Update ShowIpInterfaceBrief for cli_command

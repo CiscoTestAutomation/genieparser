@@ -4,11 +4,18 @@
 import re
 import os
 import json
+import sys
 import warnings
+import logging
 import importlib
+from difflib import SequenceMatcher as SM
+
+
 from genie.libs import parser
 from genie.abstract import Lookup
 
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+log = logging.getLogger(__name__)
 # Parser within Genie
 try:
     mod = importlib.import_module('genie.libs.parser')
@@ -67,6 +74,8 @@ def get_parser(command, device):
         return _find_parser_cls(device, found_data), kwargs
 
 def _find_command(command, data, device):
+    ratio = 0
+    matches = None
     for key in data:
         if not '{' in key:
             # Disregard the non regex ones
@@ -91,7 +100,11 @@ def _find_command(command, data, device):
             for token in lookup._tokens:
                 if token in ret_data:
                     ret_data = ret_data[token]
-            return (ret_data, match.groupdict())
+            new_ratio = SM(None, key, command).ratio()
+            if new_ratio > ratio:
+                matches = (ret_data, match.groupdict())
+    return matches
+        
     raise SyntaxError('Could not find a parser match')
 
 def _find_parser_cls(device, data):
