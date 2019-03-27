@@ -175,7 +175,12 @@
             show ethernet service instance interface <interface> stats
     * Add ShowEthernetServiceInstanceSummary for:
             show ethernet service instance summary
+    * Add ShowL2vpnVfi for:
+            show l2vpn vfi
 
+* IOS
+    * Add ShowL2vpnVfi for:
+            show l2vpn vfi
 --------------------------------------------------------------------------------
                                    INTERFACE
 --------------------------------------------------------------------------------
