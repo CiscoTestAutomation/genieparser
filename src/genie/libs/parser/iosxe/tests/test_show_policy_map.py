@@ -274,7 +274,6 @@ class test_show_policy_map_control_plane(unittest.TestCase):
                                           'drop_rate_bps': 0},
                                      'match': 'any'}}}}}}}}
 
-
     golden_output1 = {'execute.return_value': '''
         Router#show policy-map control-plane
         Load for five secs: 29%/0%; one minute: 7%; five minutes: 6%
@@ -424,6 +423,28 @@ class test_show_policy_map_control_plane(unittest.TestCase):
               Router#
 
                           '''}
+
+    golden_parsed_output2 = {}
+
+    golden_output2 = {'execute.return_value': '''
+        Device# show policy-map control-plane
+        Control Plane
+        Service-policy input:TEST
+        Class-map:TEST (match-all)
+              20 packets, 11280 bytes
+              5 minute offered rate 0 bps, drop rate 0 bps
+              Match:access-group 101
+              police:
+                8000 bps, 1500 limit, 1500 extended limit
+                conformed 15 packets, 6210 bytes; action:transmit
+                exceeded 5 packets, 5070 bytes; action:drop
+                violated 0 packets, 0 bytes; action:drop
+                conformed 0 bps, exceed 0 bps, violate 0 bps
+        Class-map:class-default (match-any)
+              0 packets, 0 bytes
+              5 minute offered rate 0 bps, drop rate 0 bps
+              Match:any
+        '''}
 
     def test_show_policy_map_control_plane_empty(self):
         self.maxDiff = None
