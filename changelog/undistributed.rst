@@ -158,4 +158,10 @@
     * Add ShowEthernetServiceInstanceSummary for:
             show ethernet service instance summary
 
-
+--------------------------------------------------------------------------------
+                                   INTERFACE
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowInterfaceStats for:
+        show interface <interface> stats
+        show interface stats
