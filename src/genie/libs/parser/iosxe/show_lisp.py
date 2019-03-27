@@ -99,7 +99,8 @@ class ShowLispSession(ShowLispSessionSchema):
 
         # Peer                           State      Up/Down        In/Out    Users
         # 2.2.2.2                        Up         00:51:38        8/13     3
-        p2 = re.compile(r'(?P<peer>(\S+)) +(?P<state>(Up|Down)) +(?P<time>(\S+))'
+        # 2001:DB8:B:2::2                Init       never           0/0      1
+        p2 = re.compile(r'(?P<peer>(\S+)) +(?P<state>(\S+)) +(?P<time>(\S+))'
                          ' +(?P<in>(\d+))\/(?P<out>(\d+)) +(?P<users>(\d+))$')
 
         for line in out.splitlines():
