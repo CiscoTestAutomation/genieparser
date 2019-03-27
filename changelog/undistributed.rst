@@ -112,7 +112,7 @@
 ---------------------------------------------------------------------------------
 * IOSXE
     * Add ShowBfdNeighborsDetails
-        show bfd neighbors client ospf details
+        show bfd neighbors client <client> details
         show bfd neighbors details
 
 ----------------------------------------------------------------------------------
