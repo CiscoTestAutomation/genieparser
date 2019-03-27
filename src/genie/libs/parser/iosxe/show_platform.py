@@ -115,6 +115,8 @@ class ShowVersion(ShowVersionSchema):
             line = line.rstrip()
 
             # version
+            # Cisco IOS Software [Everest], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.5, RELEASE SOFTWARE (fc3)
+            # Cisco IOS XE Software, Version BLD_V163_MR_THROTTLE_LATEST_20170410_093453_V16_3_3_24
             p1 = re.compile(
                 r'^\s*[Cc]isco +IOS +[Ss]oftware.+, (?P<platform>.+) '
                  'Software +\((?P<image_id>.+)\).+[Vv]ersion +'
