@@ -158,7 +158,12 @@ class test_show_interfaces(unittest.TestCase):
         },
         "GigabitEthernet0/2": {
             "type": "iGbE",
+            "auto_negotiate": True,
             "delay": 10,
+            "duplex_mode": 'auto',
+            "link_type": 'auto',
+            "media_type": 'RJ45',
+            "port_speed": 'auto speed',
             "queues": {
                "input_queue_drops": 0,
                "output_queue_max": 40,
