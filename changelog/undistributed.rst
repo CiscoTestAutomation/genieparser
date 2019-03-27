@@ -177,10 +177,14 @@
             show ethernet service instance summary
     * Add ShowL2vpnVfi for:
             show l2vpn vfi
+    * Add ShowL2vpnServiceAll for:
+            show l2vpn service all
 
 * IOS
     * Add ShowL2vpnVfi for:
             show l2vpn vfi
+    * Add ShowL2vpnServiceAll for:
+            show l2vpn service all
 --------------------------------------------------------------------------------
                                    INTERFACE
 --------------------------------------------------------------------------------
