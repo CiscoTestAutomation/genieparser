@@ -576,9 +576,7 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 			# 					- Diagnostic: 0
 			m = p25.match(line)
 			if m:
-				
 				group = m.groupdict()
-				
 				last_packet.update({'diagnostic' : int(group['diagnostic'])})
 				continue
 
