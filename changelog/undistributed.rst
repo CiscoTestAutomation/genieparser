@@ -72,6 +72,7 @@
     * Add ShowPlatformHardwareSerdesInternal for 'show platform hardware slot <x> serdes statistics internal'
     * Add ShowProcessesCpuHistory for 'show processes cpu history'
 
+    * Update ShowVersion to support more output
 --------------------------------------------------------------------------------
                                     MPLS LDP
 --------------------------------------------------------------------------------
@@ -182,3 +183,6 @@
     * Add ShowInterfaceStats for:
         show interface <interface> stats
         show interface stats
+
+    * Update ShowIpInterface to support more output
+    * Update ShowIpInterfaceBrief for cli_command
