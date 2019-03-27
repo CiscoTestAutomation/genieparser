@@ -29,6 +29,7 @@
         *  show mpls interfaces <interface>
         *  show mpls interfaces <interface> detail
         *  show mpls interfaces detail
+        *  show mpls l2transport vc detail
 """
 
 import re
@@ -2242,7 +2243,7 @@ class ShowMplsL2TransportSchema(MetaParser):
     schema = {
         'interface': {
             Any(): {
-                Optional('state'): str,
+                Optional('status'): str,
                 Optional('local_circuit'): str,
                 Optional('state'): str,
                 'destination_address': {
@@ -2252,15 +2253,16 @@ class ShowMplsL2TransportSchema(MetaParser):
                         Optional('tunnel_label'): str,
                         Optional('next_hop'): str,
                         Optional('output_interface'): str,
-                        Optional('imposed_label_stack'): int,
+                        Optional('imposed_label_stack'): str,
                         Optional('default_path'): str,
                         Optional('preferred_path'): str,
                     },
                 },
                 Optional('line_protocol_status'): str,
                 Optional('ethernet_vlan'): {
-                    'number': int,
-                    'status': str,
+                    Any(): {
+                        'status': str,
+                    },
                 },
                 Optional('create_time'): str,
                 Optional('last_status_change_time'): str,
@@ -2322,6 +2324,7 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
         ret_dict = {}
 
         # Local interface: VFI PE1-VPLS-A up
+        # Local interface: Fa2/1/1.2 up, line protocol up, Eth VLAN 2 up
         p1 = re.compile(r'^Local +interface: +(?P<interface>[\w\d\/\.\s\-]+)'
                          ' +(?P<state>\w+)(, line +protocol +(?P<line_protocol_status>\w+),'
                          ' Eth +VLAN +(?P<number>\d+) +(?P<status>\w+))?$')
@@ -2338,11 +2341,11 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
 
         #   Tunnel label: imp-null, next hop point2point
         p5 = re.compile(r'^Tunnel +label: +(?P<tunnel_label>\S+),'
-                         ' +next +hop: +(?P<next_hop>[\S\s]+)$')
+                         ' +next +hop +(?P<next_hop>[\S\s]+)$')
 
         #   Output interface: Se2/0/2, imposed label stack {16}
         p6 = re.compile(r'^Output +interface: +(?P<output_interface>\S+),'
-                         ' +imposed +label +stack \{+(?P<imposed_label_stack>\d+)\}$')
+                         ' +imposed +label +stack +(?P<imposed_label_stack>\S+)$')
 
         #   Create time: 1d00h, last status change time: 00:00:03
         p7 = re.compile(r'^Create +time: +(?P<create_time>\S+),'
@@ -2384,7 +2387,7 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
                           ' +(?P<byte_receive>\d+), +send +(?P<byte_send>\d+)$')
 
         #   packet drops:  receive 0, send 0
-        p17 = re.compile(r'^byte +drops: +receive'
+        p17 = re.compile(r'^packet +drops: +receive'
                           ' +(?P<pkts_drop_receive>\d+), +send +(?P<pkts_drop_send>\d+)$')
 
         for line in out.splitlines():
@@ -2393,15 +2396,18 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                interface = group['interface']
+                interface = Common.convert_intf_name(group['interface'])
                 final_dict = ret_dict.setdefault('interface', {}).\
                     setdefault(interface, {})
+                final_dict['status'] = group['state']
                 if group['line_protocol_status']:
                     final_dict['line_protocol_status'] = group['line_protocol_status']
                 if group['number'] and group['status']:
-                    final_dict.setdefault('ethernet_vlan', {})
-                    final_dict['ethernet_vlan']['number'] = int(group['number'])
-                    final_dict['ethernet_vlan']['status'] = group['status']
+                    ether_number = int(group['number'])
+                    final_dict.setdefault('ethernet_vlan', {}).\
+                        setdefault(ether_number, {})
+                    final_dict['ethernet_vlan'][ether_number]['status'] = \
+                        group['status']
                 continue
 
             m = p2.match(line)
@@ -2435,8 +2441,9 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                new_final_dict['output_interface'] = group['output_interface']
-                new_final_dict['imposed_label_stack'] = int(group['imposed_label_stack'])
+                new_final_dict['output_interface'] = Common.convert_intf_name(
+                    group['output_interface'])
+                new_final_dict['imposed_label_stack'] = group['imposed_label_stack']
                 continue
 
             m = p7.match(line)

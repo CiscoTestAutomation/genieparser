@@ -2511,61 +2511,65 @@ class test_show_mpls_l2transport_vc_detail(unittest.TestCase):
     empty_output = {'execute.return_value': '      '}
 
     golden_parsed_output = {
-        'interface': {
-            'Fa2/1/1.2': {
-                'destination_address': {
-                    '10.2.2.2': {
-                        'default_path': 'active',
-                        'output_interface': 'Se2/0/2',
-                        'vc_status': 'recovering',
-                        'preferred_path': 'not configured',
-                        'imposed_label_stack': 16,
-                        'vc_id': 1002,
+    'interface': {
+        'FastEthernet2/1/1.2': {
+            'signaling_protocol': {
+                'LDP': {
+                    'mtu': {
+                        'local': 1500,
+                        'remote': 1500,
                         },
-                    },
-                'create_time': '1d00h',
-                'sequencing': {
-                    'sent': 'disabled',
-                    'received': 'disabled',
-                    },
-                'statistics': {
-                    'packets': {
-                        'sent': 28879,
-                        'received': 20040,
+                    'remote_interface_description': 'xconnect to PE2',
+                    'group_id': {
+                        'local': 0,
+                        'remote': 0,
                         },
-                    'bytes': {
-                        'sent': 25992388,
-                        'received': 25073016,
+                    'peer_id': '10.2.2.2:0',
+                    'mpls_vc_labels': {
+                        'local': 21,
+                        'remote': 16,
                         },
+                    'peer_state': 'down',
                     },
-                'last_status_change_time': '00:00:03',
-                'line_protocol_status': 'up',
-                'signaling_protocol': {
-                    'LDP': {
-                        'mtu': {
-                            'local': 1500,
-                            'remote': 1500,
-                            },
-                        'mpls_vc_labels': {
-                            'local': 21,
-                            'remote': 16,
-                            },
-                        'group_id': {
-                            'local': 0,
-                            'remote': 0,
-                            },
-                        'peer_state': 'down',
-                        'peer_id': '10.2.2.2:0',
-                        'remote_interface_description': 'xconnect to PE2',
-                        },
+                },
+            'destination_address': {
+                '10.2.2.2': {
+                    'default_path': 'active',
+                    'preferred_path': 'not configured',
+                    'tunnel_label': 'imp-null',
+                    'vc_id': 1002,
+                    'output_interface': 'SerialEthernet2/0/2',
+                    'vc_status': 'recovering',
+                    'imposed_label_stack': '{16}',
+                    'next_hop': 'point2point',
                     },
-                'ethernet_vlan': {
+                },
+            'line_protocol_status': 'up',
+            'sequencing': {
+                'received': 'disabled',
+                'sent': 'disabled',
+                },
+            'status': 'up',
+            'create_time': '1d00h',
+            'statistics': {
+                'bytes': {
+                    'received': 25073016,
+                    'sent': 25992388,
+                    },
+                'packets': {
+                    'received': 20040,
+                    'sent': 28879,
+                    },
+                },
+            'last_status_change_time': '00:00:03',
+            'ethernet_vlan': {
+                2: {
                     'status': 'up',
-                    'number': 2,
                     },
                 },
             },
-        }
+        },
+    }
 
     golden_output = {'execute.return_value': '''\
         Device# show mpls l2transport vc detail
@@ -2611,61 +2615,56 @@ class test_show_mpls_l2transport_vc_detail(unittest.TestCase):
     '''}
 
     golden_parsed_output_2 = {
-        'interface': {
-            'Fa2/1/1.2': {
-                'statistics': {
-                    'packets': {
-                        'sent': 28879,
-                        'received': 20040,
+    'interface': {
+        'VFIPE1-VPLS-A': {
+            'create_time': '3d15h',
+            'status': 'up',
+            'last_status_change_time': '1d03h',
+            'sequencing': {
+                'received': 'disabled',
+                'sent': 'disabled',
+                },
+            'statistics': {
+                'packets': {
+                    'received': 0,
+                    'sent': 0,
+                    },
+                'bytes': {
+                    'received': 0,
+                    'sent': 0,
+                    },
+                },
+            'destination_address': {
+                '10.2.2.2': {
+                    'imposed_label_stack': '{18}',
+                    'tunnel_label': 'imp-null',
+                    'output_interface': 'SerialEthernet2/0',
+                    'vc_status': 'up',
+                    'vc_id': 100,
+                    'next_hop': 'point2point',
+                    },
+                },
+            'signaling_protocol': {
+                'LDP': {
+                    'group_id': {
+                        'local': 0,
+                        'remote': 0,
                         },
-                    'bytes': {
-                        'sent': 25992388,
-                        'received': 25073016,
+                    'peer_state': 'up',
+                    'peer_id': '10.2.2.2:0',
+                    'mtu': {
+                        'local': 1500,
+                        'remote': 1500,
+                        },
+                    'mpls_vc_labels': {
+                        'local': 18,
+                        'remote': 18,
                         },
                     },
-                'signaling_protocol': {
-                    'LDP': {
-                        'mpls_vc_labels': {
-                            'local': 21,
-                            'remote': 16,
-                            },
-                        'group_id': {
-                            'local': 0,
-                            'remote': 0,
-                            },
-                        'remote_interface_description': 'xconnect to PE2',
-                        'peer_state': 'down',
-                        'peer_id': '10.2.2.2:0',
-                        'mtu': {
-                            'local': 1500,
-                            'remote': 1500,
-                            },
-                        },
-                    },
-                'last_status_change_time': '00:00:03',
-                'sequencing': {
-                    'sent': 'disabled',
-                    'received': 'disabled',
-                    },
-                'line_protocol_status': 'up',
-                'destination_address': {
-                    '10.2.2.2': {
-                        'output_interface': 'Se2/0/2',
-                        'preferred_path': 'not configured',
-                        'default_path': 'active',
-                        'imposed_label_stack': 16,
-                        'vc_status': 'recovering',
-                        'vc_id': 1002,
-                        },
-                    },
-                'ethernet_vlan': {
-                    'number': 2,
-                    'status': 'up',
-                    },
-                'create_time': '1d00h',
                 },
             },
-        }
+        },
+    }
 
     golden_output_2 = {'execute.return_value': '''\
         Device# show mpls l2transport vc detail
