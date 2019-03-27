@@ -314,7 +314,7 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 			'(?P<total_adjs_found>\d+)$')
 
 		# Holddown - negotiated: 510000         adjusted: 0
-		p41 = re.compile(r'^\s*Hold(d)?down +\- +negotiated: +'\
+		p41 = re.compile(r'^\s*Hol(d)?down +\- +negotiated: +'\
 			'(?P<holddown_negotiated>\d+) +adjusted: +'\
 			'(?P<holddown_adjusted>\d+)$')
 
