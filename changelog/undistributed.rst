@@ -225,6 +225,17 @@
     * Update ShowIpInterface to support more output
     * Update ShowIpInterfaceBrief for cli_command
 
+----------------------------------------------------------------------------------
+                                 NTP
+----------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowNtpAssociationsDetail for:
+        show ntp associations detail
+
+* IOS
+    * Add ShowNtpAssociationsDetail for:
+        show ntp associations detail
+
 --------------------------------------------------------------------------------
                                    ISIS
 --------------------------------------------------------------------------------
@@ -249,3 +260,4 @@
         show run key chain
     * Add ShowRunRouterIsis for:
         show run router isis
+
