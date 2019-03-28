@@ -21,8 +21,9 @@ from genie.metaparser.util.schemaengine import Schema, Any, Optional
 from genie.libs.parser.iosxe.show_arp import \
     ShowArp as ShowArp_iosxe, \
     ShowIpArpSummary as ShowIpArpSummary_iosxe, \
-    ShowIpTraffic as ShowIpTraffic_iosxe
-
+    ShowIpTraffic as ShowIpTraffic_iosxe, \
+    ShowArpApplication as ShowArpApplication_iosxe, \
+    ShowArpSummary as ShowArpSummary_iosxe
 
 class ShowIpArp(ShowArp_iosxe):
     """ Parser for show arp
@@ -51,7 +52,14 @@ class ShowIpArpSummary(ShowIpArpSummary_iosxe):
     """Parser for show ip arp summary"""
     pass
 
-
 class ShowIpTraffic(ShowIpTraffic_iosxe):
     """Parser for: show ip traffic"""
+    pass
+
+class ShowArpApplication(ShowArpApplication_iosxe):
+    """Parser for show arp application"""
+    pass
+
+class ShowArpSummary(ShowArpSummary_iosxe):
+    """ Parser for 'show arp summary'"""
     pass

@@ -11,8 +11,12 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
 
 # Parser
 from genie.libs.parser.ios.show_arp import ShowIpArp, ShowIpArpSummary,\
-                                           ShowIpTraffic
+                                           ShowIpTraffic, ShowArpApplication, \
+                                           ShowArpSummary
 
+from genie.libs.parser.iosxe.tests.test_show_arp import test_show_arp_application as \
+                                           test_show_arp_application_iosxe, \
+                                           test_show_arp_summary as test_show_arp_summary_iosxe
 
 # ============================================
 # Parser for 'show arp [vrf <WORD>] <WROD>'
@@ -392,6 +396,39 @@ class test_show_ip_traffic(unittest.TestCase):
 				obj = ShowIpTraffic(device=self.device)
 				parsed_output = obj.parse()
 				self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+# ============================================
+# unit test for 'show arp application'
+# ============================================
+class test_show_arp_application(test_show_arp_application_iosxe):
+    def test_empty(self):
+          self.device = Mock(**self.empty_output)
+          obj = ShowArpApplication(device=self.device)
+          with self.assertRaises(SchemaEmptyParserError):
+              parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowArpApplication(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+# ============================================
+# unit test for 'show arp summary'
+# ============================================
+class test_show_arp_summary(test_show_arp_summary_iosxe):
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowArpSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowArpSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
 		unittest.main()
