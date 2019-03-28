@@ -629,7 +629,7 @@ class ShowInstallCommitSummarySchema(MetaParser):
         }
 
 class ShowInstallCommitSummary(ShowInstallCommitSummarySchema):
-    """Parser for show install inactive summary"""
+    """Parser for show install commit summary"""
     
     cli_command = 'show install commit summary'
     
