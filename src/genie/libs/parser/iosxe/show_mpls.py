@@ -2272,16 +2272,16 @@ class ShowMplsL2TransportSchema(MetaParser):
                 Optional('signaling_protocol'): {
                     Any(): {
                         'mpls_vc_labels': {
-                            'local': int,
-                            'remote': int,
+                            'local': str,
+                            'remote': str,
                         },
                         'group_id': {
-                            'local': int,
-                            'remote': int,
+                            'local': str,
+                            'remote': str,
                         },
                         'mtu': {
-                            'local': int,
-                            'remote': int,
+                            'local': str,
+                            'remote': str,
                         },
                         Optional('mac_withdraw'): {
                             'sent': int,
@@ -2360,8 +2360,8 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
         p1_1 = re.compile(r'^Local +interface: +(?P<interface>[\w\W]+) +(?P<state>\w+), +line +protocol +(?P<line_protocol_status>\w+), +(?P<protocol>\w+) +(?P<status>\w+)$')
 
         #   Destination address: 10.2.2.2, VC ID: 1002, VC status: recovering
-        p2 = re.compile(r'^Destination +address: +(?P<address>[\d\.]+),'
-                         ' +VC +ID: +(?P<vc_id>\d+), +VC +status: +(?P<vc_status>\w+)$')
+        p2 = re.compile(r'^Destination +address:? +(?P<address>[\d\.]+),?'
+                         ' +VC +ID: +(?P<vc_id>\d+),? +VC +status:? +(?P<vc_status>\w+)$')
 
         #   Preferred path: not configured
         p3 = re.compile(r'^Preferred +path: +(?P<preferred_path>[\S\s]+)$')
@@ -2393,7 +2393,7 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
                          ' +remote +(?P<mpls_remote>\d+)$')
 
         #   Group ID: local 0, remote 0
-        p10 = re.compile(r'^Group +ID: +local +(?P<group_id_local>\d+),'
+        p10 = re.compile(r'^Group +ID: +local +(?P<group_id_local>[\w\W]+),'
                           ' +remote +(?P<group_id_remote>\d+)$')
 
         #   MTU: local 1500, remote 1500
@@ -2561,25 +2561,25 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
                 group = m.groupdict()
                 signaling_final_dict.setdefault('mpls_vc_labels', {})
                 signaling_final_dict['mpls_vc_labels']['local'] = \
-                    int(group['mpls_local'])
+                    group['mpls_local']
                 signaling_final_dict['mpls_vc_labels']['remote'] = \
-                    int(group['mpls_remote'])
+                    group['mpls_remote']
                 continue
 
             m = p10.match(line)
             if m:
                 group = m.groupdict()
                 signaling_final_dict.setdefault('group_id', {})
-                signaling_final_dict['group_id']['local'] = int(group['group_id_local'])
-                signaling_final_dict['group_id']['remote'] = int(group['group_id_remote'])
+                signaling_final_dict['group_id']['local'] = group['group_id_local']
+                signaling_final_dict['group_id']['remote'] = group['group_id_remote']
                 continue
 
             m = p11.match(line)
             if m:
                 group = m.groupdict()
                 signaling_final_dict.setdefault('mtu', {})
-                signaling_final_dict['mtu']['local'] = int(group['mtu_local'])
-                signaling_final_dict['mtu']['remote'] = int(group['mtu_remote'])
+                signaling_final_dict['mtu']['local'] = group['mtu_local']
+                signaling_final_dict['mtu']['remote'] = group['mtu_remote']
                 continue
 
             m = p12.match(line)

@@ -2539,17 +2539,17 @@ class test_show_mpls_l2transport_vc_detail(unittest.TestCase):
                     'peer_id': '10.2.2.2:0',
                     'remote_interface_description': 'xconnect to PE2',
                     'group_id': {
-                        'local': 0,
-                        'remote': 0,
+                        'local': '0',
+                        'remote': '0',
                         },
                     'peer_state': 'up',
                     'mtu': {
-                        'local': 1500,
-                        'remote': 1500,
+                        'local': '1500',
+                        'remote': '1500',
                         },
                     'mpls_vc_labels': {
-                        'local': 21,
-                        'remote': 16,
+                        'local': '21',
+                        'remote': '16',
                         },
                     },
                 },
@@ -2606,18 +2606,18 @@ class test_show_mpls_l2transport_vc_detail(unittest.TestCase):
             'signaling_protocol': {
                 'LDP': {
                     'mtu': {
-                        'remote': 1500,
-                        'local': 1500,
+                        'remote': '1500',
+                        'local': '1500',
                         },
                     'group_id': {
-                        'remote': 0,
-                        'local': 0,
+                        'remote': '0',
+                        'local': '0',
                         },
                     'peer_id': '10.2.2.2:0',
                     'peer_state': 'up',
                     'mpls_vc_labels': {
-                        'remote': 18,
-                        'local': 18,
+                        'remote': '18',
+                        'local': '18',
                         },
                     },
                 },
@@ -2810,16 +2810,16 @@ class test_show_mpls_l2transport_vc(unittest.TestCase):
                       'id': '203.0.113.1',
                       'status': 'UP',
                       'mpls_vc_labels': {
-                          'local': 22,
-                          'remote': 33,
+                          'local': '22',
+                          'remote': '33',
                           },
                       'group_id': {
-                          'local': 0,
-                          'remote': 0,
+                          'local': '0',
+                          'remote': '0',
                           },
                       'mtu': {
-                          'local': 1500,
-                          'remote': 1500,
+                          'local': '1500',
+                          'remote': '1500',
                           },
                       },
                   },
