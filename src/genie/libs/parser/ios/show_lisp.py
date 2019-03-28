@@ -1,6 +1,6 @@
 ''' show_lisp.py
 
-IOSXE parsers for the following show commands:
+IOS parsers for the following show commands:
     * show lisp session
     * show lisp platform
     * show lisp all extranet <extranet> instance-id <instance_id>
