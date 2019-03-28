@@ -185,6 +185,7 @@ class ShowIpRoute(ShowIpRouteSchema):
 
             # C        1.1.1.1 is directly connected, Loopback0
             # S        2.2.2.2 [1/0] via 20.1.2.2, GigabitEthernet0/1
+            # S*       10.10.10.10 [1/0] via 10.1.2.2, GigabitEthernet0/2
             # O        10.2.3.0/24 [110/2] via 20.1.2.2, 06:46:59, GigabitEthernet0/1
             # i L1     22.22.22.22 [115/20] via 20.1.2.2, 06:47:04, GigabitEthernet0/1
             # D        200.1.4.1
