@@ -8,7 +8,9 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
 
 from genie.libs.parser.ios.show_l2vpn import ShowL2vpnVfi, \
                                              ShowL2vpnServiceAll, \
-                                             ShowEthernetServiceInstanceStats
+                                             ShowEthernetServiceInstanceStats, \
+                                             ShowEthernetServiceInstanceSummary, \
+                                             ShowEthernetServiceInstanceDetail
 
 
 class test_show_l2vpn_vfi(unittest.TestCase):
@@ -831,6 +833,456 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
         platform_obj = ShowEthernetServiceInstanceStats(device=self.device)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_shrinked)
+
+
+class test_show_ethernet_service_instance_summary(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+    'system_summary': {
+        'bdomain': {
+            'deleted': 0,
+            'total': 502,
+            'admin_do': 0,
+            'up': 502,
+            'error_di': 0,
+            'bd_adm_do': 0,
+            'down': 0,
+            'unknown': 0,
+            },
+        'other': {
+            'deleted': 0,
+            'total': 110,
+            'admin_do': 0,
+            'up': 110,
+            'error_di': 0,
+            'bd_adm_do': 0,
+            'down': 0,
+            'unknown': 0,
+            },
+        'local sw': {
+            'deleted': 0,
+            'total': 0,
+            'admin_do': 0,
+            'up': 0,
+            'error_di': 0,
+            'bd_adm_do': 0,
+            'down': 0,
+            'unknown': 0,
+            },
+        'xconnect': {
+            'deleted': 0,
+            'total': 0,
+            'admin_do': 0,
+            'up': 0,
+            'error_di': 0,
+            'bd_adm_do': 0,
+            'down': 0,
+            'unknown': 0,
+            },
+        'all': {
+            'deleted': 0,
+            'total': 612,
+            'admin_do': 0,
+            'up': 612,
+            'error_di': 0,
+            'bd_adm_do': 0,
+            'down': 0,
+            'unknown': 0,
+            },
+        },
+    'GigabitEthernet0/0/7': {
+        'bdomain': {
+            'deleted': 0,
+            'total': 0,
+            'admin_do': 0,
+            'up': 0,
+            'error_di': 0,
+            'bd_adm_do': 0,
+            'down': 0,
+            'unknown': 0,
+            },
+        'other': {
+            'deleted': 0,
+            'total': 356,
+            'admin_do': 0,
+            'up': 356,
+            'error_di': 0,
+            'bd_adm_do': 0,
+            'down': 0,
+            'unknown': 0,
+            },
+        'local sw': {
+            'deleted': 0,
+            'total': 0,
+            'admin_do': 0,
+            'up': 0,
+            'error_di': 0,
+            'bd_adm_do': 0,
+            'down': 0,
+            'unknown': 0,
+            },
+        'xconnect': {
+            'deleted': 0,
+            'total': 0,
+            'admin_do': 0,
+            'up': 0,
+            'error_di': 0,
+            'bd_adm_do': 0,
+            'down': 0,
+            'unknown': 0,
+            },
+        'all': {
+            'deleted': 0,
+            'total': 356,
+            'admin_do': 0,
+            'up': 356,
+            'error_di': 0,
+            'bd_adm_do': 0,
+            'down': 0,
+            'unknown': 0,
+            },
+        },
+    'Port-channel1': {
+        'bdomain': {
+            'deleted': 0,
+            'total': 532,
+            'admin_do': 0,
+            'up': 532,
+            'error_di': 0,
+            'bd_adm_do': 0,
+            'down': 0,
+            'unknown': 0,
+            },
+        'other': {
+            'deleted': 0,
+            'total': 0,
+            'admin_do': 0,
+            'up': 0,
+            'error_di': 0,
+            'bd_adm_do': 0,
+            'down': 0,
+            'unknown': 0,
+            },
+        'local sw': {
+            'deleted': 0,
+            'total': 0,
+            'admin_do': 0,
+            'up': 0,
+            'error_di': 0,
+            'bd_adm_do': 0,
+            'down': 0,
+            'unknown': 0,
+            },
+        'xconnect': {
+            'deleted': 0,
+            'total': 0,
+            'admin_do': 0,
+            'up': 0,
+            'error_di': 0,
+            'bd_adm_do': 0,
+            'down': 0,
+            'unknown': 0,
+            },
+        'all': {
+            'deleted': 0,
+            'total': 532,
+            'admin_do': 0,
+            'up': 532,
+            'error_di': 0,
+            'bd_adm_do': 0,
+            'down': 0,
+            'unknown': 0,
+            },
+        },
+    }
+
+    golden_output = {'execute.return_value': '''\
+        Router#show ethernet service instance summary
+        Load for five secs: 2%/0%; one minute: 5%; five minutes: 4%
+        Time source is NTP, 16:31:09.005 JST Tue Nov 8 2016
+
+        System summary
+                    Total       Up  AdminDo     Down  ErrorDi  Unknown  Deleted  BdAdmDo  
+        bdomain       502      502        0        0        0        0        0        0  
+        xconnect        0        0        0        0        0        0        0        0  
+        local sw        0        0        0        0        0        0        0        0  
+        other         110      110        0        0        0        0        0        0  
+        all           612      612        0        0        0        0        0        0  
+        Associated interface: GigabitEthernet0/0/7
+                    Total       Up  AdminDo     Down  ErrorDi  Unknown  Deleted  BdAdmDo  
+        bdomain         0        0        0        0        0        0        0        0  
+        xconnect        0        0        0        0        0        0        0        0  
+        local sw        0        0        0        0        0        0        0        0  
+        other         356      356        0        0        0        0        0        0  
+        all           356      356        0        0        0        0        0        0  
+        Associated interface: Port-channel1
+                    Total       Up  AdminDo     Down  ErrorDi  Unknown  Deleted  BdAdmDo  
+        bdomain       532      532        0        0        0        0        0        0  
+        xconnect        0        0        0        0        0        0        0        0  
+        local sw        0        0        0        0        0        0        0        0  
+        other           0        0        0        0        0        0        0        0  
+        all           532      532        0        0        0        0        0        0  
+    '''
+    }
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        platform_obj = ShowEthernetServiceInstanceSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse()    
+
+    def test_golden_full(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        platform_obj = ShowEthernetServiceInstanceSummary(device=self.device)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+class test_show_ethernet_service_instance_detail(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'service_instance': {
+            1: {
+                'encapsulation': 'dot1q 200-300 vlan protocol type 0x8100',
+                'l2protocol_drop': True,
+                'efp_statistics': {
+                    'bytes_in': 0,
+                    'pkts_in': 0,
+                    'pkts_out': 0,
+                    'bytes_out': 0,
+                    },
+                'associated_interface': 'Ethernet0/0',
+                'intiators': 'unclassified vlan',
+                'ce_vlans': '',
+                'type': 'L2Context',
+                'associated_evc': '',
+                'control_policy': 'ABC',
+                'dot1q_tunnel_ethertype': '0x8100',
+                'state': 'Up',
+                },
+            2: {
+                'l2protocol_drop': True,
+                'efp_statistics': {
+                    'bytes_in': 0,
+                    'pkts_in': 0,
+                    'pkts_out': 0,
+                    'bytes_out': 0,
+                    },
+                'associated_interface': 'Ethernet0/0',
+                'encapsulation': 'dot1q 201 vlan protocol type 0x8100',
+                'ce_vlans': '10-20',
+                'type': 'Dynamic',
+                'associated_evc': '',
+                'dot1q_tunnel_ethertype': '0x8100',
+                'state': 'Up',
+                },
+            },
+        }
+
+    golden_output = {'execute.return_value': '''\
+    Device# show ethernet service instance detail
+
+    Service Instance ID: 1
+    Service instance type: L2Context
+    Intiators: unclassified vlan
+    Control policy: ABC
+    Associated Interface: Ethernet0/0
+    Associated EVC:
+    L2protocol drop
+    CE-Vlans:
+    Encapsulation: dot1q 200-300 vlan protocol type 0x8100
+    Interface Dot1q Tunnel Ethertype: 0x8100
+    State: Up
+    EFP Statistics:
+       Pkts In   Bytes In   Pkts Out  Bytes Out
+             0          0          0          0
+
+    Service Instance ID: 2
+    Service instance type: Dynamic
+
+    Associated Interface: Ethernet0/0
+    Associated EVC:
+    L2protocol drop
+    CE-Vlans: 10-20
+    Encapsulation: dot1q 201 vlan protocol type 0x8100
+    Interface Dot1q Tunnel Ethertype: 0x8100
+    State: Up
+    EFP Statistics:
+       Pkts In   Bytes In   Pkts Out  Bytes Out
+             0          0          0          0
+    '''
+    }
+
+    golden_parsed_output_2 = {
+    'service_instance': {
+        400: {
+            'associated_interface': 'Ethernet1/3',
+            'ce_vlans': '30',
+            'l2protocol_drop': False,
+            'associated_evc': '50',
+            'state': 'AdminDown',
+            'efp_statistics': {
+                'pkts_out': 0,
+                'bytes_in': 0,
+                'bytes_out': 0,
+                'pkts_in': 0,
+                },
+            },
+        },
+    }
+
+    golden_output_2 = {'execute.return_value': '''\
+    Router# show ethernet service instance detail
+
+    Service Instance ID: 400
+    Associated Interface: Ethernet1/3
+    Associated EVC: 50
+    CE-Vlans: 30
+    State: AdminDown
+    EFP Statistics:
+       Pkts In   Bytes In   Pkts Out  Bytes Out
+             0          0          0          0
+    '''
+    }
+
+    golden_parsed_output_interface = {
+    'service_instance': {
+        1: {
+            'intiators': 'unclassified vlan',
+            'state': 'Up',
+            'l2protocol_drop': True,
+            'type': 'L2Context',
+            'encapsulation': 'dot1q 200-300 vlan protocol type 0x8100',
+            'associated_evc': '',
+            'efp_statistics': {
+                'pkts_in': 0,
+                'bytes_in': 0,
+                'bytes_out': 0,
+                'pkts_out': 0,
+                },
+            'control_policy': 'ABC',
+            'associated_interface': 'Ethernet0/0',
+            'dot1q_tunnel_ethertype': '0x8100',
+            'ce_vlans': '',
+            },
+        2: {
+            'state': 'Up',
+            'l2protocol_drop': True,
+            'type': 'Dynamic',
+            'encapsulation': 'dot1q 201 vlan protocol type 0x8100',
+            'associated_evc': '',
+            'efp_statistics': {
+                'pkts_in': 0,
+                'bytes_in': 0,
+                'bytes_out': 0,
+                'pkts_out': 0,
+                },
+            'dot1q_tunnel_ethertype': '0x8100',
+            'associated_interface': 'Ethernet0/0',
+            'ce_vlans': '10-20',
+            },
+        3: {
+            'state': 'Up',
+            'l2protocol_drop': True,
+            'type': 'static',
+            'encapsulation': 'dot1q 201 vlan protocol type 0x8100',
+            'associated_evc': '',
+            'efp_statistics': {
+                'pkts_in': 0,
+                'bytes_in': 0,
+                'bytes_out': 0,
+                'pkts_out': 0,
+                },
+            'dot1q_tunnel_ethertype': '0x8100',
+            'associated_interface': 'Ethernet0/0',
+            'ce_vlans': '10-20',
+            },
+        },
+    }
+
+    golden_output_interface = {'execute.return_value': '''\
+    Device# show ethernet service instance interface ethernet 0/0 detail
+
+    Service Instance ID: 1
+    Service instance type: L2Context
+    Intiators: unclassified vlan
+    Control policy: ABC
+    Associated Interface: Ethernet0/0
+    Associated EVC:
+    L2protocol drop
+    CE-Vlans:
+    Encapsulation: dot1q 200-300 vlan protocol type 0x8100
+    Interface Dot1q Tunnel Ethertype: 0x8100
+    State: Up
+    EFP Statistics:
+       Pkts In   Bytes In   Pkts Out  Bytes Out
+             0          0          0          0
+
+    Service Instance ID: 2
+    Service instance type: Dynamic
+
+    Associated Interface: Ethernet0/0
+    Associated EVC:
+    L2protocol drop
+    CE-Vlans: 10-20
+    Encapsulation: dot1q 201 vlan protocol type 0x8100
+    Interface Dot1q Tunnel Ethertype: 0x8100
+    State: Up
+    EFP Statistics:
+       Pkts In   Bytes In   Pkts Out  Bytes Out
+             0          0          0          0
+
+    Service Instance ID: 3
+    Service instance type: static
+    Associated Interface: Ethernet0/0
+    Associated EVC:
+    L2protocol drop
+    CE-Vlans: 10-20
+    Encapsulation: dot1q 201 vlan protocol type 0x8100
+    Interface Dot1q Tunnel Ethertype: 0x8100
+    State: Up
+    EFP Statistics:
+       Pkts In   Bytes In   Pkts Out  Bytes Out
+             0          0          0          0
+    '''
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        platform_obj = ShowEthernetServiceInstanceDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse()    
+
+    def test_golden_full(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        platform_obj = ShowEthernetServiceInstanceDetail(device=self.device)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_full_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        platform_obj = ShowEthernetServiceInstanceDetail(device=self.device)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
+    def test_golden_interface(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_interface)
+        platform_obj = ShowEthernetServiceInstanceDetail(device=self.device)
+        parsed_output = platform_obj.parse(interface='ethernet 0/0')
+        self.assertEqual(parsed_output, self.golden_parsed_output_interface)
 
 
 if __name__ == '__main__':
