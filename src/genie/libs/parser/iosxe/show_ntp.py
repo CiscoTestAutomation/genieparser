@@ -502,9 +502,9 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
         # 192.168.255.254 configured, ipv4, authenticated, insane, invalid, stratum 
         # 172.16.255.254 configured, ipv4, authenticated, our_master, sane, valid, stratum 2
         # 192.168.13.33 configured, ipv6, insane, invalid, unsynced, stratum 16
-        # ios 172.31.32.2 configured, insane, invalid, stratum 5
-        # ios 192.168.13.33 configured, selected, sane, valid, stratum 3
-        # ios 192.168.13.57 configured, our_master, sane, valid, stratum 3
+        # 172.31.32.2 configured, insane, invalid, stratum 5
+        # 192.168.13.33 configured, selected, sane, valid, stratum 3
+        # 192.168.13.57 configured, our_master, sane, valid, stratum 3
         p1 = re.compile(r'^(?P<address>[\w\.\:]+) +(?P<configured>\w+),( +(?P<ip_type>ipv4|ipv6),)?'
                          '( +(?P<authenticated>authenticated),)?( +(?P<our_master>our_master),)?'
                          '( +(?P<selected>selected),)? +(?P<insane>\w+), +(?P<invalid>\w+),'
@@ -526,7 +526,7 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
 
         # delay 0.00 msec, offset 0.0000 msec, dispersion 7.23, jitter 0.97 
         # delay 0.00 msec, offset -1.0000 msec, dispersion 5.64, jitter 0.97 msec
-        # ios delay 7.86 msec, offset 11.176 msec, dispersion 3.62
+        # delay 7.86 msec, offset 11.176 msec, dispersion 3.62
         p5 = re.compile(r'^delay +(?P<delay_msec>[\d\.]+) +msec, +offset +(?P<offset_msec>[\d\.\-]+)'
                          ' +msec, +dispersion +(?P<dispersion>[\d\.]+)'
                          '(, +jitter +(?P<jitter_msec>[\d\.]+)( +msec)?)?$')
@@ -535,8 +535,8 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
         p6 = re.compile(r'^precision +(?P<precision>[\d\*]+), +version +(?P<version>\d+)$')
 
         # assoc id 62758, assoc name 192.168.255.254
-        # ios assoc ID 2, assoc name myserver
-        # ios assoc ID 1, assoc name 192.168.1.55,
+        # assoc ID 2, assoc name myserver
+        # assoc ID 1, assoc name 192.168.1.55,
         p7 = re.compile(r'^assoc +(id|ID) +(?P<assoc_id>\d+), +assoc +name +(?P<assoc_name>[\w\.]+),?$')
 
         # assoc in packets 27, assoc out packets 27, assoc error packets 0
@@ -548,7 +548,7 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
         p9 = re.compile(r'^org +time +(?P<org_time>[\w\:\s\(\)\.]+)$')
 
         # rec time DBAB046D.A8B43B28 (16:14:53.659 JST Fri Oct 14 2016)
-        #  ios rcv time AFE252E2.3D7E464D (00:12:34.240 PDT Mon Jan 1 1900)
+        # rcv time AFE252E2.3D7E464D (00:12:34.240 PDT Mon Jan 1 1900)
         p10 = re.compile(r'^(rec|rcv) +time +(?P<rec_time>[\w\:\s\(\)\.]+)$')
 
         # xmt time DBAB046D.A8B43B28 (16:14:53.659 JST Fri Oct 14 2016)
