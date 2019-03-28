@@ -6,17 +6,25 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
-                                    MONITOR
+                                   POLICY MAP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowPolicyMapControlPlane Parser for:
+       'show policy map control plane'
+
+--------------------------------------------------------------------------------
+                                   MONITOR
 --------------------------------------------------------------------------------
 * IOSXE
     * Added ShowMonitor Parser for:
        'show monitor'
        'show monitor session all'
+       'show monitor session {session}'
        'show monitor capture'
 
 
 --------------------------------------------------------------------------------
-                                    OSPF
+                                   OSPF
 --------------------------------------------------------------------------------
 * IOSXE
     * Added parsers:
@@ -32,14 +40,14 @@
         * ShowIpOspfDatabaseOpaqueArea
 
 --------------------------------------------------------------------------------
-                                    SNMP
+                                   SNMP
 --------------------------------------------------------------------------------
 * IOSXE
     * Added ShowSnmpMib for:
         'show snmp mib'
 
 --------------------------------------------------------------------------------
-                                    PLATFORM
+                                   PLATFORM
 --------------------------------------------------------------------------------
 * IOSXE
     * Add ShowPlatformHardwarePlim for;
@@ -125,8 +133,15 @@
         show platform hardware qfp active statistics drop
         show platform hardware qfp standby statistics drop
 
+    * Update ShowVersion to support more output
+
+* IOSXR
+    * Add ShowInstallInactiveSummary for:
+          show install inactive summary
+    * Add ShowInstallCommitSummary for:
+          show install commit summary
 --------------------------------------------------------------------------------
-                                    MPLS LDP
+                                   MPLS LDP
 --------------------------------------------------------------------------------
 * IOSXE
     * Add ShowMplsLdpParameters for:
@@ -168,6 +183,16 @@
           show mpls interfaces <interface>
           show mpls interfaces <interface> detail
           show mpls interfaces detail
+    * Add ShowMplsL2TransportDetail for:
+          show mpls l2transport vc detail
+
+* IOS
+    * Add ShowMplsL2TransportDetail for:
+          show mpls l2transport vc detail
+
+* IOSXR
+    * Add ShowMplsLdpNeighborBrief for:
+          show mpls ldp neighbor brief
 
 ---------------------------------------------------------------------------------
                                    BFD 
@@ -178,7 +203,7 @@
         show bfd neighbors details
 
 ----------------------------------------------------------------------------------
-                                 ARP
+                                   ARP
 ----------------------------------------------------------------------------------
 * IOSXE
     * Add ShowArpApplication for:
@@ -187,7 +212,7 @@
         show arp summary
 
 --------------------------------------------------------------------------------
-                                    QOS
+                                   QOS
 --------------------------------------------------------------------------------
 * IOSXE
     * Add ShowServiceGroupState for:
@@ -199,7 +224,7 @@
         show service-group traffic-stats <group>
 
 --------------------------------------------------------------------------------
-                                 CONFIG
+                                   CONFIG
 --------------------------------------------------------------------------------
 * IOSXE
     * Add ShowArchiveConfigDifferences for:
@@ -212,7 +237,7 @@
         show configuration lock
 
 --------------------------------------------------------------------------------
-                                    L2VPN
+                                   L2VPN
 --------------------------------------------------------------------------------
 * IOSXE
     * Add ShowBridgeDomain for:
@@ -227,6 +252,20 @@
             show ethernet service instance interface <interface> stats
     * Add ShowEthernetServiceInstanceSummary for:
             show ethernet service instance summary
+    * Add ShowL2vpnVfi for:
+            show l2vpn vfi
+
+* IOS
+    * Add ShowL2vpnVfi for:
+            show l2vpn vfi
+--------------------------------------------------------------------------------
+                                   LAG
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowEtherChannelLoadBalancing for:
+        show etherchannel load-balancing
+    * Add ShowLacpNeighborDetail for:
+        show lacp neighbor detail
 
 --------------------------------------------------------------------------------
                                    INTERFACE
@@ -235,3 +274,43 @@
     * Add ShowInterfaceStats for:
         show interface <interface> stats
         show interface stats
+
+    * Update ShowIpInterface to support more output
+    * Update ShowIpInterfaceBrief for cli_command
+
+----------------------------------------------------------------------------------
+                                 NTP
+----------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowNtpAssociationsDetail for:
+        show ntp associations detail
+
+* IOS
+    * Add ShowNtpAssociationsDetail for:
+        show ntp associations detail
+
+--------------------------------------------------------------------------------
+                                   ISIS
+--------------------------------------------------------------------------------
+* IOSXR
+    * Add ShowIsisAdjacency for:
+        show isis adjacency
+    * Add ShowIsisNeighborsSchema for:
+        show run isis neighbors
+
+--------------------------------------------------------------------------------
+                                   MRIB
+--------------------------------------------------------------------------------
+* IOSXR
+    * Add ShowMribVrfRouteSummary for:
+        show mrib vrf <vrf> <address-family> route summary
+
+--------------------------------------------------------------------------------
+                                   RUNNING-CONFIG
+--------------------------------------------------------------------------------
+* IOSXR
+    * Add ShowRunKeyChain for:
+        show run key chain
+    * Add ShowRunRouterIsis for:
+        show run router isis
+

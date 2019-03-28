@@ -14,6 +14,8 @@
      *  show pagp internal
      *  show pagp <channel_group> internal
      *  show etherchannel summary
+     *  show etherchannel load-balancing
+     *  show lacp neighbor detail
 """
 # Python
 import re
@@ -656,8 +658,8 @@ class ShowEtherchannelSummarySchema(MetaParser):
         show etherchannel summary"""
 
     schema = {
-        'number_of_lag_in_use': int,
-        'number_of_aggregators': int,
+        Optional('number_of_lag_in_use'): int,
+        Optional('number_of_aggregators'): int,
         Optional('interfaces'): {
             Any(): {
                 Optional('name'): str,
@@ -790,4 +792,203 @@ class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
                         port_dict['port_channel_member'] = True
                         port_dict['port_channel_member_intfs'] = sorted(eth_list)
                 continue
+        return result_dict
+
+
+# ====================================================
+#  schema for show etherchannel load-balancing
+# ====================================================
+class ShowEtherChannelLoadBalancingSchema(MetaParser):
+    """Schema for:
+        show etherchannel load-balancing"""
+
+    schema = {
+        'global_lb_method': str,
+        Optional('lb_algo_type'): str,
+        'port_channel': {
+            Any(): {
+                'lb_method': str,
+            },
+        },
+    }
+
+
+# ====================================================
+#  parser for show etherchannel load-balancing
+# ====================================================
+class ShowEtherChannelLoadBalancing(ShowEtherChannelLoadBalancingSchema):
+    """Parser for :
+      show etherchannel load-balancing"""
+
+    cli_command = 'show etherchannel load-balancing'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initialize result dict
+        result_dict = {}
+        
+        # Global LB Method: flow-based
+        # LB Algo type: Source Destination IP
+        #   Port-Channel:                       LB Method
+        #     Port-channel1                   :  flow-based (Source Destination IP)
+        p1 = re.compile(r'^\s*Global +LB +Method: *(?P<global_lb_method>[\w-]*)$')
+        p2 = re.compile(r'^\s*LB +Algo +type: *(?P<lb_algo_type>[\w\s]*)$')
+        p3 = re.compile(r'^\s*(?P<port_channel>[\w-]+) +: *(?P<lb_method>.+)$')
+
+        for line in out.splitlines():
+            line = line.rstrip()
+
+            m = p1.match(line)
+            if m:
+                global_lb_method = m.groupdict()['global_lb_method']
+                result_dict.update({'global_lb_method': global_lb_method})
+                continue
+
+            m = p2.match(line)
+            if m:
+                lb_algo_type = m.groupdict()['lb_algo_type']
+                result_dict.update({'lb_algo_type': lb_algo_type})
+                continue
+
+            m = p3.match(line)
+            if m:
+                port_channel = m.groupdict()['port_channel']
+                lb_method = m.groupdict()['lb_method']
+                port_dict = result_dict.setdefault('port_channel', {}).setdefault(port_channel, {})
+                port_dict.update({'lb_method': lb_method})
+                continue
+
+        return result_dict
+
+
+# ====================================================
+#  schema for show lacp neighbor detail
+# ====================================================
+class ShowLacpNeighborDetailSchema(MetaParser):
+    """Schema for:
+        show lacp neighbor detail"""
+
+    schema = {
+        'interfaces': {
+            Any(): {
+                'name': str,
+                'protocol': str,
+                'members': {
+                    Any(): {
+                        'interface': str,
+                        'system_id': str,
+                        'port_num': int,
+                        'age': int,
+                        'flags': str,
+                        'lacp_port_priority': int,
+                        'oper_key': int,
+                        'port_state': int,
+                        Optional('activity'): str,
+                        'timeout': str,
+                        'aggregatable': bool,
+                        'synchronization': bool,
+                        'collecting': bool,
+                        'distributing': bool,
+                        'defaulted': bool,
+                        'expired': bool,
+                    },
+                }
+            },
+        },
+    }
+
+
+# ====================================================
+#  parser for show lacp neighbor detail
+# ====================================================
+class ShowLacpNeighborDetail(ShowLacpNeighborDetailSchema):
+    """Parser for :
+        show lacp neighbor detail"""
+
+    cli_command = 'show lacp neighbor detail'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initialize result dict
+        result_dict = {}
+        
+        # Channel group 1 neighbors
+        p1 = re.compile(r'^\s*Channel +group +(?P<channel_group>[\d]+)')
+
+        # Port           System ID             Port Number     Age         Flags
+        # Gi0/0/1         00127,6487.88af.b840  0x2              28s        FA
+        p2 = re.compile(r'^\s*(?P<interface>[\w/]+) +(?P<system_id>[\w,.]+) +(?P<port_num>[\w]+)'
+                        ' +(?P<age>[\d]+)s +(?P<flags>[\w]+)$')
+
+        # Port Priority        Oper Key        Port State
+        # 100                  0x1             0x3F
+        p3 = re.compile(r'^\s*(?P<lacp_port_priority>[\d.]+) +(?P<oper_key>[\w]+) +(?P<port_state>[\w]+)$')
+
+        # Activity:   Timeout:   Aggregation:   Synchronization:
+        # Active      Short      Yes            Yes
+        p4 = re.compile(r'^\s*(?P<activity>[\w]+) +(?P<timeout>Long|Short)'
+                        ' +(?P<aggregatable>[\w]+) +(?P<synchronization>[\w]+)$')
+
+        # Collecting:   Distributing:   Defaulted:   Expired:
+        # Yes           Yes             No           No 
+        p5 = re.compile(r'^\s*(?P<collecting>Yes|No) +(?P<distributing>[\w]+) +(?P<defaulted>[\w]+) +(?P<expired>[\w]+)$')
+
+        for line in out.splitlines():
+            line = line.rstrip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                name = 'Port-channel' + group["channel_group"]
+                intf_dict = result_dict.setdefault('interfaces', {}).setdefault(name, {})
+                intf_dict.update({'name': name})
+                intf_dict.update({'protocol': 'lacp'})
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                interface = Common.convert_intf_name(group["interface"])
+                member_dict = intf_dict.setdefault('members', {}).setdefault(interface, {})
+                member_dict.update({'interface': interface})
+                member_dict.update({'system_id': group['system_id']})
+                member_dict.update({'port_num': int(group['port_num'], 0)})
+                member_dict.update({'age': int(group['age'])})
+                member_dict.update({'flags': group['flags']})
+                continue
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                member_dict.update({'lacp_port_priority': int(group['lacp_port_priority'])})
+                member_dict.update({'oper_key': int(group['oper_key'], 0)})
+                member_dict.update({'port_state': int(group['port_state'], 0)})
+                continue
+
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                member_dict.update({'activity': group['activity']})
+                member_dict.update({'timeout': group['timeout']})
+                member_dict.update({'aggregatable': group['aggregatable'] == 'Yes'})
+                member_dict.update({'synchronization': group['synchronization'] == 'Yes'})
+                continue
+
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                member_dict.update({'collecting': group['collecting'] == 'Yes'})
+                member_dict.update({'distributing': group['distributing'] == 'Yes'})
+                member_dict.update({'defaulted': group['defaulted'] == 'Yes'})
+                member_dict.update({'expired': group['expired'] == 'Yes'})
+                continue
+
         return result_dict
