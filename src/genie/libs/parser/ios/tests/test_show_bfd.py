@@ -9,7 +9,8 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from genie.libs.parser.iosxe.tests.test_show_bfd import test_show_bfd as test_show_bfd_iosxe
+from genie.libs.parser.iosxe.tests.test_show_bfd import test_show_bfd as \
+                                                        test_show_bfd_iosxe
 
 # Parser
 from genie.libs.parser.ios.show_bfd import ShowBfdNeighborsDetails

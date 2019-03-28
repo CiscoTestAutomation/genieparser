@@ -5,7 +5,8 @@ IOS parser for the following show command
 '''
 
 # import iosxe parser
-from genie.libs.parser.iosxe.show_bfd import ShowBfdNeighborsDetails as ShowBfdNeighborsDetails_iosxe
+from genie.libs.parser.iosxe.show_bfd import ShowBfdNeighborsDetails as \
+											 ShowBfdNeighborsDetails_iosxe
 
 
 class ShowBfdNeighborsDetails(ShowBfdNeighborsDetails_iosxe):
