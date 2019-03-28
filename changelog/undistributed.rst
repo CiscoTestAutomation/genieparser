@@ -6,12 +6,20 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
+                                    POLICY MAP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowPolicyMapControlPlane Parser for:
+       'show policy map control plane'
+
+--------------------------------------------------------------------------------
                                     MONITOR
 --------------------------------------------------------------------------------
 * IOSXE
     * Added ShowMonitor Parser for:
        'show monitor'
        'show monitor session all'
+       'show monitor session {session}'
        'show monitor capture'
 
 
@@ -116,6 +124,12 @@
           show mpls interfaces <interface>
           show mpls interfaces <interface> detail
           show mpls interfaces detail
+    * Add ShowMplsL2TransportDetail for:
+          show mpls l2transport vc detail
+
+* IOS
+    * Add ShowMplsL2TransportDetail for:
+          show mpls l2transport vc detail
 
 ---------------------------------------------------------------------------------
                                    BFD 
@@ -181,6 +195,15 @@
 * IOS
     * Add ShowL2vpnVfi for:
             show l2vpn vfi
+--------------------------------------------------------------------------------
+                                  LAG
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowEtherChannelLoadBalancing for:
+        show etherchannel load-balancing
+    * Add ShowLacpNeighborDetail for:
+        show lacp neighbor detail
+
 --------------------------------------------------------------------------------
                                    INTERFACE
 --------------------------------------------------------------------------------
