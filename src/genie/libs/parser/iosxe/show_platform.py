@@ -3487,7 +3487,7 @@ class ShowPlatformHardwareSerdes(ShowPlatformHardwareSerdesSchema):
         p1 = re.compile(r'^From +Slot +(?P<link>[\w\d\-\s]+)$')
 
         #   Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0 
-        p2 = re.compile(r'^Pkts  +High: +(?P<high>\d+) +Low: +(?P<low>\d+)( +Bad: +(?P<bad>\d+) +Dropped: +(?P<dropped>\d+))?$')
+        p2 = re.compile(r'^Pkts +High: +(?P<high>\d+) +Low: +(?P<low>\d+)( +Bad: +(?P<bad>\d+) +Dropped: +(?P<dropped>\d+))?$')
 
         #   Bytes High: 0          Low: 0          Bad: 0          Dropped: 0
         p3 = re.compile(r'^Bytes +High: +(?P<high>\d+) +Low: +(?P<low>\d+) +Bad: +(?P<bad>\d+) +Dropped: +(?P<dropped>\d+)$')
@@ -4118,7 +4118,7 @@ class ShowPlatformHardwareQfpInterfaceIfnameStatisticsSchema(MetaParser):
             'active': {
                 'interface': {
                     Any(): {
-                        'platform_handle': int,
+                        Optional('platform_handle'): int,
                         'receive_stats': {
                             Any(): {
                                 'packets': int,
@@ -4167,7 +4167,8 @@ class ShowPlatformHardwareQfpInterfaceIfnameStatistics(ShowPlatformHardwareQfpIn
         # initial return dictionary
         ret_dict = {}
         current_stats = None
-
+        final_dict = {}
+        
         # Platform Handle 7
         p1 = re.compile(r'^Platform +Handle +(?P<platform_handle>\d+)$')
 
@@ -4195,6 +4196,11 @@ class ShowPlatformHardwareQfpInterfaceIfnameStatistics(ShowPlatformHardwareQfpIn
 
             m = p2.match(line)
             if m:
+                if not final_dict:
+                    converted_interface = Common.convert_intf_name(interface)
+                    final_dict = ret_dict.setdefault('qfp', {}).setdefault(
+                        'active', {}).setdefault('interface', {}).setdefault(converted_interface, {})
+
                 group = m.groupdict()
                 status = group['transmit_receive']
                 if 'Receive' in status:

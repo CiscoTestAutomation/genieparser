@@ -85,6 +85,8 @@
         show platform hardware qfp active bqs <x> opm statistics channel all
         show platform hardware qfp standby bqs <x> opm statistics channel all
 
+    * Update ShowVersion to support more output
+
 *IOS
     * Add ShowProcessesCpu for:
         show processes cpu
@@ -132,8 +134,6 @@
     * Add ShowPlatformHardwareQfpStatisticsDrop for:
         show platform hardware qfp active statistics drop
         show platform hardware qfp standby statistics drop
-
-    * Update ShowVersion to support more output
 
 * IOSXR
     * Add ShowInstallInactiveSummary for:
