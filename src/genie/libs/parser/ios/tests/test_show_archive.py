@@ -9,12 +9,15 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from genie.libs.parser.iosxe.tests.test_show_archive import test_show_archive as test_show_archive_iosxe
-from genie.libs.parser.iosxe.tests.test_show_archive import test_show_archive_config_differences as test_show_archive_config_differences_iosxe
+from genie.libs.parser.iosxe.tests.test_show_archive import test_show_archive as test_show_archive_iosxe, \
+                                                            test_show_archive_config_differences as \
+                                                            test_show_archive_config_differences_iosxe
 # Parser
-from genie.libs.parser.ios.show_archive import ShowArchive, ShowArchiveConfigDifferences, \
-                                            ShowArchiveConfigIncrementalDiffs
+from genie.libs.parser.ios.show_archive import ShowArchive, \
+                                               ShowArchiveConfigDifferences, \
+                                               ShowArchiveConfigIncrementalDiffs
 
+import json
 
 # ============================================
 # unit test for 'show archive'
@@ -122,5 +125,6 @@ class test_show_archive_config_differences(test_show_archive_config_differences_
         obj = ShowArchiveConfigIncrementalDiffs(device=self.device)
         parsed_output = obj.parse(fileA='file1.txt')
         self.assertEqual(parsed_output,self.golden_parsed_output_incremental_diff)
+
 if __name__ == '__main__':
     unittest.main()
