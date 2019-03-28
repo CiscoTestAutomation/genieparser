@@ -1,4 +1,4 @@
-''' show_paltform.py
+''' show_platform.py
 
 IOSXR parsers for the following show commands:
     * 'show version'
@@ -6,6 +6,8 @@ IOSXR parsers for the following show commands:
     * 'show platform'
     * 'show platform vm'
     * 'show install active summary'
+    * 'show install inactive summary'
+    * 'show install commit summary'
     * 'show inventory'
     * 'admin show diag chassis'
     * 'show redundancy summary'
@@ -550,6 +552,134 @@ class ShowInstallActiveSummary(ShowInstallActiveSummarySchema):
                     continue
 
         return install_active_dict
+
+# ========================================
+# Schema for 'show install inactive summary'
+# ========================================
+class ShowInstallInactiveSummarySchema(MetaParser):
+    """Schema for show install inactive summary"""
+    schema = {
+        'inactive_packages': Any(),
+        Optional('num_inactive_packages'): int,
+        Optional('sdr'): list,
+        }
+
+class ShowInstallInactiveSummary(ShowInstallInactiveSummarySchema):
+    """Parser for show install inactive summary"""
+    
+    cli_command = 'show install inactive summary'
+    
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        # Init vars
+        install_inactive_dict = {}
+        previous_line_sdr = False
+        previous_line_inactive_packages = False
+        
+        for line in out.splitlines():
+            line = line.rstrip()
+            
+            p1 = re.compile(r'\s*SDRs:*$')
+            m = p1.match(line)
+            if m:
+                previous_line_sdr = True
+                continue
+            
+            if previous_line_sdr:
+                previous_line_sdr = False
+                install_inactive_dict.setdefault('sdr', []).append(str(line).strip())
+                continue
+            
+            
+            # disk0:xrvr-full-x-6.2.1.23I
+            # disk0:asr9k-mini-px-6.1.21.15I
+            # xrv9k-xr-6.2.2.14I version=6.2.2.14I [Boot image]
+            p2 = re.compile(r'\s*Inactive +Packages:'
+                             ' *(?P<num_inactive_packages>[0-9]+)?$')
+            m = p2.match(line)
+            if m:
+                previous_line_inactive_packages = True
+                if 'inactive_packages' not in install_inactive_dict:
+                    install_inactive_dict['inactive_packages'] = []
+                if m.groupdict()['num_inactive_packages']:
+                    install_inactive_dict['num_inactive_packages'] = \
+                        int(m.groupdict()['num_inactive_packages'])
+                continue
+            
+            if previous_line_inactive_packages and line is not None:
+                clean_line = str(line).strip()
+                if line and '/' not in line:
+                    install_inactive_dict['inactive_packages'].append(clean_line)
+                    continue
+        
+        return install_inactive_dict
+
+# ========================================
+# Schema for 'show install commit summary'
+# ========================================
+class ShowInstallCommitSummarySchema(MetaParser):
+    """Schema for show install commit summary"""
+    schema = {
+        'committed_packages': Any(),
+        Optional('num_committed_packages'): int,
+        Optional('sdr'): list,
+        }
+
+class ShowInstallCommitSummary(ShowInstallCommitSummarySchema):
+    """Parser for show install inactive summary"""
+    
+    cli_command = 'show install commit summary'
+    
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        # Init vars
+        install_commit_dict = {}
+        previous_line_sdr = False
+        previous_line_committed_packages = False
+        
+        for line in out.splitlines():
+            line = line.rstrip()
+            
+            p1 = re.compile(r'\s*SDRs:*$')
+            m = p1.match(line)
+            if m:
+                previous_line_sdr = True
+                continue
+            
+            if previous_line_sdr:
+                previous_line_sdr = False
+                install_commit_dict.setdefault('sdr', []).append(str(line).strip())
+                continue
+            
+            
+            # disk0:xrvr-full-x-6.2.1.23I
+            # disk0:asr9k-mini-px-6.1.21.15I
+            # xrv9k-xr-6.2.2.14I version=6.2.2.14I [Boot image]
+            p2 = re.compile(r'\s*Committed +Packages:'
+                             ' *(?P<num_committed_packages>[0-9]+)?$')
+            m = p2.match(line)
+            if m:
+                previous_line_committed_packages = True
+                if 'committed_packages' not in install_commit_dict:
+                    install_commit_dict['committed_packages'] = []
+                if m.groupdict()['num_committed_packages']:
+                    install_commit_dict['num_committed_packages'] = \
+                        int(m.groupdict()['num_committed_packages'])
+                continue
+            
+            if previous_line_committed_packages and line is not None:
+                clean_line = str(line).strip()
+                if line and '/' not in line:
+                    install_commit_dict['committed_packages'].append(clean_line)
+                    continue
+        
+        return install_commit_dict
 
 # ===========================
 # Schema for 'show inventory'
