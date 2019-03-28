@@ -131,6 +131,9 @@ class ShowPolicyMapControlPlane(ShowPolicyMapControlPlaneSchema):
         # police:
         p6 = re.compile(r'^police:+$')
 
+        #  police:  cir 64000 bps, bc 8000 bytes
+        p6_1 = re.compile(r'^police: +cir (?P<cir_bps>(\d+)) bps, bc (?P<bc_bytes>(\d+)) bytes$')
+
         # cir 8000 bps, bc 1500 bytes
         p7 = re.compile(r'^cir (?P<cir_bps>(\d+)) bps, bc (?P<bc_bytes>(\d+)) bytes$')
 
@@ -250,6 +253,15 @@ class ShowPolicyMapControlPlane(ShowPolicyMapControlPlaneSchema):
                 police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
                 police_dict['bc_bytes'] = int(m.groupdict()['bc_bytes'])
                 continue
+
+            # police:  cir 64000 bps, bc 8000 bytes
+            m = p6_1.match(line)
+            if m:
+                police_dict = class_map_dict.setdefault('police', {})
+                police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
+                police_dict['bc_bytes'] = int(m.groupdict()['bc_bytes'])
+                continue
+
 
             # 8000 bps, 1500 limit, 1500 extended limit
             m = p7_1.match(line)

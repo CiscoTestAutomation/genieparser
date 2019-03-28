@@ -257,6 +257,66 @@ class test_show_policy_map_control_plane(unittest.TestCase):
             Match:any
         '''}
 
+    golden_parsed_output3 ={
+        'Control Plane':
+            {'service_policy':
+                {'input':
+                    {'policy_name':
+                        {'control-plane-in':
+                            {'class_map':
+                                {' telnet-class':
+                                    {'match_all': True,
+                                     'packets': 10521,
+                                     'bytes': 673344,
+                                     'rate':
+                                         {'interval': 300,
+                                          'offered_rate_bps': 18000,
+                                          'drop_rate_bps': 15000},
+                                     'match': ' access-group 102',
+                                     'police':
+                                         {'cir_bps': 64000,
+                                          'bc_bytes': 8000,
+                                          'conformed':
+                                              {'packets': 1430,
+                                               'bytes': 91520,
+                                               'actions': 'transmit',
+                                               'bps': 2000},
+                                          'exceeded':
+                                              {'packets': 9091,
+                                               'bytes': 581824,
+                                               'actions': 'drop',
+                                               'bps': 15000}}},
+                                ' class-default':
+                                    {'match_all': False,
+                                     'packets': 0,
+                                     'bytes': 0,
+                                     'rate':
+                                         {'interval': 300,
+                                          'offered_rate_bps': 0,
+                                          'drop_rate_bps': 0},
+                                     'match': ' any'}}}}}}}}
+
+    golden_output3 = {'execute.return_value':'''
+        Router# show policy-map control-plane
+        Control Plane
+        Service-policy input: control-plane-in
+        Class-map: telnet-class (match-all)
+            10521 packets, 673344 bytes
+            5 minute offered rate 18000 bps, drop rate 15000 bps
+            Match: access-group 102
+            police:  cir 64000 bps, bc 8000 bytes
+               conformed 1430 packets, 91520 bytes; actions:
+               transmit
+               exceeded 9091 packets, 581824 bytes; actions:
+               drop
+               conformed 2000 bps, exceeded 15000 bps
+        Class-map: class-default (match-any)
+            0 packets, 0 bytes
+            5 minute offered rate 0000 bps, drop rate 0000 bps
+            Match: any
+
+    '''}
+
     def test_show_policy_map_control_plane_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -279,6 +339,14 @@ class test_show_policy_map_control_plane(unittest.TestCase):
         parsed_output = obj.parse()
         #import pdb;pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_show_policy_map_control_plane_full3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowPolicyMapControlPlane(device=self.device)
+        parsed_output = obj.parse()
+        #import pdb;pdb.set_trace()
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 if __name__ == '__main__':
     unittest.main()
