@@ -459,7 +459,7 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                             V - Virtual, M - SSM Mapping, L - Local,
                             Ac - Channel accounted towards access control limit)
           Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
-          10.4.1.1          00:05:06  stopped   stopped   Yes  L
+          10.4.1.1         00:05:06  stopped   stopped   Yes  L
 
         Interface:        GigabitEthernet1
         Group:                239.2.2.2
@@ -487,7 +487,7 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                             V - Virtual, M - SSM Mapping, L - Local,
                             Ac - Channel accounted towards access control limit)
           Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
-          10.4.1.2          00:05:06  stopped   stopped   Yes  L
+          10.4.1.2         00:05:06  stopped   stopped   Yes  L
 
         Interface:        GigabitEthernet1
         Group:                239.7.7.7
@@ -499,7 +499,7 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                             V - Virtual, M - SSM Mapping, L - Local,
                             Ac - Channel accounted towards access control limit)
           Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
-          10.16.2.1          00:05:06  stopped   stopped   Yes  S
+          10.16.2.1        00:05:06  stopped   stopped   Yes  S
 
         Interface:        GigabitEthernet1
         Group:                239.6.6.6
@@ -527,8 +527,8 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                             V - Virtual, M - SSM Mapping, L - Local,
                             Ac - Channel accounted towards access control limit)
           Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
-          10.16.2.1          00:05:06  stopped   stopped   Yes  S
-          10.16.2.2          00:05:06  stopped   stopped   Yes  S
+          10.16.2.1        00:05:06  stopped   stopped   Yes  S
+          10.16.2.2        00:05:06  stopped   stopped   Yes  S
 
         Interface:        GigabitEthernet1
         Group:                224.0.1.40
@@ -765,7 +765,7 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                             V - Virtual, M - SSM Mapping, L - Local,
                             Ac - Channel accounted towards access control limit)
           Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
-          10.4.1.1          00:06:24  stopped   stopped   Yes  L
+          10.4.1.1         00:06:24  stopped   stopped   Yes  L
 
         Interface:        GigabitEthernet2
         Group:                239.2.2.2
@@ -793,7 +793,7 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                             V - Virtual, M - SSM Mapping, L - Local,
                             Ac - Channel accounted towards access control limit)
           Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
-          10.4.1.2          00:06:23  stopped   stopped   Yes  L
+          10.4.1.2         00:06:23  stopped   stopped   Yes  L
 
         Interface:        GigabitEthernet2
         Group:                239.7.7.7
@@ -825,8 +825,8 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                             V - Virtual, M - SSM Mapping, L - Local,
                             Ac - Channel accounted towards access control limit)
           Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
-          10.16.2.1          00:03:56  stopped   stopped   Yes  S
-          10.16.2.2          00:05:57  stopped   stopped   Yes  S
+          10.16.2.1        00:03:56  stopped   stopped   Yes  S
+          10.16.2.2        00:05:57  stopped   stopped   Yes  S
 
         Interface:        GigabitEthernet2
         Group:                224.0.1.40
@@ -980,7 +980,7 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                             V - Virtual, M - SSM Mapping, L - Local,
                             Ac - Channel accounted towards access control limit)
           Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
-          192.168.34.2      1w0d      00:02:30  stopped   Yes  R
+          192.168.34.2     1w0d      00:02:30  stopped   Yes  R
 
         Interface:  Vlan210
         Group:    227.1.1.1

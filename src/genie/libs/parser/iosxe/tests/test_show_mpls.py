@@ -2317,12 +2317,12 @@ tag    tag or VC   or Tunnel Id      switched   interface
     golden_output_4 = {'execute.return_value':'''\
     Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop
     Label      Label      or Tunnel Id     Switched      interface
-    16         Pop Label  10.4.1.2-A        0             Et0/0      10.4.1.2
-    17         Pop Label  10.4.1.2-A        0             Et0/0      10.4.1.2
-    18         Pop Label  10.4.1.2-A        0             Et0/0      10.4.1.2
-    19         Pop Label  10.135.15.2-A     0             Et0/1      10.135.15.2
-    20         Pop Label  10.135.15.2-A     0             Et0/1      10.135.15.2
-    21         Pop Label  10.135.15.2-A     0             Et0/1      10.135.15.2
+    16         Pop Label  10.4.1.2-A       0             Et0/0      10.4.1.2
+    17         Pop Label  10.4.1.2-A       0             Et0/0      10.4.1.2
+    18         Pop Label  10.4.1.2-A       0             Et0/0      10.4.1.2
+    19         Pop Label  10.135.15.2-A    0             Et0/1      10.135.15.2
+    20         Pop Label  10.135.15.2-A    0             Et0/1      10.135.15.2
+    21         Pop Label  10.135.15.2-A    0             Et0/1      10.135.15.2
     22    [T]  Pop Label  1/1[TE-Bind]     0             Tu1        point2point
     16110      Pop Label  10.70.20.20/32   0             Et0/0      10.4.1.2
     16120      16120      10.30.30.30/32   0             Et0/0      10.4.1.2

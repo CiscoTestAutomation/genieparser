@@ -98,7 +98,7 @@ class ShowLispSession(ShowLispSessionSchema):
                          ' +established: +(?P<established>(\d+))$')
 
         # Peer                           State      Up/Down        In/Out    Users
-        # 10.16.2.2                        Up         00:51:38        8/13     3
+        # 10.16.2.2                      Up         00:51:38        8/13     3
         p2 = re.compile(r'(?P<peer>(\S+)) +(?P<state>(Up|Down)) +(?P<time>(\S+))'
                          ' +(?P<in>(\d+))\/(?P<out>(\d+)) +(?P<users>(\d+))$')
 
@@ -116,7 +116,7 @@ class ShowLispSession(ShowLispSessionSchema):
                 vrf_dict['established'] = int(group['established'])
                 continue
 
-            # 10.1.8.8                        Up         00:52:15        8/13     3
+            # 10.1.8.8                       Up         00:52:15        8/13     3
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -1578,7 +1578,7 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
         p4 = re.compile(r'Negative +cache +entry, +action: +(?P<action>(.*))$')
 
         #   Locator  Uptime    State      Pri/Wgt     Encap-IID
-        #   10.1.8.8  00:04:02  up          50/50        -
+        #   10.1.8.8 00:04:02  up          50/50        -
         p5 = re.compile(r'(?P<locator>(\S+)) +(?P<uptime>(\S+))'
                          ' +(?P<state>(up|down))'
                          ' +(?P<priority>(\d+))\/(?P<weight>(\d+))'
@@ -1657,7 +1657,7 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
                 continue
 
             #  Locator  Uptime    State      Pri/Wgt     Encap-IID
-            #  10.1.8.8  00:04:02  up          50/50        -
+            #  10.1.8.8 00:04:02  up          50/50        -
             m = p5.match(line)
             if m:
                 group = m.groupdict()
@@ -1767,7 +1767,7 @@ class ShowLispServiceRlocMembers(ShowLispServiceRlocMembersSchema):
                          ' +(?P<distribution>(enabled|disabled))$')
 
         # RLOC                    Origin                       Valid
-        # 10.16.2.2                 Registration                 Yes
+        # 10.16.2.2               Registration                 Yes
         p4 = re.compile(r'(?P<member>([0-9\.\:]+)) +(?P<origin>(\S+))'
                          ' +(?P<valid>(\S+))$')
 
@@ -1805,7 +1805,7 @@ class ShowLispServiceRlocMembers(ShowLispServiceRlocMembersSchema):
                 continue
 
             # RLOC                    Origin                       Valid
-            # 10.16.2.2                 Registration                 Yes
+            # 10.16.2.2               Registration                 Yes
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -2282,8 +2282,8 @@ class ShowLispServiceDatabase(ShowLispServiceDatabaseSchema):
                          ' +locator-set +(?P<locator_set>(\S+))$')
 
         # Locator       Pri/Wgt  Source     State
-        # 10.16.2.2       50/50    cfg-intf   site-self, reachable
-        # 10.229.11.1    1/100    cfg-intf   site-self, reachable
+        # 10.16.2.2     50/50    cfg-intf   site-self, reachable
+        # 10.229.11.1   1/100    cfg-intf   site-self, reachable
         p5 = re.compile(r'(?P<locator>(\S+))'
                          ' +(?P<priority>(\d+))\/(?P<weight>(\d+))'
                          ' +(?P<source>(\S+)) +(?P<state>(.*))$')
@@ -2358,7 +2358,7 @@ class ShowLispServiceDatabase(ShowLispServiceDatabaseSchema):
                 continue
 
             # Locator       Pri/Wgt  Source     State
-            # 10.16.2.2       50/50    cfg-intf   site-self, reachable
+            # 10.16.2.2     50/50    cfg-intf   site-self, reachable
             m = p5.match(line)
             if m:
                 group = m.groupdict()
@@ -2786,7 +2786,7 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
         p20 = re.compile(r'sourced +by +(?P<source>(.*))$')
 
         # Locator  Local  State      Pri/Wgt  Scope
-        # 10.16.2.2  yes    up          50/50   IPv4 none
+        # 10.16.2.2 yes    up          50/50   IPv4 none
         p21 = re.compile(r'(?P<locator>(\S+)) +(?P<local>(\S+))'
                           ' +(?P<state>(\S+)) +(?P<priority>(\d+))\/'
                           '(?P<weight>(\d+)) +(?P<scope>(.*))$')

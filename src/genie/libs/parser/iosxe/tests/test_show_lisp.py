@@ -71,9 +71,9 @@ class test_show_lisp_session(unittest.TestCase):
         204-MSMR#show lisp session
         Sessions for VRF default, total: 3, established: 3
         Peer                           State      Up/Down        In/Out    Users
-        10.16.2.2                        Up         00:51:38        8/13     3
-        10.144.6.6                        Up         00:51:53        3/10     1
-        10.1.8.8                        Up         00:52:15        8/13     3
+        10.16.2.2                      Up         00:51:38        8/13     3
+        10.144.6.6                     Up         00:51:53        3/10     1
+        10.1.8.8                       Up         00:52:15        8/13     3
         '''}
 
     def test_show_lisp_session_full1(self):
@@ -1762,7 +1762,7 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
           Negative cache entry, action: send-map-request
         192.168.9.0/24, uptime: 00:04:02, expires: 23:55:57, via map-reply, complete
           Locator  Uptime    State      Pri/Wgt     Encap-IID
-          10.1.8.8  00:04:02  up          50/50        -
+          10.1.8.8 00:04:02  up          50/50        -
         '''}
 
     golden_parsed_output2 = {
@@ -1872,11 +1872,11 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
           Negative cache entry, action: send-map-request
         2001:192:168:9::/64, uptime: 00:06:51, expires: 23:53:08, via map-reply, complete
           Locator  Uptime    State      Pri/Wgt     Encap-IID
-          10.1.8.8  00:06:51  up          50/50        -
+          10.1.8.8 00:06:51  up          50/50        -
         172.16.10.0/24, uptime: 00:00:00, expires: 23:59:59, via map-reply, complete
           Locator                     Uptime    State      Pri/Wgt
-          172.16.156.134             00:00:00  up           1/50
-          192.168.65.94                00:00:00  up           1/50
+          172.16.156.134              00:00:00  up           1/50
+          192.168.65.94               00:00:00  up           1/50
           2001:468:D01:9C::80DF:9C86  00:00:00  up           2/100
         '''}
 
@@ -2005,16 +2005,16 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
 
         b827.eb51.f5ce/48, uptime: 22:49:42, expires: 01:10:17, via WLC Map-Notify, complete
           Locator     Uptime    State      Pri/Wgt     Encap-IID
-          10.151.22.1  22:49:42  up           0/0         -
+          10.151.22.1 22:49:42  up           0/0         -
         b827.eb73.159c/48, uptime: 15:02:35, expires: 08:57:24, via WLC Map-Notify, complete
           Locator     Uptime    State      Pri/Wgt     Encap-IID
-          10.151.22.1  15:02:35  up           0/0         -
+          10.151.22.1 15:02:35  up           0/0         -
         b827.ebd0.acc6/48, uptime: 15:02:34, expires: 08:57:25, via WLC Map-Notify, complete
           Locator     Uptime    State      Pri/Wgt     Encap-IID
-          10.151.22.1  15:02:34  up           0/0         -
+          10.151.22.1 15:02:34  up           0/0         -
         b827.ebd6.0c63/48, uptime: 14:57:15, expires: 09:02:44, via WLC Map-Notify, complete
           Locator     Uptime    State      Pri/Wgt     Encap-IID
-          10.151.22.1  14:57:15  up           0/0         -
+          10.151.22.1 14:57:15  up           0/0         -
 
         =================================================
         Output for router lisp 0 instance-id 2
@@ -2416,8 +2416,8 @@ class test_show_lisp_service_rloc_members(unittest.TestCase):
         Entries: 2 valid / 2 total, Distribution disabled
 
         RLOC                                    Origin                       Valid
-        10.16.2.2                                 Registration                 Yes
-        10.1.8.8                                 Registration                 Yes
+        10.16.2.2                               Registration                 Yes
+        10.1.8.8                                Registration                 Yes
         '''}
 
     golden_parsed_output2 = {
@@ -2450,8 +2450,8 @@ class test_show_lisp_service_rloc_members(unittest.TestCase):
         Entries: 2 valid / 2 total, Distribution disabled
 
         RLOC                                    Origin                       Valid
-        10.16.2.2                                 Registration                 Yes
-        10.1.8.8                                 Registration                 Yes
+        10.16.2.2                               Registration                 Yes
+        10.1.8.8                                Registration                 Yes
         '''}
 
     golden_parsed_output3 = {
@@ -2920,7 +2920,7 @@ class test_show_lisp_service_database(unittest.TestCase):
 
         192.168.0.0/24, locator-set RLOC
           Locator  Pri/Wgt  Source     State
-          10.16.2.2   50/50   cfg-intf   site-self, reachable
+          10.16.2.2 50/50   cfg-intf   site-self, reachable
         '''}
 
     golden_parsed_output2 = {
@@ -2962,7 +2962,7 @@ class test_show_lisp_service_database(unittest.TestCase):
 
         2001:192:168::/64, locator-set RLOC
           Locator  Pri/Wgt  Source     State
-          10.16.2.2   50/50   cfg-intf   site-self, reachable
+          10.16.2.2 50/50   cfg-intf   site-self, reachable
         '''}
 
     golden_parsed_output3 = {
@@ -3052,10 +3052,10 @@ class test_show_lisp_service_database(unittest.TestCase):
 
         0050.56b0.6a0e/48, dynamic-eid Auto-L2-group-1, inherited from default locator-set RLOC
           Locator     Pri/Wgt  Source     State
-          10.229.11.1    1/100  cfg-intf   site-self, reachable
+          10.229.11.1   1/100  cfg-intf   site-self, reachable
         cafe.cafe.cafe/48, dynamic-eid Auto-L2-group-1, inherited from default locator-set RLOC
           Locator     Pri/Wgt  Source     State
-          10.229.11.1    1/100  cfg-intf   site-self, reachable
+          10.229.11.1   1/100  cfg-intf   site-self, reachable
 
         =================================================
         Output for router lisp 0 instance-id 2
@@ -4000,7 +4000,7 @@ class test_show_lisp_service_server_detail_internal(unittest.TestCase):
                          site-ID unspecified
                          sourced by reliable transport
               Locator  Local  State      Pri/Wgt  Scope
-              10.16.2.2  yes    up          50/50   IPv4 none
+              10.16.2.2 yes    up          50/50   IPv4 none
 
         Site name: xtr1_2
         Allowed configured locators: any
@@ -4187,7 +4187,7 @@ class test_show_lisp_service_server_detail_internal(unittest.TestCase):
                          site-ID unspecified
                          sourced by reliable transport
               Locator  Local  State      Pri/Wgt  Scope
-              10.16.2.2  yes    up          50/50   IPv4 none
+              10.16.2.2 yes   up          50/50   IPv4 none
         Site name: xtr1_2
         Allowed configured locators: any
         Allowed EID-prefixes:
@@ -4214,7 +4214,7 @@ class test_show_lisp_service_server_detail_internal(unittest.TestCase):
                          site-ID unspecified
                          sourced by reliable transport
               Locator  Local  State      Pri/Wgt  Scope
-              10.1.8.8  yes    up          50/50   IPv4 none
+              10.1.8.8 yes    up          50/50   IPv4 none
         '''}
 
     golden_parsed_output3 = {
@@ -4717,8 +4717,8 @@ class test_show_lisp_service_statistics(unittest.TestCase):
           Number of reachability reports:           0 (+ dropped 0)
         ITR Map-Resolvers:
           Map-Resolver         LastReply  Metric ReqsSent Positive Negative No-Reply
-          10.64.4.4              03:13:58        4        1        1        0        0
-          10.166.13.13          03:13:58       26        2        0        0        1
+          10.64.4.4            03:13:58        4        1        1        0        0
+          10.166.13.13         03:13:58       26        2        0        0        1
         LISP RLOC Statistics - last cleared: never
         Control Packets:
             RTR Map-Requests forwarded:             0
@@ -4951,8 +4951,8 @@ class test_show_lisp_service_statistics(unittest.TestCase):
           Number of reachability reports:           0 (+ dropped 0)
         ITR Map-Resolvers:
           Map-Resolver         LastReply  Metric ReqsSent Positive Negative No-Reply
-          10.64.4.4              00:15:36       19        2        1        0        1
-          10.166.13.13          00:17:11       31        3        0        0        2
+          10.64.4.4            00:15:36       19        2        1        0        1
+          10.166.13.13         00:17:11       31        3        0        0        2
         LISP RLOC Statistics - last cleared: never
         Control Packets:
             RTR Map-Requests forwarded:             0

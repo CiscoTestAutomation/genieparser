@@ -275,7 +275,7 @@ class test_show_ip_pim_interface(unittest.TestCase):
                                           Mode   Count  Intvl  Prior
     10.1.2.1         GigabitEthernet1         v2/S   1      30     1          10.1.2.2
     10.1.3.1         GigabitEthernet2         v2/S   1      30     1          10.1.3.3
-    10.4.1.1          Loopback0                v2/S   0      30     1          10.4.1.1
+    10.4.1.1         Loopback0                v2/S   0      30     1          10.4.1.1
      '''}
 
     golden_parsed_output_interface_2 = {
@@ -1328,8 +1328,8 @@ class test_show_ip_pim_neighbor(unittest.TestCase):
               L - DR Load-balancing Capable
         Neighbor          Interface                Uptime/Expires    Ver   DR
         Address                                                            Prio/Mode
-        192.168.4.1         Port-channel1.100        4w4d/00:01:40     v2    1 / S P G
-        192.168.205.2         GigabitEthernet0/2/3.100 4w4d/00:01:19     v2    1 / DR B S P G
+        192.168.4.1       Port-channel1.100        4w4d/00:01:40     v2    1 / S P G
+        192.168.205.2     GigabitEthernet0/2/3.100 4w4d/00:01:19     v2    1 / DR B S P G
     
     '''}
 
@@ -1752,8 +1752,8 @@ class test_show_ip_pim_interface_df(unittest.TestCase):
     golden_output_1 = {'execute.return_value': '''
         * implies this system is the DF
         Interface                RP               DF Winner        Metric     Uptime
-        Tunnel9                  10.186.0.1     0.0.0.0             20         00:00:00
-        Ethernet0/1              10.186.0.1    *10.4.0.4            20         00:00:39   
+        Tunnel9                  10.186.0.1       0.0.0.0          20         00:00:00
+        Ethernet0/1              10.186.0.1      *10.4.0.4         20         00:00:39   
     '''}
     def test_empty(self):
         self.device = Mock(**self.empty_output)

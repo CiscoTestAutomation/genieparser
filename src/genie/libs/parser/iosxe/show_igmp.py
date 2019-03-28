@@ -525,7 +525,7 @@ class ShowIpIgmpGroupsDetail(ShowIpIgmpGroupsDetailSchema):
                 continue
 
             # Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
-            # 10.4.1.1          00:05:06  stopped   stopped   Yes  L
+            # 10.4.1.1         00:05:06  stopped   stopped   Yes  L
             p7 = re.compile(r'^(?P<source>[\w\.\:]+) +'
                              '(?P<up_time>[\w\.\:]+) +'
                              '(?P<v3_exp>\w+) +'

@@ -1719,7 +1719,7 @@ class ShowPimNeighbor(ShowPimNeighborSchema):
 
             # Neighbor          Interface                Uptime/Expires    Ver   DR
             # Address                                                            Prio/Mode
-            # 192.168.154.1         Port-channel2.100        1d09h/00:01:39    v2    1 / S P G
+            # 192.168.154.1      Port-channel2.100       1d09h/00:01:39    v2    1 / S P G
             p1 = re.compile(r'^(?P<nei_address>[\d\.]+) +'
                              '(?P<intf>[\w\.\/\-]+) +'
                              '(?P<uptime>[\w\.\:]+)/(?P<expires>[\w\.\:]+) +'
@@ -1892,7 +1892,7 @@ class ShowIpPimInterfaceDf(ShowIpPimInterfaceDfSchema):
             # Interface          RP               DF Winner        Metric          Uptime
             # Ethernet3/3        10.10.0.2        10.4.0.2         0               00:03:49
             #                    10.10.0.3        10.4.0.3         0               00:01:49
-            # Ethernet0/1        10.186.0.1        *10.4.0.4         20              00:00:39 
+            # Ethernet0/1        10.186.0.1      *10.4.0.4         20              00:00:39 
             p1 = re.compile(r'^((?P<intf>[\w\.\/\-]+) +)?'
                              '(?P<address>[\w\.\:]+) +'
                              '(?P<df>\*)?(?P<df_address>[\w\.\:]+) +'

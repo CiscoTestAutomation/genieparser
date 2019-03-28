@@ -1648,7 +1648,7 @@ class test_show_l2vpn_vfi(unittest.TestCase):
           Bridge-Domain 2051 attachment circuits:
           Pseudo-port interface: pseudowire100001
           Interface          Peer Address    VE-ID  Local Label  Remote Label    S
-          pseudowire100202   10.120.202.64    1      16           327810          Y
+          pseudowire100202   10.120.202.64   1      16           327810          Y
 
         VFI name: VPLS-2052, state: up, type: multipoint, signaling: BGP
           VPN ID: 2052, VE-ID: 2, VE-SIZE: 10
@@ -1656,7 +1656,7 @@ class test_show_l2vpn_vfi(unittest.TestCase):
           Bridge-Domain 2052 attachment circuits:
           Pseudo-port interface: pseudowire100002
           Interface          Peer Address    VE-ID  Local Label  Remote Label    S
-          pseudowire100203   10.120.202.64    1      26           327818          Y
+          pseudowire100203   10.120.202.64   1      26           327818          Y
 
         VFI name: VPLS-2053, state: up, type: multipoint, signaling: BGP
           VPN ID: 2053, VE-ID: 2, VE-SIZE: 10
@@ -1664,7 +1664,7 @@ class test_show_l2vpn_vfi(unittest.TestCase):
           Bridge-Domain 2053 attachment circuits:
           Pseudo-port interface: pseudowire100003
           Interface          Peer Address    VE-ID  Local Label  Remote Label    S
-          pseudowire100204   10.120.202.64    1      36           327826          Y
+          pseudowire100204   10.120.202.64   1      36           327826          Y
 
         VFI name: VPLS-2054, state: up, type: multipoint, signaling: BGP
           VPN ID: 2054, VE-ID: 2, VE-SIZE: 10
@@ -1672,7 +1672,7 @@ class test_show_l2vpn_vfi(unittest.TestCase):
           Bridge-Domain 2054 attachment circuits:
           Pseudo-port interface: pseudowire100004
           Interface          Peer Address    VE-ID  Local Label  Remote Label    S
-          pseudowire100205   10.120.202.64    1      46           327834          Y
+          pseudowire100205   10.120.202.64   1      46           327834          Y
 
         VFI name: VPLS-2055, state: up, type: multipoint, signaling: BGP
           VPN ID: 2055, VE-ID: 2, VE-SIZE: 10
@@ -1680,7 +1680,7 @@ class test_show_l2vpn_vfi(unittest.TestCase):
           Bridge-Domain 2055 attachment circuits:
           Pseudo-port interface: pseudowire100005
           Interface          Peer Address    VE-ID  Local Label  Remote Label    S
-          pseudowire100206   10.120.202.64    1      56           327842          Y
+          pseudowire100206   10.120.202.64   1      56           327842          Y
     '''
     }
 
@@ -1738,9 +1738,9 @@ class test_show_l2vpn_vfi(unittest.TestCase):
       Bridge-Domain 30 attachment circuits:
       Pseudo-port interface: pseudowire100004
       Interface          Peer Address     VC ID        S
-      pseudowire3        10.64.4.4          14           Y
-      pseudowire2        10.36.3.3          13           Y
-      pseudowire1        10.16.2.2          12           Y
+      pseudowire3        10.64.4.4        14           Y
+      pseudowire2        10.36.3.3        13           Y
+      pseudowire1        10.16.2.2        12           Y
     '''
     }
 
@@ -1808,9 +1808,9 @@ class test_show_l2vpn_vfi(unittest.TestCase):
       Bridge-Domain 30 attachment circuits:
       Neighbors connected via pseudowires:
       Interface          Peer Address    VE-ID  Local Label  Remote Label    S
-      pseudowire100007   10.64.4.4         4      30           24015           Y
-      pseudowire100006   10.36.3.3         3      29           20              Y
-      pseudowire100005   10.16.2.2         2      28           24              Y
+      pseudowire100007   10.64.4.4       4      30           24015           Y
+      pseudowire100006   10.36.3.3       3      29           20              Y
+      pseudowire100005   10.16.2.2       2      28           24              Y
     '''
     }
 

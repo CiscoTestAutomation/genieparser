@@ -341,9 +341,9 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
 
 
         # Gateway         Distance      Last Update
-        # 10.36.3.3              110      07:33:00
-        # 10.16.2.2              110      07:33:00
-        # 10.64.4.4              110      00:19:15
+        # 10.36.3.3            110      07:33:00
+        # 10.16.2.2            110      07:33:00
+        # 10.64.4.4            110      00:19:15
         p8 = re.compile(r"^(?P<gateway>([0-9\.]+)) +(?P<distance>(\d+))"
                          " +(?P<last_update>([a-zA-Z0-9\:\.]+))$")
 
@@ -942,9 +942,9 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                     continue
 
                 # Gateway         Distance      Last Update
-                # 10.36.3.3              110      07:33:00
-                # 10.16.2.2              110      07:33:00
-                # 10.64.4.4              110      00:19:15
+                # 10.36.3.3            110      07:33:00
+                # 10.16.2.2            110      07:33:00
+                # 10.64.4.4            110      00:19:15
                 m = p8.match(line)
                 if m:
                     group = m.groupdict()

@@ -63,9 +63,9 @@ class test_show_arp(unittest.TestCase):
 
 		golden_output = {'execute.return_value': '''\
 				Protocol  Address          Age (min)  Hardware Addr   Type   Interface
-				Internet  192.168.234.1              -   58bf.eab6.2f51  ARPA   Vlan100
-				Internet  192.168.234.2             29   3820.5672.fc51  ARPA   Vlan100
-				Internet  192.168.70.1              -   58bf.eab6.2f62  ARPA   Vlan200
+				Internet  192.168.234.1           -   58bf.eab6.2f51  ARPA   Vlan100
+				Internet  192.168.234.2          29   3820.5672.fc51  ARPA   Vlan100
+				Internet  192.168.70.1            -   58bf.eab6.2f62  ARPA   Vlan200
 		'''}
 		
 		golden_parsed_output_1 = {

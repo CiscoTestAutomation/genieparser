@@ -3232,8 +3232,8 @@ class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
                          ' +(?P<area>(\S+))\)$')
 
         # Link ID         ADV Router      Age         Seq#       Checksum Link count
-        # 10.13.202.64    10.120.202.64    2794        0x80000043 0x002254 3
-        # 10.1.1.2        10.169.197.253 70          0x8000003F 0x0015EF
+        # 10.13.202.64    10.120.202.64   2794        0x80000043 0x002254 3
+        # 10.1.1.2        10.169.197.253  70          0x8000003F 0x0015EF
         p3 = re.compile(r'^(?P<link_id>(\S+)) +(?P<adv_router>(\S+))'
                          ' +(?P<age>(\d+)) +(?P<seq>(\S+)) +(?P<checksum>(\S+))'
                          '(?: *(?P<link_count>(\d+)))?$')
@@ -3297,8 +3297,8 @@ class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
                 continue
 
             # Link ID         ADV Router      Age         Seq#       Checksum Link count
-            # 10.13.202.64    10.120.202.64    2794        0x80000043 0x002254 3
-            # 10.1.1.2        10.169.197.253 70          0x8000003F 0x0015EF
+            # 10.13.202.64    10.120.202.64   2794        0x80000043 0x002254 3
+            # 10.1.1.2        10.169.197.253  70          0x8000003F 0x0015EF
             m = p3.match(line)
             if m:
                 group = m.groupdict()

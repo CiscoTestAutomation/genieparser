@@ -76,8 +76,8 @@ class test_show_ntp_associations(unittest.TestCase):
         iosv-1#show ntp associations 
 
           address         ref clock       st   when   poll reach  delay  offset   disp
-        *~10.16.2.2         127.127.1.1      3     25     64     7  5.610  27.027  3.342
-         ~10.36.3.3         .STEP.          16      -    512     0  0.000   0.000 15937.
+        *~10.16.2.2       127.127.1.1      3     25     64     7  5.610  27.027  3.342
+         ~10.36.3.3       .STEP.          16      -    512     0  0.000   0.000 15937.
          * sys.peer, # selected, + candidate, - outlyer, x falseticker, ~ configured
     '''}
 
@@ -134,8 +134,8 @@ class test_show_ntp_associations(unittest.TestCase):
         show ntp associations
 
           address         ref clock       st   when   poll reach  delay  offset   disp
-         ~10.16.2.2         127.127.1.1      3     41     64     0  0.000   0.000 15937.
-         ~10.36.3.3         .INIT.          16      -     64     0  0.000   0.000 15937.
+         ~10.16.2.2       127.127.1.1      3     41     64     0  0.000   0.000 15937.
+         ~10.36.3.3       .INIT.          16      -     64     0  0.000   0.000 15937.
          * sys.peer, # selected, + candidate, - outlyer, x falseticker, ~ configured
     '''}
 

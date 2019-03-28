@@ -688,9 +688,9 @@ class ShowL2vpnVfi(ShowL2vpnVfiSchema):
                          ' +(?P<ve_id>\d+) +(?P<local_label>\d+) +(?P<remote_label>\d+) +(?P<split_horizon>\w+)$')
 
         # Interface          Peer Address     VC ID        S
-        # pseudowire3        10.64.4.4          14           Y
-        # pseudowire2        10.36.3.3          13           Y
-        # pseudowire1        10.16.2.2          12           Y
+        # pseudowire3        10.64.4.4        14           Y
+        # pseudowire2        10.36.3.3        13           Y
+        # pseudowire1        10.16.2.2        12           Y
         p6_1 = re.compile(r'^(?P<pw_intf>\S+) +(?P<pw_peer_id>[\d\.]+)'
                          ' +(?P<vc_id>\d+) +(?P<split_horizon>\w+)$')
 

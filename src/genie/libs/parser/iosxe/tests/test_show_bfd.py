@@ -196,7 +196,7 @@ class test_show_bfd(unittest.TestCase):
 
 		IPv4 Sessions
 		NeighAddr                              LD/RD         RH/RS     State     Int
-		10.169.197.94                       4097/4097       Up        Up        Gi0/0/0
+		10.169.197.94                        4097/4097       Up        Up        Gi0/0/0
 		Session state is UP and using echo function with 500 ms interval.
 		Session Host: Software
 		OurAddr: 10.169.197.93 

@@ -187,10 +187,10 @@ class test_show_ip_protocols(unittest.TestCase):
             Loopback0
           Routing Information Sources:
             Gateway         Distance      Last Update
-            10.60.6.3           115      05:56:34
-            10.60.6.2           115      05:56:34
-            10.60.6.4           115      05:56:34
-            10.60.6.9           115      05:56:34
+            10.60.6.3            115      05:56:34
+            10.60.6.2            115      05:56:34
+            10.60.6.4            115      05:56:34
+            10.60.6.9            115      05:56:34
           Distance: (default is 115)
 
         Routing Protocol is "bgp 9999"
@@ -201,8 +201,8 @@ class test_show_ip_protocols(unittest.TestCase):
           Maximum path: 1
           Routing Information Sources:
             Gateway         Distance      Last Update
-            10.60.6.3           200      12w5d
-            10.60.6.2           200      14w4d
+            10.60.6.3            200      12w5d
+            10.60.6.2            200      14w4d
           Distance: external 20 internal 200 local 200
         '''}
 
@@ -344,9 +344,9 @@ class test_show_ip_protocols(unittest.TestCase):
                 GigabitEthernet1
               Routing Information Sources:
                 Gateway         Distance      Last Update
-                10.36.3.3              110      07:33:00
-                10.16.2.2              110      07:33:00
-                10.64.4.4              110      00:19:15
+                10.36.3.3            110      07:33:00
+                10.16.2.2            110      07:33:00
+                10.64.4.4            110      00:19:15
               Distance: (default is 110)
               Distance: intra-area 112 inter-area 113 external 114
 
@@ -358,7 +358,7 @@ class test_show_ip_protocols(unittest.TestCase):
               Maximum path: 1
               Routing Information Sources:
                 Gateway         Distance      Last Update
-                10.64.4.4              200      03:34:58
+                10.64.4.4            200      03:34:58
               Distance: external 20 internal 200 local 200
             '''
 
