@@ -29,6 +29,7 @@
         *  show mpls interfaces <interface>
         *  show mpls interfaces <interface> detail
         *  show mpls interfaces detail
+        *  show mpls l2transport vc detail
 """
 
 import re
@@ -47,7 +48,8 @@ from genie.libs.parser.iosxe.show_mpls import ShowMplsLdpParameters as ShowMplsL
                                               ShowMplsLdpDiscovery as ShowMplsLdpDiscovery_iosxe,\
                                               ShowMplsLdpIgpSync as ShowMplsLdpIgpSync_iosxe,\
                                               ShowMplsForwardingTable as ShowMplsForwardingTable_iosxe,\
-                                              ShowMplsInterface as ShowMplsInterface_iosxe
+                                              ShowMplsInterface as ShowMplsInterface_iosxe,\
+                                              ShowMplsL2TransportDetail as ShowMplsL2TransportDetail_iosxe
 
 
 class ShowMplsLdpParameters(ShowMplsLdpParameters_iosxe):
@@ -131,4 +133,13 @@ class ShowMplsInterface(ShowMplsInterface_iosxe):
         show mpls interfaces <interface>
         show mpls interfaces <interface> detail
         show mpls interfaces detail"""
+
+
+# ================================================
+#   Show mpls l2transport vc detail
+# ================================================
+class ShowMplsL2TransportDetail(ShowMplsL2TransportDetail_iosxe):
+    """
+    Parser for show mpls l2transport vc detail
+    """
     pass
