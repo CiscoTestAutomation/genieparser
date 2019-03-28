@@ -64,7 +64,7 @@ class test_show_mpls_ldp_parameters(unittest.TestCase):
 
     Router#show mpls ldp parameters
     Load for five secs: 2%/0%; one minute: 5%; five minutes: 5%
-    Time source is NTP, 16:10:10.454 JST Tue Nov 8 2016
+    Time source is NTP, 16:10:10.454 EST Tue Nov 8 2016
     LDP Feature Set Manager: State Initialized
       LDP features:
         Auto-Configuration
@@ -149,7 +149,7 @@ class test_show_mpls_ldp_parameters(unittest.TestCase):
 
     Router#show mpls ldp parameters
     Load for five secs: 2%/0%; one minute: 5%; five minutes: 5%
-    Time source is NTP, 16:10:10.454 JST Tue Nov 8 2016
+    Time source is NTP, 16:10:10.454 EST Tue Nov 8 2016
     LDP Feature Set Manager: State Initialized
       LDP features:
         Auto-Configuration
@@ -195,7 +195,7 @@ class test_show_mpls_ldp_nsr_statistics(unittest.TestCase):
     golden_parsed_output = {
            'statistics': {
                'peer': {
-                   '106.162.197.252': {
+                   '10.169.197.252': {
                        'local_space_id':{
                            0: {
                                'in_label_request_records':{
@@ -217,7 +217,7 @@ class test_show_mpls_ldp_nsr_statistics(unittest.TestCase):
                            }
                        }
                    },
-                   '106.162.197.253': {
+                   '10.169.197.253': {
                        'local_space_id': {
                            0: {
                                'in_label_request_records': {
@@ -310,14 +310,14 @@ class test_show_mpls_ldp_nsr_statistics(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
     Router#show mpls ldp nsr statistics
     Load for five secs: 2%/0%; one minute: 5%; five minutes: 5%
-    Time source is NTP, 16:10:12.625 JST Tue Nov 8 2016
+    Time source is NTP, 16:10:12.625 EST Tue Nov 8 2016
 
-    Peer: 106.162.197.252:0
+    Peer: 10.169.197.252:0
       In label Request Records created: 0, freed: 0
       In label Withdraw Records created: 0, freed: 0
       Local Address Withdraw Set: 0, Cleared: 0
       Transmit contexts enqueued: 0, dequeued: 0
-    Peer: 106.162.197.253:0
+    Peer: 10.169.197.253:0
       In label Request Records created: 0, freed: 0
       In label Withdraw Records created: 0, freed: 0
       Local Address Withdraw Set: 0, Cleared: 0
@@ -453,7 +453,7 @@ class test_show_mpls_ldp_neighbor(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
     Router#show mpls ldp neighbor
 Load for five secs: 59%/0%; one minute: 11%; five minutes: 7%
-Time source is NTP, 20:53:42.709 JST Fri Nov 11 2016
+Time source is NTP, 20:53:42.709 EST Fri Nov 11 2016
     Peer LDP Ident: 10.169.197.252:0; Local LDP Ident 10.169.197.254:0
         TCP connection: 10.169.197.252.646 - 10.169.197.254.20170
         State: Oper; Msgs sent/rcvd: 851/852; Downstream
@@ -732,7 +732,7 @@ class test_show_mpls_ldp_neighbor_detail(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
     Router#show mpls ldp neighbor detail
     Load for five secs: 2%/0%; one minute: 5%; five minutes: 5%
-    Time source is NTP, 16:10:10.569 JST Tue Nov 8 2016
+    Time source is NTP, 16:10:10.569 EST Tue Nov 8 2016
         Peer LDP Ident: 10.169.197.252:0; Local LDP Ident 10.169.197.254:0
             TCP connection: 10.169.197.252.646 - 10.169.197.254.44315
             Password: not required, none, in use
@@ -954,7 +954,7 @@ class test_show_mpls_ldp_bindings(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
        Router#show mpls ldp bindings
 Load for five secs: 55%/0%; one minute: 15%; five minutes: 10%
-Time source is NTP, 20:29:28.227 JST Fri Nov 11 2016
+Time source is NTP, 20:29:28.227 EST Fri Nov 11 2016
 
   lib entry: 10.186.1.0/24, rev 1028
         local binding:  label: 2536
@@ -981,7 +981,7 @@ Time source is NTP, 20:29:28.227 JST Fri Nov 11 2016
     golden_output_all_detail = {'execute.return_value': '''\
     Router#show mpls ldp bindings all detail
 Load for five secs: 2%/0%; one minute: 5%; five minutes: 5%
-Time source is NTP, 16:10:10.910 JST Tue Nov 8 2016
+Time source is NTP, 16:10:10.910 EST Tue Nov 8 2016
 
   lib entry: 10.120.202.48/30, rev 18, chkpt: none
         local binding:  label: 2030 (owner LDP)
@@ -1317,7 +1317,7 @@ class test_show_mpls_ldp_capabilities(unittest.TestCase):
     golden_output_all = {'execute.return_value':'''
     Router#show mpls ldp capabilities all
     Load for five secs: 2%/0%; one minute: 5%; five minutes: 5%
-    Time source is NTP, 16:10:10.481 JST Tue Nov 8 2016
+    Time source is NTP, 16:10:10.481 EST Tue Nov 8 2016
 
     LDP Capabilities - [<description> (<type>)]
     ---------------------------------------------------------
@@ -1374,24 +1374,24 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
             "vrf": {
                 "default": {
                     "local_ldp_identifier": {
-                        "106.162.197.254:0": {
+                        "10.169.197.254:0": {
                             'discovery_sources':{
                                 "interfaces": {
                                     "GigabitEthernet0/0/0": {
                                         'session': 'ldp',
                                         "hello_interval_ms": 5000,
-                                        "transport_ip_addr": "106.162.197.254",
+                                        "transport_ip_addr": "10.169.197.254",
                                         "xmit": True,
                                         "recv": True,
                                         "ldp_id": {
-                                            "106.162.197.252:0": {
-                                                "reachable_via": "106.162.197.252/32",
+                                            "10.169.197.252:0": {
+                                                "reachable_via": "10.169.197.252/32",
                                                 "password": "not required, none, in use",
                                                 "holdtime_sec": 15,
-                                                "transport_ip_address": "106.162.197.252",
+                                                "transport_ip_address": "10.169.197.252",
                                                 "proposed_peer": 15,
                                                 "clients": "IPv4, mLDP",
-                                                "source_ip_address": "106.162.197.93",
+                                                "source_ip_address": "10.169.197.93",
                                                 "proposed_local": 15
                                             }
                                         },
@@ -1399,19 +1399,19 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
                                     },
                                     "GigabitEthernet0/0/2": {
                                         "hello_interval_ms": 5000,
-                                        "transport_ip_addr": "106.162.197.254",
+                                        "transport_ip_addr": "10.169.197.254",
                                         'session': 'ldp',
                                         "xmit": True,
                                         "recv": True,
                                         "ldp_id": {
-                                            "106.162.197.253:0": {
-                                                "reachable_via": "106.162.197.253/32",
+                                            "10.169.197.253:0": {
+                                                "reachable_via": "10.169.197.253/32",
                                                 "password": "not required, none, in use",
                                                 "holdtime_sec": 15,
-                                                "transport_ip_address": "106.162.197.253",
+                                                "transport_ip_address": "10.169.197.253",
                                                 "proposed_peer": 15,
                                                 "clients": "IPv4, mLDP",
-                                                "source_ip_address": "106.162.197.97",
+                                                "source_ip_address": "10.169.197.97",
                                                 "proposed_local": 15
                                             }
                                         },
@@ -1428,27 +1428,27 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
 
     Router#show mpls ldp discovery all detail
     Load for five secs: 2%/0%; one minute: 5%; five minutes: 5%
-    Time source is NTP, 16:10:10.682 JST Tue Nov 8 2016
+    Time source is NTP, 16:10:10.682 EST Tue Nov 8 2016
      Local LDP Identifier:
-        106.162.197.254:0
+        10.169.197.254:0
         Discovery Sources:
         Interfaces:
             GigabitEthernet0/0/0 (ldp): xmit/recv
                 Enabled: Interface config
-                Hello interval: 5000 ms; Transport IP addr: 106.162.197.254
-                LDP Id: 106.162.197.252:0
-                  Src IP addr: 106.162.197.93; Transport IP addr: 106.162.197.252
+                Hello interval: 5000 ms; Transport IP addr: 10.169.197.254
+                LDP Id: 10.169.197.252:0
+                  Src IP addr: 10.169.197.93; Transport IP addr: 10.169.197.252
                   Hold time: 15 sec; Proposed local/peer: 15/15 sec
-                  Reachable via 106.162.197.252/32
+                  Reachable via 10.169.197.252/32
                   Password: not required, none, in use
                 Clients: IPv4, mLDP
             GigabitEthernet0/0/2 (ldp): xmit/recv
                 Enabled: Interface config
-                Hello interval: 5000 ms; Transport IP addr: 106.162.197.254
-                LDP Id: 106.162.197.253:0
-                  Src IP addr: 106.162.197.97; Transport IP addr: 106.162.197.253
+                Hello interval: 5000 ms; Transport IP addr: 10.169.197.254
+                LDP Id: 10.169.197.253:0
+                  Src IP addr: 10.169.197.97; Transport IP addr: 10.169.197.253
                   Hold time: 15 sec; Proposed local/peer: 15/15 sec
-                  Reachable via 106.162.197.253/32
+                  Reachable via 10.169.197.253/32
                   Password: not required, none, in use
                 Clients: IPv4, mLDP
     '''
@@ -1458,22 +1458,22 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
     Router# show mpls ldp discovery
 
      Local LDP Identifier:
-         8.1.1.1:0
+         10.81.1.1:0
      Discovery Sources:
          Interfaces:
              Ethernet1/1/3 (ldp): xmit/recv
-                 LDP Id: 177.73.0.77:0
-                 LDP Id: 144.0.0.44:0
-                 LDP Id: 155.0.0.55:0
+                 LDP Id: 172.16.25.77:0
+                 LDP Id: 172.16.81.44:0
+                 LDP Id: 172.16.55.55:0
              ATM3/0.1 (ldp): xmit/recv
-                 LDP Id: 203.0.7.7:2
+                 LDP Id: 192.168.240.7:2
              ATM0/0.2 (tdp): xmit/recv
-                 TDP Id: 119.1.0.1:1
+                 TDP Id: 10.120.0.1:1
      Targeted Hellos:
-             8.1.1.1 -> 133.0.0.33 (ldp): active, xmit/recv
-                 LDP Id: 133.0.0.33:0
-             8.1.1.1 -> 168.7.0.16 (tdp): passive, xmit/recv
-                 TDP Id: 133.0.0.33:0
+             10.81.1.1 -> 172.16.94.33 (ldp): active, xmit/recv
+                 LDP Id: 172.16.94.33:0
+             10.81.1.1 -> 172.16.25.16 (tdp): passive, xmit/recv
+                 TDP Id: 172.16.94.33:0
      Router#
         '''
                                 }
@@ -1481,20 +1481,20 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
         "vrf": {
             "default": {
                 "local_ldp_identifier": {
-                    "8.1.1.1:0": {
+                    "10.81.1.1:0": {
                         "targeted_hellos": {
-                            "8.1.1.1": {
-                                "168.7.0.16": {
+                            "10.81.1.1": {
+                                "172.16.25.16": {
                                     "session": "tdp",
                                     "active": False,
-                                    'tdp_id': '133.0.0.33:0',
+                                    'tdp_id': '172.16.94.33:0',
                                     "xmit": True,
                                     "recv": True,
                                 },
-                                "133.0.0.33": {
+                                "172.16.94.33": {
                                     "active": True,
                                     "session": "ldp",
-                                    "ldp_id": "133.0.0.33:0",
+                                    "ldp_id": "172.16.94.33:0",
                                     "xmit": True,
                                     "recv": True,
                                 }
@@ -1507,11 +1507,11 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
                                     "xmit": True,
                                     "recv": True,
                                     "ldp_id": {
-                                        "177.73.0.77:0": {
+                                        "172.16.25.77:0": {
                                         },
-                                        "155.0.0.55:0": {
+                                        "172.16.55.55:0": {
                                         },
-                                        "144.0.0.44:0": {
+                                        "172.16.81.44:0": {
                                         }
                                     }
                                 },
@@ -1520,7 +1520,7 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
                                     "xmit": True,
                                     "recv": True,
                                     "ldp_id": {
-                                        "203.0.7.7:2": {
+                                        "192.168.240.7:2": {
                                         }
                                     }
                                 },
@@ -1529,7 +1529,7 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
                                     "xmit": True,
                                     "recv": True,
                                     "tdp_id": {
-                                        "119.1.0.1:1": {
+                                        "10.120.0.1:1": {
                                         }
                                     }
                                 }
@@ -1545,7 +1545,7 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
     "vrf": {
         "default": {
             "local_ldp_identifier": {
-                "12.12.12.12:0": {
+                "10.66.12.12:0": {
                     "discovery_sources": {
                         "interfaces": {
                             "ATM1/1/0.1": {
@@ -1553,7 +1553,7 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
                                 "xmit": True,
                                 "recv": True,
                                 "tdp_id": {
-                                    "11.11.11.11:0": {
+                                    "10.229.11.11:0": {
                                     }
                                 }
                             }
@@ -1564,7 +1564,7 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
         },
         "vpn2": {
             "local_ldp_identifier": {
-                "30.13.0.2:0": {
+                "10.64.0.2:0": {
                     "discovery_sources": {
                         "interfaces": {
                             "ATM3/0/0.2": {
@@ -1572,7 +1572,7 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
                                 "xmit": True,
                                 "recv": True,
                                 "ldp_id": {
-                                    "14.14.14.14:0": {
+                                    "10.19.14.14:0": {
                                     }
                                 }
                             }
@@ -1583,7 +1583,7 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
         },
         "vpn1": {
             "local_ldp_identifier": {
-                "30.7.0.2:0": {
+                "10.94.0.2:0": {
                     "discovery_sources": {
                         "interfaces": {
                             "ATM3/0/0.1": {
@@ -1591,7 +1591,7 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
                                 "xmit": True,
                                 "recv": True,
                                 "ldp_id": {
-                                    "14.14.14.14:0": {
+                                    "10.19.14.14:0": {
                                     }
                                 }
                             }
@@ -1606,23 +1606,23 @@ class test_show_mpls_ldp_discovery(unittest.TestCase):
     Router# show mpls ldp discovery all
 
      Local LDP Identifier:
-         12.12.12.12:0
+         10.66.12.12:0
          Discovery Sources:
          Interfaces:
              ATM1/1/0.1 (tdp):xmit/recv
-                 TDP Id:11.11.11.11:0
+                 TDP Id:10.229.11.11:0
      VRF vpn1:Local LDP Identifier:
-         30.7.0.2:0
+         10.94.0.2:0
          Discovery Sources:
          Interfaces:
              ATM3/0/0.1 (ldp):xmit/recv
-                 LDP Id:14.14.14.14:0
+                 LDP Id:10.19.14.14:0
      VRF vpn2:Local LDP Identifier:
-         30.13.0.2:0
+         10.64.0.2:0
          Discovery Sources:
          Interfaces:
              ATM3/0/0.2 (ldp):xmit/recv
-                 LDP Id:14.14.14.14:0
+                 LDP Id:10.19.14.14:0
     '''}
 
     def test_empty(self):
@@ -1676,9 +1676,9 @@ class test_show_mpls_ldp_igp_sync(unittest.TestCase):
                         },
                         'igp': {
                             'holddown_time': 'infinite',
-                            'enabled': "ospf 9996"
+                            'enabled': "ospf 65109"
                         },
-                        'peer_ldp_ident': '106.162.197.252:0',
+                        'peer_ldp_ident': '10.169.197.252:0',
                     },
                     "GigabitEthernet0/0/2": {
                         'ldp': {
@@ -1694,15 +1694,15 @@ class test_show_mpls_ldp_igp_sync(unittest.TestCase):
 
     Router#show mpls ldp igp sync all
     Load for five secs: 2%/0%; one minute: 5%; five minutes: 5%
-    Time source is NTP, 16:10:10.780 JST Tue Nov 8 2016
+    Time source is NTP, 16:10:10.780 EST Tue Nov 8 2016
 
     GigabitEthernet0/0/0:
         LDP configured; LDP-IGP Synchronization enabled.
         Sync status: sync achieved; peer reachable.
         Sync delay time: 0 seconds (0 seconds left)
         IGP holddown time: infinite.
-        Peer LDP Ident: 106.162.197.252:0
-        IGP enabled: OSPF 9996
+        Peer LDP Ident: 10.169.197.252:0
+        IGP enabled: OSPF 65109
     GigabitEthernet0/0/2:
         LDP configured; LDP-IGP Synchronization not enabled.
 
@@ -1866,7 +1866,7 @@ class test_show_mpls_forwarding_table(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
     Router#show mpls forwarding-table vrf L3VPN-0051 detail
     Load for five secs: 71%/0%; one minute: 11%; five minutes: 9%
-    Time source is NTP, 20:29:27.645 JST Fri Nov 11 2016
+    Time source is NTP, 20:29:27.645 EST Fri Nov 11 2016
 
     Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop
     Label      Label      or Tunnel Id     Switched      interface
@@ -2033,10 +2033,10 @@ tag    tag or VC   or Tunnel Id      switched   interface
                          "outgoing_label_or_vc": {
                               "Pop Label": {
                                    "prefix_or_tunnel_id": {
-                                        "1.1.1.2-A": {
+                                        "10.4.1.2-A": {
                                              "outgoing_interface": {
                                                   "Ethernet0/0": {
-                                                       "next_hop": "1.1.1.2",
+                                                       "next_hop": "10.4.1.2",
                                                        "bytes_label_switched": 0
                                                   }
                                              }
@@ -2049,10 +2049,10 @@ tag    tag or VC   or Tunnel Id      switched   interface
                          "outgoing_label_or_vc": {
                               "Pop Label": {
                                    "prefix_or_tunnel_id": {
-                                        "1.1.1.2-A": {
+                                        "10.4.1.2-A": {
                                              "outgoing_interface": {
                                                   "Ethernet0/0": {
-                                                       "next_hop": "1.1.1.2",
+                                                       "next_hop": "10.4.1.2",
                                                        "bytes_label_switched": 0
                                                   }
                                              }
@@ -2065,10 +2065,10 @@ tag    tag or VC   or Tunnel Id      switched   interface
                          "outgoing_label_or_vc": {
                               "Pop Label": {
                                    "prefix_or_tunnel_id": {
-                                        "1.1.1.2-A": {
+                                        "10.4.1.2-A": {
                                              "outgoing_interface": {
                                                   "Ethernet0/0": {
-                                                       "next_hop": "1.1.1.2",
+                                                       "next_hop": "10.4.1.2",
                                                        "bytes_label_switched": 0
                                                   }
                                              }
@@ -2081,10 +2081,10 @@ tag    tag or VC   or Tunnel Id      switched   interface
                          "outgoing_label_or_vc": {
                               "Pop Label": {
                                    "prefix_or_tunnel_id": {
-                                        "15.15.15.2-A": {
+                                        "10.135.15.2-A": {
                                              "outgoing_interface": {
                                                   "Ethernet0/1": {
-                                                       "next_hop": "15.15.15.2",
+                                                       "next_hop": "10.135.15.2",
                                                        "bytes_label_switched": 0
                                                   }
                                              }
@@ -2097,10 +2097,10 @@ tag    tag or VC   or Tunnel Id      switched   interface
                          "outgoing_label_or_vc": {
                               "Pop Label": {
                                    "prefix_or_tunnel_id": {
-                                        "15.15.15.2-A": {
+                                        "10.135.15.2-A": {
                                              "outgoing_interface": {
                                                   "Ethernet0/1": {
-                                                       "next_hop": "15.15.15.2",
+                                                       "next_hop": "10.135.15.2",
                                                        "bytes_label_switched": 0
                                                   }
                                              }
@@ -2113,10 +2113,10 @@ tag    tag or VC   or Tunnel Id      switched   interface
                          "outgoing_label_or_vc": {
                               "Pop Label": {
                                    "prefix_or_tunnel_id": {
-                                        "15.15.15.2-A": {
+                                        "10.135.15.2-A": {
                                              "outgoing_interface": {
                                                   "Ethernet0/1": {
-                                                       "next_hop": "15.15.15.2",
+                                                       "next_hop": "10.135.15.2",
                                                        "bytes_label_switched": 0
                                                   }
                                              }
@@ -2146,10 +2146,10 @@ tag    tag or VC   or Tunnel Id      switched   interface
                          "outgoing_label_or_vc": {
                               "Pop Label": {
                                    "prefix_or_tunnel_id": {
-                                        "20.20.20.20/32": {
+                                        "10.70.20.20/32": {
                                              "outgoing_interface": {
                                                   "Ethernet0/0": {
-                                                       "next_hop": "1.1.1.2",
+                                                       "next_hop": "10.4.1.2",
                                                        "bytes_label_switched": 0
                                                   }
                                              }
@@ -2162,10 +2162,10 @@ tag    tag or VC   or Tunnel Id      switched   interface
                          "outgoing_label_or_vc": {
                               "16120": {
                                    "prefix_or_tunnel_id": {
-                                        "30.30.30.30/32": {
+                                        "10.30.30.30/32": {
                                              "outgoing_interface": {
                                                   "Ethernet0/0": {
-                                                       "next_hop": "1.1.1.2",
+                                                       "next_hop": "10.4.1.2",
                                                        "bytes_label_switched": 0
                                                   }
                                              }
@@ -2178,10 +2178,10 @@ tag    tag or VC   or Tunnel Id      switched   interface
                          "outgoing_label_or_vc": {
                               "16130": {
                                    "prefix_or_tunnel_id": {
-                                        "40.40.40.40/32": {
+                                        "10.25.40.40/32": {
                                              "outgoing_interface": {
                                                   "Ethernet0/0": {
-                                                       "next_hop": "1.1.1.2",
+                                                       "next_hop": "10.4.1.2",
                                                        "bytes_label_switched": 0
                                                   },
                                                   "Tunnel1": {
@@ -2199,7 +2199,7 @@ tag    tag or VC   or Tunnel Id      switched   interface
                          "outgoing_label_or_vc": {
                               "Pop Label": {
                                    "prefix_or_tunnel_id": {
-                                        "50.50.50.50/32": {
+                                        "10.55.50.50/32": {
                                              "outgoing_interface": {
                                                   "Tunnel1": {
                                                        "next_hop": "point2point",
@@ -2216,10 +2216,10 @@ tag    tag or VC   or Tunnel Id      switched   interface
                          "outgoing_label_or_vc": {
                               "Pop Label": {
                                    "prefix_or_tunnel_id": {
-                                        "100.100.100.100/32": {
+                                        "10.220.100.100/32": {
                                              "outgoing_interface": {
                                                   "Ethernet0/1": {
-                                                       "next_hop": "15.15.15.2",
+                                                       "next_hop": "10.135.15.2",
                                                        "bytes_label_switched": 0
                                                   }
                                              }
@@ -2232,10 +2232,10 @@ tag    tag or VC   or Tunnel Id      switched   interface
                          "outgoing_label_or_vc": {
                               "Pop Label": {
                                    "prefix_or_tunnel_id": {
-                                        "0-20.20.20.20/32-0": {
+                                        "0-10.70.20.20/32-0": {
                                              "outgoing_interface": {
                                                   "Ethernet0/0": {
-                                                       "next_hop": "1.1.1.2",
+                                                       "next_hop": "10.4.1.2",
                                                        "bytes_label_switched": 0
                                                   }
                                              }
@@ -2248,10 +2248,10 @@ tag    tag or VC   or Tunnel Id      switched   interface
                          "outgoing_label_or_vc": {
                               "17200": {
                                    "prefix_or_tunnel_id": {
-                                        "0-30.30.30.30/32-0": {
+                                        "0-10.30.30.30/32-0": {
                                              "outgoing_interface": {
                                                   "Ethernet0/0": {
-                                                       "next_hop": "1.1.1.2",
+                                                       "next_hop": "10.4.1.2",
                                                        "bytes_label_switched": 0
                                                   }
                                              }
@@ -2264,10 +2264,10 @@ tag    tag or VC   or Tunnel Id      switched   interface
                          "outgoing_label_or_vc": {
                               "17300": {
                                    "prefix_or_tunnel_id": {
-                                        "0-40.40.40.40/32-0": {
+                                        "0-10.25.40.40/32-0": {
                                              "outgoing_interface": {
                                                   "Ethernet0/1": {
-                                                       "next_hop": "15.15.15.2",
+                                                       "next_hop": "10.135.15.2",
                                                        "bytes_label_switched": 0
                                                   }
                                              }
@@ -2280,10 +2280,10 @@ tag    tag or VC   or Tunnel Id      switched   interface
                          "outgoing_label_or_vc": {
                               "17400": {
                                    "prefix_or_tunnel_id": {
-                                        "0-50.50.50.50/32-0": {
+                                        "0-10.55.50.50/32-0": {
                                              "outgoing_interface": {
                                                   "Ethernet0/1": {
-                                                       "next_hop": "15.15.15.2",
+                                                       "next_hop": "10.135.15.2",
                                                        "bytes_label_switched": 0
                                                   }
                                              }
@@ -2296,10 +2296,10 @@ tag    tag or VC   or Tunnel Id      switched   interface
                          "outgoing_label_or_vc": {
                               "Pop Label": {
                                    "prefix_or_tunnel_id": {
-                                        "0-100.100.100.100/32-0": {
+                                        "0-10.220.100.100/32-0": {
                                              "outgoing_interface": {
                                                   "Ethernet0/1": {
-                                                       "next_hop": "15.15.15.2",
+                                                       "next_hop": "10.135.15.2",
                                                        "bytes_label_switched": 0
                                                   }
                                              }
@@ -2317,30 +2317,30 @@ tag    tag or VC   or Tunnel Id      switched   interface
     golden_output_4 = {'execute.return_value':'''\
     Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop
     Label      Label      or Tunnel Id     Switched      interface
-    16         Pop Label  1.1.1.2-A        0             Et0/0      1.1.1.2
-    17         Pop Label  1.1.1.2-A        0             Et0/0      1.1.1.2
-    18         Pop Label  1.1.1.2-A        0             Et0/0      1.1.1.2
-    19         Pop Label  15.15.15.2-A     0             Et0/1      15.15.15.2
-    20         Pop Label  15.15.15.2-A     0             Et0/1      15.15.15.2
-    21         Pop Label  15.15.15.2-A     0             Et0/1      15.15.15.2
+    16         Pop Label  10.4.1.2-A        0             Et0/0      10.4.1.2
+    17         Pop Label  10.4.1.2-A        0             Et0/0      10.4.1.2
+    18         Pop Label  10.4.1.2-A        0             Et0/0      10.4.1.2
+    19         Pop Label  10.135.15.2-A     0             Et0/1      10.135.15.2
+    20         Pop Label  10.135.15.2-A     0             Et0/1      10.135.15.2
+    21         Pop Label  10.135.15.2-A     0             Et0/1      10.135.15.2
     22    [T]  Pop Label  1/1[TE-Bind]     0             Tu1        point2point
-    16110      Pop Label  20.20.20.20/32   0             Et0/0      1.1.1.2
-    16120      16120      30.30.30.30/32   0             Et0/0      1.1.1.2
-    16130      16130      40.40.40.40/32   0             Et0/0      1.1.1.2
-          [T]  16130      40.40.40.40/32   0             Tu1        point2point
-    16140 [T]  Pop Label  50.50.50.50/32   0             Tu1        point2point
-    16200      Pop Label  100.100.100.100/32   \
-                                           0             Et0/1      15.15.15.2
-    17100      Pop Label  0-20.20.20.20/32-0   \
-                                           0             Et0/0      1.1.1.2
-    17200      17200      0-30.30.30.30/32-0   \
-                                           0             Et0/0      1.1.1.2
-    17300      17300      0-40.40.40.40/32-0   \
-                                           0             Et0/1      15.15.15.2
-    17400      17400      0-50.50.50.50/32-0   \
-                                           0             Et0/1      15.15.15.2
-    18000      Pop Label  0-100.100.100.100/32-0   \
-                                           0             Et0/1      15.15.15.2
+    16110      Pop Label  10.70.20.20/32   0             Et0/0      10.4.1.2
+    16120      16120      10.30.30.30/32   0             Et0/0      10.4.1.2
+    16130      16130      10.25.40.40/32   0             Et0/0      10.4.1.2
+          [T]  16130      10.25.40.40/32   0             Tu1        point2point
+    16140 [T]  Pop Label  10.55.50.50/32   0             Tu1        point2point
+    16200      Pop Label  10.220.100.100/32   \
+                                           0             Et0/1      10.135.15.2
+    17100      Pop Label  0-10.70.20.20/32-0   \
+                                           0             Et0/0      10.4.1.2
+    17200      17200      0-10.30.30.30/32-0   \
+                                           0             Et0/0      10.4.1.2
+    17300      17300      0-10.25.40.40/32-0   \
+                                           0             Et0/1      10.135.15.2
+    17400      17400      0-10.55.50.50/32-0   \
+                                           0             Et0/1      10.135.15.2
+    18000      Pop Label  0-10.220.100.100/32-0   \
+                                           0             Et0/1      10.135.15.2
 
     '''}
 
@@ -2431,7 +2431,7 @@ class test_show_mpls_interface(unittest.TestCase):
     golden_output_detail = {'execute.return_value': '''\
     Router#show mpls interfaces detail
     Load for five secs: 2%/0%; one minute: 5%; five minutes: 5%
-    Time source is NTP, 16:10:10.438 JST Tue Nov 8 2016
+    Time source is NTP, 16:10:10.438 EST Tue Nov 8 2016
 
     Interface GigabitEthernet0/0/0:
             Type Unknown

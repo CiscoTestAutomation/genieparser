@@ -102,10 +102,10 @@ class ShowIpPrefixListDetail(ShowIpPrefixListDetailSchema):
                 ret_dict['prefix_set_name'][name]['protocol'] = protocol
                 continue
 
-            # seq 5 permit 35.0.0.0/8 (hit count: 0, refcount: 1)
+            # seq 5 permit 10.205.0.0/8 (hit count: 0, refcount: 1)
             # seq 5 permit 2001:DB8:1::/64 (hit count: 0, refcount: 1)
-            # seq 20 permit 37.0.0.0/8 ge 24 (hit count: 0, refcount: 2)
-            # seq 25 permit 38.0.0.0/8 ge 16 le 24 (hit count: 0, refcount: 3)
+            # seq 20 permit 10.94.0.0/8 ge 24 (hit count: 0, refcount: 2)
+            # seq 25 permit 10.169.0.0/8 ge 16 le 24 (hit count: 0, refcount: 3)
             p3 = re.compile(r'^seq +(?P<seq>\d+) +(?P<action>\w+) +'
                              '(?P<prefixes>(?P<prefix>[\w\.\|:]+)\/(?P<mask>\d+))'
                              '( *(?P<range>[lge\d\s]+))?'

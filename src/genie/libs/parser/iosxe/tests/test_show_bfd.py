@@ -23,9 +23,9 @@ class test_show_bfd(unittest.TestCase):
 
   golden_parsed_output = {
     'our_address': {
-  	  '106.162.197.93': {
+  	  '10.169.197.93': {
         'neighbor_address':{
-          '106.162.197.94': {
+          '10.169.197.94': {
             'ld_rd': '4097/4097',
             'rh_rs': '1',
             'holdown_timer': 0,
@@ -97,7 +97,7 @@ class test_show_bfd(unittest.TestCase):
   golden_output = {'execute.return_value': '''
     IPv4 Sessions
     OurAddr NeighAddr   LD/RD   RH/RS Holdown(mult) State   Int
-		106.162.197.93 106.162.197.94 4097/4097	1  0 (3 )	Up	Gi0/0/0
+		10.169.197.93 10.169.197.94 4097/4097	1  0 (3 )	Up	Gi0/0/0
     Session state is UP and using echo function with 500 ms interval.
 		Session Host: Software
 		Handle: 1
@@ -122,9 +122,9 @@ class test_show_bfd(unittest.TestCase):
 
   golden_parsed_output_client_osf_details = {
     'our_address': {
-      '106.162.197.93': {
+      '10.169.197.93': {
           'neighbor_address': {
-              '106.162.197.94': {
+              '10.169.197.94': {
                   'ld_rd': '4097/4097',
                   'rh_rs': 'Up',
                   'state': 'Up',
@@ -191,15 +191,15 @@ class test_show_bfd(unittest.TestCase):
   golden_output_client_osf_details = {'execute.return_value': '''
     1006#show bfd neighbors client ospf details
 		Load for five secs: 0%/0%; one minute: 0%; five minutes: 0%
-		Time source is NTP, 20:25:57.866 JST Sat Nov 12 2016
+		Time source is NTP, 20:25:57.866 EST Sat Nov 12 2016
 
 
 		IPv4 Sessions
 		NeighAddr                              LD/RD         RH/RS     State     Int
-		106.162.197.94                       4097/4097       Up        Up        Gi0/0/0
+		10.169.197.94                       4097/4097       Up        Up        Gi0/0/0
 		Session state is UP and using echo function with 500 ms interval.
 		Session Host: Software
-		OurAddr: 106.162.197.93 
+		OurAddr: 10.169.197.93 
 		Handle: 1
 		Local Diag: 0, Demand mode: 0, Poll bit: 0
 		MinTxInt: 1000000, MinRxInt: 1000000, Multiplier: 6

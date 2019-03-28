@@ -48,10 +48,10 @@ class test_show_ip_protocols(unittest.TestCase):
                                         'incoming_filter_list': 'not set',
                                         'maximum_path': 1,
                                         'neighbor': 
-                                            {'4.4.4.4': 
+                                            {'10.64.4.4': 
                                                 {'distance': 200,
                                                 'last_update': '03:34:58',
-                                                'neighbor_id': '4.4.4.4'}},
+                                                'neighbor_id': '10.64.4.4'}},
                                         'outgoing_filter_list': 'not set',
                                         'preference': 
                                             {'multi_values': 
@@ -79,16 +79,16 @@ class test_show_ip_protocols(unittest.TestCase):
                                                         'intra_area': 112}}},
                                             'single_value': 
                                                 {'all': 110}},
-                                        'router_id': '1.1.1.1',
+                                        'router_id': '10.4.1.1',
                                         'routing_information_sources': 
                                             {'gateway': 
-                                                {'2.2.2.2': 
+                                                {'10.16.2.2': 
                                                     {'distance': 110,
                                                     'last_update': '07:33:00'},
-                                                '3.3.3.3': 
+                                                '10.36.3.3': 
                                                     {'distance': 110,
                                                     'last_update': '07:33:00'},
-                                                '4.4.4.4': 
+                                                '10.64.4.4': 
                                                     {'distance': 110,
                                                     'last_update': '00:19:15'}}},
                                         'spf_control': 
@@ -187,10 +187,10 @@ class test_show_ip_protocols(unittest.TestCase):
             Loopback0
           Routing Information Sources:
             Gateway         Distance      Last Update
-            11.139.6.3           115      05:56:34
-            11.139.6.2           115      05:56:34
-            11.139.6.4           115      05:56:34
-            11.139.6.9           115      05:56:34
+            10.60.6.3           115      05:56:34
+            10.60.6.2           115      05:56:34
+            10.60.6.4           115      05:56:34
+            10.60.6.9           115      05:56:34
           Distance: (default is 115)
 
         Routing Protocol is "bgp 9999"
@@ -201,8 +201,8 @@ class test_show_ip_protocols(unittest.TestCase):
           Maximum path: 1
           Routing Information Sources:
             Gateway         Distance      Last Update
-            11.139.6.3           200      12w5d
-            11.139.6.2           200      14w4d
+            10.60.6.3           200      12w5d
+            10.60.6.2           200      14w4d
           Distance: external 20 internal 200 local 200
         '''}
 
@@ -232,14 +232,14 @@ class test_show_ip_protocols(unittest.TestCase):
                                         'incoming_filter_list': 'not set',
                                         'maximum_path': 1,
                                         'neighbor': 
-                                            {'11.139.6.2': 
+                                            {'10.60.6.2': 
                                                 {'distance': 200,
                                                 'last_update': '14w4d',
-                                                'neighbor_id': '11.139.6.2'},
-                                            '11.139.6.3': 
+                                                'neighbor_id': '10.60.6.2'},
+                                            '10.60.6.3': 
                                                 {'distance': 200,
                                                 'last_update': '12w5d',
-                                                'neighbor_id': '11.139.6.3'}},
+                                                'neighbor_id': '10.60.6.3'}},
                                         'outgoing_filter_list': 'not set',
                                         'preference': 
                                             {'multi_values': 
@@ -264,16 +264,16 @@ class test_show_ip_protocols(unittest.TestCase):
                                         'redistributing': 'isis banana',
                                         'routing_information_sources': 
                                             {'gateway': 
-                                                {'11.139.6.2': 
+                                                {'10.60.6.2': 
                                                     {'distance': 115,
                                                     'last_update': '05:56:34'},
-                                                '11.139.6.3': 
+                                                '10.60.6.3': 
                                                     {'distance': 115,
                                                     'last_update': '05:56:34'},
-                                                '11.139.6.4': 
+                                                '10.60.6.4': 
                                                     {'distance': 115,
                                                     'last_update': '05:56:34'},
-                                                '11.139.6.9': 
+                                                '10.60.6.9': 
                                                     {'distance': 115,
                                                     'last_update': '05:56:34'}}}}}}}}}}}}
 
@@ -334,7 +334,7 @@ class test_show_ip_protocols(unittest.TestCase):
             Routing Protocol is "ospf 1"
               Outgoing update filter list for all interfaces is not set
               Incoming update filter list for all interfaces is not set
-              Router ID 1.1.1.1
+              Router ID 10.4.1.1
               Number of areas in this router is 1. 1 normal 0 stub 0 nssa
               Maximum path: 4
               Routing for Networks:
@@ -344,9 +344,9 @@ class test_show_ip_protocols(unittest.TestCase):
                 GigabitEthernet1
               Routing Information Sources:
                 Gateway         Distance      Last Update
-                3.3.3.3              110      07:33:00
-                2.2.2.2              110      07:33:00
-                4.4.4.4              110      00:19:15
+                10.36.3.3              110      07:33:00
+                10.16.2.2              110      07:33:00
+                10.64.4.4              110      00:19:15
               Distance: (default is 110)
               Distance: intra-area 112 inter-area 113 external 114
 
@@ -358,7 +358,7 @@ class test_show_ip_protocols(unittest.TestCase):
               Maximum path: 1
               Routing Information Sources:
                 Gateway         Distance      Last Update
-                4.4.4.4              200      03:34:58
+                10.64.4.4              200      03:34:58
               Distance: external 20 internal 200 local 200
             '''
 
@@ -372,8 +372,8 @@ class test_show_ip_protocols(unittest.TestCase):
         raw3 = '''\
             R1_ospf_xe#show running-config | section router ospf 2
               router ospf 2 vrf VRF1
-                area 1 virtual-link 5.5.5.5
-                area 1 sham-link 11.11.11.11 22.22.22.22 cost 111 ttl-security hops 3
+                area 1 virtual-link 10.100.5.5
+                area 1 sham-link 10.229.11.11 10.151.22.22 cost 111 ttl-security hops 3
                 redistribute bgp
             '''
 
@@ -452,8 +452,8 @@ class test_show_ip_protocols(unittest.TestCase):
         raw3 = '''\
             R1_ospf_xe#show running-config | section router ospf 2
               router ospf 2 vrf VRF1
-                area 1 virtual-link 5.5.5.5
-                area 1 sham-link 11.11.11.11 22.22.22.22 cost 111 ttl-security hops 3
+                area 1 virtual-link 10.100.5.5
+                area 1 sham-link 10.229.11.11 10.151.22.22 cost 111 ttl-security hops 3
                 redistribute bgp
             '''
 

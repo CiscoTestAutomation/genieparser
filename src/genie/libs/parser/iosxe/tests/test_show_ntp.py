@@ -35,7 +35,7 @@ class test_show_ntp_associations(unittest.TestCase):
              'root_delay': 0.0}
             },
     'peer':
-        {'1.1.1.1':
+        {'10.4.1.1':
             {'local_mode':
                 {'client':
                     {'delay': 0.0,
@@ -46,7 +46,7 @@ class test_show_ntp_associations(unittest.TestCase):
                     'reach': 0,
                     'receive_time': '-',
                     'refid': '.INIT.',
-                    'remote': '1.1.1.1',
+                    'remote': '10.4.1.1',
                     'stratum': 16,
                     'configured': True,
                     'local_mode': 'client'}
@@ -69,7 +69,7 @@ class test_show_ntp_associations(unittest.TestCase):
                     'local_mode': 'client'}
                 }
             },
-        '2.2.2.2':
+        '10.16.2.2':
             {'local_mode':
                 {'client':
                     {'delay': 0.0,
@@ -80,7 +80,7 @@ class test_show_ntp_associations(unittest.TestCase):
                     'reach': 0,
                     'receive_time': '-',
                     'refid': '.INIT.',
-                    'remote': '2.2.2.2',
+                    'remote': '10.16.2.2',
                     'stratum': 16,
                     'configured': True,
                     'local_mode': 'client'}
@@ -95,10 +95,10 @@ class test_show_ntp_associations(unittest.TestCase):
 
           address         ref clock       st   when   poll reach  delay  offset   disp
         *~127.127.1.1     .LOCL.           0      6     16   377  0.000   0.000  1.204
-         ~1.1.1.1         .INIT.          16      -   1024     0  0.000   0.000 15937.
-         ~1.1.1.1         .INIT.          16      -   1024     0  0.000   0.000 15937.
-         ~2.2.2.2         .INIT.          16      -   1024     0  0.000   0.000 15937.
-         ~2.2.2.2         .INIT.          16      -   1024     0  0.000   0.000 15937.
+         ~10.4.1.1         .INIT.          16      -   1024     0  0.000   0.000 15937.
+         ~10.4.1.1         .INIT.          16      -   1024     0  0.000   0.000 15937.
+         ~10.16.2.2         .INIT.          16      -   1024     0  0.000   0.000 15937.
+         ~10.16.2.2         .INIT.          16      -   1024     0  0.000   0.000 15937.
          * sys.peer, # selected, + candidate, - outlyer, x falseticker, ~ configured
     '''
     }
@@ -185,15 +185,15 @@ class test_show_ntp_config(unittest.TestCase):
         'vrf': {
             'VRF1': {
                 'address': {
-                    '4.4.4.4': {
+                    '10.64.4.4': {
                         'isconfigured': {
                             'True': {
-                                'address': '4.4.4.4',
+                                'address': '10.64.4.4',
                                 'isconfigured': True}
                         },
                         'type': {
                             'server': {
-                                'address': '4.4.4.4',
+                                'address': '10.64.4.4',
                                 'type': 'server',
                                 'vrf': 'VRF1'}
                         }
@@ -202,28 +202,28 @@ class test_show_ntp_config(unittest.TestCase):
             },
             'default': {
                 'address': {
-                    '1.1.1.1': {
+                    '10.4.1.1': {
                         'isconfigured': {
                             'True': {
-                                'address': '1.1.1.1',
+                                'address': '10.4.1.1',
                                 'isconfigured': True}
                             },
                         'type': {
                             'server': {
-                                'address': '1.1.1.1',
+                                'address': '10.4.1.1',
                                 'type': 'server',
                                 'vrf': 'default'}
                         }
                     },
-                    '2.2.2.2': {
+                    '10.16.2.2': {
                         'isconfigured': {
                             'True': {
-                                'address': '2.2.2.2',
+                                'address': '10.16.2.2',
                                 'isconfigured': True}
                         },
                         'type': {
                             'server': {
-                                'address': '2.2.2.2',
+                                'address': '10.16.2.2',
                                 'type': 'server',
                                 'vrf': 'default'}
                         }
@@ -235,9 +235,9 @@ class test_show_ntp_config(unittest.TestCase):
 
     golden_output_1 = {'execute.return_value': '''\
         R1#show ntp config
-        ntp server 1.1.1.1
-        ntp server 2.2.2.2
-        ntp server vrf VRF1 4.4.4.4
+        ntp server 10.4.1.1
+        ntp server 10.16.2.2
+        ntp server vrf VRF1 10.64.4.4
     '''
     }
 
@@ -283,7 +283,7 @@ class test_show_ntp_associations_detail(unittest.TestCase):
                                             "master": False,
                                             "stratum": 3,
                                             "refid": "172.16.255.254",
-                                            "input_time": "DBAB02D6.9E354130 (16:08:06.618 JST Fri Oct 14 2016)",
+                                            "input_time": "DBAB02D6.9E354130 (16:08:06.618 EST Fri Oct 14 2016)",
                                             "peer_interface": "172.16.255.254",
                                             "poll": "512",
                                             "vrf": "default",
@@ -315,9 +315,9 @@ class test_show_ntp_associations_detail(unittest.TestCase):
                                                 "packet_sent": 27,
                                                 "packet_dropped": 0
                                             },
-                                            "originate_time": "00000000.00000000 (09:00:00.000 JST Mon Jan 1 1900)",
-                                            "receive_time": "DBAB046D.A8B43B28 (16:14:53.659 JST Fri Oct 14 2016)",
-                                            "transmit_time": "DBAB046D.A8B43B28 (16:14:53.659 JST Fri Oct 14 2016)",
+                                            "originate_time": "00000000.00000000 (09:00:00.000 EST Mon Jan 1 1900)",
+                                            "receive_time": "DBAB046D.A8B43B28 (16:14:53.659 EST Fri Oct 14 2016)",
+                                            "transmit_time": "DBAB046D.A8B43B28 (16:14:53.659 EST Fri Oct 14 2016)",
                                             "filtdelay": "0.00    1.00    0.00    0.00    0.00    0.00    0.00    0.00",
                                             "filtoffset": "0.00    0.50    0.00    1.00    1.00    1.00    1.00    1.00",
                                             "filterror": "1.95    5.89    9.88   13.89   15.84   17.79   19.74   21.76",
@@ -344,7 +344,7 @@ class test_show_ntp_associations_detail(unittest.TestCase):
                                             "master": True,
                                             "stratum": 2,
                                             "refid": "172.16.255.254",
-                                            "input_time": "DBAB02D6.9E354130 (16:08:06.618 JST Fri Oct 14 2016)",
+                                            "input_time": "DBAB02D6.9E354130 (16:08:06.618 EST Fri Oct 14 2016)",
                                             "peer_interface": "172.16.255.254",
                                             "poll": "512",
                                             "vrf": "default",
@@ -376,9 +376,9 @@ class test_show_ntp_associations_detail(unittest.TestCase):
                                                 "packet_sent": 50,
                                                 "packet_dropped": 0
                                             },
-                                            "originate_time": "00000000.00000000 (09:00:00.000 JST Mon Jan 1 1900)",
-                                            "receive_time": "DBAB05BA.A8B43B28 (16:20:26.659 JST Fri Oct 14 2016)",
-                                            "transmit_time": "DBAB05BA.A8B43B28 (16:20:26.659 JST Fri Oct 14 2016)",
+                                            "originate_time": "00000000.00000000 (09:00:00.000 EST Mon Jan 1 1900)",
+                                            "receive_time": "DBAB05BA.A8B43B28 (16:20:26.659 EST Fri Oct 14 2016)",
+                                            "transmit_time": "DBAB05BA.A8B43B28 (16:20:26.659 EST Fri Oct 14 2016)",
                                             "filtdelay": "1.00    1.00    1.00    1.00    0.00    1.00    1.00    0.00",
                                             "filtoffset": "-0.50   -0.50   -0.50   -0.50   -1.00   -0.50   -0.50   -1.00",
                                             "filterror": "1.95    2.88    3.81    4.74    5.08    5.11    7.53    8.46",
@@ -399,35 +399,35 @@ class test_show_ntp_associations_detail(unittest.TestCase):
     golden_output = {'execute.return_value': '''
         Router#show ntp associations detail
         Load for five secs: 1%/0%; one minute: 3%; five minutes: 4%
-        Time source is NTP, 16:21:12.433 JST Fri Oct 14 2016
+        Time source is NTP, 16:21:12.433 EST Fri Oct 14 2016
 
         192.168.255.254 configured, ipv4, authenticated, insane, invalid, stratum 3
-        ref ID 172.16.255.254, time DBAB02D6.9E354130 (16:08:06.618 JST Fri Oct 14 2016)
+        ref ID 172.16.255.254, time DBAB02D6.9E354130 (16:08:06.618 EST Fri Oct 14 2016)
         our mode client, peer mode server, our poll intvl 512, peer poll intvl 512
         root delay 0.00 msec, root disp 14.52, reach 377, sync dist 28.40
         delay 0.00 msec, offset 0.0000 msec, dispersion 7.23, jitter 0.97 msec
         precision 2**10, version 4
         assoc id 62758, assoc name 192.168.255.254
         assoc in packets 27, assoc out packets 27, assoc error packets 0
-        org time 00000000.00000000 (09:00:00.000 JST Mon Jan 1 1900)
-        rec time DBAB046D.A8B43B28 (16:14:53.659 JST Fri Oct 14 2016)
-        xmt time DBAB046D.A8B43B28 (16:14:53.659 JST Fri Oct 14 2016)
+        org time 00000000.00000000 (09:00:00.000 EST Mon Jan 1 1900)
+        rec time DBAB046D.A8B43B28 (16:14:53.659 EST Fri Oct 14 2016)
+        xmt time DBAB046D.A8B43B28 (16:14:53.659 EST Fri Oct 14 2016)
         filtdelay =     0.00    1.00    0.00    0.00    0.00    0.00    0.00    0.00
         filtoffset =    0.00    0.50    0.00    1.00    1.00    1.00    1.00    1.00
         filterror =     1.95    5.89    9.88   13.89   15.84   17.79   19.74   21.76
         minpoll = 6, maxpoll = 10
 
         172.16.255.254 configured, ipv4, authenticated, our_master, sane, valid, stratum 2
-        ref ID 127.127.1.1    , time DBAB05B9.753F7E30 (16:20:25.458 JST Fri Oct 14 2016)
+        ref ID 127.127.1.1    , time DBAB05B9.753F7E30 (16:20:25.458 EST Fri Oct 14 2016)
         our mode client, peer mode server, our poll intvl 512, peer poll intvl 512
         root delay 0.00 msec, root disp 2.18, reach 177, sync dist 9.47
         delay 0.00 msec, offset -1.0000 msec, dispersion 5.64, jitter 0.97 msec
         precision 2**10, version 4
         assoc id 62756, assoc name 172.16.255.254
         assoc in packets 38, assoc out packets 50, assoc error packets 0
-        org time 00000000.00000000 (09:00:00.000 JST Mon Jan 1 1900)
-        rec time DBAB05BA.A8B43B28 (16:20:26.659 JST Fri Oct 14 2016)
-        xmt time DBAB05BA.A8B43B28 (16:20:26.659 JST Fri Oct 14 2016)
+        org time 00000000.00000000 (09:00:00.000 EST Mon Jan 1 1900)
+        rec time DBAB05BA.A8B43B28 (16:20:26.659 EST Fri Oct 14 2016)
+        xmt time DBAB05BA.A8B43B28 (16:20:26.659 EST Fri Oct 14 2016)
         filtdelay =     1.00    1.00    1.00    1.00    0.00    1.00    1.00    0.00
         filtoffset =   -0.50   -0.50   -0.50   -0.50   -1.00   -0.50   -0.50   -1.00
         filterror =     1.95    2.88    3.81    4.74    5.08    5.11    7.53    8.46

@@ -29,15 +29,15 @@ class test_show_arp(unittest.TestCase):
 				'Vlan100': {
 					'ipv4': {
 						'neighbors': {
-							'201.0.12.1': {
+							'192.168.234.1': {
 								'age': '-',
-                              	'ip': '201.0.12.1',
+                              	'ip': '192.168.234.1',
                              	'link_layer_address': '58bf.eab6.2f51',
                               	'origin': 'static',
                               	'protocol': 'Internet',
                               	'type': 'ARPA'},
-               				'201.0.12.2': {'age': '29',
-                              	'ip': '201.0.12.2',
+               				'192.168.234.2': {'age': '29',
+                              	'ip': '192.168.234.2',
                               	'link_layer_address': '3820.5672.fc51',
                               	'origin': 'dynamic',
                               	'protocol': 'Internet',
@@ -48,9 +48,9 @@ class test_show_arp(unittest.TestCase):
                 'Vlan200': {
                 	'ipv4': {
                 		'neighbors': {
-                			'201.0.14.1': {
+                			'192.168.70.1': {
                 				'age': '-',
-                              	'ip': '201.0.14.1',
+                              	'ip': '192.168.70.1',
                               	'link_layer_address': '58bf.eab6.2f62',
                               	'origin': 'static',
                               	'protocol': 'Internet',
@@ -63,9 +63,9 @@ class test_show_arp(unittest.TestCase):
 
 		golden_output = {'execute.return_value': '''\
 				Protocol  Address          Age (min)  Hardware Addr   Type   Interface
-				Internet  201.0.12.1              -   58bf.eab6.2f51  ARPA   Vlan100
-				Internet  201.0.12.2             29   3820.5672.fc51  ARPA   Vlan100
-				Internet  201.0.14.1              -   58bf.eab6.2f62  ARPA   Vlan200
+				Internet  192.168.234.1              -   58bf.eab6.2f51  ARPA   Vlan100
+				Internet  192.168.234.2             29   3820.5672.fc51  ARPA   Vlan100
+				Internet  192.168.70.1              -   58bf.eab6.2f62  ARPA   Vlan200
 		'''}
 		
 		golden_parsed_output_1 = {
@@ -510,7 +510,7 @@ class test_show_arp_application(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''\
         Load for five secs: 5%1%; one minute: 6%; five minutes: 7%
-        Time source is NTP, 21:20:36.100 JST Fri Nov 11 2016
+        Time source is NTP, 21:20:36.100 EST Fri Nov 11 2016
         Number of clients registered: 16
 
         Application         ID      Num of Subblocks

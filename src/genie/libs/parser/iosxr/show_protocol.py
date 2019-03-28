@@ -199,7 +199,7 @@ class ShowProtocolsAfiAllAll(ShowProtocolsAfiAllAllSchema):
                         ['address_family']['ipv4']['instance'][instance]
                 continue
 
-            # Router Id: 3.3.3.3
+            # Router Id: 10.36.3.3
             p2 = re.compile(r'^Router +Id: +(?P<router_id>(\S+))$')
             m = p2.match(line)
             if m:
@@ -410,8 +410,8 @@ class ShowProtocolsAfiAllAll(ShowProtocolsAfiAllAllSchema):
                 continue
 
             # Neighbor      State/Last update received  NSR-State  GR-Enabled
-            # 4.4.4.4       08:05:59                    None       No
-            # 4.4.4.4       08:05:59                    None       No
+            # 10.64.4.4       08:05:59                    None       No
+            # 10.64.4.4       08:05:59                    None       No
             p13 = re.compile(r'^(?P<nbr>([0-9\.]+)) +(?P<last_update>([0-9\:]+))'
                               ' +(?P<nsr_state>(\S+)) +(?P<gr_en>(No|Yes))$')
             m = p13.match(line)
