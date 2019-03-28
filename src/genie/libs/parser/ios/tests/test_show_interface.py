@@ -26,8 +26,18 @@ from genie.libs.parser.ios.show_interface import \
                                         ShowInterfaces, ShowIpInterface,\
                                         ShowIpv6Interface, \
                                         ShowInterfacesAccounting, \
-                                        ShowIpInterfaceBriefPipeIp
+                                        ShowIpInterfaceBriefPipeIp, \
+                                        ShowInterfacesCounters, \
+                                        ShowInterfacesSwitchport, \
+                                        ShowInterfacesTrunk, \
+                                        ShowInterfacesStats
 
+# iosxe tests/test_show_interface
+from genie.libs.parser.iosxe.tests.test_show_interface import \
+                test_show_interfaces_counters as test_show_interfaces_counters_iosxe,\
+                test_show_interfaces_switchport as test_show_interfaces_switchport_iosxe,\
+                test_show_interfaces_trunk as test_show_interfaces_trunk_iosxe,\
+                test_show_interfaces_stats as test_show_interfaces_stats_iosxe
 
 class test_show_interface_parsergen(unittest.TestCase):
 
@@ -972,6 +982,88 @@ class test_show_interfaces_accounting(unittest.TestCase):
         obj = ShowInterfacesAccounting(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+#############################################################################
+# unitest For show interfaces <WORD> counters
+#############################################################################
+class test_show_interfaces_counters(test_show_interfaces_counters_iosxe):
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        interface_obj = ShowInterfacesCounters(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = interface_obj.parse(interface='Gi1/0/1')
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        interface_obj = ShowInterfacesCounters(device=self.device)
+        parsed_output = interface_obj.parse(interface='GigabitEthernet1/0/1')
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+#############################################################################
+# unitest For Show Interfaces switchport
+#############################################################################
+class test_show_interfaces_switchport(test_show_interfaces_switchport_iosxe):
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        intf_obj = ShowInterfacesSwitchport(device=self.device)
+        parsed_output = intf_obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        intf_obj = ShowInterfacesSwitchport(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = intf_obj.parse()
+
+
+#############################################################################
+# unitest For show interfaces trunk
+#############################################################################
+class test_show_interfaces_trunk(test_show_interfaces_trunk_iosxe):
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        interface_obj = ShowInterfacesTrunk(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = interface_obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        interface_obj = ShowInterfacesTrunk(device=self.device)
+        parsed_output = interface_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+###################################################
+# unit test for show interfaces stats
+####################################################
+class test_show_interfaces_stats(test_show_interfaces_stats_iosxe):
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowInterfacesStats(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowInterfacesStats(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_show_interfaces(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_interface)
+        obj = ShowInterfacesStats(device=self.device)
+        parsed_output = obj.parse(interface='GigabitEthernet0/0/0')
+        self.assertEqual(parsed_output,self.golden_parsed_output_interface)
+
 
 if __name__ == '__main__':
     unittest.main()
