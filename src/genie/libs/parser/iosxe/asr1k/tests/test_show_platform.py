@@ -224,7 +224,7 @@ class test_show_env_asr1k(unittest.TestCase):
         ------------------ show environment all ------------------
 
         Load for five secs: 0%/0%; one minute: 1%; five minutes: 0%
-        Time source is NTP, 16:53:30.232 JST Wed Nov 2 2016
+        Time source is NTP, 16:53:30.232 EST Wed Nov 2 2016
 
         Sensor List:  Environmental Monitoring 
          Sensor           Location          State             Reading

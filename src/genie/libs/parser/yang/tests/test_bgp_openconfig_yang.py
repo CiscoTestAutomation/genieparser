@@ -40,7 +40,7 @@ class test_yang_bgp_iosxr(unittest.TestCase):
                         'total_paths': 0,
                         'total_prefixes': 0}},
                 'neighbor': 
-                    {'2.2.2.2': 
+                    {'10.16.2.2': 
                         {'address_family': 
                             {'idx:l3vpn-ipv4-unicast': 
                                 {'active': False,
@@ -63,7 +63,7 @@ class test_yang_bgp_iosxr(unittest.TestCase):
                         'bgp_session_transport': 
                             {'transport': 
                                 {'foreign_host': '0',
-                                'foreign_port': '2.2.2.2',
+                                'foreign_port': '10.16.2.2',
                                 'local_host': 'Loopback0',
                                 'local_port': '0'}},
                         'graceful_restart_restart_time': 120,
@@ -72,7 +72,7 @@ class test_yang_bgp_iosxr(unittest.TestCase):
                         'output_queue': 0,
                         'remote_as': 100,
                         'session_state': 'idle'},
-                    '3.3.3.3': 
+                    '10.36.3.3': 
                         {'address_family': 
                             {'idx:l3vpn-ipv4-unicast': 
                                 {'active': False,
@@ -95,7 +95,7 @@ class test_yang_bgp_iosxr(unittest.TestCase):
                         'bgp_session_transport': 
                             {'transport': 
                                 {'foreign_host': '0',
-                                'foreign_port': '3.3.3.3',
+                                'foreign_port': '10.36.3.3',
                                 'local_host': 'Loopback0',
                                 'local_port': '0'}},
                         'graceful_restart_restart_time': 120,
@@ -104,7 +104,7 @@ class test_yang_bgp_iosxr(unittest.TestCase):
                         'output_queue': 0,
                         'remote_as': 100,
                         'session_state': 'idle'}},
-                'router_id': '1.1.1.1'}}}
+                'router_id': '10.4.1.1'}}}
 
     class etree_holder():
         def __init__(self):
@@ -114,11 +114,11 @@ class test_yang_bgp_iosxr(unittest.TestCase):
                    <global>
                     <config>
                      <as>100</as>
-                     <router-id>1.1.1.1</router-id>
+                     <router-id>10.4.1.1</router-id>
                     </config>
                     <state>
                      <as>100</as>
-                     <router-id>1.1.1.1</router-id>
+                     <router-id>10.4.1.1</router-id>
                      <total-paths>0</total-paths>
                      <total-prefixes>0</total-prefixes>
                     </state>
@@ -153,13 +153,13 @@ class test_yang_bgp_iosxr(unittest.TestCase):
                    </global>
                    <neighbors>
                     <neighbor>
-                     <neighbor-address>2.2.2.2</neighbor-address>
+                     <neighbor-address>10.16.2.2</neighbor-address>
                      <config>
-                      <neighbor-address>2.2.2.2</neighbor-address>
+                      <neighbor-address>10.16.2.2</neighbor-address>
                       <peer-as>100</peer-as>
                      </config>
                      <state>
-                      <neighbor-address>2.2.2.2</neighbor-address>
+                      <neighbor-address>10.16.2.2</neighbor-address>
                       <peer-as>100</peer-as>
                       <queues>
                        <input>0</input>
@@ -184,7 +184,7 @@ class test_yang_bgp_iosxr(unittest.TestCase):
                       <state>
                        <local-address>Loopback0</local-address>
                        <local-port>0</local-port>
-                       <remote-address>2.2.2.2</remote-address>
+                       <remote-address>10.16.2.2</remote-address>
                        <remote-port>0</remote-port>
                       </state>
                      </transport>
@@ -234,13 +234,13 @@ class test_yang_bgp_iosxr(unittest.TestCase):
                      </graceful-restart>
                     </neighbor>
                     <neighbor>
-                     <neighbor-address>3.3.3.3</neighbor-address>
+                     <neighbor-address>10.36.3.3</neighbor-address>
                      <config>
-                      <neighbor-address>3.3.3.3</neighbor-address>
+                      <neighbor-address>10.36.3.3</neighbor-address>
                       <peer-as>100</peer-as>
                      </config>
                      <state>
-                      <neighbor-address>3.3.3.3</neighbor-address>
+                      <neighbor-address>10.36.3.3</neighbor-address>
                       <peer-as>100</peer-as>
                       <queues>
                        <input>0</input>
@@ -265,7 +265,7 @@ class test_yang_bgp_iosxr(unittest.TestCase):
                       <state>
                        <local-address>Loopback0</local-address>
                        <local-port>0</local-port>
-                       <remote-address>3.3.3.3</remote-address>
+                       <remote-address>10.36.3.3</remote-address>
                        <remote-port>0</remote-port>
                       </state>
                      </transport>
@@ -385,7 +385,7 @@ class test_yang_bgp_nxos(unittest.TestCase):
                 'graceful_restart_stalepath_time': 300,
                 'log_neighbor_changes': True,
                 'neighbor': 
-                    {'21.0.101.1': 
+                    {'10.186.101.1': 
                         {'address_family': 
                             {'ipv4 unicast': 
                                 {'enabled': True,
@@ -407,7 +407,7 @@ class test_yang_bgp_nxos(unittest.TestCase):
                         'bgp_session_transport': 
                             {'transport': 
                                 {'foreign_host': 'unspecified',
-                                'foreign_port': '21.0.101.1',
+                                'foreign_port': '10.186.101.1',
                                 'local_host': '0.0.0.0',
                                 'local_port': 'unspecified',
                                 'passive_mode': 'false'}},
@@ -424,7 +424,7 @@ class test_yang_bgp_nxos(unittest.TestCase):
                         'route_reflector_client': True,
                         'route_reflector_cluster_id': 3,
                         'send_community': 'BOTH'},
-                    '21.0.102.1': 
+                    '10.186.102.1': 
                         {'address_family': 
                             {'ipv4 unicast': 
                                 {'enabled': True,
@@ -445,7 +445,7 @@ class test_yang_bgp_nxos(unittest.TestCase):
                         'bgp_session_transport': 
                             {'transport': 
                                 {'foreign_host': 'unspecified',
-                                'foreign_port': '21.0.102.1',
+                                'foreign_port': '10.186.102.1',
                                 'local_host': '0.0.0.0',
                                 'local_port': 'unspecified',
                                 'passive_mode': 'false'}},
@@ -462,7 +462,7 @@ class test_yang_bgp_nxos(unittest.TestCase):
                         'route_reflector_client': True,
                         'route_reflector_cluster_id': 3,
                         'send_community': 'BOTH'},
-                    '21.0.201.1': 
+                    '10.186.201.1': 
                         {'address_family': 
                             {'ipv4 unicast': 
                                 {'enabled': True,
@@ -485,7 +485,7 @@ class test_yang_bgp_nxos(unittest.TestCase):
                         'bgp_session_transport': 
                             {'transport': 
                                 {'foreign_host': 'unspecified',
-                                'foreign_port': '21.0.201.1',
+                                'foreign_port': '10.186.201.1',
                                 'local_host': '0.0.0.0',
                                 'local_port': 'unspecified',
                                 'passive_mode': 'false'}},
@@ -502,11 +502,11 @@ class test_yang_bgp_nxos(unittest.TestCase):
                         'route_reflector_client': False,
                         'route_reflector_cluster_id': 3,
                         'send_community': 'BOTH'},
-                    '4.4.4.4': 
+                    '10.64.4.4': 
                         {'bgp_session_transport': 
                             {'transport': 
                                 {'foreign_host': 'unspecified',
-                                'foreign_port': '4.4.4.4',
+                                'foreign_port': '10.64.4.4',
                                 'local_host': '0.0.0.0',
                                 'local_port': 'unspecified',
                                 'passive_mode': 'false'}},
@@ -980,7 +980,7 @@ class test_yang_bgp_nxos(unittest.TestCase):
                                     <peer-as/>
                                     <remove-private-as/>
                                     <peer-group/>
-                                    <neighbor-address>4.4.4.4</neighbor-address>
+                                    <neighbor-address>10.64.4.4</neighbor-address>
                                 </config>
                                 <ebgp-multihop>
                                     <config>
@@ -1012,7 +1012,7 @@ class test_yang_bgp_nxos(unittest.TestCase):
                                     <peer-as/>
                                     <remove-private-as/>
                                     <peer-group/>
-                                    <neighbor-address>4.4.4.4</neighbor-address>
+                                    <neighbor-address>10.64.4.4</neighbor-address>
                                 </state>
                                 <timers>
                                     <config>
@@ -1032,11 +1032,11 @@ class test_yang_bgp_nxos(unittest.TestCase):
                                         <local-address>0.0.0.0</local-address>
                                         <passive-mode>false</passive-mode>
                                         <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
-                                        <remote-address xmlns="http://openconfig.net/yang/bgp-operational">4.4.4.4</remote-address>
+                                        <remote-address xmlns="http://openconfig.net/yang/bgp-operational">10.64.4.4</remote-address>
                                         <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
                                     </state>
                                 </transport>
-                                <neighbor-address>4.4.4.4</neighbor-address>
+                                <neighbor-address>10.64.4.4</neighbor-address>
                             </neighbor>
                             <neighbor>
                                 <afi-safis>
@@ -1168,7 +1168,7 @@ class test_yang_bgp_nxos(unittest.TestCase):
                                     <remove-private-as/>
                                     <send-community>BOTH</send-community>
                                     <peer-group/>
-                                    <neighbor-address>21.0.102.1</neighbor-address>
+                                    <neighbor-address>10.186.102.1</neighbor-address>
                                 </config>
                                 <ebgp-multihop>
                                     <config>
@@ -1203,7 +1203,7 @@ class test_yang_bgp_nxos(unittest.TestCase):
                                     <remove-private-as/>
                                     <send-community>BOTH</send-community>
                                     <peer-group/>
-                                    <neighbor-address>21.0.102.1</neighbor-address>
+                                    <neighbor-address>10.186.102.1</neighbor-address>
                                 </state>
                                 <timers>
                                     <config>
@@ -1225,11 +1225,11 @@ class test_yang_bgp_nxos(unittest.TestCase):
                                         <local-address>0.0.0.0</local-address>
                                         <passive-mode>false</passive-mode>
                                         <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
-                                        <remote-address xmlns="http://openconfig.net/yang/bgp-operational">21.0.102.1</remote-address>
+                                        <remote-address xmlns="http://openconfig.net/yang/bgp-operational">10.186.102.1</remote-address>
                                         <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
                                     </state>
                                 </transport>
-                                <neighbor-address>21.0.102.1</neighbor-address>
+                                <neighbor-address>10.186.102.1</neighbor-address>
                             </neighbor>
                             <neighbor>
                                 <afi-safis>
@@ -1644,7 +1644,7 @@ class test_yang_bgp_nxos(unittest.TestCase):
                                     <remove-private-as/>
                                     <send-community>BOTH</send-community>
                                     <peer-group/>
-                                    <neighbor-address>21.0.101.1</neighbor-address>
+                                    <neighbor-address>10.186.101.1</neighbor-address>
                                 </config>
                                 <ebgp-multihop>
                                     <config>
@@ -1679,7 +1679,7 @@ class test_yang_bgp_nxos(unittest.TestCase):
                                     <remove-private-as/>
                                     <send-community>BOTH</send-community>
                                     <peer-group/>
-                                    <neighbor-address>21.0.101.1</neighbor-address>
+                                    <neighbor-address>10.186.101.1</neighbor-address>
                                 </state>
                                 <timers>
                                     <config>
@@ -1701,11 +1701,11 @@ class test_yang_bgp_nxos(unittest.TestCase):
                                         <local-address>0.0.0.0</local-address>
                                         <passive-mode>false</passive-mode>
                                         <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
-                                        <remote-address xmlns="http://openconfig.net/yang/bgp-operational">21.0.101.1</remote-address>
+                                        <remote-address xmlns="http://openconfig.net/yang/bgp-operational">10.186.101.1</remote-address>
                                         <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
                                     </state>
                                 </transport>
-                                <neighbor-address>21.0.101.1</neighbor-address>
+                                <neighbor-address>10.186.101.1</neighbor-address>
                             </neighbor>
                             <neighbor>
                                 <afi-safis>
@@ -1853,7 +1853,7 @@ class test_yang_bgp_nxos(unittest.TestCase):
                                     <remove-private-as/>
                                     <send-community>BOTH</send-community>
                                     <peer-group/>
-                                    <neighbor-address>21.0.201.1</neighbor-address>
+                                    <neighbor-address>10.186.201.1</neighbor-address>
                                 </config>
                                 <ebgp-multihop>
                                     <config>
@@ -1888,7 +1888,7 @@ class test_yang_bgp_nxos(unittest.TestCase):
                                     <remove-private-as/>
                                     <send-community>BOTH</send-community>
                                     <peer-group/>
-                                    <neighbor-address>21.0.201.1</neighbor-address>
+                                    <neighbor-address>10.186.201.1</neighbor-address>
                                 </state>
                                 <timers>
                                     <config>
@@ -1910,11 +1910,11 @@ class test_yang_bgp_nxos(unittest.TestCase):
                                         <local-address>0.0.0.0</local-address>
                                         <passive-mode>false</passive-mode>
                                         <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
-                                        <remote-address xmlns="http://openconfig.net/yang/bgp-operational">21.0.201.1</remote-address>
+                                        <remote-address xmlns="http://openconfig.net/yang/bgp-operational">10.186.201.1</remote-address>
                                         <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
                                     </state>
                                 </transport>
-                                <neighbor-address>21.0.201.1</neighbor-address>
+                                <neighbor-address>10.186.201.1</neighbor-address>
                             </neighbor>
                         </neighbors>
                     </bgp>

@@ -44,19 +44,19 @@ class test_show_lisp_session(unittest.TestCase):
                 {'sessions':
                     {'established': 3,
                     'peers':
-                        {'2.2.2.2':
+                        {'10.16.2.2':
                             {'state': 'up',
                             'time': '00:51:38',
                             'total_in': 8,
                             'total_out': 13,
                             'users': 3},
-                        '6.6.6.6':
+                        '10.144.6.6':
                             {'state': 'up',
                             'time': '00:51:53',
                             'total_in': 3,
                             'total_out': 10,
                             'users': 1},
-                        '8.8.8.8':
+                        '10.1.8.8':
                             {'state': 'up',
                             'time': '00:52:15',
                             'total_in': 8,
@@ -71,9 +71,9 @@ class test_show_lisp_session(unittest.TestCase):
         204-MSMR#show lisp session
         Sessions for VRF default, total: 3, established: 3
         Peer                           State      Up/Down        In/Out    Users
-        2.2.2.2                        Up         00:51:38        8/13     3
-        6.6.6.6                        Up         00:51:53        3/10     1
-        8.8.8.8                        Up         00:52:15        8/13     3
+        10.16.2.2                      Up         00:51:38        8/13     3
+        10.144.6.6                     Up         00:51:53        3/10     1
+        10.1.8.8                       Up         00:52:15        8/13     3
         '''}
 
     def test_show_lisp_session_full1(self):
@@ -182,9 +182,9 @@ class test_show_lisp_extranet(unittest.TestCase):
                                             {'extranet': 'ext1',
                                             'home_instance_id': 103,
                                             'subscriber':
-                                                {'172.168.1.0/24':
+                                                {'172.16.1.0/24':
                                                     {'bidirectional': True,
-                                                    'eid_record': '172.168.1.0/24'}}}},
+                                                    'eid_record': '172.16.1.0/24'}}}},
                                     'vni': '102'},
                                 '103':
                                     {'extranets':
@@ -192,15 +192,15 @@ class test_show_lisp_extranet(unittest.TestCase):
                                             {'extranet': 'ext1',
                                             'home_instance_id': 103,
                                             'provider':
-                                                {'100.100.100.0/24':
+                                                {'10.220.100.0/24':
                                                     {'bidirectional': True,
-                                                    'eid_record': '100.100.100.0/24'},
-                                                '200.200.200.0/24':
+                                                    'eid_record': '10.220.100.0/24'},
+                                                '192.168.195.0/24':
                                                     {'bidirectional': True,
-                                                    'eid_record': '200.200.200.0/24'},
-                                                '88.88.88.0/24':
+                                                    'eid_record': '192.168.195.0/24'},
+                                                '10.121.88.0/24':
                                                     {'bidirectional': True,
-                                                    'eid_record': '88.88.88.0/24'}}}},
+                                                    'eid_record': '10.121.88.0/24'}}}},
                                     'vni': '103'},
                             'total_extranet_entries': 6}}}}}}}
 
@@ -213,10 +213,10 @@ class test_show_lisp_extranet(unittest.TestCase):
         Home Instance ID: 103
         Total entries: 6
         Provider/Subscriber  Inst ID    EID prefix
-        Provider             103        88.88.88.0/24
-        Provider             103        100.100.100.0/24
-        Provider             103        200.200.200.0/24
-        Subscriber           102        172.168.1.0/24
+        Provider             103        10.121.88.0/24
+        Provider             103        10.220.100.0/24
+        Provider             103        192.168.195.0/24
+        Subscriber           102        172.16.1.0/24
         Subscriber           101        192.168.0.0/24
         Subscriber           101        192.168.9.0/24
         '''}
@@ -380,9 +380,9 @@ class test_show_lisp_dynamic_eid_detail(unittest.TestCase):
                                                             'uptime': '11:56:56'}},
                                                     'last_dynamic_eid_discovery_elaps_time': '11:56:56'}},
                                             'mapping_servers': 
-                                                {'4.4.4.4': 
+                                                {'10.64.4.4': 
                                                     {'proxy_reply': True},
-                                                '6.6.6.6': 
+                                                '10.144.6.6': 
                                                     {}},
                                             'num_of_roaming_dynamic_eid': 1,
                                             'registering_more_specific': True,
@@ -398,8 +398,8 @@ class test_show_lisp_dynamic_eid_detail(unittest.TestCase):
         Dynamic-EID name: 192
           Database-mapping EID-prefix: 192.168.0.0/24, locator-set RLOC
           Registering more-specific dynamic-EIDs
-          Map-Server(s): 4.4.4.4  (proxy-replying)
-          Map-Server(s): 6.6.6.6
+          Map-Server(s): 10.64.4.4  (proxy-replying)
+          Map-Server(s): 10.144.6.6
           Site-based multicast Map-Notify group: 225.1.1.2
           Number of roaming dynamic-EIDs discovered: 1
           Last dynamic-EID discovered: 192.168.0.1, 11:56:56 ago
@@ -468,11 +468,11 @@ class test_show_lisp_service(unittest.TestCase):
                                     },
                                 },
                             'mapping_servers': 
-                                {'13.13.13.13': 
-                                    {'ms_address': '13.13.13.13',
+                                {'10.166.13.13': 
+                                    {'ms_address': '10.166.13.13',
                                     'uptime': '00:00:35'},
-                                '4.4.4.4': 
-                                    {'ms_address': '4.4.4.4',
+                                '10.64.4.4': 
+                                    {'ms_address': '10.64.4.4',
                                     'uptime': '17:49:58'}},
                             'proxy_etr_router': False},
                         'instance_id': 
@@ -488,7 +488,7 @@ class test_show_lisp_service(unittest.TestCase):
                                     'total_database_mapping_size': 1},
                                 'eid_table': 'vrf red',
                                 'itr': 
-                                    {'local_rloc_last_resort': '2.2.2.2',
+                                    {'local_rloc_last_resort': '10.16.2.2',
                                     'use_proxy_etr_rloc': '10.10.10.10'},
                                 'map_cache': 
                                     {'imported_route_count': 0,
@@ -498,20 +498,20 @@ class test_show_lisp_service(unittest.TestCase):
                                     'static_mappings_configured': 0},
                                 'map_request_source': 'derived from EID destination',
                                 'mapping_servers': 
-                                    {'13.13.13.13': 
-                                        {'ms_address': '13.13.13.13',
+                                    {'10.166.13.13': 
+                                        {'ms_address': '10.166.13.13',
                                         'uptime': '00:00:35'},
-                                    '4.4.4.4': 
-                                        {'ms_address': '4.4.4.4',
+                                    '10.64.4.4': 
+                                        {'ms_address': '10.64.4.4',
                                         'uptime': '17:49:58'}},
                                 'site_registration_limit': 0}},
                         'itr': 
                             {'enabled': True,
                             'map_resolvers': 
-                                {'13.13.13.13': 
-                                    {'map_resolver': '13.13.13.13'},
-                                '4.4.4.4': 
-                                    {'map_resolver': '4.4.4.4'}},
+                                {'10.166.13.13': 
+                                    {'map_resolver': '10.166.13.13'},
+                                '10.64.4.4': 
+                                    {'map_resolver': '10.64.4.4'}},
                             'max_smr_per_map_cache_entry': '8 more specifics',
                             'multiple_smr_suppression_time': 20,
                             'proxy_itr_router': False,
@@ -557,11 +557,11 @@ class test_show_lisp_service(unittest.TestCase):
           Delegated Database Tree (DDT):       disabled
           Site Registration Limit:             0
           Map-Request source:                  derived from EID destination
-          ITR Map-Resolver(s):                 4.4.4.4, 13.13.13.13
-          ETR Map-Server(s):                   4.4.4.4 (17:49:58), 13.13.13.13 (00:00:35)
+          ITR Map-Resolver(s):                 10.64.4.4, 10.166.13.13
+          ETR Map-Server(s):                   10.64.4.4 (17:49:58), 10.166.13.13 (00:00:35)
           xTR-ID:                              0x730E0861-0x12996F6D-0xEFEA2114-0xE1C951F7
           site-ID:                             unspecified
-          ITR local RLOC (last resort):        2.2.2.2
+          ITR local RLOC (last resort):        10.16.2.2
           ITR use proxy ETR RLOC(s):           10.10.10.10
           ITR Solicit Map Request (SMR):       accept and process
             Max SMRs per map-cache entry:      8 more specifics
@@ -612,11 +612,11 @@ class test_show_lisp_service(unittest.TestCase):
                                     },
                                 },
                             'mapping_servers': 
-                                {'13.13.13.13': 
-                                    {'ms_address': '13.13.13.13',
+                                {'10.166.13.13': 
+                                    {'ms_address': '10.166.13.13',
                                     'uptime': '00:00:35'},
-                                '4.4.4.4': 
-                                    {'ms_address': '4.4.4.4',
+                                '10.64.4.4': 
+                                    {'ms_address': '10.64.4.4',
                                     'uptime': '17:49:58'}},
                             'proxy_etr_router': False},
                         'instance_id': 
@@ -632,7 +632,7 @@ class test_show_lisp_service(unittest.TestCase):
                                     'total_database_mapping_size': 1},
                                 'eid_table': 'vrf red',
                                 'itr': 
-                                    {'local_rloc_last_resort': '2.2.2.2',
+                                    {'local_rloc_last_resort': '10.16.2.2',
                                     'use_proxy_etr_rloc': '10.10.10.10'},
                                 'map_cache': 
                                     {'imported_route_count': 0,
@@ -642,20 +642,20 @@ class test_show_lisp_service(unittest.TestCase):
                                     'static_mappings_configured': 0},
                                 'map_request_source': 'derived from EID destination',
                                 'mapping_servers': 
-                                    {'13.13.13.13': 
-                                        {'ms_address': '13.13.13.13',
+                                    {'10.166.13.13': 
+                                        {'ms_address': '10.166.13.13',
                                         'uptime': '00:00:35'},
-                                    '4.4.4.4': 
-                                        {'ms_address': '4.4.4.4',
+                                    '10.64.4.4': 
+                                        {'ms_address': '10.64.4.4',
                                         'uptime': '17:49:58'}},
                                 'site_registration_limit': 0}},
                         'itr': 
                             {'enabled': True,
                             'map_resolvers': 
-                                {'13.13.13.13': 
-                                    {'map_resolver': '13.13.13.13'},
-                                '4.4.4.4': 
-                                    {'map_resolver': '4.4.4.4'}},
+                                {'10.166.13.13': 
+                                    {'map_resolver': '10.166.13.13'},
+                                '10.64.4.4': 
+                                    {'map_resolver': '10.64.4.4'}},
                             'max_smr_per_map_cache_entry': '8 more specifics',
                             'multiple_smr_suppression_time': 20,
                             'proxy_itr_router': False,
@@ -701,11 +701,11 @@ class test_show_lisp_service(unittest.TestCase):
           Delegated Database Tree (DDT):       disabled
           Site Registration Limit:             0
           Map-Request source:                  derived from EID destination
-          ITR Map-Resolver(s):                 4.4.4.4, 13.13.13.13
-          ETR Map-Server(s):                   4.4.4.4 (17:49:58), 13.13.13.13 (00:00:35)
+          ITR Map-Resolver(s):                 10.64.4.4, 10.166.13.13
+          ETR Map-Server(s):                   10.64.4.4 (17:49:58), 10.166.13.13 (00:00:35)
           xTR-ID:                              0x730E0861-0x12996F6D-0xEFEA2114-0xE1C951F7
           site-ID:                             unspecified
-          ITR local RLOC (last resort):        2.2.2.2
+          ITR local RLOC (last resort):        10.16.2.2
           ITR use proxy ETR RLOC(s):           10.10.10.10
           ITR Solicit Map Request (SMR):       accept and process
             Max SMRs per map-cache entry:      8 more specifics
@@ -751,11 +751,11 @@ class test_show_lisp_service(unittest.TestCase):
                             'encapsulation': 'vxlan',
                             'map_cache_ttl': '1d00h',
                             'mapping_servers': 
-                                {'44.44.44.44': 
-                                    {'ms_address': '44.44.44.44',
+                                {'10.94.44.44': 
+                                    {'ms_address': '10.94.44.44',
                                     'uptime': '00:00:50'},
-                                '66.66.66.66': 
-                                    {'ms_address': '66.66.66.66',
+                                '10.84.66.66': 
+                                    {'ms_address': '10.84.66.66',
                                     'uptime': 'never'}},
                             'proxy_etr_router': False},
                         'instance_id': 
@@ -774,7 +774,7 @@ class test_show_lisp_service(unittest.TestCase):
                                     'total_database_mapping_size': 2},
                                 'eid_table': 'Vlan 101',
                                 'itr': 
-                                    {'local_rloc_last_resort': '11.11.11.1'},
+                                    {'local_rloc_last_resort': '10.229.11.1'},
                                 'map_cache': 
                                     {'imported_route_count': 0,
                                     'imported_route_limit': 5000,
@@ -783,11 +783,11 @@ class test_show_lisp_service(unittest.TestCase):
                                     'static_mappings_configured': 0},
                                 'map_request_source': 'derived from EID destination',
                                 'mapping_servers': 
-                                    {'44.44.44.44': 
-                                        {'ms_address': '44.44.44.44',
+                                    {'10.94.44.44': 
+                                        {'ms_address': '10.94.44.44',
                                         'uptime': '00:00:45'},
-                                    '66.66.66.66': 
-                                        {'ms_address': '66.66.66.66',
+                                    '10.84.66.66': 
+                                        {'ms_address': '10.84.66.66',
                                         'uptime': 'never'}},
                                 'site_registration_limit': 0},
                             '2': 
@@ -805,7 +805,7 @@ class test_show_lisp_service(unittest.TestCase):
                                    'total_database_mapping_size': 2},
                                 'eid_table': 'Vlan 102',
                                 'itr': 
-                                    {'local_rloc_last_resort': '11.11.11.1'},
+                                    {'local_rloc_last_resort': '10.229.11.1'},
                                 'map_cache': 
                                     {'imported_route_count': 0,
                                     'imported_route_limit': 5000,
@@ -814,20 +814,20 @@ class test_show_lisp_service(unittest.TestCase):
                                     'static_mappings_configured': 0},
                                 'map_request_source': 'derived from EID destination',
                                 'mapping_servers': 
-                                    {'44.44.44.44': 
-                                        {'ms_address': '44.44.44.44',
+                                    {'10.94.44.44': 
+                                        {'ms_address': '10.94.44.44',
                                         'uptime': '00:00:50'},
-                                    '66.66.66.66': 
-                                        {'ms_address': '66.66.66.66',
+                                    '10.84.66.66': 
+                                        {'ms_address': '10.84.66.66',
                                         'uptime': 'never'}},
                                 'site_registration_limit': 0}},
                         'itr': 
                             {'enabled': True,
                             'map_resolvers': 
-                                {'44.44.44.44': 
-                                    {'map_resolver': '44.44.44.44'},
-                                '66.66.66.66': 
-                                    {'map_resolver': '66.66.66.66'}},
+                                {'10.94.44.44': 
+                                    {'map_resolver': '10.94.44.44'},
+                                '10.84.66.66': 
+                                    {'map_resolver': '10.84.66.66'}},
                             'max_smr_per_map_cache_entry': '8 more specifics',
                             'multiple_smr_suppression_time': 20,
                             'proxy_itr_router': False,
@@ -854,10 +854,10 @@ class test_show_lisp_service(unittest.TestCase):
                         'source_locator_configuration': 
                             {'vlans': 
                                 {'vlan100': 
-                                    {'address': '11.11.11.1',
+                                    {'address': '10.229.11.1',
                                     'interface': 'Loopback0'},
                                 'vlan101': 
-                                    {'address': '11.11.11.1',
+                                    {'address': '10.229.11.1',
                                     'interface': 'Loopback0'}}}}}}}}
 
     golden_output3 = {'execute.return_value': '''
@@ -887,13 +887,13 @@ class test_show_lisp_service(unittest.TestCase):
           Delegated Database Tree (DDT):       disabled
           Site Registration Limit:             0
           Map-Request source:                  derived from EID destination
-          ITR Map-Resolver(s):                 44.44.44.44
-                                               66.66.66.66 *** not reachable ***
-          ETR Map-Server(s):                   44.44.44.44 (00:00:45)
-                                               66.66.66.66 (never)
+          ITR Map-Resolver(s):                 10.94.44.44
+                                               10.84.66.66 *** not reachable ***
+          ETR Map-Server(s):                   10.94.44.44 (00:00:45)
+                                               10.84.66.66 (never)
           xTR-ID:                              0xA5EABB49-0x6C6CE939-0x530E699E-0x09187DFC
           site-ID:                             unspecified
-          ITR local RLOC (last resort):        11.11.11.1
+          ITR local RLOC (last resort):        10.229.11.1
           ITR Solicit Map Request (SMR):       accept and process
             Max SMRs per map-cache entry:      8 more specifics
             Multiple SMR suppression time:     20 secs
@@ -914,8 +914,8 @@ class test_show_lisp_service(unittest.TestCase):
             Map-cache FIB updates:             established
             Persistent map-cache:              disabled
           Source locator configuration:
-            Vlan100: 11.11.11.1 (Loopback0)
-            Vlan101: 11.11.11.1 (Loopback0)
+            Vlan100: 10.229.11.1 (Loopback0)
+            Vlan101: 10.229.11.1 (Loopback0)
           Database:
             Total database mapping size:       2
             static database size/limit:        0/65535
@@ -945,13 +945,13 @@ class test_show_lisp_service(unittest.TestCase):
           Delegated Database Tree (DDT):       disabled
           Site Registration Limit:             0
           Map-Request source:                  derived from EID destination
-          ITR Map-Resolver(s):                 44.44.44.44
-                                               66.66.66.66 *** not reachable ***
-          ETR Map-Server(s):                   44.44.44.44 (00:00:50)
-                                               66.66.66.66 (never)
+          ITR Map-Resolver(s):                 10.94.44.44
+                                               10.84.66.66 *** not reachable ***
+          ETR Map-Server(s):                   10.94.44.44 (00:00:50)
+                                               10.84.66.66 (never)
           xTR-ID:                              0xA5EABB49-0x6C6CE939-0x530E699E-0x09187DFC
           site-ID:                             unspecified
-          ITR local RLOC (last resort):        11.11.11.1
+          ITR local RLOC (last resort):        10.229.11.1
           ITR Solicit Map Request (SMR):       accept and process
             Max SMRs per map-cache entry:      8 more specifics
             Multiple SMR suppression time:     20 secs
@@ -972,8 +972,8 @@ class test_show_lisp_service(unittest.TestCase):
             Map-cache FIB updates:             established
             Persistent map-cache:              disabled
           Source locator configuration:
-            Vlan100: 11.11.11.1 (Loopback0)
-            Vlan101: 11.11.11.1 (Loopback0)
+            Vlan100: 10.229.11.1 (Loopback0)
+            Vlan101: 10.229.11.1 (Loopback0)
           Database:
             Total database mapping size:       2
             static database size/limit:        0/65535
@@ -1330,10 +1330,10 @@ class test_show_lisp_service(unittest.TestCase):
                             'enabled': True,
                             'map_cache_ttl': '1d00h',
                             'mapping_servers': 
-                                {'13.13.13.13': 
-                                    {'ms_address': '13.13.13.13'},
-                                '4.4.4.4': 
-                                    {'ms_address': '4.4.4.4'}},
+                                {'10.166.13.13': 
+                                    {'ms_address': '10.166.13.13'},
+                                '10.64.4.4': 
+                                    {'ms_address': '10.64.4.4'}},
                             'proxy_etr_router': False},
                         'instance_id': 
                             {'*': 
@@ -1344,17 +1344,17 @@ class test_show_lisp_service(unittest.TestCase):
                                 'map_cache': 
                                     {'persistent_map_cache': False},
                                 'mapping_servers': 
-                                    {'13.13.13.13': 
-                                        {'ms_address': '13.13.13.13'},
-                                    '4.4.4.4': 
-                                        {'ms_address': '4.4.4.4'}}}},
+                                    {'10.166.13.13': 
+                                        {'ms_address': '10.166.13.13'},
+                                    '10.64.4.4': 
+                                        {'ms_address': '10.64.4.4'}}}},
                         'itr': 
                             {'enabled': True,
                             'map_resolvers': 
-                                {'13.13.13.13': 
-                                    {'map_resolver': '13.13.13.13'},
-                                '4.4.4.4': 
-                                    {'map_resolver': '4.4.4.4'}},
+                                {'10.166.13.13': 
+                                    {'map_resolver': '10.166.13.13'},
+                                '10.64.4.4': 
+                                    {'map_resolver': '10.64.4.4'}},
                             'max_smr_per_map_cache_entry': '8 more specifics',
                             'multiple_smr_suppression_time': 20,
                             'proxy_itr_router': True,
@@ -1397,8 +1397,8 @@ class test_show_lisp_service(unittest.TestCase):
           Map Server (MS):                     disabled
           Map Resolver (MR):                   disabled
           Delegated Database Tree (DDT):       disabled
-          ITR Map-Resolver(s):                 4.4.4.4, 13.13.13.13
-          ETR Map-Server(s):                   4.4.4.4, 13.13.13.13
+          ITR Map-Resolver(s):                 10.64.4.4, 10.166.13.13
+          ETR Map-Server(s):                   10.64.4.4, 10.166.13.13
           xTR-ID:                              0x730E0861-0x12996F6D-0xEFEA2114-0xE1C951F7
           site-ID:                             unspecified
           ITR local RLOC (last resort):        *** NOT FOUND ***
@@ -1437,10 +1437,10 @@ class test_show_lisp_service(unittest.TestCase):
                             'enabled': True,
                             'map_cache_ttl': '1d00h',
                             'mapping_servers': 
-                                {'13.13.13.13': 
-                                    {'ms_address': '13.13.13.13'},
-                                '4.4.4.4': 
-                                    {'ms_address': '4.4.4.4'}},
+                                {'10.166.13.13': 
+                                    {'ms_address': '10.166.13.13'},
+                                '10.64.4.4': 
+                                    {'ms_address': '10.64.4.4'}},
                             'proxy_etr_router': False},
                         'instance_id': 
                             {'*': 
@@ -1451,17 +1451,17 @@ class test_show_lisp_service(unittest.TestCase):
                                 'map_cache': 
                                     {'persistent_map_cache': False},
                                 'mapping_servers': 
-                                    {'13.13.13.13': 
-                                        {'ms_address': '13.13.13.13'},
-                                    '4.4.4.4': 
-                                        {'ms_address': '4.4.4.4'}}}},
+                                    {'10.166.13.13': 
+                                        {'ms_address': '10.166.13.13'},
+                                    '10.64.4.4': 
+                                        {'ms_address': '10.64.4.4'}}}},
                         'itr': 
                             {'enabled': True,
                             'map_resolvers': 
-                                {'13.13.13.13': 
-                                    {'map_resolver': '13.13.13.13'},
-                                '4.4.4.4': 
-                                    {'map_resolver': '4.4.4.4'}},
+                                {'10.166.13.13': 
+                                    {'map_resolver': '10.166.13.13'},
+                                '10.64.4.4': 
+                                    {'map_resolver': '10.64.4.4'}},
                             'max_smr_per_map_cache_entry': '8 more specifics',
                             'multiple_smr_suppression_time': 20,
                             'proxy_itr_router': False,
@@ -1501,8 +1501,8 @@ class test_show_lisp_service(unittest.TestCase):
           Map Server (MS):                     disabled
           Map Resolver (MR):                   disabled
           Delegated Database Tree (DDT):       disabled
-          ITR Map-Resolver(s):                 4.4.4.4, 13.13.13.13
-          ETR Map-Server(s):                   4.4.4.4, 13.13.13.13
+          ITR Map-Resolver(s):                 10.64.4.4, 10.166.13.13
+          ETR Map-Server(s):                   10.64.4.4, 10.166.13.13
           xTR-ID:                              0x5B6A0468-0x55E69768-0xD1AE2E61-0x4A082FD5
           site-ID:                             unspecified
           ITR local RLOC (last resort):        *** NOT FOUND ***
@@ -1541,8 +1541,8 @@ class test_show_lisp_service(unittest.TestCase):
                             'enabled': True,
                             'map_cache_ttl': '1d00h',
                             'mapping_servers': 
-                                {'44.44.44.44': 
-                                    {'ms_address': '44.44.44.44'}},
+                                {'10.94.44.44': 
+                                    {'ms_address': '10.94.44.44'}},
                             'proxy_etr_router': False},
                         'instance_id': 
                             {'*': 
@@ -1553,15 +1553,15 @@ class test_show_lisp_service(unittest.TestCase):
                                 'map_cache': 
                                     {'persistent_map_cache': False},
                                 'mapping_servers': 
-                                    {'44.44.44.44': 
-                                        {'ms_address': '44.44.44.44'}}}},
+                                    {'10.94.44.44': 
+                                        {'ms_address': '10.94.44.44'}}}},
                         'itr': 
                             {'enabled': True,
                             'map_resolvers': 
-                                {'44.44.44.44': 
-                                    {'map_resolver': '44.44.44.44'},
-                                '66.66.66.66': 
-                                    {'map_resolver': '66.66.66.66'}},
+                                {'10.94.44.44': 
+                                    {'map_resolver': '10.94.44.44'},
+                                '10.84.66.66': 
+                                    {'map_resolver': '10.84.66.66'}},
                             'max_smr_per_map_cache_entry': '8 more specifics',
                             'multiple_smr_suppression_time': 20,
                             'proxy_itr_router': False,
@@ -1587,10 +1587,10 @@ class test_show_lisp_service(unittest.TestCase):
                         'source_locator_configuration': 
                             {'vlans': 
                                 {'vlan100': 
-                                    {'address': '11.11.11.1',
+                                    {'address': '10.229.11.1',
                                     'interface': 'Loopback0'},
                                 'vlan101': 
-                                    {'address': '11.11.11.1',
+                                    {'address': '10.229.11.1',
                                     'interface': 'Loopback0'}}}}}}}}
 
     golden_output6 = {'execute.return_value': '''
@@ -1611,10 +1611,10 @@ class test_show_lisp_service(unittest.TestCase):
           Map Resolver (MR):                   disabled
           Mr-use-petr:                         disabled
           Delegated Database Tree (DDT):       disabled
-          ITR Map-Resolver(s):                 44.44.44.44
-                                               66.66.66.66
-          ETR Map-Server(s):                   44.44.44.44
-                                               66.66.66.66
+          ITR Map-Resolver(s):                 10.94.44.44
+                                               10.84.66.66
+          ETR Map-Server(s):                   10.94.44.44
+                                               10.84.66.66
           xTR-ID:                              0xA5EABB49-0x6C6CE939-0x530E699E-0x09187DFC
           site-ID:                             unspecified
           ITR local RLOC (last resort):        *** NOT FOUND ***
@@ -1635,8 +1635,8 @@ class test_show_lisp_service(unittest.TestCase):
             Map-cache activity check period:   60 secs
             Persistent map-cache:              disabled
           Source locator configuration:
-            Vlan100: 11.11.11.1 (Loopback0)
-            Vlan101: 11.11.11.1 (Loopback0)
+            Vlan100: 10.229.11.1 (Loopback0)
+            Vlan101: 10.229.11.1 (Loopback0)
           Database:
             Dynamic database mapping limit:    5120
         '''}
@@ -1749,7 +1749,7 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                                             {'address_type': 'ipv4-afi',
                                                             'virtual_network_id': '101',
                                                             'ipv4': 
-                                                                {'ipv4': '8.8.8.8'}}}}}}}}}}}}}}}
+                                                                {'ipv4': '10.1.8.8'}}}}}}}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         202-XTR#show lisp all instance-id 101 ipv4 map-cache 
@@ -1762,7 +1762,7 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
           Negative cache entry, action: send-map-request
         192.168.9.0/24, uptime: 00:04:02, expires: 23:55:57, via map-reply, complete
           Locator  Uptime    State      Pri/Wgt     Encap-IID
-          8.8.8.8  00:04:02  up          50/50        -
+          10.1.8.8 00:04:02  up          50/50        -
         '''}
 
     golden_parsed_output2 = {
@@ -1843,7 +1843,7 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                                         'locator_address': 
                                                             {'address_type': 'ipv4-afi',
                                                             'ipv4': 
-                                                                {'ipv4': '8.8.8.8'},
+                                                                {'ipv4': '10.1.8.8'},
                                                             'virtual_network_id': '101'}}}},
                                             'creation_time': '00:06:51',
                                             'via': 'map-reply, complete'},
@@ -1872,11 +1872,11 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
           Negative cache entry, action: send-map-request
         2001:192:168:9::/64, uptime: 00:06:51, expires: 23:53:08, via map-reply, complete
           Locator  Uptime    State      Pri/Wgt     Encap-IID
-          8.8.8.8  00:06:51  up          50/50        -
+          10.1.8.8 00:06:51  up          50/50        -
         172.16.10.0/24, uptime: 00:00:00, expires: 23:59:59, via map-reply, complete
           Locator                     Uptime    State      Pri/Wgt
-          172.16.156.134             00:00:00  up           1/50
-          192.168.65.94                00:00:00  up           1/50
+          172.16.156.134              00:00:00  up           1/50
+          192.168.65.94               00:00:00  up           1/50
           2001:468:D01:9C::80DF:9C86  00:00:00  up           2/100
         '''}
 
@@ -1913,7 +1913,7 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                                         'locator_address': 
                                                             {'address_type': 'ipv4-afi',
                                                             'ipv4': 
-                                                                {'ipv4': '22.22.22.1'},
+                                                                {'ipv4': '10.151.22.1'},
                                                             'virtual_network_id': '193'}}}},
                                             'creation_time': '22:49:42',
                                             'via': 'WLC Map-Notify, complete'},
@@ -1937,7 +1937,7 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                                         'locator_address': 
                                                             {'address_type': 'ipv4-afi',
                                                             'ipv4': 
-                                                                {'ipv4': '22.22.22.1'},
+                                                                {'ipv4': '10.151.22.1'},
                                                             'virtual_network_id': '193',
                                                             }}}},
                                             'creation_time': '15:02:35',
@@ -1962,7 +1962,7 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                                         'locator_address': 
                                                             {'address_type': 'ipv4-afi',
                                                             'ipv4': 
-                                                                {'ipv4': '22.22.22.1'},
+                                                                {'ipv4': '10.151.22.1'},
                                                             'virtual_network_id': '193'}}}},
                                             'creation_time': '15:02:34',
                                             'via': 'WLC Map-Notify, complete'},
@@ -1986,7 +1986,7 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                                         'locator_address': 
                                                             {'address_type': 'ipv4-afi',
                                                             'ipv4': 
-                                                                {'ipv4': '22.22.22.1'},
+                                                                {'ipv4': '10.151.22.1'},
                                                             'virtual_network_id': '193'}}}},
                                             'creation_time': '14:57:15',
                                             'via': 'WLC Map-Notify, complete'}}}}}}}}}}
@@ -2005,16 +2005,16 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
 
         b827.eb51.f5ce/48, uptime: 22:49:42, expires: 01:10:17, via WLC Map-Notify, complete
           Locator     Uptime    State      Pri/Wgt     Encap-IID
-          22.22.22.1  22:49:42  up           0/0         -
+          10.151.22.1 22:49:42  up           0/0         -
         b827.eb73.159c/48, uptime: 15:02:35, expires: 08:57:24, via WLC Map-Notify, complete
           Locator     Uptime    State      Pri/Wgt     Encap-IID
-          22.22.22.1  15:02:35  up           0/0         -
+          10.151.22.1 15:02:35  up           0/0         -
         b827.ebd0.acc6/48, uptime: 15:02:34, expires: 08:57:25, via WLC Map-Notify, complete
           Locator     Uptime    State      Pri/Wgt     Encap-IID
-          22.22.22.1  15:02:34  up           0/0         -
+          10.151.22.1 15:02:34  up           0/0         -
         b827.ebd6.0c63/48, uptime: 14:57:15, expires: 09:02:44, via WLC Map-Notify, complete
           Locator     Uptime    State      Pri/Wgt     Encap-IID
-          22.22.22.1  14:57:15  up           0/0         -
+          10.151.22.1 14:57:15  up           0/0         -
 
         =================================================
         Output for router lisp 0 instance-id 2
@@ -2399,10 +2399,10 @@ class test_show_lisp_service_rloc_members(unittest.TestCase):
                                     'total_entries': 2,
                                     'valid_entries': 2,
                                     'members': 
-                                        {'2.2.2.2': 
+                                        {'10.16.2.2': 
                                             {'origin': 'registration',
                                             'valid': 'yes'},
-                                        '8.8.8.8': 
+                                        '10.1.8.8': 
                                             {'origin': 'registration',
                                             'valid': 'yes'}}}}}}}}}}
 
@@ -2416,8 +2416,8 @@ class test_show_lisp_service_rloc_members(unittest.TestCase):
         Entries: 2 valid / 2 total, Distribution disabled
 
         RLOC                                    Origin                       Valid
-        2.2.2.2                                 Registration                 Yes
-        8.8.8.8                                 Registration                 Yes
+        10.16.2.2                               Registration                 Yes
+        10.1.8.8                                Registration                 Yes
         '''}
 
     golden_parsed_output2 = {
@@ -2433,10 +2433,10 @@ class test_show_lisp_service_rloc_members(unittest.TestCase):
                                     'total_entries': 2,
                                     'valid_entries': 2,
                                     'members': 
-                                        {'2.2.2.2': 
+                                        {'10.16.2.2': 
                                             {'origin': 'registration',
                                             'valid': 'yes'},
-                                        '8.8.8.8': 
+                                        '10.1.8.8': 
                                             {'origin': 'registration',
                                             'valid': 'yes'}}}}}}}}}}
 
@@ -2450,8 +2450,8 @@ class test_show_lisp_service_rloc_members(unittest.TestCase):
         Entries: 2 valid / 2 total, Distribution disabled
 
         RLOC                                    Origin                       Valid
-        2.2.2.2                                 Registration                 Yes
-        8.8.8.8                                 Registration                 Yes
+        10.16.2.2                               Registration                 Yes
+        10.1.8.8                                Registration                 Yes
         '''}
 
     golden_parsed_output3 = {
@@ -2903,7 +2903,7 @@ class test_show_lisp_service_database(unittest.TestCase):
                                                 {'address_type': 'ipv4',
                                                 'vrf': 'red'},
                                             'id': '192.168.0.0/24',
-                                            'loopback_address': '2.2.2.2',
+                                            'loopback_address': '10.16.2.2',
                                             'priority': 50,
                                             'rlocs': 'RLOC',
                                             'source': 'cfg-intf',
@@ -2920,7 +2920,7 @@ class test_show_lisp_service_database(unittest.TestCase):
 
         192.168.0.0/24, locator-set RLOC
           Locator  Pri/Wgt  Source     State
-          2.2.2.2   50/50   cfg-intf   site-self, reachable
+          10.16.2.2 50/50   cfg-intf   site-self, reachable
         '''}
 
     golden_parsed_output2 = {
@@ -2945,7 +2945,7 @@ class test_show_lisp_service_database(unittest.TestCase):
                                                 {'address_type': 'ipv6',
                                                 'vrf': 'red'},
                                             'id': '2001:192:168::/64',
-                                            'loopback_address': '2.2.2.2',
+                                            'loopback_address': '10.16.2.2',
                                             'priority': 50,
                                             'rlocs': 'RLOC',
                                             'source': 'cfg-intf',
@@ -2962,7 +2962,7 @@ class test_show_lisp_service_database(unittest.TestCase):
 
         2001:192:168::/64, locator-set RLOC
           Locator  Pri/Wgt  Source     State
-          2.2.2.2   50/50   cfg-intf   site-self, reachable
+          10.16.2.2 50/50   cfg-intf   site-self, reachable
         '''}
 
     golden_parsed_output3 = {
@@ -2988,7 +2988,7 @@ class test_show_lisp_service_database(unittest.TestCase):
                                                 {'address_type': 'ethernet',
                                                 'vrf': '101'},
                                             'id': '0050.56b0.6a0e/48',
-                                            'loopback_address': '11.11.11.1',
+                                            'loopback_address': '10.229.11.1',
                                             'priority': 1,
                                             'rlocs': 'RLOC',
                                             'source': 'cfg-intf',
@@ -3000,7 +3000,7 @@ class test_show_lisp_service_database(unittest.TestCase):
                                             {'address_type': 'ethernet',
                                             'vrf': '101'},
                                         'id': 'cafe.cafe.cafe/48',
-                                        'loopback_address': '11.11.11.1',
+                                        'loopback_address': '10.229.11.1',
                                         'priority': 1,
                                         'rlocs': 'RLOC',
                                         'source': 'cfg-intf',
@@ -3018,7 +3018,7 @@ class test_show_lisp_service_database(unittest.TestCase):
                                                 {'address_type': 'ethernet',
                                                 'vrf': '102'},
                                             'id': '0050.56b0.60de/48',
-                                            'loopback_address': '11.11.11.1',
+                                            'loopback_address': '10.229.11.1',
                                             'priority': 1,
                                             'rlocs': 'RLOC',
                                             'source': 'cfg-intf',
@@ -3030,7 +3030,7 @@ class test_show_lisp_service_database(unittest.TestCase):
                                                 {'address_type': 'ethernet',
                                                 'vrf': '102'},
                                             'id': 'face.0171.0001/48',
-                                            'loopback_address': '11.11.11.1',
+                                            'loopback_address': '10.229.11.1',
                                             'priority': 1,
                                             'rlocs': 'RLOC',
                                             'source': 'cfg-intf',
@@ -3052,10 +3052,10 @@ class test_show_lisp_service_database(unittest.TestCase):
 
         0050.56b0.6a0e/48, dynamic-eid Auto-L2-group-1, inherited from default locator-set RLOC
           Locator     Pri/Wgt  Source     State
-          11.11.11.1    1/100  cfg-intf   site-self, reachable
+          10.229.11.1   1/100  cfg-intf   site-self, reachable
         cafe.cafe.cafe/48, dynamic-eid Auto-L2-group-1, inherited from default locator-set RLOC
           Locator     Pri/Wgt  Source     State
-          11.11.11.1    1/100  cfg-intf   site-self, reachable
+          10.229.11.1   1/100  cfg-intf   site-self, reachable
 
         =================================================
         Output for router lisp 0 instance-id 2
@@ -3065,10 +3065,10 @@ class test_show_lisp_service_database(unittest.TestCase):
 
         0050.56b0.60de/48, dynamic-eid Auto-L2-group-2, inherited from default locator-set RLOC
           Locator     Pri/Wgt  Source     State
-          11.11.11.1    1/100  cfg-intf   site-self, reachable
+          10.229.11.1    1/100  cfg-intf   site-self, reachable
         face.0171.0001/48, dynamic-eid Auto-L2-group-2, inherited from default locator-set RLOC
           Locator     Pri/Wgt  Source     State
-          11.11.11.1    1/100  cfg-intf   site-self, reachable
+          10.229.11.1    1/100  cfg-intf   site-self, reachable
 
         =================================================
         Output for router lisp 0 instance-id 102
@@ -3871,7 +3871,7 @@ class test_show_lisp_service_server_detail_internal(unittest.TestCase):
                                                             {'ipv4': '192.168.0.1/32'},
                                                         'virtual_network_id': '101',
                                                         },
-                                                    'etr': '2.2.2.2',
+                                                    'etr': '10.16.2.2',
                                                     'map_notify': True,
                                                     'merge': False,
                                                     'nonce': '0x70D18EF4-0x3A605D67',
@@ -3884,7 +3884,7 @@ class test_show_lisp_service_server_detail_internal(unittest.TestCase):
                                                     'creation_time': '01:12:41',
                                                     'hash_function': 'sha1,',
                                                     'locator': 
-                                                        {'2.2.2.2': 
+                                                        {'10.16.2.2': 
                                                             {'local': True,
                                                             'priority': 50,
                                                             'scope': 'IPv4 none',
@@ -3920,7 +3920,7 @@ class test_show_lisp_service_server_detail_internal(unittest.TestCase):
                                                             {'ipv4': '192.168.9.0/24'},
                                                         'virtual_network_id': '101',
                                                         },
-                                                    'etr': '8.8.8.8',
+                                                    'etr': '10.1.8.8',
                                                     'creation_time': '01:55:47',
                                                     'hash_function': 'sha1,',
                                                     'map_notify': True,
@@ -3933,7 +3933,7 @@ class test_show_lisp_service_server_detail_internal(unittest.TestCase):
                                                     'time_to_live': 86400,
                                                     'ttl': '1d00h',
                                                     'locator': 
-                                                        {'8.8.8.8': 
+                                                        {'10.1.8.8': 
                                                             {'local': True,
                                                             'priority': 50,
                                                             'scope': 'IPv4 none',
@@ -3993,14 +3993,14 @@ class test_show_lisp_service_server_detail_internal(unittest.TestCase):
             Registration errors:
               Authentication failures:   0
               Allowed locators mismatch: 0
-            ETR 2.2.2.2, last registered 01:12:41, proxy-reply, map-notify
+            ETR 10.16.2.2, last registered 01:12:41, proxy-reply, map-notify
                          TTL 1d00h, no merge, hash-function sha1, nonce 0x70D18EF4-0x3A605D67
                          state complete, no security-capability
                          xTR-ID 0x21EDD25F-0x7598784C-0x769C8E4E-0xC04926EC
                          site-ID unspecified
                          sourced by reliable transport
               Locator  Local  State      Pri/Wgt  Scope
-              2.2.2.2  yes    up          50/50   IPv4 none
+              10.16.2.2 yes    up          50/50   IPv4 none
 
         Site name: xtr1_2
         Allowed configured locators: any
@@ -4022,14 +4022,14 @@ class test_show_lisp_service_server_detail_internal(unittest.TestCase):
             Registration errors:
               Authentication failures:   0
               Allowed locators mismatch: 0
-            ETR 8.8.8.8, last registered 01:55:47, proxy-reply, map-notify
+            ETR 10.1.8.8, last registered 01:55:47, proxy-reply, map-notify
                          TTL 1d00h, no merge, hash-function sha1, nonce 0xB06AE31D-0x6ADB0BA5
                          state complete, no security-capability
                          xTR-ID 0x77200484-0xD134DC48-0x0FBAD9DC-0x4A46CA5D
                          site-ID unspecified
                          sourced by reliable transport
               Locator  Local  State      Pri/Wgt  Scope
-              8.8.8.8  yes    up          50/50   IPv4 none
+              10.1.8.8  yes    up          50/50   IPv4 none
         '''}
 
     golden_parsed_output2 = {
@@ -4072,7 +4072,7 @@ class test_show_lisp_service_server_detail_internal(unittest.TestCase):
                                                             {'ipv6': '2001:192:168:9::/64'},
                                                         'virtual_network_id': '101',
                                                         },
-                                                    'etr': '8.8.8.8',
+                                                    'etr': '10.1.8.8',
                                                     'creation_time': '00:13:19',
                                                     'hash_function': 'sha1,',
                                                     'map_notify': True,
@@ -4085,7 +4085,7 @@ class test_show_lisp_service_server_detail_internal(unittest.TestCase):
                                                     'time_to_live': 86400,
                                                     'ttl': '1d00h',
                                                     'locator': 
-                                                        {'8.8.8.8': 
+                                                        {'10.1.8.8': 
                                                             {'local': True,
                                                             'priority': 50,
                                                             'scope': 'IPv4 none',
@@ -4121,7 +4121,7 @@ class test_show_lisp_service_server_detail_internal(unittest.TestCase):
                                                             {'ipv6': '2001:192:168::/64'},
                                                         'virtual_network_id': '101',
                                                         },
-                                                    'etr': '2.2.2.2',
+                                                    'etr': '10.16.2.2',
                                                     'creation_time': '00:13:19',
                                                     'hash_function': 'sha1,',
                                                     'map_notify': True,
@@ -4134,7 +4134,7 @@ class test_show_lisp_service_server_detail_internal(unittest.TestCase):
                                                     'time_to_live': 86400,
                                                     'ttl': '1d00h',
                                                     'locator': 
-                                                        {'2.2.2.2': 
+                                                        {'10.16.2.2': 
                                                             {'local': True,
                                                             'priority': 50,
                                                             'scope': 'IPv4 none',
@@ -4180,14 +4180,14 @@ class test_show_lisp_service_server_detail_internal(unittest.TestCase):
             Registration errors:  
               Authentication failures:   0
               Allowed locators mismatch: 0
-            ETR 2.2.2.2, last registered 00:13:19, proxy-reply, map-notify
+            ETR 10.16.2.2, last registered 00:13:19, proxy-reply, map-notify
                          TTL 1d00h, no merge, hash-function sha1, nonce 0xF8845AAB-0x44B8B869
                          state complete, no security-capability
                          xTR-ID 0x5B6A0468-0x55E69768-0xD1AE2E61-0x4A082FD5
                          site-ID unspecified
                          sourced by reliable transport
               Locator  Local  State      Pri/Wgt  Scope
-              2.2.2.2  yes    up          50/50   IPv4 none
+              10.16.2.2 yes   up          50/50   IPv4 none
         Site name: xtr1_2
         Allowed configured locators: any
         Allowed EID-prefixes:
@@ -4207,14 +4207,14 @@ class test_show_lisp_service_server_detail_internal(unittest.TestCase):
             Registration errors:  
               Authentication failures:   0
               Allowed locators mismatch: 0
-            ETR 8.8.8.8, last registered 00:13:19, proxy-reply, map-notify
+            ETR 10.1.8.8, last registered 00:13:19, proxy-reply, map-notify
                          TTL 1d00h, no merge, hash-function sha1, nonce 0x90004FBE-0x03D2420E
                          state complete, no security-capability
                          xTR-ID 0x6BE732BF-0xD9530F52-0xF9162AA3-0x6283920A
                          site-ID unspecified
                          sourced by reliable transport
               Locator  Local  State      Pri/Wgt  Scope
-              8.8.8.8  yes    up          50/50   IPv4 none
+              10.1.8.8 yes    up          50/50   IPv4 none
         '''}
 
     golden_parsed_output3 = {
@@ -4603,14 +4603,14 @@ class test_show_lisp_service_statistics(unittest.TestCase):
                                     'map_register_invalid_source_rloc_drops': '0',
                                     'map_request_invalid_source_rloc_drops': '0',
                                     'map_rseolvers': 
-                                        {'13.13.13.13': 
+                                        {'10.166.13.13': 
                                             {'last_reply': '03:13:58',
                                             'metric': '26',
                                             'negative': 0,
                                             'no_reply': 1,
                                             'positive': 0,
                                             'reqs_sent': 2},
-                                        '4.4.4.4': 
+                                        '10.64.4.4': 
                                             {'last_reply': '03:13:58',
                                             'metric': '4',
                                             'negative': 0,
@@ -4717,8 +4717,8 @@ class test_show_lisp_service_statistics(unittest.TestCase):
           Number of reachability reports:           0 (+ dropped 0)
         ITR Map-Resolvers:
           Map-Resolver         LastReply  Metric ReqsSent Positive Negative No-Reply
-          4.4.4.4              03:13:58        4        1        1        0        0
-          13.13.13.13          03:13:58       26        2        0        0        1
+          10.64.4.4            03:13:58        4        1        1        0        0
+          10.166.13.13         03:13:58       26        2        0        0        1
         LISP RLOC Statistics - last cleared: never
         Control Packets:
             RTR Map-Requests forwarded:             0
@@ -4837,14 +4837,14 @@ class test_show_lisp_service_statistics(unittest.TestCase):
                                     'map_register_invalid_source_rloc_drops': '0',
                                     'map_request_invalid_source_rloc_drops': '0',
                                     'map_rseolvers': 
-                                        {'13.13.13.13': 
+                                        {'10.166.13.13': 
                                             {'last_reply': '00:17:11',
                                             'metric': '31',
                                             'negative': 0,
                                             'no_reply': 2,
                                             'positive': 0,
                                             'reqs_sent': 3},
-                                        '4.4.4.4': 
+                                        '10.64.4.4': 
                                             {'last_reply': '00:15:36',
                                             'metric': '19',
                                             'negative': 0,
@@ -4951,8 +4951,8 @@ class test_show_lisp_service_statistics(unittest.TestCase):
           Number of reachability reports:           0 (+ dropped 0)
         ITR Map-Resolvers:
           Map-Resolver         LastReply  Metric ReqsSent Positive Negative No-Reply
-          4.4.4.4              00:15:36       19        2        1        0        1
-          13.13.13.13          00:17:11       31        3        0        0        2
+          10.64.4.4            00:15:36       19        2        1        0        1
+          10.166.13.13         00:17:11       31        3        0        0        2
         LISP RLOC Statistics - last cleared: never
         Control Packets:
             RTR Map-Requests forwarded:             0
@@ -5046,14 +5046,14 @@ class test_show_lisp_service_statistics(unittest.TestCase):
                                     'map_register_invalid_source_rloc_drops': '0',
                                     'map_request_invalid_source_rloc_drops': '0',
                                     'map_rseolvers': 
-                                        {'44.44.44.44': 
+                                        {'10.94.44.44': 
                                             {'last_reply': 'never',
                                             'metric': '1',
                                             'negative': 0,
                                             'no_reply': 1,
                                             'positive': 1,
                                             'reqs_sent': 6},
-                                        '66.66.66.66': 
+                                        '10.84.66.66': 
                                             {'last_reply': 'never',
                                             'metric': 'Unreach',
                                             'negative': 0,
@@ -5157,8 +5157,8 @@ class test_show_lisp_service_statistics(unittest.TestCase):
           Number of SMR signals dropped:                    0
         ITR Map-Resolvers:
           Map-Resolver         LastReply  Metric ReqsSent Positive Negative No-Reply
-          44.44.44.44          never           1      306       18        0       66
-          66.66.66.66          never     Unreach        0        0        0        0
+          10.94.44.44          never           1      306       18        0       66
+          10.84.66.66          never     Unreach        0        0        0        0
         LISP RLOC Statistics - last cleared: never
         Control Packets:
             RTR Map-Requests forwarded:                     0
@@ -5236,8 +5236,8 @@ class test_show_lisp_service_statistics(unittest.TestCase):
           Number of SMR signals dropped:                    0
         ITR Map-Resolvers:
           Map-Resolver         LastReply  Metric ReqsSent Positive Negative No-Reply
-          44.44.44.44          never           1        6        1        0        1
-          66.66.66.66          never     Unreach        0        0        0        0
+          10.94.44.44          never           1        6        1        0        1
+          10.84.66.66          never     Unreach        0        0        0        0
         LISP RLOC Statistics - last cleared: never
         Control Packets:
             RTR Map-Requests forwarded:                     0

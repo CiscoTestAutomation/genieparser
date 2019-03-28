@@ -284,7 +284,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 continue
 
             # Management Addresses:
-            #     IP: 1.2.1.1
+            #     IP: 10.9.1.1
             m = p9.match(line)
             if m:
                 nei_dict['management_address'] = m.groupdict()['ip']

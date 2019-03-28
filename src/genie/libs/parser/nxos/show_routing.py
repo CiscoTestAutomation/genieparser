@@ -111,8 +111,8 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
                     address_family = 'vpnv6 unicast'
                 continue
 
-            # 20.43.0.1/32, ubest/mbest: 1/0 time, attached
-            # 55.0.9.0/24, ubest/mbest: 1/0 time
+            # 10.144.0.1/32, ubest/mbest: 1/0 time, attached
+            # 10.220.9.0/24, ubest/mbest: 1/0 time
             p2 = re.compile(r'(?P<ip_mask>[\w\:\.\/]+), +ubest/mbest: +'
                              '(?P<ubest>\d+)/(?P<mbest>\d+)( +time)?'
                              '(, +(?P<attach>\w+))?$')
@@ -148,10 +148,10 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
                     continue
 
             # *via fec1::1002%default, Eth1/1, [200/4444], 15:57:39, bgp-333, internal, tag 333
-            # *via 3.3.3.3%default, [33/0], 5w0d, bgp-100, internal, tag 100 (mpls-vpn)
+            # *via 10.36.3.3%default, [33/0], 5w0d, bgp-100, internal, tag 100 (mpls-vpn)
             # *via 2001:db8::5054:ff:fed5:63f9, Eth1/1, [0/0], 00:15:46, direct,
             # *via 2001:db8:2:2::2, Eth1/1, [0/0], 00:15:46, direct, , tag 222
-            # *via 100.0.130.2%default, [200/0], 3d07h, bgp-1, internal, tag 1 (evpn), segid: 50009 tunnelid: 0x64008202 encap: VXLAN
+            # *via 10.55.130.2%default, [200/0], 3d07h, bgp-1, internal, tag 1 (evpn), segid: 50009 tunnelid: 0x64008202 encap: VXLAN
             p3 = re.compile(r'^(?P<cast>.*)via +(?P<nexthop>[\w\.\:\s]+)'
                              '(%(?P<table>[\w\:]+))?, *'
                              '((?P<int>[a-zA-Z0-9\./_]+),)? *'
@@ -357,10 +357,10 @@ class ShowIpRoute(ShowIpRouteSchema):
                 vrf = m.groupdict()['vrf']
                 continue
 
-            # 1.1.1.1/32, ubest/mbest: 2/0
-            # 3.3.3.3/32, ubest/mbest: 2/0, attached
-            # 11.0.0.0/24, ubest/mbest: 1/0 time, attached
-            # 90.77.77.1/32, ubest/mbest: 1/0 time
+            # 10.4.1.1/32, ubest/mbest: 2/0
+            # 10.36.3.3/32, ubest/mbest: 2/0, attached
+            # 10.121.0.0/24, ubest/mbest: 1/0 time, attached
+            # 10.94.77.1/32, ubest/mbest: 1/0 time
             p2 = re.compile(r'^\s*(?P<route>[\d\/\.]+)'
                             ', +ubest/mbest: +(?P<ubest_mbest>[\d\/]+)'
                             '( +time)?(, +(?P<attached>[\w]+))?$')
@@ -416,7 +416,7 @@ class ShowIpRoute(ShowIpRouteSchema):
 
             # *via 10.2.3.2, Eth1/4, [1/0], 01:01:30, static
             # *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra
-            # *via 11.11.11.11, [200/0], 01:01:12, bgp-100, internal, tag 100
+            # *via 10.229.11.11, [200/0], 01:01:12, bgp-100, internal, tag 100
             p3 = re.compile(r'^\s*(?P<star>[*]+)via +(?P<next_hop>[\d\.]+),'
                             '( +(?P<interface>[\w\/\.]+))?,? +\[(?P<route_preference>[\d\/]+)\],'
                             ' +(?P<date>[0-9][\w\:]+)?,?( +(?P<source_protocol>[\w\-]+))?,?'
@@ -669,8 +669,8 @@ class ShowIpv6Route(ShowIpv6RouteSchema):
                 vrf = m.groupdict()['vrf']
                 continue
 
-            # 1.1.1.1/32, ubest/mbest: 2/0
-            # 3.3.3.3/32, ubest/mbest: 2/0, attached
+            # 10.4.1.1/32, ubest/mbest: 2/0
+            # 10.36.3.3/32, ubest/mbest: 2/0, attached
             # 2004:ab4:123:13::1/128, ubest/mbest: 1/0, attached
             p2 = re.compile(r'^\s*(?P<route>[\w\/\:]+)'
                             ', +ubest/mbest: +(?P<ubest_mbest>[\d\/]+)(, +(?P<attached>[\w]+))?$')
@@ -727,7 +727,7 @@ class ShowIpv6Route(ShowIpv6RouteSchema):
 
             # *via 10.2.3.2, Eth1/4, [1/0], 01:01:30, static
             # *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra
-            # *via 11.11.11.11, [200/0], 01:01:12, bgp-100, internal, tag 100
+            # *via 10.229.11.11, [200/0], 01:01:12, bgp-100, internal, tag 100
             p3 = re.compile(r'^\s*(?P<star>[*]+)via +(?P<next_hop>[\w\.\:\%]+),'
                             '( +(?P<interface>[\w\/\.]+))?,? +\[(?P<route_preference>[\d\/]+)\],'
                             ' +(?P<date>[0-9][\w\:]+)?,?( +(?P<source_protocol>[\w\-]+))?,?'

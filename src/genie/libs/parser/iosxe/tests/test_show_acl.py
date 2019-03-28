@@ -69,7 +69,7 @@ class test_show_access_lists(unittest.TestCase):
                                     'matches': {'l3': {'tcp': {'source_network': {'192.168.1.0 0.0.0.255': {'source_network': '192.168.1.0 '
                                                                                                                                                   '0.0.0.255'}},
                                                                'protocol': 'tcp',
-                                                               'destination_network': {'host 1.1.1.1': {'destination_network': 'host 1.1.1.1'}}}},
+                                                               'destination_network': {'host 10.4.1.1': {'destination_network': 'host 10.4.1.1'}}}},
                                                 'l4': {'tcp': {'established': True}}},
                                     'name': '10'},
                              '20': {'actions': {'forwarding': 'permit',
@@ -77,7 +77,7 @@ class test_show_access_lists(unittest.TestCase):
                                     'matches': {'l3': {'tcp': {'destination_network': {'any': {'destination_network': 'any'}},
                                                                'precedence': 'network',
                                                                'protocol': 'tcp',
-                                                               'source_network': {'host 2.2.2.2': {'source_network': 'host 2.2.2.2'}},
+                                                               'source_network': {'host 10.16.2.2': {'source_network': 'host 10.16.2.2'}},
                                                                'ttl': 255,
                                                                'ttl_operator': 'eq'}},
                                                 'l4': {'tcp': {'established': False,
@@ -203,8 +203,8 @@ class test_show_access_lists(unittest.TestCase):
             10 permit pim any any dscp default option 222 log
             20 permit icmp 0.1.1.1 255.0.0.0 any 10 66
         Extended IP access list test22
-            10 permit tcp 192.168.1.0 0.0.0.255 host 1.1.1.1 established log
-            20 permit tcp host 2.2.2.2 eq www telnet 443 any precedence network ttl eq 255
+            10 permit tcp 192.168.1.0 0.0.0.255 host 10.4.1.1 established log
+            20 permit tcp host 10.16.2.2 eq www telnet 443 any precedence network ttl eq 255
             30 deny ip any any
             40 permit tcp any range ftp-data bgp any
         IPv6 access list ipv6_acl
@@ -227,26 +227,26 @@ class test_show_access_lists(unittest.TestCase):
     golden_ip_access_list_output = {'execute.return_value': '''\
     Router#show ip access-lists ACL_TEST
 Load for five secs: 1%/0%; one minute: 2%; five minutes: 2%
-Time source is NTP, 18:12:32.965 JST Mon Oct 17 2016
+Time source is NTP, 18:12:32.965 EST Mon Oct 17 2016
 
 Extended IP access list ACL_TEST
-    10 deny tcp 1.32.188.0 0.0.0.255 host 192.168.16.1 eq www
-    20 deny tcp 1.1.1.0 0.0.0.255 host 192.168.16.1 eq www
-    30 deny tcp 1.1.2.0 0.0.0.255 host 192.168.16.1 eq www
-    40 deny tcp 1.1.3.0 0.0.0.255 host 192.168.16.1 eq www
-    50 deny tcp 1.1.4.0 0.0.0.255 host 192.168.16.1 eq www
-    60 deny tcp 1.1.5.0 0.0.0.255 host 192.168.16.1 eq www
-    70 deny tcp 1.1.6.0 0.0.0.255 host 192.168.16.1 eq www
-    80 deny tcp 1.1.7.0 0.0.0.255 host 192.168.16.1 eq www
-    90 deny tcp 1.1.8.0 0.0.0.255 host 192.168.16.1 eq www
-    100 deny tcp 1.1.9.0 0.0.0.255 host 192.168.16.1 eq www
-    110 deny tcp 1.1.10.0 0.0.0.255 host 192.168.16.1 eq www
-    120 deny tcp 1.1.11.0 0.0.0.255 host 192.168.16.1 eq www
-    130 deny tcp 1.1.12.0 0.0.0.255 host 192.168.16.1 eq www
-    140 deny tcp 1.1.13.0 0.0.0.255 host 192.168.16.1 eq www
-    150 deny tcp 1.1.14.0 0.0.0.255 host 192.168.16.1 eq www
-    160 deny tcp 1.1.15.0 0.0.0.255 host 192.168.16.1 eq www
-    170 deny tcp 1.1.16.0 0.0.0.255 host 192.168.16.1 eq www
+    10 deny tcp 10.69.188.0 0.0.0.255 host 192.168.16.1 eq www
+    20 deny tcp 10.4.1.0 0.0.0.255 host 192.168.16.1 eq www
+    30 deny tcp 10.4.2.0 0.0.0.255 host 192.168.16.1 eq www
+    40 deny tcp 10.4.3.0 0.0.0.255 host 192.168.16.1 eq www
+    50 deny tcp 10.4.4.0 0.0.0.255 host 192.168.16.1 eq www
+    60 deny tcp 10.4.5.0 0.0.0.255 host 192.168.16.1 eq www
+    70 deny tcp 10.4.6.0 0.0.0.255 host 192.168.16.1 eq www
+    80 deny tcp 10.4.7.0 0.0.0.255 host 192.168.16.1 eq www
+    90 deny tcp 10.4.8.0 0.0.0.255 host 192.168.16.1 eq www
+    100 deny tcp 10.4.9.0 0.0.0.255 host 192.168.16.1 eq www
+    110 deny tcp 10.4.10.0 0.0.0.255 host 192.168.16.1 eq www
+    120 deny tcp 10.4.11.0 0.0.0.255 host 192.168.16.1 eq www
+    130 deny tcp 10.4.12.0 0.0.0.255 host 192.168.16.1 eq www
+    140 deny tcp 10.4.13.0 0.0.0.255 host 192.168.16.1 eq www
+    150 deny tcp 10.4.14.0 0.0.0.255 host 192.168.16.1 eq www
+    160 deny tcp 10.4.15.0 0.0.0.255 host 192.168.16.1 eq www
+    170 deny tcp 10.4.16.0 0.0.0.255 host 192.168.16.1 eq www
 
     '''}
     golden_parsed_ip_access_list_output = {
@@ -261,8 +261,8 @@ Extended IP access list ACL_TEST
                             "l3": {
                                 "tcp": {
                                     "source_network": {
-                                        "1.1.7.0 0.0.0.255": {
-                                            "source_network": "1.1.7.0 0.0.0.255"
+                                        "10.4.7.0 0.0.0.255": {
+                                            "source_network": "10.4.7.0 0.0.0.255"
                                         }
                                     },
                                     "protocol": "tcp",
@@ -296,8 +296,8 @@ Extended IP access list ACL_TEST
                             "l3": {
                                 "tcp": {
                                     "source_network": {
-                                        "1.1.4.0 0.0.0.255": {
-                                            "source_network": "1.1.4.0 0.0.0.255"
+                                        "10.4.4.0 0.0.0.255": {
+                                            "source_network": "10.4.4.0 0.0.0.255"
                                         }
                                     },
                                     "protocol": "tcp",
@@ -331,8 +331,8 @@ Extended IP access list ACL_TEST
                             "l3": {
                                 "tcp": {
                                     "source_network": {
-                                        "1.32.188.0 0.0.0.255": {
-                                            "source_network": "1.32.188.0 0.0.0.255"
+                                        "10.69.188.0 0.0.0.255": {
+                                            "source_network": "10.69.188.0 0.0.0.255"
                                         }
                                     },
                                     "protocol": "tcp",
@@ -366,8 +366,8 @@ Extended IP access list ACL_TEST
                             "l3": {
                                 "tcp": {
                                     "source_network": {
-                                        "1.1.12.0 0.0.0.255": {
-                                            "source_network": "1.1.12.0 0.0.0.255"
+                                        "10.4.12.0 0.0.0.255": {
+                                            "source_network": "10.4.12.0 0.0.0.255"
                                         }
                                     },
                                     "protocol": "tcp",
@@ -401,8 +401,8 @@ Extended IP access list ACL_TEST
                             "l3": {
                                 "tcp": {
                                     "source_network": {
-                                        "1.1.8.0 0.0.0.255": {
-                                            "source_network": "1.1.8.0 0.0.0.255"
+                                        "10.4.8.0 0.0.0.255": {
+                                            "source_network": "10.4.8.0 0.0.0.255"
                                         }
                                     },
                                     "protocol": "tcp",
@@ -436,8 +436,8 @@ Extended IP access list ACL_TEST
                             "l3": {
                                 "tcp": {
                                     "source_network": {
-                                        "1.1.3.0 0.0.0.255": {
-                                            "source_network": "1.1.3.0 0.0.0.255"
+                                        "10.4.3.0 0.0.0.255": {
+                                            "source_network": "10.4.3.0 0.0.0.255"
                                         }
                                     },
                                     "protocol": "tcp",
@@ -471,8 +471,8 @@ Extended IP access list ACL_TEST
                             "l3": {
                                 "tcp": {
                                     "source_network": {
-                                        "1.1.14.0 0.0.0.255": {
-                                            "source_network": "1.1.14.0 0.0.0.255"
+                                        "10.4.14.0 0.0.0.255": {
+                                            "source_network": "10.4.14.0 0.0.0.255"
                                         }
                                     },
                                     "protocol": "tcp",
@@ -506,8 +506,8 @@ Extended IP access list ACL_TEST
                             "l3": {
                                 "tcp": {
                                     "source_network": {
-                                        "1.1.2.0 0.0.0.255": {
-                                            "source_network": "1.1.2.0 0.0.0.255"
+                                        "10.4.2.0 0.0.0.255": {
+                                            "source_network": "10.4.2.0 0.0.0.255"
                                         }
                                     },
                                     "protocol": "tcp",
@@ -541,8 +541,8 @@ Extended IP access list ACL_TEST
                             "l3": {
                                 "tcp": {
                                     "source_network": {
-                                        "1.1.11.0 0.0.0.255": {
-                                            "source_network": "1.1.11.0 0.0.0.255"
+                                        "10.4.11.0 0.0.0.255": {
+                                            "source_network": "10.4.11.0 0.0.0.255"
                                         }
                                     },
                                     "protocol": "tcp",
@@ -576,8 +576,8 @@ Extended IP access list ACL_TEST
                             "l3": {
                                 "tcp": {
                                     "source_network": {
-                                        "1.1.9.0 0.0.0.255": {
-                                            "source_network": "1.1.9.0 0.0.0.255"
+                                        "10.4.9.0 0.0.0.255": {
+                                            "source_network": "10.4.9.0 0.0.0.255"
                                         }
                                     },
                                     "protocol": "tcp",
@@ -611,8 +611,8 @@ Extended IP access list ACL_TEST
                             "l3": {
                                 "tcp": {
                                     "source_network": {
-                                        "1.1.16.0 0.0.0.255": {
-                                            "source_network": "1.1.16.0 0.0.0.255"
+                                        "10.4.16.0 0.0.0.255": {
+                                            "source_network": "10.4.16.0 0.0.0.255"
                                         }
                                     },
                                     "protocol": "tcp",
@@ -646,8 +646,8 @@ Extended IP access list ACL_TEST
                             "l3": {
                                 "tcp": {
                                     "source_network": {
-                                        "1.1.15.0 0.0.0.255": {
-                                            "source_network": "1.1.15.0 0.0.0.255"
+                                        "10.4.15.0 0.0.0.255": {
+                                            "source_network": "10.4.15.0 0.0.0.255"
                                         }
                                     },
                                     "protocol": "tcp",
@@ -681,8 +681,8 @@ Extended IP access list ACL_TEST
                             "l3": {
                                 "tcp": {
                                     "source_network": {
-                                        "1.1.1.0 0.0.0.255": {
-                                            "source_network": "1.1.1.0 0.0.0.255"
+                                        "10.4.1.0 0.0.0.255": {
+                                            "source_network": "10.4.1.0 0.0.0.255"
                                         }
                                     },
                                     "protocol": "tcp",
@@ -716,8 +716,8 @@ Extended IP access list ACL_TEST
                             "l3": {
                                 "tcp": {
                                     "source_network": {
-                                        "1.1.6.0 0.0.0.255": {
-                                            "source_network": "1.1.6.0 0.0.0.255"
+                                        "10.4.6.0 0.0.0.255": {
+                                            "source_network": "10.4.6.0 0.0.0.255"
                                         }
                                     },
                                     "protocol": "tcp",
@@ -751,8 +751,8 @@ Extended IP access list ACL_TEST
                             "l3": {
                                 "tcp": {
                                     "source_network": {
-                                        "1.1.10.0 0.0.0.255": {
-                                            "source_network": "1.1.10.0 0.0.0.255"
+                                        "10.4.10.0 0.0.0.255": {
+                                            "source_network": "10.4.10.0 0.0.0.255"
                                         }
                                     },
                                     "protocol": "tcp",
@@ -786,8 +786,8 @@ Extended IP access list ACL_TEST
                             "l3": {
                                 "tcp": {
                                     "source_network": {
-                                        "1.1.13.0 0.0.0.255": {
-                                            "source_network": "1.1.13.0 0.0.0.255"
+                                        "10.4.13.0 0.0.0.255": {
+                                            "source_network": "10.4.13.0 0.0.0.255"
                                         }
                                     },
                                     "protocol": "tcp",
@@ -821,8 +821,8 @@ Extended IP access list ACL_TEST
                             "l3": {
                                 "tcp": {
                                     "source_network": {
-                                        "1.1.5.0 0.0.0.255": {
-                                            "source_network": "1.1.5.0 0.0.0.255"
+                                        "10.4.5.0 0.0.0.255": {
+                                            "source_network": "10.4.5.0 0.0.0.255"
                                         }
                                     },
                                     "protocol": "tcp",
