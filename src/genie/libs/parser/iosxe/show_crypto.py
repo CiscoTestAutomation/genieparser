@@ -78,7 +78,7 @@ class ShowCryptoPkiCertificates(ShowCryptoPkiCertificatesSchema):
         p3 = re.compile(r'^Certificate +Serial +Number +\(hex\): +(?P<serial_number_in_hex>\w+)$')
         p4 = re.compile(r'^Certificate Usage: +(?P<usage>[\w\s]+)$')
         p5 = re.compile(r'^((?P<issuer>Issuer)|(?P<subject>Subject)|(?P<validity_date>Validity +Date)):$')
-        p6 = re.compile(r'^cn\=(?P<cn>[\w\s\-]+)$')
+        p6 = re.compile(r'^cn\=(?P<cn>[\S\s]+)$')
         p7 = re.compile(r'^o\=(?P<o>[\w\s]+)$')
         p8 = re.compile(r'^Name: +(?P<name>.*)$')
         p9 = re.compile(r'^Serial +Number: *'
