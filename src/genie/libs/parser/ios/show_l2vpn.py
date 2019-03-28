@@ -3,6 +3,7 @@
 IOS parsers for the following show commands:
 
     * show l2vpn vfi
+    * show l2vpn service all
 '''
 
 # Python
@@ -19,13 +20,18 @@ from genie.metaparser.util.schemaengine import Schema, \
                                          Use
 
 # import iosxe parser
-from genie.libs.parser.iosxe.show_l2vpn import ShowL2vpnVfi as ShowL2vpnVfi_iosxe
-
+from genie.libs.parser.iosxe.show_l2vpn import ShowL2vpnVfi as ShowL2vpnVfi_iosxe,\
+                                               ShowL2vpnServiceAll as ShowL2vpnServiceAll_iosxe
 
 # ===========================
 # Parser for 'show l2vpn vfi'
 # ===========================
 class ShowL2vpnVfi(ShowL2vpnVfi_iosxe):
     """Parser for show l2vpn vfi
+    """
+    pass
+
+class ShowL2vpnServiceAll(ShowL2vpnServiceAll_iosxe):
+    """Parser for show l2vpn service all
     """
     pass

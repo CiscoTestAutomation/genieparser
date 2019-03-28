@@ -889,11 +889,16 @@ class ShowL2vpnServiceAll(ShowL2vpnServiceAllSchema):
         #   Interface          Group       Encapsulation                   Prio  St  XC St
         #   ---------          -----       -------------                   ----  --  -----
         # VPLS name: VPLS-2051, State: UP
-        p1 = re.compile(r'^VPLS +name: +(?P<name>[\w\d\-]+), +State: +(?P<state>\w+)$')
+        # XC name: serviceWire1, State: UP
+        # VPWS name: Gi1/1/1-1001, State: UP
+        p1 = re.compile(r'^[\w]+ +name: +(?P<name>[\w\d\-\/]+), +State: +(?P<state>\w+)$')
 
         #   pw100214           core_pw     1:2051(MPLS)                    0     UP  UP  
         #   pw100001                       VPLS-2051(VFI)                  0     UP  UP   
-        p2 = re.compile(r'^(?P<pw_intf>\S+)( +(?P<group>\S+))? +(?P<encapsulation>\S+) +(?P<priority>\d+) +(?P<intf_state>\w+) +(?P<state_in_l2vpn_service>\w+)$')
+        #   Eth2/1:20          access_conn EVC 55                  0     UP  UP
+        #   Pw2                core        MPLS 6.6.6.6:200        1     SB  IA
+        p2 = re.compile(r'^(?P<pw_intf>\S+)( +(?P<group>\S+))? +(?P<encapsulation>\S+(\s{1})?\S+(\s{1}\S+)?)'
+                         ' +(?P<priority>\d+) +(?P<intf_state>\w+) +(?P<state_in_l2vpn_service>\w+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -917,7 +922,7 @@ class ShowL2vpnServiceAll(ShowL2vpnServiceAllSchema):
                 final_dict.setdefault('interface', {}).setdefault(pw_intf, {})
                 if group['group']:
                     final_dict['interface'][pw_intf]['group'] = group['group']
-                final_dict['interface'][pw_intf]['encapsulation'] = group['encapsulation']
+                final_dict['interface'][pw_intf]['encapsulation'] = group['encapsulation'].strip()
                 final_dict['interface'][pw_intf]['priority'] = int(group['priority'])
                 final_dict['interface'][pw_intf]['state'] = group['intf_state']
                 final_dict['interface'][pw_intf]['state_in_l2vpn_service'] = group['state_in_l2vpn_service']
