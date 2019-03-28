@@ -83,8 +83,8 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
 
         #   address         ref clock       st   when   poll reach  delay  offset   disp
         # *~127.127.1.1     .LOCL.           0      6     16   377  0.000   0.000  1.204
-        #  ~1.1.1.1         .INIT.          16      -   1024     0  0.000   0.000 15937.
-        # +~2.2.2.2         127.127.1.1      8    137     64     1 15.917 556.786 7938.0
+        #  ~10.4.1.1        .INIT.          16      -   1024     0  0.000   0.000 15937.
+        # +~10.16.2.2       127.127.1.1      8    137     64     1 15.917 556.786 7938.0
         p1 = re.compile(r'^(?P<mode_code>[x\*\#\+\- ])?(?P<configured>[\~])? *(?P<remote>[\w\.\:]+) +'
                          '(?P<refid>[\w\.]+) +(?P<stratum>\d+) +'
                          '(?P<receive_time>[\d\-]+) +(?P<poll>\d+) +'
@@ -97,7 +97,7 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
             if not line:
                 continue
 
-            # *171.68.38.65     .GNSS.           1 -   59   64  377    1.436   73.819  10.905
+            # *172.16.229.65    .GNSS.           1 -   59   64  377    1.436   73.819  10.905
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
@@ -362,10 +362,10 @@ class ShowNtpConfig(ShowNtpConfigSchema):
         ret_dict = {}
 
         # R1#show ntp config
-        # ntp server 1.1.1.1
-        # ntp server 2.2.2.2
-        # ntp server vrf VRF1 4.4.4.4
-        # ntp server 2.2.2.2 source Loopback0
+        # ntp server 10.4.1.1
+        # ntp server 10.16.2.2
+        # ntp server vrf VRF1 10.64.4.4
+        # ntp server 10.16.2.2 source Loopback0
 
         p1 = re.compile(r"^ntp +(?P<type>\w+)( +vrf +(?P<vrf>[\d\w]+))? "
             "+(?P<address>[\w\.\:]+)( +source +(?P<source_interface>[\w]+))?$")
@@ -510,7 +510,7 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
                          '( +(?P<selected>selected),)? +(?P<insane>\w+), +(?P<invalid>\w+),'
                          '( +(?P<unsynced>unsynced),)? +stratum +(?P<stratum>\d+)$')
 
-        # ref ID 172.16.255.254, time DBAB02D6.9E354130 (16:08:06.618 JST Fri Oct 14 2016)
+        # ref ID 172.16.255.254, time DBAB02D6.9E354130 (16:08:06.618 EST Fri Oct 14 2016)
         p2 = re.compile(r'^ref +ID +(?P<refid>[\w\.]+), +time +(?P<input_time>[\w\:\s\(\)\.]+)$')
 
         # our mode client, peer mode server, our poll intvl 512, peer poll intvl 512
@@ -544,14 +544,14 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
                          ' +assoc +out +packets +(?P<assoc_out_packets>\d+),'
                          ' +assoc +error +packets +(?P<assoc_error_packets>[\d\.]+)$')
 
-        # org time 00000000.00000000 (09:00:00.000 JST Mon Jan 1 1900)
+        # org time 00000000.00000000 (09:00:00.000 EST Mon Jan 1 1900)
         p9 = re.compile(r'^org +time +(?P<org_time>[\w\:\s\(\)\.]+)$')
 
-        # rec time DBAB046D.A8B43B28 (16:14:53.659 JST Fri Oct 14 2016)
+        # rec time DBAB046D.A8B43B28 (16:14:53.659 EST Fri Oct 14 2016)
         # rcv time AFE252E2.3D7E464D (00:12:34.240 PDT Mon Jan 1 1900)
         p10 = re.compile(r'^(rec|rcv) +time +(?P<rec_time>[\w\:\s\(\)\.]+)$')
 
-        # xmt time DBAB046D.A8B43B28 (16:14:53.659 JST Fri Oct 14 2016)
+        # xmt time DBAB046D.A8B43B28 (16:14:53.659 EST Fri Oct 14 2016)
         p11 = re.compile(r'^xmt +time +(?P<xmt_time>[\w\:\s\(\)\.]+)$')
 
         # filtdelay =     0.00    1.00    0.00    0.00    0.00    0.00    0.00    0.00

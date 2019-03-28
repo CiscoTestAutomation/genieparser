@@ -153,8 +153,8 @@ class test_show_interfaces(unittest.TestCase):
             "arp_timeout": "04:00:00",
             "oper_status": "up",
             "ipv4": {
-               "201.0.2.1/24": {
-                    "ip": "201.0.2.1",
+               "192.168.154.1/24": {
+                    "ip": "192.168.154.1",
                     "prefix_length": "24"
                }
             },
@@ -309,8 +309,8 @@ class test_show_interfaces(unittest.TestCase):
             "rxload": "1/255",
             "oper_status": "up",
             "ipv4": {
-               "110.1.1.1/24": {
-                    "ip": "110.1.1.1",
+               "10.81.1.1/24": {
+                    "ip": "10.81.1.1",
                     "prefix_length": "24"
                }
             },
@@ -375,7 +375,7 @@ class test_show_interfaces(unittest.TestCase):
             "encapsulations": {
                "encapsulation": "tunnel"
             },
-            "description": "Pim Register Tunnel (Encap) for RP 11.10.1.1",
+            "description": "Pim Register Tunnel (Encap) for RP 10.186.1.1",
             "mtu": 17912,
             "rxload": "1/255",
             "oper_status": "up",
@@ -389,8 +389,8 @@ class test_show_interfaces(unittest.TestCase):
                "unnumbered": {
                     "interface_ref": "GigabitEthernet0/2.1"
                },
-               "201.0.2.1/24": {
-                    "ip": "201.0.2.1",
+               "192.168.154.1/24": {
+                    "ip": "192.168.154.1",
                     "prefix_length": "24"
                }
             },
@@ -428,7 +428,7 @@ class test_show_interfaces(unittest.TestCase):
              0 output buffer failures, 0 output buffers swapped out
         GigabitEthernet0/2.1 is up, line protocol is up 
           Hardware is iGbE, address is fa16.3e4b.55fd (bia fa16.3e4b.55fd)
-          Internet address is 201.0.2.1/24
+          Internet address is 192.168.154.1/24
           MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
              reliability 255/255, txload 1/255, rxload 1/255
           Encapsulation 802.1Q Virtual LAN, Vlan ID  300.
@@ -437,7 +437,7 @@ class test_show_interfaces(unittest.TestCase):
           Last clearing of "show interface" counters never
         Loopback1 is up, line protocol is up 
           Hardware is Loopback
-          Internet address is 110.1.1.1/24
+          Internet address is 10.81.1.1/24
           MTU 1514 bytes, BW 8000000 Kbit/sec, DLY 5000 usec, 
              reliability 255/255, txload 1/255, rxload 1/255
           Encapsulation LOOPBACK, loopback not set
@@ -459,14 +459,14 @@ class test_show_interfaces(unittest.TestCase):
              0 output buffer failures, 0 output buffers swapped out
         Tunnel0 is up, line protocol is up 
           Hardware is Tunnel
-          Description: Pim Register Tunnel (Encap) for RP 11.10.1.1
-          Interface is unnumbered. Using address of GigabitEthernet0/2.1 (201.0.2.1)
+          Description: Pim Register Tunnel (Encap) for RP 10.186.1.1
+          Interface is unnumbered. Using address of GigabitEthernet0/2.1 (192.168.154.1)
           MTU 17912 bytes, BW 100 Kbit/sec, DLY 50000 usec, 
              reliability 255/255, txload 1/255, rxload 1/255
           Encapsulation TUNNEL, loopback not set
           Keepalive not set
           Tunnel linestate evaluation up
-          Tunnel source 201.0.2.1 (GigabitEthernet0/2.1), destination 11.10.1.1
+          Tunnel source 192.168.154.1 (GigabitEthernet0/2.1), destination 10.186.1.1
            Tunnel Subblocks:
               src-track:
                  Tunnel0 source tracking subblock associated with GigabitEthernet0/2.1
@@ -561,8 +561,8 @@ class test_show_ip_interface(unittest.TestCase):
                "Fast"
             ],
             "ipv4": {
-               "201.0.2.1/24": {
-                    "ip": "201.0.2.1",
+               "192.168.154.1/24": {
+                    "ip": "192.168.154.1",
                     "secondary": False,
                     "broadcase_address": "255.255.255.255",
                     "prefix_length": "24"
@@ -577,8 +577,8 @@ class test_show_ip_interface(unittest.TestCase):
         "Tunnel0": {
             "ip_cef_switching": True,
             "ipv4": {
-               "201.0.2.1/24": {
-                    "ip": "201.0.2.1",
+               "192.168.154.1/24": {
+                    "ip": "192.168.154.1",
                     "secondary": False,
                     "broadcase_address": "255.255.255.255",
                     "prefix_length": "24"
@@ -633,7 +633,7 @@ class test_show_ip_interface(unittest.TestCase):
         GigabitEthernet0/2 is up, line protocol is up
           Internet protocol processing disabled
         GigabitEthernet0/2.1 is up, line protocol is up
-          Internet address is 201.0.2.1/24
+          Internet address is 192.168.154.1/24
           Broadcast address is 255.255.255.255
           Address determined by non-volatile memory
           MTU is 1500 bytes
@@ -672,7 +672,7 @@ class test_show_ip_interface(unittest.TestCase):
           IPv4 WCCP Redirect inbound is disabled
           IPv4 WCCP Redirect exclude is disabled
         Tunnel0 is up, line protocol is up
-          Interface is unnumbered. Using address of GigabitEthernet0/2.1 (201.0.2.1)
+          Interface is unnumbered. Using address of GigabitEthernet0/2.1 (192.168.154.1)
           Broadcast address is 255.255.255.255
           MTU is 1472 bytes
           Helper address is not set
@@ -965,7 +965,7 @@ class test_show_interfaces_accounting(unittest.TestCase):
                         Protocol    Pkts In   Chars In   Pkts Out  Chars Out
                               IP      13651     671855      13651     671855
                             IPv6         21       1596         25       1900
-        Tunnel0 Pim Register Tunnel (Encap) for RP 11.10.1.1
+        Tunnel0 Pim Register Tunnel (Encap) for RP 10.186.1.1
                         Protocol    Pkts In   Chars In   Pkts Out  Chars Out
         No traffic sent or received on this interface.
 

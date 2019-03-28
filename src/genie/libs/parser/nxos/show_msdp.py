@@ -119,10 +119,10 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
 
         result_dict = {}
 
-        # MSDP peer 1.1.1.1 for VRF "default"
+        # MSDP peer 10.4.1.1 for VRF "default"
         p1 = re.compile(r'^\s*MSDP +peer +(?P<address>[\d\.]+) +for +VRF +\"(?P<vrf>[\w]+)\"$')
 
-        # AS 100, local address: 3.3.3.3 (loopback0)
+        # AS 100, local address: 10.36.3.3 (loopback0)
         p2 = re.compile(r'^\s*AS +(?P<peer_as>[\d]+), +local address: +(?P<connect_source_address>[\d\.]+)'
                         ' +\((?P<connect_source>[\w\-\/\.]+)\)$')
         #   Description: R1
@@ -449,7 +449,7 @@ class ShowIpMsdpSaCacheDetailVrf(ShowIpMsdpSaCacheDetailVrfSchema):
         p1 = re.compile(r'^\s*MSDP SA Route Cache for VRF +\"(?P<vrf>[\w]+)\" +\- +(?P<number_of_entries>[\d]+) +entries$')
 
         # Source          Group            RP               ASN         Uptime
-        # 173.1.1.2       228.1.1.1        10.106.106.106   100         00:02:43
+        # 172.16.25.2       228.1.1.1        10.106.106.106   100         00:02:43
         p2 = re.compile(r'^\s*(?P<source>[\d\.]+) +(?P<group>[\d\.]+) +(?P<rp>[\d\.]+) +(?P<asn>[\d\.]+) +(?P<uptime>[\w\:\.]+)$')
 
         #     Peer: 10.106.106.106, Expires: 00:02:32
@@ -745,7 +745,7 @@ class ShowIpMsdpSummary(ShowIpMsdpSummarySchema):
         # MSDP Peer Status Summary for VRF "default"
         p1 = re.compile(r'^MSDP +Peer +Status +Summary +for +VRF +\"(?P<vrf>\S+)\"$')
 
-        # Local ASN: 0, originator-id: 2.2.2.2
+        # Local ASN: 0, originator-id: 10.16.2.2
         p2 = re.compile(r'^Local +ASN: +(?P<local_as>\d+), +'
                          'originator\-id: +(?P<originator_id>[\d\.]+)$')
 
@@ -758,7 +758,7 @@ class ShowIpMsdpSummary(ShowIpMsdpSummarySchema):
 
         # Peer            Peer        Connection      Uptime/   Last msg  (S,G)s
         # Address         ASN         State           Downtime  Received  Received
-        # 6.6.6.6         0           Established     05:46:19  00:00:51  1
+        # 10.144.6.6         0           Established     05:46:19  00:00:51  1
         p6 = re.compile(r'^(?P<address>[\d\.]+) +(?P<peer_as>\d+) +(?P<session_state>[\w\/\-]+) +'
                          '(?P<elapsed_time>[\w\.\:]+) +(?P<last_message_received>[\w\.\:]+) +'
                          '(?P<num_of_sg_received>\d+)$')
@@ -777,7 +777,7 @@ class ShowIpMsdpSummary(ShowIpMsdpSummarySchema):
                 vrf_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {})
                 continue
 
-            # Local ASN: 0, originator-id: 2.2.2.2
+            # Local ASN: 0, originator-id: 10.16.2.2
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -796,7 +796,7 @@ class ShowIpMsdpSummary(ShowIpMsdpSummarySchema):
                 vrf_dict.setdefault('statistics', {}).update({k:int(v) for k, v in m.groupdict().items()})
                 continue
 
-            # # 6.6.6.6         0           Established     05:46:19  00:00:51  1
+            # # 10.144.6.6         0           Established     05:46:19  00:00:51  1
             m = p6.match(line)
             if m:
                 group = m.groupdict()
@@ -884,11 +884,11 @@ class ShowRunningConfigMsdp(ShowRunningConfigMsdpSchema):
         # vrf context VRF1
         p_vrf  = re.compile(r'^vrf +context +(?P<vrf>\S+)$')
 
-        # ip msdp keepalive 6.6.6.6 20 30
+        # ip msdp keepalive 10.144.6.6 20 30
         p1 = re.compile(r'^ip +msdp +keepalive +(?P<peer>[\d\.]+) +'
                          '(?P<keepalive_interval>\d+) +(?P<holdtime_interval>\d+)$')
 
-        # ip msdp description 6.6.6.6 some description
+        # ip msdp description 10.144.6.6 some description
         p2 = re.compile(r'^ip +msdp +description +(?P<peer>[\d\.]+) +'
                          '(?P<description>.*)$')
 
@@ -898,8 +898,8 @@ class ShowRunningConfigMsdp(ShowRunningConfigMsdpSchema):
         # ip msdp originator-id loopback11
         p4 = re.compile(r'^ip +msdp +originator\-id +(?P<originating_rp>[\w\.\-\/]+)$')
 
-        # ip msdp peer 3.3.3.3 connect-source loopback0 remote-as 234
-        # ip msdp peer 6.6.6.6 connect-source loopback11
+        # ip msdp peer 10.36.3.3 connect-source loopback0 remote-as 234
+        # ip msdp peer 10.144.6.6 connect-source loopback11
         p5 = re.compile(r'^ip +msdp +peer +(?P<peer>[\d\.]+) +connect\-source +'
                          '(?P<connected_source>[\w\-\/\.]+)( +remote\-as +(?P<peer_as>\d+))?$')
 
@@ -917,7 +917,7 @@ class ShowRunningConfigMsdp(ShowRunningConfigMsdpSchema):
                 vrf_dict = msdp_dict.setdefault('vrf', {}).setdefault(m.groupdict()['vrf'], {})
                 continue
 
-            # ip msdp keepalive 6.6.6.6 20 30
+            # ip msdp keepalive 10.144.6.6 20 30
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
@@ -927,7 +927,7 @@ class ShowRunningConfigMsdp(ShowRunningConfigMsdpSchema):
                 timer_dict['holdtime_interval'] = int(groups['holdtime_interval'])
                 continue
 
-            # ip msdp description 6.6.6.6 some description
+            # ip msdp description 10.144.6.6 some description
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
@@ -949,8 +949,8 @@ class ShowRunningConfigMsdp(ShowRunningConfigMsdpSchema):
                 global_dict['originating_rp'] = m.groupdict()['originating_rp']
                 continue
 
-            # ip msdp peer 3.3.3.3 connect-source loopback0 remote-as 234
-            # ip msdp peer 6.6.6.6 connect-source loopback11
+            # ip msdp peer 10.36.3.3 connect-source loopback0 remote-as 234
+            # ip msdp peer 10.144.6.6 connect-source loopback11
             m = p5.match(line)
             if m:
                 groups = m.groupdict()
