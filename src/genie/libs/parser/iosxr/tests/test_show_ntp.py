@@ -119,7 +119,7 @@ class test_show_ntp_associations(unittest.TestCase):
                 'clock_state': 'unsynchronized'}
         },
         'peer': {
-            '1.1.1.1': {
+            '10.4.1.1': {
                 'local_mode': {
                     'client': {
                         'configured': True,
@@ -132,11 +132,11 @@ class test_show_ntp_associations(unittest.TestCase):
                         'reach': 0,
                         'receive_time': '-',
                         'refid': '.AUTH.',
-                        'remote': '1.1.1.1',
+                        'remote': '10.4.1.1',
                         'stratum': 16}
                 }
             },
-            '2.2.2.2': {
+            '10.16.2.2': {
                 'local_mode': {
                     'client': {
                         'configured': True,
@@ -149,11 +149,11 @@ class test_show_ntp_associations(unittest.TestCase):
                         'reach': 377,
                         'receive_time': 52,
                         'refid': '127.127.1.1',
-                        'remote': '2.2.2.2',
+                        'remote': '10.16.2.2',
                         'stratum': 9}
                 }
             },
-            '4.4.4.4': {
+            '10.64.4.4': {
                 'local_mode': {
                     'client': {
                         'configured': True,
@@ -166,11 +166,11 @@ class test_show_ntp_associations(unittest.TestCase):
                         'reach': 0,
                         'receive_time': '-',
                         'refid': '.AUTH.',
-                        'remote': '4.4.4.4',
+                        'remote': '10.64.4.4',
                         'stratum': 16}
                 }
             },
-            '5.5.5.5': {
+            '10.100.5.5': {
                 'local_mode': {
                     'client': {
                         'configured': True,
@@ -183,11 +183,11 @@ class test_show_ntp_associations(unittest.TestCase):
                         'reach': 0,
                         'receive_time': '-',
                         'refid': '.AUTH.',
-                        'remote': '5.5.5.5',
+                        'remote': '10.100.5.5',
                         'stratum': 16}
                 }
             },
-            '6.6.6.6': {
+            '10.144.6.6': {
                 'local_mode': {
                     'client': {
                         'configured': True,
@@ -200,7 +200,7 @@ class test_show_ntp_associations(unittest.TestCase):
                         'reach': 0,
                         'receive_time': '-',
                         'refid': '.AUTH.',
-                        'remote': '6.6.6.6',
+                        'remote': '10.144.6.6',
                         'stratum': 16}
                 }
             }
@@ -208,41 +208,41 @@ class test_show_ntp_associations(unittest.TestCase):
         'vrf': {
             'VRF1': {
                 'address': {
-                    '1.1.1.1': {
+                    '10.4.1.1': {
                         'isconfigured': {
                             True: {
-                                'address': '1.1.1.1',
+                                'address': '10.4.1.1',
                                 'isconfigured': True}
                         },
                         'type': {
                             'peer': {
-                                'address': '1.1.1.1',
+                                'address': '10.4.1.1',
                                 'type': 'peer',
                                 'vrf': 'VRF1'}
                         }
                     },
-                    '5.5.5.5': {
+                    '10.100.5.5': {
                         'isconfigured': {
                             True: {
-                                'address': '5.5.5.5',
+                                'address': '10.100.5.5',
                                 'isconfigured': True}
                         },
                         'type': {
                             'peer': {
-                                'address': '5.5.5.5',
+                                'address': '10.100.5.5',
                                 'type': 'peer',
                                 'vrf': 'VRF1'}
                         }
                     },
-                    '6.6.6.6': {
+                    '10.144.6.6': {
                         'isconfigured': {
                             True: {
-                                'address': '6.6.6.6',
+                                'address': '10.144.6.6',
                                 'isconfigured': True}
                         },
                         'type': {
                             'peer': {
-                                'address': '6.6.6.6',
+                                'address': '10.144.6.6',
                                 'type': 'peer',
                                 'vrf': 'VRF1'}
                         }
@@ -251,41 +251,41 @@ class test_show_ntp_associations(unittest.TestCase):
             },
             'default': {
                 'address': {
-                    '1.1.1.1': {
+                    '10.4.1.1': {
                         'isconfigured': {
                             True: {
-                                'address': '1.1.1.1',
+                                'address': '10.4.1.1',
                                 'isconfigured': True}
                         },
                         'type': {
                             'peer': {
-                                'address': '1.1.1.1',
+                                'address': '10.4.1.1',
                                 'type': 'peer',
                                 'vrf': 'default'}
                         }
                     },
-                    '2.2.2.2': {
+                    '10.16.2.2': {
                         'isconfigured': {
                             True: {
-                                'address': '2.2.2.2',
+                                'address': '10.16.2.2',
                                 'isconfigured': True}
                         },
                         'type': {
                             'peer': {
-                                'address': '2.2.2.2',
+                                'address': '10.16.2.2',
                                 'type': 'peer',
                                 'vrf': 'default'}
                         }
                     },
-                    '4.4.4.4': {
+                    '10.64.4.4': {
                         'isconfigured': {
                             True: {
-                                'address': '4.4.4.4',
+                                'address': '10.64.4.4',
                                 'isconfigured': True}
                         },
                         'type': {
                             'peer': {
-                                'address': '4.4.4.4',
+                                'address': '10.64.4.4',
                                 'type': 'peer',
                                 'vrf': 'default'}
                         }
@@ -300,14 +300,14 @@ class test_show_ntp_associations(unittest.TestCase):
         Mon Nov  5 23:22:25.521 UTC
 
               address         ref clock     st  when  poll reach  delay  offset    disp
-         ~1.1.1.1 vrf VRF1
+         ~10.4.1.1 vrf VRF1
                            .INIT.           16     -  1024    0    0.00   0.000   15937
-         ~1.1.1.1          .AUTH.           16     -  1024    0    0.00   0.000   15937
-         ~2.2.2.2          127.127.1.1       9    52    64  377   69.18  -518066   4.702
-         ~4.4.4.4          .AUTH.           16     -  1024    0    0.00   0.000   15937
-         ~5.5.5.5 vrf VRF1
+         ~10.4.1.1          .AUTH.           16     -  1024    0    0.00   0.000   15937
+         ~10.16.2.2          127.127.1.1       9    52    64  377   69.18  -518066   4.702
+         ~10.64.4.4          .AUTH.           16     -  1024    0    0.00   0.000   15937
+         ~10.100.5.5 vrf VRF1
                            .AUTH.           16     -  1024    0    0.00   0.000   15937
-         ~6.6.6.6 vrf VRF1
+         ~10.144.6.6 vrf VRF1
                            .AUTH.           16     -  1024    0    0.00   0.000   15937
          * sys_peer, # selected, + candidate, - outlayer, x falseticker, ~ configured
     '''
@@ -354,7 +354,7 @@ class test_show_ntp_associations(unittest.TestCase):
                         'poll': 64,
                         'reach': 377,
                         'receive_time': 20,
-                        'refid': '171.68.10.80',
+                        'refid': '172.16.36.80',
                         'remote': 'dead:beef::2',
                         'stratum': 3}
                 }
@@ -401,12 +401,12 @@ class test_show_ntp_associations(unittest.TestCase):
     golden_output_2 = {'execute.return_value': '''
         RP/0/RP0/CPU0:router# show ntp associations 
           
-        Tue Oct  7 11:22:46.839 JST 
+        Tue Oct  7 11:22:46.839 EST 
            
               address         ref clock     st  when  poll reach  delay  offset    disp
         *~192.168.128.5    10.81.254.131     2     1    64  377    7.98  -0.560   0.108
         +~dead:beef::2 vrf testAA
-                           171.68.10.80      3    20    64  377    6.00  -2.832   0.046
+                           172.16.36.80      3    20    64  377    6.00  -2.832   0.046
         * sys_peer, # selected, + candidate, - outlayer, x falseticker, ~ configured
     '''
     }
@@ -461,7 +461,7 @@ class test_show_ntp_status(unittest.TestCase):
                 'precision': '2**24',
                 'refid': '192.168.128.5',
                 'reftime': 'CC95463C.9B964367 '
-                           '(11:21:48.607 JST Tue Oct  '
+                           '(11:21:48.607 EST Tue Oct  '
                            '7 2008)',
                 'rootdelay': 186.05,
                 'rootdispersion': 53.86,
@@ -473,11 +473,11 @@ class test_show_ntp_status(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         RP/0/RP0/CPU0:router# show ntp status 
           
-        Tue Oct  7 11:22:54.023 JST 
+        Tue Oct  7 11:22:54.023 EST 
           
         Clock is synchronized, stratum 3, reference is 192.168.128.5
         nominal freq is 1000.0000 Hz, actual freq is 1000.2725 Hz, precision is 2**24
-        reference time is CC95463C.9B964367 (11:21:48.607 JST Tue Oct  7 2008)
+        reference time is CC95463C.9B964367 (11:21:48.607 EST Tue Oct  7 2008)
         clock offset is -1.738 msec, root delay is 186.050 msec
         root dispersion is 53.86 msec, peer dispersion is 0.09 msec
         loopfilter state is 'CTRL' (Normal Controlled Loop), drift is -0.0002724105 s/s
@@ -589,13 +589,13 @@ class test_show_run_ntp(unittest.TestCase):
             'default': {
                 'source': 'Loopback0',
                 'address': {
-                    '1.1.1.1': {
+                    '10.4.1.1': {
                         'type': 'server'},
-                    '2.2.2.2': {
+                    '10.16.2.2': {
                         'type': 'peer'},
-                    '3.3.3.3': {
+                    '10.36.3.3': {
                         'type': 'peer'},
-                    '4.4.4.4': {
+                    '10.64.4.4': {
                         'type': 'peer'},
                     }
                 }
@@ -606,10 +606,10 @@ class test_show_run_ntp(unittest.TestCase):
         RP/0/RP0/CPU0:iosxrv9000-1#sh run ntp
         Thu Dec 20 23:56:57.618 EST
         ntp
-         server 1.1.1.1
-         peer 2.2.2.2
-         peer 3.3.3.3
-         peer 4.4.4.4
+         server 10.4.1.1
+         peer 10.16.2.2
+         peer 10.36.3.3
+         peer 10.64.4.4
          source Loopback0
         !
     '''

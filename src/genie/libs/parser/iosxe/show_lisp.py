@@ -98,7 +98,7 @@ class ShowLispSession(ShowLispSessionSchema):
                          ' +established: +(?P<established>(\d+))$')
 
         # Peer                           State      Up/Down        In/Out    Users
-        # 2.2.2.2                        Up         00:51:38        8/13     3
+        # 10.16.2.2                      Up         00:51:38        8/13     3
         # 2001:DB8:B:2::2                Init       never           0/0      1
         p2 = re.compile(r'(?P<peer>(\S+)) +(?P<state>(\S+)) +(?P<time>(\S+))'
                          ' +(?P<in>(\d+))\/(?P<out>(\d+)) +(?P<users>(\d+))$')
@@ -117,7 +117,7 @@ class ShowLispSession(ShowLispSessionSchema):
                 vrf_dict['established'] = int(group['established'])
                 continue
 
-            # 8.8.8.8                        Up         00:52:15        8/13     3
+            # 10.1.8.8                       Up         00:52:15        8/13     3
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -325,7 +325,7 @@ class ShowLispExtranet(ShowLispExtranetSchema):
         p3 = re.compile(r'Total +entries *: +(?P<total_entries>(\d+))$')
 
         # Provider/Subscriber  Inst ID    EID prefix
-        # Provider             103        88.88.88.0/24
+        # Provider             103        10.121.88.0/24
         # Subscriber           101        192.168.9.0/24
         p4 = re.compile(r'(?P<ext_type>(Provider|Subscriber)) +(?P<inst>(\d+))'
                          ' +(?P<eid>(\S+))$')
@@ -356,7 +356,7 @@ class ShowLispExtranet(ShowLispExtranetSchema):
                 continue
 
             # Provider/Subscriber  Inst ID    EID prefix
-            # Provider             103        88.88.88.0/24
+            # Provider             103        10.121.88.0/24
             # Subscriber           101        192.168.9.0/24
             m = p4.match(line)
             if m:
@@ -500,8 +500,8 @@ class ShowLispDynamicEidDetail(ShowLispDynamicEidDetailSchema):
         # Map-Server(s): none configured, use global Map-Server
         p6 = re.compile(r'Map-Server\(s\)\: none configured, use global Map-Server$')
 
-        # Map-Server(s): 4.4.4.4  (proxy-replying)
-        # Map-Server(s): 6.6.6.6
+        # Map-Server(s): 10.64.4.4  (proxy-replying)
+        # Map-Server(s): 10.144.6.6
         p6_1 = re.compile(r'Map-Server\(s\)\: +(?P<ms>([0-9\.\:]+))'
                            '(?: +\((?P<pr>(proxy-replying))\))?$')
 
@@ -590,8 +590,8 @@ class ShowLispDynamicEidDetail(ShowLispDynamicEidDetailSchema):
                 dynamic_eids_dict['global_map_server'] = True
                 continue
 
-            # Map-Server(s): 4.4.4.4  (proxy-replying)
-            # Map-Server(s): 6.6.6.6
+            # Map-Server(s): 10.64.4.4  (proxy-replying)
+            # Map-Server(s): 10.144.6.6
             m = p6_1.match(line)
             if m:
                 group = m.groupdict()
@@ -869,16 +869,16 @@ class ShowLispService(ShowLispServiceSchema):
         # Map-Request source:                  derived from EID destination
         p14 = re.compile(r'Map-Request +source *: +(?P<source>(.*))$')
 
-        # ITR Map-Resolver(s):                 4.4.4.4, 13.13.13.13
+        # ITR Map-Resolver(s):                 10.64.4.4, 10.166.13.13
         p15 = re.compile(r'ITR +Map\-Resolver\(s\) *: +(?P<resolvers>(.*))$')
 
-        #                                      66.66.66.66 *** not reachable ***
+        #                                      10.84.66.66 *** not reachable ***
         p15_1 = re.compile(r'(?P<resolver>([0-9\.\:]+))(?: +\*.*)?$')
 
-        # ETR Map-Server(s):                   4.4.4.4 (17:49:58), 13.13.13.13 (00:00:35)
+        # ETR Map-Server(s):                   10.64.4.4 (17:49:58), 10.166.13.13 (00:00:35)
         p16 = re.compile(r'ETR +Map\-Server\(s\) *: +(?P<servers>(.*))$')
  
-        #                                      66.66.66.66 (never)
+        #                                      10.84.66.66 (never)
         p16_1 = re.compile(r'(?P<server>([0-9\.\:]+))(?: +\((?P<uptime>(\S+))\))?$')
 
         # xTR-ID:                              0x730E0861-0x12996F6D-0xEFEA2114-0xE1C951F7
@@ -887,7 +887,7 @@ class ShowLispService(ShowLispServiceSchema):
         # site-ID:                             unspecified
         p18 = re.compile(r'site-ID *: +(?P<site_id>(\S+))$')
 
-        # ITR local RLOC (last resort):        2.2.2.2
+        # ITR local RLOC (last resort):        10.16.2.2
         # ITR local RLOC (last resort):        *** NOT FOUND ***
         p19 = re.compile(r'ITR +local +RLOC +\(last +resort\) *: +(?P<val>(.*))$')
 
@@ -966,7 +966,7 @@ class ShowLispService(ShowLispServiceSchema):
         # Source locator configuration:
         p40 = re.compile(r'Source +locator +configuration:$')
 
-        #   Vlan100: 11.11.11.1 (Loopback0)
+        #   Vlan100: 10.229.11.1 (Loopback0)
         p41 = re.compile(r'Vlan(?P<vlan>(\d+))\: +(?P<address>([0-9\.\:]+))'
                           ' +\((?P<intf>(\S+))\)$')
 
@@ -1132,7 +1132,7 @@ class ShowLispService(ShowLispServiceSchema):
                 iid_dict['map_request_source'] = m.groupdict()['source']
                 continue
 
-            # ITR Map-Resolver(s):                 4.4.4.4, 13.13.13.13
+            # ITR Map-Resolver(s):                 10.64.4.4, 10.166.13.13
             m = p15.match(line)
             if m:
                 map_resolvers = m.groupdict()['resolvers'].split(',')
@@ -1149,7 +1149,7 @@ class ShowLispService(ShowLispServiceSchema):
                     m.groupdict()['resolver']
                 continue
 
-            # ETR Map-Server(s):                   4.4.4.4 (17:49:58), 13.13.13.13 (00:00:35)
+            # ETR Map-Server(s):                   10.64.4.4 (17:49:58), 10.166.13.13 (00:00:35)
             m = p16.match(line)
             if m:
                 map_servers = m.groupdict()['servers'].split(',')
@@ -1175,7 +1175,7 @@ class ShowLispService(ShowLispServiceSchema):
                         iid_ms_dict['uptime'] = uptime
                 continue
 
-            #                                  66.66.66.66 (never)
+            #                                  10.84.66.66 (never)
             m = p16_1.match(line)
             if m:
                 temp1 = etr_dict['mapping_servers'].setdefault(
@@ -1202,7 +1202,7 @@ class ShowLispService(ShowLispServiceSchema):
                 lrouterid_dict['site_id'] = m.groupdict()['site_id']
                 continue
 
-            # ITR local RLOC (last resort):        2.2.2.2
+            # ITR local RLOC (last resort):        10.16.2.2
             m = p19.match(line)
             if m:
                 iid_itr_dict = iid_dict.setdefault('itr', {})
@@ -1363,8 +1363,8 @@ class ShowLispService(ShowLispServiceSchema):
                                     'source_locator_configuration', {})
                 continue
 
-            #   Vlan100: 11.11.11.1 (Loopback0)
-            #   Vlan101: 11.11.11.1 (Loopback0)
+            #   Vlan100: 10.229.11.1 (Loopback0)
+            #   Vlan101: 10.229.11.1 (Loopback0)
             m = p41.match(line)
             if m:
                 vlan = 'vlan' + m.groupdict()['vlan']
@@ -1579,7 +1579,7 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
         p4 = re.compile(r'Negative +cache +entry, +action: +(?P<action>(.*))$')
 
         #   Locator  Uptime    State      Pri/Wgt     Encap-IID
-        #   8.8.8.8  00:04:02  up          50/50        -
+        #   10.1.8.8 00:04:02  up          50/50        -
         p5 = re.compile(r'(?P<locator>(\S+)) +(?P<uptime>(\S+))'
                          ' +(?P<state>(up|down))'
                          ' +(?P<priority>(\d+))\/(?P<weight>(\d+))'
@@ -1658,7 +1658,7 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
                 continue
 
             #  Locator  Uptime    State      Pri/Wgt     Encap-IID
-            #  8.8.8.8  00:04:02  up          50/50        -
+            #  10.1.8.8 00:04:02  up          50/50        -
             m = p5.match(line)
             if m:
                 group = m.groupdict()
@@ -1768,7 +1768,7 @@ class ShowLispServiceRlocMembers(ShowLispServiceRlocMembersSchema):
                          ' +(?P<distribution>(enabled|disabled))$')
 
         # RLOC                    Origin                       Valid
-        # 2.2.2.2                 Registration                 Yes
+        # 10.16.2.2               Registration                 Yes
         p4 = re.compile(r'(?P<member>([0-9\.\:]+)) +(?P<origin>(\S+))'
                          ' +(?P<valid>(\S+))$')
 
@@ -1806,7 +1806,7 @@ class ShowLispServiceRlocMembers(ShowLispServiceRlocMembersSchema):
                 continue
 
             # RLOC                    Origin                       Valid
-            # 2.2.2.2                 Registration                 Yes
+            # 10.16.2.2               Registration                 Yes
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -2283,8 +2283,8 @@ class ShowLispServiceDatabase(ShowLispServiceDatabaseSchema):
                          ' +locator-set +(?P<locator_set>(\S+))$')
 
         # Locator       Pri/Wgt  Source     State
-        # 2.2.2.2       50/50    cfg-intf   site-self, reachable
-        # 11.11.11.1    1/100    cfg-intf   site-self, reachable
+        # 10.16.2.2     50/50    cfg-intf   site-self, reachable
+        # 10.229.11.1   1/100    cfg-intf   site-self, reachable
         p5 = re.compile(r'(?P<locator>(\S+))'
                          ' +(?P<priority>(\d+))\/(?P<weight>(\d+))'
                          ' +(?P<source>(\S+)) +(?P<state>(.*))$')
@@ -2359,7 +2359,7 @@ class ShowLispServiceDatabase(ShowLispServiceDatabaseSchema):
                 continue
 
             # Locator       Pri/Wgt  Source     State
-            # 2.2.2.2       50/50    cfg-intf   site-self, reachable
+            # 10.16.2.2     50/50    cfg-intf   site-self, reachable
             m = p5.match(line)
             if m:
                 group = m.groupdict()
@@ -2762,7 +2762,7 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
         # Allowed locators mismatch: 0
         p14 = re.compile(r'Allowed +locators +mismatch: +(?P<mismatch>(\d+))$')
 
-        # ETR 2.2.2.2, last registered 01:12:41, proxy-reply, map-notify
+        # ETR 10.16.2.2, last registered 01:12:41, proxy-reply, map-notify
         p15 = re.compile(r'ETR +(?P<etr>(\S+)), +last +registered'
                           ' +(?P<last_registered>(\S+)),'
                           '(?: +(?P<proxy_reply>(proxy-reply)),)?'
@@ -2787,7 +2787,7 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
         p20 = re.compile(r'sourced +by +(?P<source>(.*))$')
 
         # Locator  Local  State      Pri/Wgt  Scope
-        # 2.2.2.2  yes    up          50/50   IPv4 none
+        # 10.16.2.2 yes    up          50/50   IPv4 none
         p21 = re.compile(r'(?P<locator>(\S+)) +(?P<local>(\S+))'
                           ' +(?P<state>(\S+)) +(?P<priority>(\d+))\/'
                           '(?P<weight>(\d+)) +(?P<scope>(.*))$')
@@ -2925,7 +2925,7 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
                     int(m.groupdict()['mismatch'])
                 continue
 
-            # ETR 2.2.2.2, last registered 01:12:41, proxy-reply, map-notify
+            # ETR 10.16.2.2, last registered 01:12:41, proxy-reply, map-notify
             m = p15.match(line)
             if m:
                 group = m.groupdict()
@@ -3006,7 +3006,7 @@ class ShowLispServiceServerDetailInternal(ShowLispServiceServerDetailInternalSch
                 continue
 
             # Locator  Local  State      Pri/Wgt  Scope
-            # 2.2.2.2  yes    up          50/50   IPv4 none
+            # 10.16.2.2  yes    up          50/50   IPv4 none
             m = p21.match(line)
             if m:
                 group = m.groupdict()
@@ -3121,8 +3121,8 @@ class ShowLispServiceStatistics(ShowLispServiceStatisticsSchema):
         p7 = re.compile(r'^(?P<key>([a-zA-Z\-\/\s]+))\: +(?P<value>(.*))$')
 
         # Map-Resolver    LastReply  Metric ReqsSent Positive Negative No-Reply
-        # 44.44.44.44     never           1      306       18        0       66
-        # 66.66.66.66     never     Unreach        0        0        0        0
+        # 10.94.44.44     never           1      306       18        0       66
+        # 10.84.66.66     never     Unreach        0        0        0        0
         p8 = re.compile(r'(?P<mr>([a-zA-Z0-9\.\:]+)) +(?P<last_reply>(\S+))'
                          ' +(?P<metric>(\S+)) +(?P<sent>(\d+))'
                          ' +(?P<positive>(\d+)) +(?P<negative>(\d+))'
@@ -3226,8 +3226,8 @@ class ShowLispServiceStatistics(ShowLispServiceStatisticsSchema):
                 continue
 
             # Map-Resolver    LastReply  Metric ReqsSent Positive Negative No-Reply
-            # 44.44.44.44     never           1      306       18        0       66
-            # 66.66.66.66     never     Unreach        0        0        0        0
+            # 10.94.44.44     never           1      306       18        0       66
+            # 10.84.66.66     never     Unreach        0        0        0        0
             m = p8.match(line)
             if m:
                 group = m.groupdict()

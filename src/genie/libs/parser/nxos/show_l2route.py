@@ -57,7 +57,7 @@ class ShowL2routeEvpnMac(ShowL2routeEvpnMacSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # 100         fa16.3e59.d0b2 BGP    SplRcv        0          93.1.1.1
+            # 100         fa16.3e59.d0b2 BGP    SplRcv        0          10.166.1.1
             p1 = re.compile(r'^\s*(?P<topology>[0-9]+) +(?P<mac_address>[a-z0-9\.]+) '
                 '+(?P<prod>[a-zA-Z]+) +(?P<flags>[a-zA-Z\,]+) +(?P<seq_no>[0-9]+) '
                 '+(?P<next_hops>[a-zA-Z0-9\/\.]+)$')
@@ -129,7 +129,7 @@ class ShowL2routeEvpnMacEvi(ShowL2routeEvpnMacEviSchema):
 
         ret_dict = {}
 
-        # 100         fa16.3e59.d0b2 BGP    SplRcv        0          93.1.1.1
+        # 100         fa16.3e59.d0b2 BGP    SplRcv        0          10.166.1.1
         p1 = re.compile(r'^\s*(?P<topology>[0-9]+) +(?P<mac_address>[a-z0-9\.]+) '
             '+(?P<prod>[a-zA-Z]+) +(?P<flags>[a-zA-Z\,]+) +(?P<seq_no>[0-9]+) '
             '+(?P<next_hops>[a-zA-Z0-9\/\.]+)$')

@@ -163,7 +163,7 @@ class ShowIpRoute(ShowIpRouteSchema):
                 vrf = m.groupdict()['vrf']
                 continue
 
-            # 1.0.0.0/32 is subnetted, 1 subnets
+            # 10.1.0.0/32 is subnetted, 1 subnets
             # 10.0.0.0/8 is variably subnetted, 5 subnets, 2 masks
             p2 = re.compile(r'^\s*(?P<subnetted_ip>[\d\/\.]+)'
                             ' +is +(variably )?subnetted, +(?P<number_of_subnets>[\d]+) +subnets(, +(?P<number_of_masks>[\d]+) +masks)?$')
@@ -183,11 +183,11 @@ class ShowIpRoute(ShowIpRouteSchema):
                         netmask = subnetted_ip.split('/')[1]
                 continue
 
-            # C        1.1.1.1 is directly connected, Loopback0
-            # S        2.2.2.2 [1/0] via 20.1.2.2, GigabitEthernet0/1
-            # O        10.2.3.0/24 [110/2] via 20.1.2.2, 06:46:59, GigabitEthernet0/1
-            # i L1     22.22.22.22 [115/20] via 20.1.2.2, 06:47:04, GigabitEthernet0/1
-            # D        200.1.4.1
+            # C        10.4.1.1 is directly connected, Loopback0
+            # S        10.16.2.2 [1/0] via 10.186.2.2, GigabitEthernet0/1
+            # O        10.2.3.0/24 [110/2] via 10.186.2.2, 06:46:59, GigabitEthernet0/1
+            # i L1     10.151.22.22 [115/20] via 10.186.2.2, 06:47:04, GigabitEthernet0/1
+            # D        192.168.205.1
             p3 = re.compile(r'^\s*(?P<code>[\w\*]+) +(?P<code1>[\w]+)? +(?P<network>[\d\/\.]+)?'
                             '( +is +directly +connected,)?( +\[(?P<route_preference>[\d\/]+)\]?'
                             '( +via )?(?P<next_hop>[\d\.]+)?,)?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
@@ -483,9 +483,9 @@ class ShowIpRoute(ShowIpRouteSchema):
                                 ['next_hop_list'][index]['outgoing_interface'] = interface
 
                 continue
-            # Routing entry for 61.0.0.0/24, 1 known subnets
+            # Routing entry for 10.151.0.0/24, 1 known subnets
             # Routing entry for 0.0.0.0/0, supernet
-            # Routing entry for 200.1.2.0/24
+            # Routing entry for 192.168.154.0/24
             m = p100.match(line)
             if m:
                 group = m.groupdict()
@@ -516,8 +516,8 @@ class ShowIpRoute(ShowIpRouteSchema):
                 route_dict.update({k: v for k, v in group.items() if v})
                 continue
 
-            # Last update from 201.1.12.2 on Vlan101, 2w3d ago
-            # Last update from 201.3.12.2 on Vlan103, 00:00:12 ago
+            # Last update from 192.168.151.2 on Vlan101, 2w3d ago
+            # Last update from 192.168.246.2 on Vlan103, 00:00:12 ago
             m = p400.match(line)
             if m:
                 group = m.groupdict()
@@ -525,8 +525,8 @@ class ShowIpRoute(ShowIpRouteSchema):
                 update_dict.update({k: v for k, v in group.items() if v})
                 continue
 
-            # * 201.1.12.2, from 201.1.12.2, 2w3d ago, via Vlan101
-            # * 18.0.1.2
+            # * 192.168.151.2, from 192.168.151.2, 2w3d ago, via Vlan101
+            # * 10.69.1.2
             m = p500.match(line)
             if m:
                 group = m.groupdict()
@@ -739,7 +739,7 @@ class ShowIpv6RouteUpdated(ShowIpv6RouteUpdatedSchema):
             #   via Loopback0, receive
             #   via 2001:10:1:2::2, GigabitEthernet0/0
             #   via GigabitEthernet0/2, directly connected
-            #   via 200.0.4.1%default, indirectly connected
+            #   via 192.168.51.1%default, indirectly connected
             p3 = re.compile(r'^\s*via( +(?P<next_hop>[0-9][\w\:\.\%]+)?,)?'
                             '( +(?P<interface>[\w\.\/\-\_]+))?,?( +receive)?( +directly connected)?( +indirectly connected)?$')
             m = p3.match(line)
@@ -1017,9 +1017,9 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # Routing entry for 61.0.0.0/24, 1 known subnets
+            # Routing entry for 10.151.0.0/24, 1 known subnets
             # Routing entry for 0.0.0.0/0, supernet
-            # Routing entry for 200.1.2.0/24
+            # Routing entry for 192.168.154.0/24
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -1045,8 +1045,8 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
                 entry_dict.update({k:v for k,v in group.items() if v})
                 continue
 
-            # Last update from 201.1.12.2 on Vlan101, 2w3d ago
-            # Last update from 201.3.12.2 on Vlan103, 00:00:12 ago
+            # Last update from 192.168.151.2 on Vlan101, 2w3d ago
+            # Last update from 192.168.246.2 on Vlan103, 00:00:12 ago
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -1054,8 +1054,8 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
                 update_dict.update({k:v for k,v in group.items() if v})
                 continue
 
-            # * 201.1.12.2, from 201.1.12.2, 2w3d ago, via Vlan101
-            # * 18.0.1.2
+            # * 192.168.151.2, from 192.168.151.2, 2w3d ago, via Vlan101
+            # * 10.69.1.2
             m = p5.match(line)
             if m:
                 group = m.groupdict()
