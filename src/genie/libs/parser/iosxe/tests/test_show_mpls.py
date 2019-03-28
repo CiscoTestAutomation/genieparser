@@ -15,7 +15,8 @@ from genie.libs.parser.iosxe.show_mpls import ShowMplsLdpParameters,\
                                               ShowMplsLdpDiscovery,\
                                               ShowMplsLdpIgpSync,\
                                               ShowMplsForwardingTable,\
-                                              ShowMplsInterface
+                                              ShowMplsInterface, \
+                                              ShowMplsL2TransportDetail
 
 class test_show_mpls_ldp_parameters(unittest.TestCase):
     dev1 = Device(name='empty')
@@ -2503,6 +2504,197 @@ class test_show_mpls_interface(unittest.TestCase):
         obj = ShowMplsInterface(device=self.dev)
         parsed_output = obj.parse(all='all')
         self.assertEqual(parsed_output, self.golden_parsed_output_all)
+
+
+class test_show_mpls_l2transport_vc_detail(unittest.TestCase):
+    dev = Device(name='dev1')
+    empty_output = {'execute.return_value': '      '}
+
+    golden_parsed_output = {
+    'interface': {
+        'FastEthernet2/1/1.2': {
+            'ethernet_vlan': {
+                2: {
+                    'status': 'up',
+                    },
+                },
+            'status': 'up',
+            'destination_address': {
+                '10.2.2.2': {
+                    'default_path': 'active',
+                    'imposed_label_stack': '{16}',
+                    'next_hop': 'point2point',
+                    'vc_status': 'up',
+                    'output_interface': 'Serial2/0/2',
+                    'tunnel_label': 'imp-null',
+                    'vc_id': 1002,
+                    'preferred_path': 'not configured',
+                    },
+                },
+            'last_status_change_time': '1d00h',
+            'line_protocol_status': 'up',
+            'signaling_protocol': {
+                'LDP': {
+                    'peer_id': '10.2.2.2:0',
+                    'remote_interface_description': 'xconnect to PE2',
+                    'group_id': {
+                        'local': 0,
+                        'remote': 0,
+                        },
+                    'peer_state': 'up',
+                    'mtu': {
+                        'local': 1500,
+                        'remote': 1500,
+                        },
+                    'mpls_vc_labels': {
+                        'local': 21,
+                        'remote': 16,
+                        },
+                    },
+                },
+            'create_time': '1d00h',
+            'statistics': {
+                'bytes': {
+                    'received': 4322368,
+                    'sent': 5040220,
+                    },
+                'packets': {
+                    'received': 3466,
+                    'sent': 12286,
+                    },
+                'packets_drop': {
+                    'received': 0,
+                    'sent': 0,
+                    },
+                },
+            'sequencing': {
+                'received': 'disabled',
+                'sent': 'disabled',
+                },
+            },
+        },
+    }
+
+    golden_output = {'execute.return_value': '''\
+        Device# show mpls l2transport vc detail
+
+        ip cef distributed
+
+        Local interface: Fa2/1/1.2 up, line protocol up, Eth VLAN 2 up
+          Destination address: 10.2.2.2, VC ID: 1002, VC status: up
+            Preferred path: not configured
+            Default path: active
+            Tunnel label: imp-null, next hop point2point
+            Output interface: Se2/0/2, imposed label stack {16}
+          Create time: 1d00h, last status change time: 1d00h
+          Signaling protocol: LDP, peer 10.2.2.2:0 up
+            MPLS VC labels: local 21, remote 16
+            Group ID: local 0, remote 0
+            MTU: local 1500, remote 1500
+            Remote interface description: "xconnect to PE2"
+          Sequencing: receive disabled, send disabled
+          VC statistics:
+            packet totals: receive 3466, send 12286
+            byte totals:   receive 4322368, send 5040220
+            packet drops:  receive 0, send 0
+    '''}
+
+    golden_parsed_output_2 = {
+    'interface': {
+        'VFIPE1-VPLS-A': {
+            'signaling_protocol': {
+                'LDP': {
+                    'mtu': {
+                        'remote': 1500,
+                        'local': 1500,
+                        },
+                    'group_id': {
+                        'remote': 0,
+                        'local': 0,
+                        },
+                    'peer_id': '10.2.2.2:0',
+                    'peer_state': 'up',
+                    'mpls_vc_labels': {
+                        'remote': 18,
+                        'local': 18,
+                        },
+                    },
+                },
+            'last_status_change_time': '1d03h',
+            'status': 'up',
+            'destination_address': {
+                '10.2.2.2': {
+                    'imposed_label_stack': '{18}',
+                    'output_interface': 'Serial2/0',
+                    'next_hop': 'point2point',
+                    'vc_id': 100,
+                    'vc_status': 'up',
+                    'tunnel_label': 'imp-null',
+                    },
+                },
+            'statistics': {
+                'packets_drop': {
+                    'received': 0,
+                    'sent': 0,
+                    },
+                'packets': {
+                    'received': 0,
+                    'sent': 0,
+                    },
+                'bytes': {
+                    'received': 0,
+                    'sent': 0,
+                    },
+                },
+            'sequencing': {
+                'received': 'disabled',
+                'sent': 'disabled',
+                },
+            'create_time': '3d15h',
+            },
+        },
+    }
+
+    golden_output_2 = {'execute.return_value': '''\
+        Device# show mpls l2transport vc detail
+
+        Local interface: VFI PE1-VPLS-A up
+          Destination address: 10.2.2.2, VC ID: 100, VC status: up
+            Tunnel label: imp-null, next hop point2point
+            Output interface: Se2/0, imposed label stack {18}
+          Create time: 3d15h, last status change time: 1d03h
+          Signaling protocol: LDP, peer 10.2.2.2:0 up
+            MPLS VC labels: local 18, remote 18
+            Group ID: local 0, remote 0
+            MTU: local 1500, remote 1500
+            Remote interface description:
+          Sequencing: receive disabled, send disabled
+          VC statistics:
+            packet totals: receive 0, send 0
+            byte totals:   receive 0, send 0
+            packet drops:  receive 0, send 0
+    '''}
+
+    def test_empty(self):
+        self.dev = Mock(**self.empty_output)
+        obj = ShowMplsL2TransportDetail(device=self.dev)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output)
+        obj = ShowMplsL2TransportDetail(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output_2)
+        obj = ShowMplsL2TransportDetail(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
 
 if __name__ == '__main__':
     unittest.main()
