@@ -17,7 +17,7 @@ from genie.libs.parser.iosxe.show_policy_map import ShowPolicyMapControlPlane
 # Unit test for 'show policy map control plane'
 # =============================================
 class test_show_policy_map_control_plane(unittest.TestCase):
-    '''Unit test for "how policy map control plane" '''
+    '''Unit test for "show policy map control plane" '''
 
     device = Device(name='aDevice')
 
@@ -40,7 +40,240 @@ class test_show_policy_map_control_plane(unittest.TestCase):
                                           'offered_rate_bps': 0,
                                           'drop_rate_bps': 0},
                                      'match': ' access-group name Ping_Option',
-                                     'police': {'cir_bps': 8000, 'bc_bytes': 1500, 'conformed': {'packets': 0, 'bytes': 0, 'actions': 'drop', 'bps': 0}, 'exceeded': {'packets': 0, 'bytes': 0, 'actions': 'drop', 'bps': 0}}}, ' TELNET_Class': {'match_all': True, 'packets': 0, 'bytes': 0, 'rate': {'interval': 300, 'offered_rate_bps': 0, 'drop_rate_bps': 0}, 'match': ' access-group name TELNET_Permit', 'police': {'cir_bps': 8000, 'bc_bytes': 1500, 'conformed': {'packets': 0, 'bytes': 0, 'actions': 'drop', 'bps': 0}, 'exceeded': {'packets': 0, 'bytes': 0, 'actions': 'drop', 'bps': 0}}}, ' TACACS_Class': {'match_all': True, 'packets': 0, 'bytes': 0, 'rate': {'interval': 300, 'offered_rate_bps': 0, 'drop_rate_bps': 0}, 'match': ' access-group name TACACS_Permit', 'police': {'cir_bps': 8000, 'bc_bytes': 1500, 'conformed': {'packets': 0, 'bytes': 0, 'actions': 'drop', 'bps': 0}, 'exceeded': {'packets': 0, 'bytes': 0, 'actions': 'drop', 'bps': 0}}}, ' SNMP_Class': {'match_all': True, 'packets': 0, 'bytes': 0, 'rate': {'interval': 300, 'offered_rate_bps': 0, 'drop_rate_bps': 0}, 'match': ' access-group name SNMP_Permit', 'police': {'cir_bps': 8000, 'bc_bytes': 1500, 'conformed': {'packets': 0, 'bytes': 0, 'actions': 'drop', 'bps': 0}, 'exceeded': {'packets': 0, 'bytes': 0, 'actions': 'drop', 'bps': 0}}}, ' FTP_Class': {'match_all': True, 'packets': 0, 'bytes': 0, 'rate': {'interval': 300, 'offered_rate_bps': 0, 'drop_rate_bps': 0}, 'match': ' access-group name FTP_Permit', 'police': {'cir_bps': 8000, 'bc_bytes': 1500, 'conformed': {'packets': 0, 'bytes': 0, 'actions': 'drop', 'bps': 0}, 'exceeded': {'packets': 0, 'bytes': 0, 'actions': 'drop', 'bps': 0}}}, ' BGP_Class': {'match_all': True, 'packets': 32, 'bytes': 2032, 'rate': {'interval': 300, 'offered_rate_bps': 0, 'drop_rate_bps': 0}, 'match': ' access-group name BGP_Permit', 'qos_set': {'ip_precedence': 6, 'marker_statistics': 'Disabled'}}, ' OSPF_Class': {'match_all': True, 'packets': 58, 'bytes': 11788, 'rate': {'interval': 300, 'offered_rate_bps': 0, 'drop_rate_bps': 0}, 'match': ' access-group name OSPF_Permit', 'qos_set': {'ip_precedence': 6, 'marker_statistics': 'Disabled'}}, ' LDP_Class': {'match_all': True, 'packets': 128, 'bytes': 9552, 'rate': {'interval': 300, 'offered_rate_bps': 0, 'drop_rate_bps': 0}, 'match': ' access-group name LDP_Permit', 'qos_set': {'ip_precedence': 6, 'marker_statistics': 'Disabled'}}, ' ICMP_Class1': {'match_all': True, 'packets': 0, 'bytes': 0, 'rate': {'interval': 300, 'offered_rate_bps': 0, 'drop_rate_bps': 0}, 'match': ' access-group name ICMP_Permit1', 'police': {'cir_bps': 8000, 'bc_bytes': 1500, 'conformed': {'packets': 0, 'bytes': 0, 'actions': 'drop', 'bps': 0}, 'exceeded': {'packets': 0, 'bytes': 0, 'actions': 'drop', 'bps': 0}}}, ' ICMP_Class2': {'match_all': True, 'packets': 4, 'bytes': 482, 'rate': {'interval': 300, 'offered_rate_bps': 0, 'drop_rate_bps': 0}, 'match': ' access-group name ICMP_Permit2', 'police': {'cir_bps': 12000000, 'bc_bytes': 150000, 'conformed': {'packets': 4, 'bytes': 482, 'actions': 'transmit', 'bps': 0}, 'exceeded': {'packets': 0, 'bytes': 0, 'actions': 'drop', 'bps': 0}}}, ' NTP_Class': {'match_all': True, 'packets': 3, 'bytes': 330, 'rate': {'interval': 300, 'offered_rate_bps': 0, 'drop_rate_bps': 0}, 'match': ' access-group name NTP_Permit', 'police': {'cir_bps': 8000, 'bc_bytes': 1500, 'conformed': {'packets': 3, 'bytes': 330, 'actions': 'drop', 'bps': 0}, 'exceeded': {'packets': 0, 'bytes': 0, 'actions': 'drop', 'bps': 0}}}, ' ALL_Class': {'match_all': True, 'packets': 23, 'bytes': 1548, 'rate': {'interval': 300, 'offered_rate_bps': 0, 'drop_rate_bps': 0}, 'match': ' access-group name ALL_Permit', 'police': {'cir_bps': 200000, 'bc_bytes': 15000, 'conformed': {'packets': 23, 'bytes': 1548, 'actions': 'transmit', 'bps': 0}, 'exceeded': {'packets': 0, 'bytes': 0, 'actions': 'drop', 'bps': 0}}}, ' class-default': {'match_all': False, 'packets': 276, 'bytes': 16554, 'rate': {'interval': 300, 'offered_rate_bps': 0, 'drop_rate_bps': 0}, 'match': ' any'}}}}}}}}
+                                     'police':
+                                         {'cir_bps': 8000,
+                                          'bc_bytes': 1500,
+                                          'conformed':
+                                              {'packets': 0,
+                                               'bytes': 0,
+                                               'actions': 'drop',
+                                               'bps': 0},
+                                          'exceeded':
+                                              {'packets': 0,
+                                               'bytes': 0,
+                                               'actions': 'drop',
+                                               'bps': 0}}},
+                                ' TELNET_Class':
+                                    {'match_all': True,
+                                     'packets': 0,
+                                     'bytes': 0,
+                                     'rate':
+                                         {'interval': 300,
+                                          'offered_rate_bps': 0,
+                                          'drop_rate_bps': 0},
+                                     'match': ' access-group name TELNET_Permit',
+                                     'police':
+                                         {'cir_bps': 8000,
+                                          'bc_bytes': 1500,
+                                          'conformed':
+                                              {'packets': 0,
+                                               'bytes': 0,
+                                               'actions': 'drop',
+                                               'bps': 0},
+                                          'exceeded':
+                                              {'packets': 0,
+                                               'bytes': 0,
+                                               'actions': 'drop',
+                                               'bps': 0}}},
+                                ' TACACS_Class':
+                                     {'match_all': True,
+                                      'packets': 0,
+                                      'bytes': 0,
+                                      'rate':
+                                          {'interval': 300,
+                                           'offered_rate_bps': 0,
+                                           'drop_rate_bps': 0},
+                                      'match': ' access-group name TACACS_Permit',
+                                      'police':
+                                          {'cir_bps': 8000,
+                                           'bc_bytes': 1500,
+                                           'conformed':
+                                               {'packets': 0,
+                                                'bytes': 0,
+                                                'actions': 'drop',
+                                                'bps': 0},
+                                           'exceeded':
+                                               {'packets': 0,
+                                                'bytes': 0,
+                                                'actions': 'drop',
+                                                'bps': 0}}},
+                                ' SNMP_Class':
+                                     {'match_all': True,
+                                      'packets': 0,
+                                      'bytes': 0,
+                                      'rate':
+                                          {'interval': 300,
+                                           'offered_rate_bps': 0,
+                                           'drop_rate_bps': 0},
+                                      'match': ' access-group name SNMP_Permit',
+                                      'police':
+                                          {'cir_bps': 8000,
+                                           'bc_bytes': 1500,
+                                           'conformed':
+                                               {'packets': 0,
+                                                'bytes': 0,
+                                                'actions': 'drop',
+                                                'bps': 0},
+                                           'exceeded':
+                                               {'packets': 0,
+                                                'bytes': 0,
+                                                'actions': 'drop',
+                                                'bps': 0}}},
+                                ' FTP_Class':
+                                     {'match_all': True,
+                                      'packets': 0,
+                                      'bytes': 0,
+                                      'rate':
+                                          {'interval': 300,
+                                           'offered_rate_bps': 0,
+                                           'drop_rate_bps': 0},
+                                      'match': ' access-group name FTP_Permit',
+                                      'police':
+                                          {'cir_bps': 8000,
+                                           'bc_bytes': 1500,
+                                           'conformed':
+                                               {'packets': 0,
+                                                'bytes': 0,
+                                                'actions': 'drop',
+                                                'bps': 0},
+                                           'exceeded':
+                                               {'packets': 0,
+                                                'bytes': 0,
+                                                'actions': 'drop',
+                                                'bps': 0}}},
+                                ' BGP_Class':
+                                     {'match_all': True,
+                                      'packets': 32,
+                                      'bytes': 2032,
+                                      'rate':
+                                          {'interval': 300,
+                                           'offered_rate_bps': 0,
+                                           'drop_rate_bps': 0},
+                                      'match': ' access-group name BGP_Permit',
+                                      'qos_set':
+                                          {'ip_precedence': 6,
+                                           'marker_statistics': 'Disabled'}},
+                                ' OSPF_Class':
+                                     {'match_all': True,
+                                      'packets': 58,
+                                      'bytes': 11788,
+                                      'rate':
+                                          {'interval': 300,
+                                           'offered_rate_bps': 0,
+                                           'drop_rate_bps': 0},
+                                      'match': ' access-group name OSPF_Permit',
+                                      'qos_set':
+                                          {'ip_precedence': 6,
+                                           'marker_statistics': 'Disabled'}},
+                                ' LDP_Class':
+                                     {'match_all': True,
+                                      'packets': 128,
+                                      'bytes': 9552,
+                                      'rate':
+                                          {'interval': 300,
+                                           'offered_rate_bps': 0,
+                                           'drop_rate_bps': 0},
+                                      'match': ' access-group name LDP_Permit',
+                                      'qos_set':
+                                          {'ip_precedence': 6,
+                                           'marker_statistics': 'Disabled'}},
+                                ' ICMP_Class1':
+                                     {'match_all': True,
+                                      'packets': 0,
+                                      'bytes': 0,
+                                      'rate':
+                                          {'interval': 300,
+                                           'offered_rate_bps': 0,
+                                           'drop_rate_bps': 0},
+                                      'match': ' access-group name ICMP_Permit1',
+                                      'police':
+                                          {'cir_bps': 8000,
+                                           'bc_bytes': 1500,
+                                           'conformed':
+                                               {'packets': 0,
+                                                'bytes': 0,
+                                                'actions': 'drop',
+                                                'bps': 0},
+                                           'exceeded':
+                                               {'packets': 0,
+                                                'bytes': 0,
+                                                'actions': 'drop',
+                                                'bps': 0}}},
+                                ' ICMP_Class2':
+                                     {'match_all': True,
+                                      'packets': 4,
+                                      'bytes': 482,
+                                      'rate':
+                                          {'interval': 300,
+                                           'offered_rate_bps': 0,
+                                           'drop_rate_bps': 0},
+                                      'match': ' access-group name ICMP_Permit2',
+                                      'police':
+                                          {'cir_bps': 12000000,
+                                           'bc_bytes': 150000,
+                                           'conformed':
+                                               {'packets': 4,
+                                                'bytes': 482,
+                                                'actions': 'transmit',
+                                                'bps': 0},
+                                           'exceeded':
+                                               {'packets': 0,
+                                                'bytes': 0,
+                                                'actions': 'drop',
+                                                'bps': 0}}},
+                                ' NTP_Class':
+                                     {'match_all': True,
+                                      'packets': 3,
+                                      'bytes': 330,
+                                      'rate':
+                                          {'interval': 300,
+                                           'offered_rate_bps': 0,
+                                           'drop_rate_bps': 0},
+                                      'match': ' access-group name NTP_Permit',
+                                      'police':
+                                          {'cir_bps': 8000,
+                                           'bc_bytes': 1500,
+                                           'conformed':
+                                               {'packets': 3,
+                                                'bytes': 330,
+                                                'actions': 'drop',
+                                                'bps': 0},
+                                           'exceeded':
+                                               {'packets': 0,
+                                                'bytes': 0,
+                                                'actions': 'drop',
+                                                'bps': 0}}},
+                                ' ALL_Class':
+                                     {'match_all': True,
+                                      'packets': 23,
+                                      'bytes': 1548,
+                                      'rate':
+                                          {'interval': 300,
+                                           'offered_rate_bps': 0,
+                                           'drop_rate_bps': 0},
+                                      'match': ' access-group name ALL_Permit',
+                                      'police':
+                                          {'cir_bps': 200000,
+                                           'bc_bytes': 15000,
+                                           'conformed':
+                                               {'packets': 23,
+                                                'bytes': 1548,
+                                                'actions': 'transmit',
+                                                'bps': 0},
+                                           'exceeded':
+                                               {'packets': 0,
+                                                'bytes': 0,
+                                                'actions': 'drop',
+                                                'bps': 0}}},
+                                ' class-default':
+                                     {'match_all': False,
+                                      'packets': 276,
+                                      'bytes': 16554,
+                                      'rate':
+                                          {'interval': 300,
+                                           'offered_rate_bps': 0,
+                                           'drop_rate_bps': 0},
+                                      'match': ' any'}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         Router#show policy-map control-plane
@@ -296,7 +529,7 @@ class test_show_policy_map_control_plane(unittest.TestCase):
                                           'drop_rate_bps': 0},
                                      'match': ' any'}}}}}}}}
 
-    golden_output3 = {'execute.return_value':'''
+    golden_output3 = {'execute.return_value': '''
         Router# show policy-map control-plane
         Control Plane
         Service-policy input: control-plane-in
@@ -310,6 +543,120 @@ class test_show_policy_map_control_plane(unittest.TestCase):
                exceeded 9091 packets, 581824 bytes; actions:
                drop
                conformed 2000 bps, exceeded 15000 bps
+        Class-map: class-default (match-any)
+            0 packets, 0 bytes
+            5 minute offered rate 0000 bps, drop rate 0000 bps
+            Match: any
+
+    '''}
+
+    golden_parsed_output4 ={
+        'Control Plane':
+            {'service_policy':
+                {'input':
+                    {'policy_name':
+                        {'copp-ftp':
+                            {'class_map':
+                                {' copp-ftp':
+                                    {'match_all': False,
+                                     'packets': 2234,
+                                     'bytes': 223400,
+                                     'rate':
+                                         {'interval': 300,
+                                          'offered_rate_bps': 0,
+                                          'drop_rate_bps': 0},
+                                     'match': ' access-group name copp-ftp',
+                                     'police':
+                                         {'cir_bps': 10000000,
+                                          'bc_bytes': 312500,
+                                          'conformed':
+                                              {'packets': 2234,
+                                               'bytes': 223400,
+                                               'actions': 'transmit',
+                                               'bps': 0},
+                                          'exceeded':
+                                              {'packets': 0,
+                                               'bytes': 0,
+                                               'actions': 'drop',
+                                               'bps': 0}}},
+                                ' class-default':
+                                    {'match_all': False,
+                                     'packets': 0,
+                                     'bytes': 0,
+                                     'rate':
+                                         {'interval': 300,
+                                          'offered_rate_bps': 0,
+                                          'drop_rate_bps': 0},
+                                     'match': ' any'}}},
+                        'control-plane-in':
+                            {'class_map':
+                                {' telnet-class':
+                                    {'match_all': True,
+                                     'packets': 10521,
+                                     'bytes': 673344,
+                                     'rate':
+                                         {'interval': 300,
+                                          'offered_rate_bps': 18000,
+                                          'drop_rate_bps': 15000},
+                                     'match': ' access-group 102',
+                                     'police':
+                                         {'cir_bps': 64000,
+                                          'bc_bytes': 8000,
+                                          'conformed':
+                                              {'packets': 1430,
+                                               'bytes': 91520,
+                                               'actions': 'transmit',
+                                               'bps': 2000},
+                                          'exceeded':
+                                              {'packets': 9091,
+                                               'bytes': 581824,
+                                               'actions': 'drop',
+                                               'bps': 15000}}},
+                                ' class-default':
+                                    {'match_all': False,
+                                     'packets': 0,
+                                     'bytes': 0,
+                                     'rate':
+                                         {'interval': 300,
+                                          'offered_rate_bps': 0,
+                                          'drop_rate_bps': 0},
+                                     'match': ' any'}}}}}}}}
+
+    golden_output4 = {'execute.return_value': '''
+        Router# show policy-map control-plane
+        Control Plane
+
+        Service-policy input: copp-ftp
+
+        Class-map: copp-ftp (match-any)
+            2234 packets, 223400 bytes
+            5 minute offered rate 0000 bps, drop rate 0000 bps
+            Match: access-group name copp-ftp
+            police:
+            cir 10000000 bps, be 312500 bytes
+            conformed 2234 packets, 223400 bytes; actions:
+            transmit
+            exceeded 0 packets, 0 bytes; actions:
+            drop
+            conformed 0000 bps, exceeded 0000 bps
+
+        Class-map: class-default (match-any)
+            0 packets, 0 bytes
+            5 minute offered rate 0000 bps, drop rate 0000 bps
+            Match: any
+           
+        Control Plane
+        Service-policy input: control-plane-in
+        Class-map: telnet-class (match-all)
+            10521 packets, 673344 bytes
+            5 minute offered rate 18000 bps, drop rate 15000 bps
+            Match: access-group 102
+            police:  cir 64000 bps, bc 8000 bytes
+            conformed 1430 packets, 91520 bytes; actions:
+            transmit
+            exceeded 9091 packets, 581824 bytes; actions:
+            drop
+            conformed 2000 bps, exceeded 15000 bps
         Class-map: class-default (match-any)
             0 packets, 0 bytes
             5 minute offered rate 0000 bps, drop rate 0000 bps
@@ -337,7 +684,6 @@ class test_show_policy_map_control_plane(unittest.TestCase):
         self.device = Mock(**self.golden_output2)
         obj = ShowPolicyMapControlPlane(device=self.device)
         parsed_output = obj.parse()
-        #import pdb;pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
     def test_show_policy_map_control_plane_full3(self):
@@ -345,8 +691,14 @@ class test_show_policy_map_control_plane(unittest.TestCase):
         self.device = Mock(**self.golden_output3)
         obj = ShowPolicyMapControlPlane(device=self.device)
         parsed_output = obj.parse()
-        #import pdb;pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output3)
+
+    def test_show_policy_map_control_plane_full4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output4)
+        obj = ShowPolicyMapControlPlane(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output4)
 
 if __name__ == '__main__':
     unittest.main()

@@ -135,7 +135,8 @@ class ShowPolicyMapControlPlane(ShowPolicyMapControlPlaneSchema):
         p6_1 = re.compile(r'^police: +cir (?P<cir_bps>(\d+)) bps, bc (?P<bc_bytes>(\d+)) bytes$')
 
         # cir 8000 bps, bc 1500 bytes
-        p7 = re.compile(r'^cir (?P<cir_bps>(\d+)) bps, bc (?P<bc_bytes>(\d+)) bytes$')
+        # cir 10000000 bps, be 312500 bytes
+        p7 = re.compile(r'^cir (?P<cir_bps>(\d+)) bps, (?P<key>(bc|be)) (?P<bc_bytes>(\d+)) bytes$')
 
         # 8000 bps, 1500 limit, 1500 extended limit
         p7_1 = re.compile(r'^(?P<police_bps>(\d+)) bps, +(?P<police_limit>(\d+)) limit, +'
@@ -170,13 +171,13 @@ class ShowPolicyMapControlPlane(ShowPolicyMapControlPlaneSchema):
         # start
         p12 = re.compile(r'^(?P<action>(drop|transmit|start))$')
 
-        #QoS Set
+        # QoS Set
         p13 = re.compile(r'^QoS +Set+$')
 
-        #ip precedence 6
+        # ip precedence 6
         p14 = re.compile(r'^ip +precedence +(?P<ip_precedence>(\d+))$')
 
-        #Marker statistics: Disabled
+        # Marker statistics: Disabled
         p15 = re.compile(r'^Marker +statistics: +(?P<marker_statistics>(\w+))$')
 
         for line in out.splitlines():
@@ -238,7 +239,7 @@ class ShowPolicyMapControlPlane(ShowPolicyMapControlPlaneSchema):
             # Match: access-group name Ping_Option
             m = p5.match(line)
             if m:
-                class_map_dict['match'] = str(m.groupdict()['match'])
+                class_map_dict['match'] = m.groupdict()['match']
                 continue
 
             # police:
@@ -358,7 +359,7 @@ class ShowPolicyMapControlPlane(ShowPolicyMapControlPlaneSchema):
             # Marker statistics: Disabled
             m = p15.match(line)
             if m:
-                qos_dict['marker_statistics'] = str(m.groupdict()['marker_statistics'])
+                qos_dict['marker_statistics'] = m.groupdict()['marker_statistics']
                 continue
 
         return ret_dict
