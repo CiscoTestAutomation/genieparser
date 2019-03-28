@@ -6,12 +6,20 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
+                                    POLICY MAP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowPolicyMapControlPlane Parser for:
+       'show policy map control plane'
+
+--------------------------------------------------------------------------------
                                     MONITOR
 --------------------------------------------------------------------------------
 * IOSXE
     * Added ShowMonitor Parser for:
        'show monitor'
        'show monitor session all'
+       'show monitor session {session}'
        'show monitor capture'
 
 
