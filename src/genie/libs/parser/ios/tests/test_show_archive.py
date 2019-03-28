@@ -10,9 +10,10 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
 from genie.libs.parser.iosxe.tests.test_show_archive import test_show_archive as test_show_archive_iosxe
-
+from genie.libs.parser.iosxe.tests.test_show_archive import test_show_archive_config_differences as test_show_archive_config_differences_iosxe
 # Parser
-from genie.libs.parser.ios.show_archive import ShowArchive
+from genie.libs.parser.ios.show_archive import ShowArchive, ShowArchiveConfigDifferences, \
+                                            ShowArchiveConfigIncrementalDiffs
 
 
 # ============================================
@@ -78,5 +79,48 @@ class test_show_archive_ios(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
+
+#=====================================================
+# Unit test for the following commands:
+# * show archive config differences
+# * show archive config differences {fileA} {fileB}
+# * show archive config differences {fileA}
+# * show archive config incremental-diff {fileA}
+#=====================================================
+class test_show_archive_config_differences(test_show_archive_config_differences_iosxe):
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowArchiveConfigDifferences(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+    
+    # Test case for 'show archive config differences'
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowArchiveConfigDifferences(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+    
+    # Test case for 'show archive config differences {fileA}'
+    def test_golden_one_file(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowArchiveConfigDifferences(device=self.device)
+        parsed_output = obj.parse(fileA='file1.txt')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    # Test case for 'show archive config differences {fileA} {fileB}'
+    def test_golden_two_files(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowArchiveConfigDifferences(device=self.device)
+        parsed_output = obj.parse(fileA='file1.txt', fileB='file2.txt')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+    
+    # Test case for 'show archive config incremental-diff {fileA}
+    def test_golden_incremental_diffs(self):
+        self.device = Mock(**self.golden_output_incremental_diff)
+        obj = ShowArchiveConfigIncrementalDiffs(device=self.device)
+        parsed_output = obj.parse(fileA='file1.txt')
+        self.assertEqual(parsed_output,self.golden_parsed_output_incremental_diff)
 if __name__ == '__main__':
     unittest.main()
