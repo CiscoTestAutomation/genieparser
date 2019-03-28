@@ -18,6 +18,8 @@ from genie.libs.parser.iosxe.show_mpls import ShowMplsLdpParameters,\
                                               ShowMplsInterface, \
                                               ShowMplsL2TransportDetail
 
+from genie.libs.parser.utils.common import format_output
+
 class test_show_mpls_ldp_parameters(unittest.TestCase):
     dev1 = Device(name='empty')
     dev = Device(name='dev1')
@@ -2505,7 +2507,6 @@ class test_show_mpls_interface(unittest.TestCase):
         parsed_output = obj.parse(all='all')
         self.assertEqual(parsed_output, self.golden_parsed_output_all)
 
-
 class test_show_mpls_l2transport_vc_detail(unittest.TestCase):
     dev = Device(name='dev1')
     empty_output = {'execute.return_value': '      '}
@@ -2679,22 +2680,274 @@ class test_show_mpls_l2transport_vc_detail(unittest.TestCase):
         self.dev = Mock(**self.empty_output)
         obj = ShowMplsL2TransportDetail(device=self.dev)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
+            parsed_output = obj.parse(cmd='detail')
 
     def test_golden(self):
         self.maxDiff = None
         self.dev = Mock(**self.golden_output)
         obj = ShowMplsL2TransportDetail(device=self.dev)
-        parsed_output = obj.parse()
+        parsed_output = obj.parse(cmd='detail')
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_golden_2(self):
         self.maxDiff = None
         self.dev = Mock(**self.golden_output_2)
         obj = ShowMplsL2TransportDetail(device=self.dev)
-        parsed_output = obj.parse()
+        parsed_output = obj.parse(cmd='detail')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
+
+# ============================================
+# Parser for 'show mpls l2transport vc'
+# ============================================
+class test_show_mpls_l2transport_vc(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    
+    golden_output = {'execute.return_value': 
+    '''
+    Local intf     Local circuit      Dest address    VC ID      Status    
+     -------------  ------------------ --------------- ---------- ----------
+     Se5/0          FR DLCI 55         10.0.0.1        55         UP        
+     AT4/0          ATM AAL5 0/100     10.0.0.1        100        UP        
+     AT4/0          ATM AAL5 0/200     10.0.0.1        200        UP        
+     AT4/0.300      ATM AAL5 0/300     10.0.0.1        300        UP 
+    '''
+    }
+
+    golden_output_2 = {'execute.return_value': 
+    '''
+    Load for five secs: 4%/1%; one minute: 4%; five minutes: 2%
+    Time source is hardware calendar, *17:26:56.066 GMT Mon Oct 18 2010
+
+
+    Local intf     Local circuit              Dest address    VC ID      Status    
+    -------------  -------------------------- --------------- ---------- ----------
+    VFI auto       VFI                        10.1.1.1        100         UP      
+    '''
+    }
+
+    golden_parsed_output = {
+      'interface': {
+          'Serial5/0': {
+            'local_circuit': 'FR DLCI 55',
+            'destination_address': {
+              '10.0.0.1': {
+                  'vc_id': 55,
+                  'vc_status': 'UP'
+                },
+            },
+          },
+         'ATM4/0': {
+            'local_circuit': 'ATM AAL5 0/200',
+              'destination_address': {
+                  '10.0.0.1': {
+                      'vc_id': 200,
+                      'vc_status': 'UP'
+                    },
+                },
+          },
+          'ATM4/0.300': {
+            'local_circuit': 'ATM AAL5 0/300',
+              'destination_address': {
+                  '10.0.0.1': {
+                      'vc_id': 300,
+                      'vc_status': 'UP'
+                    },
+                },
+            },
+      },
+    }
+    golden_parsed_output_2 = {
+      'interface': {
+          'VFI auto': {
+              'local_circuit': 'VFI',
+              'destination_address': {
+                  '10.1.1.1': {
+                      'vc_id': 100,
+                      'vc_status': 'UP'
+                      },
+                  },
+              },
+          },
+      }
+
+    golden_parsed_output_3 = {
+      'interface': {
+          'Serial0/1/0': {
+              'local_circuit': 'HDLC',
+              'destination_address': {
+                  '10.0.0.1': {
+                      'vc_id': 101,
+                      'vc_status': 'UP',
+                  },
+              },
+          },
+          'GigabitEthernet1/0/0': {
+              'state': 'up',
+              'line_protocol_status': 'up',
+              'protocol_status': {
+                  'Ethernet' : 'up',
+              },
+              'destination_address': {
+                  '203.0.113.1': {
+                      'vc_id': 101,
+                      'vc_status': 'up',
+                      'preferred_path': 'not configured',
+                      'default_path': 'active',
+                      'next_hop': '10.0.0.11',
+                      },
+                  },
+              'create_time': '00:00:22',
+              'last_status_change_time': '00:00:19',
+              'last_label_fsm_state_change_time': '00:00:19',
+              'signaling_protocol': {
+                  'LDP': {
+                      'peer_id': '203.0.113.1:0',
+                      'peer_state': 'up',
+                      'targeted_hello_ip': '10.0.0.1',
+                      'id': '203.0.113.1',
+                      'status': 'UP',
+                      'mpls_vc_labels': {
+                          'local': 22,
+                          'remote': 33,
+                          },
+                      'group_id': {
+                          'local': 0,
+                          'remote': 0,
+                          },
+                      'mtu': {
+                          'local': 1500,
+                          'remote': 1500,
+                          },
+                      },
+                  },
+              'graceful_restart': 'configured and enabled',
+              'non_stop_routing': 'not configured and not enabled',
+              'status_tlv_support': 'enabled/supported',
+              'ldp_route_enabled': 'enabled',
+              'label_state_machine': 'established, LruRru',
+              'last_status_name': {
+                  'local dataplane': {
+                      'received': 'No fault',
+                      },
+                  'BFD dataplane': {
+                      'received': 'Not sent',
+                      },
+                  'BFD peer monitor': {
+                      'received': 'No fault',
+                      },
+                  'local AC circuit': {
+                      'received': 'No fault',
+                      'sent': 'No fault',
+                      },
+                  'local PW i/f circ': {
+                      'received': 'No fault',
+                      },
+                  'local LDP TLV': {
+                      'sent': 'No fault',
+                      },
+                  'remote LDP TLV': {
+                      'received': 'No fault',
+                      },
+                  'remote LDP ADJ': {
+                      'received': 'No fault',
+                      },
+                  },
+              'sequencing': {
+                  'received': 'disabled',
+                  'sent': 'disabled',
+                  },
+              'statistics': {
+                  'packets': {
+                      'received': 9,
+                      'sent': 5,
+                    },
+                    'bytes': {
+                      'received': 315,
+                      'sent': 380,
+                    },
+                    'packets_drop': {
+                      'received': 0,
+                      'seq_error': 0,
+                      'sent': 0,
+                    },
+                },
+              },
+          },
+      }
+
+
+    golden_output_3 = {'execute.return_value': '''
+      Local intf     Local circuit              Dest address    VC ID      Status    
+      -------------  -------------------------- --------------- ---------- ----------
+      Se0/1/0:0       HDLC                        10.0.0.1        101         UP      
+
+      Local interface: Gi1/0/0 up, line protocol up, Ethernet up
+      Interworking type is Ethernet
+      Destination address: 203.0.113.1, VC ID: 101, VC status: up
+      Output interface: Fa0/0/1, imposed label stack {19 33}
+      Preferred path: not configured
+      Default path: active
+      Next hop: 10.0.0.11
+      Create time: 00:00:22, last status change time: 00:00:19
+      Last label FSM state change time: 00:00:19
+      Signaling protocol: LDP, peer 203.0.113.1:0 up
+      Targeted Hello: 10.0.0.1(LDP Id) -> 203.0.113.1, LDP is UP
+      Graceful restart: configured and enabled
+      Non stop routing: not configured and not enabled
+      Status TLV support (local/remote) : enabled/supported
+      LDP route watch : enabled
+      Label/status state machine : established, LruRru
+      Last local dataplane status rcvd: No fault
+      Last BFD dataplane status rcvd: Not sent
+      Last BFD peer monitor status rcvd: No fault
+      Last local AC circuit status rcvd: No fault
+      Last local AC circuit status sent: No fault
+      Last local PW i/f circ status rcvd: No fault
+      Last local LDP TLV status sent: No fault
+      Last remote LDP TLV status rcvd: No fault
+      Last remote LDP ADJ status rcvd: No fault
+      MPLS VC labels: local 22, remote 33
+      Group ID: local 0, remote 0
+      MTU: local 1500, remote 1500
+      Remote interface description: Connect to CE1
+      Sequencing: receive disabled, send disabled
+      Control Word: On
+      SSO Descriptor: 203.0.113.1/101, local label: 22
+      Dataplane:
+      SSM segment/switch IDs: 4574/4573 (used), PWID: 80
+      VC statistics:
+      transit packet totals: receive 9, send 5
+      transit byte totals: receive 315, send 380
+      transit packet drops: receive 0, seq error 0, send 0
+
+    '''
+    }
+    def test_empty(self):
+            self.device = Mock(**self.empty_output)
+            obj = ShowMplsL2TransportDetail(device=self.device)
+            with self.assertRaises(SchemaEmptyParserError):
+                parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowMplsL2TransportDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowMplsL2TransportDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
+    def test_golden_3(self):
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowMplsL2TransportDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_3)
 
 if __name__ == '__main__':
     unittest.main()

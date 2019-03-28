@@ -2264,6 +2264,9 @@ class ShowMplsL2TransportSchema(MetaParser):
                         'status': str,
                     },
                 },
+                Optional('protocol_status'): {
+                    Any(): str,
+                },
                 Optional('create_time'): str,
                 Optional('last_status_change_time'): str,
                 Optional('signaling_protocol'): {
@@ -2297,19 +2300,32 @@ class ShowMplsL2TransportSchema(MetaParser):
                     'sent': str,
                 },
                 Optional('statistics'): {
-                    'packets': {
+                    Optional('packets'): {
                         'received': int,
                         'sent': int,
                     },
-                    'bytes': {
+                    Optional('bytes'): {
                         'received': int,
                         'sent': int,
                     },
                     Optional('packets_drop'): {
                         'received': int,
+                        Optional('seq_error'): int,
                         'sent': int,
                     },
                 },
+                Optional('last_label_fsm_state_change_time') : str,
+                Optional('graceful_restart') : str,
+                Optional('non_stop_routing'): str,
+                Optional('status_tlv_support') : str,
+                Optional('ldp_route_enabled'): str,
+                Optional('last_status_name'): {
+                    Any(): {
+                        Optional('received'): str,
+                        Optional('sent'): str
+                    },
+                },
+                Optional('label_state_machine'): str,
             },
         }
     }
@@ -2319,11 +2335,15 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
     """
     Parser for show mpls l2transport vc detail
     """
-    cli_command = 'show mpls l2transport vc detail'
+    cli_command = ['show mpls l2transport vc',
+        'show mpls l2transport vc detail']
 
-    def cli(self, output=None):
+    def cli(self, cmd='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if cmd:
+                out = self.device.execute(self.cli_command[1])
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -2335,6 +2355,9 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
         p1 = re.compile(r'^Local +interface: +(?P<interface>[\w\d\/\.\s\-]+)'
                          ' +(?P<state>\w+)(, line +protocol +(?P<line_protocol_status>\w+),'
                          ' Eth +VLAN +(?P<number>\d+) +(?P<status>\w+))?$')
+
+        # Local interface: Se0/1/0:0 up, line protocol up, HDLC up
+        p1_1 = re.compile(r'^Local +interface: +(?P<interface>[\w\W]+) +(?P<state>\w+), +line +protocol +(?P<line_protocol_status>\w+), +(?P<protocol>\w+) +(?P<status>\w+)$')
 
         #   Destination address: 10.2.2.2, VC ID: 1002, VC status: recovering
         p2 = re.compile(r'^Destination +address: +(?P<address>[\d\.]+),'
@@ -2398,17 +2421,50 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
         #   VC statistics:
         p14 = re.compile(r'^VC +statistics:$')
 
-        #   packet totals: receive 20040, send 28879
-        p15 = re.compile(r'^packet +totals: +receive'
+         #   packet totals: receive 20040, send 28879
+        p15 = re.compile(r'^(transit +)?packet +totals: +receive'
                           ' +(?P<pkts_receive>\d+), +send +(?P<pkts_send>\d+)$')
 
         #   byte totals:   receive 25073016, send 25992388
-        p16 = re.compile(r'^byte +totals: +receive'
+        p16 = re.compile(r'^(transit +)?byte +totals: +receive'
                           ' +(?P<byte_receive>\d+), +send +(?P<byte_send>\d+)$')
 
-        #   packet drops:  receive 0, send 0
-        p17 = re.compile(r'^packet +drops: +receive'
+        #   transit packet drops:  receive 0, seq error 0, send 0
+        p17 = re.compile(r'^(transit +)?packet +drops: +receive'
                           ' +(?P<pkts_drop_receive>\d+), +send +(?P<pkts_drop_send>\d+)$')
+
+        #   packet drops:  receive 0, send 0
+        p17_1 = re.compile(r'^(transit +)?packet +drops: +receive +(?P<pkts_drop_receive>\d+), +seq +error +(?P<seq_error>\d+), +send +(?P<pkts_drop_send>\d+)')
+
+        
+        #  Se5/0          FR DLCI 55         10.0.0.1        55         UP   
+        p18 = re.compile(r'^\s*(?P<local_intf>[\w\W]{0,13}) +(?P<local_circuit>' \
+            '[\w\W]{0,26}) +(?P<dest_address>[\d\.]+) +(?P<vc_id>\d+) +' \
+            '(?P<vc_status>\S+)')
+
+        # Last label FSM state change time: 00:00:19
+        p19 = re.compile(r'^\s*Last +label +FSM +state +change +time: +(?P<last_label_fsm_state_change_time>\d+:\d+:\d+)$')
+
+        # Graceful restart: configured and enabled
+        p20 = re.compile(r'^\s*Graceful +restart: +(?P<graceful_restart>[\w\W]+)$')
+
+        # Non stop routing: not configured and not enabled
+        p21 = re.compile(r'^\s*Non +stop +routing: +(?P<non_stop_routing>[\w\W]+)$')
+
+        # Status TLV support (local/remote) : enabled/supported
+        p22 = re.compile(r'^\s*Status +TLV +support +\(local\/remote\) +: +(?P<status_tlv_support>[\w\W]+)$')
+
+        # LDP route watch : enabled
+        p23 = re.compile(r'^\s*LDP +route +watch +: +(?P<ldp_route_enabled>[\w\W]+)$')
+
+        # Last local PW i/f circ status rcvd: No fault
+        p24 = re.compile(r'^\s*Last +(?P<last_status_name>[\w\W]+) +status +(rcvd): (?P<received>[\w\W]+)$')
+
+        # Last local AC circuit status sent: No fault
+        p25 = re.compile(r'^\s*Last +(?P<last_status_name>[\w\W]+) +status +(sent): (?P<sent>[\w\W]+)$')
+
+        # Label/status state machine : established, LruRru
+        p26 = re.compile(r'^\s*Label\/status +state +machine +: +(?P<label_state_machine>[\w\W]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -2428,6 +2484,18 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
                         setdefault(ether_number, {})
                     final_dict['ethernet_vlan'][ether_number]['status'] = \
                         group['status']
+                continue
+
+            m = p1_1.match(line)
+            if m:
+                group = m.groupdict()
+                interface = Common.convert_intf_name(group['interface'])
+                final_dict = ret_dict.setdefault('interface', {}).\
+                    setdefault(interface, {})
+                final_dict['state'] = group['state']
+                final_dict['line_protocol_status'] = group['line_protocol_status']
+                protocol = final_dict.setdefault('protocol_status', {})
+                protocol.update({group['protocol'] : group['status']})  
                 continue
 
             m = p2.match(line)
@@ -2579,4 +2647,80 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
                 statistics_final_dict['packets_drop']['sent'] = int(group['pkts_drop_send'])
                 continue
 
+            m = p17_1.match(line)
+            if m:
+                group = m.groupdict()
+                statistics_final_dict.setdefault('packets_drop', {})
+                statistics_final_dict['packets_drop']['received'] = int(group['pkts_drop_receive'])
+                statistics_final_dict['packets_drop']['seq_error'] = int(group['seq_error'])
+                statistics_final_dict['packets_drop']['sent'] = int(group['pkts_drop_send'])
+                continue
+
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                local_interface = ret_dict.setdefault('interface', {}). \
+                    setdefault(Common.convert_intf_name( \
+                        group['local_intf'].strip()), {})
+
+                local_interface.update({'local_circuit' : \
+                    group['local_circuit'].strip()})
+                dest_address = local_interface.setdefault( \
+                    'destination_address', {}). \
+                    setdefault(group['dest_address'], {})
+                dest_address.update({'vc_id': int(group['vc_id'])})
+                dest_address.update({'vc_status': group['vc_status']})
+                continue
+
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict.update({k:v for k, v in group.items()})
+                continue
+
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict.update({k:v for k, v in group.items()})
+                continue
+
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict.update({k:v for k, v in group.items()})
+                continue
+
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict.update({k:v for k, v in group.items()})
+                continue
+
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict.update({k:v for k, v in group.items()})
+                continue
+
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                last_status_name = final_dict.setdefault('last_status_name', {}). \
+                    setdefault(group['last_status_name'], {})
+                last_status_name.update({'received': group['received']})
+                continue
+
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                last_status_name = final_dict.setdefault('last_status_name', {}) .\
+                    setdefault(group['last_status_name'], {})
+                last_status_name.update({'sent': group['sent']})
+                continue
+
+            m = p26.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict.update({k:v for k, v in group.items()})
+                continue
         return ret_dict
