@@ -10,8 +10,10 @@ from genie.libs.parser.ios.show_l2vpn import ShowL2vpnVfi, \
                                              ShowL2vpnServiceAll, \
                                              ShowEthernetServiceInstanceStats, \
                                              ShowEthernetServiceInstanceSummary, \
-                                             ShowEthernetServiceInstanceDetail
+                                             ShowEthernetServiceInstanceDetail, \
+                                             ShowBridgeDomain
 
+from genie.libs.parser.iosxe.tests.test_show_l2vpn import test_show_bridge_domain as test_show_bridge_domain_iosxe
 
 class test_show_l2vpn_vfi(unittest.TestCase):
 
@@ -1283,6 +1285,36 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
         platform_obj = ShowEthernetServiceInstanceDetail(device=self.device)
         parsed_output = platform_obj.parse(interface='ethernet 0/0')
         self.assertEqual(parsed_output, self.golden_parsed_output_interface)
+
+
+class test_show_bridge_domain(test_show_bridge_domain_iosxe):
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        platform_obj = ShowBridgeDomain(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse()    
+
+    def test_golden_full(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_full)
+        platform_obj = ShowBridgeDomain(device=self.device)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_full)
+
+    def test_golden_bridge_domain(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_bridge_domain)
+        platform_obj = ShowBridgeDomain(device=self.device)
+        parsed_output = platform_obj.parse(bd_id='3051')
+        self.assertEqual(parsed_output, self.golden_parsed_output_bridge_domain)
+
+    def test_golden_count(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_count)
+        platform_obj = ShowBridgeDomain(device=self.device)
+        parsed_output = platform_obj.parse(word='Port-channel1\.EFP2.*')
+        self.assertEqual(parsed_output, self.golden_parsed_output_count)
 
 
 if __name__ == '__main__':

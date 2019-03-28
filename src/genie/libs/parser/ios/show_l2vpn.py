@@ -24,7 +24,8 @@ from genie.libs.parser.iosxe.show_l2vpn import ShowL2vpnVfi as ShowL2vpnVfi_iosx
                                                ShowL2vpnServiceAll as ShowL2vpnServiceAll_iosxe, \
                                                ShowEthernetServiceInstanceStats as ShowEthernetServiceInstanceStats_iosxe, \
                                                ShowEthernetServiceInstanceSummary as ShowEthernetServiceInstanceSummary_iosxe, \
-                                               ShowEthernetServiceInstanceDetail as ShowEthernetServiceInstanceDetail_iosxe
+                                               ShowEthernetServiceInstanceDetail as ShowEthernetServiceInstanceDetail_iosxe, \
+                                               ShowBridgeDomain as ShowBridgeDomain_iosxe
 
 # ===========================
 # Parser for 'show l2vpn vfi'
@@ -69,5 +70,16 @@ class ShowEthernetServiceInstanceSummary(ShowEthernetServiceInstanceSummary_iosx
 class ShowEthernetServiceInstanceDetail(ShowEthernetServiceInstanceDetail_iosxe):
     """Parser for show ethernet service instance detail
                   show ethernet service instance interface <interface> detail
+    """
+    pass
+
+
+# ====================================
+# Parser for 'show bridge-domain'
+# ====================================
+class ShowBridgeDomain(ShowBridgeDomain_iosxe):
+    """Parser for show bridge-domain
+                  show bridge-domain <WORD>
+                  show bridge-domain | count <WORD>
     """
     pass
