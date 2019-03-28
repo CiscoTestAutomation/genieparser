@@ -197,7 +197,8 @@ class ShowIpRoute(ShowIpRouteSchema):
                 if m.groupdict()['code']:
                     source_protocol_codes = m.groupdict()['code'].strip()
                     for key,val in source_protocol_dict.items():
-                        if source_protocol_codes in val:
+                        source_protocol_replaced = source_protocol_codes.replace('*','')
+                        if source_protocol_replaced in val:
                             source_protocol = key
 
                 if m.groupdict()['code1']:
