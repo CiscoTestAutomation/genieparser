@@ -3492,7 +3492,7 @@ class ShowPlatformHardwareSerdes(ShowPlatformHardwareSerdesSchema):
         p1 = re.compile(r'^From +Slot +(?P<link>[\w\d\-\s]+)$')
 
         #   Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0 
-        p2 = re.compile(r'^Pkts  +High: +(?P<high>\d+) +Low: +(?P<low>\d+)( +Bad: +(?P<bad>\d+) +Dropped: +(?P<dropped>\d+))?$')
+        p2 = re.compile(r'^Pkts +High: +(?P<high>\d+) +Low: +(?P<low>\d+)( +Bad: +(?P<bad>\d+) +Dropped: +(?P<dropped>\d+))?$')
 
         #   Bytes High: 0          Low: 0          Bad: 0          Dropped: 0
         p3 = re.compile(r'^Bytes +High: +(?P<high>\d+) +Low: +(?P<low>\d+) +Bad: +(?P<bad>\d+) +Dropped: +(?P<dropped>\d+)$')
@@ -3572,7 +3572,8 @@ class ShowPlatformHardwareSerdesInternal(ShowPlatformHardwareSerdesSchema):
         ret_dict = {}
 
         # Network-Processor-0 Link:
-        p1 = re.compile(r'^(?P<link>[\w\d\-\s]+) +Link:$')
+        # RP/ESP Link:
+        p1 = re.compile(r'^(?P<link>[\w\d\-\s/]+) +Link:$')
 
         #   Local TX in sync, Local RX in sync                                   
         p2 = re.compile(r'^Local +TX +in +sync, +Local +RX +in +sync$')
@@ -3581,11 +3582,13 @@ class ShowPlatformHardwareSerdesInternal(ShowPlatformHardwareSerdesSchema):
         p3 = re.compile(r'^Remote +TX +in +sync, +Remote +RX +in +sync$')
 
         #   To Network-Processor       Packets:    21763844  Bytes:  7343838083 
-        #   To Encryption Processor   Packets:           0  Bytes:           0                                   
-        p4 = re.compile(r'^To +(?P<link_name_1>[\w\-\d\s]+) +Packets: +(?P<to_packets>\d+) +Bytes: +(?P<to_bytes>\d+)$')
+        #   To Encryption Processor   Packets:           0  Bytes:           0     
+        #   To RP/ESP Packets: 1150522 Bytes: 166031138
+        p4 = re.compile(r'^To +(?P<link_name_1>[\w\-\d\s/]+) +Packets: +(?P<to_packets>\d+) +Bytes: +(?P<to_bytes>\d+)$')
 
-        #   From Network-Processor     Packets:    21259012  Bytes:  7397920802                                  
-        p5 = re.compile(r'^From +(?P<link_name_2>[\w\-\d\s]+) +Packets: +(?P<from_packets>\d+) +Bytes: +(?P<from_bytes>\d+)$')
+        #   From Network-Processor     Packets:    21259012  Bytes:  7397920802     
+        #   From RP/ESP Packets: 4364008 Bytes: 697982854
+        p5 = re.compile(r'^From +(?P<link_name_2>[\w\-\d\s/]+) +Packets: +(?P<from_packets>\d+) +Bytes: +(?P<from_bytes>\d+)$')
 
         #     Drops                   Packets:           0  Bytes:           0
         p6 = re.compile(r'^Drops +Packets: +(?P<dropped_packets>\d+) +Bytes: +(?P<dropped_bytes>\d+)$')
@@ -4120,7 +4123,7 @@ class ShowPlatformHardwareQfpInterfaceIfnameStatisticsSchema(MetaParser):
             'active': {
                 'interface': {
                     Any(): {
-                        'platform_handle': int,
+                        Optional('platform_handle'): int,
                         'receive_stats': {
                             Any(): {
                                 'packets': int,
@@ -4169,7 +4172,8 @@ class ShowPlatformHardwareQfpInterfaceIfnameStatistics(ShowPlatformHardwareQfpIn
         # initial return dictionary
         ret_dict = {}
         current_stats = None
-
+        final_dict = {}
+        
         # Platform Handle 7
         p1 = re.compile(r'^Platform +Handle +(?P<platform_handle>\d+)$')
 
@@ -4197,6 +4201,11 @@ class ShowPlatformHardwareQfpInterfaceIfnameStatistics(ShowPlatformHardwareQfpIn
 
             m = p2.match(line)
             if m:
+                if not final_dict:
+                    converted_interface = Common.convert_intf_name(interface)
+                    final_dict = ret_dict.setdefault('qfp', {}).setdefault(
+                        'active', {}).setdefault('interface', {}).setdefault(converted_interface, {})
+
                 group = m.groupdict()
                 status = group['transmit_receive']
                 if 'Receive' in status:
