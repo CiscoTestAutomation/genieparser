@@ -65,8 +65,8 @@ class ShowNvePeers(ShowNvePeersSchema):
 
         result_dict = {}
         # Interface Peer-IP          State LearnType Uptime   Router-Mac
-        # nve1      201.202.1.1      Up    CP        01:15:09 n/a
-        # nve1      204.1.1.1        Up    CP        00:03:05 5e00.0002.0007
+        # nve1      192.168.16.1      Up    CP        01:15:09 n/a
+        # nve1      192.168.106.1        Up    CP        00:03:05 5e00.0002.0007
 
         p1 = re.compile(r'^\s*(?P<nve_name>[\w\/]+) +(?P<peer_ip>[\w\.]+) +(?P<peer_state>[\w]+)'
                         ' +(?P<learn_type>[\w]+) +(?P<uptime>[\w\:]+) +(?P<router_mac>[\w\.\/]+)$')
@@ -427,7 +427,7 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
                     nve_dict.update({'host_reach_mode': group.pop('host_learning_mode').lower()})
                     continue
 
-                #  Source-Interface: loopback1 (primary: 201.11.11.11, secondary: 201.12.11.22)
+                #  Source-Interface: loopback1 (primary: 192.168.4.11, secondary: 192.168.196.22)
                 m = p5.match(line)
                 if m:
                     group = m.groupdict()
@@ -549,7 +549,7 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
                     nve_dict.update({'multi_src_intf_last_reinit_notify_type': group.pop('notif_sent').lower()})
                     continue
 
-                # Multisite bgw-if: loopback2 (ip: 101.101.101.101, admin: Down, oper: Down)
+                # Multisite bgw-if: loopback2 (ip: 10.4.101.101, admin: Down, oper: Down)
                 m = p21.match(line)
                 if m:
                     group = m.groupdict()
@@ -776,7 +776,7 @@ class ShowNveEthernetSegment(ShowNveEthernetSegmentSchema):
         #  My ordinal: 0
         #  DF timer start time: 00:00:00
         #  Config State: N/A
-        #  DF List: 201.0.0.55 201.0.0.66
+        #  DF List: 192.168.111.55 192.168.111.66
         #  ES route added to L2RIB: True
         #  EAD/ES routes added to L2RIB: False
         #  EAD/EVI route timer age: not running
@@ -989,7 +989,7 @@ class ShowL2routeEvpnEternetSegmentAll(ShowL2routeEvpnEternetSegmentAllSchema):
         index = 1
         # ESI                      Orig Rtr. IP Addr  Prod  Ifindex      NFN Bitmap
         # ------------------------ -----------------  ----- ----------- ----------
-        # 0300.0000.0001.2c00.0309 201.0.0.55         VXLAN nve1         64
+        # 0300.0000.0001.2c00.0309 192.168.111.55         VXLAN nve1         64
 
         p1 = re.compile(r'^\s*(?P<ethernet_segment>(?!ESI)[\w\.]+) +(?P<originating_rtr>[\d\.]+)'
                         ' +(?P<prod_name>[\w]+) +(?P<int_ifhdl>[\w\/]+) +(?P<client_nfn>[\w\.]+)$')
@@ -1072,9 +1072,9 @@ class ShowL2routeTopologyDetail(ShowL2routeTopologyDetailSchema):
         # -----------   -------------   ----------
         # 101           Vxlan-10001     VNI: 10001
         #                   Encap:0 IOD:0 IfHdl:1224736769
-        #                   VTEP IP: 201.11.11.11
-        #                   Emulated IP: 201.12.11.22
-        #                   Emulated RO IP: 201.12.11.22
+        #                   VTEP IP: 192.168.4.11
+        #                   Emulated IP: 192.168.196.22
+        #                   Emulated RO IP: 192.168.196.22
         #                   TX-ID: 20 (Rcvd Ack: 0)
         #                   RMAC: 5e00.0005.0007, VRFID: 3
         #                   VMAC: 0200.c90c.0b16
@@ -1194,7 +1194,7 @@ class ShowL2routeMacAllDetail(ShowL2routeMacAllDetailSchema):
         result_dict = {}
         # Topology    Mac Address    Prod   Flags         Seq No     Next-Hops
         # ----------- -------------- ------ ------------- ---------- ----------------
-        # 101         5e00.0002.0007 VXLAN  Rmac          0          204.1.1.1
+        # 101         5e00.0002.0007 VXLAN  Rmac          0          192.168.106.1
         #            Route Resolution Type: Regular
         #            Forwarding State: Resolved (PeerID: 2)
         #            Sent To: BGP
@@ -1311,8 +1311,8 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
         result_dict = {}
         # Topology    Mac Address    Prod   Flags         Seq No     Host IP         Next-Hops
         # ----------- -------------- ------ ---------- --------------- ---------------
-        # 1001        fa16.3ec2.34fe BGP    --            0          5.1.10.11      204.1.1.1
-        # 1001        fa16.3ea3.fb66 HMM    --            0          5.1.10.55      Local
+        # 1001        fa16.3ec2.34fe BGP    --            0          10.36.10.11      192.168.106.1
+        # 1001        fa16.3ea3.fb66 HMM    --            0          10.36.10.55      Local
         #            Sent To: BGP
         #            SOO: 774975538
         #            L3-Info: 10001
@@ -1325,7 +1325,7 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
         p4 = re.compile(r'^\s*L3-Info: +(?P<l3_info>[\d]+)$')
         # Topology    Mac Address    Host IP         Prod   Flags         Seq No     Next-Hops
         # ----------- -------------- --------------- ------ ---------- ---------------
-        # 101         0000.9cfc.2596 100.101.1.3     BGP    --            0         23.23.23.23
+        # 101         0000.9cfc.2596 10.111.1.3     BGP    --            0         10.76.23.23
         p5 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<host_ip>[\w\/\.]+)'
                         ' +(?P<mac_ip_prod_type>[\w\,]+)'
                         ' +(?P<mac_ip_flags>[\w\,\-]+) +(?P<seq_num>[\d]+)'
@@ -1809,7 +1809,7 @@ class ShowNveVniIngressReplication(ShowNveVniIngressReplicationSchema):
 
         # Interface VNI      Replication List  Source  Up Time
         # --------- -------- ----------------- ------- -------
-        # nve1      10101    7.7.7.7           BGP-IMET 1d02h
+        # nve1      10101    10.196.7.7           BGP-IMET 1d02h
 
         p1 = re.compile(r'^\s*(?P<nve_name>[\w]+) +(?P<vni>[\d]+)( +(?P<replication_list>[\w\.]+)'
                         ' +(?P<source>[\w\-]+) +(?P<uptime>[\w\:]+))?$')
@@ -2045,7 +2045,7 @@ class ShowFabricMulticastIpSaAdRoute(ShowFabricMulticastIpSaAdRouteSchema):
         p1 = re.compile(r'^\s*VRF +\"(?P<vrf_name>\S+)\" +MVPN +SA +AD +Route +Database'
                         ' +VNI: +(?P<vnid>[\d]+)$')
 
-        # Src Active AD Route: (100.101.1.3/32, 238.8.4.101/32) uptime: 00:01:01
+        # Src Active AD Route: (10.111.1.3/32, 238.8.4.101/32) uptime: 00:01:01
         p2 = re.compile(r'^\s*Src +Active +AD +Route: +\((?P<saddr>[\w\/\.]+), +(?P<gaddr>[\w\/\.]+)\)'
                         ' +uptime: +(?P<uptime>[\w\.\:]+)$')
         #  Interested Fabric Nodes:

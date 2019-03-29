@@ -124,9 +124,9 @@ class ShowL2routeEvpnMacIp(MetaParser):
             # Topo ID  Mac Address    IP Address      Prod   Next Hop(s)
             # -------- -------------- --------------- ------ ----------------------------------------
 
-            # 0        fc00.0001.0006 192.0.4.3       LOCAL  Bundle-Ether1.0
-            # 0        fc00.0001.0006 192.0.4.3       L2VPN  Bundle-Ether1.0
-            # 0        fc00.0001.0008 192.0.5.3       L2VPN  68101/I/ME
+            # 0        fc00.0001.0006 192.168.166.3       LOCAL  Bundle-Ether1.0
+            # 0        fc00.0001.0006 192.168.166.3       L2VPN  Bundle-Ether1.0
+            # 0        fc00.0001.0008 192.168.49.3       L2VPN  68101/I/ME
             m = re.match(r'^(?P<topo_id>\d+)'
                          r' +(?P<mac>[A-Za-z0-9]+\.[A-Za-z0-9]+\.[A-Za-z0-9]+)'
                          r' +(?P<ip>\d+\.\d+\.\d+\.\d+|[A-Fa-f0-9:]+)'

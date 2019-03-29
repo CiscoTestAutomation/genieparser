@@ -30,7 +30,7 @@ Paths: (1 available, best #1)
   Path #1: Received by speaker 0
   Not advertised to any peer
   Local
-    0.0.0.0 from 0.0.0.0 (4.4.4.4)
+    0.0.0.0 from 0.0.0.0 (10.64.4.4)
       Origin incomplete, metric 0, localpref 100, weight 32768, valid, redistributed, best, group-best
       Received Path ID 0, Local Path ID 0, version 4
 
@@ -53,7 +53,7 @@ Paths: (1 available, best #1)
   Path #1: Received by speaker 0
   Not advertised to any peer
   Local
-    0.0.0.0 from 0.0.0.0 (4.4.4.4)
+    0.0.0.0 from 0.0.0.0 (10.64.4.4)
       Origin incomplete, metric 0, localpref XN<localpref_number>X100, weight 32768, valid, redistributed, best, group-best
       Received Path ID 0, Local Path ID 0, version 4
 
