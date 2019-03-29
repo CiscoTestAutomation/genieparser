@@ -5,10 +5,10 @@ from ats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                              SchemaMissingKeyError
-
+# ios show_session
 from genie.libs.parser.ios.show_session import ShowLine,\
                                                ShowUsers
-
+# iosxe/test_show_session
 from genie.libs.parser.iosxe.tests.test_show_session import \
         test_show_line as test_show_line_iosxe,\
         test_show_users as test_show_users_iosxe
