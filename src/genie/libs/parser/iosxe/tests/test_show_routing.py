@@ -476,6 +476,189 @@ class test_show_ip_route(unittest.TestCase):
         L        10.50.15.12/32 is directly connected, FastEthernet0/0
         '''}
 
+    golden_parsed_output4 = {
+        'vrf': 
+            {'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'routes': 
+                            {'0.0.0.0/0': {'active': True,
+                                           'metric': 100,
+                                           'next_hop': {'next_hop_list': {1: {'index': 1,
+                                                                               'next_hop': '10.239.7.37',
+                                                                               'outgoing_interface': 'Vlan101',
+                                                                               'updated': '3w6d'},
+                                                                           2: {'index': 2,
+                                                                               'next_hop': '10.239.7.33',
+                                                                               'outgoing_interface': 'Vlan100',
+                                                                               'updated': '3w6d'}}},
+                                           'route': '0.0.0.0/0',
+                                           'route_preference': 115,
+                                           'source_protocol': 'local',
+                                           'source_protocol_codes': 'i*L1'},
+                            '10.239.6.1/32': {'active': True,
+                                              'metric': 200,
+                                              'next_hop': {'next_hop_list': {1: {'index': 1,
+                                                                                 'next_hop': '10.239.7.33',
+                                                                                 'outgoing_interface': 'Vlan100',
+                                                                                 'updated': '1w1d'}}},
+                                              'route': '10.239.6.1/32',
+                                              'route_preference': 115,
+                                              'source_protocol': 'isis',
+                                              'source_protocol_codes': 'i '
+                                                                       'ia'},
+                            '10.239.6.10/32': {'active': True,
+                                               'metric': 200,
+                                               'next_hop': {'next_hop_list': {1: {'index': 1,
+                                                                                  'next_hop': '10.239.7.33',
+                                                                                  'outgoing_interface': 'Vlan100',
+                                                                                  'updated': '2w1d'}}},
+                                               'route': '10.239.6.10/32',
+                                               'route_preference': 115,
+                                               'source_protocol': 'isis',
+                                               'source_protocol_codes': 'i '
+                                                                        'ia'},
+                            '10.239.6.13/32': {'active': True,
+                                               'metric': 250,
+                                               'next_hop': {'next_hop_list': {1: {'index': 1,
+                                                                                  'next_hop': '10.239.7.33',
+                                                                                  'outgoing_interface': 'Vlan100',
+                                                                                  'updated': '2w1d'}}},
+                                               'route': '10.239.6.13/32',
+                                               'route_preference': 115,
+                                               'source_protocol': 'isis',
+                                               'source_protocol_codes': 'i '
+                                                                        'ia'},
+                            '10.239.6.14/32': {'active': True,
+                                               'metric': 300,
+                                               'next_hop': {'next_hop_list': {1: {'index': 1,
+                                                                                  'next_hop': '10.239.7.37',
+                                                                                  'outgoing_interface': 'Vlan101',
+                                                                                  'updated': '2w1d'},
+                                                                              2: {'index': 2,
+                                                                                  'next_hop': '10.239.7.33',
+                                                                                  'outgoing_interface': 'Vlan100',
+                                                                                  'updated': '2w1d'}}},
+                                               'route': '10.239.6.14/32',
+                                               'route_preference': 115,
+                                               'source_protocol': 'isis',
+                                               'source_protocol_codes': 'i '
+                                                                        'ia'},
+                            '10.239.6.15/32': {'active': True,
+                                               'metric': 250,
+                                               'next_hop': {'next_hop_list': {1: {'index': 1,
+                                                                                  'next_hop': '10.239.7.37',
+                                                                                  'outgoing_interface': 'Vlan101',
+                                                                                  'updated': '2w1d'}}},
+                                               'route': '10.239.6.15/32',
+                                               'route_preference': 115,
+                                               'source_protocol': 'isis',
+                                               'source_protocol_codes': 'i '
+                                                                        'ia'},
+                            '10.239.6.2/32': {'active': True,
+                                              'metric': 100,
+                                              'next_hop': {'next_hop_list': {1: {'index': 1,
+                                                                                 'next_hop': '10.239.7.33',
+                                                                                 'outgoing_interface': 'Vlan100',
+                                                                                 'updated': '6w0d'}}},
+                                              'route': '10.239.6.2/32',
+                                              'route_preference': 115,
+                                              'source_protocol': 'isis',
+                                              'source_protocol_codes': 'i '
+                                                                       'L1'},
+                            '10.239.6.3/32': {'active': True,
+                                              'metric': 100,
+                                              'next_hop': {'next_hop_list': {1: {'index': 1,
+                                                                                 'next_hop': '10.239.7.37',
+                                                                                 'outgoing_interface': 'Vlan101',
+                                                                                 'updated': '3w6d'}}},
+                                              'route': '10.239.6.3/32',
+                                              'route_preference': 115,
+                                              'source_protocol': 'isis',
+                                              'source_protocol_codes': 'i '
+                                                                       'L1'},
+                            '10.239.6.4/32': {'active': True,
+                                              'metric': 50,
+                                              'next_hop': {'next_hop_list': {1: {'index': 1,
+                                                                                 'next_hop': '10.239.7.33',
+                                                                                 'outgoing_interface': 'Vlan100',
+                                                                                 'updated': '6w0d'}}},
+                                              'route': '10.239.6.4/32',
+                                              'route_preference': 115,
+                                              'source_protocol': 'isis',
+                                              'source_protocol_codes': 'i '
+                                                                       'L1'},
+                            '10.239.6.7/32': {'active': True,
+                                              'metric': 50,
+                                              'next_hop': {'next_hop_list': {1: {'index': 1,
+                                                                                 'next_hop': '10.239.7.37',
+                                                                                 'outgoing_interface': 'Vlan101',
+                                                                                 'updated': '3w6d'}}},
+                                              'route': '10.239.6.7/32',
+                                              'route_preference': 115,
+                                              'source_protocol': 'isis',
+                                              'source_protocol_codes': 'i '
+                                                                       'L1'},
+                            '10.239.6.9/32': {'active': True,
+                                              'next_hop': {'outgoing_interface': {'Loopback0': {'outgoing_interface': 'Loopback0'}}},
+                                              'route': '10.239.6.9/32',
+                                              'source_protocol': 'connected',
+                                              'source_protocol_codes': 'C'},
+                            '10.239.7.32/30': {'active': True,
+                                               'next_hop': {'outgoing_interface': {'Vlan100': {'outgoing_interface': 'Vlan100'}}},
+                                               'route': '10.239.7.32/30',
+                                               'source_protocol': 'connected',
+                                               'source_protocol_codes': 'C'},
+                            '10.239.7.34/32': {'active': True,
+                                               'next_hop': {'outgoing_interface': {'Vlan100': {'outgoing_interface': 'Vlan100'}}},
+                                               'route': '10.239.7.34/32',
+                                               'source_protocol': 'local',
+                                               'source_protocol_codes': 'L'},
+                            '10.239.7.36/30': {'active': True,
+                                               'next_hop': {'outgoing_interface': {'Vlan101': {'outgoing_interface': 'Vlan101'}}},
+                                               'route': '10.239.7.36/30',
+                                               'source_protocol': 'connected',
+                                               'source_protocol_codes': 'C'},
+                            '10.239.7.38/32': {'active': True,
+                                               'next_hop': {'outgoing_interface': {'Vlan101': {'outgoing_interface': 'Vlan101'}}},
+                                               'route': '10.239.7.38/32',
+                                               'source_protocol': 'local',
+                                               'source_protocol_codes': 'L'}}}}}}}
+
+    golden_output4 = {'execute.return_value': '''
+        Router#show ip route
+        Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+               D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area 
+               N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+               E1 - OSPF external type 1, E2 - OSPF external type 2
+               i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+               ia - IS-IS inter area, * - candidate default, U - per-user static route
+               o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP
+               a - application route
+               + - replicated route, % - next hop override, p - overrides from PfR
+
+        Gateway of last resort is 10.239.7.37 to network 0.0.0.0
+
+        i*L1  0.0.0.0/0 [115/100] via 10.239.7.37, 3w6d, Vlan101
+                        [115/100] via 10.239.7.33, 3w6d, Vlan100
+              10.0.0.0/8 is variably subnetted, 14 subnets, 2 masks
+        i ia     10.239.6.1/32 [115/200] via 10.239.7.33, 1w1d, Vlan100
+        i L1     10.239.6.2/32 [115/100] via 10.239.7.33, 6w0d, Vlan100
+        i L1     10.239.6.3/32 [115/100] via 10.239.7.37, 3w6d, Vlan101
+        i L1     10.239.6.4/32 [115/50] via 10.239.7.33, 6w0d, Vlan100
+        i L1     10.239.6.7/32 [115/50] via 10.239.7.37, 3w6d, Vlan101
+        C        10.239.6.9/32 is directly connected, Loopback0
+        i ia     10.239.6.10/32 [115/200] via 10.239.7.33, 2w1d, Vlan100
+        i ia     10.239.6.13/32 [115/250] via 10.239.7.33, 2w1d, Vlan100
+        i ia     10.239.6.14/32 [115/300] via 10.239.7.37, 2w1d, Vlan101
+                                [115/300] via 10.239.7.33, 2w1d, Vlan100
+        i ia     10.239.6.15/32 [115/250] via 10.239.7.37, 2w1d, Vlan101
+        C        10.239.7.32/30 is directly connected, Vlan100
+        L        10.239.7.34/32 is directly connected, Vlan100
+        C        10.239.7.36/30 is directly connected, Vlan101
+        L        10.239.7.38/32 is directly connected, Vlan101
+        '''}
+
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpRoute(device=self.device)
@@ -502,6 +685,13 @@ class test_show_ip_route(unittest.TestCase):
         obj = ShowIpRoute(device=self.device)
         parsed_output = obj.parse(vrf='OOB_Mgmt')
         self.assertEqual(parsed_output, self.golden_parsed_output3)
+
+    def test_show_ip_route4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output4)
+        obj = ShowIpRoute(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output4)
 
 
 ###################################################

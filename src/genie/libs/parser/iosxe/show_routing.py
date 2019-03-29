@@ -188,6 +188,7 @@ class ShowIpRoute(ShowIpRouteSchema):
             # O        10.2.3.0/24 [110/2] via 10.186.2.2, 06:46:59, GigabitEthernet0/1
             # i L1     10.151.22.22 [115/20] via 10.186.2.2, 06:47:04, GigabitEthernet0/1
             # D        192.168.205.1
+            # i*L1  0.0.0.0/0 [115/100] via 10.239.7.37, 3w6d, Vlan101
             p3 = re.compile(r'^\s*(?P<code>[\w\*]+) +(?P<code1>[\w]+)? +(?P<network>[\d\/\.]+)?'
                             '( +is +directly +connected,)?( +\[(?P<route_preference>[\d\/]+)\]?'
                             '( +via )?(?P<next_hop>[\d\.]+)?,)?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
@@ -197,8 +198,9 @@ class ShowIpRoute(ShowIpRouteSchema):
                 if m.groupdict()['code']:
                     source_protocol_codes = m.groupdict()['code'].strip()
                     for key,val in source_protocol_dict.items():
-                        if source_protocol_codes in val:
-                            source_protocol = key
+                        for item in val:
+                            if item in source_protocol_codes:
+                                source_protocol = key
 
                 if m.groupdict()['code1']:
                     source_protocol_codes = '{} {}'.format(source_protocol_codes, m.groupdict()['code1'])
