@@ -18,12 +18,13 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional
 
 # import iosxe parser
-from genie.libs.parser.iosxe.show_arp import \
-    ShowArp as ShowArp_iosxe, \
-    ShowIpArpSummary as ShowIpArpSummary_iosxe, \
-    ShowIpTraffic as ShowIpTraffic_iosxe, \
-    ShowArpApplication as ShowArpApplication_iosxe, \
-    ShowArpSummary as ShowArpSummary_iosxe
+from genie.libs.parser.iosxe.show_arp import ShowArp as ShowArp_iosxe, \
+                                        ShowIpArpSummary as \
+                                        ShowIpArpSummary_iosxe, \
+                                        ShowIpTraffic as ShowIpTraffic_iosxe, \
+                                        ShowArpApplication as \
+                                        ShowArpApplication_iosxe, \
+                                        ShowArpSummary as ShowArpSummary_iosxe
 
 class ShowIpArp(ShowArp_iosxe):
     """ Parser for show arp

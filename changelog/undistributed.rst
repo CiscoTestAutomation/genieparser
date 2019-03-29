@@ -157,7 +157,11 @@
         show arp application
     * Add ShowArpSummary for:
         show arp summary
-
+* IOS
+    * Add ShowArpApplication for:
+        show arp application
+    * Add ShowArpSummary for:
+        show arp summary
 --------------------------------------------------------------------------------
                                    QOS
 --------------------------------------------------------------------------------

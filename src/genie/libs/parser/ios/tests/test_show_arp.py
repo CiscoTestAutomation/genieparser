@@ -15,8 +15,9 @@ from genie.libs.parser.ios.show_arp import ShowIpArp, ShowIpArpSummary,\
                                            ShowArpSummary
 
 from genie.libs.parser.iosxe.tests.test_show_arp import test_show_arp_application as \
-                                           test_show_arp_application_iosxe, \
-                                           test_show_arp_summary as test_show_arp_summary_iosxe
+                                                 test_show_arp_application_iosxe, \
+                                                 test_show_arp_summary as \
+                                                 test_show_arp_summary_iosxe
 
 # ============================================
 # Parser for 'show arp [vrf <WORD>] <WROD>'
