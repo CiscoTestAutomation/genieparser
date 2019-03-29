@@ -2,6 +2,7 @@
 
 IOSXR parsers for the following show commands:
     * 'show mrib vrf <WORD> <WORD> route'
+    * 'show mrib vrf <WORD> <WORD> route summary'
 '''
 
 # Python
@@ -63,7 +64,7 @@ class ShowMribVrfRouteSchema(MetaParser):
 class ShowMribVrfRoute(ShowMribVrfRouteSchema):
     """
     Parser for show mrib vrf <vrf> <address-family> route
-    For checking any output with the parser ,below mandatory keys have to be in cli command.
+    For checking any output with the parser, below mandatory keys have to be in cli command.
     - vrf
     - af
     """
@@ -237,4 +238,110 @@ class ShowMribVrfRoute(ShowMribVrfRouteSchema):
                     sub_dict[intf_list_type][interface]['rpf_nbr'] = rpf_nbr
                     continue
 
+        return parsed_dict
+
+# ======================================================
+# Parser for 'show mrib vrf <WORD> <WORD> route summary'
+# ======================================================
+
+class ShowMribVrfRouteSummarySchema(MetaParser):
+    
+    """Schema for show mrib vrf <vrf> <address-family> route summary"""
+
+    schema = {
+        'vrf': { 
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        'no_group_ranges': int,
+                        'no_g_routes': int,
+                        'no_s_g_routes': int,
+                        'no_route_x_interfaces': int,
+                        'total_no_interfaces': int,                    
+                    }
+                }
+            },
+        },
+    }
+
+class ShowMribVrfRouteSummary(ShowMribVrfRouteSummarySchema):
+    """
+    Parser for show mrib vrf <vrf> <address-family> route summary
+    For checking any output with the parser, below mandatory keys have to be in cli command.
+    - vrf
+    - af (optional)
+    """
+    cli_command = [
+                    'show mrib route summary',
+                    'show mrib vrf {vrf} route summary',
+                    'show mrib vrf {vrf} ipv4 route summary',
+                    'show mrib vrf {vrf} ipv6 route summary',
+                ]
+
+    def cli(self, vrf='', af='',output=None):
+        if output is None:
+            if vrf:
+                if af == 'ipv4':
+                    out = self.device.execute(self.cli_command[2].format(vrf=vrf))
+                elif af == 'ipv6':
+                    out = self.device.execute(self.cli_command[3].format(vrf=vrf))
+                else:
+                    out = self.device.execute(self.cli_command[1].format(vrf=vrf))
+                    af = 'ipv4'
+            else:
+                out = self.device.execute(self.cli_command[0])
+                af = 'ipv4'
+        else:
+            out = output
+        
+        # Init vars
+        parsed_dict = {}
+        vrf = ''
+        
+        for line in out.splitlines():
+            line = line.rstrip()
+            
+            # MRIB Route Summary for VRF default
+            p1 = re.compile(r'^\s*MRIB +Route +Summary +for +VRF +(?P<vrf>(\S+))\s*$')
+            m = p1.match(line)
+            if m:
+                vrf = m.groupdict()['vrf']
+                parsed_dict.setdefault('vrf', {}).setdefault(vrf, {}).setdefault('address_family', {}).setdefault(af, {})
+                continue
+            
+            # No. of group ranges = 5
+            p2 = re.compile(r'^\s*No\. +of +group +ranges +=\s+(?P<no_group_ranges>[0-9]+)\s*$')
+            m = p2.match(line)
+            if m:
+                parsed_dict['vrf'][vrf]['address_family'][af]['no_group_ranges'] = int(m.groupdict()['no_group_ranges'])
+                continue
+            
+            # No. of (*,G) routes = 1
+            p3 = re.compile(r'^\s*No\. +of +\(\*,G\) +routes +=\s+(?P<no_g_routes>[0-9]+)\s*$')
+            m = p3.match(line)
+            if m:
+                parsed_dict['vrf'][vrf]['address_family'][af]['no_g_routes'] = int(m.groupdict()['no_g_routes'])
+                continue
+            
+            # No. of (S,G) routes = 0
+            p4 = re.compile(r'^\s*No\. +of +\(S,G\) +routes +=\s+(?P<no_s_g_routes>[0-9]+)\s*$')
+            m = p4.match(line)
+            if m:
+                parsed_dict['vrf'][vrf]['address_family'][af]['no_s_g_routes'] = int(m.groupdict()['no_s_g_routes'])
+                continue
+            
+            # No. of Route x Interfaces (RxI) = 0
+            p5 = re.compile(r'^\s*No\. +of +Route +x +Interfaces +\(RxI\) +=\s+(?P<no_route_x_interfaces>[0-9]+)\s*$')
+            m = p5.match(line)
+            if m:
+                parsed_dict['vrf'][vrf]['address_family'][af]['no_route_x_interfaces'] = int(m.groupdict()['no_route_x_interfaces'])
+                continue
+            
+            # Total No. of Interfaces in all routes = 1
+            p6 = re.compile(r'^\s*Total +No\. +of +Interfaces +in +all +routes +=\s+(?P<total_no_interfaces>[0-9]+)\s*$')
+            m = p6.match(line)
+            if m:
+                parsed_dict['vrf'][vrf]['address_family'][af]['total_no_interfaces'] = int(m.groupdict()['total_no_interfaces'])
+                continue
+        
         return parsed_dict

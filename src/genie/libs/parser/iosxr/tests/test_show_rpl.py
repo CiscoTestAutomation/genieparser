@@ -58,7 +58,7 @@ class test_show_rpl_route_policy(unittest.TestCase):
  'test3': {'statements': {10: {'actions': {'actions': 'pass'},
                                'conditions': {}},
                           20: {'actions': {'actions': 'pass'},
-                               'conditions': {'match_area_eq': '1',
+                               'conditions': {'match_area_eq': '10.4.1.1',
                                               'match_level_eq': 'level-2'}},
                           30: {'actions': {'actions': 'pass'},
                                'conditions': {'match_as_path_list': 'test',
@@ -84,7 +84,7 @@ class test_show_rpl_route_policy(unittest.TestCase):
                                            'set_med': 113,
                                            'set_metric': '100',
                                            'set_metric_type': 'type-2',
-                                           'set_next_hop': '1.1.1.1',
+                                           'set_next_hop': '10.4.1.1',
                                            'set_ospf_metric': '100',
                                            'set_route_origin': 'egp',
                                            'set_tag': '111'},
@@ -134,7 +134,7 @@ class test_show_rpl_route_policy(unittest.TestCase):
     route-policy test3
       if extcommunity rt matches-any test then
         pass
-      elseif ospf-area is 1.1.1.1 and route-type is level-2 then
+      elseif ospf-area is 10.4.1.1 and route-type is level-2 then
         pass
       elseif destination in prefix-set1 and as-path in test then
         pass
@@ -143,7 +143,7 @@ class test_show_rpl_route_policy(unittest.TestCase):
       elseif tag in test then
         set origin egp
         set local-preference 100
-        set next-hop 1.1.1.1
+        set next-hop 10.4.1.1
         set next-hop self
         set med 113
         prepend as-path 100 10

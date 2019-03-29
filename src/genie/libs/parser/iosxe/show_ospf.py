@@ -230,8 +230,8 @@ class ShowIpOspf(ShowIpOspfSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # Routing Process "ospf 1" with ID 3.3.3.3
-            # VRF VRF1 in Routing Process "ospf 1" with ID 3.3.3.3
+            # Routing Process "ospf 1" with ID 10.36.3.3
+            # VRF VRF1 in Routing Process "ospf 1" with ID 10.36.3.3
             p1 = re.compile(r'(?:^VRF +(?P<vrf>(\S+)) +in +)?Routing +Process'
                              ' +\"(?:ospf)? +(?P<instance>([a-zA-Z0-9\s]+))\"'
                              ' +with +ID +(?P<router_id>(\S+))$')
@@ -979,9 +979,9 @@ class ShowIpOspf(ShowIpOspfSchema):
                     sub_dict['areas'][area]['ranges'] = {}
                 continue
 
-            # 1.1.1.0/24 Passive Advertise
-            # 1.1.0.0/16 Passive DoNotAdvertise 
-            # 1.1.0.0/16 Active(10 - configured) Advertise
+            # 10.4.1.0/24 Passive Advertise
+            # 10.4.0.0/16 Passive DoNotAdvertise 
+            # 10.4.0.0/16 Active(10 - configured) Advertise
             p40_2 = re.compile(r'^(?P<prefix>([0-9\.\/]+)) +(Passive|Active)'
                                 '(?:\((?P<cost>(\d+)) +\- +configured\))?'
                                 ' +(?P<advertise>(Advertise|DoNotAdvertise))$')
@@ -1473,9 +1473,9 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                     name = interface
                 continue
 
-            # Internet Address 1.1.1.1/32, Interface ID 11, Area 0
+            # Internet Address 10.4.1.1/32, Interface ID 11, Area 0
             # Internet Address 0.0.0.0/0, Area 0, Attached via Not Attached
-            # Internet Address 20.2.4.4/24, Area 1, Attached via Interface Enable
+            # Internet Address 10.229.4.4/24, Area 1, Attached via Interface Enable
             p2 = re.compile(r'^Internet +Address +(?P<address>(\S+)),'
                              '(?: +Interface +ID +(?P<intf_id>(\d+)),)?'
                              ' +Area +(?P<area>(\S+))(?:, +Attached +via'
@@ -1497,9 +1497,9 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 attached = str(m.groupdict()['attached']).lower()
                 continue
 
-            # Process ID 1, Router ID 4.4.4.4, Network Type VIRTUAL_LINK, Cost: 1
-            # Process ID 2, Router ID 11.11.11.11, Network Type SHAM_LINK, Cost: 111
-            # Process ID 1, Router ID 1.1.1.1, Network Type BROADCAST, Cost: 1
+            # Process ID 1, Router ID 10.64.4.4, Network Type VIRTUAL_LINK, Cost: 1
+            # Process ID 2, Router ID 10.229.11.11, Network Type SHAM_LINK, Cost: 111
+            # Process ID 1, Router ID 10.4.1.1, Network Type BROADCAST, Cost: 1
             p3 = re.compile(r'^Process +ID +(?P<pid>(\S+)),'
                              '(?: +VRF +(?P<vrf>(\S+)))?'
                              ' +Router +ID +(?P<router_id>(\S+)),'
@@ -1526,7 +1526,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
 
                     for line in out.splitlines():
                         line = line.rstrip()
-                        # Virtual Link OSPF_VL0 to router 5.5.5.5 is down
+                        # Virtual Link OSPF_VL0 to router 10.100.5.5 is down
                         p = re.search('Virtual +Link +(?P<intf>(\S+)) +to +router'
                                      ' +(?P<address>(\S+)) +is +(up|down)'
                                      '(?:.*)?', line)
@@ -1542,7 +1542,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
 
                         for line in out.splitlines():
                             line = line.rstrip()
-                            #  area 1 virtual-link 5.5.5.5
+                            #  area 1 virtual-link 10.100.5.5
                             q = re.search('area +(?P<q_area>(\d+)) +virtual-link'
                                           ' +(?P<addr>(\S+))(?: +(.*))?', line)
                             if q:
@@ -1567,7 +1567,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
 
                     for line in out.splitlines():
                         line = line.rstrip()
-                        # Sham Link OSPF_SL1 to address 22.22.22.22 is up
+                        # Sham Link OSPF_SL1 to address 10.151.22.22 is up
                         p = re.search('Sham +Link +(?P<intf>(\S+)) +to +address'
                                      ' +(?P<remote>(\S+)) +is +(up|down)', line)
                         if p:
@@ -1582,7 +1582,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
 
                         for line in out.splitlines():
                             line = line.rstrip()
-                            # area 1 sham-link 11.11.11.11 22.22.22.22 cost 111 ttl-security hops 3
+                            # area 1 sham-link 10.229.11.11 10.151.22.22 cost 111 ttl-security hops 3
                             q = re.search('area +(?P<q_area>(\d+)) +sham-link'
                                           ' +(?P<local_id>(\S+))'
                                           ' +(?P<remote_id>(\S+)) +(.*)', line)
@@ -1786,7 +1786,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                         sub_dict['bfd']['enable'] = False
                         continue
 
-            # Designated Router (ID) 3.3.3.3, Interface address 10.2.3.3
+            # Designated Router (ID) 10.36.3.3, Interface address 10.2.3.3
             p10 = re.compile(r'^Designated +(R|r)outer +\(ID\)'
                              ' +(?P<dr_router_id>(\S+)), +(I|i)nterface'
                              ' +(A|a)ddress +(?P<dr_ip_addr>(\S+))$')
@@ -1796,7 +1796,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 sub_dict['dr_ip_addr'] = str(m.groupdict()['dr_ip_addr'])
                 continue
 
-            # Backup Designated router (ID) 2.2.2.2, Interface address 10.2.3.2
+            # Backup Designated router (ID) 10.16.2.2, Interface address 10.2.3.2
             p11 = re.compile(r'^Backup +(D|d)esignated +(R|r)outer +\(ID\)'
                              ' +(?P<bdr_router_id>(\S+)), +(I|i)nterface'
                              ' +(A|a)ddress +(?P<bdr_ip_addr>(\S+))$')
@@ -1910,7 +1910,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                     int(m.groupdict()['adj_nbr_count'])
                 continue
 
-            # Adjacent with neighbor 2.2.2.2 (Backup Designated Router)
+            # Adjacent with neighbor 10.16.2.2 (Backup Designated Router)
             p20_1 = re.compile(r'^Adjacent +with +neighbor +(?P<nbr>(\S+))'
                               ' +\((B|b)ackup +(D|d)esignated +(R|r)outer\)$')
             m = p20_1.match(line)
@@ -1923,7 +1923,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 sub_dict['neighbors'][neighbor]['bdr_router_id'] = neighbor
                 continue
 
-            # Adjacent with neighbor 3.3.3.3 (Designated Router)
+            # Adjacent with neighbor 10.36.3.3 (Designated Router)
             p20_2 = re.compile(r'^Adjacent +with +neighbor +(?P<nbr>(\S+))'
                               ' +\((D|d)esignated +(R|r)outer\)$')
             m = p20_2.match(line)
@@ -1936,7 +1936,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 sub_dict['neighbors'][neighbor]['dr_router_id'] = neighbor
                 continue
 
-            # Adjacent with neighbor 4.4.4.4 (Hello suppressed)
+            # Adjacent with neighbor 10.64.4.4 (Hello suppressed)
             p20_3 = re.compile(r'^Adjacent +with +neighbor +(?P<nbr>(\S+))'
                               ' +\(Hello suppressed\)$')
             m = p20_3.match(line)
@@ -2104,8 +2104,8 @@ class ShowIpOspfLinksParser(MetaParser):
         for line in out.splitlines():
             line = line.strip()
 
-            # Sham Link OSPF_SL0 to address 22.22.22.22 is up
-            # Virtual Link OSPF_VL0 to router 4.4.4.4 is up
+            # Sham Link OSPF_SL0 to address 10.151.22.22 is up
+            # Virtual Link OSPF_VL0 to router 10.64.4.4 is up
             p1 = re.compile(r'^(Virtual|Sham) +Link +(?P<interface>(\S+)) +to'
                              ' +(address|router) +(?P<address>(\S+)) +is'
                              ' +(?P<link_state>(up|down))$')
@@ -2131,7 +2131,7 @@ class ShowIpOspfLinksParser(MetaParser):
                 for line in out.splitlines():
                     line = line.rstrip()
 
-                    # Process ID 2, Router ID 11.11.11.11, Network Type SHAM_LINK, Cost: 111
+                    # Process ID 2, Router ID 10.229.11.11, Network Type SHAM_LINK, Cost: 111
                     p = re.search('Process +ID +(?P<instance>(\S+)), +Router'
                                   ' +(.*)', line)
                     if p:
@@ -2182,8 +2182,8 @@ class ShowIpOspfLinksParser(MetaParser):
                 continue
 
 
-            # Area 1, source address 33.33.33.33
-            # Area 1 source address 11.11.11.11
+            # Area 1, source address 10.21.33.33
+            # Area 1 source address 10.229.11.11
             p2 = re.compile(r'^Area +(?P<area>(\S+)),? +source +address'
                              ' +(?P<source_address>(\S+))$')
             m = p2.match(line)
@@ -2792,8 +2792,8 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # Neighbor 2.2.2.2, interface address 10.1.2.2
-            # Neighbor 200.0.1.1, interface address 201.0.14.1, interface-id 192
+            # Neighbor 10.16.2.2, interface address 10.1.2.2
+            # Neighbor 192.168.111.1, interface address 192.168.70.1, interface-id 192
             # Neighbor 192.168.255.9, interface address 10.0.109.9, interface-id unknown
             p1 = re.compile(r'^Neighbor +(?P<neighbor>(\S+)), +interface'
                              ' +address +(?P<address>(\S+))'
@@ -2823,7 +2823,7 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                 for line in out.splitlines():
                     line = line.rstrip()
 
-                    # Process ID 2, Router ID 11.11.11.11, Network Type SHAM_LINK, Cost: 111
+                    # Process ID 2, Router ID 10.229.11.11, Network Type SHAM_LINK, Cost: 111
                     p = re.search('Process +ID +(?P<instance>(\S+)), +Router +ID'
                                   ' +(?P<router_id>(\S+)) +(.*)', line)
                     if p:
@@ -2886,7 +2886,7 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
 
                     for line in out.splitlines():
                         line = line.rstrip()
-                        # Virtual Link OSPF_VL0 to router 5.5.5.5 is down
+                        # Virtual Link OSPF_VL0 to router 10.100.5.5 is down
                         p = re.search('Virtual +Link +(?P<intf>(\S+)) +to +router'
                                      ' +(?P<address>(\S+)) +is +(up|down)'
                                      '(?:.*)?', line)
@@ -2902,7 +2902,7 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
 
                         for line in out.splitlines():
                             line = line.rstrip()
-                            #  area 1 virtual-link 5.5.5.5
+                            #  area 1 virtual-link 10.100.5.5
                             q = re.search('area +(?P<q_area>(\d+)) +virtual-link'
                                           ' +(?P<addr>(\S+))(?: +(.*))?', line)
                             if q:
@@ -2927,7 +2927,7 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
 
                     for line in out.splitlines():
                         line = line.rstrip()
-                        # Sham Link OSPF_SL1 to address 22.22.22.22 is up
+                        # Sham Link OSPF_SL1 to address 10.151.22.22 is up
                         p = re.search('Sham +Link +(?P<intf>(\S+)) +to +address'
                                      ' +(?P<remote>(\S+)) +is +(up|down)', line)
                         if p:
@@ -2942,7 +2942,7 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
 
                         for line in out.splitlines():
                             line = line.rstrip()
-                            # area 1 sham-link 11.11.11.11 22.22.22.22 cost 111 ttl-security hops 3
+                            # area 1 sham-link 10.229.11.11 10.151.22.22 cost 111 ttl-security hops 3
                             q = re.search('area +(?P<q_area>(\d+)) +sham-link'
                                           ' +(?P<local_id>(\S+))'
                                           ' +(?P<remote_id>(\S+)) +(.*)', line)
@@ -3218,8 +3218,8 @@ class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
             'opaque': 10,
             }
 
-        # OSPF Router with ID (172.152.187.214) (Process ID 9996)
-        # OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
+        # OSPF Router with ID (172.16.1.214) (Process ID 65109)
+        # OSPF Router with ID (10.36.3.3) (Process ID 1, VRF VRF1)
         p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
                          ' +\(Process +ID +(?P<instance>(\d+))'
                          '(?:, +VRF +(?P<vrf>(\S+)))?\)$')
@@ -3232,8 +3232,8 @@ class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
                          ' +(?P<area>(\S+))\)$')
 
         # Link ID         ADV Router      Age         Seq#       Checksum Link count
-        # 10.13.202.64    27.93.202.64    2794        0x80000043 0x002254 3
-        # 10.1.1.2        106.162.197.253 70          0x8000003F 0x0015EF
+        # 10.13.202.64    10.120.202.64   2794        0x80000043 0x002254 3
+        # 10.1.1.2        10.169.197.253  70          0x8000003F 0x0015EF
         p3 = re.compile(r'^(?P<link_id>(\S+)) +(?P<adv_router>(\S+))'
                          ' +(?P<age>(\d+)) +(?P<seq>(\S+)) +(?P<checksum>(\S+))'
                          '(?: *(?P<link_count>(\d+)))?$')
@@ -3242,9 +3242,9 @@ class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
             line = line.strip()
 
             # Load for five secs: 71%/0%; one minute: 11%; five minutes: 9%
-            # Time source is NTP, 20:29:26.348 JST Fri Nov 11 2016
+            # Time source is NTP, 20:29:26.348 EST Fri Nov 11 2016
 
-            # OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
+            # OSPF Router with ID (10.36.3.3) (Process ID 1, VRF VRF1)
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -3297,8 +3297,8 @@ class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
                 continue
 
             # Link ID         ADV Router      Age         Seq#       Checksum Link count
-            # 10.13.202.64    27.93.202.64    2794        0x80000043 0x002254 3
-            # 10.1.1.2        106.162.197.253 70          0x8000003F 0x0015EF
+            # 10.13.202.64    10.120.202.64   2794        0x80000043 0x002254 3
+            # 10.1.1.2        10.169.197.253  70          0x8000003F 0x0015EF
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -3375,8 +3375,8 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
         for line in out.splitlines():
             line = line.strip()
 
-            # OSPF Router with ID (3.3.3.3) (Process ID 1)
-            # OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
+            # OSPF Router with ID (10.36.3.3) (Process ID 1)
+            # OSPF Router with ID (10.36.3.3) (Process ID 1, VRF VRF1)
             p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
                              ' +\(Process +ID +(?P<instance>(\d+))'
                              '(?:, +VRF +(?P<vrf>(\S+)))?\)$')
@@ -3496,8 +3496,8 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                 lsa_type = lsa_type_mapping[db_type]
                 continue
 
-            # Link State ID: 1.1.1.1
-            # Link State ID: 44.44.44.44 (Network address)
+            # Link State ID: 10.4.1.1
+            # Link State ID: 10.94.44.44 (Network address)
             # Link State ID: 10.1.2.1 (Designated Router address)
             # Link State ID: 10.1.2.1 (address of Designated Router)
             p5_2 = re.compile(r'^Link +State +ID: +(?P<lsa_id>(\S+))'
@@ -3507,7 +3507,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                 lsa_id = str(m.groupdict()['lsa_id'])
                 continue
 
-            # Advertising Router: 4.4.4.4
+            # Advertising Router: 10.64.4.4
             p6 = re.compile(r'^Advertising +Router: +(?P<adv_router>(\S+))$')
             m = p6.match(line)
             if m:
@@ -3686,7 +3686,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                 db_topo_dict['external_route_tag'] = int(m.groupdict()['tag'])
                 continue
 
-            # Attached Router: 66.66.66.66
+            # Attached Router: 10.84.66.66
             p16 = re.compile(r'^Attached +Router: +(?P<att_router>(\S+))$')
             m = p16.match(line)
             if m:
@@ -3719,7 +3719,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                 link_type = str(m.groupdict()['type']).lower()
                 continue
 
-            # (Link ID) Network/subnet number: 1.1.1.1
+            # (Link ID) Network/subnet number: 10.4.1.1
             p19_1 = re.compile(r'^\(Link +ID\) +Network\/(s|S)ubnet +(n|N)umber:'
                                 ' +(?P<link_id>(\S+))$')
             m = p19_1.match(line)
@@ -3747,7 +3747,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                 db_dict['links'][link_id]['topologies'][default_mt_id]['mt_id'] = default_mt_id
                 continue
 
-            # (Link ID) Designated Router address: 20.6.7.6
+            # (Link ID) Designated Router address: 10.166.7.6
             p19_2 = re.compile(r'^\(Link +ID\) +(D|d)esignated +(R|r)outer'
                                 ' +(a|A)ddress: +(?P<link_id>(\S+))$')
             m = p19_2.match(line)
@@ -3775,7 +3775,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                 db_dict['links'][link_id]['topologies'][default_mt_id]['mt_id'] = default_mt_id
                 continue
 
-            # (Link ID) Neighboring Router ID: 22.22.22.22
+            # (Link ID) Neighboring Router ID: 10.151.22.22
             p19_3 = re.compile(r'^\(Link +ID\) +(N|n)eighboring +(R|r)outer'
                                 ' +(I|d)D: +(?P<link_id>(\S+))$')
             m = p19_3.match(line)
@@ -3812,7 +3812,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                     str(m.groupdict()['link_data'])
                 continue
 
-            # (Link Data) Router Interface address: 20.6.7.6
+            # (Link Data) Router Interface address: 10.166.7.6
             p20_2 = re.compile(r'^\(Link +Data\) +Router +Interface +address:'
                                 ' +(?P<link_data>(\S+))$')
             m = p20_2.match(line)
@@ -3871,7 +3871,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                 header_dict['fragment_number'] = int(m.groupdict()['num'])
                 continue
 
-            # MPLS TE router ID : 1.1.1.1
+            # MPLS TE router ID : 10.4.1.1
             p25 = re.compile(r'^MPLS +TE +router +ID *: +(?P<mpls>(\S+))$')
             m = p25.match(line)
             if m:
@@ -4878,7 +4878,7 @@ class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # OSPF Router with ID (1.1.1.1) (Process ID 1)
+            # OSPF Router with ID (10.4.1.1) (Process ID 1)
             p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
                              ' +\(Process +ID +(?P<instance>(\S+))\)$')
             m = p1.match(line)
@@ -5199,10 +5199,10 @@ class ShowIpOspfMaxMetric(ShowIpOspfMaxMetricSchema):
         address_family = 'ipv4'
 
         # Load for five secs: 71%/0%; one minute: 11%; five minutes: 9%
-        # Time source is NTP, 20:29:26.348 JST Fri Nov 11 2016
+        # Time source is NTP, 20:29:26.348 EST Fri Nov 11 2016
 
-        # OSPF Router with ID (172.152.187.214) (Process ID 9996)
-        # OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
+        # OSPF Router with ID (172.16.1.214) (Process ID 65109)
+        # OSPF Router with ID (10.36.3.3) (Process ID 1, VRF VRF1)
         p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
                          ' +\(Process +ID +(?P<instance>(\d+))'
                          '(?:, +VRF +(?P<vrf>(\S+)))?\)$')
@@ -5239,7 +5239,7 @@ class ShowIpOspfMaxMetric(ShowIpOspfMaxMetricSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
+            # OSPF Router with ID (10.36.3.3) (Process ID 1, VRF VRF1)
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -5596,13 +5596,13 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
         p6 = re.compile(r'^Sent: +(?P<total>(\d+)) +total$')
 
 
-        # OSPF Router with ID (106.162.197.252) (Process ID 9996)
-        # OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
+        # OSPF Router with ID (10.169.197.252) (Process ID 65109)
+        # OSPF Router with ID (10.36.3.3) (Process ID 1, VRF VRF1)
         p7 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
                          ' +\(Process +ID +(?P<instance>(\d+))'
                          '(?:, +VRF +(?P<vrf>(\S+)))?\)$')
 
-        # OSPF queue statistics for process ID 9996:
+        # OSPF queue statistics for process ID 65109:
         p8 = re.compile(r'^OSPF +queue +statistics +for +process +ID +(?P<pid>(\d+)):$')
 
         #                   InputQ   UpdateQ      OutputQ
@@ -5695,7 +5695,7 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
         p22 = re.compile(r'^Type +(?P<type>(\d+)), +Length +(?P<len>(\d+)),'
                           ' +Data +(?P<data>(\d+)), +Checksum +(?P<csum>(\d+))$')
 
-        # Summary traffic statistics for process ID 9996:
+        # Summary traffic statistics for process ID 65109:
         p23 = re.compile(r'^Summary +traffic +statistics +for +process +ID'
                           ' +(?P<pid>(\d+)):$')
 
@@ -5770,8 +5770,8 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
                 sent = True ; received = False
                 continue
 
-            # OSPF Router with ID (106.162.197.252) (Process ID 9996)
-            # OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
+            # OSPF Router with ID (10.169.197.252) (Process ID 65109)
+            # OSPF Router with ID (10.36.3.3) (Process ID 1, VRF VRF1)
             m = p7.match(line)
             if m:
                 group = m.groupdict()
@@ -5791,7 +5791,7 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
                 ospf_dict['router_id'] = router_id
                 continue
 
-            # OSPF queue statistics for process ID 9996:
+            # OSPF queue statistics for process ID 65109:
             m = p8.match(line)
             if m:
                 queue_stats_dict = ospf_dict.setdefault('ospf_queue_statistics', {})
@@ -5988,7 +5988,7 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
                 ospf_lsa_errors_dict['checksum'] = int(group['csum'])
                 continue
 
-            # Summary traffic statistics for process ID 9996:
+            # Summary traffic statistics for process ID 65109:
             m = p23.match(line)
             if m:
                 summary_stats_dict = ospf_dict.\

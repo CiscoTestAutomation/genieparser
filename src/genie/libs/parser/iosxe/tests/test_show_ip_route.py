@@ -24,9 +24,9 @@ class test_show_ip_route(unittest.TestCase):
         {'address_family':
           {'ipv4 unicast':
             {'ip':
-              {'15.1.1.0/24':
+              {'10.1.1.0/24':
                 {'nexthop':
-                  {'1.1.1.1':
+                  {'10.4.1.1':
                     {'protocol':
                       {'bgp':
                         {'metric': '2219',
@@ -44,8 +44,8 @@ class test_show_ip_route(unittest.TestCase):
              OE1 - OSPF ext 1, OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1
              ON2 - OSPF NSSA ext 2, la - LISP alt, lr - LISP site-registrations
              ld - LISP dyn-eid, a - Application
-            15.0.0.0/24 is subnetted, 5 subnets
-      B        15.1.1.0 [200/2219] via 1.1.1.1, 01:40:40
+            10.225.0.0/24 is subnetted, 5 subnets
+      B        10.1.1.0 [200/2219] via 10.4.1.1, 01:40:40
       '''}
 
     golden_parsed_output2 = {'vrf':
@@ -53,47 +53,47 @@ class test_show_ip_route(unittest.TestCase):
         {'address_family':
           {'vpnv4 unicast':
             {'ip':
-              {'15.1.1.0/24':
+              {'10.1.1.0/24':
                 {'nexthop':
-                  {'1.1.1.1':
+                  {'10.4.1.1':
                     {'protocol':
                       {'bgp':
                         {'metric': '2219',
                          'preference': '200',
                          'uptime': '01:40:40'}}}}},
-              '15.1.2.0/24':
+              '10.1.2.0/24':
                 {'nexthop':
-                  {'1.1.1.1':
+                  {'10.4.1.1':
                     {'protocol':
                       {'bgp':
                         {'metric': '2219',
                          'preference': '200',
                          'uptime': '01:40:40'}}}}},
-              '15.1.3.0/24':
+              '10.1.3.0/24':
                 {'nexthop':
-                  {'1.1.1.1':
+                  {'10.4.1.1':
                     {'protocol':
                       {'bgp':
                         {'metric': '2219',
                          'preference': '200',
                          'uptime': '01:40:40'}}}}},
-              '15.1.4.0/24':
+              '10.1.4.0/24':
                 {'nexthop':
-                  {'1.1.1.1':
+                  {'10.4.1.1':
                     {'protocol':
                       {'bgp':
                         {'metric': '2219',
                          'preference': '200',
                          'uptime': '01:40:40'}}}}},
-              '15.1.5.0/24':
+              '10.1.5.0/24':
                 {'nexthop':
-                  {'1.1.1.1':
+                  {'10.4.1.1':
                     {'protocol':
                       {'bgp':
                         {'metric': '2219',
                          'preference': '200',
                          'uptime': '01:40:40'}}}}},
-              '46.1.1.0/24':
+              '10.169.1.0/24':
                 {'nexthop':
                   {'10.4.6.6':
                     {'protocol':
@@ -101,7 +101,7 @@ class test_show_ip_route(unittest.TestCase):
                         {'metric': '2219',
                          'preference': '20',
                          'uptime': '01:36:35'}}}}},
-              '46.1.2.0/24':
+              '10.169.2.0/24':
                 {'nexthop':
                   {'10.4.6.6':
                     {'protocol':
@@ -109,7 +109,7 @@ class test_show_ip_route(unittest.TestCase):
                         {'metric': '2219',
                          'preference': '20',
                          'uptime': '01:36:35'}}}}},
-              '46.1.3.0/24':
+              '10.169.3.0/24':
                 {'nexthop':
                   {'10.4.6.6':
                     {'protocol':
@@ -117,7 +117,7 @@ class test_show_ip_route(unittest.TestCase):
                         {'metric': '2219',
                          'preference': '20',
                          'uptime': '01:36:35'}}}}},
-              '46.1.4.0/24':
+              '10.169.4.0/24':
                 {'nexthop':
                   {'10.4.6.6':
                     {'protocol':
@@ -125,7 +125,7 @@ class test_show_ip_route(unittest.TestCase):
                         {'metric': '2219',
                          'preference': '20',
                          'uptime': '01:36:35'}}}}},
-              '46.1.5.0/24':
+              '10.169.5.0/24':
                 {'nexthop':
                   {'10.4.6.6':
                     {'protocol':
@@ -133,45 +133,45 @@ class test_show_ip_route(unittest.TestCase):
                         {'metric': '2219',
                          'preference': '20',
                          'uptime': '01:36:35'}}}}},
-              '46.2.2.0/24':
+              '10.9.2.0/24':
                 {'nexthop':
-                  {'20.4.6.6':
+                  {'10.66.6.6':
                     {'protocol':
                       {'bgp':
                         {'metric': '2219',
                          'preference': '20',
                          'route_table': 'VRF2',
                          'uptime': '01:36:26'}}}}},
-              '46.2.3.0/24':
+              '10.9.3.0/24':
                 {'nexthop':
-                  {'20.4.6.6':
+                  {'10.66.6.6':
                     {'protocol':
                       {'bgp':
                         {'metric': '2219',
                          'preference': '20',
                          'route_table': 'VRF2',
                          'uptime': '01:36:26'}}}}},
-              '46.2.4.0/24':
+              '10.9.4.0/24':
                 {'nexthop':
-                  {'20.4.6.6':
+                  {'10.66.6.6':
                     {'protocol':
                       {'bgp':
                         {'metric': '2219',
                          'preference': '20',
                          'route_table': 'VRF2',
                          'uptime': '01:36:26'}}}}},
-              '46.2.5.0/24':
+              '10.9.5.0/24':
                 {'nexthop':
-                  {'20.4.6.6':
+                  {'10.66.6.6':
                     {'protocol':
                       {'bgp':
                         {'metric': '2219',
                          'preference': '20',
                          'route_table': 'VRF2',
                          'uptime': '01:36:26'}}}}},
-              '46.2.6.0/24':
+              '10.9.6.0/24':
                 {'nexthop':
-                  {'20.4.6.6':
+                  {'10.66.6.6':
                     {'protocol':
                       {'bgp':
                         {'metric': '2219',
@@ -194,23 +194,23 @@ class test_show_ip_route(unittest.TestCase):
 
       Gateway of last resort is not set
 
-            15.0.0.0/24 is subnetted, 5 subnets
-      B        15.1.1.0 [200/2219] via 1.1.1.1, 01:40:40
-      B        15.1.2.0 [200/2219] via 1.1.1.1, 01:40:40
-      B        15.1.3.0 [200/2219] via 1.1.1.1, 01:40:40
-      B        15.1.4.0 [200/2219] via 1.1.1.1, 01:40:40
-      B        15.1.5.0 [200/2219] via 1.1.1.1, 01:40:40
-            46.0.0.0/24 is subnetted, 10 subnets
-      B        46.1.1.0 [20/2219] via 10.4.6.6, 01:36:35
-      B        46.1.2.0 [20/2219] via 10.4.6.6, 01:36:35
-      B        46.1.3.0 [20/2219] via 10.4.6.6, 01:36:35
-      B        46.1.4.0 [20/2219] via 10.4.6.6, 01:36:35
-      B        46.1.5.0 [20/2219] via 10.4.6.6, 01:36:35
-      B        46.2.2.0 [20/2219] via 20.4.6.6 (VRF2), 01:36:26
-      B        46.2.3.0 [20/2219] via 20.4.6.6 (VRF2), 01:36:26
-      B        46.2.4.0 [20/2219] via 20.4.6.6 (VRF2), 01:36:26
-      B        46.2.5.0 [20/2219] via 20.4.6.6 (VRF2), 01:36:26
-      B        46.2.6.0 [20/2219] via 20.4.6.6 (VRF2), 01:36:26
+            10.225.0.0/24 is subnetted, 5 subnets
+      B        10.1.1.0 [200/2219] via 10.4.1.1, 01:40:40
+      B        10.1.2.0 [200/2219] via 10.4.1.1, 01:40:40
+      B        10.1.3.0 [200/2219] via 10.4.1.1, 01:40:40
+      B        10.1.4.0 [200/2219] via 10.4.1.1, 01:40:40
+      B        10.1.5.0 [200/2219] via 10.4.1.1, 01:40:40
+            10.76.0.0/24 is subnetted, 10 subnets
+      B        10.169.1.0 [20/2219] via 10.4.6.6, 01:36:35
+      B        10.169.2.0 [20/2219] via 10.4.6.6, 01:36:35
+      B        10.169.3.0 [20/2219] via 10.4.6.6, 01:36:35
+      B        10.169.4.0 [20/2219] via 10.4.6.6, 01:36:35
+      B        10.169.5.0 [20/2219] via 10.4.6.6, 01:36:35
+      B        10.9.2.0 [20/2219] via 10.66.6.6 (VRF2), 01:36:26
+      B        10.9.3.0 [20/2219] via 10.66.6.6 (VRF2), 01:36:26
+      B        10.9.4.0 [20/2219] via 10.66.6.6 (VRF2), 01:36:26
+      B        10.9.5.0 [20/2219] via 10.66.6.6 (VRF2), 01:36:26
+      B        10.9.6.0 [20/2219] via 10.66.6.6 (VRF2), 01:36:26
       '''}
 
     golden_parsed_output3 = {'vrf':
@@ -257,7 +257,7 @@ class test_show_ip_route(unittest.TestCase):
             {'ip':
               {'615:11:11:1::/64':
                 {'nexthop':
-                  {'1.1.1.1':
+                  {'10.4.1.1':
                     {'protocol':
                       {'bgp':
                         {'attribute': 'indirectly connected',
@@ -266,7 +266,7 @@ class test_show_ip_route(unittest.TestCase):
                          'route_table': 'default'}}}}},
               '615:11:11:2::/64':
                 {'nexthop':
-                  {'1.1.1.1':
+                  {'10.4.1.1':
                     {'protocol':
                       {'bgp':
                         {'attribute': 'indirectly connected',
@@ -275,7 +275,7 @@ class test_show_ip_route(unittest.TestCase):
                          'route_table': 'default'}}}}},
               '615:11:11:3::/64':
                 {'nexthop':
-                  {'1.1.1.1':
+                  {'10.4.1.1':
                     {'protocol':
                       {'bgp':
                         {'attribute': 'indirectly connected',
@@ -284,7 +284,7 @@ class test_show_ip_route(unittest.TestCase):
                          'route_table': 'default'}}}}},
               '615:11:11:4::/64':
                 {'nexthop':
-                  {'1.1.1.1':
+                  {'10.4.1.1':
                     {'protocol':
                       {'bgp':
                         {'attribute': 'indirectly connected',
@@ -293,7 +293,7 @@ class test_show_ip_route(unittest.TestCase):
                          'route_table': 'default'}}}}},
               '615:11:11::/64':
                 {'nexthop':
-                  {'1.1.1.1':
+                  {'10.4.1.1':
                     {'protocol':
                       {'bgp':
                         {'attribute': 'indirectly connected',
@@ -389,15 +389,15 @@ class test_show_ip_route(unittest.TestCase):
              ON1 - OSPF NSSA ext 1, ON2 - OSPF NSSA ext 2, la - LISP alt
              lr - LISP site-registrations, ld - LISP dyn-eid, a - Application
       B   615:11:11::/64 [200/2219]
-           via 1.1.1.1%default, indirectly connected
+           via 10.4.1.1%default, indirectly connected
       B   615:11:11:1::/64 [200/2219]
-           via 1.1.1.1%default, indirectly connected
+           via 10.4.1.1%default, indirectly connected
       B   615:11:11:2::/64 [200/2219]
-           via 1.1.1.1%default, indirectly connected
+           via 10.4.1.1%default, indirectly connected
       B   615:11:11:3::/64 [200/2219]
-           via 1.1.1.1%default, indirectly connected
+           via 10.4.1.1%default, indirectly connected
       B   615:11:11:4::/64 [200/2219]
-           via 1.1.1.1%default, indirectly connected
+           via 10.4.1.1%default, indirectly connected
       B   646:11:11::/64 [20/2219]
            via 2001:DB8:4:6::6
       B   646:11:11:1::/64 [20/2219]

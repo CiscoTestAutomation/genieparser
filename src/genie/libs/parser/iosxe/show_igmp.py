@@ -525,7 +525,7 @@ class ShowIpIgmpGroupsDetail(ShowIpIgmpGroupsDetailSchema):
                 continue
 
             # Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
-            # 1.1.1.1          00:05:06  stopped   stopped   Yes  L
+            # 10.4.1.1         00:05:06  stopped   stopped   Yes  L
             p7 = re.compile(r'^(?P<source>[\w\.\:]+) +'
                              '(?P<up_time>[\w\.\:]+) +'
                              '(?P<v3_exp>\w+) +'
@@ -678,7 +678,7 @@ class ShowIpIgmpSsmMapping(ShowIpIgmpSsmMappingSchema):
                 database = m.groupdict()['database']
                 continue
 
-            # Source list  : 1.1.1.1
+            # Source list  : 10.4.1.1
             p3 = re.compile(r'^Source +list *: +(?P<source_addr>[\w\.\:]+)$')
             m = p3.match(line)
             if m:
@@ -703,7 +703,7 @@ class ShowIpIgmpSsmMapping(ShowIpIgmpSsmMappingSchema):
                     ret_dict['vrf'][vrf]['ssm_map'][ssm]['database'] = database.lower()
                 continue
 
-            # 1.1.1.2
+            # 10.4.1.2
             p3_1 = re.compile(r'^(?P<source_addr>[\w\.\:]+)$')
             m = p3_1.match(line)
             if m:

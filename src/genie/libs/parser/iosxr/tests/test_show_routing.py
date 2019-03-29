@@ -34,17 +34,17 @@ class test_show_route_ipv4(unittest.TestCase):
 
     Gateway of last resort is not set
 
-    S    1.1.1.1/32 is directly connected, 01:51:13, GigabitEthernet0/0/0/0
+    S    10.4.1.1/32 is directly connected, 01:51:13, GigabitEthernet0/0/0/0
                     is directly connected, 01:51:13, GigabitEthernet0/0/0/3
-    L    2.2.2.2/32 is directly connected, 01:51:14, Loopback0
-    S    3.3.3.3/32 [1/0] via 10.2.3.3, 01:51:13, GigabitEthernet0/0/0/1
-                    [1/0] via 20.2.3.3, 01:51:13, GigabitEthernet0/0/0/2
+    L    10.16.2.2/32 is directly connected, 01:51:14, Loopback0
+    S    10.36.3.3/32 [1/0] via 10.2.3.3, 01:51:13, GigabitEthernet0/0/0/1
+                    [1/0] via 10.229.3.3, 01:51:13, GigabitEthernet0/0/0/2
     C    10.1.2.0/24 is directly connected, 01:51:13, GigabitEthernet0/0/0/3
-    i L1 21.21.21.21/32 [115/20] via 20.1.2.1, 01:50:50, GigabitEthernet0/0/0/0
+    i L1 10.234.21.21/32 [115/20] via 10.186.2.1, 01:50:50, GigabitEthernet0/0/0/0
                         [115/20] via 10.1.2.1, 01:50:50, GigabitEthernet0/0/0/3
-    B    31.31.31.31/32 [200/0] via 11.11.11.11, 00:55:14
-    L    32.32.32.32/32 is directly connected, 01:51:14, Loopback3
-    B    33.33.33.33/32 [200/0] via 13.13.13.13, 00:52:31
+    B    10.19.31.31/32 [200/0] via 10.229.11.11, 00:55:14
+    L    10.16.32.32/32 is directly connected, 01:51:14, Loopback3
+    B    10.21.33.33/32 [200/0] via 10.166.13.13, 00:52:31
     '''
 }
     golden_parsed_output_1 = {
@@ -53,8 +53,8 @@ class test_show_route_ipv4(unittest.TestCase):
                 'address_family': {
                     'ipv4': {
                         'routes': {
-                            '1.1.1.1/32': {
-                                'route': '1.1.1.1/32',
+                            '10.4.1.1/32': {
+                                'route': '10.4.1.1/32',
                                 'active': True,
                                 'source_protocol_codes': 'S',
                                 'source_protocol': 'static',
@@ -71,8 +71,8 @@ class test_show_route_ipv4(unittest.TestCase):
                                     },
                                 },
                             },
-                            '2.2.2.2/32': {
-                                'route': '2.2.2.2/32',
+                            '10.16.2.2/32': {
+                                'route': '10.16.2.2/32',
                                 'active': True,
                                 'source_protocol_codes': 'L',
                                 'source_protocol': 'local',
@@ -85,8 +85,8 @@ class test_show_route_ipv4(unittest.TestCase):
                                     },
                                 },
                             },
-                            '3.3.3.3/32': {
-                                'route': '3.3.3.3/32',
+                            '10.36.3.3/32': {
+                                'route': '10.36.3.3/32',
                                 'active': True,
                                 'route_preference': 1,
                                 'metric': 0,
@@ -102,7 +102,7 @@ class test_show_route_ipv4(unittest.TestCase):
                                         },
                                         2: {
                                             'index': 2,
-                                            'next_hop': '20.2.3.3',
+                                            'next_hop': '10.229.3.3',
                                             'outgoing_interface': 'GigabitEthernet0/0/0/2',
                                             'updated': '01:51:13'
                                         },
@@ -123,8 +123,8 @@ class test_show_route_ipv4(unittest.TestCase):
                                     },
                                 },
                             },
-                            '21.21.21.21/32': {
-                                'route': '21.21.21.21/32',
+                            '10.234.21.21/32': {
+                                'route': '10.234.21.21/32',
                                 'active': True,
                                 'route_preference': 115,
                                 'metric': 20,
@@ -134,7 +134,7 @@ class test_show_route_ipv4(unittest.TestCase):
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '20.1.2.1',
+                                            'next_hop': '10.186.2.1',
                                             'outgoing_interface': 'GigabitEthernet0/0/0/0',
                                             'updated': '01:50:50'
                                         },
@@ -148,8 +148,8 @@ class test_show_route_ipv4(unittest.TestCase):
                                 },
 
                         },
-                            '31.31.31.31/32': {
-                                'route': '31.31.31.31/32',
+                            '10.19.31.31/32': {
+                                'route': '10.19.31.31/32',
                                 'active': True,
                                 'route_preference': 200,
                                 'metric': 0,
@@ -159,15 +159,15 @@ class test_show_route_ipv4(unittest.TestCase):
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '11.11.11.11',
+                                            'next_hop': '10.229.11.11',
                                             'updated': '00:55:14'
                                         },
                                     },
                                 },
 
                             },
-                            '32.32.32.32/32': {
-                                'route': '32.32.32.32/32',
+                            '10.16.32.32/32': {
+                                'route': '10.16.32.32/32',
                                 'active': True,
                                 'source_protocol_codes': 'L',
                                 'source_protocol': 'local',
@@ -180,8 +180,8 @@ class test_show_route_ipv4(unittest.TestCase):
                                     },
                                 },
                             },
-                            '33.33.33.33/32': {
-                                'route': '33.33.33.33/32',
+                            '10.21.33.33/32': {
+                                'route': '10.21.33.33/32',
                                 'active': True,
                                 'route_preference': 200,
                                 'metric': 0,
@@ -191,7 +191,7 @@ class test_show_route_ipv4(unittest.TestCase):
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '13.13.13.13',
+                                            'next_hop': '10.166.13.13',
                                             'updated': '00:52:31'
                                         },
                                     },
@@ -223,9 +223,9 @@ class test_show_route_ipv4(unittest.TestCase):
 
     Gateway of last resort is not set
 
-    L    200.1.0.1/32 is directly connected, 1d22h, Loopback501
-    C    201.1.0.0/24 is directly connected, 20:03:59, GigabitEthernet0/0/0/0.501
-    L    201.1.0.1/32 is directly connected, 20:03:59, GigabitEthernet0/0/0/0.501
+    L    192.168.111.1/32 is directly connected, 1d22h, Loopback501
+    C    192.168.4.0/24 is directly connected, 20:03:59, GigabitEthernet0/0/0/0.501
+    L    192.168.4.1/32 is directly connected, 20:03:59, GigabitEthernet0/0/0/0.501
 
     VRF: VRF502
 
@@ -242,12 +242,12 @@ class test_show_route_ipv4(unittest.TestCase):
 
     Gateway of last resort is not set
 
-    B    12.0.0.0/24 [20/0] via 201.2.0.2, 19:38:48
-    B    12.0.1.0/24 [20/0] via 201.2.0.2, 19:38:48
-    B    12.0.2.0/24 [20/0] via 201.2.0.2, 19:38:48
-    L    200.2.0.1/32 is directly connected, 1d22h, Loopback502
-    C    201.2.0.0/24 is directly connected, 20:03:59, GigabitEthernet0/0/0/0.502
-    L    201.2.0.1/32 is directly connected, 20:03:59, GigabitEthernet0/0/0/0.502
+    B    10.144.0.0/24 [20/0] via 192.168.154.2, 19:38:48
+    B    10.144.1.0/24 [20/0] via 192.168.154.2, 19:38:48
+    B    10.144.2.0/24 [20/0] via 192.168.154.2, 19:38:48
+    L    192.168.4.1/32 is directly connected, 1d22h, Loopback502
+    C    192.168.154.0/24 is directly connected, 20:03:59, GigabitEthernet0/0/0/0.502
+    L    192.168.154.1/32 is directly connected, 20:03:59, GigabitEthernet0/0/0/0.502
 
 
     VRF: VRF505
@@ -261,8 +261,8 @@ class test_show_route_ipv4(unittest.TestCase):
                 'address_family': {
                     'ipv4': {
                         'routes': {
-                            '200.1.0.1/32': {
-                                'route': '200.1.0.1/32',
+                            '192.168.111.1/32': {
+                                'route': '192.168.111.1/32',
                                 'active': True,
                                 'source_protocol_codes': 'L',
                                 'source_protocol': 'local',
@@ -275,8 +275,8 @@ class test_show_route_ipv4(unittest.TestCase):
                                     },
                                 },
                             },
-                            '201.1.0.0/24': {
-                                'route': '201.1.0.0/24',
+                            '192.168.4.0/24': {
+                                'route': '192.168.4.0/24',
                                 'active': True,
                                 'source_protocol_codes': 'C',
                                 'source_protocol': 'connected',
@@ -289,8 +289,8 @@ class test_show_route_ipv4(unittest.TestCase):
                                     },
                                 },
                             },
-                            '201.1.0.1/32': {
-                                'route': '201.1.0.1/32',
+                            '192.168.4.1/32': {
+                                'route': '192.168.4.1/32',
                                 'active': True,
                                 'source_protocol_codes': 'L',
                                 'source_protocol': 'local',
@@ -311,8 +311,8 @@ class test_show_route_ipv4(unittest.TestCase):
                 'address_family': {
                     'ipv4': {
                         'routes': {
-                            '12.0.0.0/24': {
-                                'route': '12.0.0.0/24',
+                            '10.144.0.0/24': {
+                                'route': '10.144.0.0/24',
                                 'active': True,
                                 'source_protocol_codes': 'B',
                                 'source_protocol': 'bgp',
@@ -322,14 +322,14 @@ class test_show_route_ipv4(unittest.TestCase):
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '201.2.0.2',
+                                            'next_hop': '192.168.154.2',
                                             'updated': '19:38:48'
                                         },
                                     },
                                 },
                             },
-                            '12.0.1.0/24': {
-                                'route': '12.0.1.0/24',
+                            '10.144.1.0/24': {
+                                'route': '10.144.1.0/24',
                                 'active': True,
                                 'source_protocol_codes': 'B',
                                 'source_protocol': 'bgp',
@@ -339,14 +339,14 @@ class test_show_route_ipv4(unittest.TestCase):
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '201.2.0.2',
+                                            'next_hop': '192.168.154.2',
                                             'updated': '19:38:48'
                                         },
                                     },
                                 },
                             },
-                            '12.0.2.0/24': {
-                                'route': '12.0.2.0/24',
+                            '10.144.2.0/24': {
+                                'route': '10.144.2.0/24',
                                 'active': True,
                                 'source_protocol_codes': 'B',
                                 'source_protocol': 'bgp',
@@ -356,14 +356,14 @@ class test_show_route_ipv4(unittest.TestCase):
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '201.2.0.2',
+                                            'next_hop': '192.168.154.2',
                                             'updated': '19:38:48'
                                         },
                                     },
                                 },
                             },
-                            '200.2.0.1/32': {
-                                'route': '200.2.0.1/32',
+                            '192.168.4.1/32': {
+                                'route': '192.168.4.1/32',
                                 'active': True,
                                 'source_protocol_codes': 'L',
                                 'source_protocol': 'local',
@@ -376,8 +376,8 @@ class test_show_route_ipv4(unittest.TestCase):
                                     },
                                 },
                             },
-                            '201.2.0.0/24': {
-                                'route': '201.2.0.0/24',
+                            '192.168.154.0/24': {
+                                'route': '192.168.154.0/24',
                                 'active': True,
                                 'source_protocol_codes': 'C',
                                 'source_protocol': 'connected',
@@ -390,8 +390,8 @@ class test_show_route_ipv4(unittest.TestCase):
                                     },
                                 },
                             },
-                            '201.2.0.1/32': {
-                                'route': '201.2.0.1/32',
+                            '192.168.154.1/32': {
+                                'route': '192.168.154.1/32',
                                 'active': True,
                                 'source_protocol_codes': 'L',
                                 'source_protocol': 'local',
