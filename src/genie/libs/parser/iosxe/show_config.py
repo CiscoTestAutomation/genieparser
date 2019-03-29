@@ -42,7 +42,7 @@ class ShowConfigurationLockSchema(MetaParser):
                     Optional('count'): int,
                     Optional('pending_requests'): int,
                     Optional('user_debug_info'): str,
-                    Optional('session_idle_state'): str,
+                    Optional('session_idle_state'): bool,
                     Optional('num_of_exec_cmds_executed'): int,
                     Optional('num_of_exec_cmds_blocked'): int,
                     Optional('config_wait_for_show_completion'): str,
@@ -72,7 +72,9 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
         
         parser_lock_found = False
         
+        # Owner PID : -1
         # Owner PID : 543
+        # Owner PID :10
         p1 = re.compile(r'^\s*Owner +PID +: *(?P<owner_pid>(\-)?\d+)$')
         # TTY number : 2
         p2 = re.compile(r'^\s*TTY +number +: +(?P<tty_number>\d+)$')
@@ -87,38 +89,45 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                 '+(?P<lock_active_time_in_sec>\d+)$')
         # Parser Configure Lock
         p6 = re.compile(r'^\s*Parser +Configure +Lock$')
-        # Owner PID         : 10
-        p7 = re.compile(r'^\s*Owner +PID +: *(?P<owner_pid>(\-)?\d+)$')
+        
         # User              : User1
-        p8 = re.compile(r'^\s*User *: *(?P<user>\S+)$')
+        # User:User1
+        p7 = re.compile(r'^\s*User *: *(?P<user>\S+)$')
         # TTY               : 3
-        p9 = re.compile(r'^\s*TTY *: *(?P<tty>(\-)?\d+)$')
+        # TTY:3
+        p8 = re.compile(r'^\s*TTY *: *(?P<tty>(\-)?\d+)$')
         # Type              : EXCLUSIVE
-        p10 = re.compile(r'^\s*Type *: *(?P<type>[\w\W]+)$')
+        # Type:EXCLUSIVE
+        p9 = re.compile(r'^\s*Type *: *(?P<type>[\w\W]+)$')
         # State             : LOCKED
-        p11 = re.compile(r'^\s*State *: *(?P<state>\S+)$')
+        # State:LOCKED
+        p10 = re.compile(r'^\s*State *: *(?P<state>\S+)$')
         # Class             : Exposed
-        p12 = re.compile(r'^\s*Class *: *(?P<class_name>\S+)$')
+        # Class:Exposed
+        p11 = re.compile(r'^\s*Class *: *(?P<class_name>\S+)$')
         # Count             : 0
-        p13 = re.compile(r'^\s*Count *: *(?P<count>\d+)$')
+        # Count:0
+        p12 = re.compile(r'^\s*Count *: *(?P<count>\d+)$')
         # Pending Requests  : 0
-        p14 = re.compile(r'^\s*Pending +Requests *: '\
+        # Pending Requests:0
+        p13 = re.compile(r'^\s*Pending +Requests *: '\
 		'*(?P<pending_requests>\d+)$')
         # User debug info   : 0
-        p15 = re.compile(r'^\s*User +debug +info *: '\
+        # User debug info:0
+        p14 = re.compile(r'^\s*User +debug +info *: '\
 		'*(?P<user_debug_info>[\w\W]+)$')
         # Session idle state : TRUE
-        p16 = re.compile(r'^Session +idle +state *: *(?P<session_idle_state>[\w]+)$')
+        p15 = re.compile(r'^Session +idle +state *: *(?P<session_idle_state>[\w]+)$')
         # No of exec cmds getting executed : 0
-        p17 = re.compile(r'^No +of +exec +cmds +getting +executed *: *(?P<num_of_exec_cmds_executed>\d+)$')
+        p16 = re.compile(r'^No +of +exec +cmds +getting +executed *: *(?P<num_of_exec_cmds_executed>\d+)$')
         # No of exec cmds blocked : 0
-        p18 = re.compile(r'^No +of +exec +cmds +blocked *: *(?P<num_of_exec_cmds_blocked>\d+)$')
+        p17 = re.compile(r'^No +of +exec +cmds +blocked *: *(?P<num_of_exec_cmds_blocked>\d+)$')
         # Config wait for show completion : FALSE
-        p19 = re.compile(r'^Config +wait +for +show +completion *: *(?P<config_wait_for_show_completion>[\w]+)$')
+        p18 = re.compile(r'^Config +wait +for +show +completion *: *(?P<config_wait_for_show_completion>[\w]+)$')
         # Remote ip address : Unknown
-        p20 = re.compile(r'^Remote +ip +address *: *(?P<remote_ip_address>[\w]+)$')
+        p19 = re.compile(r'^Remote +ip +address *: *(?P<remote_ip_address>[\w]+)$')
         # Lock Expiration timer (in Sec) : 593
-        p21 = re.compile(r'^Lock +Expiration +timer +\(in +Sec\) *: *(?P<lock_expiration_timer_in_sec>[\w]+)$')
+        p20 = re.compile(r'^Lock +Expiration +timer +\(in +Sec\) *: *(?P<lock_expiration_timer_in_sec>[\w]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -173,7 +182,7 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                     continue
             else:
                 # Owner PID             : 10
-                m = p7.match(line)
+                m = p1.match(line)
                 if m:
                     group = m.groupdict()
                     parser_configure_lock = ret_dict.\
@@ -183,35 +192,35 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                     continue
                 
                 # User                  : User1
-                m = p8.match(line)
+                m = p7.match(line)
                 if m:
                     group = m.groupdict()
                     parser_configure_lock.update({'user' : group['user']})
                     continue
                 
                 # TTY                   : 3
-                m = p9.match(line)
+                m = p8.match(line)
                 if m:
                     group = m.groupdict()
                     parser_configure_lock.update({'tty' : int(group['tty'])})
                     continue
                 
                 # Type                  : Exclusive
-                m = p10.match(line)
+                m = p9.match(line)
                 if m:
                     group = m.groupdict()
                     parser_configure_lock.update({'type' : group['type']})
                     continue
                 
                 # State                 : Locked
-                m = p11.match(line)
+                m = p10.match(line)
                 if m:
                     group = m.groupdict()
                     parser_configure_lock.update({'state' : group['state']})
                     continue
                 
                 # Class                 : Exposed
-                m = p12.match(line)
+                m = p11.match(line)
                 if m:
                     group = m.groupdict()
                     parser_configure_lock.update({'class' : \
@@ -219,7 +228,7 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                     continue
                 
                 # Count                 : 0
-                m = p13.match(line)
+                m = p12.match(line)
                 if m:
                     group = m.groupdict()
                     parser_configure_lock.update({'count' : 
@@ -227,7 +236,7 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                     continue
                 
                 # Pending Requests      : 0
-                m = p14.match(line)
+                m = p13.match(line)
                 if m:
                     group = m.groupdict()
                     parser_configure_lock.update({'pending_requests' : 
@@ -235,7 +244,7 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                     continue
                 
                 # User debug info       : 0
-                m = p15.match(line)
+                m = p14.match(line)
                 if m:
                     group = m.groupdict()
                     parser_configure_lock.update({'user_debug_info' :  
@@ -243,15 +252,15 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                     continue
 
                 # Session idle state : TRUE
-                m = p16.match(line)
+                m = p15.match(line)
                 if m:
                     group = m.groupdict()
                     parser_configure_lock.update({'session_idle_state' : 
-                         group['session_idle_state']})
+                         bool(group['session_idle_state'])})
                     continue
 
                 # No of exec cmds getting executed : 0
-                m = p17.match(line)
+                m = p16.match(line)
                 if m:
                     group = m.groupdict()
                     parser_configure_lock.update({'num_of_exec_cmds_executed' : 
@@ -259,7 +268,7 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                     continue
 
                 # No of exec cmds blocked : 0
-                m = p18.match(line)
+                m = p17.match(line)
                 if m:
                     group = m.groupdict()
                     parser_configure_lock.update({'num_of_exec_cmds_blocked' : 
@@ -267,7 +276,7 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                     continue
 
                 # Config wait for show completion : FALSE
-                m = p19.match(line)
+                m = p18.match(line)
                 if m:
                     group = m.groupdict()
                     parser_configure_lock.update({'config_wait_for_show_completion' : 
@@ -275,7 +284,7 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                     continue
 
                 # Remote ip address : Unknown
-                m = p20.match(line)
+                m = p19.match(line)
                 if m:
                     group = m.groupdict()
                     parser_configure_lock.update({'remote_ip_address' : 
@@ -283,7 +292,7 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                     continue
 
                 # Lock Expiration timer (in Sec) : 593
-                m = p21.match(line)
+                m = p20.match(line)
                 if m:
                     group = m.groupdict()
                     parser_configure_lock.update({'lock_expiration_timer_in_sec' : 

@@ -9,7 +9,9 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from genie.libs.parser.iosxe.tests.test_show_config import test_show_configuration_lock as test_show_configuration_lock_iosxe
+from genie.libs.parser.iosxe.tests.test_show_config \
+                                      import test_show_configuration_lock as \
+                                             test_show_configuration_lock_iosxe
 
 # Parser
 from genie.libs.parser.ios.show_config import ShowConfigurationLock
@@ -104,7 +106,7 @@ class test_show_configuration_lock_ios(unittest.TestCase):
                     'count': 1,
                     'pending_requests': 0,
                     'user_debug_info': 'configure terminal',
-                    'session_idle_state': 'TRUE',
+                    'session_idle_state': True,
                     'num_of_exec_cmds_executed': 0,
                     'num_of_exec_cmds_blocked': 0,
                     'config_wait_for_show_completion': 'FALSE',
