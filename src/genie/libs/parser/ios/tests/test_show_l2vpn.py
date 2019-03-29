@@ -118,82 +118,70 @@ class test_show_l2vpn_service_all(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-    'instance': {
-        'default': {
-            'vrf': {
-                'default': {
-                    'address_family': {
-                        'l2vpn_vpls': {
-                            'serviceStit3': {
-                                'interface': {
-                                    'Pw4': {
-                                        'group': 'right',
-                                        'state_in_l2vpn_service': 'UP',
-                                        'state': 'UP',
-                                        'encapsulation': 'MPLS 8.8.8.8:300',
-                                        'priority': 0,
-                                        },
-                                    'Pw3': {
-                                        'group': 'left',
-                                        'state_in_l2vpn_service': 'UP',
-                                        'state': 'UP',
-                                        'encapsulation': 'MPLS 7.7.7.7:300',
-                                        'priority': 0,
-                                        },
-                                    },
-                                'state': 'UP',
-                                'name': 'serviceStit3',
-                                },
-                            'serviceWire1': {
-                                'interface': {
-                                    'Eth4/1:20': {
-                                        'group': 'core_conn',
-                                        'state_in_l2vpn_service': 'UP',
-                                        'state': 'UP',
-                                        'encapsulation': 'EVC 55',
-                                        'priority': 1,
-                                        },
-                                    'Eth1/1:10': {
-                                        'group': 'access',
-                                        'state_in_l2vpn_service': 'UP',
-                                        'state': 'UP',
-                                        'encapsulation': 'EVC 45',
-                                        'priority': 0,
-                                        },
-                                    'Eth3/1:20': {
-                                        'group': 'core_conn',
-                                        'state_in_l2vpn_service': 'IA',
-                                        'state': 'DN',
-                                        'encapsulation': 'EVC 55',
-                                        'priority': 0,
-                                        },
-                                    'Pw2': {
-                                        'group': 'core',
-                                        'state_in_l2vpn_service': 'IA',
-                                        'state': 'SB',
-                                        'encapsulation': 'MPLS 6.6.6.6:200',
-                                        'priority': 1,
-                                        },
-                                    'Pw1': {
-                                        'group': 'core',
-                                        'state_in_l2vpn_service': 'UP',
-                                        'state': 'UP',
-                                        'encapsulation': 'MPLS 5.5.5.5:100',
-                                        'priority': 0,
-                                        },
-                                    'Eth2/1:20': {
-                                        'group': 'access_conn',
-                                        'state_in_l2vpn_service': 'UP',
-                                        'state': 'UP',
-                                        'encapsulation': 'EVC 55',
-                                        'priority': 0,
-                                        },
-                                    },
-                                'state': 'UP',
-                                'name': 'serviceWire1',
-                                },
-                            },
-                        },
+    'vpls_name': {
+        'serviceStit3': {
+            'state': 'UP',
+            'interface': {
+                'Pw4': {
+                    'encapsulation': 'MPLS 8.8.8.8:300',
+                    'state': 'UP',
+                    'priority': 0,
+                    'group': 'right',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'Pw3': {
+                    'encapsulation': 'MPLS 7.7.7.7:300',
+                    'state': 'UP',
+                    'priority': 0,
+                    'group': 'left',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'serviceWire1': {
+            'state': 'UP',
+            'interface': {
+                'Eth3/1:20': {
+                    'encapsulation': 'EVC 55',
+                    'state': 'DN',
+                    'priority': 0,
+                    'group': 'core_conn',
+                    'state_in_l2vpn_service': 'IA',
+                    },
+                'Pw2': {
+                    'encapsulation': 'MPLS 6.6.6.6:200',
+                    'state': 'SB',
+                    'priority': 1,
+                    'group': 'core',
+                    'state_in_l2vpn_service': 'IA',
+                    },
+                'Pw1': {
+                    'encapsulation': 'MPLS 5.5.5.5:100',
+                    'state': 'UP',
+                    'priority': 0,
+                    'group': 'core',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'Eth1/1:10': {
+                    'encapsulation': 'EVC 45',
+                    'state': 'UP',
+                    'priority': 0,
+                    'group': 'access',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'Eth2/1:20': {
+                    'encapsulation': 'EVC 55',
+                    'state': 'UP',
+                    'priority': 0,
+                    'group': 'access_conn',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'Eth4/1:20': {
+                    'encapsulation': 'EVC 55',
+                    'state': 'UP',
+                    'priority': 1,
+                    'group': 'core_conn',
+                    'state_in_l2vpn_service': 'UP',
                     },
                 },
             },
@@ -225,36 +213,25 @@ class test_show_l2vpn_service_all(unittest.TestCase):
 
 
     golden_parsed_output_2 = {
-    'instance': {
-        'default': {
-            'vrf': {
-                'default': {
-                    'address_family': {
-                        'l2vpn_vpls': {
-                            'Gi1/1/1-1001': {
-                                'interface': {
-                                    'pw100001': {
-                                        'group': 'right',
-                                        'state_in_l2vpn_service': 'UP',
-                                        'state': 'UP',
-                                        'encapsulation': '2.1.1.2:1234000(MPLS)',
-                                        'priority': 0,
-                                        },
-                                    'Gi1/1/1': {
-                                        'group': 'left',
-                                        'state_in_l2vpn_service': 'UP',
-                                        'state': 'UP',
-                                        'encapsulation': 'Gi1/1/1:1001(Gi VLAN)',
-                                        'priority': 0,
-                                        },
-                                    },
-                                'state': 'UP',
-                                'name': 'Gi1/1/1-1001',
-                                },
-                            },
-                        },
+    'vpls_name': {
+        'Gi1/1/1-1001': {
+            'interface': {
+                'pw100001': {
+                    'encapsulation': '2.1.1.2:1234000(MPLS)',
+                    'priority': 0,
+                    'state_in_l2vpn_service': 'UP',
+                    'state': 'UP',
+                    'group': 'right',
+                    },
+                'Gi1/1/1': {
+                    'encapsulation': 'Gi1/1/1:1001(Gi VLAN)',
+                    'priority': 0,
+                    'state_in_l2vpn_service': 'UP',
+                    'state': 'UP',
+                    'group': 'left',
                     },
                 },
+            'state': 'UP',
             },
         },
     }

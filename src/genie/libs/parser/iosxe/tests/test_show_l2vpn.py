@@ -138,7 +138,7 @@ class test_show_bridge_domain(unittest.TestCase):
     golden_output_full = {'execute.return_value': '''\
         Router#show bridge-domain
         Load for five secs: 55%/0%; one minute: 15%; five minutes: 10%
-        Time source is NTP, 20:29:29.871 JST Fri Nov 11 2016
+        Time source is NTP, 20:29:29.871 EST Fri Nov 11 2016
 
         Bridge-domain 2051 (2 ports in all)
         State: UP                    Mac learning: Enabled
@@ -330,7 +330,7 @@ class test_show_bridge_domain(unittest.TestCase):
     golden_output_bridge_domain = {'execute.return_value': '''\
         Router#show bridge-domain 3051
         Load for five secs: 10%/1%; one minute: 11%; five minutes: 12%
-        Time source is NTP, 19:54:46.940 JST Wed Nov 2 2016
+        Time source is NTP, 19:54:46.940 EST Wed Nov 2 2016
 
         Bridge-domain 3051 (2 ports in all)
         State: UP                    Mac learning: Enabled
@@ -514,7 +514,7 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         Router#show ethernet service instance detail
         Load for five secs: 4%/0%; one minute: 5%; five minutes: 4%
-        Time source is NTP, 16:31:09.701 JST Tue Nov 8 2016
+        Time source is NTP, 16:31:09.701 EST Tue Nov 8 2016
 
         Service Instance ID: 2051
         Service Instance Type: Static
@@ -1027,7 +1027,7 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         Router#show ethernet service instance stats
         Load for five secs: 2%/0%; one minute: 5%; five minutes: 4%
-        Time source is NTP, 16:31:09.138 JST Tue Nov 8 2016
+        Time source is NTP, 16:31:09.138 EST Tue Nov 8 2016
 
         System maximum number of service instances: 32768
         Service Instance 2051, Interface GigabitEthernet0/0/3
@@ -1233,7 +1233,7 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
     golden_output_shrinked = {'execute.return_value': '''\
         1006#show ethernet service instance stats
         Load for five secs: 1%/0%; one minute: 0%; five minutes: 0%
-        Time source is NTP, 15:44:40.696 JST Fri Nov 11 2016
+        Time source is NTP, 15:44:40.696 EST Fri Nov 11 2016
 
         System maximum number of service instances: 32768
     '''
@@ -1434,7 +1434,7 @@ class test_show_ethernet_service_instance_summary(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         Router#show ethernet service instance summary
         Load for five secs: 2%/0%; one minute: 5%; five minutes: 4%
-        Time source is NTP, 16:31:09.005 JST Tue Nov 8 2016
+        Time source is NTP, 16:31:09.005 EST Tue Nov 8 2016
 
         System summary
                     Total       Up  AdminDo     Down  ErrorDi  Unknown  Deleted  BdAdmDo  
@@ -1639,7 +1639,7 @@ class test_show_l2vpn_vfi(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         Router#sh l2vpn vfi
         Load for five secs: 20%/0%; one minute: 5%; five minutes: 5%
-        Time source is NTP, 11:33:13.680 JST Wed Nov 9 2016
+        Time source is NTP, 11:33:13.680 EST Wed Nov 9 2016
 
         Legend: RT=Route-target, S=Split-horizon, Y=Yes, N=No
 
@@ -1850,423 +1850,392 @@ class test_show_l2vpn_service_all(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-        'instance': {
-            'default': {
-                'vrf': {
-                    'default': {
-                        'address_family': {
-                            'l2vpn_vpls': {
-                                'VPLS-2054': {
-                                    'state': 'UP',
-                                    'name': 'VPLS-2054',
-                                    'interface': {
-                                        'pw100004': {
-                                            'state': 'UP',
-                                            'state_in_l2vpn_service': 'UP',
-                                            'encapsulation': 'VPLS-2054(VFI)',
-                                            'priority': 0,
-                                            },
-                                        'pw100217': {
-                                            'group': 'core_pw',
-                                            'state': 'UP',
-                                            'encapsulation': '1:2054(MPLS)',
-                                            'priority': 0,
-                                            'state_in_l2vpn_service': 'UP',
-                                            },
-                                        },
-                                    },
-                                'VPLS-2064': {
-                                    'state': 'UP',
-                                    'name': 'VPLS-2064',
-                                    'interface': {
-                                        'pw100014': {
-                                            'state': 'UP',
-                                            'state_in_l2vpn_service': 'UP',
-                                            'encapsulation': 'VPLS-2064(VFI)',
-                                            'priority': 0,
-                                            },
-                                        'pw100202': {
-                                            'group': 'core_pw',
-                                            'state': 'UP',
-                                            'encapsulation': '1:2064(MPLS)',
-                                            'priority': 0,
-                                            'state_in_l2vpn_service': 'UP',
-                                            },
-                                        },
-                                    },
-                                'VPLS-2055': {
-                                    'state': 'UP',
-                                    'name': 'VPLS-2055',
-                                    'interface': {
-                                        'pw100005': {
-                                            'state': 'UP',
-                                            'state_in_l2vpn_service': 'UP',
-                                            'encapsulation': 'VPLS-2055(VFI)',
-                                            'priority': 0,
-                                            },
-                                        'pw100218': {
-                                            'group': 'core_pw',
-                                            'state': 'UP',
-                                            'encapsulation': '1:2055(MPLS)',
-                                            'priority': 0,
-                                            'state_in_l2vpn_service': 'UP',
-                                            },
-                                        },
-                                    },
-                                'VPLS-2062': {
-                                    'state': 'UP',
-                                    'name': 'VPLS-2062',
-                                    'interface': {
-                                        'pw100225': {
-                                            'group': 'core_pw',
-                                            'state': 'UP',
-                                            'encapsulation': '1:2062(MPLS)',
-                                            'priority': 0,
-                                            'state_in_l2vpn_service': 'UP',
-                                            },
-                                        'pw100012': {
-                                            'state': 'UP',
-                                            'state_in_l2vpn_service': 'UP',
-                                            'encapsulation': 'VPLS-2062(VFI)',
-                                            'priority': 0,
-                                            },
-                                        },
-                                    },
-                                'VPLS-2067': {
-                                    'state': 'UP',
-                                    'name': 'VPLS-2067',
-                                    'interface': {
-                                        'pw100017': {
-                                            'state': 'UP',
-                                            'state_in_l2vpn_service': 'UP',
-                                            'encapsulation': 'VPLS-2067(VFI)',
-                                            'priority': 0,
-                                            },
-                                        'pw100205': {
-                                            'group': 'core_pw',
-                                            'state': 'UP',
-                                            'encapsulation': '1:2067(MPLS)',
-                                            'priority': 0,
-                                            'state_in_l2vpn_service': 'UP',
-                                            },
-                                        },
-                                    },
-                                'VPLS-2068': {
-                                    'state': 'UP',
-                                    'name': 'VPLS-2068',
-                                    'interface': {
-                                        'pw100018': {
-                                            'state': 'UP',
-                                            'state_in_l2vpn_service': 'UP',
-                                            'encapsulation': 'VPLS-2068(VFI)',
-                                            'priority': 0,
-                                            },
-                                        'pw100206': {
-                                            'group': 'core_pw',
-                                            'state': 'UP',
-                                            'encapsulation': '1:2068(MPLS)',
-                                            'priority': 0,
-                                            'state_in_l2vpn_service': 'UP',
-                                            },
-                                        },
-                                    },
-                                'VPLS-2059': {
-                                    'state': 'UP',
-                                    'name': 'VPLS-2059',
-                                    'interface': {
-                                        'pw100009': {
-                                            'state': 'UP',
-                                            'state_in_l2vpn_service': 'UP',
-                                            'encapsulation': 'VPLS-2059(VFI)',
-                                            'priority': 0,
-                                            },
-                                        'pw100222': {
-                                            'group': 'core_pw',
-                                            'state': 'UP',
-                                            'encapsulation': '1:2059(MPLS)',
-                                            'priority': 0,
-                                            'state_in_l2vpn_service': 'UP',
-                                            },
-                                        },
-                                    },
-                                'VPLS-2053': {
-                                    'state': 'UP',
-                                    'name': 'VPLS-2053',
-                                    'interface': {
-                                        'pw100216': {
-                                            'group': 'core_pw',
-                                            'state': 'UP',
-                                            'encapsulation': '1:2053(MPLS)',
-                                            'priority': 0,
-                                            'state_in_l2vpn_service': 'UP',
-                                            },
-                                        'pw100003': {
-                                            'state': 'UP',
-                                            'state_in_l2vpn_service': 'UP',
-                                            'encapsulation': 'VPLS-2053(VFI)',
-                                            'priority': 0,
-                                            },
-                                        },
-                                    },
-                                'VPLS-2056': {
-                                    'state': 'UP',
-                                    'name': 'VPLS-2056',
-                                    'interface': {
-                                        'pw100219': {
-                                            'group': 'core_pw',
-                                            'state': 'UP',
-                                            'encapsulation': '1:2056(MPLS)',
-                                            'priority': 0,
-                                            'state_in_l2vpn_service': 'UP',
-                                            },
-                                        'pw100006': {
-                                            'state': 'UP',
-                                            'state_in_l2vpn_service': 'UP',
-                                            'encapsulation': 'VPLS-2056(VFI)',
-                                            'priority': 0,
-                                            },
-                                        },
-                                    },
-                                'VPLS-2071': {
-                                    'state': 'UP',
-                                    'name': 'VPLS-2071',
-                                    'interface': {
-                                        'pw100209': {
-                                            'group': 'core_pw',
-                                            'state': 'UP',
-                                            'encapsulation': '1:2071(MPLS)',
-                                            'priority': 0,
-                                            'state_in_l2vpn_service': 'UP',
-                                            },
-                                        'pw100021': {
-                                            'state': 'UP',
-                                            'state_in_l2vpn_service': 'UP',
-                                            'encapsulation': 'VPLS-2071(VFI)',
-                                            'priority': 0,
-                                            },
-                                        },
-                                    },
-                                'VPLS-2063': {
-                                    'state': 'UP',
-                                    'name': 'VPLS-2063',
-                                    'interface': {
-                                        'pw100226': {
-                                            'group': 'core_pw',
-                                            'state': 'UP',
-                                            'encapsulation': '1:2063(MPLS)',
-                                            'priority': 0,
-                                            'state_in_l2vpn_service': 'UP',
-                                            },
-                                        'pw100013': {
-                                            'state': 'UP',
-                                            'state_in_l2vpn_service': 'UP',
-                                            'encapsulation': 'VPLS-2063(VFI)',
-                                            'priority': 0,
-                                            },
-                                        },
-                                    },
-                                'VPLS-2060': {
-                                    'state': 'UP',
-                                    'name': 'VPLS-2060',
-                                    'interface': {
-                                        'pw100010': {
-                                            'state': 'UP',
-                                            'state_in_l2vpn_service': 'UP',
-                                            'encapsulation': 'VPLS-2060(VFI)',
-                                            'priority': 0,
-                                            },
-                                        'pw100223': {
-                                            'group': 'core_pw',
-                                            'state': 'UP',
-                                            'encapsulation': '1:2060(MPLS)',
-                                            'priority': 0,
-                                            'state_in_l2vpn_service': 'UP',
-                                            },
-                                        },
-                                    },
-                                'VPLS-2058': {
-                                    'state': 'UP',
-                                    'name': 'VPLS-2058',
-                                    'interface': {
-                                        'pw100221': {
-                                            'group': 'core_pw',
-                                            'state': 'UP',
-                                            'encapsulation': '1:2058(MPLS)',
-                                            'priority': 0,
-                                            'state_in_l2vpn_service': 'UP',
-                                            },
-                                        'pw100008': {
-                                            'state': 'UP',
-                                            'state_in_l2vpn_service': 'UP',
-                                            'encapsulation': 'VPLS-2058(VFI)',
-                                            'priority': 0,
-                                            },
-                                        },
-                                    },
-                                'VPLS-2069': {
-                                    'state': 'UP',
-                                    'name': 'VPLS-2069',
-                                    'interface': {
-                                        'pw100019': {
-                                            'state': 'UP',
-                                            'state_in_l2vpn_service': 'UP',
-                                            'encapsulation': 'VPLS-2069(VFI)',
-                                            'priority': 0,
-                                            },
-                                        'pw100207': {
-                                            'group': 'core_pw',
-                                            'state': 'UP',
-                                            'encapsulation': '1:2069(MPLS)',
-                                            'priority': 0,
-                                            'state_in_l2vpn_service': 'UP',
-                                            },
-                                        },
-                                    },
-                                'VPLS-2057': {
-                                    'state': 'UP',
-                                    'name': 'VPLS-2057',
-                                    'interface': {
-                                        'pw100220': {
-                                            'group': 'core_pw',
-                                            'state': 'UP',
-                                            'encapsulation': '1:2057(MPLS)',
-                                            'priority': 0,
-                                            'state_in_l2vpn_service': 'UP',
-                                            },
-                                        'pw100007': {
-                                            'state': 'UP',
-                                            'state_in_l2vpn_service': 'UP',
-                                            'encapsulation': 'VPLS-2057(VFI)',
-                                            'priority': 0,
-                                            },
-                                        },
-                                    },
-                                'VPLS-2051': {
-                                    'state': 'UP',
-                                    'name': 'VPLS-2051',
-                                    'interface': {
-                                        'pw100001': {
-                                            'state': 'UP',
-                                            'state_in_l2vpn_service': 'UP',
-                                            'encapsulation': 'VPLS-2051(VFI)',
-                                            'priority': 0,
-                                            },
-                                        'pw100214': {
-                                            'group': 'core_pw',
-                                            'state': 'UP',
-                                            'encapsulation': '1:2051(MPLS)',
-                                            'priority': 0,
-                                            'state_in_l2vpn_service': 'UP',
-                                            },
-                                        },
-                                    },
-                                'VPLS-2070': {
-                                    'state': 'UP',
-                                    'name': 'VPLS-2070',
-                                    'interface': {
-                                        'pw100020': {
-                                            'state': 'UP',
-                                            'state_in_l2vpn_service': 'UP',
-                                            'encapsulation': 'VPLS-2070(VFI)',
-                                            'priority': 0,
-                                            },
-                                        'pw100208': {
-                                            'group': 'core_pw',
-                                            'state': 'UP',
-                                            'encapsulation': '1:2070(MPLS)',
-                                            'priority': 0,
-                                            'state_in_l2vpn_service': 'UP',
-                                            },
-                                        },
-                                    },
-                                'VPLS-2052': {
-                                    'state': 'UP',
-                                    'name': 'VPLS-2052',
-                                    'interface': {
-                                        'pw100002': {
-                                            'state': 'UP',
-                                            'state_in_l2vpn_service': 'UP',
-                                            'encapsulation': 'VPLS-2052(VFI)',
-                                            'priority': 0,
-                                            },
-                                        'pw100215': {
-                                            'group': 'core_pw',
-                                            'state': 'UP',
-                                            'encapsulation': '1:2052(MPLS)',
-                                            'priority': 0,
-                                            'state_in_l2vpn_service': 'UP',
-                                            },
-                                        },
-                                    },
-                                'VPLS-2061': {
-                                    'state': 'UP',
-                                    'name': 'VPLS-2061',
-                                    'interface': {
-                                        'pw100224': {
-                                            'group': 'core_pw',
-                                            'state': 'UP',
-                                            'encapsulation': '1:2061(MPLS)',
-                                            'priority': 0,
-                                            'state_in_l2vpn_service': 'UP',
-                                            },
-                                        'pw100011': {
-                                            'state': 'UP',
-                                            'state_in_l2vpn_service': 'UP',
-                                            'encapsulation': 'VPLS-2061(VFI)',
-                                            'priority': 0,
-                                            },
-                                        },
-                                    },
-                                'VPLS-2065': {
-                                    'state': 'UP',
-                                    'name': 'VPLS-2065',
-                                    'interface': {
-                                        'pw100203': {
-                                            'group': 'core_pw',
-                                            'state': 'UP',
-                                            'encapsulation': '1:2065(MPLS)',
-                                            'priority': 0,
-                                            'state_in_l2vpn_service': 'UP',
-                                            },
-                                        'pw100015': {
-                                            'state': 'UP',
-                                            'state_in_l2vpn_service': 'UP',
-                                            'encapsulation': 'VPLS-2065(VFI)',
-                                            'priority': 0,
-                                            },
-                                        },
-                                    },
-                                'VPLS-2066': {
-                                    'state': 'UP',
-                                    'name': 'VPLS-2066',
-                                    'interface': {
-                                        'pw100016': {
-                                            'state': 'UP',
-                                            'state_in_l2vpn_service': 'UP',
-                                            'encapsulation': 'VPLS-2066(VFI)',
-                                            'priority': 0,
-                                            },
-                                        'pw100204': {
-                                            'group': 'core_pw',
-                                            'state': 'UP',
-                                            'encapsulation': '1:2066(MPLS)',
-                                            'priority': 0,
-                                            'state_in_l2vpn_service': 'UP',
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        },
+    'vpls_name': {
+        'VPLS-2053': {
+            'state': 'UP',
+            'interface': {
+                'pw100003': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2053(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100216': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2053(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
                     },
                 },
             },
-        }
+        'VPLS-2052': {
+            'state': 'UP',
+            'interface': {
+                'pw100002': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2052(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100215': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2052(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2071': {
+            'state': 'UP',
+            'interface': {
+                'pw100209': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2071(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100021': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2071(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2058': {
+            'state': 'UP',
+            'interface': {
+                'pw100008': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2058(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100221': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2058(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2067': {
+            'state': 'UP',
+            'interface': {
+                'pw100205': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2067(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100017': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2067(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2061': {
+            'state': 'UP',
+            'interface': {
+                'pw100224': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2061(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100011': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2061(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2069': {
+            'state': 'UP',
+            'interface': {
+                'pw100019': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2069(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100207': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2069(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2064': {
+            'state': 'UP',
+            'interface': {
+                'pw100202': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2064(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100014': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2064(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2070': {
+            'state': 'UP',
+            'interface': {
+                'pw100020': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2070(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100208': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2070(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2057': {
+            'state': 'UP',
+            'interface': {
+                'pw100220': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2057(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100007': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2057(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2055': {
+            'state': 'UP',
+            'interface': {
+                'pw100005': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2055(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100218': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2055(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2056': {
+            'state': 'UP',
+            'interface': {
+                'pw100006': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2056(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100219': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2056(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2051': {
+            'state': 'UP',
+            'interface': {
+                'pw100001': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2051(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100214': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2051(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2059': {
+            'state': 'UP',
+            'interface': {
+                'pw100009': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2059(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100222': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2059(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2063': {
+            'state': 'UP',
+            'interface': {
+                'pw100226': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2063(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100013': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2063(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2060': {
+            'state': 'UP',
+            'interface': {
+                'pw100010': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2060(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100223': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2060(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2068': {
+            'state': 'UP',
+            'interface': {
+                'pw100018': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2068(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100206': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2068(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2066': {
+            'state': 'UP',
+            'interface': {
+                'pw100016': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2066(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100204': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2066(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2062': {
+            'state': 'UP',
+            'interface': {
+                'pw100012': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2062(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100225': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2062(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2065': {
+            'state': 'UP',
+            'interface': {
+                'pw100015': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2065(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100203': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2065(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2054': {
+            'state': 'UP',
+            'interface': {
+                'pw100217': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2054(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100004': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2054(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        },
+    }
 
     golden_output = {'execute.return_value': '''\
         Router#show l2vpn service all
         Load for five secs: 2%/0%; one minute: 7%; five minutes: 9%
-        Time source is NTP, 20:31:05.928 JST Fri Nov 11 2016
+        Time source is NTP, 20:31:05.928 EST Fri Nov 11 2016
 
         Legend: St=State    XC St=State in the L2VPN Service      Prio=Priority
                 UP=Up       DN=Down            AD=Admin Down      IA=Inactive

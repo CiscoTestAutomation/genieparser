@@ -837,30 +837,19 @@ class ShowL2vpnServiceAllSchema(MetaParser):
     """
 
     schema = {
-        'instance': {
-            'default': {
-                'vrf': {
-                    'default': {
-                        'address_family': {
-                            'l2vpn_vpls': {
-                                Any(): {
-                                    'name': str,
-                                    'state': str,
-                                    'interface': {
-                                        Any(): {
-                                            Optional('group'): str,
-                                            'encapsulation': str,
-                                            'priority': int,
-                                            'state': str,
-                                            'state_in_l2vpn_service': str,
-                                        },
-                                    }
-                                },
-                            }
-                        }
-                    }
+        'vpls_name': {
+            Any(): {
+                'state': str,
+                'interface': {
+                    Any(): {
+                        Optional('group'): str,
+                        'encapsulation': str,
+                        'priority': int,
+                        'state': str,
+                        'state_in_l2vpn_service': str,
+                    },
                 }
-            }
+            },
         }
     }
 
@@ -907,11 +896,8 @@ class ShowL2vpnServiceAll(ShowL2vpnServiceAllSchema):
             if m:
                 group = m.groupdict()
                 vpls_name = group['name']
-                final_dict = ret_dict.setdefault('instance', {}).setdefault(
-                    'default', {}).setdefault('vrf', {}).setdefault(
-                    'default', {}).setdefault('address_family', {}).setdefault(
-                    'l2vpn_vpls', {}).setdefault(vpls_name, {})
-                final_dict['name'] = vpls_name
+                final_dict = ret_dict.setdefault('vpls_name', {}).setdefault(
+                    vpls_name, {})
                 final_dict['state'] = group['state']
                 continue
 
@@ -922,10 +908,14 @@ class ShowL2vpnServiceAll(ShowL2vpnServiceAllSchema):
                 final_dict.setdefault('interface', {}).setdefault(pw_intf, {})
                 if group['group']:
                     final_dict['interface'][pw_intf]['group'] = group['group']
-                final_dict['interface'][pw_intf]['encapsulation'] = group['encapsulation'].strip()
-                final_dict['interface'][pw_intf]['priority'] = int(group['priority'])
-                final_dict['interface'][pw_intf]['state'] = group['intf_state']
-                final_dict['interface'][pw_intf]['state_in_l2vpn_service'] = group['state_in_l2vpn_service']
+                final_dict['interface'][pw_intf]['encapsulation'] = \
+                    group['encapsulation'].strip()
+                final_dict['interface'][pw_intf]['priority'] = int(
+                    group['priority'])
+                final_dict['interface'][pw_intf]['state'] = \
+                    group['intf_state']
+                final_dict['interface'][pw_intf]['state_in_l2vpn_service'] = \
+                    group['state_in_l2vpn_service']
                 continue
 
         return ret_dict
