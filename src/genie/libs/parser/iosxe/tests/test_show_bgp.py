@@ -2864,9 +2864,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                                'RR-client)',
                                                                  'status_codes': '*>',
                                                                  'transfer_pathid': '0x0',
-                                                                 'update_group': [38,
-                                                                                  44,
-                                                                                  45]}},
+                                                                 'update_group': [38, 44, 45]}},
                                                    'paths': '1 '
                                                             'available, '
                                                             'best '
@@ -2895,9 +2893,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                                    'RR-client)',
                                                                      'status_codes': '*>',
                                                                      'transfer_pathid': '0x0',
-                                                                     'update_group': [38,
-                                                                                      44,
-                                                                                      45]}},
+                                                                     'update_group': [38, 44, 45]}},
                                                        'paths': '1 '
                                                                 'available, '
                                                                 'best '
@@ -2927,9 +2923,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                                     'RR-client)',
                                                                       'status_codes': '*>',
                                                                       'transfer_pathid': '0x0',
-                                                                      'update_group': [38,
-                                                                                       44,
-                                                                                       45]}},
+                                                                      'update_group': [38, 44, 45]}},
                                                         'paths': '1 '
                                                                  'available, '
                                                                  'best '
@@ -2958,9 +2952,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                                      'RR-client)',
                                                                        'status_codes': '*>',
                                                                        'transfer_pathid': '0x0',
-                                                                       'update_group': [38,
-                                                                                        44,
-                                                                                        45]}},
+                                                                       'update_group': [38, 44, 45]}},
                                                          'paths': '1 '
                                                                   'available, '
                                                                   'best '
@@ -2989,9 +2981,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                                      'RR-client)',
                                                                        'status_codes': '*>',
                                                                        'transfer_pathid': '0x0',
-                                                                       'update_group': [38,
-                                                                                        44,
-                                                                                        45]}},
+                                                                       'update_group': [38, 44, 45]}},
                                                          'paths': '1 '
                                                                   'available, '
                                                                   'best '
@@ -3020,9 +3010,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                                      'RR-client)',
                                                                        'status_codes': '*>',
                                                                        'transfer_pathid': '0x0',
-                                                                       'update_group': [38,
-                                                                                        44,
-                                                                                        45]}},
+                                                                       'update_group': [38, 44, 45]}},
                                                          'paths': '1 '
                                                                   'available, '
                                                                   'best '
@@ -3051,9 +3039,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                                      'RR-client)',
                                                                        'status_codes': '*>',
                                                                        'transfer_pathid': '0x0',
-                                                                       'update_group': [38,
-                                                                                        44,
-                                                                                        45]}},
+                                                                       'update_group': [38, 44, 45]}},
                                                          'paths': '1 '
                                                                   'available, '
                                                                   'best '
@@ -3083,9 +3069,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                                     'RR-client)',
                                                                       'status_codes': '*>',
                                                                       'transfer_pathid': '0x0',
-                                                                      'update_group': [38,
-                                                                                       44,
-                                                                                       45]}},
+                                                                      'update_group': [38, 44, 45]}},
                                                         'paths': '1 '
                                                                  'available, '
                                                                  'best '
@@ -3114,9 +3098,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                                     'RR-client)',
                                                                       'status_codes': '*>',
                                                                       'transfer_pathid': '0x0',
-                                                                      'update_group': [38,
-                                                                                       44,
-                                                                                       45]}},
+                                                                      'update_group': [38, 44, 45]}},
                                                         'paths': '1 '
                                                                  'available, '
                                                                  'best '
@@ -3145,9 +3127,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                                     'RR-client)',
                                                                       'status_codes': '*>',
                                                                       'transfer_pathid': '0x0',
-                                                                      'update_group': [38,
-                                                                                       44,
-                                                                                       45]}},
+                                                                      'update_group': [38, 44, 45]}},
                                                         'paths': '1 '
                                                                  'available, '
                                                                  'best '
@@ -3176,9 +3156,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                                     'RR-client)',
                                                                       'status_codes': '*>',
                                                                       'transfer_pathid': '0x0',
-                                                                      'update_group': [38,
-                                                                                       44,
-                                                                                       45]}},
+                                                                      'update_group': [38, 44, 45]}},
                                                         'paths': '1 '
                                                                  'available, '
                                                                  'best '
@@ -3207,9 +3185,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                                     'RR-client)',
                                                                       'status_codes': '*>',
                                                                       'transfer_pathid': '0x0',
-                                                                      'update_group': [38,
-                                                                                       44,
-                                                                                       45]}},
+                                                                      'update_group': [38, 44, 45]}},
                                                         'paths': '1 '
                                                                  'available, '
                                                                  'best '
@@ -3238,9 +3214,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                                     'RR-client)',
                                                                       'status_codes': '*>',
                                                                       'transfer_pathid': '0x0',
-                                                                      'update_group': [38,
-                                                                                       44,
-                                                                                       45]}},
+                                                                      'update_group': [38, 44, 45]}},
                                                         'paths': '1 '
                                                                  'available, '
                                                                  'best '
@@ -3269,9 +3243,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                                     'RR-client)',
                                                                       'status_codes': '*>',
                                                                       'transfer_pathid': '0x0',
-                                                                      'update_group': [38,
-                                                                                       44,
-                                                                                       45]}},
+                                                                      'update_group': [38, 44, 45]}},
                                                         'paths': '1 '
                                                                  'available, '
                                                                  'best '
@@ -3300,9 +3272,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                                     'RR-client)',
                                                                       'status_codes': '*>',
                                                                       'transfer_pathid': '0x0',
-                                                                      'update_group': [38,
-                                                                                       44,
-                                                                                       45]}},
+                                                                      'update_group': [38, 44, 45]}},
                                                         'paths': '1 '
                                                                  'available, '
                                                                  'best '

@@ -1286,6 +1286,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                     update_group = []
                     for item in group:
                         update_group.append(int(group[item]))
+                        update_group = sorted(update_group)
                 else:
                     update_group = int(group['group1'])
                 continue
