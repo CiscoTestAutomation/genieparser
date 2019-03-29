@@ -25,11 +25,11 @@ class ShowVtpStatusSchema(MetaParser):
                 Optional('domain_name'): str,
                 'pruning_mode': bool,
                 'traps_generation': bool,
-                'device_id': str,
+                Optional('device_id'): str,
                 'conf_last_modified_by': str,
                 'conf_last_modified_time': str,
-                'updater_id': str,
-                'updater_interface': str,
+                Optional('updater_id'): str,
+                Optional('updater_interface'): str,
                 Optional('updater_reason'): str,
                 'operating_mode': str,
                 'enabled': bool,
@@ -75,7 +75,8 @@ class ShowVtpStatus(ShowVtpStatusSchema):
                 continue
 
             # VTP version running             : 1
-            p2 = re.compile(r'^VTP +version +running +: +(?P<val>\d+)$')
+            # VTP Version                     : 2
+            p2 = re.compile(r'^VTP +[Vv]ersion( +running)? +: +(?P<val>\d+)$')
             m = p2.match(line)
             if m:
                 if 'vtp' not in ret_dict:
