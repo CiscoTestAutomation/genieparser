@@ -42,7 +42,7 @@ class ShowConfigurationLockSchema(MetaParser):
                     Optional('count'): int,
                     Optional('pending_requests'): int,
                     Optional('user_debug_info'): str,
-                    Optional('session_idle_state'): bool,
+                    Optional('session_idle_state'): str,
                     Optional('num_of_exec_cmds_executed'): int,
                     Optional('num_of_exec_cmds_blocked'): int,
                     Optional('config_wait_for_show_completion'): str,
@@ -256,7 +256,7 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
                 if m:
                     group = m.groupdict()
                     parser_configure_lock.update({'session_idle_state' : 
-                         bool(group['session_idle_state'])})
+                         group['session_idle_state']})
                     continue
 
                 # No of exec cmds getting executed : 0

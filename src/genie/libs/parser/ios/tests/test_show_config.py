@@ -106,7 +106,7 @@ class test_show_configuration_lock_ios(unittest.TestCase):
                     'count': 1,
                     'pending_requests': 0,
                     'user_debug_info': 'configure terminal',
-                    'session_idle_state': True,
+                    'session_idle_state': 'TRUE',
                     'num_of_exec_cmds_executed': 0,
                     'num_of_exec_cmds_blocked': 0,
                     'config_wait_for_show_completion': 'FALSE',
