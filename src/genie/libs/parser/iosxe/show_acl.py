@@ -257,7 +257,8 @@ class ShowAccessLists(ShowAccessListsSchema):
         ret_dict = {}
 
         # initial regexp pattern
-        p_ip = re.compile(r'^Extended +IP +access +list +(?P<name>[\w\-\.]+)( *\((?P<per_user>.*)\))?$')
+        p_ip = re.compile(r'^(Extended|Standard) +IP +access +list[s]? +(?P<name>[\w\-\.#]+)( *\((?P<per_user>.*)\))?$')
+        p_ip_1 = re.compile(r'^ip +access-list +extended +(?P<name>[\w\-\.#]+)( *\((?P<per_user>.*)\))?$')
         p_ipv6 = re.compile(r'^IPv6 +access +list +(?P<name>[\w\-\.]+)( *\((?P<per_user>.*)\))?$')
         p_mac = re.compile(r'^Extended +MAC +access +list +(?P<name>[\w\-\.]+)( *\((?P<per_user>.*)\))?$')
         p_ip_acl = re.compile(
@@ -268,6 +269,7 @@ class ShowAccessLists(ShowAccessListsSchema):
             '(?P<src_port>[\w\-\s]+))?'
             '(?P<dst>( *host)? +(any|((\d+.){3}\d+ +(\d+.){3}\d+)|'
             '(\d+.){3}\d+))( *(?P<left>.*))?$')
+        p_ip_acl_standard = re.compile(r'^(?P<actions_forwarding>(deny|permit)) +(?P<src>([\d.]+))$')
         p_ipv6_acl = re.compile(
             r'^(?P<actions_forwarding>(deny|permit)) +'
             '(?P<protocol>(ahp|esp|hbh|icmp|ipv6|pcp|sctp|tcp|udp))'
@@ -285,13 +287,19 @@ class ShowAccessLists(ShowAccessListsSchema):
             line = line.strip()
 
             # Extended IP access list acl_name
+            # Standard IP access list 1
             m_ip = p_ip.match(line)
+            # ip access-list extended mylist2
+            m_ip_1 = p_ip_1.match(line)
             # IPv6 access list preauth_v6 (per-user)
             m_ipv6 = p_ipv6.match(line)
             # Extended MAC access list mac_acl 
             m_mac = p_mac.match(line)
-            if m_ip:
-                m = m_ip
+            if m_ip or m_ip_1:
+                if m_ip:
+                    m = m_ip
+                else:
+                    m = m_ip_1
                 acl_type = 'ipv4-acl-type'
             elif m_ipv6:
                 m = m_ipv6
@@ -308,6 +316,29 @@ class ShowAccessLists(ShowAccessListsSchema):
                 acl_dict['name'] = group['name']
                 acl_dict['type'] = acl_type
                 acl_dict.setdefault('per_user', True) if group['per_user'] else None
+                continue
+
+            # permit 172.20.10.10
+            m = p_ip_acl_standard.match(line)
+            if m:
+                group = m.groupdict()
+                seq = int(sorted(acl_dict.get('aces', {'0': 'dummy'}).keys())[-1]) + 10
+                seq_dict = acl_dict.setdefault('aces', {}).setdefault(str(seq), {})
+                seq_dict['name'] = str(seq)
+
+                # store values
+                actions_forwarding = group['actions_forwarding']
+                src = group['src']
+                protocol = 'ipv4'
+
+                # actions
+                seq_dict.setdefault('actions', {}).setdefault('forwarding', actions_forwarding)
+
+                # l3 dict
+                l3_dict = seq_dict.setdefault('matches', {}).setdefault('l3', {}).setdefault(protocol, {})
+                l3_dict['protocol'] = protocol
+                l3_dict.setdefault('source_network', {}).setdefault(src, {}).setdefault('source_network', src)
+                l3_dict.setdefault('destination_network', {}).setdefault(src, {}).setdefault('destination_network', src)
                 continue
 
             # 10 permit ip any any (10031 matches)
