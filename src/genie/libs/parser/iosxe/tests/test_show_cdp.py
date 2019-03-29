@@ -5,7 +5,7 @@ from ats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
-from genie.libs.parser.iosxe.show_cdp import ShowCdpNeighbors
+from genie.libs.parser.iosxe.show_cdp import ShowCdpNeighbors, ShowCdpNeighborsDetail
 
 
 class test_show_cdp_neighbors(unittest.TestCase):
@@ -81,7 +81,6 @@ class test_show_cdp_neighbors(unittest.TestCase):
         parsers.py --cmd 'show cdp neighbors' --os 'iosxe' --output-only
         ==========   iosxe : show cdp neighbors : show cdp neighbors ==========
         Device# show cdp neighbors
-
 
         Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge
                         S - Switch, H - Host, I - IGMP, r - Repeater
@@ -191,6 +190,114 @@ class test_show_cdp_neighbors(unittest.TestCase):
         obj = ShowCdpNeighbors(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+
+
+class test_show_cdp_neighbors_detail(unittest.TestCase):
+    device = Device(name='aDevice')
+
+    expected_parsed_output = {}
+
+    full_device_output = {'execute.return_value': '''
+        Device ID: R6(9P57K4EJ8CA)
+        Entry address(es): 
+          IP address: 172.16.1.203
+        Platform: N9K-9000v,  Capabilities: Router Switch CVTA phone port 
+        Interface: GigabitEthernet0/0,  Port ID (outgoing port): mgmt0
+        Holdtime : 133 sec
+ 
+        Version :
+        Cisco Nexus Operating System (NX-OS) Software, Version 9.2(1)
+         
+        advertisement version: 2
+        Duplex: full
+        Management address(es): 
+          IP address: 172.16.1.203
+         
+        -------------------------
+        Device ID: R7(9QBDKB58F76)
+        Entry address(es): 
+          IP address: 172.16.1.204
+        Platform: N9K-9000v,  Capabilities: Router Switch CVTA phone port 
+        Interface: GigabitEthernet0/0,  Port ID (outgoing port): mgmt0
+        Holdtime : 126 sec
+                  
+        Version :
+        Cisco Nexus Operating System (NX-OS) Software, Version 9.2(1)
+         
+        advertisement version: 2
+        Duplex: full
+        Management address(es): 
+          IP address: 172.16.1.204
+         
+        -------------------------
+        Device ID: R5.cisco.com
+        Entry address(es): 
+          IP address: 172.16.1.202
+        Platform: Cisco ,  Capabilities: Router Source-Route-Bridge 
+        Interface: GigabitEthernet0/0,  Port ID (outgoing port): GigabitEthernet0/0
+        Holdtime : 177 sec
+         
+        Version :
+        Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)
+        Technical Support: http://www.cisco.com/techsupport
+        Copyright (c) 1986-2018 by Cisco Systems, Inc.
+        Compiled Wed 01-Aug-18 16:45 by prod_rel_team
+                  
+        advertisement version: 2
+        Management address(es): 
+          IP address: 172.16.1.202
+         
+        -------------------------
+        Device ID: R8.cisco.com
+        Entry address(es): 
+          IP address: 172.16.1.205
+        Platform: Cisco ,  Capabilities: Router Source-Route-Bridge 
+        Interface: GigabitEthernet0/0,  Port ID (outgoing port): GigabitEthernet0/0
+        Holdtime : 143 sec
+         
+        Version :
+        Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)
+        Technical Support: http://www.cisco.com/techsupport
+        Copyright (c) 1986-2018 by Cisco Systems, Inc.
+        Compiled Wed 01-Aug-18 16:45 by prod_rel_team
+         
+        advertisement version: 2
+        Management address(es): 
+          IP address: 172.16.1.205
+                  
+        -------------------------
+        Device ID: R9.cisco.com
+        Entry address(es): 
+          IP address: 172.16.1.206
+        Platform: Cisco ,  Capabilities: Router Source-Route-Bridge 
+        Interface: GigabitEthernet0/0,  Port ID (outgoing port): GigabitEthernet0/0
+        Holdtime : 151 sec
+         
+        Version :
+        Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)
+        Technical Support: http://www.cisco.com/techsupport
+        Copyright (c) 1986-2018 by Cisco Systems, Inc.
+        Compiled Wed 01-Aug-18 16:45 by prod_rel_team
+         
+        advertisement version: 2
+        Management address(es): 
+          IP address: 172.16.1.206
+         
+         
+        Total cdp entries displayed : 5 
+    '''} 
+
+
+
+
+    def test_show_cdp_neighbors_detail(self):
+        self.maxDiff = None
+        self.device = Mock(**self.full_device_output)
+        obj = ShowCdpNeighborsDetail(device=self.device)
+        parsed_output = obj.parse()        
+        self.assertEqual(parsed_output, self.expected_parsed_output)
+
+
 
 if __name__ == '__main__':
     unittest.main()
