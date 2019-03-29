@@ -305,7 +305,7 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
         p2 = re.compile(r"^(?P<dir>(Outgoing|Incoming)) +update +filter +list"
                          " +for +all +interfaces +is +(?P<state>([a-zA-Z\s]+))$")
 
-        # Router ID 1.1.1.1
+        # Router ID 10.4.1.1
         p3 = re.compile(r"^Router +ID +(?P<router_id>(\S+))$")
 
         # Number of areas in this router is 1. 1 normal 0 stub 0 nssa
@@ -341,9 +341,9 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
 
 
         # Gateway         Distance      Last Update
-        # 3.3.3.3              110      07:33:00
-        # 2.2.2.2              110      07:33:00
-        # 4.4.4.4              110      00:19:15
+        # 10.36.3.3            110      07:33:00
+        # 10.16.2.2            110      07:33:00
+        # 10.64.4.4            110      00:19:15
         p8 = re.compile(r"^(?P<gateway>([0-9\.]+)) +(?P<distance>(\d+))"
                          " +(?P<last_update>([a-zA-Z0-9\:\.]+))$")
 
@@ -779,7 +779,7 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                     pdict[direction] = str(group['state']).lower()
                     continue
 
-                # Router ID 1.1.1.1
+                # Router ID 10.4.1.1
                 m = p3.match(line)
                 if m:
                     ospf_dict['router_id'] = str(m.groupdict()['router_id'])
@@ -942,9 +942,9 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                     continue
 
                 # Gateway         Distance      Last Update
-                # 3.3.3.3              110      07:33:00
-                # 2.2.2.2              110      07:33:00
-                # 4.4.4.4              110      00:19:15
+                # 10.36.3.3            110      07:33:00
+                # 10.16.2.2            110      07:33:00
+                # 10.64.4.4            110      00:19:15
                 m = p8.match(line)
                 if m:
                     group = m.groupdict()

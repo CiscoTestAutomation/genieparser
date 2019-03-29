@@ -158,7 +158,7 @@ class ShowIpIgmpSnooping(ShowIpIgmpSnoopingSchema):
                 lookup_mode = m.groupdict()['lookup_mode'].lower()
 
             #  IGMP querier none
-            #  IGMP querier present, address: 50.1.1.1, version: 2, i/f Vlan100
+            #  IGMP querier present, address: 10.51.1.1, version: 2, i/f Vlan100
             p9 = re.compile(r'^\s*IGMP +querier +(?P<igmp_querier>\S+)'
                             '(, +address: +(?P<address>\S+))?'
                             '(, +version: +(?P<version>\d))?'
@@ -925,7 +925,7 @@ class ShowIpIgmpGroups(ShowIpIgmpGroupsSchema):
                 continue
 
             # 239.5.5.5          S    Ethernet2/1         00:21:00  never     10.1.2.1
-            # 234.1.1.2          L   loopback11             00:00:20  never     5.5.5.5
+            # 234.1.1.2          L   loopback11             00:00:20  never     10.100.5.5
             p3 = re.compile(r'^(?P<group>[\w\.\:]+) +(?P<type>[SDLTH\*]+) +(?P<intf>[\w\.\/\-]+)'
                              ' +(?P<uptime>[\w\.\:]+) +(?P<expires>[\w\.\:]+)'
                              ' +(?P<last_reporter>[\w\.\:]+)$')
@@ -1061,7 +1061,7 @@ class ShowIpIgmpLocalGroups(ShowIpIgmpLocalGroupsSchema):
                 continue
 
             # 239.1.1.1        *                Local    Eth2/4      00:00:50
-            # 239.7.7.7        2.2.2.1          Static   Eth2/4      01:06:47
+            # 239.7.7.7        10.16.2.1          Static   Eth2/4      01:06:47
             p2 = re.compile(r'^(?P<group>[\w\.\:]+) +(?P<source>[\w\.\:\*]+) +'
                              '(?P<type>\w+) +(?P<intf>[\w\.\/\-]+)'
                              ' +(?P<last_reporter>[\w\.\:]+)$')

@@ -66,7 +66,7 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
                                         {'flags': 'igmp ip pim',
                                         'incoming_interface_list': 
                                             {'port-channel8': 
-                                                {'rpf_nbr': '159.103.50.233'}},
+                                                {'rpf_nbr': '172.16.189.233'}},
                                        'oil_count': 3,
                                         'outgoing_interface_list': 
                                             {'Vlan803': 
@@ -83,7 +83,7 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
                                         {'flags': 'ip pim',
                                         'incoming_interface_list': 
                                             {'Vlan807': 
-                                                {'rpf_nbr': '159.103.211.228'}},
+                                                {'rpf_nbr': '172.16.94.228'}},
                                         'oil_count': 1,
                                         'outgoing_interface_list': 
                                             {'port-channel9': 
@@ -94,7 +94,7 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
                                         {'flags': 'ip pim',
                                         'incoming_interface_list': 
                                             {'Ethernet1/1.10': 
-                                                {'rpf_nbr': '159.103.211.228'}},
+                                                {'rpf_nbr': '172.16.94.228'}},
                                         'oil_count': 1,
                                         'outgoing_interface_list': 
                                             {'Ethernet1/2.20': 
@@ -158,19 +158,19 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
         IP Multicast Routing Table for VRF "VRF2"
 
         (*, 224.192.1.10/32), uptime: 09:15:11, igmp ip pim
-           Incoming interface: port-channel8, RPF nbr: 159.103.50.233
+           Incoming interface: port-channel8, RPF nbr: 172.16.189.233
            Outgoing interface list: (count: 3)
              Vlan864, uptime: 09:11:22, igmp
              Vlan812, uptime: 09:14:42, igmp
              Vlan803, uptime: 09:15:11, igmp
 
         (192.168.112.3/32, 224.192.1.10/32), uptime: 09:31:16, pim ip
-           Incoming interface: Vlan807, RPF nbr: 159.103.211.228
+           Incoming interface: Vlan807, RPF nbr: 172.16.94.228
            Outgoing interface list: (count: 1)
              port-channel9, uptime: 09:31:16, pim        
 
         (192.168.112.4/32, 224.192.1.10/32), uptime: 09:31:16, pim ip
-           Incoming interface: Ethernet1/1.10, RPF nbr: 159.103.211.228
+           Incoming interface: Ethernet1/1.10, RPF nbr: 172.16.94.228
            Outgoing interface list: (count: 1)
              Ethernet1/2.20, uptime: 09:31:16, pim  
 
@@ -764,14 +764,14 @@ class test_show_ip_static_route_multicast(unittest.TestCase):
                 {'address_family': 
                     {'ipv4': 
                         {'mroute': 
-                            {'112.0.0.0/8': 
+                            {'10.49.0.0/8': 
                                 {'path': 
                                     {'0.0.0.0/32 Null0': 
                                         {'interface_name': 'Null0',
                                         'neighbor_address': '0.0.0.0/32',
                                         'urib': True,
                                         'vrf_id': '1'}}},
-                            '212.0.0.0/8': 
+                            '192.168.64.0/8': 
                                 {'path': 
                                     {'0.0.0.0/32 Null0': 
                                         {'interface_name': 'Null0',
@@ -810,9 +810,9 @@ class test_show_ip_static_route_multicast(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         Mstatic-route for VRF "default"(1)
         IPv4 MStatic Routes:
-          112.0.0.0/8, configured nh: 0.0.0.0/32 Null0
+          10.49.0.0/8, configured nh: 0.0.0.0/32 Null0
             (installed in urib)
-          212.0.0.0/8, configured nh: 0.0.0.0/32 Null0
+          192.168.64.0/8, configured nh: 0.0.0.0/32 Null0
             (installed in urib)
 
             Static-route for VRF "VRF1"(2)
@@ -1021,7 +1021,7 @@ class test_show_forwarding_distribution_multicast_route(unittest.TestCase):
                                                         },
                                                     },
                                                 },
-                                                '23.23.23.23/32': {
+                                                '10.76.23.23/32': {
                                                     "src_len": 32,
                                                     "rpf_ifname": "loopback1",
                                                     "rcv_packets": 0,
@@ -1059,7 +1059,7 @@ class test_show_forwarding_distribution_multicast_route(unittest.TestCase):
                                         "238.8.4.101/32": {
                                             "grp_len": 32,
                                             "saddr": {
-                                                "100.101.1.3/32": {
+                                                "10.111.1.3/32": {
                                                     "src_len": 32,
                                                     "rpf_ifname": 'Vlan101',
                                                     "rcv_packets": 0,
@@ -1125,7 +1125,7 @@ Legend:
     Outgoing Interface List Index: 30
       nve1
 
-  (23.23.23.23/32, 231.100.1.1/32), RPF Interface: loopback1, flags:
+  (10.76.23.23/32, 231.100.1.1/32), RPF Interface: loopback1, flags:
     Received Packets: 0 Bytes: 0
     Number of Outgoing Interfaces: 1
     Outgoing Interface List Index: 29
@@ -1139,7 +1139,7 @@ Legend:
         ( Mem L2 Ports: port-channel1 nve1 )
         l2_oiflist_index: 44
 
-(100.101.1.3/32, 238.8.4.101/32), RPF Interface: Vlan101, flags:
+(10.111.1.3/32, 238.8.4.101/32), RPF Interface: Vlan101, flags:
     Received Packets: 0 Bytes: 0
     Number of Outgoing Interfaces: 2
     Outgoing Interface List Index: 54

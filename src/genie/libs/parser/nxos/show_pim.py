@@ -903,7 +903,7 @@ class ShowPimRp(ShowPimRpSchema):
             if m:
                 continue
 
-            # Auto-RP RPA: 11.11.11.11*, next Discovery message in: 00:00:15
+            # Auto-RP RPA: 10.229.11.11*, next Discovery message in: 00:00:15
             p3 = re.compile(r'^\s*Auto-RP RPA: +(?P<auto_rp_address>[\w\S]+),'
                             ' +next +[d|D]iscovery +message +in: +(?P<next_discory_message>[\w\S]+)$')
             m = p3.match(line)
@@ -1027,7 +1027,7 @@ class ShowPimRp(ShowPimRpSchema):
                 flag = False
                 continue
 
-            # RP: 33.33.33.33, (0), uptime: 03:52:52, expires: never,
+            # RP: 10.21.33.33, (0), uptime: 03:52:52, expires: never,
             p8 = re.compile(r'^\s*RP: +(?P<rp>[\w\d\S]+), +\(+(?P<df_ordinal>[\d\S]+)+\),'
                             ' +uptime: +(?P<uptime>[\w\.\:]+),'
                             ' +expires: +(?P<expires>[\w\d\S][^,]+)(?P<comma>[\,]+)?$')
@@ -1044,7 +1044,7 @@ class ShowPimRp(ShowPimRpSchema):
                 code = None
                 continue
 
-            # RP: 55.55.55.51, (0), 
+            # RP: 10.115.55.51, (0), 
             p8_1 = re.compile(r'^\s*RP: +(?P<rp>[\w\d\S]+), +\(+(?P<df_ordinal>[\d\S]+)+\),$')
             m = p8_1.match(line)
             if m:
@@ -1086,8 +1086,8 @@ class ShowPimRp(ShowPimRpSchema):
                     info_source_type_conversions = ['autorp']
                 continue 
 
-            # RP-source: 2.2.2.2 (A), 2.2.2.2 (B),
-            # RP-source: 6.6.6.6 (A), 2.2.2.2 (B), (local), 
+            # RP-source: 10.16.2.2 (A), 10.16.2.2 (B),
+            # RP-source: 10.144.6.6 (A), 10.16.2.2 (B), (local), 
             p8_4 = re.compile(r'^\s*RP\-source: +(?P<rp_source>\S+) +\(+(?P<info_source_type>\w+)+\),')
             m = p8_4.match(line)
             if m:
@@ -1605,7 +1605,7 @@ class ShowIpPimDf(ShowIpPimDfSchema):
                 ordinal = df_uptime = df_bits = df_address = interface = rp_address = is_rpf = ""
 
             # RP Address (ordinal)   DF-bits          RP Metric  Group Range
-            # 2.2.2.2 (2)            00000002 (1)     [0/0]      224.128.0.0/9
+            # 10.16.2.2 (2)            00000002 (1)     [0/0]      224.128.0.0/9
             p2 = re.compile(r'^\s*(?P<rp_address>[\d\.]+) +\((?P<ordinal>\d+)\)'
                             ' +(?P<df_bits>[\w\s\(\)]+)'
                             ' +\[(?P<metrics_pref>\d+)/(?P<metrics>\d+)\] +(?P<group_range>[\d\.\/]+)$')
@@ -1619,7 +1619,7 @@ class ShowIpPimDf(ShowIpPimDfSchema):
                 group_range = m.groupdict()['group_range']
 
             # Interface            DF Address       DF State   DF Metric    DF Uptime
-            #  Loopback0            1.1.1.1          Winner     [0/0]        00:28:14   (RPF)
+            #  Loopback0            10.4.1.1          Winner     [0/0]        00:28:14   (RPF)
             #  Ethernet2/2                 10.2.0.2         Lose       [0/0]        00:28:14
 
             p3 = re.compile(r'^\s*(?P<interface>\S+) +(?P<df_address>\S+)'
@@ -2192,8 +2192,8 @@ class ShowIpPimRouteSchema(MetaParser):
                                 Optional('expiration'): str,  # Ops '00:01:58' from show ip|ipv6 pim route vrf all
                                 Optional('incoming_interface'): str,  # Ops 'Ethernet1/34'
                                 Optional('mode'): str,  # Ops 'none'|'ssm'|'asm'|'bidir'|'dm'|'other'
-                                Optional('rp_address'): str,  # Ops '2.2.2.2'
-                                Optional('rpf_neighbor'): str,  # Ops '11.1.0.1'
+                                Optional('rp_address'): str,  # Ops '10.16.2.2'
+                                Optional('rpf_neighbor'): str,  # Ops '10.144.0.1'
                                 Optional('jp_holdtime_roundup'): int,
                                 Optional('oif'):str,
                                 Optional('oif_count'):int,
@@ -2257,7 +2257,7 @@ class ShowIpPimRoute(ShowIpPimRouteSchema):
                 group = ""
 
             # (*, 232.0.0.0/8), expires 0.000000 (00:00:01)
-            # (*, 233.0.0.0/24), RP 12.12.12.12, bidir, expires 00:01:58, RP-bit
+            # (*, 233.0.0.0/24), RP 10.66.12.12, bidir, expires 00:01:58, RP-bit
             p2 = re.compile(r'^\s*\((?P<source_address>[\S]+)'
                             ', +(?P<group>[\S]+)\),'
                             '( +RP +(?P<rp>[\S\-]+),)?( +(?P<mode>\w+),)?'
@@ -2849,7 +2849,7 @@ class ShowIpPimVrfDetail(ShowIpPimVrfDetailSchema):
                 parsed_dict['vrf'][vrf_name]['address_family'] \
                     [af_name]['register_rate_limit'] = register_rate_limit
 
-            # Register source  interface : loopback0 address : 1.1.1.1
+            # Register source  interface : loopback0 address : 10.4.1.1
             p4 = re.compile(r'^\s*Register +source +interface +: +(?P<intf_name>[\w\d\S]+)'
                             ' +address +: +(?P<address>[\w\d\S]+)$')
             m = p4.match(line)
@@ -4245,8 +4245,8 @@ class ShowRunningConfigPim(ShowRunningConfigPimSchema):
                          '( +hash\-len +(?P<bsr_candidate_hash_mask_length>\d+))?'
                          '( priority +(?P<bsr_candidate_priority>\d+))?')
 
-        # ip pim rp-address 6.6.6.6 group-list 234.0.0.0/8
-        # ip pim rp-address 6.6.6.6 group-list 239.1.1.0/24 bidir
+        # ip pim rp-address 10.144.6.6 group-list 234.0.0.0/8
+        # ip pim rp-address 10.144.6.6 group-list 239.1.1.0/24 bidir
         p3 = re.compile(r'^(?P<af>ip|ipv6) +pim +rp\-address +(?P<static_rp_address>[\w\.\:]+) +'
                          '((group\-list +(?P<static_rp_group_list>[\w\.]+\/\d+))|'
                          '(route\-map +(?P<static_rp_route_map>\w+))|'
@@ -4280,8 +4280,8 @@ class ShowRunningConfigPim(ShowRunningConfigPimSchema):
         # ip pim ssm range 232.0.0.0/8
         p7 = re.compile(r'^$')
 
-        # ip pim anycast-rp 126.126.126.126 2.2.2.2
-        # ip pim anycast-rp 126.126.126.126 6.6.6.6
+        # ip pim anycast-rp 10.9.126.126 10.16.2.2
+        # ip pim anycast-rp 10.9.126.126 10.144.6.6
         p8 = re.compile(r'^$')
 
         # ip pim bsr forward listen
@@ -4320,8 +4320,8 @@ class ShowRunningConfigPim(ShowRunningConfigPimSchema):
                 pim_dict['feature_pim6'] = True
                 continue
            
-            # ip pim rp-address 6.6.6.6 group-list 234.0.0.0/8
-            # ip pim rp-address 6.6.6.6 group-list 239.1.1.0/24 bidir
+            # ip pim rp-address 10.144.6.6 group-list 234.0.0.0/8
+            # ip pim rp-address 10.144.6.6 group-list 239.1.1.0/24 bidir
             m = p3.match(line)
             if m:
                 groups = m.groupdict()
@@ -4382,7 +4382,7 @@ class ShowRunningConfigPim(ShowRunningConfigPimSchema):
                 continue
 
             # ip pim send-rp-announce loopback0 group-list 236.0.0.0/8 bidir interval 60 scope 43
-            # ip pim send-rp-announce 2.2.2.2 prefix-list abc bidir
+            # ip pim send-rp-announce 10.16.2.2 prefix-list abc bidir
             m = p5.match(line)
             if m:
                 groups = m.groupdict()

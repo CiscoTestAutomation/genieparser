@@ -110,7 +110,7 @@ class test_show_archive_config_differences(unittest.TestCase):
     
     golden_output = {'execute.return_value': '''\
         Load for five secs: 14%/0%; one minute: 13%; five minutes: 19%
-        Time source is NTP, 11:58:48.301 JST Fri Oct 14 2016
+        Time source is NTP, 11:58:48.301 EST Fri Oct 14 2016
         !Contextual Config Diffs:
         +hostname Router
         -hostname Test4

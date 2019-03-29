@@ -22,45 +22,45 @@ class test_show_ntp_peer_status(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output_1 = {
-        'clock_state': {'system_status': {'associations_address': '1.1.1.1',
+        'clock_state': {'system_status': {'associations_address': '10.4.1.1',
                                           'clock_state': 'synchronized',
                                           'clock_stratum': 8,
                                           'root_delay': 0.01311}},
         'vrf': {
             'default': {
-                'peer': {'1.1.1.1': {'delay': 0.01311,
+                'peer': {'10.4.1.1': {'delay': 0.01311,
                                      'local': '0.0.0.0',
                                      'mode': 'synchronized',
                                      'poll': 16,
                                      'reach': 377,
-                                     'remote': '1.1.1.1',
+                                     'remote': '10.4.1.1',
                                      'stratum': 8,
                                      'vrf': 'default'},
-                        '2.2.2.2': {'delay': 0.01062,
+                        '10.16.2.2': {'delay': 0.01062,
                                   'local': '0.0.0.0',
                                   'mode': 'client',
                                   'poll': 16,
                                   'reach': 377,
-                                  'remote': '2.2.2.2',
+                                  'remote': '10.16.2.2',
                                   'stratum': 9,
                                   'vrf': 'default'},
-                        '5.5.5.5': {'delay': 0.0,
+                        '10.100.5.5': {'delay': 0.0,
                                   'local': '0.0.0.0',
                                   'mode': 'client',
                                   'poll': 64,
                                   'reach': 0,
-                                  'remote': '5.5.5.5',
+                                  'remote': '10.100.5.5',
                                   'stratum': 16,
                                   'vrf': 'default'}
                 }
             },
             'VRF1': {
-                'peer': {'4.4.4.4': {'delay': 0.0,
+                'peer': {'10.64.4.4': {'delay': 0.0,
                                      'local': '0.0.0.0',
                                      'mode': 'client',
                                      'poll': 256,
                                      'reach': 0,
-                                     'remote': '4.4.4.4',
+                                     'remote': '10.64.4.4',
                                      'stratum': 16,
                                      'vrf': 'VRF1'}
                 }
@@ -70,7 +70,7 @@ class test_show_ntp_peer_status(unittest.TestCase):
     }
 
     golden_parsed_output_2 = {
-        'clock_state': {'system_status': {'associations_address': '4.4.4.32',
+        'clock_state': {'system_status': {'associations_address': '10.64.4.32',
                                           'clock_state': 'synchronized',
                                           'clock_stratum': 4,
                                           'root_delay': 0.02588}},
@@ -82,12 +82,12 @@ class test_show_ntp_peer_status(unittest.TestCase):
                                                      'reach': 0,
                                                      'remote': '127.127.1.0',
                                                      'stratum': 8},
-                                     '4.4.4.32': {'delay': 0.02588,
+                                     '10.64.4.32': {'delay': 0.02588,
                                                   'local': '10.100.100.1',
                                                   'mode': 'synchronized',
                                                   'poll': 64,
                                                   'reach': 377,
-                                                  'remote': '4.4.4.32',
+                                                  'remote': '10.64.4.32',
                                                   'stratum': 4,
                                                   'vrf': 'default'}}}}
     }
@@ -95,36 +95,36 @@ class test_show_ntp_peer_status(unittest.TestCase):
     golden_parsed_output_3 = {
         'clock_state': {'system_status': {'clock_state': 'unsynchronized'}},
         'total_peers': 4,
-        'vrf': {'VRF1': {'peer': {'4.4.4.4': {'delay': 0.0,
+        'vrf': {'VRF1': {'peer': {'10.64.4.4': {'delay': 0.0,
                                               'local': '0.0.0.0',
                                               'mode': 'client',
                                               'poll': 256,
                                               'reach': 0,
-                                              'remote': '4.4.4.4',
+                                              'remote': '10.64.4.4',
                                               'stratum': 16,
                                               'vrf': 'VRF1'}}},
-                'default': {'peer': {'1.1.1.1': {'delay': 0.01311,
+                'default': {'peer': {'10.4.1.1': {'delay': 0.01311,
                                                  'local': '0.0.0.0',
                                                  'mode': 'client',
                                                  'poll': 16,
                                                  'reach': 377,
-                                                 'remote': '1.1.1.1',
+                                                 'remote': '10.4.1.1',
                                                  'stratum': 8,
                                                  'vrf': 'default'},
-                                     '2.2.2.2': {'delay': 0.01062,
+                                     '10.16.2.2': {'delay': 0.01062,
                                                  'local': '0.0.0.0',
                                                  'mode': 'client',
                                                  'poll': 16,
                                                  'reach': 377,
-                                                 'remote': '2.2.2.2',
+                                                 'remote': '10.16.2.2',
                                                  'stratum': 9,
                                                  'vrf': 'default'},
-                                     '5.5.5.5': {'delay': 0.0,
+                                     '10.100.5.5': {'delay': 0.0,
                                                  'local': '0.0.0.0',
                                                  'mode': 'client',
                                                  'poll': 64,
                                                  'reach': 0,
-                                                 'remote': '5.5.5.5',
+                                                 'remote': '10.100.5.5',
                                                  'stratum': 16,
                                                  'vrf': 'default'}}}}
     }
@@ -135,10 +135,10 @@ class test_show_ntp_peer_status(unittest.TestCase):
         - - peer mode(passive), = - polled in client mode 
             remote                                 local                                   st   poll   reach delay   vrf
         -----------------------------------------------------------------------------------------------------------------------
-        *1.1.1.1                                  0.0.0.0                                   8   16     377   0.01311 default
-        =4.4.4.4                                  0.0.0.0                                  16  256       0   0.00000 VRF1
-        =2.2.2.2                                  0.0.0.0                                   9   16     377   0.01062 default
-        =5.5.5.5                                  0.0.0.0                                  16   64       0   0.00000 default
+        *10.4.1.1                                  0.0.0.0                                   8   16     377   0.01311 default
+        =10.64.4.4                                  0.0.0.0                                  16  256       0   0.00000 VRF1
+        =10.16.2.2                                  0.0.0.0                                   9   16     377   0.01062 default
+        =10.100.5.5                                  0.0.0.0                                  16   64       0   0.00000 default
     '''
     }
 
@@ -149,7 +149,7 @@ class test_show_ntp_peer_status(unittest.TestCase):
            remote               local                 st   poll   reach delay   vrf
         -------------------------------------------------------------------------------
         =127.127.1.0            10.100.100.1            8   64       0   0.00000
-        *4.4.4.32               10.100.100.1            4   64     377   0.02588 default
+        *10.64.4.32               10.100.100.1            4   64     377   0.02588 default
     '''
     }
 
@@ -159,10 +159,10 @@ class test_show_ntp_peer_status(unittest.TestCase):
         - - peer mode(passive), = - polled in client mode 
             remote                                 local                                   st   poll   reach delay   vrf
         -----------------------------------------------------------------------------------------------------------------------
-        =1.1.1.1                                  0.0.0.0                                   8   16     377   0.01311 default
-        =4.4.4.4                                  0.0.0.0                                  16  256       0   0.00000 VRF1
-        =2.2.2.2                                  0.0.0.0                                   9   16     377   0.01062 default
-        =5.5.5.5                                  0.0.0.0                                  16   64       0   0.00000 default
+        =10.4.1.1                                  0.0.0.0                                   8   16     377   0.01311 default
+        =10.64.4.4                                  0.0.0.0                                  16  256       0   0.00000 VRF1
+        =10.16.2.2                                  0.0.0.0                                   9   16     377   0.01062 default
+        =10.100.5.5                                  0.0.0.0                                  16   64       0   0.00000 default
     '''
     }
 
@@ -203,16 +203,16 @@ class test_show_ntp_peers(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     
     golden_parsed_output_1 = {
-        'peer': {'1.1.1.1': {'isconfigured': {'True': {'address': '1.1.1.1',
+        'peer': {'10.4.1.1': {'isconfigured': {'True': {'address': '10.4.1.1',
                                                        'isconfigured': True,
                                                        'type': 'server'}}},
-                 '2.2.2.2': {'isconfigured': {'True': {'address': '2.2.2.2',
+                 '10.16.2.2': {'isconfigured': {'True': {'address': '10.16.2.2',
                                                        'isconfigured': True,
                                                        'type': 'server'}}},
-                 '4.4.4.4': {'isconfigured': {'True': {'address': '4.4.4.4',
+                 '10.64.4.4': {'isconfigured': {'True': {'address': '10.64.4.4',
                                                        'isconfigured': True,
                                                        'type': 'server'}}},
-                 '5.5.5.5': {'isconfigured': {'True': {'address': '5.5.5.5',
+                 '10.100.5.5': {'isconfigured': {'True': {'address': '10.100.5.5',
                                                        'isconfigured': True,
                                                        'type': 'server'}}}}
     }
@@ -221,10 +221,10 @@ class test_show_ntp_peers(unittest.TestCase):
         --------------------------------------------------
           Peer IP Address               Serv/Peer          
         --------------------------------------------------
-          1.1.1.1                       Server (configured) 
-          4.4.4.4                       Server (configured) 
-          2.2.2.2                       Server (configured) 
-          5.5.5.5                       Server (configured)
+          10.4.1.1                       Server (configured) 
+          10.64.4.4                       Server (configured) 
+          10.16.2.2                       Server (configured) 
+          10.100.5.5                       Server (configured)
     '''
     }
 

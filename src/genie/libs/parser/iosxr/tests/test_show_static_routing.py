@@ -25,7 +25,7 @@ class test_show_static_topology_detail(unittest.TestCase):
     VRF: default Table Id: 0xe0000000 AFI: IPv4 SAFI: Unicast
       Last path event occured at Dec  7 21:52:00.853
     Prefix/Len          Interface                Nexthop             Object              Explicit-path       Metrics
-    1.1.1.1/32          GigabitEthernet0_0_0_3   None                None                None                [0/4096/1/0/1]
+    10.4.1.1/32          GigabitEthernet0_0_0_3   None                None                None                [0/4096/1/0/1]
       Path is installed into RIB at Dec  7 21:52:00.853
       Path version: 1, Path status: 0x21
       Path has best tag: 0
@@ -34,12 +34,12 @@ class test_show_static_topology_detail(unittest.TestCase):
       Path version: 1, Path status: 0x21
       Path has best tag: 0
 
-    3.3.3.3/32          GigabitEthernet0_0_0_2   20.2.3.3            None                None                [0/0/1/0/1]
+    10.36.3.3/32          GigabitEthernet0_0_0_2   10.229.3.3            None                None                [0/0/1/0/1]
       Path is installed into RIB at Dec  7 21:52:00.843
       Path version: 1, Path status: 0xa1
       Path has best tag: 0
       Path contains both next-hop and outbound interface.
-                        None                     20.2.3.3            None                None                [0/0/3/0/1]
+                        None                     10.229.3.3            None                None                [0/0/3/0/1]
       Path is configured at Dec  7 21:47:43.624
       Path version: 0, Path status: 0x0
                         GigabitEthernet0_0_0_1   10.2.3.3            1                   None                [7/0/17/0/1]
@@ -57,8 +57,8 @@ class test_show_static_topology_detail(unittest.TestCase):
                         'table_id': '0xe0000000',
                         'safi': 'unicast',
                         'routes': {
-                            '1.1.1.1/32': {
-                                'route': '1.1.1.1/32',
+                            '10.4.1.1/32': {
+                                'route': '10.4.1.1/32',
                                 'next_hop': {
                                     'outgoing_interface': {
                                         'GigabitEthernet0/0/0/3': {
@@ -84,14 +84,14 @@ class test_show_static_topology_detail(unittest.TestCase):
                                     },
                                 },
                             },
-                            '3.3.3.3/32': {
-                                'route': '3.3.3.3/32',
+                            '10.36.3.3/32': {
+                                'route': '10.36.3.3/32',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
                                             'active': True,
-                                            'next_hop': '20.2.3.3',
+                                            'next_hop': '10.229.3.3',
                                             'outgoing_interface': 'GigabitEthernet0/0/0/2',
                                             'install_date': 'Dec  7 21:52:00.843',
                                             'metrics': 1,
@@ -104,7 +104,7 @@ class test_show_static_topology_detail(unittest.TestCase):
                                         2: {
                                             'index': 2,
                                             'active': False,
-                                            'next_hop': '20.2.3.3',
+                                            'next_hop': '10.229.3.3',
                                             'configure_date': 'Dec  7 21:47:43.624',
                                             'metrics': 1,
                                             'preference': 3,

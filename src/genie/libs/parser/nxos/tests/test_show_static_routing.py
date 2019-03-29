@@ -24,28 +24,28 @@ class test_show_ip_static_route(unittest.TestCase):
 
     Static-route for VRF "default"(1)
     IPv4 Unicast Static Routes:
-      1.1.1.1/32, configured nh: 10.1.3.1/32 Ethernet1/2
+      10.4.1.1/32, configured nh: 10.1.3.1/32 Ethernet1/2
         (installed in urib)
-      1.1.1.1/32, configured nh: 20.1.3.1/32 Ethernet1/3
+      10.4.1.1/32, configured nh: 10.186.3.1/32 Ethernet1/3
         (installed in urib)
-      2.2.2.2/32, configured nh: 10.2.3.2/32 Ethernet1/4
+      10.16.2.2/32, configured nh: 10.2.3.2/32 Ethernet1/4
         (installed in urib)
-      2.2.2.2/32, configured nh: 20.2.3.2/32 Ethernet1/1
+      10.16.2.2/32, configured nh: 10.229.3.2/32 Ethernet1/1
         (installed in urib)
 
 
     Static-route for VRF "VRF1"(3)
     IPv4 Unicast Static Routes:
-      1.1.1.1/32, configured nh: 0.0.0.0/32 Null0
+      10.4.1.1/32, configured nh: 0.0.0.0/32 Null0
         (installed in urib)
-      1.1.1.1/32, configured nh: 10.1.3.1/32 Ethernet1/2
+      10.4.1.1/32, configured nh: 10.1.3.1/32 Ethernet1/2
         (not installed in urib)
-      2.2.2.2/32, configured nh: 20.2.3.2/32
+      10.16.2.2/32, configured nh: 10.229.3.2/32
         (not installed in urib)
         rnh(installed in urib)
-      2.2.2.2/32, configured nh: 20.2.3.2/32 Ethernet1/1
+      10.16.2.2/32, configured nh: 10.229.3.2/32 Ethernet1/1
         (not installed in urib)
-      2.2.2.2/32, configured nh: 50.2.3.2/32
+      10.16.2.2/32, configured nh: 10.154.3.2/32
         (not installed in urib)
         rnh(installed in urib)
     '''
@@ -56,8 +56,8 @@ class test_show_ip_static_route(unittest.TestCase):
                 'address_family': {
                     'ipv4': {
                         'routes': {
-                            '1.1.1.1/32': {
-                                'route': '1.1.1.1/32',
+                            '10.4.1.1/32': {
+                                'route': '10.4.1.1/32',
                                 'next_hop': {
                                     'next_hop_list': {
                                          1: {
@@ -70,15 +70,15 @@ class test_show_ip_static_route(unittest.TestCase):
                                         2: {
                                             'index': 2,
                                             'active': True,
-                                            'next_hop': '20.1.3.1',
+                                            'next_hop': '10.186.3.1',
                                             'next_hop_netmask': '32',
                                             'outgoing_interface': 'Ethernet1/3',
                                         },
                                     },
                                 },
                             },
-                            '2.2.2.2/32': {
-                                'route': '2.2.2.2/32',
+                            '10.16.2.2/32': {
+                                'route': '10.16.2.2/32',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -91,7 +91,7 @@ class test_show_ip_static_route(unittest.TestCase):
                                         2: {
                                             'index': 2,
                                             'active': True,
-                                            'next_hop': '20.2.3.2',
+                                            'next_hop': '10.229.3.2',
                                             'next_hop_netmask': '32',
                                             'outgoing_interface': 'Ethernet1/1',
                                         },
@@ -107,8 +107,8 @@ class test_show_ip_static_route(unittest.TestCase):
                 'address_family': {
                     'ipv4': {
                         'routes': {
-                            '1.1.1.1/32': {
-                                'route': '1.1.1.1/32',
+                            '10.4.1.1/32': {
+                                'route': '10.4.1.1/32',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -128,21 +128,21 @@ class test_show_ip_static_route(unittest.TestCase):
                                     },
                                 },
                             },
-                            '2.2.2.2/32': {
-                                'route': '2.2.2.2/32',
+                            '10.16.2.2/32': {
+                                'route': '10.16.2.2/32',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
                                             'active': False,
                                             'rnh_active': True,
-                                            'next_hop': '20.2.3.2',
+                                            'next_hop': '10.229.3.2',
                                             'next_hop_netmask': '32',
                                         },
                                         2: {
                                             'index': 2,
                                             'active': False,
-                                            'next_hop': '20.2.3.2',
+                                            'next_hop': '10.229.3.2',
                                             'next_hop_netmask': '32',
                                             'outgoing_interface': 'Ethernet1/1',
                                         },
@@ -150,7 +150,7 @@ class test_show_ip_static_route(unittest.TestCase):
                                             'index': 3,
                                             'active': False,
                                             'rnh_active': True,
-                                            'next_hop': '50.2.3.2',
+                                            'next_hop': '10.154.3.2',
                                             'next_hop_netmask': '32',
                                         },
                                     },
@@ -168,11 +168,11 @@ class test_show_ip_static_route(unittest.TestCase):
 
         Static-route for VRF "default"(1)
         IPv4 Unicast Static Routes:
-          1.1.1.1/32, configured nh: 10.1.3.1/32 Ethernet1/2
+          10.4.1.1/32, configured nh: 10.1.3.1/32 Ethernet1/2
             (installed in urib)
-          2.2.2.2/32, configured nh: 10.2.3.2/32 Ethernet1/4
+          10.16.2.2/32, configured nh: 10.2.3.2/32 Ethernet1/4
             (installed in urib)
-          2.2.2.2/32, configured nh: 20.2.3.2/32 Ethernet1/1
+          10.16.2.2/32, configured nh: 10.229.3.2/32 Ethernet1/1
             (installed in urib)
             '''}
 
@@ -182,8 +182,8 @@ class test_show_ip_static_route(unittest.TestCase):
                 'address_family': {
                     'ipv4': {
                         'routes': {
-                            '1.1.1.1/32': {
-                                'route': '1.1.1.1/32',
+                            '10.4.1.1/32': {
+                                'route': '10.4.1.1/32',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -196,8 +196,8 @@ class test_show_ip_static_route(unittest.TestCase):
                                     },
                                 },
                             },
-                            '2.2.2.2/32': {
-                                'route': '2.2.2.2/32',
+                            '10.16.2.2/32': {
+                                'route': '10.16.2.2/32',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -210,7 +210,7 @@ class test_show_ip_static_route(unittest.TestCase):
                                         2: {
                                             'index': 2,
                                             'active': True,
-                                            'next_hop': '20.2.3.2',
+                                            'next_hop': '10.229.3.2',
                                             'next_hop_netmask': '32',
                                             'outgoing_interface': 'Ethernet1/1',
                                         },

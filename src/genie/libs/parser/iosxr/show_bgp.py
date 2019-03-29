@@ -614,7 +614,7 @@ class ShowBgpInstanceSessionGroupConfiguration(ShowBgpInstanceSessionGroupConfig
 
             # router bgp 100 session-group SG
             # router bgp 333 instance test session-group abcd
-            # router bgp 333 instance test neighbor 1.1.1.1 use session-group LALALALLA
+            # router bgp 333 instance test neighbor 10.4.1.1 use session-group LALALALLA
             pp1 = re.compile(r'\s*router +bgp +(?P<bgp_id>\d+)'
                               '(?: +instance +(?P<instance_name>[a-zA-Z0-9]+))?'
                               '(?: +neighbor +(?P<neighbor_id>[0-9\.\:]+) +use)?'
@@ -1108,7 +1108,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                     ['as_number'] = as_number
                 continue
 
-            # Router ID: 1.1.1.1 (manually configured)
+            # Router ID: 10.4.1.1 (manually configured)
             p5 = re.compile(r'^Router *ID: *(?P<router_id>[\w\.\:]+) *'
                              '(\([\w\s]+\))?$')
             m = p5.match(line)
@@ -1119,7 +1119,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                     ['router_id'] = router_id
                 continue
 
-            # Default Cluster ID: 1.1.1.1
+            # Default Cluster ID: 10.4.1.1
             # Default Cluster ID: 10 (manually configured)
             p6_1 = re.compile(r'^Default *Cluster *ID: *'
                              '(?P<default_cluster_id>[\w\.\:]+) *'
@@ -1131,7 +1131,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                     ['default_cluster_id'] = default_cluster_id
                 continue
 
-            # Active Cluster IDs:  1.1.1.1
+            # Active Cluster IDs:  10.4.1.1
             p6_2 = re.compile(r'^Active *Cluster *IDs: *'
                              '(?P<active_cluster_id>[\w\.\:]+)$')
             m = p6_2.match(line)
@@ -2212,7 +2212,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                     ret_dict['instance'][instance] = {}
                 continue
 
-            # BGP neighbor is 2.2.2.2
+            # BGP neighbor is 10.16.2.2
             p2 =  re.compile(r'^\s*BGP +neighbor +is +(?P<neighbor>[a-zA-Z0-9\.\:]+)$')
             m = p2.match(line)
             if m:
@@ -3241,7 +3241,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                 continue
 
 
-            # BGP router identifier 1.1.1.1, local AS number 100
+            # BGP router identifier 10.4.1.1, local AS number 100
             p3 = re.compile(r'^BGP *router *identifier *(?P<router_identifier>[0-9\.]+), *local *AS *number *(?P<local_as>[0-9]+)$')
             m = p3.match(line)
             if m:
@@ -3396,7 +3396,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
 
                 continue
                     
-           # *>i46.2.6.0/24        4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+           # *>i10.9.6.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
             # *> 615:11:11::/64     2001:db8:20:1:5::5
             p13 = re.compile(r'^(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)? *'
                               '(?P<prefix>(?P<ip>[\w\.\:]+)/(?P<mask>\d+))? +'
@@ -3743,9 +3743,9 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
                 continue
 
             # Network            Next Hop        From            AS Path
-            # 46.1.1.0/24        20.1.5.1        2.2.2.2         100 300 33299 51178 47751 {27016}e
-            # 615:11:11::/64     1.1.1.1         2001:db8:20:1:5::5
-            # 1.1.1.1/32         1.1.1.1         Local           ?
+            # 10.169.1.0/24        10.186.5.1        10.16.2.2         100 300 33299 51178 47751 {27016}e
+            # 615:11:11::/64     10.4.1.1         2001:db8:20:1:5::5
+            # 10.4.1.1/32         10.4.1.1         Local           ?
             p4 = re.compile(r'^(?P<prefix>(?P<ip>[\w\.\:]+)/(?P<mask>\d+)) *(?P<next_hop>[\w\.\:]+) *(?P<froms>[\w\.\:]+) *'
                              '(?P<path>[\d\{\}\s]+)?(?P<origin_code>[e|i\?])?$')
             m = p4.match(line)
@@ -4094,7 +4094,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                 bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['vrf_id'] = vrf_id
                 continue 
 
-            # BGP router identifier 11.11.11.11, local AS number 100
+            # BGP router identifier 10.229.11.11, local AS number 100
             p7 = re.compile(r'^\s*BGP *router *identifier'
                             ' *(?P<router_id>[0-9\.]+)\, *local *AS *number'
                             ' *(?P<local_as>[0-9]+)$')
@@ -4254,7 +4254,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
 
             # Neighbor        Spk    AS msg_rcvd msg_sent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
             # 10.1.5.5          0   200      60      62       63    0    0 00:57:32          0
-            # 2.2.2.2           0   100       0       0        0    0    0 00:00:00 Idle
+            # 10.16.2.2           0   100       0       0        0    0    0 00:00:00 Idle
             p17_3 = re.compile(r'^\s*(?P<neighbor>[a-zA-Z0-9\.\:]+) +(?P<spk>[0-9]+)'
                               ' +(?P<remote_as>[0-9]+) +(?P<msg_rcvd>[0-9]+)'
                               ' +(?P<msg_sent>[0-9]+)'
@@ -4482,7 +4482,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                     ['address_family'][address_family]['vrf_id'] = vrf_id
                 continue
 
-            # BGP router identifier 1.1.1.1, local AS number 100
+            # BGP router identifier 10.4.1.1, local AS number 100
             p6 = re.compile(r'^\s*BGP *router *identifier *(?P<router_identifier>[0-9\.]+),'
                             ' *local *AS *number *(?P<local_as>[0-9]+)$')
             m = p6.match(line)
@@ -4844,7 +4844,7 @@ class ShowBgpL2vpnEvpn(MetaParser):
                 is_detail = True
             if self.route_type is not None:
                 cmd += ' route-type {}'.format(self.route_type)
-            # XXXJST Workaround Csccon issue that doesn't quote Tcl arguments properly
+            # XXXEST Workaround Csccon issue that doesn't quote Tcl arguments properly
             cmd = re.escape(cmd)
             out = self.device.execute(cmd)
             out = re.sub(r'\r+\n', r'\n', out)
@@ -5128,7 +5128,7 @@ class ShowBgpL2vpnEvpnAdvertised(MetaParser):
         for line in out.splitlines():
             line = line.rstrip()
 
-            # [2][0][48][7777.7777.0002][0]/104 is advertised to 100.0.0.10
+            # [2][0][48][7777.7777.0002][0]/104 is advertised to 10.55.0.10
             m = re.match(r'^(?P<prefix>\[[^/]+\])/(?P<prefix_length>[0-9]+) is advertised to (?P<neighbor>\S+)$', line)
             if m:
                 entry = m.groupdict()
@@ -5147,7 +5147,7 @@ class ShowBgpL2vpnEvpnAdvertised(MetaParser):
                 path_info = entry['path_info'] = {}
                 continue
 
-            #    neighbor: Local           neighbor router id: 8.8.8.8
+            #    neighbor: Local           neighbor router id: 10.1.8.8
             m = re.match(r'^ +neighbor: (?P<neighbor>\S+) +neighbor router id: (?P<neighbor_router_id>\S+)$', line)
             if m:
                 if attr_info:
@@ -5182,7 +5182,7 @@ class ShowBgpL2vpnEvpnAdvertised(MetaParser):
                 attr_info = path_info['attr_out'] = {}
                 continue
 
-            #    next hop: 8.8.8.8
+            #    next hop: 10.1.8.8
             m = re.match(r'^ +next hop: (?P<next_hop>\S+)$', line)
             if m:
                 attr_info.update(m.groupdict())

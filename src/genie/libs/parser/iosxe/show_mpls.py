@@ -310,7 +310,7 @@ class ShowMplsLdpNsrStatistics(ShowMplsLdpNsrStatisticsSchema):
         result_dict = {}
         session_sync_flag = False
 
-        # Peer: 106.162.197.253:0
+        # Peer: 10.169.197.253:0
         p1 = re.compile(
             r'^Peer: +(?P<peer>[\d\.]+):(?P<local_space_id>\d+)$')
         #   In label Request Records created: 0, freed: 0
@@ -363,7 +363,7 @@ class ShowMplsLdpNsrStatistics(ShowMplsLdpNsrStatisticsSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # Peer: 106.162.197.253:0
+            # Peer: 10.169.197.253:0
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -1660,10 +1660,10 @@ class ShowMplsLdpIgpSync(ShowMplsLdpIgpSyncSchema):
         #     IGP holddown time: infinite.
         p5 = re.compile(r'^IGP +holddown +time: +(?P<holddown_time>\w+).?$')
 
-        #     Peer LDP Ident: 106.162.197.252:0
+        #     Peer LDP Ident: 10.169.197.252:0
         p6 = re.compile(r'^Peer +LDP +Ident: +(?P<peer_ldp_ident>\S+).?$')
 
-        #     IGP enabled: OSPF 9996
+        #     IGP enabled: OSPF 65109
         p7 = re.compile(r'^IGP +enabled: +(?P<igp_enabled>[\S\s]+)$')
 
         for line in out.splitlines():
@@ -1726,14 +1726,14 @@ class ShowMplsLdpIgpSync(ShowMplsLdpIgpSyncSchema):
                 igp_dict.update({'holddown_time': group['holddown_time']})
                 continue
 
-            # Peer LDP Ident: 106.162.197.252:0
+            # Peer LDP Ident: 10.169.197.252:0
             m = p6.match(line)
             if m:
                 group = m.groupdict()
                 interface_dict.update({'peer_ldp_ident': group['peer_ldp_ident']})
                 continue
 
-            # IGP enabled: OSPF 9996
+            # IGP enabled: OSPF 65109
             m = p7.match(line)
             if m:
                 group = m.groupdict()
@@ -1829,7 +1829,7 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         # 9301       No Label   172.16.100.1/32[V]   \
         #                                        0             Po1.51     192.168.10.253
 
-        #       [T]  16130      40.40.40.40/32   0             Tu1        point2point
+        #       [T]  16130      10.25.40.40/32   0             Tu1        point2point
         p1 = re.compile(r'^(?P<local_label>\d+) +(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>[\S]+) +\\$')
 
         p2 = re.compile(r'^(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')

@@ -18,7 +18,7 @@ class test_show_mac_address_table_vni(unittest.TestCase):
                                  'evi': '1001',
                                  'mac_aging_time': '0',
                                  'mac_type': 'dynamic',
-                                 'next_hop': '3.0.0.101',
+                                 'next_hop': '10.9.0.101',
                                  'ntfy': 'F',
                                  'ports': 'None',
                                  'secure': 'F'}
@@ -27,7 +27,7 @@ class test_show_mac_address_table_vni(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''\
       CH-P2-TOR-1# sh mac address-table vni 2001001 | grep nve1 
-      C 1001     0000.04b1.0000   dynamic  0         F      F    nve1(3.0.0.101)
+      C 1001     0000.04b1.0000   dynamic  0         F      F    nve1(10.9.0.101)
     '''
     }
 

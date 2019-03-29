@@ -23,7 +23,7 @@ class test_show_ntp_associations(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output_1 = {
-        'clock_state': {'system_status': {'associations_address': '171.68.38.65',
+        'clock_state': {'system_status': {'associations_address': '172.16.229.65',
                                           'associations_local_mode': 'active',
                                           'clock_offset': 73.819,
                                           'clock_refid': '.GNSS.',
@@ -37,11 +37,11 @@ class test_show_ntp_associations(unittest.TestCase):
                                                         'poll': 128,
                                                         'reach': 271,
                                                         'receive_time': 84,
-                                                        'refid': '171.68.38.65',
+                                                        'refid': '172.16.229.65',
                                                         'remote': '10.2.2.2',
                                                         'stratum': 2,
                                                         'type': 'active'}}},
-                '171.68.38.65': {'local_mode': {'active': {'delay': 1.436,
+                '172.16.229.65': {'local_mode': {'active': {'delay': 1.436,
                                                             'jitter': 10.905,
                                                             'mode': 'synchronized',
                                                             'offset': 73.819,
@@ -49,10 +49,10 @@ class test_show_ntp_associations(unittest.TestCase):
                                                             'reach': 377,
                                                             'receive_time': 59,
                                                             'refid': '.GNSS.',
-                                                            'remote': '171.68.38.65',
+                                                            'remote': '172.16.229.65',
                                                             'stratum': 1,
                                                             'type': 'active'}}},
-                '171.68.38.66': {'local_mode': {'active': {'delay': 0.969,
+                '172.16.229.66': {'local_mode': {'active': {'delay': 0.969,
                                                             'jitter': 8.964,
                                                             'mode': 'final '
                                                                     'selection '
@@ -62,10 +62,10 @@ class test_show_ntp_associations(unittest.TestCase):
                                                             'reach': 377,
                                                             'receive_time': 63,
                                                             'refid': '.GNSS.',
-                                                            'remote': '171.68.38.66',
+                                                            'remote': '172.16.229.66',
                                                             'stratum': 1,
                                                             'type': 'active'}}},
-                '72.163.32.44': {'local_mode': {'active': {'delay': 42.72,
+                '10.145.32.44': {'local_mode': {'active': {'delay': 42.72,
                                                             'jitter': 6.228,
                                                             'mode': 'final '
                                                                     'selection '
@@ -75,7 +75,7 @@ class test_show_ntp_associations(unittest.TestCase):
                                                             'reach': 377,
                                                             'receive_time': 61,
                                                             'refid': '.GNSS.',
-                                                            'remote': '72.163.32.44',
+                                                            'remote': '10.145.32.44',
                                                             'stratum': 1,
                                                             'type': 'active'}}}}
     }
@@ -85,10 +85,10 @@ class test_show_ntp_associations(unittest.TestCase):
         root@junos_vmx1> show ntp associations
            remote         refid           st t when poll reach   delay   offset  jitter
         ===============================================================================
-        x10.2.2.2         171.68.38.65     2 -   84  128  271    1.470  -46.760  52.506
-        *171.68.38.65     .GNSS.           1 -   59   64  377    1.436   73.819  10.905
-        +171.68.38.66     .GNSS.           1 -   63   64  377    0.969   59.428   8.964
-        +72.163.32.44     .GNSS.           1 -   61   64  377   42.720   64.267   6.228
+        x10.2.2.2         172.16.229.65     2 -   84  128  271    1.470  -46.760  52.506
+        *172.16.229.65     .GNSS.           1 -   59   64  377    1.436   73.819  10.905
+        +172.16.229.66     .GNSS.           1 -   63   64  377    0.969   59.428   8.964
+        +10.145.32.44     .GNSS.           1 -   61   64  377   42.720   64.267   6.228
     '''
     }
 
@@ -126,7 +126,7 @@ class test_show_ntp_status(unittest.TestCase):
                                           'precision': -23.0,
                                           'processor': 'amd64',
                                           'recent_event': 'event_peer/strat_chg',
-                                          'refid': '171.68.38.65',
+                                          'refid': '172.16.229.65',
                                           'reftime': 'df981acf.bfa97435  Thu, Nov 15 2018 11:18:23.748',
                                           'rootdelay': 1.434,
                                           'rootdispersion': 82.589,
@@ -147,7 +147,7 @@ class test_show_ntp_status(unittest.TestCase):
         version="ntpd 4.2.0-a Tue Dec 19 21:12:44  2017 (1)", processor="amd64",
         system="FreeBSDJNPR-11.0-20171206.f4cad52_buil", leap=00, stratum=2,
         precision=-23, rootdelay=1.434, rootdispersion=82.589, peer=22765,
-        refid=171.68.38.65,
+        refid=172.16.229.65,
         reftime=df981acf.bfa97435  Thu, Nov 15 2018 11:18:23.748, poll=6,
         clock=df981ae8.eb6e7ee8  Thu, Nov 15 2018 11:18:48.919, state=4,
         offset=67.812, frequency=4.968, jitter=12.270, stability=0.890
@@ -180,19 +180,19 @@ class test_show_configuration_system_ntp_display_set(unittest.TestCase):
                                               'type': {'peer': {'address': '10.2.2.2',
                                                                 'type': 'peer',
                                                                 'vrf': 'default'}}}}},
-         'mgmt_junos': {'address': {'171.68.38.65': {'isconfigured': {'True': {'address': '171.68.38.65',
+         'mgmt_junos': {'address': {'172.16.229.65': {'isconfigured': {'True': {'address': '172.16.229.65',
                                                                                'isconfigured': True}},
-                                                     'type': {'server': {'address': '171.68.38.65',
+                                                     'type': {'server': {'address': '172.16.229.65',
                                                                          'type': 'server',
                                                                          'vrf': 'mgmt_junos'}}},
-                                    '171.68.38.66': {'isconfigured': {'True': {'address': '171.68.38.66',
+                                    '172.16.229.66': {'isconfigured': {'True': {'address': '172.16.229.66',
                                                                                'isconfigured': True}},
-                                                     'type': {'server': {'address': '171.68.38.66',
+                                                     'type': {'server': {'address': '172.16.229.66',
                                                                          'type': 'server',
                                                                          'vrf': 'mgmt_junos'}}},
-                                    '72.163.32.44': {'isconfigured': {'True': {'address': '72.163.32.44',
+                                    '10.145.32.44': {'isconfigured': {'True': {'address': '10.145.32.44',
                                                                                'isconfigured': True}},
-                                                     'type': {'server': {'address': '72.163.32.44',
+                                                     'type': {'server': {'address': '10.145.32.44',
                                                                          'type': 'server',
                                                                          'vrf': 'mgmt_junos'}}}}}}
     }
@@ -200,9 +200,9 @@ class test_show_configuration_system_ntp_display_set(unittest.TestCase):
     golden_output_1 = {'execute.return_value': '''\
         root@junos_vmx1> show configuration system ntp | display set 
         set system ntp peer 10.2.2.2
-        set system ntp server 171.68.38.65 routing-instance mgmt_junos
-        set system ntp server 171.68.38.66 routing-instance mgmt_junos
-        set system ntp server 72.163.32.44 routing-instance mgmt_junos
+        set system ntp server 172.16.229.65 routing-instance mgmt_junos
+        set system ntp server 172.16.229.66 routing-instance mgmt_junos
+        set system ntp server 10.145.32.44 routing-instance mgmt_junos
     '''
     }
 
