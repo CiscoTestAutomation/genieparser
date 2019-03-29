@@ -11,6 +11,8 @@
 * IOSXE
     * Added ShowPolicyMapControlPlane Parser for:
        'show policy map control plane'
+       'show policy map'
+       'show policy map{name}'
 
 --------------------------------------------------------------------------------
                                     MONITOR

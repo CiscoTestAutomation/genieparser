@@ -374,14 +374,43 @@ class ShowPolicyMapSchema(MetaParser):
 
     schema = {
         'policy_map': 
-            {Any(): # policy1
-                {'class': 
-                    {Any(): # police
-                        {Optional('police_cir'): int,
+            {Any():
+                {'class_map':
+                    {Any():
+                        {Optional('priority_level'):
+                             {Any():
+                                  {'kb_per_sec':int}},
+                        Optional('police'):
+                            {Optional('cir_bps'): int,
+                             Optional('bc_bytes'): int,
+                             Optional('be_bytes'): int,
+                             Optional('conform_color'): str,
+                             Optional('conform_action'): str,
+                             Optional('exceed_action'): str,
+                             Optional('violate_action'): str,
+                             Optional('service_policy'): str,
+                            },
+                        Optional('bandwidth'): int,
                         Optional('conform_burst'): int,
                         Optional('pir'): int,
                         Optional('peak_burst'): int,
-                        }, 
+                        Optional('average'): str,
+                        Optional('cir_bps'): int,
+                        Optional('weighted_fair'):
+                            {Any():
+                                {'bandwidth': int,
+                                 'exponential_weight': int,
+                                 'explicit_congestion': str,
+                                 'class':
+                                     {Any():
+                                         {'min_threshold': str,
+                                          'max_threshold': str,
+                                          'mark_probability': str,
+                                         },
+                                     },
+                                 },
+                            },
+                        },
                     },
                 },
             },
@@ -403,9 +432,8 @@ class ShowPolicyMap(ShowPolicyMapSchema):
     cli_command = ['show policy-map {name}', 'show policy-map']
 
     def cli(self, name='', output=None):
-
         if output is None:
-            if name and name != 'interface':
+            if name:
                 cmd = self.cli_command[0].format(name=name)
             else:
                 cmd = self.cli_command[1]
@@ -414,16 +442,212 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         else:
             out = output
 
-        # Policy Map policy1
-        p1 = {}
-        
-        # Class police
-        p2 = {}
-   
-        # police cir 500000 conform-burst 10000 pir 1000000 peak-burst 10000 conform-action transmit exceed-action set-prec-transmit 2 violate-action drop
-        p3 = {}
+        # Init vars
+        ret_dict = {}
 
-        # continue parsing
+        # Policy Map police-in
+        p1 = re.compile(r'^Policy +Map +(?P<policy_map>([\w\-]+))$')
+        
+        # Class class-default
+        p2 = re.compile(r'^Class +(?P<class_map>([\w\-]+))$')
+
+        # police cir 445500 bc 83619
+        p3 = re.compile(r'^police +cir +(?P<cir_bps>(\d+)) +bc +(?P<bc_bytes>(\d+))$')
+
+        # police cir 50000 bc 3000 be 3000
+        p3_0 = re.compile(r'^police +cir +(?P<cir_bps>(\d+)) +bc +(?P<bc_bytes>(\d+)) +be +(?P<be_bytes>(\d+))$')
+
+        # conform-action transmit
+        p3_1 = re.compile(r'^conform-action +(?P<conform_action>([\w\-\s]+))$')
+
+        # exceed-action drop
+        p3_2 = re.compile(r'^exceed-action +(?P<exceed_action>([\w\-\s]+))$')
+
+        # conform-color hipri-conform
+        p3_3 = re.compile(r'^conform-color +(?P<conform_color>([\w\-\s]+))$')
+
+        # violate - action drop
+        p3_4 = re.compile(r'^violate-action +(?P<violate_action>([\w\-\s]+))$')
+
+        # service - policy child - policy
+        p3_5 = re.compile(r'^service-policy +(?P<service_policy>([\w\-\s]+))$')
+
+        # Average Rate Traffic Shaping
+        p4 = re.compile(r'^Average+(?P<average>([\w\-\s]+))$')
+
+        # cir 1000000 (bps)
+        p5 = re.compile(r'^cir +(?P<cir_bps>(\d+))')
+
+        # priority level 1 20000 (kb/s)
+        p6 = re.compile(r'^priority +level +(?P<priority_level>(\d+)) +(?P<kb_per_sec>(\d+))')
+
+        # bandwidth 20000 (kb/s)
+        # Bandwidth 70 (%)
+        p7 = re.compile(r'^(?P<key>bandwidth|Bandwidth) +(?P<bandwidth>(\d+))')
+
+        # Weighted Fair Queueing
+        p8 = re.compile(r'^Weighted +Fair +(?P<weighted_fair>(\w+))$')
+
+        # exponential weight 9
+        p8_1 = re.compile(r'^exponential +weight +(?P<exponential_weight>(\d+))$')
+
+        # explicit congestion notification
+        p8_2 = re.compile(r'^explicit +congestion +(?P<explicit_congestion>(\w+))$')
+
+        # class    min-threshold    max-threshold    mark-probability
+        # ----------------------------------------------------------
+        # ----------------------------------------------------------
+        # 0        -                -                1/10
+        # 1        -                -                1/10
+        # 2        -                -                1/10
+        # 3        -                -                1/10
+        # 4        -                -                1/10
+        # 5        -                -                1/10
+        # 6        -                -                1/10
+        # 7        -                -                1/10
+        # rsvp     -                -                1/10
+
+        p8_3 = re.compile(r'^(?P<class>(\w+)) +(?P<min_threshold>([\w\-]+)) +(?P<max_threshold>([\w\-]+)) '
+                           '+(?P<mark_probability>([\d\/]+))')
+
+        for line in out.splitlines():
+
+            line = line.strip()
+
+            # Policy Map police-in
+            m = p1.match(line)
+            if m:
+                policy_map = m.groupdict()['policy_map']
+                policy_map_dict = ret_dict.setdefault('policy_map', {}).setdefault(policy_map, {})
+                continue
+
+            # Class class-default
+            m = p2.match(line)
+            if m:
+                class_map = m.groupdict()['class_map']
+                class_map_dict = policy_map_dict.setdefault('class_map', {}).setdefault(class_map, {})
+                continue
+
+            # police cir 445500 bc 83619
+            m = p3.match(line)
+            if m:
+                police_dict = class_map_dict.setdefault('police', {})
+                police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
+                police_dict['bc_bytes'] = int(m.groupdict()['bc_bytes'])
+                continue
+
+            # police cir 50000 bc 3000 be 3000
+            m = p3_0.match(line)
+            if m:
+                police_dict = class_map_dict.setdefault('police', {})
+                police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
+                police_dict['bc_bytes'] = int(m.groupdict()['bc_bytes'])
+                police_dict['be_bytes'] = int(m.groupdict()['be_bytes'])
+                continue
+
+            # conform-action transmit
+            m = p3_1.match(line)
+            if m:
+                police_dict['conform_action'] = m.groupdict()['conform_action']
+                continue
+
+            # exceed-action drop
+            m = p3_2.match(line)
+            if m:
+                police_dict['exceed_action'] = m.groupdict()['exceed_action']
+                continue
+
+            # conform-color hipri-conform
+            m = p3_3.match(line)
+            if m:
+                police_dict['conform_color'] = m.groupdict()['conform_color']
+                continue
+
+            # violate - action drop
+            m = p3_4.match(line)
+            if m:
+                police_dict['violate_action'] = m.groupdict()['violate_action']
+                continue
+
+            # service - policy child - policy
+            m = p3_5.match(line)
+            if m:
+                police_dict['service_policy'] = m.groupdict()['service_policy']
+                continue
+
+            # Average Rate Traffic Shaping
+            m = p4.match(line)
+            if m:
+                class_map_dict['average'] = m.groupdict()['average']
+                continue
+
+            # cir 1000000 (bps)
+            m = p5.match(line)
+            if m:
+                class_map_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
+                continue
+
+            # priority level 1 20000 (kb/s)
+            m = p6.match(line)
+            if m:
+                priority_level = m.groupdict()['priority_level']
+                kb_per_sec = m.groupdict()['kb_per_sec']
+                priority_dict = class_map_dict.setdefault('priority_level', {}).setdefault(priority_level, {})
+                priority_dict['kb_per_sec'] = int(kb_per_sec)
+                continue
+
+            # bandwidth 20000 (kb/s)
+            m = p7.match(line)
+            if m:
+                key = m.groupdict()['key']
+                if key == 'bandwidth':
+                    class_map_dict['bandwidth'] = int(m.groupdict()['bandwidth'])
+                elif key == 'Bandwidth':
+                    weight_dict['bandwidth'] = int(m.groupdict()['bandwidth'])
+                continue
+
+            # Weighted Fair Queueing
+            m = p8.match(line)
+            if m:
+                weighted_fair= m.groupdict()['weighted_fair']
+                weight_dict = class_map_dict.setdefault('weighted_fair', {}).setdefault(weighted_fair, {})
+                continue
+
+            # exponential weight 9
+            m = p8_1.match(line)
+            if m:
+                weight_dict['exponential_weight'] = int(m.groupdict()['exponential_weight'])
+                continue
+
+            # explicit congestion notification
+            m = p8_2.match(line)
+            if m:
+                weight_dict['explicit_congestion'] = m.groupdict()['explicit_congestion']
+                p8_2 = re.compile(r'^explicit +congestion +(?P<explicit_congestion>(\w+))$')
+
+            # class    min-threshold    max-threshold    mark-probability
+            # ----------------------------------------------------------
+            # ----------------------------------------------------------
+            # 0        -                -                1/10
+            # 1        -                -                1/10
+            # 2        -                -                1/10
+            # 3        -                -                1/10
+            # 4        -                -                1/10
+            # 5        -                -                1/10
+            # 6        -                -                1/10
+            # 7        -                -                1/10
+            # rsvp     -                -                1/10
+            m = p8_3.match(line)
+            if m:
+                group = m.groupdict()
+                class_val = group['class']
+                class_dict = weight_dict.setdefault('class', {}).setdefault(class_val, {})
+                class_dict['min_threshold'] = group['min_threshold']
+                class_dict['max_threshold'] = group['max_threshold']
+                class_dict['mark_probability'] = group['mark_probability']
+                continue
+
+        return ret_dict
 
 
 # ======================================

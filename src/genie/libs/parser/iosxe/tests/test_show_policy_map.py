@@ -10,7 +10,7 @@ from ats.topology import loader
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
 # iosxe show_monitor
-from genie.libs.parser.iosxe.show_policy_map import ShowPolicyMapControlPlane
+from genie.libs.parser.iosxe.show_policy_map import ShowPolicyMapControlPlane,ShowPolicyMap
 
 
 # =============================================
@@ -676,7 +676,6 @@ class test_show_policy_map_control_plane(unittest.TestCase):
         self.device = Mock(**self.golden_output1)
         obj = ShowPolicyMapControlPlane(device=self.device)
         parsed_output = obj.parse()
-        #import pdb;pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_show_policy_map_control_plane_full2(self):
@@ -699,6 +698,268 @@ class test_show_policy_map_control_plane(unittest.TestCase):
         obj = ShowPolicyMapControlPlane(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output4)
+
+# =============================================
+# Unit test for 'show policy map '
+# =============================================
+class test_show_policy_map(unittest.TestCase):
+    '''Unit test for "show policy map"
+                     "show policy map{name}"
+    '''
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 ={
+        'policy_map':
+            {'shape-out':
+                {'class_map':
+                    {'class-default':
+                        {'average': ' Rate Traffic Shaping',
+                         'cir_bps': 1000000}}}}}
+
+    golden_output1 = {'execute.return_value':'''
+        Router#show policy-map shape-out
+        Load for five secs: 1%/0%; one minute: 4%; five minutes: 4%
+        Time source is NTP, 22:28:37.624 JST Fri Nov 4 2016
+
+            Policy Map shape-out
+                Class class-default
+                    Average Rate Traffic Shaping
+                    cir 1000000 (bps)   
+        Router#	        
+    '''}
+
+    golden_parsed_output2 = {
+        'policy_map':
+            {'police-in':
+                {'class_map':
+                    {'class-default':
+                        {'police':
+                            {'cir_bps': 445500,
+                             'bc_bytes': 83619,
+                             'conform_action': 'transmit',
+                             'exceed_action': 'drop'}}}}}}
+
+    golden_output2 = {'execute.return_value':'''
+
+        Router#show policy-map police-in
+        Load for five secs: 11%/0%; one minute: 4%; five minutes: 4%
+        Time source is NTP, 07:03:58.319 JST Wed Oct 26 2016
+
+            Policy Map police-in
+                Class class-default
+                    police cir 445500 bc 83619
+                        conform-action transmit 
+                        exceed-action drop 
+    '''}
+
+    golden_parsed_output3 = {
+        'policy_map':
+            {'parent-policy':
+                {'class_map':
+                    {'class-default':
+                        {'police':
+                            {'cir_bps': 50000,
+                             'bc_bytes': 3000,
+                             'be_bytes': 3000,
+                             'conform_color': 'hipri-conform',
+                             'conform_action': 'transmit',
+                             'exceed_action': 'transmit',
+                             'violate_action': 'drop',
+                             'service_policy': 'child-policy'}}}},
+            'police':
+                {'class_map':
+                    {'prec1':
+                        {'priority_level':
+                            {'1':
+                                {'kb_per_sec': 20000}}},
+                    'prec2':
+                        {'bandwidth': 20000},
+                    'class-default':
+                        {'bandwidth': 20000}}},
+            'child-policy':
+                {'class_map':
+                    {'user1-acl-child':
+                        {'police':
+                            {'cir_bps': 10000,
+                             'bc_bytes': 1500,
+                             'conform_action': 'set-qos-transmit 5',
+                             'exceed_action': 'drop'}},
+                    'user2-acl-child':
+                        {'police':
+                            {'cir_bps': 20000,
+                             'bc_bytes': 1500,
+                             'conform_action': 'set-qos-transmit 5',
+                             'exceed_action': 'drop'}},
+                    'class-default':
+                        {'police':
+                            {'cir_bps': 50000,
+                             'bc_bytes': 1500,
+                             'conform_action': 'transmit',
+                             'exceed_action': 'drop'}}}}}}
+
+    golden_output3 = {'execute.return_value':'''
+        Router# show policy-map
+        Policy Map parent-policy
+            Class class-default
+            police cir 50000 bc 3000 be 3000
+            conform-color hipri-conform
+            conform-action transmit
+            exceed-action transmit
+            violate-action drop
+            service-policy child-policy
+        Policy Map police
+            Class prec1
+                priority level 1 20000 (kb/s)
+            Class prec2
+                bandwidth 20000 (kb/s)
+            Class class-default
+                bandwidth 20000 (kb/s)
+        Policy Map child-policy
+            Class user1-acl-child
+                police cir 10000 bc 1500
+                conform-action set-qos-transmit 5
+                exceed-action drop
+            Class user2-acl-child
+                police cir 20000 bc 1500
+                conform-action set-qos-transmit 5
+                exceed-action drop
+            Class class-default
+                police cir 50000 bc 1500
+                conform-action transmit 
+                exceed-action drop
+    '''}
+
+    golden_parsed_output4 = {
+        'policy_map':
+            {'pol1':
+                {'class_map':
+                    {'class-default':
+                        {'weighted_fair':
+                            {'Queueing':
+                                {'bandwidth': 70,
+                                 'exponential_weight': 9,
+                                 'explicit_congestion': 'notification',
+                                 'class':
+                                     {'0':
+                                         {'min_threshold': '-',
+                                          'max_threshold': '-',
+                                          'mark_probability': '1/10'},
+                                     '1':
+                                         {'min_threshold': '-',
+                                          'max_threshold': '-',
+                                          'mark_probability': '1/10'},
+                                     '2':
+                                         {'min_threshold': '-',
+                                          'max_threshold': '-',
+                                          'mark_probability': '1/10'},
+                                     '3':
+                                         {'min_threshold': '-',
+                                          'max_threshold': '-',
+                                          'mark_probability': '1/10'},
+                                     '4':
+                                         {'min_threshold': '-',
+                                          'max_threshold': '-',
+                                          'mark_probability': '1/10'},
+                                     '5':
+                                         {'min_threshold': '-',
+                                          'max_threshold': '-',
+                                          'mark_probability': '1/10'},
+                                     '6':
+                                         {'min_threshold': '-',
+                                          'max_threshold': '-',
+                                          'mark_probability': '1/10'},
+                                     '7':
+                                         {'min_threshold': '-',
+                                          'max_threshold': '-',
+                                          'mark_probability': '1/10'},
+                                     'rsvp':
+                                         {'min_threshold': '-',
+                                          'max_threshold': '-',
+                                          'mark_probability': '1/10'}}}}}}}}}
+
+    golden_output4 = {'execute.return_value': '''
+        Router# show policy-map
+
+        Policy Map pol1
+            Class class-default
+                Weighted Fair Queueing
+                    Bandwidth 70 (%)
+                    exponential weight 9
+                    explicit congestion notification
+                    class    min-threshold    max-threshold    mark-probability
+                    ----------------------------------------------------------
+                    ----------------------------------------------------------
+
+                    0        -                -                1/10
+                    1        -                -                1/10
+                    2        -                -                1/10
+                    3        -                -                1/10
+                    4        -                -                1/10
+                    5        -                -                1/10
+                    6        -                -                1/10
+                    7        -                -                1/10
+                    rsvp     -                -                1/10
+
+        Policy Map pol1
+            Class class-default
+                Weighted Fair Queueing
+                    Bandwidth 70 (%)
+                    exponential weight 9
+                    explicit congestion notification
+                    class    min-threshold    max-threshold    mark-probability
+                    ----------------------------------------------------------
+                    ----------------------------------------------------------
+
+                    0        -                -                1/10
+                    1        -                -                1/10
+                    2        -                -                1/10
+                    3        -                -                1/10
+                    4        -                -                1/10
+                    5        -                -                1/10
+                    6        -                -                1/10
+                    7        -                -                1/10
+                    rsvp     -                -                1/10
+
+    '''}
+
+    def test_show_policy_map_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowPolicyMap(device=self.device)
+        parsed_output = obj.parse(name='shape-out')
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_policy_map_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowPolicyMap(device=self.device)
+        parsed_output = obj.parse(name='police-in')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_show_policy_map_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowPolicyMap(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
+
+    def test_show_policy_map_golden4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output4)
+        obj = ShowPolicyMap(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output4)
+
+    def test_show_policy_map_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowPolicyMap(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
 
 if __name__ == '__main__':
     unittest.main()
