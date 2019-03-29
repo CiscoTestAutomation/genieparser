@@ -87,6 +87,8 @@
           show install inactive summary
     * Add ShowInstallCommitSummary for:
           show install commit summary
+    * Update AdminShowDiagChassis for 'sn' to be optional
+
 --------------------------------------------------------------------------------
                                    MPLS LDP
 --------------------------------------------------------------------------------
@@ -261,3 +263,8 @@
     * Add ShowRunRouterIsis for:
         show run router isis
 
+--------------------------------------------------------------------------------
+                                   ROUTING
+--------------------------------------------------------------------------------
+* IOSXE
+    * Update ShowIpRoute for different output
