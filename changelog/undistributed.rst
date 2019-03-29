@@ -198,7 +198,7 @@
                                    BFD 
 ---------------------------------------------------------------------------------
 * IOSXE
-    * Add ShowBfdNeighborsDetails
+    * Add ShowBfdNeighborsDetails for:
         show bfd neighbors client <client> details
         show bfd neighbors details
 
@@ -247,6 +247,9 @@
         show archive config differences {fielA}
     * Add ShowArchiveConfigIncrementalDiffs for:
         show archive config incremental-diffs {fileA}
+    * Add ShowConfigurationLock for:
+        show configuration lock
+
 --------------------------------------------------------------------------------
                                    L2VPN
 --------------------------------------------------------------------------------

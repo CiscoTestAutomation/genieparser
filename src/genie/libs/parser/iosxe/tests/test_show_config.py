@@ -60,7 +60,7 @@ class test_show_configuration_lock(unittest.TestCase):
 		    'class': 'Exposed',
 		    'count': 0,
 		    'pending_requests': 0,
-		    'user_debug_info': 0
+		    'user_debug_info': '0'
                 },
                 11 : {
 		    'user': 'User11',
@@ -70,7 +70,7 @@ class test_show_configuration_lock(unittest.TestCase):
 		    'class': 'Exposed',
 		    'count': 0,
 		    'pending_requests': 0,
-		    'user_debug_info': 0
+		    'user_debug_info': '0'
                 }
 	    }
 	}
