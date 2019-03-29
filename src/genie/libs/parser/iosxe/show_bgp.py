@@ -63,7 +63,14 @@ IOSXE parsers for the following show commands:
     * 'show ip bgp neighbors {neighbor} advertised-routes'
     * 'show ip bgp {address_family} neighbors {neighbor} advertised-routes'
     ----------------------------------------------------------------------------
-    * show bgp all neighbors <WORD> received-routes
+    * 'show bgp all neighbors {neighbor} received-routes'
+    * 'show bgp {address_family} all neighbors {neighbor} received-routes'
+    * 'show bgp neighbors {neighbor} received-routes'
+    * 'show bgp {address_family} neighbors {neighbor} received-routes'
+    * 'show ip bgp all neighbors {neighbor} received-routes'
+    * 'show ip bgp {address_family} all neighbors {neighbor} received-routes'
+    * 'show ip bgp neighbors {neighbor} received-routes'
+    * 'show ip bgp {address_family} neighbors {neighbor} received-routes'
     ----------------------------------------------------------------------------
     * 'show bgp all neighbors {neighbor} routes'
     * 'show bgp {address_family} all neighbors {neighbor} routes'
@@ -75,10 +82,14 @@ IOSXE parsers for the following show commands:
     * 'show ip bgp {address_family} neighbors {neighbor} routes'
     ----------------------------------------------------------------------------
     * show bgp all cluster-ids
-    * show ip bgp template peer-session {policy}
-    * show ip bgp template peer-policy {policy}
-    * show ip bgp all dampening parameters
+    ----------------------------------------------------------------------------
     * show bgp all neighbors {neighbor} policy
+    ----------------------------------------------------------------------------
+    * show ip bgp template peer-session {template_name}
+    ----------------------------------------------------------------------------
+    * show ip bgp template peer-policy {template_name}
+    ----------------------------------------------------------------------------
+    * show ip bgp all dampening parameters
 '''
 
 # Python
@@ -4572,13 +4583,29 @@ class ShowIpBgpNeighborsAdvertisedRoutes(ShowBgpNeighborsAdvertisedRoutesSuperPa
 #-------------------------------------------------------------------------------
 
 
-# ===================================================
+# ===========================================================================
 # Schema for:
-#   * 'show bgp all neighbors <WORD> received-routes'
-# ===================================================
-class ShowBgpAllNeighborsReceivedRoutesSchema(MetaParser):
+#   * 'show bgp all neighbors {neighbor} received-routes'
+#   * 'show bgp {address_family} all neighbors {neighbor} received-routes'
+#   * 'show bgp neighbors {neighbor} received-routes'
+#   * 'show bgp {address_family} neighbors {neighbor} received-routes'
+#   * 'show ip bgp all neighbors {neighbor} received-routes'
+#   * 'show ip bgp {address_family} all neighbors {neighbor} received-routes'
+#   * 'show ip bgp neighbors {neighbor} received-routes'
+#   * 'show ip bgp {address_family} neighbors {neighbor} received-routes'
+# ===========================================================================
+class ShowBgpNeighborsReceivedRoutesSchema(MetaParser):
     
-    ''' Schema for "show bgp all neighbors <WORD> received-routes" '''
+    ''' Schema for:
+        * 'show bgp all neighbors {neighbor} received-routes'
+        * 'show bgp {address_family} all neighbors {neighbor} received-routes'
+        * 'show bgp neighbors {neighbor} received-routes'
+        * 'show bgp {address_family} neighbors {neighbor} received-routes'
+        * 'show ip bgp all neighbors {neighbor} received-routes'
+        * 'show ip bgp {address_family} all neighbors {neighbor} received-routes'
+        * 'show ip bgp neighbors {neighbor} received-routes'
+        * 'show ip bgp {address_family} neighbors {neighbor} received-routes'
+    '''
 
     schema = {
         'vrf':
@@ -4616,46 +4643,56 @@ class ShowBgpAllNeighborsReceivedRoutesSchema(MetaParser):
         }
 
 
-# ===================================================
-# Parser for:
-#   * 'show bgp all neighbors <WORD> received-routes'
-# ===================================================
-class ShowBgpAllNeighborsReceivedRoutes(ShowBgpAllNeighborsReceivedRoutesSchema):
+# ===========================================================================
+# Super Parser for:
+#   * 'show bgp all neighbors {neighbor} received-routes'
+#   * 'show bgp {address_family} all neighbors {neighbor} received-routes'
+#   * 'show bgp neighbors {neighbor} received-routes'
+#   * 'show bgp {address_family} neighbors {neighbor} received-routes'
+#   * 'show ip bgp all neighbors {neighbor} received-routes'
+#   * 'show ip bgp {address_family} all neighbors {neighbor} received-routes'
+#   * 'show ip bgp neighbors {neighbor} received-routes'
+#   * 'show ip bgp {address_family} neighbors {neighbor} received-routes'
+# ===========================================================================
+class ShowBgpNeighborsReceivedRoutesSuperParser(ShowBgpNeighborsReceivedRoutesSchema):
 
-    ''' Parser for "show bgp all neighbors <WORD> received-routes" '''
+    ''' Super Parser for:
+        * 'show bgp all neighbors {neighbor} received-routes'
+        * 'show bgp {address_family} all neighbors {neighbor} received-routes'
+        * 'show bgp neighbors {neighbor} received-routes'
+        * 'show bgp {address_family} neighbors {neighbor} received-routes'
+        * 'show ip bgp all neighbors {neighbor} received-routes'
+        * 'show ip bgp {address_family} all neighbors {neighbor} received-routes'
+        * 'show ip bgp neighbors {neighbor} received-routes'
+        * 'show ip bgp {address_family} neighbors {neighbor} received-routes'
+    '''
 
-    cli_command = 'show bgp all neighbors {neighbor} received-routes'
+    def cli(self, neighbor, address_family='', cmd='', output=None):
 
-    def cli(self, neighbor):
-        # find vrf names
-        # show bgp all neighbors | i BGP neighbor
-        cmd_vrfs = 'show bgp all neighbors | i BGP neighbor'
-        out_vrf = self.device.execute(cmd_vrfs)
+        if output is None:
+            # Execute command
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # Get VRF name by executing 'show bgp all neighbors | i BGP neighbor'
+        out_vrf = self.device.execute('show bgp all neighbors | i BGP neighbor')
         vrf = 'default'
-
         for line in out_vrf.splitlines():
-            if not line:
-                continue
-            else:
-                line = line.rstrip()
-
+            line = line.strip()
             # BGP neighbor is 2.2.2.2,  remote AS 100, internal link
-            p = re.compile(r'^\s*BGP +neighbor +is +(?P<bgp_neighbor>[0-9A-Z\:\.]+)'
+            p = re.compile(r'^BGP +neighbor +is +(?P<bgp_neighbor>[0-9A-Z\:\.]+)'
                             '(, +vrf +(?P<vrf>[0-9A-Za-z]+))?, +remote AS '
                             '+(?P<remote_as_id>[0-9]+), '
                             '+(?P<internal_external_link>[a-z\s]+)$')
             m = p.match(line)
             if m:
-                # Extract the neighbor corresponding VRF name
-                bgp_neighbor = str(m.groupdict()['bgp_neighbor'])
-                if bgp_neighbor == neighbor:
+                if m.groupdict()['bgp_neighbor'] == neighbor:
                     if m.groupdict()['vrf']:
                         vrf = str(m.groupdict()['vrf'])
+                        break
                 else:
                     continue
-
-        # show bgp all neighbors {neighbor} received-routes
-        out = self.device.execute(self.cli_command.format(neighbor=neighbor))
 
         # Init dictionary
         route_dict = {}
@@ -5006,6 +5043,146 @@ class ShowBgpAllNeighborsReceivedRoutes(ShowBgpAllNeighborsReceivedRoutesSchema)
                     continue
 
         return route_dict
+
+
+# ========================================================================
+# Parser for:
+#   * 'show bgp all neighbors {neighbor} received-routes'
+#   * 'show bgp {address_family} all neighbors {neighbor} received-routes'
+# ========================================================================
+class ShowBgpAllNeighborsReceivedRoutes(ShowBgpNeighborsReceivedRoutesSuperParser, ShowBgpNeighborsReceivedRoutesSchema):
+
+    ''' Parser for:
+        * 'show bgp all neighbors {neighbor} received-routes'
+        * 'show bgp {address_family} all neighbors {neighbor} received-routes'
+    '''
+
+    cli_command = ['show bgp {address_family} all neighbors {neighbor} received-routes',
+                   'show bgp all neighbors {neighbor} received-routes',
+                   ]
+
+    def cli(self, neighbor, address_family='', output=None):
+
+        if output is None:
+            # Build command
+            if address_family and neighbor:
+                cmd = self.cli_command[0].format(address_family=address_family,
+                                                 neighbor=neighbor)
+            else:
+                cmd = self.cli_command[1].format(neighbor=neighbor)
+            # Execute command
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+
+        # Call super
+        return super().cli(cmd=cmd, output=show_output, neighbor=neighbor,
+                           address_family=address_family)
+
+
+# ====================================================================
+# Parser for:
+#   * 'show bgp neighbors {neighbor} received-routes'
+#   * 'show bgp {address_family} neighbors {neighbor} received-routes'
+# ====================================================================
+class ShowBgpNeighborsReceivedRoutes(ShowBgpNeighborsReceivedRoutesSuperParser, ShowBgpNeighborsReceivedRoutesSchema):
+
+    ''' Parser for:
+        * 'show bgp {address_family} neighbors {neighbor} received-routes'
+        * 'show bgp neighbors {neighbor} received-routes'
+    '''
+
+    cli_command = ['show bgp {address_family} neighbors {neighbor} received-routes',
+                   'show bgp neighbors {neighbor} received-routes', 
+                   ]
+
+    def cli(self, neighbor, address_family='', output=None):
+
+        if output is None:
+            # Build command
+            if address_family and neighbor:
+                cmd = self.cli_command[0].format(address_family=address_family,
+                                                 neighbor=neighbor)
+            elif neighbor:
+                cmd = self.cli_command[1].format(neighbor=neighbor)
+            # Execute command
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+
+        # Call super
+        return super().cli(cmd=cmd, output=show_output, neighbor=neighbor,
+                           address_family=address_family)
+
+
+# ===========================================================================
+# Parser for:
+#   * 'show ip bgp all neighbors {neighbor} received-routes'
+#   * 'show ip bgp {address_family} all neighbors {neighbor} received-routes'
+# ===========================================================================
+class ShowIpBgpAllNeighborsReceivedRoutes(ShowBgpNeighborsReceivedRoutesSuperParser, ShowBgpNeighborsReceivedRoutesSchema):
+
+    ''' Parser for:
+        * 'show ip bgp all neighbors {neighbor} received-routes'
+        * 'show ip bgp {address_family} all neighbors {neighbor} received-routes'
+    '''
+
+    cli_command = ['show ip bgp {address_family} all neighbors {neighbor} received-routes',
+                   'show ip bgp all neighbors {neighbor} received-routes',
+                   ]
+
+    def cli(self, neighbor, address_family='', output=None):
+
+        if output is None:
+            # Build command
+            if address_family and neighbor:
+                cmd = self.cli_command[0].format(address_family=address_family,
+                                                 neighbor=neighbor)
+            else:
+                cmd = self.cli_command[1].format(neighbor=neighbor)
+            # Execute command
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+
+        # Call super
+        return super().cli(cmd=cmd, output=show_output, neighbor=neighbor,
+                           address_family=address_family)
+
+
+# =======================================================================
+# Parser for:
+#   * 'show ip bgp neighbors {neighbor} received-routes'
+#   * 'show ip bgp {address_family} neighbors {neighbor} received-routes'
+# =======================================================================
+class ShowIpBgpNeighborsReceivedRoutes(ShowBgpNeighborsReceivedRoutesSuperParser, ShowBgpNeighborsReceivedRoutesSchema):
+
+    ''' Parser for:
+        * 'show ip bgp neighbors {neighbor} received-routes'
+        * 'show ip bgp {address_family} neighbors {neighbor} received-routes'
+    '''
+
+    cli_command = ['show ip bgp {address_family} neighbors {neighbor} received-routes',
+                   'show ip bgp neighbors {neighbor} received-routes',
+                   ]
+
+    def cli(self, neighbor, address_family='', output=None):
+
+        if output is None:
+            # Build command
+            if address_family and neighbor:
+                cmd = self.cli_command[0].format(address_family=address_family,
+                                                 neighbor=neighbor)
+            elif neighbor:
+                cmd = self.cli_command[1].format(neighbor=neighbor)
+            # Execute command
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+
+        # Call super
+        return super().cli(cmd=cmd, output=show_output, neighbor=neighbor,
+                           address_family=address_family)
 
 
 #-------------------------------------------------------------------------------
@@ -5779,13 +5956,13 @@ class ShowBgpAllClusterIds(ShowBgpAllClusterIdsSchema):
 #-------------------------------------------------------------------------------
 
 
-# ==========================================
+# ==============================================
 # Schema for:
-#   * 'show bgp all neighbors <WORD> policy'
-# ==========================================
+#   * 'show bgp all neighbors {neighbor} policy'
+# ==============================================
 class ShowBgpAllNeighborsPolicySchema(MetaParser):
 
-    ''' Schema for "show bgp all neighbors <WORD> policy" '''
+    ''' Schema for "show bgp all neighbors {neighbor} policy" '''
 
     schema = {
         'vrf':
@@ -5805,13 +5982,13 @@ class ShowBgpAllNeighborsPolicySchema(MetaParser):
         }
 
 
-# ==========================================
+# ==============================================
 # Parser for:
-#   * 'show bgp all neighbors <WORD> policy'
-# ==========================================
+#   * 'show bgp all neighbors {neighbor} policy'
+# ==============================================
 class ShowBgpAllNeighborsPolicy(ShowBgpAllNeighborsPolicySchema):
 
-    ''' Parser for "show bgp all neighbors <neighbor> policy" '''
+    ''' Parser for "show bgp all neighbors {neighbor} policy" '''
 
     cli_command = 'show bgp all neighbors {neighbor} policy'
 
@@ -5883,13 +6060,13 @@ class ShowBgpAllNeighborsPolicy(ShowBgpAllNeighborsPolicySchema):
 #-------------------------------------------------------------------------------
 
 
-# ==============================================
+# =======================================================
 # Schema for:
-#   * 'show ip bgp template peer-session <WORD>'
-# ==============================================
+#   * 'show ip bgp template peer-session {template_name}'
+# =======================================================
 class ShowIpBgpTemplatePeerSessionSchema(MetaParser):
 
-    ''' Schema "show ip bgp template peer-session <WORD>" '''
+    ''' Schema "show ip bgp template peer-session {template_name}" '''
 
     schema = {
         'peer_session':
@@ -5932,13 +6109,13 @@ class ShowIpBgpTemplatePeerSessionSchema(MetaParser):
         }
 
 
-# ==============================================
+# =======================================================
 # Parser for:
-#   * 'show ip bgp template peer-session <WORD>'
-# ==============================================
+#   * 'show ip bgp template peer-session {template_name}'
+# =======================================================
 class ShowIpBgpTemplatePeerSession(ShowIpBgpTemplatePeerSessionSchema):
 
-    ''' Parser for "show ip bgp template peer-session <WORD>" '''
+    ''' Parser for "show ip bgp template peer-session {template_name}" '''
 
     cli_command = 'show ip bgp template peer-session {template_name}'
 
@@ -6162,13 +6339,13 @@ class ShowIpBgpTemplatePeerSession(ShowIpBgpTemplatePeerSessionSchema):
 #-------------------------------------------------------------------------------
 
 
-# =============================================
+# ======================================================
 # Schema for:
-#   * 'show ip bgp template peer-policy <WORD>'
-# =============================================
+#   * 'show ip bgp template peer-policy {template_name}'
+# ======================================================
 class ShowIpBgpTemplatePeerPolicySchema(MetaParser):
 
-    ''' Schema for "show ip bgp template peer-policy <WORD>" '''
+    ''' Schema for "show ip bgp template peer-policy {template_name}" '''
 
     schema = {
         'peer_policy':
@@ -6217,13 +6394,13 @@ class ShowIpBgpTemplatePeerPolicySchema(MetaParser):
         }
 
 
-# =============================================
+# ======================================================
 # Parser for:
-#   * 'show ip bgp template peer-policy <WORD>'
-# =============================================
+#   * 'show ip bgp template peer-policy {template_name}'
+# ======================================================
 class ShowIpBgpTemplatePeerPolicy(ShowIpBgpTemplatePeerPolicySchema):
 
-    ''' Parser for "show ip bgp template peer-policy <WORD>" '''
+    ''' Parser for "show ip bgp template peer-policy {template_name}" '''
 
     cli_command = 'show ip bgp template peer-policy {template_name}'
 

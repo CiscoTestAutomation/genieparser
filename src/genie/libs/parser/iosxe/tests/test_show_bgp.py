@@ -33,6 +33,9 @@ from genie.libs.parser.iosxe.show_bgp import ShowBgpAll,\
                                              ShowIpBgpAllNeighborsAdvertisedRoutes,\
                                              ShowIpBgpNeighborsAdvertisedRoutes,\
                                              ShowBgpAllNeighborsReceivedRoutes,\
+                                             ShowBgpNeighborsReceivedRoutes,\
+                                             ShowIpBgpAllNeighborsReceivedRoutes,\
+                                             ShowIpBgpNeighborsReceivedRoutes,\
                                              ShowBgpAllNeighborsRoutes,\
                                              ShowBgpNeighborsRoutes,\
                                              ShowIpBgpAllNeighborsRoutes,\
