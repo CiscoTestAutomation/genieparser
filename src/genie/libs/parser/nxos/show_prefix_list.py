@@ -83,10 +83,10 @@ class ShowIpPrefixList(ShowIpPrefixListSchema):
                 ret_dict['prefix_set_name'][name]['entries'] = int(m.groupdict()['entries'])
                 continue
 
-            # seq 5 permit 35.0.0.0/8
+            # seq 5 permit 10.205.0.0/8
             # seq 5 permit 2001:DB8:1::/64
-            # seq 20 permit 37.0.0.0/8 ge 24
-            # seq 25 permit 38.0.0.0/8 ge 16 le 24
+            # seq 20 permit 10.94.0.0/8 ge 24
+            # seq 25 permit 10.169.0.0/8 ge 16 le 24
             # seq 10 permit 192.0.2.0/24 eq 25
             p3 = re.compile(r'^seq +(?P<seq>\d+) +(?P<action>\w+) +'
                              '(?P<prefixes>(?P<prefix>[\w\.\|:]+)\/(?P<mask>\d+))'

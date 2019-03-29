@@ -86,7 +86,7 @@ class ShowArp(ShowArpSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # Internet  201.0.12.1              -   58bf.eab6.2f51  ARPA   Vlan100
+            # Internet  192.168.234.1           -   58bf.eab6.2f51  ARPA   Vlan100
             m = p1.match(line)
             if m:
                 group = m.groupdict()

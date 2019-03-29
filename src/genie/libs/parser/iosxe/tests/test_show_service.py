@@ -32,7 +32,7 @@ class test_show_service_group_state(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''\
         Load for five secs: 98%/0%; one minute: 98%; five minutes: 96%
-        Time source is NTP, 18:59:13.897 JST Web Nov 9 2016
+        Time source is NTP, 18:59:13.897 EST Web Nov 9 2016
 
         Group    State
             1       Up

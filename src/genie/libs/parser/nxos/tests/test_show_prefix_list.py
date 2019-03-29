@@ -29,34 +29,34 @@ class test_show_ip_prefix_list_detail(unittest.TestCase):
                  "protocol": "ipv4",
                  "prefix_set_name": "test",
                  "prefixes": {
-                      "38.0.0.0/8 16..24 permit": {
+                      "10.169.0.0/8 16..24 permit": {
                            "masklength_range": "16..24",
                            "sequence": 25,
-                           "prefix": "38.0.0.0/8",
+                           "prefix": "10.169.0.0/8",
                            "action": "permit"
                       },
-                      "35.0.0.0/8 8..16 permit": {
+                      "10.205.0.0/8 8..16 permit": {
                            "masklength_range": "8..16",
                            "sequence": 10,
-                           "prefix": "35.0.0.0/8",
+                           "prefix": "10.205.0.0/8",
                            "action": "permit"
                       },
-                      "36.0.0.0/8 8..16 permit": {
+                      "10.21.0.0/8 8..16 permit": {
                            "masklength_range": "8..16",
                            "sequence": 15,
-                           "prefix": "36.0.0.0/8",
+                           "prefix": "10.21.0.0/8",
                            "action": "permit"
                       },
-                      "35.0.0.0/8 8..8 deny": {
+                      "10.205.0.0/8 8..8 deny": {
                            "masklength_range": "8..8",
                            "sequence": 5,
-                           "prefix": "35.0.0.0/8",
+                           "prefix": "10.205.0.0/8",
                            "action": "deny"
                       },
-                      "37.0.0.0/8 24..32 permit": {
+                      "10.94.0.0/8 24..32 permit": {
                            "masklength_range": "24..32",
                            "sequence": 20,
-                           "prefix": "37.0.0.0/8",
+                           "prefix": "10.94.0.0/8",
                            "action": "permit"
                       },
                       "192.0.2.0/24 25..25 permit": {
@@ -72,11 +72,11 @@ class test_show_ip_prefix_list_detail(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''\
         ip prefix-list test: 6 entries
-         seq 5 deny 35.0.0.0/8 
-         seq 10 permit 35.0.0.0/8 le 16 
-         seq 15 permit 36.0.0.0/8 le 16 
-         seq 20 permit 37.0.0.0/8 ge 24 
-         seq 25 permit 38.0.0.0/8 ge 16 le 24 
+         seq 5 deny 10.205.0.0/8 
+         seq 10 permit 10.205.0.0/8 le 16 
+         seq 15 permit 10.21.0.0/8 le 16 
+         seq 20 permit 10.94.0.0/8 ge 24 
+         seq 25 permit 10.169.0.0/8 ge 16 le 24 
          seq 30 permit 192.0.2.0/24 eq 25
     '''}
 

@@ -48,9 +48,9 @@ class test_show_ip_arp(unittest.TestCase):
                 'Port-channel10': {
                 	'ipv4': {
                 		'neighbors': {
-                			'1.2.1.1': {
+                			'10.9.1.1': {
                 				'age': '-',
-                              	'ip': '1.2.1.1',
+                              	'ip': '10.9.1.1',
                               	'link_layer_address': '843d.c638.b9c6',
                               	'origin': 'static',
                               	'protocol': 'Internet',
@@ -58,9 +58,9 @@ class test_show_ip_arp(unittest.TestCase):
                 'Vlan99': {
                 	'ipv4': {
                 		'neighbors': {
-                			'18.0.1.2': {
+                			'10.69.1.2': {
                 				'age': '-',
-                               	'ip': '18.0.1.2',
+                               	'ip': '10.69.1.2',
                               	'link_layer_address': '843d.c638.b9c1',
                                	'origin': 'static',
                                	'protocol': 'Internet',
@@ -75,8 +75,8 @@ class test_show_ip_arp(unittest.TestCase):
 			R5#show ip arp 
 			Protocol  Address          Age (min)  Hardware Addr   Type   Interface
 			Internet  10.1.8.1               79   0012.7f57.ac80  ARPA   FastEthernet0
-			Internet  1.2.1.1                 -   843d.c638.b9c6  ARPA   Port-channel10
-			Internet  18.0.1.2                -   843d.c638.b9c1  ARPA   Vlan99
+			Internet  10.9.1.1                -   843d.c638.b9c6  ARPA   Port-channel10
+			Internet  10.69.1.2               -   843d.c638.b9c1  ARPA   Vlan99
 			Internet  10.1.8.146              -   843d.c638.b9b7  ARPA   FastEthernet0
 		'''}
 

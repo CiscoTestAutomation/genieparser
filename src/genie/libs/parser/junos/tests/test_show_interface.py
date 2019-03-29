@@ -28,8 +28,8 @@ class test_show_interfaces_terse(unittest.TestCase):
                    'link_state': 'up',
                    'oper_status': 'up',
                    'protocol': {'inet': {'10.0.0.4/8': {'local': '10.0.0.4/8'},
-                                         '128.0.0.1/2': {'local': '128.0.0.1/2'},
-                                         '128.0.0.4/2': {'local': '128.0.0.4/2'}},
+                                         '172.16.64.1/2': {'local': '172.16.64.1/2'},
+                                         '172.16.64.4/2': {'local': '172.16.64.4/2'}},
                                 'inet6': {'fe80::250:56ff:fe82:ba52/64': {'local': 'fe80::250:56ff:fe82:ba52/64'},
                                           'fec0::a:0:0:4/64': {'local': 'fec0::a:0:0:4/64'}},
                                 'tnp': {'0x4': {'local': '0x4'}}}},
@@ -139,8 +139,8 @@ class test_show_interfaces_terse(unittest.TestCase):
         ge-0/0/2                up    down
         em1                     up    up
         em1.0                   up    up   inet     10.0.0.4/8      
-                                                    128.0.0.1/2     
-                                                    128.0.0.4/2     
+                                                    172.16.64.1/2     
+                                                    172.16.64.4/2     
                                            inet6    fe80::250:56ff:fe82:ba52/64
                                                     fec0::a:0:0:4/64
                                            tnp      0x4  

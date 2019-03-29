@@ -26,7 +26,7 @@ class test_show_ntp_associations(unittest.TestCase):
     golden_parsed_output_1 = {
     'clock_state':
         {'system_status':
-            {'associations_address': '2.2.2.2',
+            {'associations_address': '10.16.2.2',
              'associations_local_mode': 'client',
              'clock_offset': 27.027,
              'clock_refid': '127.127.1.1',
@@ -35,7 +35,7 @@ class test_show_ntp_associations(unittest.TestCase):
              'root_delay': 5.61}
         },
     'peer':
-        {'2.2.2.2':
+        {'10.16.2.2':
             {'local_mode':
                 {'client':
                     {'delay': 5.61,
@@ -46,13 +46,13 @@ class test_show_ntp_associations(unittest.TestCase):
                     'reach': 7,
                     'receive_time': 25,
                     'refid': '127.127.1.1',
-                    'remote': '2.2.2.2',
+                    'remote': '10.16.2.2',
                     'stratum': 3,
                     'configured': True,
                     'local_mode': 'client'}
                 }
             },
-        '3.3.3.3':
+        '10.36.3.3':
             {'local_mode':
                 {'client':
                     {'delay': 0.0,
@@ -63,7 +63,7 @@ class test_show_ntp_associations(unittest.TestCase):
                     'reach': 0,
                     'receive_time': '-',
                     'refid': '.STEP.',
-                    'remote': '3.3.3.3',
+                    'remote': '10.36.3.3',
                     'stratum': 16,
                     'configured': True,
                     'local_mode': 'client'}
@@ -76,15 +76,15 @@ class test_show_ntp_associations(unittest.TestCase):
         iosv-1#show ntp associations 
 
           address         ref clock       st   when   poll reach  delay  offset   disp
-        *~2.2.2.2         127.127.1.1      3     25     64     7  5.610  27.027  3.342
-         ~3.3.3.3         .STEP.          16      -    512     0  0.000   0.000 15937.
+        *~10.16.2.2       127.127.1.1      3     25     64     7  5.610  27.027  3.342
+         ~10.36.3.3       .STEP.          16      -    512     0  0.000   0.000 15937.
          * sys.peer, # selected, + candidate, - outlyer, x falseticker, ~ configured
     '''}
 
     golden_parsed_output_2 = {
         'clock_state': {
             'system_status': {
-                'associations_address': '2.2.2.2',
+                'associations_address': '10.16.2.2',
                 'associations_local_mode': 'client',
                 'clock_offset': 27.027,
                 'clock_refid': '127.127.1.1',
@@ -93,7 +93,7 @@ class test_show_ntp_associations(unittest.TestCase):
                 'root_delay': 5.61}
         },
         'peer': {
-            '2.2.2.2': {
+            '10.16.2.2': {
                 'local_mode': {
                     'client': {
                         'delay': 5.61,
@@ -105,12 +105,12 @@ class test_show_ntp_associations(unittest.TestCase):
                         'reach': 7,
                         'receive_time': 25,
                         'refid': '127.127.1.1',
-                        'remote': '2.2.2.2',
+                        'remote': '10.16.2.2',
                         'configured': True,
                         'stratum': 3}
                 }
             },
-            '3.3.3.3': {
+            '10.36.3.3': {
                 'local_mode': {
                     'client': {
                         'delay': 0.0,
@@ -122,7 +122,7 @@ class test_show_ntp_associations(unittest.TestCase):
                         'reach': 0,
                         'receive_time': '-',
                         'refid': '.STEP.',
-                        'remote': '3.3.3.3',
+                        'remote': '10.36.3.3',
                         'configured': True,
                         'stratum': 16}
                 }
@@ -134,8 +134,8 @@ class test_show_ntp_associations(unittest.TestCase):
         show ntp associations
 
           address         ref clock       st   when   poll reach  delay  offset   disp
-         ~2.2.2.2         127.127.1.1      3     41     64     0  0.000   0.000 15937.
-         ~3.3.3.3         .INIT.          16      -     64     0  0.000   0.000 15937.
+         ~10.16.2.2       127.127.1.1      3     41     64     0  0.000   0.000 15937.
+         ~10.36.3.3       .INIT.          16      -     64     0  0.000   0.000 15937.
          * sys.peer, # selected, + candidate, - outlyer, x falseticker, ~ configured
     '''}
 
@@ -178,7 +178,7 @@ class test_show_ntp_status(unittest.TestCase):
                 'peerdispersion': 3.34,
                 'poll': 64,
                 'precision': '2**14',
-                'refid': '2.2.2.2',
+                'refid': '10.16.2.2',
                 'reftime': 'DFA02517.D2F7B9F6 '
                            '(13:40:23.824 EST Wed Nov '
                            '21 2018)',
@@ -193,7 +193,7 @@ class test_show_ntp_status(unittest.TestCase):
 
     golden_output_1 = {'execute.return_value': '''\
         iosv-1#show ntp status 
-        Clock is synchronized, stratum 4, reference is 2.2.2.2        
+        Clock is synchronized, stratum 4, reference is 10.16.2.2        
         nominal freq is 1000.0003 Hz, actual freq is 1000.4589 Hz, precision is 2**14
         ntp uptime is 239700 (1/100 of seconds), resolution is 1000
         reference time is DFA02517.D2F7B9F6 (13:40:23.824 EST Wed Nov 21 2018)
@@ -269,29 +269,29 @@ class test_show_ntp_config(unittest.TestCase):
         'vrf': {
             'default': {
                 'address': {
-                    '2.2.2.2': {
+                    '10.16.2.2': {
                         'isconfigured': {
                             'True': {
-                                'address': '2.2.2.2',
+                                'address': '10.16.2.2',
                                 'isconfigured': True}
                         },
                         'type': {
                             'server': {
-                                'address': '2.2.2.2',
+                                'address': '10.16.2.2',
                                 'source': 'Loopback0',
                                 'type': 'server',
                                 'vrf': 'default'}
                         }
                     },
-                    '3.3.3.3': {
+                    '10.36.3.3': {
                         'isconfigured': {
                             'True': {
-                                'address': '3.3.3.3',
+                                'address': '10.36.3.3',
                                 'isconfigured': True}
                         },
                         'type': {
                             'server': {
-                                'address': '3.3.3.3',
+                                'address': '10.36.3.3',
                                 'type': 'server',
                                 'vrf': 'default'}
                         }
@@ -303,8 +303,8 @@ class test_show_ntp_config(unittest.TestCase):
 
     golden_output_1 = {'execute.return_value': '''\
         iosv-1#show ntp config
-         ntp server 2.2.2.2 source Loopback0
-         ntp server 3.3.3.3
+         ntp server 10.16.2.2 source Loopback0
+         ntp server 10.36.3.3
     '''}
 
     def test_empty(self):

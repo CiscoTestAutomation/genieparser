@@ -137,7 +137,7 @@ class test_show_route_map(unittest.TestCase):
                                      'set_local_pref': 20,
                                      'set_med': 100,
                                      'set_metric_type': 'external',
-                                     'set_next_hop': ['4.4.4.4'],
+                                     'set_next_hop': ['10.64.4.4'],
                                      'set_next_hop_v6': ['2001:db8:1::1'],
                                      'set_route_origin': 'igp',
                                      'set_level': 'level-1',
@@ -226,7 +226,7 @@ route-map test, permit, sequence 10
     route-type: level-1 level-2 
     extcommunity  (extcommunity-list filter): testing 
   Set clauses:
-    ip next-hop 4.4.4.4 
+    ip next-hop 10.64.4.4 
     ipv6 next-hop 2001:db8:1::1 
     tag 30 
     metric 100 

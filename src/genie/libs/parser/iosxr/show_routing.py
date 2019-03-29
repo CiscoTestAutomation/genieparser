@@ -107,10 +107,10 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                 vrf = m.groupdict()['vrf']
                 continue
 
-            # S    1.1.1.1/32 is directly connected, 01:51:13, GigabitEthernet0/0/0/0
-            # S    3.3.3.3/32 [1/0] via 10.2.3.3, 01:51:13, GigabitEthernet0/0/0/1
-            # B    31.31.31.31/32 [200/0] via 11.11.11.11, 00:55:14
-            # i L1 23.23.23.23/32 [115/11] via 10.2.3.3, 00:52:41, GigabitEthernet0/0/0/1
+            # S    10.4.1.1/32 is directly connected, 01:51:13, GigabitEthernet0/0/0/0
+            # S    10.36.3.3/32 [1/0] via 10.2.3.3, 01:51:13, GigabitEthernet0/0/0/1
+            # B    10.19.31.31/32 [200/0] via 10.229.11.11, 00:55:14
+            # i L1 10.76.23.23/32 [115/11] via 10.2.3.3, 00:52:41, GigabitEthernet0/0/0/1
             p3 = re.compile(r'^\s*(?P<code1>[\w]+) +(?P<code2>[\w]+)? +(?P<network>[\d\/\.]+)'
                             '( +is +directly +connected,)?( +\[(?P<route_preference>[\d\/]+)\]?'
                             '( +via )?(?P<next_hop>[\d\.]+)?,)?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
@@ -460,7 +460,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 continue
 
             #   [1/0] via 2001:20:1:2::1, 01:52:23, GigabitEthernet0/0/0/0
-            #   [200/0] via ::ffff:11.11.11.11 (nexthop in vrf default), 00:55:12
+            #   [200/0] via ::ffff:10.229.11.11 (nexthop in vrf default), 00:55:12
             p3 = re.compile(r'^\s*\[(?P<route_preference>[\d\/]+)\]'
                             ' +via +(?P<next_hop>[\w\:\.)]+)?( \(nexthop in vrf default\))?,? +(?P<date>[0-9][\w\:]+)?,?( +(?P<interface>[\S]+))?$')
             m = p3.match(line)

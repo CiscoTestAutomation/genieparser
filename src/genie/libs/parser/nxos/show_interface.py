@@ -1061,7 +1061,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 continue
 
             # IP address: 10.4.4.4, IP subnet: 10.4.4.0/24 secondary
-            # IP address: 4.4.4.4, IP subnet: 4.4.4.0/24
+            # IP address: 10.64.4.4, IP subnet: 10.64.4.0/24
             p3 = re.compile(r'^\s*IP *address: *(?P<ip>[0-9\.]+), *IP'
                              ' *subnet: *(?P<ip_subnet>[a-z0-9\.]+)\/'
                              '(?P<prefix_length>[0-9]+)'
@@ -1103,7 +1103,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
                 continue
 
-            # IP address: 201.1.34.1, IP subnet: 201.1.34.0/24 route-preference: 0, tag: 0
+            # IP address: 192.168.106.1, IP subnet: 192.168.106.0/24 route-preference: 0, tag: 0
             p3_1 = re.compile(r'^\s*IP *address: *(?P<ip>[0-9\.]+), *IP'
                                ' *subnet: *(?P<ip_subnet>[a-z0-9\.]+)\/'
                                '(?P<prefix_length>[0-9\,]+)(?: *route-preference:'
@@ -2794,7 +2794,7 @@ class ShowNveInterface(ShowNveInterfaceSchema):
             ' +State: +(?P<state>[\w]+)\, +encapsulation:'
             ' +(?P<encapsulation>[\w]+)$')
 
-        # Source-Interface: loopback0 (primary: 2.0.0.1, secondary: 0.0.0.0)
+        # Source-Interface: loopback0 (primary: 10.4.0.1, secondary: 0.0.0.0)
         p2 = re.compile(r'^\s*Source-Interface: +(?P<src_intf>[a-zA-Z0-9\-]+)'
             ' +\(primary: +(?P<primary>[a-zA-Z0-9\.]+)\, +secondary:'
             ' +(?P<secondary>[a-zA-Z0-9\.]+)\)$')
