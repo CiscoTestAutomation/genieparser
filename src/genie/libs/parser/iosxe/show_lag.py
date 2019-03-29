@@ -61,8 +61,9 @@ class ShowLacpSysId(ShowLacpSysIdSchema):
 
         result_dict = {}
         # 32768, 001e.49af.8c00
-
-        p1 = re.compile(r'^\s*(?P<system_priority>[\d]+), +(?P<system_id_mac>[\w\.]+)$')
+        # 32768,0014.a93d.4a00
+        # 8000,AC-12-34-56-78-90
+        p1 = re.compile(r'^\s*(?P<system_priority>[\d]+), *(?P<system_id_mac>[\w\.\-]+)$')
 
         for line in out.splitlines():
             if line:
