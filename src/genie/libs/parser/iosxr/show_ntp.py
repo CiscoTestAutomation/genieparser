@@ -106,14 +106,14 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
 		ret_dict = {}
 		mode_code = None
 
-		#  ~2.2.2.2          127.127.1.1       9    52    64  377   69.18  -518066   4.702
+		#  ~10.16.2.2          127.127.1.1       9    52    64  377   69.18  -518066   4.702
 		p1 = re.compile(r'^(?P<mode_code>[x\*\#\+\- ])?(?P<configured>[\~])? *(?P<remote>[\w\.\:]+) +'
 						 '(?P<refid>[\w\.]+) +(?P<stratum>\d+) +'
 						 '(?P<receive_time>[\d\-]+) +(?P<poll>\d+) +'
 						 '(?P<reach>\d+) +(?P<delay>[\d\.]+) +'
 						 '(?P<offset>[\d\.\-]+) +(?P<disp>[\d\.\-]+)$')
 
-		#  ~1.1.1.1 vrf VRF1
+		#  ~10.4.1.1 vrf VRF1
 		p2 = re.compile(r'^(?P<mode_code>[x\*\#\+\- ])?(?P<configured>[\~])? *(?P<remote>[\w\.\:]+) +'
 						 'vrf +(?P<vrf>\w+)$')
 
@@ -128,7 +128,7 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
 			if not line:
 				continue
 
-			# *171.68.38.65     .GNSS.           1 -   59   64  377    1.436   73.819  10.905
+			# *172.16.229.65     .GNSS.           1 -   59   64  377    1.436   73.819  10.905
 			m = p1.match(line)
 			if m:
 				groups = m.groupdict()
@@ -205,7 +205,7 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
 				ret_dict['vrf']['default']['address'][peer]['isconfigured']\
 					[True]['isconfigured'] = True
 
-			#  ~1.1.1.1 vrf VRF1
+			#  ~10.4.1.1 vrf VRF1
 			m = p2.match(line)
 			if m:
 				groups = m.groupdict()
@@ -519,7 +519,7 @@ class ShowRunningConfigNtp(ShowRunningConfigNtpSchema):
         # initial variables
         ret_dict = {}
 
-        # peer 2.2.2.2
+        # peer 10.16.2.2
         p1 = re.compile(r'^(?P<type>\w+)( +vrf +(?P<vrf>\S+))? +(?P<address>[\d\.]+)$')
 
         # source Loopback0

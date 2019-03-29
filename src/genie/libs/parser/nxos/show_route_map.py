@@ -232,7 +232,7 @@ class ShowRouteMap(ShowRouteMapSchema):
                 ['match_tag_list'] = str(m.groupdict()['match_tag_list'])
                 continue
 
-            # ip next-hop 4.4.4.4 
+            # ip next-hop 10.64.4.4 
             p12 = re.compile(r'^\s*ip *next-hop *(?P<set_next_hop>[0-9a-z\.\-]+)$')
             m = p12.match(line)
             if m:

@@ -810,7 +810,7 @@ class test_show_bgp_instance_session_group_configuration(unittest.TestCase):
         router bgp 333 instance test session-group efddd bfd fast-detect
         router bgp 333 instance test session-group efddd ebgp-multihop 255
         router bgp 333 instance test session-group efddd local-as 10 no-prepend
-        router bgp 333 instance test neighbor 1.1.1.1 use session-group LALALALLA
+        router bgp 333 instance test neighbor 10.4.1.1 use session-group LALALALLA
         router bgp 100 session-group SG
         router bgp 100 session-group SG description SG
 
@@ -1002,7 +1002,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                         'received_updates': 0,
                         'restart_count': 1,
                         'route_distinguisher': '100:2',
-                        'router_id': '4.4.4.4',
+                        'router_id': '10.64.4.4',
                         'sent_notifications': 0,
                         'sent_updates': 0,
                         'update_delay': 120,
@@ -1188,7 +1188,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                         'received_updates': 0,
                         'restart_count': 1,
                         'route_distinguisher': '100:1',
-                        'router_id': '4.4.4.4',
+                        'router_id': '10.64.4.4',
                         'sent_notifications': 0,
                         'sent_updates': 0,
                         'update_delay': 120,
@@ -1328,7 +1328,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                         'received_updates': 0,
                         'restart_count': 1,
                         'route_distinguisher': '100:3',
-                        'router_id': '4.4.4.4',
+                        'router_id': '10.64.4.4',
                         'sent_notifications': 0,
                         'sent_updates': 0,
                         'update_delay': 120,
@@ -1356,7 +1356,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
         BGP is operating in standalone mode
         Autonomous System number format: ASPLAIN
         Autonomous System: 100
-        Router ID: 4.4.4.4
+        Router ID: 10.64.4.4
         Default Cluster ID: 10 (manually configured)
         Active Cluster IDs:  10
         Fast external fallover enabled
@@ -1505,7 +1505,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
         BGP is operating in standalone mode
         Autonomous System number format: ASPLAIN
         Autonomous System: 100
-        Router ID: 4.4.4.4
+        Router ID: 10.64.4.4
         Default Cluster ID: 10 (manually configured)
         Active Cluster IDs:  10
         Fast external fallover enabled
@@ -1604,7 +1604,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
         BGP is operating in standalone mode
         Autonomous System number format: ASPLAIN
         Autonomous System: 100
-        Router ID: 4.4.4.4
+        Router ID: 10.64.4.4
         Default Cluster ID: 10 (manually configured)
         Active Cluster IDs:  10
         Fast external fallover enabled
@@ -1705,7 +1705,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
             {'default': 
                 {'vrf': 
                     {'VRF1': 
-                        {'active_cluster_id': '1.1.1.1',
+                        {'active_cluster_id': '10.4.1.1',
                         'address_family': 
                             {'ipv6 unicast': 
                                 {'attribute_download': 'Disabled',
@@ -1836,7 +1836,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                                                     'free': 0}},
                         'current_limit_for_bmp_buffer_size': 326,
                         'current_utilization_of_bmp_buffer_limit': 0,
-                        'default_cluster_id': '1.1.1.1',
+                        'default_cluster_id': '10.4.1.1',
                         'default_keepalive': 60,
                         'default_local_preference': 100,
                         'default_value_for_bmp_buffer_size': 326,
@@ -1893,7 +1893,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                         'received_updates': 0,
                         'restart_count': 7,
                         'route_distinguisher': '200:1',
-                        'router_id': '11.11.11.11',
+                        'router_id': '10.229.11.11',
                         'sent_notifications': 0,
                         'sent_updates': 0,
                         'update_delay': 120,
@@ -1907,7 +1907,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                                 'nbrs_estab': 0,
                                 'total': 2}}},
                     'VRF2': 
-                        {'active_cluster_id': '1.1.1.1',
+                        {'active_cluster_id': '10.4.1.1',
                         'address_family': 
                             {'ipv6 unicast': 
                                 {'attribute_download': 'Disabled',
@@ -2038,7 +2038,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                                                     'free': 0}},
                         'current_limit_for_bmp_buffer_size': 326,
                         'current_utilization_of_bmp_buffer_limit': 0,
-                        'default_cluster_id': '1.1.1.1',
+                        'default_cluster_id': '10.4.1.1',
                         'default_keepalive': 60,
                         'default_local_preference': 100,
                         'default_value_for_bmp_buffer_size': 326,
@@ -2095,7 +2095,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                         'received_updates': 0,
                         'restart_count': 7,
                         'route_distinguisher': '200:2',
-                        'router_id': '11.11.11.11',
+                        'router_id': '10.229.11.11',
                         'sent_notifications': 0,
                         'sent_updates': 0,
                         'update_delay': 120,
@@ -2128,9 +2128,9 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
         BGP is operating in STANDALONE mode
         Autonomous System number format: ASPLAIN
         Autonomous System: 100
-        Router ID: 11.11.11.11 (manually configured)
-        Default Cluster ID: 1.1.1.1
-        Active Cluster IDs:  1.1.1.1
+        Router ID: 10.229.11.11 (manually configured)
+        Default Cluster ID: 10.4.1.1
+        Active Cluster IDs:  10.4.1.1
         Fast external fallover enabled
         Platform RLIMIT max: 2281701376 bytes
         Maximum limit for BMP buffer size: 435 MB
@@ -2289,9 +2289,9 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
         BGP is operating in STANDALONE mode
         Autonomous System number format: ASPLAIN
         Autonomous System: 100
-        Router ID: 11.11.11.11 (manually configured)
-        Default Cluster ID: 1.1.1.1
-        Active Cluster IDs:  1.1.1.1
+        Router ID: 10.229.11.11 (manually configured)
+        Default Cluster ID: 10.4.1.1
+        Active Cluster IDs:  10.4.1.1
         Fast external fallover enabled
         Platform RLIMIT max: 2281701376 bytes
         Maximum limit for BMP buffer size: 435 MB
@@ -2492,7 +2492,7 @@ class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
             {'default': 
                 {'vrf': 
                     {'default': 
-                        {'active_cluster_id': '1.1.1.1',
+                        {'active_cluster_id': '10.4.1.1',
                         'address_family': 
                             {'vpnv4 unicast': 
                                 {'attribute_download': 'Disabled',
@@ -2679,7 +2679,7 @@ class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
                                                    'free': 0}},
                         'current_limit_for_bmp_buffer_size': 307,
                         'current_utilization_of_bmp_buffer_limit': 0,
-                        'default_cluster_id': '1.1.1.1',
+                        'default_cluster_id': '10.4.1.1',
                         'default_keepalive': 60,
                         'default_local_preference': 100,
                         'default_value_for_bmp_buffer_size': 307,
@@ -2735,7 +2735,7 @@ class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
                         'received_notifications': 0,
                         'received_updates': 24,
                         'restart_count': 1,
-                        'router_id': '1.1.1.1',
+                        'router_id': '10.4.1.1',
                         'sent_notifications': 1,
                         'sent_updates': 14,
                         'update_delay': 120,
@@ -2756,9 +2756,9 @@ class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
         BGP is operating in standalone mode
         Autonomous System number format: ASPLAIN
         Autonomous System: 100
-        Router ID: 1.1.1.1 (manually configured)
-        Default Cluster ID: 1.1.1.1
-        Active Cluster IDs:  1.1.1.1
+        Router ID: 10.4.1.1 (manually configured)
+        Default Cluster ID: 10.4.1.1
+        Active Cluster IDs:  10.4.1.1
         Fast external fallover enabled
         Platform RLIMIT max: 2147483648 bytes
         Maximum limit for BMP buffer size: 409 MB
@@ -3034,7 +3034,7 @@ class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
             {'default': 
                 {'vrf': 
                     {'default': 
-                        {'active_cluster_id': '1.1.1.1',
+                        {'active_cluster_id': '10.4.1.1',
                         'address_family': 
                             {'vpnv4 unicast': 
                                 {'attribute_download': 'Disabled',
@@ -3199,7 +3199,7 @@ class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
                                                    'free': 0}},
                         'current_limit_for_bmp_buffer_size': 326,
                         'current_utilization_of_bmp_buffer_limit': 0,
-                        'default_cluster_id': '1.1.1.1',
+                        'default_cluster_id': '10.4.1.1',
                         'default_keepalive': 60,
                         'default_local_preference': 100,
                         'default_value_for_bmp_buffer_size': 326,
@@ -3255,7 +3255,7 @@ class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
                         'received_notifications': 0,
                         'received_updates': 0,
                         'restart_count': 1,
-                        'router_id': '1.1.1.1',
+                        'router_id': '10.4.1.1',
                         'sent_notifications': 0,
                         'sent_updates': 0,
                         'update_delay': 120,
@@ -3277,9 +3277,9 @@ class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
         BGP is operating in standalone mode
         Autonomous System number format: ASPLAIN
         Autonomous System: 100
-        Router ID: 1.1.1.1 (manually configured)
-        Default Cluster ID: 1.1.1.1
-        Active Cluster IDs:  1.1.1.1
+        Router ID: 10.4.1.1 (manually configured)
+        Default Cluster ID: 10.4.1.1
+        Active Cluster IDs:  10.4.1.1
         Fast external fallover enabled
         Platform RLIMIT max: 2281701376 bytes
         Maximum limit for BMP buffer size: 435 MB
@@ -3581,7 +3581,7 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
                "vrf": {
                     "default": {
                          "neighbor": {
-                              "3.3.3.3": {
+                              "10.36.3.3": {
                                    "last_ka_start_before_reset": "00:00:00",
                                    "bgp_session_transport": {
                                         "connection": {
@@ -3594,8 +3594,8 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
                                              "if_handle": "0x00000000",
                                              "foreign_port": "179",
                                              "local_port": "54707",
-                                             "foreign_host": "3.3.3.3",
-                                             "local_host": "1.1.1.1"
+                                             "foreign_host": "10.36.3.3",
+                                             "local_host": "10.4.1.1"
                                         }
                                    },
                                    "inbound_message": "3",
@@ -3671,7 +3671,7 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
                                    "last_write_written": 0,
                                    "second_attempted": 19,
                                    "last_read_before_reset": "00:00:00",
-                                   "router_id": "3.3.3.3",
+                                   "router_id": "10.36.3.3",
                                    "link_state": "internal link",
                                    "local_as_no_prepend": False,
                                    "second_last_write_before_written": 0,
@@ -3720,7 +3720,7 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
                                    "message_stats_input_queue": 0,
                                    "last_ka_error_before_reset": "00:00:00"
                               },
-                              "2.2.2.2": {
+                              "10.16.2.2": {
                                    "last_ka_start_before_reset": "00:00:00",
                                    "bgp_session_transport": {
                                         "connection": {
@@ -3733,8 +3733,8 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
                                              "if_handle": "0x00000000",
                                              "foreign_port": "179",
                                              "local_port": "46663",
-                                             "foreign_host": "2.2.2.2",
-                                             "local_host": "1.1.1.1"
+                                             "foreign_host": "10.16.2.2",
+                                             "local_host": "10.4.1.1"
                                         }
                                    },
                                    "inbound_message": "3",
@@ -3810,7 +3810,7 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
                                    "last_write_written": 0,
                                    "second_attempted": 19,
                                    "last_read_before_reset": "00:00:00",
-                                   "router_id": "2.2.2.2",
+                                   "router_id": "10.16.2.2",
                                    "link_state": "internal link",
                                    "local_as_no_prepend": False,
                                    "second_last_write_before_written": 0,
@@ -3872,9 +3872,9 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
         BGP instance 0: 'default'
         =========================
 
-        BGP neighbor is 2.2.2.2
+        BGP neighbor is 10.16.2.2
          Remote AS 100, local AS 100, internal link
-         Remote router ID 2.2.2.2
+         Remote router ID 10.16.2.2
           BGP state = Established, up for 00:42:33
           NSR State: None
           Last read 00:00:32, Last read before reset 00:00:00
@@ -3957,13 +3957,13 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
           Send Multicast Attributes
 
           Connections established 1; dropped 0
-          Local host: 1.1.1.1, Local port: 46663, IF Handle: 0x00000000
-          Foreign host: 2.2.2.2, Foreign port: 179
+          Local host: 10.4.1.1, Local port: 46663, IF Handle: 0x00000000
+          Foreign host: 10.16.2.2, Foreign port: 179
           Last reset 00:00:00
 
-        BGP neighbor is 3.3.3.3
+        BGP neighbor is 10.36.3.3
          Remote AS 100, local AS 100, internal link
-         Remote router ID 3.3.3.3
+         Remote router ID 10.36.3.3
           BGP state = Established, up for 00:39:07
           NSR State: None
           Last read 00:00:06, Last read before reset 00:00:00
@@ -4046,8 +4046,8 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
           Send Multicast Attributes
 
           Connections established 1; dropped 0
-          Local host: 1.1.1.1, Local port: 54707, IF Handle: 0x00000000
-          Foreign host: 3.3.3.3, Foreign port: 179
+          Local host: 10.4.1.1, Local port: 54707, IF Handle: 0x00000000
+          Foreign host: 10.36.3.3, Foreign port: 179
           Last reset 00:00:00
             '''}
 
@@ -4337,7 +4337,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                 "remove_private_as": False,
                                 "shutdown": False,
                                 "suppress_four_byte_as_capability": False,
-                                "router_id": "20.1.5.1",
+                                "router_id": "10.186.5.1",
                                 "local_as_as_no": 100,
                                 "local_as_dual_as": False,
                                 "local_as_no_prepend": False,
@@ -4453,11 +4453,11 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                     }
                                 }
                             },
-                            "20.1.5.5": {
+                            "10.186.5.5": {
                                 "remove_private_as": False,
                                 "shutdown": False,
                                 "suppress_four_byte_as_capability": False,
-                                "router_id": "20.1.5.5",
+                                "router_id": "10.186.5.5",
                                 "local_as_as_no": 100,
                                 "local_as_dual_as": False,
                                 "local_as_no_prepend": False,
@@ -4478,10 +4478,10 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                         "connections_dropped": 0
                                     },
                                     "transport": {
-                                        "foreign_host": "20.1.5.5",
+                                        "foreign_host": "10.186.5.5",
                                         "local_port": "179",
                                         "if_handle": "0x00000080",
-                                        "local_host": "20.1.5.1",
+                                        "local_host": "10.186.5.1",
                                         "foreign_port": "11099",
                                     }
                                 },
@@ -4720,9 +4720,9 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
         VRF: VRF2
         ---------
 
-        BGP neighbor is 20.1.5.5, vrf VRF2
+        BGP neighbor is 10.186.5.5, vrf VRF2
          Remote AS 200, local AS 100, external link
-         Remote router ID 20.1.5.5
+         Remote router ID 10.186.5.5
           BGP state = Established, up for 00:48:54
           NSR State: None
           Last read 00:00:51, Last read before reset 00:00:00
@@ -4783,13 +4783,13 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
           Advertise routes with local-label via Unicast SAFI
 
           Connections established 1; dropped 0
-          Local host: 20.1.5.1, Local port: 179, IF Handle: 0x00000080
-          Foreign host: 20.1.5.5, Foreign port: 11099
+          Local host: 10.186.5.1, Local port: 179, IF Handle: 0x00000080
+          Foreign host: 10.186.5.5, Foreign port: 11099
           Last reset 00:00:00
 
         BGP neighbor is 2001:db8:20:1:5::5, vrf VRF2
          Remote AS 200, local AS 100, external link
-         Remote router ID 20.1.5.1
+         Remote router ID 10.186.5.1
           BGP state = Established, up for 00:48:49
           NSR State: None
           Last read 00:00:46, Last read before reset 00:00:00
@@ -5289,11 +5289,11 @@ class test_show_bgp_instance_all_vrf_all_neighbors_advertised_routes(unittest.Te
                         {'address_family': 
                             {'vpnv4 unicast RD 200:2': 
                                 {'advertised': 
-                                    {'46.1.1.0/24': 
+                                    {'10.169.1.0/24': 
                                         {'index': 
                                             {1: 
-                                                {'froms': '2.2.2.2',
-                                                'next_hop': '20.1.5.1',
+                                                {'froms': '10.16.2.2',
+                                                'next_hop': '10.186.5.1',
                                                 'origin_code': 'e',
                                                 'path': '100 '
                                                         '300 '
@@ -5301,11 +5301,11 @@ class test_show_bgp_instance_all_vrf_all_neighbors_advertised_routes(unittest.Te
                                                         '51178 '
                                                         '47751 '
                                                         '{27016}'}}},
-                                    '46.1.4.0/24': 
+                                    '10.169.4.0/24': 
                                         {'index': 
                                             {1: 
-                                                {'froms': '2.2.2.2',
-                                                'next_hop': '20.1.5.1',
+                                                {'froms': '10.16.2.2',
+                                                'next_hop': '10.186.5.1',
                                                 'origin_code': 'e',
                                                 'path': '100 '
                                                         '300 '
@@ -5313,11 +5313,11 @@ class test_show_bgp_instance_all_vrf_all_neighbors_advertised_routes(unittest.Te
                                                         '51178 '
                                                         '47751 '
                                                         '{27016}'}}},
-                                    '46.1.5.0/24': 
+                                    '10.169.5.0/24': 
                                         {'index': 
                                             {1: 
-                                                {'froms': '2.2.2.2',
-                                                'next_hop': '20.1.5.1',
+                                                {'froms': '10.16.2.2',
+                                                'next_hop': '10.186.5.1',
                                                 'origin_code': 'e',
                                                 'path': '100 '
                                                         '300 '
@@ -5325,11 +5325,11 @@ class test_show_bgp_instance_all_vrf_all_neighbors_advertised_routes(unittest.Te
                                                         '51178 '
                                                         '47751 '
                                                         '{27016}'}}},
-                                    '46.2.2.0/24': 
+                                    '10.9.2.0/24': 
                                         {'index': 
                                             {1: 
-                                                {'froms': '2.2.2.2',
-                                                'next_hop': '20.1.5.1',
+                                                {'froms': '10.16.2.2',
+                                                'next_hop': '10.186.5.1',
                                                 'origin_code': 'e',
                                                 'path': '100 '
                                                         '400 '
@@ -5356,10 +5356,10 @@ class test_show_bgp_instance_all_vrf_all_neighbors_advertised_routes(unittest.Te
         ---------
         Network            Next Hop        From            AS Path
         Route Distinguisher: 200:2 (default for vrf VRF2)
-        46.1.1.0/24        20.1.5.1        2.2.2.2         100 300 33299 51178 47751 {27016}e
-        46.1.4.0/24        20.1.5.1        2.2.2.2         100 300 33299 51178 47751 {27016}e
-        46.1.5.0/24        20.1.5.1        2.2.2.2         100 300 33299 51178 47751 {27016}e
-        46.2.2.0/24        20.1.5.1        2.2.2.2         100 400 33299 51178 47751 {27016}e
+        10.169.1.0/24        10.186.5.1        10.16.2.2         100 300 33299 51178 47751 {27016}e
+        10.169.4.0/24        10.186.5.1        10.16.2.2         100 300 33299 51178 47751 {27016}e
+        10.169.5.0/24        10.186.5.1        10.16.2.2         100 300 33299 51178 47751 {27016}e
+        10.9.2.0/24        10.186.5.1        10.16.2.2         100 400 33299 51178 47751 {27016}e
 
         Processed 4 prefixes, 4 paths
         '''}
@@ -5368,13 +5368,13 @@ class test_show_bgp_instance_all_vrf_all_neighbors_advertised_routes(unittest.Te
         self.device1 = Mock(**self.empty_output)
         obj = ShowBgpInstanceNeighborsAdvertisedRoutes(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(vrf_type='vrf', neighbor='20.1.5.5')
+            parsed_output = obj.parse(vrf_type='vrf', neighbor='10.186.5.5')
 
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowBgpInstanceNeighborsAdvertisedRoutes(device=self.device)
-        parsed_output = obj.parse(vrf_type='vrf', neighbor='20.1.5.5')
+        parsed_output = obj.parse(vrf_type='vrf', neighbor='10.186.5.5')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
@@ -5396,22 +5396,22 @@ class test_show_bgp_instance_all_all_all_neighbors_advertised_routes(unittest.Te
                         {'address_family': 
                             {'vpnv4 unicast RD 200:2': 
                                 {'advertised': 
-                                    {'15.1.1.0/24': 
+                                    {'10.1.1.0/24': 
                                         {'index': 
                                             {1: 
-                                                {'froms': '20.1.5.5',
-                                                'next_hop': '1.1.1.1',
+                                                {'froms': '10.186.5.5',
+                                                'next_hop': '10.4.1.1',
                                                 'origin_code': 'e',
                                                 'path': '200 '
                                                         '33299 '
                                                         '51178 '
                                                         '47751 '
                                                         '{27016}'}}},
-                                    '15.1.2.0/24': 
+                                    '10.1.2.0/24': 
                                         {'index': 
                                             {1: 
-                                                {'froms': '20.1.5.5',
-                                                'next_hop': '1.1.1.1',
+                                                {'froms': '10.186.5.5',
+                                                'next_hop': '10.4.1.1',
                                                 'origin_code': 'e',
                                                 'path': '200 '
                                                         '33299 '
@@ -5428,7 +5428,7 @@ class test_show_bgp_instance_all_all_all_neighbors_advertised_routes(unittest.Te
                                         {'index': 
                                             {1: 
                                                 {'froms': '2001:db8:20:1:5::5',
-                                                'next_hop': '1.1.1.1',
+                                                'next_hop': '10.4.1.1',
                                                 'origin_code': 'e',
                                                 'path': '200 '
                                                 '33299 '
@@ -5439,7 +5439,7 @@ class test_show_bgp_instance_all_all_all_neighbors_advertised_routes(unittest.Te
                                         {'index': 
                                             {1: 
                                                 {'froms': '2001:db8:20:1:5::5',
-                                                'next_hop': '1.1.1.1',
+                                                'next_hop': '10.4.1.1',
                                                 'origin_code': 'e',
                                                 'path': '200 '
                                                 '33299 '
@@ -5461,8 +5461,8 @@ class test_show_bgp_instance_all_all_all_neighbors_advertised_routes(unittest.Te
 
         Network            Next Hop        From            AS  Path
         Route Distinguisher: 200:2
-        15.1.1.0/24        1.1.1.1         20.1.5.5        200 33299 51178 47751 {27016}e
-        15.1.2.0/24        1.1.1.1         20.1.5.5        200 33299 51178 47751 {27016}e
+        10.1.1.0/24        10.4.1.1         10.186.5.5        200 33299 51178 47751 {27016}e
+        10.1.2.0/24        10.4.1.1         10.186.5.5        200 33299 51178 47751 {27016}e
 
         Processed 2 prefixes, 2 paths
 
@@ -5471,9 +5471,9 @@ class test_show_bgp_instance_all_all_all_neighbors_advertised_routes(unittest.Te
 
         Network            Next Hop        From            AS  Path
         Route Distinguisher: 200:2
-        615:11:11::/64     1.1.1.1         2001:db8:20:1:5::5
+        615:11:11::/64     10.4.1.1         2001:db8:20:1:5::5
                                                            200 33299 51178 47751 {27017}e
-        615:11:11:1::/64   1.1.1.1         2001:db8:20:1:5::5
+        615:11:11:1::/64   10.4.1.1         2001:db8:20:1:5::5
                                                            200 33299 51178 47751 {27016}e
 
         Processed 2 prefixes, 2 paths
@@ -5483,13 +5483,13 @@ class test_show_bgp_instance_all_all_all_neighbors_advertised_routes(unittest.Te
         self.device1 = Mock(**self.empty_output)
         obj = ShowBgpInstanceNeighborsAdvertisedRoutes(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(vrf_type='all', neighbor='3.3.3.3')
+            parsed_output = obj.parse(vrf_type='all', neighbor='10.36.3.3')
 
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowBgpInstanceNeighborsAdvertisedRoutes(device=self.device)
-        parsed_output = obj.parse(vrf_type='all', neighbor='3.3.3.3')
+        parsed_output = obj.parse(vrf_type='all', neighbor='10.36.3.3')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
@@ -5519,11 +5519,11 @@ class test_show_bgp_instance_all_vrf_all_neighbors_received_routes(unittest.Test
                                 'processed_prefixes': 2,
                                 'rd_version': 63,
                                 'received': 
-                                    {'15.1.1.0/24': 
+                                    {'10.1.1.0/24': 
                                         {'index': 
                                             {1: 
                                                 {'metric': '2219',
-                                                'next_hop': '20.1.5.5',
+                                                'next_hop': '10.186.5.5',
                                                 'origin_codes': 'e',
                                                 'path': '200 '
                                                         '33299 '
@@ -5532,11 +5532,11 @@ class test_show_bgp_instance_all_vrf_all_neighbors_received_routes(unittest.Test
                                                         '{27016}',
                                                 'status_codes': '*',
                                                 'weight': '0'}}},
-                                    '15.1.2.0/24': 
+                                    '10.1.2.0/24': 
                                         {'index': 
                                             {1: 
                                                 {'metric': '2219',
-                                                'next_hop': '20.1.5.5',
+                                                'next_hop': '10.186.5.5',
                                                 'origin_codes': 'e',
                                                 'path': '200 '
                                                         '33299 '
@@ -5546,7 +5546,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_received_routes(unittest.Test
                                                 'status_codes': '*',
                                                 'weight': '0'}}}},
                                 'route_distinguisher': '200:2',
-                                'router_identifier': '11.11.11.11',
+                                'router_identifier': '10.229.11.11',
                                 'state': 'active',
                                 'table_id': '0xe0000011',
                                 'table_state': 'active',
@@ -5568,7 +5568,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_received_routes(unittest.Test
         BGP VRF VRF2, state: Active
         BGP Route Distinguisher: 200:2
         VRF ID: 0x60000002
-        BGP router identifier 11.11.11.11, local AS number 100
+        BGP router identifier 10.229.11.11, local AS number 100
         Non-stop routing is enabled
         BGP table state: Active
         Table ID: 0xe0000011   RD version: 63
@@ -5581,8 +5581,8 @@ class test_show_bgp_instance_all_vrf_all_neighbors_received_routes(unittest.Test
         Origin codes: i - IGP, e - EGP, ? - incomplete
            Network            Next Hop            Metric LocPrf Weight Path
         Route Distinguisher: 200:2 (default for vrf VRF2)
-        *  15.1.1.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
-        *  15.1.2.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *  10.1.1.0/24        10.186.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *  10.1.2.0/24        10.186.5.5              2219             0 200 33299 51178 47751 {27016} e
 
         Processed 2 prefixes, 2 paths
         '''}
@@ -5591,13 +5591,13 @@ class test_show_bgp_instance_all_vrf_all_neighbors_received_routes(unittest.Test
         self.device1 = Mock(**self.empty_output)
         obj = ShowBgpInstanceNeighborsReceivedRoutes(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(vrf_type='vrf', neighbor='20.1.5.5')
+            parsed_output = obj.parse(vrf_type='vrf', neighbor='10.186.5.5')
 
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowBgpInstanceNeighborsReceivedRoutes(device=self.device)
-        parsed_output = obj.parse(vrf_type='vrf', neighbor='20.1.5.5')
+        parsed_output = obj.parse(vrf_type='vrf', neighbor='10.186.5.5')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
@@ -5626,12 +5626,12 @@ class test_show_bgp_instance_all_all_all_neighbors_received_routes(unittest.Test
                                 'nsr_issu_sync_group_versions': '0/0',
                                 'rd_version': 0,
                                 'received': 
-                                    {'46.1.1.0/24': 
+                                    {'10.169.1.0/24': 
                                         {'index': 
                                             {1: 
                                                 {'locprf': '100',
                                                 'metric': '2219',
-                                                'next_hop': '4.4.4.4',
+                                                'next_hop': '10.64.4.4',
                                                 'origin_codes': 'e',
                                                 'path': '300 '
                                                         '33299 '
@@ -5640,7 +5640,7 @@ class test_show_bgp_instance_all_all_all_neighbors_received_routes(unittest.Test
                                                         '{27016}',
                                                 'status_codes': '*i',
                                                 'weight': '0'}}}},
-                                'router_identifier': '1.1.1.1',
+                                'router_identifier': '10.4.1.1',
                                 'scan_interval': 60,
                                 'table_id': '0x0',
                                 'table_state': 'active',
@@ -5656,12 +5656,12 @@ class test_show_bgp_instance_all_all_all_neighbors_received_routes(unittest.Test
                                 'processed_prefixes': 10,
                                 'rd_version': 0,
                                 'received': 
-                                    {'46.2.2.0/24': 
+                                    {'10.9.2.0/24': 
                                         {'index': 
                                             {1: 
                                                 {'locprf': '100',
                                                 'metric': '2219',
-                                                'next_hop': '4.4.4.4',
+                                                'next_hop': '10.64.4.4',
                                                 'origin_codes': 'e',
                                                 'path': '400 '
                                                       '33299 '
@@ -5670,7 +5670,7 @@ class test_show_bgp_instance_all_all_all_neighbors_received_routes(unittest.Test
                                                       '{27016}',
                                                 'status_codes': '*i',
                                                 'weight': '0'}}}},
-                                'router_identifier': '1.1.1.1',
+                                'router_identifier': '10.4.1.1',
                                 'scan_interval': 60,
                                 'table_id': '0x0',
                                 'table_state': 'active',
@@ -5689,7 +5689,7 @@ class test_show_bgp_instance_all_all_all_neighbors_received_routes(unittest.Test
                                             {1: 
                                                 {'locprf': '100',
                                                 'metric': '2219',
-                                                'next_hop': '4.4.4.4',
+                                                'next_hop': '10.64.4.4',
                                                 'origin_codes': 'e',
                                                 'path': '300 '
                                                         '33299 '
@@ -5703,7 +5703,7 @@ class test_show_bgp_instance_all_all_all_neighbors_received_routes(unittest.Test
                                             {1: 
                                                 {'locprf': '100',
                                                 'metric': '2219',
-                                                'next_hop': '4.4.4.4',
+                                                'next_hop': '10.64.4.4',
                                                 'origin_codes': 'e',
                                                 'path': '300 '
                                                         '33299 '
@@ -5712,7 +5712,7 @@ class test_show_bgp_instance_all_all_all_neighbors_received_routes(unittest.Test
                                                         '{27016}',
                                                 'status_codes': '*i',
                                                 'weight': '0'}}}},
-                                'router_identifier': '1.1.1.1',
+                                'router_identifier': '10.4.1.1',
                                 'scan_interval': 60,
                                 'table_id': '0x0',
                                 'table_state': 'active',
@@ -5733,7 +5733,7 @@ class test_show_bgp_instance_all_all_all_neighbors_received_routes(unittest.Test
                                             {1: 
                                                 {'locprf': '100',
                                                 'metric': '2219',
-                                                'next_hop': '4.4.4.4',
+                                                'next_hop': '10.64.4.4',
                                                 'origin_codes': 'e',
                                                 'path': '400 '
                                                         '33299 '
@@ -5747,7 +5747,7 @@ class test_show_bgp_instance_all_all_all_neighbors_received_routes(unittest.Test
                                             {1: 
                                                 {'locprf': '100',
                                                 'metric': '2219',
-                                                'next_hop': '4.4.4.4',
+                                                'next_hop': '10.64.4.4',
                                                 'origin_codes': 'e',
                                                 'path': '400 '
                                                         '33299 '
@@ -5756,7 +5756,7 @@ class test_show_bgp_instance_all_all_all_neighbors_received_routes(unittest.Test
                                                         '{27016}',
                                                 'status_codes': '*i',
                                                 'weight': '0'}}}},
-                                'router_identifier': '1.1.1.1',
+                                'router_identifier': '10.4.1.1',
                                 'scan_interval': 60,
                                 'table_id': '0x0',
                                 'table_state': 'active',
@@ -5769,7 +5769,7 @@ class test_show_bgp_instance_all_all_all_neighbors_received_routes(unittest.Test
         Address Family: VPNv4 Unicast
         -----------------------------
 
-        BGP router identifier 1.1.1.1, local AS number 100
+        BGP router identifier 10.4.1.1, local AS number 100
         BGP generic scan interval 60 secs
         Non-stop routing is enabled
         BGP table state: Active
@@ -5784,16 +5784,16 @@ class test_show_bgp_instance_all_all_all_neighbors_received_routes(unittest.Test
         Origin codes: i - IGP, e - EGP, ? - incomplete
            Network            Next Hop            Metric LocPrf Weight Path
         Route Distinguisher: 300:1
-        * i46.1.1.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        * i10.169.1.0/24        10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         Route Distinguisher: 400:1
-        * i46.2.2.0/24        4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        * i10.9.2.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
 
         Processed 10 prefixes, 10 paths
 
         Address Family: VPNv6 Unicast
         -----------------------------
 
-        BGP router identifier 1.1.1.1, local AS number 100
+        BGP router identifier 10.4.1.1, local AS number 100
         BGP generic scan interval 60 secs
         Non-stop routing is enabled
         BGP table state: Active
@@ -5808,11 +5808,11 @@ class test_show_bgp_instance_all_all_all_neighbors_received_routes(unittest.Test
         Origin codes: i - IGP, e - EGP, ? - incomplete
            Network            Next Hop            Metric LocPrf Weight Path
         Route Distinguisher: 300:1
-        * i646:11:11::/64     4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        * i646:11:11:4::/64   4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        * i646:11:11::/64     10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        * i646:11:11:4::/64   10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         Route Distinguisher: 400:1
-        * i646:22:22::/64     4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
-        * i646:22:22:1::/64   4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        * i646:22:22::/64     10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        * i646:22:22:1::/64   10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
 
         Processed 10 prefixes, 10 paths
         '''}
@@ -5821,13 +5821,13 @@ class test_show_bgp_instance_all_all_all_neighbors_received_routes(unittest.Test
         self.device1 = Mock(**self.empty_output)
         obj = ShowBgpInstanceNeighborsReceivedRoutes(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(vrf_type='all', neighbor='20.1.5.5')
+            parsed_output = obj.parse(vrf_type='all', neighbor='10.186.5.5')
 
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowBgpInstanceNeighborsReceivedRoutes(device=self.device)
-        parsed_output = obj.parse(vrf_type='all', neighbor='20.1.5.5')
+        parsed_output = obj.parse(vrf_type='all', neighbor='10.186.5.5')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
@@ -5856,13 +5856,13 @@ class test_show_bgp_instance_all_vrf_all_neighbors_routes(unittest.TestCase):
                                 'processed_prefixes': 2,
                                 'rd_version': 63,
                                 'route_distinguisher': '200:2',
-                                'router_identifier': '11.11.11.11',
+                                'router_identifier': '10.229.11.11',
                                 'routes':
-                                    {'15.1.1.0/24': 
+                                    {'10.1.1.0/24': 
                                         {'index': 
                                             {1: 
                                                 {'metric': '2219',
-                                                'next_hop': '20.1.5.5',
+                                                'next_hop': '10.186.5.5',
                                                 'origin_codes': 'e',
                                                 'path': '200 '
                                                         '33299 '
@@ -5871,11 +5871,11 @@ class test_show_bgp_instance_all_vrf_all_neighbors_routes(unittest.TestCase):
                                                         '{27016}',
                                                 'status_codes': '*>',
                                                 'weight': '0'}}},
-                                    '15.1.2.0/24': 
+                                    '10.1.2.0/24': 
                                         {'index': 
                                             {1: 
                                                 {'metric': '2219',
-                                                'next_hop': '20.1.5.5',
+                                                'next_hop': '10.186.5.5',
                                                 'origin_codes': 'e',
                                                 'path': '200 '
                                                         '33299 '
@@ -5905,7 +5905,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_routes(unittest.TestCase):
         BGP VRF VRF2, state: Active
         BGP Route Distinguisher: 200:2
         VRF ID: 0x60000002
-        BGP router identifier 11.11.11.11, local AS number 100
+        BGP router identifier 10.229.11.11, local AS number 100
         Non-stop routing is enabled
         BGP table state: Active
         Table ID: 0xe0000011   RD version: 63
@@ -5918,8 +5918,8 @@ class test_show_bgp_instance_all_vrf_all_neighbors_routes(unittest.TestCase):
         Origin codes: i - IGP, e - EGP, ? - incomplete
            Network            Next Hop            Metric LocPrf Weight Path
         Route Distinguisher: 200:2 (default for vrf VRF2)
-        *> 15.1.1.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
-        *> 15.1.2.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *> 10.1.1.0/24        10.186.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *> 10.1.2.0/24        10.186.5.5              2219             0 200 33299 51178 47751 {27016} e
         
         Processed 2 prefixes, 2 paths
         '''}
@@ -5928,13 +5928,13 @@ class test_show_bgp_instance_all_vrf_all_neighbors_routes(unittest.TestCase):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowBgpInstanceNeighborsRoutes(device=self.dev1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(vrf_type='vrf', neighbor='20.1.5.5')
+            parsed_output = obj.parse(vrf_type='vrf', neighbor='10.186.5.5')
 
     def test_golden(self):
         self.maxDiff = None
         self.dev = Mock(**self.golden_output)
         obj = ShowBgpInstanceNeighborsRoutes(device=self.dev)
-        parsed_output = obj.parse(vrf_type='vrf', neighbor='20.1.5.5')
+        parsed_output = obj.parse(vrf_type='vrf', neighbor='10.186.5.5')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
@@ -5961,14 +5961,14 @@ class test_show_bgp_instance_all_all_all_neighbors_routes(unittest.TestCase):
                                 'nsr_initial_initsync_version': '11',
                                 'nsr_issu_sync_group_versions': '0/0',
                                 'rd_version': 0,
-                                'router_identifier': '1.1.1.1',
+                                'router_identifier': '10.4.1.1',
                                 'routes': 
-                                    {'46.1.1.0/24': 
+                                    {'10.169.1.0/24': 
                                         {'index': 
                                             {1: 
                                                 {'locprf': '100',
                                                 'metric': '2219',
-                                                'next_hop': '4.4.4.4',
+                                                'next_hop': '10.64.4.4',
                                                 'origin_codes': 'e',
                                                 'path': '300 '
                                                         '33299 '
@@ -5991,14 +5991,14 @@ class test_show_bgp_instance_all_all_all_neighbors_routes(unittest.TestCase):
                                 'processed_paths': 2,
                                 'processed_prefixes': 2,
                                 'rd_version': 0,
-                                'router_identifier': '1.1.1.1',
+                                'router_identifier': '10.4.1.1',
                                 'routes':
-                                    {'46.2.2.0/24': 
+                                    {'10.9.2.0/24': 
                                         {'index': 
                                             {1: 
                                                 {'locprf': '100',
                                                 'metric': '2219',
-                                                'next_hop': '4.4.4.4',
+                                                'next_hop': '10.64.4.4',
                                                 'origin_codes': 'e',
                                                 'path': '400 '
                                                         '33299 '
@@ -6019,14 +6019,14 @@ class test_show_bgp_instance_all_all_all_neighbors_routes(unittest.TestCase):
                                 'nsr_initial_initsync_version': '11',
                                 'nsr_issu_sync_group_versions': '0/0',
                                 'rd_version': 0,
-                                'router_identifier': '1.1.1.1',
+                                'router_identifier': '10.4.1.1',
                                 'routes': 
                                     {'646:11:11:1::/64': 
                                         {'index': 
                                             {1: 
                                                 {'locprf': '100',
                                                 'metric': '2219',
-                                                'next_hop': '4.4.4.4',
+                                                'next_hop': '10.64.4.4',
                                                 'origin_codes': 'e',
                                                 'path': '300 '
                                                         '33299 '
@@ -6040,7 +6040,7 @@ class test_show_bgp_instance_all_all_all_neighbors_routes(unittest.TestCase):
                                             {1: 
                                                 {'locprf': '100',
                                                 'metric': '2219',
-                                                'next_hop': '4.4.4.4',
+                                                'next_hop': '10.64.4.4',
                                                 'origin_codes': 'e',
                                                 'path': '300 '
                                                         '33299 '
@@ -6063,14 +6063,14 @@ class test_show_bgp_instance_all_all_all_neighbors_routes(unittest.TestCase):
                                 'processed_paths': 3,
                                 'processed_prefixes': 3,
                                 'rd_version': 0,
-                                'router_identifier': '1.1.1.1',
+                                'router_identifier': '10.4.1.1',
                                 'routes':
                                     {'646:22:22::/64': 
                                         {'index': 
                                             {1: 
                                                 {'locprf': '100',
                                                 'metric': '2219',
-                                                'next_hop': '4.4.4.4',
+                                                'next_hop': '10.64.4.4',
                                                 'origin_codes': 'e',
                                                 'path': '400 '
                                                        '33299 '
@@ -6091,7 +6091,7 @@ class test_show_bgp_instance_all_all_all_neighbors_routes(unittest.TestCase):
         Address Family: VPNv4 Unicast
         -----------------------------
 
-        BGP router identifier 1.1.1.1, local AS number 100
+        BGP router identifier 10.4.1.1, local AS number 100
         BGP generic scan interval 60 secs
         Non-stop routing is enabled
         BGP table state: Active
@@ -6106,10 +6106,10 @@ class test_show_bgp_instance_all_all_all_neighbors_routes(unittest.TestCase):
         Origin codes: i - IGP, e - EGP, ? - incomplete
            Network            Next Hop            Metric LocPrf Weight Path
         Route Distinguisher: 300:1
-        * i46.1.1.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        * i10.169.1.0/24        10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         
         Route Distinguisher: 400:1
-        * i46.2.2.0/24        4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        * i10.9.2.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
         
 
         Processed 2 prefixes, 2 paths
@@ -6117,7 +6117,7 @@ class test_show_bgp_instance_all_all_all_neighbors_routes(unittest.TestCase):
         Address Family: VPNv6 Unicast
         -----------------------------
 
-        BGP router identifier 1.1.1.1, local AS number 100
+        BGP router identifier 10.4.1.1, local AS number 100
         BGP generic scan interval 60 secs
         Non-stop routing is enabled
         BGP table state: Active
@@ -6132,10 +6132,10 @@ class test_show_bgp_instance_all_all_all_neighbors_routes(unittest.TestCase):
         Origin codes: i - IGP, e - EGP, ? - incomplete
            Network            Next Hop            Metric LocPrf Weight Path
         Route Distinguisher: 300:1
-        * i646:11:11::/64     4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        * i646:11:11:1::/64   4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        * i646:11:11::/64     10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        * i646:11:11:1::/64   10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         Route Distinguisher: 400:1
-        * i646:22:22::/64     4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        * i646:22:22::/64     10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
         
 
         Processed 3 prefixes, 3 paths
@@ -6218,13 +6218,13 @@ class test_show_bgp_instance_all_all_all_neighbors_routes(unittest.TestCase):
         self.device1 = Mock(**self.empty_output)
         obj = ShowBgpInstanceNeighborsRoutes(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(vrf_type='all', neighbor='3.3.3.3')
+            parsed_output = obj.parse(vrf_type='all', neighbor='10.36.3.3')
 
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowBgpInstanceNeighborsRoutes(device=self.device)
-        parsed_output = obj.parse(vrf_type='all', neighbor='3.3.3.3')
+        parsed_output = obj.parse(vrf_type='all', neighbor='10.36.3.3')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_golden_1(self):
@@ -6259,7 +6259,7 @@ class test_show_bgp_instance_all_all_all_summary(unittest.TestCase):
                                                                                                            'sendtblver': 43,
                                                                                                            'standbyver': 0}},
                                                                                    'rd_version': 0,
-                                                                                   'router_id': '1.1.1.1',
+                                                                                   'router_id': '10.4.1.1',
                                                                                    'table_id': '0x0',
                                                                                    'table_state': 'active'},
                                                                  'vpnv6 unicast': {'bgp_table_version': 43,
@@ -6277,10 +6277,10 @@ class test_show_bgp_instance_all_all_all_summary(unittest.TestCase):
                                                                                                            'sendtblver': 43,
                                                                                                            'standbyver': 0}},
                                                                                    'rd_version': 0,
-                                                                                   'router_id': '1.1.1.1',
+                                                                                   'router_id': '10.4.1.1',
                                                                                    'table_id': '0x0',
                                                                                    'table_state': 'active'}},
-                                              'neighbor': {'2.2.2.2': {'address_family': {'vpnv4 unicast': {'input_queue': 0,
+                                              'neighbor': {'10.16.2.2': {'address_family': {'vpnv4 unicast': {'input_queue': 0,
                                                                                                             'msg_rcvd': 59,
                                                                                                             'msg_sent': 56,
                                                                                                             'output_queue': 0,
@@ -6297,7 +6297,7 @@ class test_show_bgp_instance_all_all_all_summary(unittest.TestCase):
                                                                                                             'tbl_ver': 43,
                                                                                                             'up_down': '00:50:38'}},
                                                                        'remote_as': 100},
-                                                           '3.3.3.3': {'address_family': {'vpnv4 unicast': {'input_queue': 0,
+                                                           '10.36.3.3': {'address_family': {'vpnv4 unicast': {'input_queue': 0,
                                                                                                             'msg_rcvd': 68,
                                                                                                             'msg_sent': 58,
                                                                                                             'output_queue': 0,
@@ -6323,7 +6323,7 @@ class test_show_bgp_instance_all_all_all_summary(unittest.TestCase):
         Address Family: VPNv4 Unicast
         -----------------------------
 
-        BGP router identifier 1.1.1.1, local AS number 100
+        BGP router identifier 10.4.1.1, local AS number 100
         BGP generic scan interval 60 secs
         Non-stop routing is enabled
         BGP table state: Active
@@ -6340,14 +6340,14 @@ class test_show_bgp_instance_all_all_all_summary(unittest.TestCase):
         Speaker              43         43         43         43          43           0
 
         Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
-        2.2.2.2           0   100      59      56       43    0    0 00:50:38         10
-        3.3.3.3           0   100      68      58       43    0    0 00:47:11         10
+        10.16.2.2           0   100      59      56       43    0    0 00:50:38         10
+        10.36.3.3           0   100      68      58       43    0    0 00:47:11         10
 
 
         Address Family: VPNv6 Unicast
         -----------------------------
 
-        BGP router identifier 1.1.1.1, local AS number 100
+        BGP router identifier 10.4.1.1, local AS number 100
         BGP generic scan interval 60 secs
         Non-stop routing is enabled
         BGP table state: Active
@@ -6364,8 +6364,8 @@ class test_show_bgp_instance_all_all_all_summary(unittest.TestCase):
         Speaker              43         43         43         43          43           0
 
         Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
-        2.2.2.2           0   100      59      56       43    0    0 00:50:38         10
-        3.3.3.3           0   100      68      58       43    0    0 00:47:11         10
+        10.16.2.2           0   100      59      56       43    0    0 00:50:38         10
+        10.36.3.3           0   100      68      58       43    0    0 00:47:11         10
         '''}
 
     def test_empty(self):
@@ -6409,7 +6409,7 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
                                                                                                         'standbyver': 0}},
                                                                                 'rd_version': 63,
                                                                                 'route_distinguisher': '200:1',
-                                                                                'router_id': '11.11.11.11',
+                                                                                'router_id': '10.229.11.11',
                                                                                 'table_id': '0xe0000010',
                                                                                 'table_state': 'active',
                                                                                 'vrf_id': '0x60000001',
@@ -6440,12 +6440,12 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
                                                                                                         'standbyver': 0}},
                                                                                 'rd_version': 63,
                                                                                 'route_distinguisher': '200:2',
-                                                                                'router_id': '11.11.11.11',
+                                                                                'router_id': '10.229.11.11',
                                                                                 'table_id': '0xe0000011',
                                                                                 'table_state': 'active',
                                                                                 'vrf_id': '0x60000002',
                                                                                 'vrf_state': 'active'}},
-                                           'neighbor': {'20.1.5.5': {'address_family': {'vpnv4 unicast': {'input_queue': 0,
+                                           'neighbor': {'10.186.5.5': {'address_family': {'vpnv4 unicast': {'input_queue': 0,
                                                                                                           'msg_rcvd': 58,
                                                                                                           'msg_sent': 62,
                                                                                                           'output_queue': 0,
@@ -6465,7 +6465,7 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
         BGP VRF VRF1, state: Active
         BGP Route Distinguisher: 200:1
         VRF ID: 0x60000001
-        BGP router identifier 11.11.11.11, local AS number 100
+        BGP router identifier 10.229.11.11, local AS number 100
         Non-stop routing is enabled
         BGP table state: Active
         Table ID: 0xe0000010   RD version: 63
@@ -6488,7 +6488,7 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
         BGP VRF VRF2, state: Active
         BGP Route Distinguisher: 200:2
         VRF ID: 0x60000002
-        BGP router identifier 11.11.11.11, local AS number 100
+        BGP router identifier 10.229.11.11, local AS number 100
         Non-stop routing is enabled
         BGP table state: Active
         Table ID: 0xe0000011   RD version: 63
@@ -6503,7 +6503,7 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
         Speaker              63         63         63         63          63           0
 
         Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
-        20.1.5.5          0   200      58      62       63    0    0 00:01:12          5
+        10.186.5.5          0   200      58      62       63    0    0 00:01:12          5
         '''}
 
     golden_parsed_output2 = {
@@ -6529,7 +6529,7 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
                                                         'standbyver': 0}},
                                 'rd_version': 2,
                                 'route_distinguisher': '200:1',
-                                'router_id': '11.11.11.11',
+                                'router_id': '10.229.11.11',
                                 'table_id': '0xe0800011',
                                 'table_state': 'active',
                                 'vrf_id': '0x60000002',
@@ -6567,7 +6567,7 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
                                                         'standbyver': 0}},
                                 'rd_version': 3,
                                 'route_distinguisher': '200:2',
-                                'router_id': '11.11.11.11',
+                                'router_id': '10.229.11.11',
                                 'table_id': '0xe0800012',
                                 'table_state': 'active',
                                 'vrf_id': '0x60000003',
@@ -6614,7 +6614,7 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
         BGP VRF VRF1, state: Active
         BGP Route Distinguisher: 200:1
         VRF ID: 0x60000002
-        BGP router identifier 11.11.11.11, local AS number 100
+        BGP router identifier 10.229.11.11, local AS number 100
         Non-stop routing is enabled
         BGP table state: Active
         Table ID: 0xe0800011   RD version: 2
@@ -6637,7 +6637,7 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
         BGP VRF VRF2, state: Active
         BGP Route Distinguisher: 200:2
         VRF ID: 0x60000003
-        BGP router identifier 11.11.11.11, local AS number 100
+        BGP router identifier 10.229.11.11, local AS number 100
         Non-stop routing is enabled
         BGP table state: Active
         Table ID: 0xe0800012   RD version: 3
@@ -6695,13 +6695,13 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
                                                                                    'nsr_initial_initsync_version': '11',
                                                                                    'nsr_issu_sync_group_versions': '0/0',
                                                                                    'rd_version': 0,
-                                                                                   'router_identifier': '1.1.1.1',
+                                                                                   'router_identifier': '10.4.1.1',
                                                                                    'scan_interval': 60,
                                                                                    'table_id': '0x0',
                                                                                    'table_state': 'active'},
                                                                  'vpnv4 unicast RD 200:1': {'default_vrf': 'vrf1',
-                                                                                            'prefix': {'15.1.1.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                     'next_hop': '20.1.5.5',
+                                                                                            'prefix': {'10.1.1.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                     'next_hop': '10.186.5.5',
                                                                                                                                      'origin_codes': 'e',
                                                                                                                                      'path': '200 '
                                                                                                                                              '33299 '
@@ -6710,9 +6710,9 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
                                                                                                                                              '{27016}',
                                                                                                                                      'status_codes': '*>',
                                                                                                                                      'weight': '0'}}},
-                                                                                                       '46.1.1.0/24': {'index': {1: {'locprf': '100',
+                                                                                                       '10.169.1.0/24': {'index': {1: {'locprf': '100',
                                                                                                                                      'metric': '2219',
-                                                                                                                                     'next_hop': '4.4.4.4',
+                                                                                                                                     'next_hop': '10.64.4.4',
                                                                                                                                      'origin_codes': 'e',
                                                                                                                                      'path': '300 '
                                                                                                                                              '33299 '
@@ -6723,8 +6723,8 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
                                                                                                                                      'weight': '0'}}}},
                                                                                             'route_distinguisher': '200:1'},
                                                                  'vpnv4 unicast RD 200:2': {'default_vrf': 'vrf2',
-                                                                                            'prefix': {'15.1.1.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                     'next_hop': '20.1.5.5',
+                                                                                            'prefix': {'10.1.1.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                     'next_hop': '10.186.5.5',
                                                                                                                                      'origin_codes': 'e',
                                                                                                                                      'path': '200 '
                                                                                                                                              '33299 '
@@ -6733,9 +6733,9 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
                                                                                                                                              '{27016}',
                                                                                                                                      'status_codes': '*>',
                                                                                                                                      'weight': '0'}}},
-                                                                                                       '46.1.5.0/24': {'index': {1: {'locprf': '100',
+                                                                                                       '10.169.5.0/24': {'index': {1: {'locprf': '100',
                                                                                                                                      'metric': '2219',
-                                                                                                                                     'next_hop': '4.4.4.4',
+                                                                                                                                     'next_hop': '10.64.4.4',
                                                                                                                                      'origin_codes': 'e',
                                                                                                                                      'path': '300 '
                                                                                                                                              '33299 '
@@ -6746,9 +6746,9 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
                                                                                                                                      'weight': '0'}}}},
                                                                                             'route_distinguisher': '200:2'},
                                                                  'vpnv4 unicast RD 300:1': {'default_vrf': 'none',
-                                                                                            'prefix': {'46.1.1.0/24': {'index': {1: {'locprf': '100',
+                                                                                            'prefix': {'10.169.1.0/24': {'index': {1: {'locprf': '100',
                                                                                                                                      'metric': '2219',
-                                                                                                                                     'next_hop': '4.4.4.4',
+                                                                                                                                     'next_hop': '10.64.4.4',
                                                                                                                                      'origin_codes': 'e',
                                                                                                                                      'path': '300 '
                                                                                                                                              '33299 '
@@ -6759,7 +6759,7 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
                                                                                                                                      'weight': '0'},
                                                                                                                                  2: {'locprf': '100',
                                                                                                                                      'metric': '2219',
-                                                                                                                                     'next_hop': '4.4.4.4',
+                                                                                                                                     'next_hop': '10.64.4.4',
                                                                                                                                      'origin_codes': 'e',
                                                                                                                                      'path': '300 '
                                                                                                                                              '33299 '
@@ -6770,9 +6770,9 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
                                                                                                                                      'weight': '0'}}}},
                                                                                             'route_distinguisher': '300:1'},
                                                                  'vpnv4 unicast RD 400:1': {'default_vrf': 'none',
-                                                                                            'prefix': {'46.2.2.0/24': {'index': {1: {'locprf': '100',
+                                                                                            'prefix': {'10.9.2.0/24': {'index': {1: {'locprf': '100',
                                                                                                                                      'metric': '2219',
-                                                                                                                                     'next_hop': '4.4.4.4',
+                                                                                                                                     'next_hop': '10.64.4.4',
                                                                                                                                      'origin_codes': 'e',
                                                                                                                                      'path': '400 '
                                                                                                                                              '33299 '
@@ -6783,7 +6783,7 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
                                                                                                                                      'weight': '0'},
                                                                                                                                  2: {'locprf': '100',
                                                                                                                                      'metric': '2219',
-                                                                                                                                     'next_hop': '4.4.4.4',
+                                                                                                                                     'next_hop': '10.64.4.4',
                                                                                                                                      'origin_codes': 'e',
                                                                                                                                      'path': '400 '
                                                                                                                                              '33299 '
@@ -6792,9 +6792,9 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
                                                                                                                                              '{27016}',
                                                                                                                                      'status_codes': '*i',
                                                                                                                                      'weight': '0'}}},
-                                                                                                       '46.2.3.0/24': {'index': {1: {'locprf': '100',
+                                                                                                       '10.9.3.0/24': {'index': {1: {'locprf': '100',
                                                                                                                                      'metric': '2219',
-                                                                                                                                     'next_hop': '4.4.4.4',
+                                                                                                                                     'next_hop': '10.64.4.4',
                                                                                                                                      'origin_codes': 'e',
                                                                                                                                      'path': '400 '
                                                                                                                                              '33299 '
@@ -6805,7 +6805,7 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
                                                                                                                                      'weight': '0'},
                                                                                                                                  2: {'locprf': '100',
                                                                                                                                      'metric': '2219',
-                                                                                                                                     'next_hop': '4.4.4.4',
+                                                                                                                                     'next_hop': '10.64.4.4',
                                                                                                                                      'origin_codes': 'e',
                                                                                                                                      'path': '400 '
                                                                                                                                              '33299 '
@@ -6826,7 +6826,7 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
                                                                                    'nsr_initial_initsync_version': '11',
                                                                                    'nsr_issu_sync_group_versions': '0/0',
                                                                                    'rd_version': 0,
-                                                                                   'router_identifier': '1.1.1.1',
+                                                                                   'router_identifier': '10.4.1.1',
                                                                                    'scan_interval': 60,
                                                                                    'table_id': '0x0',
                                                                                    'table_state': 'active'},
@@ -6853,7 +6853,7 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
                                                                                                                                           'weight': '0'}}},
                                                                                                        '646:11:11:1::/64': {'index': {1: {'locprf': '100',
                                                                                                                                           'metric': '2219',
-                                                                                                                                          'next_hop': '4.4.4.4',
+                                                                                                                                          'next_hop': '10.64.4.4',
                                                                                                                                           'origin_codes': 'e',
                                                                                                                                           'path': '300 '
                                                                                                                                                   '33299 '
@@ -6864,7 +6864,7 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
                                                                                                                                           'weight': '0'}}},
                                                                                                        '646:11:11:2::/64': {'index': {1: {'locprf': '100',
                                                                                                                                           'metric': '2219',
-                                                                                                                                          'next_hop': '4.4.4.4',
+                                                                                                                                          'next_hop': '10.64.4.4',
                                                                                                                                           'origin_codes': 'e',
                                                                                                                                           'path': '300 '
                                                                                                                                                   '33299 '
@@ -6875,7 +6875,7 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
                                                                                                                                           'weight': '0'}}},
                                                                                                        '646:11:11::/64': {'index': {1: {'locprf': '100',
                                                                                                                                         'metric': '2219',
-                                                                                                                                        'next_hop': '4.4.4.4',
+                                                                                                                                        'next_hop': '10.64.4.4',
                                                                                                                                         'origin_codes': 'e',
                                                                                                                                         'path': '300 '
                                                                                                                                                 '33299 '
@@ -6908,7 +6908,7 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
                                                                                                                                         'weight': '0'}}},
                                                                                                        '646:11:11:1::/64': {'index': {1: {'locprf': '100',
                                                                                                                                           'metric': '2219',
-                                                                                                                                          'next_hop': '4.4.4.4',
+                                                                                                                                          'next_hop': '10.64.4.4',
                                                                                                                                           'origin_codes': 'e',
                                                                                                                                           'path': '300 '
                                                                                                                                                   '33299 '
@@ -6919,7 +6919,7 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
                                                                                                                                           'weight': '0'}}},
                                                                                                        '646:11:11:2::/64': {'index': {1: {'locprf': '100',
                                                                                                                                           'metric': '2219',
-                                                                                                                                          'next_hop': '4.4.4.4',
+                                                                                                                                          'next_hop': '10.64.4.4',
                                                                                                                                           'origin_codes': 'e',
                                                                                                                                           'path': '300 '
                                                                                                                                                   '33299 '
@@ -6930,7 +6930,7 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
                                                                                                                                           'weight': '0'}}},
                                                                                                        '646:11:11::/64': {'index': {1: {'locprf': '100',
                                                                                                                                         'metric': '2219',
-                                                                                                                                        'next_hop': '4.4.4.4',
+                                                                                                                                        'next_hop': '10.64.4.4',
                                                                                                                                         'origin_codes': 'e',
                                                                                                                                         'path': '300 '
                                                                                                                                                 '33299 '
@@ -6943,7 +6943,7 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
                                                                  'vpnv6 unicast RD 300:1': {'default_vrf': 'none',
                                                                                             'prefix': {'646:11:11:1::/64': {'index': {1: {'locprf': '100',
                                                                                                                                           'metric': '2219',
-                                                                                                                                          'next_hop': '4.4.4.4',
+                                                                                                                                          'next_hop': '10.64.4.4',
                                                                                                                                           'origin_codes': 'e',
                                                                                                                                           'path': '300 '
                                                                                                                                                   '33299 '
@@ -6954,7 +6954,7 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
                                                                                                                                           'weight': '0'},
                                                                                                                                       2: {'locprf': '100',
                                                                                                                                           'metric': '2219',
-                                                                                                                                          'next_hop': '4.4.4.4',
+                                                                                                                                          'next_hop': '10.64.4.4',
                                                                                                                                           'origin_codes': 'e',
                                                                                                                                           'path': '300 '
                                                                                                                                                   '33299 '
@@ -6965,7 +6965,7 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
                                                                                                                                           'weight': '0'}}},
                                                                                                        '646:11:11::/64': {'index': {1: {'locprf': '100',
                                                                                                                                         'metric': '2219',
-                                                                                                                                        'next_hop': '4.4.4.4',
+                                                                                                                                        'next_hop': '10.64.4.4',
                                                                                                                                         'origin_codes': 'e',
                                                                                                                                         'path': '300 '
                                                                                                                                                 '33299 '
@@ -6976,7 +6976,7 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
                                                                                                                                         'weight': '0'},
                                                                                                                                     2: {'locprf': '100',
                                                                                                                                         'metric': '2219',
-                                                                                                                                        'next_hop': '4.4.4.4',
+                                                                                                                                        'next_hop': '10.64.4.4',
                                                                                                                                         'origin_codes': 'e',
                                                                                                                                         'path': '300 '
                                                                                                                                                 '33299 '
@@ -6989,7 +6989,7 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
                                                                  'vpnv6 unicast RD 400:1': {'default_vrf': 'none',
                                                                                             'prefix': {'646:22:22:1::/64': {'index': {1: {'locprf': '100',
                                                                                                                                           'metric': '2219',
-                                                                                                                                          'next_hop': '4.4.4.4',
+                                                                                                                                          'next_hop': '10.64.4.4',
                                                                                                                                           'origin_codes': 'e',
                                                                                                                                           'path': '400 '
                                                                                                                                                   '33299 '
@@ -7000,7 +7000,7 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
                                                                                                                                           'weight': '0'},
                                                                                                                                       2: {'locprf': '100',
                                                                                                                                           'metric': '2219',
-                                                                                                                                          'next_hop': '4.4.4.4',
+                                                                                                                                          'next_hop': '10.64.4.4',
                                                                                                                                           'origin_codes': 'e',
                                                                                                                                           'path': '400 '
                                                                                                                                                   '33299 '
@@ -7011,7 +7011,7 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
                                                                                                                                           'weight': '0'}}},
                                                                                                        '646:22:22::/64': {'index': {1: {'locprf': '100',
                                                                                                                                         'metric': '2219',
-                                                                                                                                        'next_hop': '4.4.4.4',
+                                                                                                                                        'next_hop': '10.64.4.4',
                                                                                                                                         'origin_codes': 'e',
                                                                                                                                         'path': '400 '
                                                                                                                                                 '33299 '
@@ -7022,7 +7022,7 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
                                                                                                                                         'weight': '0'},
                                                                                                                                     2: {'locprf': '100',
                                                                                                                                         'metric': '2219',
-                                                                                                                                        'next_hop': '4.4.4.4',
+                                                                                                                                        'next_hop': '10.64.4.4',
                                                                                                                                         'origin_codes': 'e',
                                                                                                                                         'path': '400 '
                                                                                                                                                 '33299 '
@@ -7044,7 +7044,7 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
         Address Family: VPNv4 Unicast
         -----------------------------
 
-        BGP router identifier 1.1.1.1, local AS number 100
+        BGP router identifier 10.4.1.1, local AS number 100
         BGP generic scan interval 60 secs
         Non-stop routing is enabled
         BGP table state: Active
@@ -7059,26 +7059,26 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
         Origin codes: i - IGP, e - EGP, ? - incomplete
            Network            Next Hop            Metric LocPrf Weight Path
         Route Distinguisher: 200:1 (default for vrf VRF1)
-        *> 15.1.1.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
-        *>i46.1.1.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *> 10.1.1.0/24        10.186.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *>i10.169.1.0/24        10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         Route Distinguisher: 200:2 (default for vrf VRF2)
-        *> 15.1.1.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
-        *>i46.1.5.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *> 10.1.1.0/24        10.186.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *>i10.169.5.0/24        10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         Route Distinguisher: 300:1
-        *>i46.1.1.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        * i                   4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i10.169.1.0/24        10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        * i                   10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         Route Distinguisher: 400:1
-        *>i46.2.2.0/24        4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
-        * i                   4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
-        *>i46.2.3.0/24        4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
-        * i                   4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        *>i10.9.2.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        * i                   10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        *>i10.9.3.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        * i                   10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
         
         Processed 40 prefixes, 50 paths
 
         Address Family: VPNv6 Unicast
         -----------------------------
 
-        BGP router identifier 1.1.1.1, local AS number 100
+        BGP router identifier 10.4.1.1, local AS number 100
         BGP generic scan interval 60 secs
         Non-stop routing is enabled
         BGP table state: Active
@@ -7097,27 +7097,27 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
                                                     2219             0 200 33299 51178 47751 {27016} e
         *> 615:11:11:4::/64   2001:db8:20:1:5::5
                                                     2219             0 200 33299 51178 47751 {27016} e
-        *>i646:11:11::/64     4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        *>i646:11:11:1::/64   4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        *>i646:11:11:2::/64   4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i646:11:11::/64     10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i646:11:11:1::/64   10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i646:11:11:2::/64   10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         Route Distinguisher: 200:2 (default for vrf VRF2)
         *> 615:11:11::/64     2001:db8:20:1:5::5
                                                     2219             0 200 33299 51178 47751 {27016} e
         *> 615:11:11:1::/64   2001:db8:20:1:5::5
                                                     2219             0 200 33299 51178 47751 {27016} e
-        *>i646:11:11::/64     4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        *>i646:11:11:1::/64   4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        *>i646:11:11:2::/64   4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i646:11:11::/64     10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i646:11:11:1::/64   10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i646:11:11:2::/64   10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         Route Distinguisher: 300:1
-        *>i646:11:11::/64     4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        * i                   4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        *>i646:11:11:1::/64   4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        * i                   4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i646:11:11::/64     10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        * i                   10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i646:11:11:1::/64   10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        * i                   10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         Route Distinguisher: 400:1
-        *>i646:22:22::/64     4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
-        * i                   4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
-        *>i646:22:22:1::/64   4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
-        * i                   4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        *>i646:22:22::/64     10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        * i                   10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        *>i646:22:22:1::/64   10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        * i                   10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
     
         Processed 40 prefixes, 50 paths
 
@@ -7155,14 +7155,14 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                 'nsr_initial_initsync_version': '11',
                                                                                 'nsr_issu_sync_group_versions': '0/0',
                                                                                 'rd_version': 43,
-                                                                                'router_identifier': '11.11.11.11',
+                                                                                'router_identifier': '10.229.11.11',
                                                                                 'table_id': '0xe0000010',
                                                                                 'table_state': 'active',
                                                                                 'vrf_id': '0x60000001',
                                                                                 'vrf_state': 'active'},
                                                               'vpnv4 unicast RD 200:1': {'default_vrf': 'vrf1',
-                                                                                         'prefix': {'15.1.1.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                  'next_hop': '20.1.5.5',
+                                                                                         'prefix': {'10.1.1.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                  'next_hop': '10.186.5.5',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '200 '
                                                                                                                                           '33299 '
@@ -7171,8 +7171,8 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                                                                           '{27016}',
                                                                                                                                   'status_codes': '*>',
                                                                                                                                   'weight': '0'}}},
-                                                                                                    '15.1.2.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                  'next_hop': '20.1.5.5',
+                                                                                                    '10.1.2.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                  'next_hop': '10.186.5.5',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '200 '
                                                                                                                                           '33299 '
@@ -7181,8 +7181,8 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                                                                           '{27016}',
                                                                                                                                   'status_codes': '*>',
                                                                                                                                   'weight': '0'}}},
-                                                                                                    '15.1.3.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                  'next_hop': '20.1.5.5',
+                                                                                                    '10.1.3.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                  'next_hop': '10.186.5.5',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '200 '
                                                                                                                                           '33299 '
@@ -7191,8 +7191,8 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                                                                           '{27016}',
                                                                                                                                   'status_codes': '*>',
                                                                                                                                   'weight': '0'}}},
-                                                                                                    '15.1.4.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                  'next_hop': '20.1.5.5',
+                                                                                                    '10.1.4.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                  'next_hop': '10.186.5.5',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '200 '
                                                                                                                                           '33299 '
@@ -7201,8 +7201,8 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                                                                           '{27016}',
                                                                                                                                   'status_codes': '*>',
                                                                                                                                   'weight': '0'}}},
-                                                                                                    '15.1.5.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                  'next_hop': '20.1.5.5',
+                                                                                                    '10.1.5.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                  'next_hop': '10.186.5.5',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '200 '
                                                                                                                                           '33299 '
@@ -7211,9 +7211,9 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                                                                           '{27016}',
                                                                                                                                   'status_codes': '*>',
                                                                                                                                   'weight': '0'}}},
-                                                                                                    '46.1.1.0/24': {'index': {1: {'locprf': '100',
+                                                                                                    '10.169.1.0/24': {'index': {1: {'locprf': '100',
                                                                                                                                   'metric': '2219',
-                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'next_hop': '10.64.4.4',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '300 '
                                                                                                                                           '33299 '
@@ -7222,9 +7222,9 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                                                                           '{27016}',
                                                                                                                                   'status_codes': '*>i',
                                                                                                                                   'weight': '0'}}},
-                                                                                                    '46.1.2.0/24': {'index': {1: {'locprf': '100',
+                                                                                                    '10.169.2.0/24': {'index': {1: {'locprf': '100',
                                                                                                                                   'metric': '2219',
-                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'next_hop': '10.64.4.4',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '300 '
                                                                                                                                           '33299 '
@@ -7233,9 +7233,9 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                                                                           '{27016}',
                                                                                                                                   'status_codes': '*>i',
                                                                                                                                   'weight': '0'}}},
-                                                                                                    '46.1.3.0/24': {'index': {1: {'locprf': '100',
+                                                                                                    '10.169.3.0/24': {'index': {1: {'locprf': '100',
                                                                                                                                   'metric': '2219',
-                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'next_hop': '10.64.4.4',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '300 '
                                                                                                                                           '33299 '
@@ -7244,9 +7244,9 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                                                                           '{27016}',
                                                                                                                                   'status_codes': '*>i',
                                                                                                                                   'weight': '0'}}},
-                                                                                                    '46.1.4.0/24': {'index': {1: {'locprf': '100',
+                                                                                                    '10.169.4.0/24': {'index': {1: {'locprf': '100',
                                                                                                                                   'metric': '2219',
-                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'next_hop': '10.64.4.4',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '300 '
                                                                                                                                           '33299 '
@@ -7255,9 +7255,9 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                                                                           '{27016}',
                                                                                                                                   'status_codes': '*>i',
                                                                                                                                   'weight': '0'}}},
-                                                                                                    '46.1.5.0/24': {'index': {1: {'locprf': '100',
+                                                                                                    '10.169.5.0/24': {'index': {1: {'locprf': '100',
                                                                                                                                   'metric': '2219',
-                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'next_hop': '10.64.4.4',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '300 '
                                                                                                                                           '33299 '
@@ -7266,9 +7266,9 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                                                                           '{27016}',
                                                                                                                                   'status_codes': '*>i',
                                                                                                                                   'weight': '0'}}},
-                                                                                                    '46.2.2.0/24': {'index': {1: {'locprf': '100',
+                                                                                                    '10.9.2.0/24': {'index': {1: {'locprf': '100',
                                                                                                                                   'metric': '2219',
-                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'next_hop': '10.64.4.4',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '400 '
                                                                                                                                           '33299 '
@@ -7277,9 +7277,9 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                                                                           '{27016}',
                                                                                                                                   'status_codes': '*>i',
                                                                                                                                   'weight': '0'}}},
-                                                                                                    '46.2.3.0/24': {'index': {1: {'locprf': '100',
+                                                                                                    '10.9.3.0/24': {'index': {1: {'locprf': '100',
                                                                                                                                   'metric': '2219',
-                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'next_hop': '10.64.4.4',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '400 '
                                                                                                                                           '33299 '
@@ -7288,9 +7288,9 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                                                                           '{27016}',
                                                                                                                                   'status_codes': '*>i',
                                                                                                                                   'weight': '0'}}},
-                                                                                                    '46.2.4.0/24': {'index': {1: {'locprf': '100',
+                                                                                                    '10.9.4.0/24': {'index': {1: {'locprf': '100',
                                                                                                                                   'metric': '2219',
-                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'next_hop': '10.64.4.4',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '400 '
                                                                                                                                           '33299 '
@@ -7299,9 +7299,9 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                                                                           '{27016}',
                                                                                                                                   'status_codes': '*>i',
                                                                                                                                   'weight': '0'}}},
-                                                                                                    '46.2.5.0/24': {'index': {1: {'locprf': '100',
+                                                                                                    '10.9.5.0/24': {'index': {1: {'locprf': '100',
                                                                                                                                   'metric': '2219',
-                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'next_hop': '10.64.4.4',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '400 '
                                                                                                                                           '33299 '
@@ -7310,9 +7310,9 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                                                                           '{27016}',
                                                                                                                                   'status_codes': '*>i',
                                                                                                                                   'weight': '0'}}},
-                                                                                                    '46.2.6.0/24': {'index': {1: {'locprf': '100',
+                                                                                                    '10.9.6.0/24': {'index': {1: {'locprf': '100',
                                                                                                                                   'metric': '2219',
-                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'next_hop': '10.64.4.4',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '400 '
                                                                                                                                           '33299 '
@@ -7332,14 +7332,14 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                 'nsr_initial_initsync_version': '11',
                                                                                 'nsr_issu_sync_group_versions': '0/0',
                                                                                 'rd_version': 43,
-                                                                                'router_identifier': '11.11.11.11',
+                                                                                'router_identifier': '10.229.11.11',
                                                                                 'table_id': '0xe0000011',
                                                                                 'table_state': 'active',
                                                                                 'vrf_id': '0x60000002',
                                                                                 'vrf_state': 'active'},
                                                               'vpnv4 unicast RD 200:2': {'default_vrf': 'vrf2',
-                                                                                         'prefix': {'15.1.1.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                  'next_hop': '20.1.5.5',
+                                                                                         'prefix': {'10.1.1.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                  'next_hop': '10.186.5.5',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '200 '
                                                                                                                                           '33299 '
@@ -7348,8 +7348,8 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                                                                           '{27016}',
                                                                                                                                   'status_codes': '*>',
                                                                                                                                   'weight': '0'}}},
-                                                                                                    '15.1.2.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                  'next_hop': '20.1.5.5',
+                                                                                                    '10.1.2.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                  'next_hop': '10.186.5.5',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '200 '
                                                                                                                                           '33299 '
@@ -7358,8 +7358,8 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                                                                           '{27016}',
                                                                                                                                   'status_codes': '*>',
                                                                                                                                   'weight': '0'}}},
-                                                                                                    '15.1.3.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                  'next_hop': '20.1.5.5',
+                                                                                                    '10.1.3.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                  'next_hop': '10.186.5.5',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '200 '
                                                                                                                                           '33299 '
@@ -7368,8 +7368,8 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                                                                           '{27016}',
                                                                                                                                   'status_codes': '*>',
                                                                                                                                   'weight': '0'}}},
-                                                                                                    '15.1.4.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                  'next_hop': '20.1.5.5',
+                                                                                                    '10.1.4.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                  'next_hop': '10.186.5.5',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '200 '
                                                                                                                                           '33299 '
@@ -7378,8 +7378,8 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                                                                           '{27016}',
                                                                                                                                   'status_codes': '*>',
                                                                                                                                   'weight': '0'}}},
-                                                                                                    '15.1.5.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                  'next_hop': '20.1.5.5',
+                                                                                                    '10.1.5.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                  'next_hop': '10.186.5.5',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '200 '
                                                                                                                                           '33299 '
@@ -7388,9 +7388,9 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                                                                           '{27016}',
                                                                                                                                   'status_codes': '*>',
                                                                                                                                   'weight': '0'}}},
-                                                                                                    '46.1.1.0/24': {'index': {1: {'locprf': '100',
+                                                                                                    '10.169.1.0/24': {'index': {1: {'locprf': '100',
                                                                                                                                   'metric': '2219',
-                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'next_hop': '10.64.4.4',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '300 '
                                                                                                                                           '33299 '
@@ -7399,9 +7399,9 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                                                                           '{27016}',
                                                                                                                                   'status_codes': '*>i',
                                                                                                                                   'weight': '0'}}},
-                                                                                                    '46.1.2.0/24': {'index': {1: {'locprf': '100',
+                                                                                                    '10.169.2.0/24': {'index': {1: {'locprf': '100',
                                                                                                                                   'metric': '2219',
-                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'next_hop': '10.64.4.4',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '300 '
                                                                                                                                           '33299 '
@@ -7410,9 +7410,9 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                                                                           '{27016}',
                                                                                                                                   'status_codes': '*>i',
                                                                                                                                   'weight': '0'}}},
-                                                                                                    '46.1.3.0/24': {'index': {1: {'locprf': '100',
+                                                                                                    '10.169.3.0/24': {'index': {1: {'locprf': '100',
                                                                                                                                   'metric': '2219',
-                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'next_hop': '10.64.4.4',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '300 '
                                                                                                                                           '33299 '
@@ -7421,9 +7421,9 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                                                                           '{27016}',
                                                                                                                                   'status_codes': '*>i',
                                                                                                                                   'weight': '0'}}},
-                                                                                                    '46.1.4.0/24': {'index': {1: {'locprf': '100',
+                                                                                                    '10.169.4.0/24': {'index': {1: {'locprf': '100',
                                                                                                                                   'metric': '2219',
-                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'next_hop': '10.64.4.4',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '300 '
                                                                                                                                           '33299 '
@@ -7432,9 +7432,9 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                                                                           '{27016}',
                                                                                                                                   'status_codes': '*>i',
                                                                                                                                   'weight': '0'}}},
-                                                                                                    '46.1.5.0/24': {'index': {1: {'locprf': '100',
+                                                                                                    '10.169.5.0/24': {'index': {1: {'locprf': '100',
                                                                                                                                   'metric': '2219',
-                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'next_hop': '10.64.4.4',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '300 '
                                                                                                                                           '33299 '
@@ -7443,9 +7443,9 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                                                                           '{27016}',
                                                                                                                                   'status_codes': '*>i',
                                                                                                                                   'weight': '0'}}},
-                                                                                                    '46.2.2.0/24': {'index': {1: {'locprf': '100',
+                                                                                                    '10.9.2.0/24': {'index': {1: {'locprf': '100',
                                                                                                                                   'metric': '2219',
-                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'next_hop': '10.64.4.4',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '400 '
                                                                                                                                           '33299 '
@@ -7454,9 +7454,9 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                                                                           '{27016}',
                                                                                                                                   'status_codes': '*>i',
                                                                                                                                   'weight': '0'}}},
-                                                                                                    '46.2.3.0/24': {'index': {1: {'locprf': '100',
+                                                                                                    '10.9.3.0/24': {'index': {1: {'locprf': '100',
                                                                                                                                   'metric': '2219',
-                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'next_hop': '10.64.4.4',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '400 '
                                                                                                                                           '33299 '
@@ -7465,9 +7465,9 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                                                                           '{27016}',
                                                                                                                                   'status_codes': '*>i',
                                                                                                                                   'weight': '0'}}},
-                                                                                                    '46.2.4.0/24': {'index': {1: {'locprf': '100',
+                                                                                                    '10.9.4.0/24': {'index': {1: {'locprf': '100',
                                                                                                                                   'metric': '2219',
-                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'next_hop': '10.64.4.4',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '400 '
                                                                                                                                           '33299 '
@@ -7476,9 +7476,9 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                                                                           '{27016}',
                                                                                                                                   'status_codes': '*>i',
                                                                                                                                   'weight': '0'}}},
-                                                                                                    '46.2.5.0/24': {'index': {1: {'locprf': '100',
+                                                                                                    '10.9.5.0/24': {'index': {1: {'locprf': '100',
                                                                                                                                   'metric': '2219',
-                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'next_hop': '10.64.4.4',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '400 '
                                                                                                                                           '33299 '
@@ -7487,9 +7487,9 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                                                                           '{27016}',
                                                                                                                                   'status_codes': '*>i',
                                                                                                                                   'weight': '0'}}},
-                                                                                                    '46.2.6.0/24': {'index': {1: {'locprf': '100',
+                                                                                                    '10.9.6.0/24': {'index': {1: {'locprf': '100',
                                                                                                                                   'metric': '2219',
-                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'next_hop': '10.64.4.4',
                                                                                                                                   'origin_codes': 'e',
                                                                                                                                   'path': '400 '
                                                                                                                                           '33299 '
@@ -7512,7 +7512,7 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
         BGP VRF VRF1, state: Active
         BGP Route Distinguisher: 200:1
         VRF ID: 0x60000001
-        BGP router identifier 11.11.11.11, local AS number 100
+        BGP router identifier 10.229.11.11, local AS number 100
         Non-stop routing is enabled
         BGP table state: Active
         Table ID: 0xe0000010   RD version: 43
@@ -7525,21 +7525,21 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
         Origin codes: i - IGP, e - EGP, ? - incomplete
            Network            Next Hop            Metric LocPrf Weight Path
         Route Distinguisher: 200:1 (default for vrf VRF1)
-        *> 15.1.1.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
-        *> 15.1.2.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
-        *> 15.1.3.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
-        *> 15.1.4.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
-        *> 15.1.5.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
-        *>i46.1.1.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        *>i46.1.2.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        *>i46.1.3.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        *>i46.1.4.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        *>i46.1.5.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        *>i46.2.2.0/24        4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
-        *>i46.2.3.0/24        4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
-        *>i46.2.4.0/24        4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
-        *>i46.2.5.0/24        4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
-        *>i46.2.6.0/24        4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        *> 10.1.1.0/24        10.186.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *> 10.1.2.0/24        10.186.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *> 10.1.3.0/24        10.186.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *> 10.1.4.0/24        10.186.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *> 10.1.5.0/24        10.186.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *>i10.169.1.0/24        10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i10.169.2.0/24        10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i10.169.3.0/24        10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i10.169.4.0/24        10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i10.169.5.0/24        10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i10.9.2.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        *>i10.9.3.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        *>i10.9.4.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        *>i10.9.5.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        *>i10.9.6.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
 
         Processed 15 prefixes, 15 paths
 
@@ -7548,7 +7548,7 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
         BGP VRF VRF2, state: Active
         BGP Route Distinguisher: 200:2
         VRF ID: 0x60000002
-        BGP router identifier 11.11.11.11, local AS number 100
+        BGP router identifier 10.229.11.11, local AS number 100
         Non-stop routing is enabled
         BGP table state: Active
         Table ID: 0xe0000011   RD version: 43
@@ -7561,21 +7561,21 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
         Origin codes: i - IGP, e - EGP, ? - incomplete
            Network            Next Hop            Metric LocPrf Weight Path
         Route Distinguisher: 200:2 (default for vrf VRF2)
-        *> 15.1.1.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
-        *> 15.1.2.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
-        *> 15.1.3.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
-        *> 15.1.4.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
-        *> 15.1.5.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
-        *>i46.1.1.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        *>i46.1.2.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        *>i46.1.3.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        *>i46.1.4.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        *>i46.1.5.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        *>i46.2.2.0/24        4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
-        *>i46.2.3.0/24        4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
-        *>i46.2.4.0/24        4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
-        *>i46.2.5.0/24        4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
-        *>i46.2.6.0/24        4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        *> 10.1.1.0/24        10.186.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *> 10.1.2.0/24        10.186.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *> 10.1.3.0/24        10.186.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *> 10.1.4.0/24        10.186.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *> 10.1.5.0/24        10.186.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *>i10.169.1.0/24        10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i10.169.2.0/24        10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i10.169.3.0/24        10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i10.169.4.0/24        10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i10.169.5.0/24        10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i10.9.2.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        *>i10.9.3.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        *>i10.9.4.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        *>i10.9.5.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        *>i10.9.6.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
 
         Processed 15 prefixes, 15 paths
         '''}

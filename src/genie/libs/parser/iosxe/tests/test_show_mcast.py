@@ -35,14 +35,14 @@ class test_show_ip_mroute(unittest.TestCase):
                                      "source_address": {
                                           "*": {
                                                "expire": "stopped",
-                                               "rp": "1.1.1.1",
+                                               "rp": "10.4.1.1",
                                                "flags": "SPF",
                                                'msdp_learned': False,
                                                'rp_bit': False,
                                                "uptime": "00:00:03",
                                                "rpf_nbr": "0.0.0.0",
                                           },
-                                          "1.1.1.1": {
+                                          "10.4.1.1": {
                                                "expire": "00:02:57",
                                                "flags": "PFT",
                                                'msdp_learned': False,
@@ -88,7 +88,7 @@ class test_show_ip_mroute(unittest.TestCase):
                                                "flags": "SCL",
                                                'msdp_learned': False,
                                                'rp_bit': False,
-                                               "rp": "2.2.2.2",
+                                               "rp": "10.16.2.2",
                                                "uptime": "2d09h",
                                                "rpf_nbr": "0.0.0.0",
                                           }
@@ -131,11 +131,11 @@ class test_show_ip_mroute(unittest.TestCase):
          Timers: Uptime/Expires
          Interface state: Interface, Next-Hop or VCD, State/Mode
 
-        (*, 239.1.1.1), 00:00:03/stopped, RP 1.1.1.1, flags: SPF
+        (*, 239.1.1.1), 00:00:03/stopped, RP 10.4.1.1, flags: SPF
           Incoming interface: Null, RPF nbr 0.0.0.0
           Outgoing interface list: Null
 
-        (1.1.1.1, 239.1.1.1), 00:00:03/00:02:57, flags: PFT
+        (10.4.1.1, 239.1.1.1), 00:00:03/00:02:57, flags: PFT
           Incoming interface: Loopback0, RPF nbr 0.0.0.0, Registering
           Outgoing interface list: Null
 
@@ -143,7 +143,7 @@ class test_show_ip_mroute(unittest.TestCase):
           Incoming interface: GigabitEthernet2, RPF nbr 0.0.0.0, Registering
           Outgoing interface list: Null
 
-        (*, 224.0.1.40), 2d09h/00:02:56, RP 2.2.2.2, flags: SCL
+        (*, 224.0.1.40), 2d09h/00:02:56, RP 10.16.2.2, flags: SCL
           Incoming interface: Null, RPF nbr 0.0.0.0
           Outgoing interface list:
             Loopback0, Forward/Sparse, 2d09h/00:02:56
@@ -162,7 +162,7 @@ class test_show_ip_mroute(unittest.TestCase):
                            "multicast_group": {
                                 "239.1.1.1": {
                                      "source_address": {
-                                          "11.11.11.11": {
+                                          "10.229.11.11": {
                                                "expire": "00:02:55",
                                                "uptime": "00:00:04",
                                                "flags": "PFT",
@@ -183,7 +183,7 @@ class test_show_ip_mroute(unittest.TestCase):
                                                "flags": "SPF",
                                                'msdp_learned': False,
                                                'rp_bit': False,
-                                               "rp": "11.11.11.11",
+                                               "rp": "10.229.11.11",
                                                "rpf_nbr": "0.0.0.0",
                                           }
                                      }
@@ -204,7 +204,7 @@ class test_show_ip_mroute(unittest.TestCase):
                                                "flags": "SJCL",
                                                'msdp_learned': False,
                                                'rp_bit': False,
-                                               "rp": "11.11.11.11"}}}}}}}}}
+                                               "rp": "10.229.11.11"}}}}}}}}}
 
     golden_output2 = {'execute.return_value': '''\
         IP Multicast Routing Table
@@ -224,15 +224,15 @@ class test_show_ip_mroute(unittest.TestCase):
          Timers: Uptime/Expires
          Interface state: Interface, Next-Hop or VCD, State/Mode
 
-        (*, 239.1.1.1), 00:00:04/stopped, RP 11.11.11.11, flags: SPF
+        (*, 239.1.1.1), 00:00:04/stopped, RP 10.229.11.11, flags: SPF
           Incoming interface: Null, RPF nbr 0.0.0.0
           Outgoing interface list: Null
 
-        (11.11.11.11, 239.1.1.1), 00:00:04/00:02:55, flags: PFT
+        (10.229.11.11, 239.1.1.1), 00:00:04/00:02:55, flags: PFT
           Incoming interface: Loopback1, RPF nbr 0.0.0.0, Registering
           Outgoing interface list: Null
 
-        (*, 224.0.1.40), 00:08:58/00:02:52, RP 11.11.11.11, flags: SJCL
+        (*, 224.0.1.40), 00:08:58/00:02:52, RP 10.229.11.11, flags: SJCL
           Incoming interface: Null, RPF nbr 0.0.0.0
           Outgoing interface list:
             Loopback1, Forward/Sparse, 00:08:58/00:02:52
@@ -465,7 +465,7 @@ class test_show_ip_mroute_static(unittest.TestCase):
         "vrf": {
             "VRF1": {
                  "mroute": {
-                      "77.77.77.77/32": {
+                      "10.1.77.77/32": {
                            "path": {
                                 "10.12.12.13 1": {
                                      "neighbor_address": "10.12.12.13",
@@ -473,7 +473,7 @@ class test_show_ip_mroute_static(unittest.TestCase):
                                 }}}}}}}
 
     golden_output2 = {'execute.return_value': '''\
-        Mroute: 77.77.77.77/32, RPF neighbor: 10.12.12.13, distance: 1
+        Mroute: 10.1.77.77/32, RPF neighbor: 10.12.12.13, distance: 1
     '''}
 
     def test_empty(self):

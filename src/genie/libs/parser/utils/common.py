@@ -103,6 +103,7 @@ def _find_command(command, data, device):
             new_ratio = SM(None, key, command).ratio()
             if new_ratio > ratio:
                 matches = (ret_data, match.groupdict())
+                ratio = new_ratio
     return matches
         
     raise SyntaxError('Could not find a parser match')
@@ -160,6 +161,7 @@ class Common():
                    'AT': 'ATM',
                    'Et': 'Ethernet',
                    'BD': 'BridgeDomain',
+                   'Se': 'Serial',
                    }
         m = re.search('([a-zA-Z]+)', intf) 
         m1 = re.search('([\d\/\.]+)', intf)

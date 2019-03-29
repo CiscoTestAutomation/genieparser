@@ -32,9 +32,9 @@ Codes: M - Manual static, A - AAA download, N - IP NAT, D - DHCP,
    IR - ICMP Redirect
 Codes in []: A - active, N - non-active, B - BFD-tracked, D - Not Tracked, P - permanent
 Static local RIB for default
-M  10.1.1.0/24 [1/0] via GigabitEthernet2.2 4.0.0.2 [A]
+M  10.1.1.0/24 [1/0] via GigabitEthernet2.2 10.16.0.2 [A]
 M              [3/0] via GigabitEthernet1 192.168.1.1 [N]
-M  20.1.1.0/24 [3/0] via GigabitEthernet1 192.168.1.1 [A]
+M  10.186.1.0/24 [3/0] via GigabitEthernet1 192.168.1.1 [A]
 
     '''
 }
@@ -51,7 +51,7 @@ M  20.1.1.0/24 [3/0] via GigabitEthernet1 192.168.1.1 [A]
                                          1: {
                                              'index': 1,
                                              'active': True,
-                                             'next_hop': '4.0.0.2',
+                                             'next_hop': '10.16.0.2',
                                              'outgoing_interface': 'GigabitEthernet2.2',
                                              'preference': 1,
                                          },
@@ -65,8 +65,8 @@ M  20.1.1.0/24 [3/0] via GigabitEthernet1 192.168.1.1 [A]
                                     },
                                 },
                             },
-                            '20.1.1.0/24': {
-                                'route': '20.1.1.0/24',
+                            '10.186.1.0/24': {
+                                'route': '10.186.1.0/24',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -100,10 +100,10 @@ M  20.1.1.0/24 [3/0] via GigabitEthernet1 192.168.1.1 [A]
        IR - ICMP Redirect
     Codes in []: A - active, N - non-active, B - BFD-tracked, D - Not Tracked, P - permanent
     Static local RIB for VRF1
-    M  2.2.2.2/32 [1/0] via GigabitEthernet0/0 10.1.2.2 [A]
-    M             [2/0] via GigabitEthernet0/1 20.1.2.2 [N]
-    M             [3/0] via 20.1.2.2 [N]
-    M  3.3.3.3/32 [1/0] via GigabitEthernet0/2 [A]
+    M  10.16.2.2/32 [1/0] via GigabitEthernet0/0 10.1.2.2 [A]
+    M             [2/0] via GigabitEthernet0/1 10.186.2.2 [N]
+    M             [3/0] via 10.186.2.2 [N]
+    M  10.36.3.3/32 [1/0] via GigabitEthernet0/2 [A]
     M             [1/0] via GigabitEthernet0/3 [A]
     '''
     }
@@ -113,8 +113,8 @@ M  20.1.1.0/24 [3/0] via GigabitEthernet1 192.168.1.1 [A]
                 'address_family': {
                     'ipv4': {
                         'routes': {
-                            '2.2.2.2/32': {
-                                'route': '2.2.2.2/32',
+                            '10.16.2.2/32': {
+                                'route': '10.16.2.2/32',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -127,21 +127,21 @@ M  20.1.1.0/24 [3/0] via GigabitEthernet1 192.168.1.1 [A]
                                         2: {
                                             'index': 2,
                                             'active': False,
-                                            'next_hop': '20.1.2.2',
+                                            'next_hop': '10.186.2.2',
                                             'outgoing_interface': 'GigabitEthernet0/1',
                                             'preference': 2,
                                         },
                                         3: {
                                             'index': 3,
                                             'active': False,
-                                            'next_hop': '20.1.2.2',
+                                            'next_hop': '10.186.2.2',
                                             'preference': 3,
                                         },
                                     },
                                 },
                             },
-                            '3.3.3.3/32': {
-                                'route': '3.3.3.3/32',
+                            '10.36.3.3/32': {
+                                'route': '10.36.3.3/32',
                                 'next_hop': {
                                     'outgoing_interface': {
                                         'GigabitEthernet0/2': {
