@@ -83,7 +83,7 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             out = output
 
         # initial return dictionary
-        ldp_dict = {}
+        result_dict = {}
         ldp_feature_flag = False
         ldp_feature_list = []
 
@@ -123,7 +123,7 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             # LDP Feature Set Manager: State Initialized
             m = p1.match(line)
             if m:
-                ldp_feature_dict = ldp_dict.setdefault('ldp_featureset_manager', {}).setdefault('State Initialized', {})
+                ldp_feature_dict = result_dict.setdefault('ldp_featureset_manager', {}).setdefault('State Initialized', {})
                 continue
 
             #  LDP features:
@@ -145,7 +145,7 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             if m:
                 group = m.groupdict()
                 ldp_feature_flag = False
-                ldp_dict.update({'version': int(group['version'])})
+                result_dict.update({'version': int(group['version'])})
                 continue
 
             # Session hold time: 180 sec; keep alive interval: 60 sec
@@ -153,8 +153,8 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             if m:
                 group = m.groupdict()
                 ldp_feature_flag = False
-                ldp_dict.update({'session_hold_time': int(group['session_holdtime'])})
-                ldp_dict.update({'keep_alive_interval': int(group['keepalive_interval'])})
+                result_dict.update({'session_hold_time': int(group['session_holdtime'])})
+                result_dict.update({'keep_alive_interval': int(group['keepalive_interval'])})
                 continue
 
             # Discovery hello: holdtime: 15 sec; interval: 5 sec
@@ -162,7 +162,7 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             if m:
                 group = m.groupdict()
                 ldp_feature_flag = False
-                discovery_hello = ldp_dict.setdefault('discovery_hello', {})
+                discovery_hello = result_dict.setdefault('discovery_hello', {})
                 discovery_hello.update({'holdtime': int(group['holdtime'])})
                 discovery_hello.update({'interval': int(group['interval'])})
                 continue
@@ -172,7 +172,7 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             if m:
                 group = m.groupdict()
                 ldp_feature_flag = False
-                discovery_targeted_hello = ldp_dict.setdefault('discovery_targeted_hello', {})
+                discovery_targeted_hello = result_dict.setdefault('discovery_targeted_hello', {})
                 discovery_targeted_hello.update({'holdtime': int(group['targeted_holdtime'])})
                 discovery_targeted_hello.update({'interval': int(group['targeted_interval'])})
                 continue
@@ -182,14 +182,14 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             if m:
                 group = m.groupdict()
                 ldp_feature_flag = False
-                ldp_dict.update({'downstream_on_demand_max_hop_count': int(group['maxhop_count'])})
+                result_dict.update({'downstream_on_demand_max_hop_count': int(group['maxhop_count'])})
                 continue
 
             # LDP for targeted sessions
             m = p8.match(line)
             if m:
                 ldp_feature_flag = False
-                ldp_dict.update({'ldp_for_targeted_sessions': True})
+                result_dict.update({'ldp_for_targeted_sessions': True})
                 continue
 
             # LDP initial/maximum backoff: 15/120 sec
@@ -197,7 +197,7 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             if m:
                 group = m.groupdict()
                 ldp_feature_flag = False
-                backoff_dict = ldp_dict.setdefault('ldp_backoff', {})
+                backoff_dict = result_dict.setdefault('ldp_backoff', {})
                 backoff_dict.update({'initial': int(group['initial'])})
                 backoff_dict.update({'maximum': int(group['maximum'])})
                 continue
@@ -207,7 +207,7 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             if m:
                 group = m.groupdict()
                 ldp_feature_flag = False
-                ldp_dict.update({'ldp_loop_detection': group['loop_detection']})
+                result_dict.update({'ldp_loop_detection': group['loop_detection']})
                 continue
 
             # LDP NSR: Disabled
@@ -215,10 +215,10 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             if m:
                 group = m.groupdict()
                 ldp_feature_flag = False
-                ldp_dict.update({'ldp_nsr': group['nsr'].lower()})
+                result_dict.update({'ldp_nsr': group['nsr'].lower()})
                 continue
 
-        return ldp_dict
+        return result_dict
 
 
 class ShowMplsLdpNsrStatisticsSchema(MetaParser):
@@ -930,7 +930,7 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
         # lib entry: 10.186.1.0/24, rev 1028
         # lib entry: 10.120.202.64/32, rev 12, chkpt: none
         # tib entry: 10.0.0.0/8, rev 4
-        # ios: 10.16.16.16/32, rev 775
+        # 10.16.16.16/32, rev 775
         p1 = re.compile(r'^([\w]+ +entry: +)?(?P<lib_entry>[\d\.\/]+), +rev +(?P<rev>\d+)(, +chkpt: +(?P<checkpoint>\S+))?$')
 
         #  local binding:  label: 2536
