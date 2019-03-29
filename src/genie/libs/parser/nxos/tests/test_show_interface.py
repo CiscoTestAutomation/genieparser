@@ -343,7 +343,7 @@ class test_show_interface(unittest.TestCase):
             'ethertype': '0x8100',
             'flow_control': {'receive': False, 'send': False},
             'interface_reset': 0,
-            'ipv4': {'111.122.1.112/16': {'ip': '111.122.1.112',
+            'ipv4': {'10.229.1.112/16': {'ip': '10.229.1.112',
                                          'prefix_length': '16'}},
             'last_link_flapped': '13:23:37',
             'link_state': 'DCX-No ACK in 100 PDUs',
@@ -493,7 +493,7 @@ class test_show_interface(unittest.TestCase):
 
           Hardware: 1000/10000 Ethernet, address: 002a.6ab4.90bc (bia 002a.6ab4.9068)
           Description: Connection to pe1
-          Internet Address is 111.122.1.112/16
+          Internet Address is 10.229.1.112/16
           MTU 1500 bytes,  BW 10000000 Kbit, DLY 10 usec
           reliability 255/255, txload 1/255, rxload 1/255
           Encapsulation ARPA, medium is broadcast
@@ -871,7 +871,7 @@ class test_show_ip_interface_vrf_all(unittest.TestCase):
           loopback0, Interface status: protocol-up/link-up/admin-up, iod: 180,
           Unnumbered interfaces of loopback0: first iod 46
           Ethernet2/11: 
-            IP address: 4.4.4.4, IP subnet: 4.4.4.0/24
+            IP address: 10.64.4.4, IP subnet: 10.64.4.0/24
             IP broadcast address: 255.255.255.255
             IP multicast groups locally joined: none
             IP MTU: 1500 bytes (using link MTU)
@@ -933,7 +933,7 @@ class test_show_ip_interface_vrf_all(unittest.TestCase):
           Ethernet2/10.12, Interface status: protocol-down/link-down/admin-down, iod: 184,
           Unnumbered interfaces of Ethernet2/10.12: first iod 47
           Ethernet2/12: 
-            IP address: 12.12.12.12, IP subnet: 12.12.12.0/24
+            IP address: 10.66.12.12, IP subnet: 10.66.12.0/24
             IP broadcast address: 255.255.255.255
             IP multicast groups locally joined: none
             IP MTU: 1500 bytes (using link MTU)
@@ -1071,12 +1071,12 @@ class test_show_ip_interface_vrf_all(unittest.TestCase):
                     "labeled_bytes_received": 0,
                     "unicast_bytes_originated": 0
                },
-               "4.4.4.4/24": {
-                    "ip": "4.4.4.4",
+               "10.64.4.4/24": {
+                    "ip": "10.64.4.4",
                     "prefix_length": "24",
                     "broadcast_address": "255.255.255.255",
                     "secondary": False,
-                    "ip_subnet": "4.4.4.0"
+                    "ip_subnet": "10.64.4.0"
                },
                "unnumbered": {
                     "interface_ref": "loopback0"
@@ -1146,12 +1146,12 @@ class test_show_ip_interface_vrf_all(unittest.TestCase):
                     "labeled_bytes_received": 0,
                     "unicast_bytes_originated": 0
                },
-               "4.4.4.4/24": {
+               "10.64.4.4/24": {
                     "route_preference": "0",
                     "prefix_length": "24",
                     "broadcast_address": "255.255.255.255",
-                    "ip_subnet": "4.4.4.0",
-                    "ip": "4.4.4.4",
+                    "ip_subnet": "10.64.4.0",
+                    "ip": "10.64.4.4",
                     "secondary": False,
                     "route_tag": "0"
                }
@@ -1298,12 +1298,12 @@ class test_show_ip_interface_vrf_all(unittest.TestCase):
                     "labeled_bytes_received": 0,
                     "unicast_bytes_originated": 0
                },
-               "12.12.12.12/24": {
+               "10.66.12.12/24": {
                     "route_preference": "0",
                     "prefix_length": "24",
                     "broadcast_address": "255.255.255.255",
-                    "ip_subnet": "12.12.12.0",
-                    "ip": "12.12.12.12",
+                    "ip_subnet": "10.66.12.0",
+                    "ip": "10.66.12.12",
                     "secondary": False,
                     "route_tag": "0"
                }
@@ -1372,12 +1372,12 @@ class test_show_ip_interface_vrf_all(unittest.TestCase):
                     "labeled_bytes_received": 0,
                     "unicast_bytes_originated": 0
                },
-               "12.12.12.12/24": {
-                    "ip": "12.12.12.12",
+               "10.66.12.12/24": {
+                    "ip": "10.66.12.12",
                     "prefix_length": "24",
                     "broadcast_address": "255.255.255.255",
                     "secondary": False,
-                    "ip_subnet": "12.12.12.0"
+                    "ip_subnet": "10.66.12.0"
                },
                "unnumbered": {
                     "interface_ref": "Ethernet2/10.12"
@@ -1406,7 +1406,7 @@ class test_show_ip_interface_vrf_all(unittest.TestCase):
       loopback0, Interface status: protocol-up/link-up/admin-up, iod: 53,
       Unnumbered interfaces of loopback0: first iod 61
       mti18: tunnel-te11: tunnel-te12: 
-        IP address: 200.0.2.1, IP subnet: 200.0.2.1/32 route-preference: 0, tag: 0 
+        IP address: 192.168.4.1, IP subnet: 192.168.4.1/32 route-preference: 0, tag: 0 
         IP broadcast address: 255.255.255.255
         IP multicast groups locally joined: 
             224.0.1.40  224.0.1.39  224.0.0.13  224.0.0.2  224.0.0.1  
@@ -1595,13 +1595,13 @@ class test_show_ip_interface_vrf_all(unittest.TestCase):
             "icmp_redirects": "enabled",
             "int_stat_last_reset": "never",
             "ipv4": {
-                 "200.0.2.1/32": {
+                 "192.168.4.1/32": {
                       "route_preference": "0",
                       "broadcast_address": "255.255.255.255",
                       "route_tag": "0",
-                      "ip": "200.0.2.1",
+                      "ip": "192.168.4.1",
                       "prefix_length": "32",
-                      "ip_subnet": "200.0.2.1"
+                      "ip_subnet": "192.168.4.1"
                  },
                  "counters": {
                       "multicast_packets_forwarded": 0,
@@ -1747,13 +1747,13 @@ class test_show_ip_interface_vrf_all(unittest.TestCase):
             "icmp_redirects": "enabled",
             "int_stat_last_reset": "never",
             "ipv4": {
-                 "200.0.2.1/32": {
+                 "192.168.4.1/32": {
                       "route_preference": "0",
                       "broadcast_address": "255.255.255.255",
                       "route_tag": "0",
-                      "ip": "200.0.2.1",
+                      "ip": "192.168.4.1",
                       "prefix_length": "32",
-                      "ip_subnet": "200.0.2.1"
+                      "ip_subnet": "192.168.4.1"
                  },
                  "counters": {
                       "multicast_packets_forwarded": 0,
@@ -1823,13 +1823,13 @@ class test_show_ip_interface_vrf_all(unittest.TestCase):
             "icmp_redirects": "enabled",
             "int_stat_last_reset": "never",
             "ipv4": {
-                 "200.0.2.1/32": {
+                 "192.168.4.1/32": {
                       "route_preference": "0",
                       "broadcast_address": "255.255.255.255",
                       "route_tag": "0",
-                      "ip": "200.0.2.1",
+                      "ip": "192.168.4.1",
                       "prefix_length": "32",
-                      "ip_subnet": "200.0.2.1"
+                      "ip_subnet": "192.168.4.1"
                  },
                  "counters": {
                       "multicast_packets_forwarded": 0,
@@ -1974,13 +1974,13 @@ class test_show_ip_interface_vrf_all(unittest.TestCase):
             "icmp_redirects": "enabled",
             "int_stat_last_reset": "never",
             "ipv4": {
-                 "200.0.2.1/32": {
+                 "192.168.4.1/32": {
                       "route_preference": "0",
                       "broadcast_address": "255.255.255.255",
                       "route_tag": "0",
-                      "ip": "200.0.2.1",
+                      "ip": "192.168.4.1",
                       "prefix_length": "32",
-                      "ip_subnet": "200.0.2.1"
+                      "ip_subnet": "192.168.4.1"
                  },
                  "counters": {
                       "multicast_packets_forwarded": 0,
@@ -2664,89 +2664,89 @@ class test_show_ip_interface_brief(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {'interface': 
                                 {'Eth5/48.106': 
-                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '111.0.6.1'}, 
+                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.6.1'}, 
                                  'Lo3': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '200.3.2.1'}, 
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.205.1'}, 
                                  'Po1.102': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '201.2.12.2'}, 
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.70.2'}, 
                                  'Lo11': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '200.11.0.1'}, 
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.151.1'}, 
                                  'Vlan23': 
                                     {'vlan_id': 
                                         {'23':
-                                            {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '201.52.23.1'}}}, 
+                                            {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.186.1'}}}, 
                                  'Eth5/48.101': 
-                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '111.0.1.1'}, 
+                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.1.1'}, 
                                  'Eth5/48.102': 
-                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '111.0.2.1'}, 
+                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.2.1'}, 
                                  'Eth5/48.105': 
-                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '111.0.5.1'}, 
+                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.5.1'}, 
                                  'Lo2': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '200.2.2.1'}, 
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.51.1'}, 
                                  'Lo1': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '200.1.2.1'}, 
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.154.1'}, 
                                  'Eth6/22': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '201.51.23.1'}, 
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.145.1'}, 
                                  'Po1.101': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '201.1.12.2'}, 
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.151.2'}, 
                                  'Lo10': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '200.10.2.1'}, 
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.64.1'}, 
                                  'Po1.103': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '201.3.12.2'}, 
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.246.2'}, 
                                  'Eth5/48.100': 
-                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '111.0.0.1'}, 
+                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.0.1'}, 
                                  'Po2.107': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '201.7.23.1'}, 
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.66.1'}, 
                                  'Eth5/48.103': 
-                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '111.0.3.1'}, 
+                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.3.1'}, 
                                  'tunnel-te12': 
                                     {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': 'unnumbered(loopback0)'}, 
                                  'Eth5/48.110': 
-                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '111.0.10.1'}, 
+                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.10.1'}, 
                                  'Po2.103': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '201.3.23.1'}, 
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.19.1'}, 
                                  'Lo0': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '200.0.2.1'}, 
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.4.1'}, 
                                  'Po2.101': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '201.1.23.1'}, 
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.135.1'}, 
                                  'Po2.100': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '201.0.23.1'}, 
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.196.1'}, 
                                  'tunnel-te11': 
                                     {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': 'unnumbered(loopback0)'}, 
                                  'Po2.102': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '201.2.23.1'}, 
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.76.1'}, 
                                  'Eth5/48.104': 
-                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '111.0.4.1'}
+                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.4.1'}
                                 }
                             }
 
     golden_output = {'execute.return_value': '''
  IP Interface Status for VRF "default"(1)
  Interface            IP Address      Interface Status
- Vlan23               201.52.23.1     protocol-up/link-up/admin-up       
- Lo0                  200.0.2.1       protocol-up/link-up/admin-up       
- Lo1                  200.1.2.1       protocol-up/link-up/admin-up       
- Lo2                  200.2.2.1       protocol-up/link-up/admin-up       
- Lo3                  200.3.2.1       protocol-up/link-up/admin-up       
- Lo10                 200.10.2.1      protocol-up/link-up/admin-up       
- Lo11                 200.11.0.1      protocol-up/link-up/admin-up       
- Po2.100              201.0.23.1      protocol-up/link-up/admin-up       
- Po1.101              201.1.12.2      protocol-up/link-up/admin-up       
- Po2.101              201.1.23.1      protocol-up/link-up/admin-up       
- Po1.102              201.2.12.2      protocol-up/link-up/admin-up       
- Po2.102              201.2.23.1      protocol-up/link-up/admin-up       
- Po1.103              201.3.12.2      protocol-up/link-up/admin-up       
- Po2.103              201.3.23.1      protocol-up/link-up/admin-up       
- Po2.107              201.7.23.1      protocol-up/link-up/admin-up       
- Eth5/48.100          111.0.0.1       protocol-down/link-down/admin-up   
- Eth5/48.101          111.0.1.1       protocol-down/link-down/admin-up   
- Eth5/48.102          111.0.2.1       protocol-down/link-down/admin-up   
- Eth5/48.103          111.0.3.1       protocol-down/link-down/admin-up   
- Eth5/48.104          111.0.4.1       protocol-down/link-down/admin-up   
- Eth5/48.105          111.0.5.1       protocol-down/link-down/admin-up   
- Eth5/48.106          111.0.6.1       protocol-down/link-down/admin-up   
- Eth5/48.110          111.0.10.1      protocol-down/link-down/admin-up   
- Eth6/22              201.51.23.1     protocol-up/link-up/admin-up       
+ Vlan23               192.168.186.1     protocol-up/link-up/admin-up       
+ Lo0                  192.168.4.1       protocol-up/link-up/admin-up       
+ Lo1                  192.168.154.1       protocol-up/link-up/admin-up       
+ Lo2                  192.168.51.1       protocol-up/link-up/admin-up       
+ Lo3                  192.168.205.1       protocol-up/link-up/admin-up       
+ Lo10                 192.168.64.1      protocol-up/link-up/admin-up       
+ Lo11                 192.168.151.1      protocol-up/link-up/admin-up       
+ Po2.100              192.168.196.1      protocol-up/link-up/admin-up       
+ Po1.101              192.168.151.2      protocol-up/link-up/admin-up       
+ Po2.101              192.168.135.1      protocol-up/link-up/admin-up       
+ Po1.102              192.168.70.2      protocol-up/link-up/admin-up       
+ Po2.102              192.168.76.1      protocol-up/link-up/admin-up       
+ Po1.103              192.168.246.2      protocol-up/link-up/admin-up       
+ Po2.103              192.168.19.1      protocol-up/link-up/admin-up       
+ Po2.107              192.168.66.1      protocol-up/link-up/admin-up       
+ Eth5/48.100          10.81.0.1       protocol-down/link-down/admin-up   
+ Eth5/48.101          10.81.1.1       protocol-down/link-down/admin-up   
+ Eth5/48.102          10.81.2.1       protocol-down/link-down/admin-up   
+ Eth5/48.103          10.81.3.1       protocol-down/link-down/admin-up   
+ Eth5/48.104          10.81.4.1       protocol-down/link-down/admin-up   
+ Eth5/48.105          10.81.5.1       protocol-down/link-down/admin-up   
+ Eth5/48.106          10.81.6.1       protocol-down/link-down/admin-up   
+ Eth5/48.110          10.81.10.1      protocol-down/link-down/admin-up   
+ Eth6/22              192.168.145.1     protocol-up/link-up/admin-up       
  tunnel-te11          unnumbered      protocol-up/link-up/admin-up       
                       (loopback0)
  tunnel-te12          unnumbered      protocol-up/link-up/admin-up       
@@ -2774,14 +2774,14 @@ class test_show_ip_interface_brief_Pipe_Vlan(unittest.TestCase):
                                 {'Vlan98': 
                                     {'vlan_id': 
                                         {'98': 
-                                            {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '201.0.12.1'}
+                                            {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '192.168.234.1'}
                                         }
                                     }
                                 }
                             }
 
     golden_output = {'execute.return_value': '''
- Vlan98               201.0.12.1      protocol-down/link-down/admin-up 
+ Vlan98               192.168.234.1      protocol-down/link-down/admin-up 
 '''}
 
     def test_golden(self):
@@ -3055,7 +3055,7 @@ class test_show_nve_interface(unittest.TestCase):
                                     'source_interface':
                                         {'loopback1':
                                             {'secondary': '0.0.0.0',
-                                             'primary': '3.0.0.1'}
+                                             'primary': '10.9.0.1'}
                                         },
                                     'vpc_capability':
                                         {'VPC-VIP-Only':
@@ -3071,7 +3071,7 @@ class test_show_nve_interface(unittest.TestCase):
          VPC Capability: VPC-VIP-Only [not-notified]
          Local Router MAC: 00f2.8b7a.f8ff
          Host Learning Mode: Control-Plane
-         Source-Interface: loopback1 (primary: 3.0.0.1, secondary: 0.0.0.0)
+         Source-Interface: loopback1 (primary: 10.9.0.1, secondary: 0.0.0.0)
          Source Interface State: Up
          IR Capability Mode: No
          Virtual RMAC Advertisement: No
@@ -3111,37 +3111,37 @@ class test_show_ip_interface_brief_vrf_all(unittest.TestCase):
         'interface':
             {'Eth1/1.1':
                 {'interface_status': 'protocol-up/link-up/admin-up',
-                 'ip_address': '201.0.1.1'},
+                 'ip_address': '192.168.4.1'},
              'Eth1/1.2':
                 {'interface_status': 'protocol-up/link-up/admin-up',
-                 'ip_address': '201.1.1.1'},
+                 'ip_address': '192.168.154.1'},
              'Eth1/1.4':
                 {'interface_status': 'protocol-up/link-up/admin-up',
-                 'ip_address': '201.4.1.1'},
+                 'ip_address': '192.168.106.1'},
              'Eth1/2.1':
                 {'interface_status': 'protocol-up/link-up/admin-up',
-                 'ip_address': '201.0.2.1'},
+                 'ip_address': '192.168.154.1'},
              'Eth1/2.2':
                 {'interface_status': 'protocol-up/link-up/admin-up',
-                 'ip_address': '201.1.2.1'},
+                 'ip_address': '192.168.51.1'},
              'Eth1/2.4':
                 {'interface_status': 'protocol-up/link-up/admin-up',
-                 'ip_address': '201.4.2.1'},
+                 'ip_address': '192.168.9.1'},
              'Lo0':
                 {'interface_status': 'protocol-up/link-up/admin-up',
-                 'ip_address': '100.1.1.1'},
+                 'ip_address': '10.1.1.1'},
              'Lo1':
                 {'interface_status': 'protocol-up/link-up/admin-up',
-                 'ip_address': '110.1.1.1'},
+                 'ip_address': '10.81.1.1'},
              'Vlan100':
                 {'interface_status': 'protocol-up/link-up/admin-up',
-                 'ip_address': '50.1.1.1'},
+                 'ip_address': '10.51.1.1'},
              'Vlan101':
                 {'interface_status': 'protocol-up/link-up/admin-up',
-                 'ip_address': '50.2.1.1'},
+                 'ip_address': '10.154.1.1'},
              'Vlan200':
                 {'interface_status': 'protocol-up/link-up/admin-up',
-                 'ip_address': '55.1.1.1'},
+                 'ip_address': '10.76.1.1'},
              'mgmt0':
                 {'interface_status': 'protocol-up/link-up/admin-up',
                  'ip_address': '10.255.5.169'}
@@ -3153,15 +3153,15 @@ class test_show_ip_interface_brief_vrf_all(unittest.TestCase):
 
         IP Interface Status for VRF "default"(1)
         Interface            IP Address      Interface Status
-        Vlan100              50.1.1.1        protocol-up/link-up/admin-up       
-        Vlan101              50.2.1.1        protocol-up/link-up/admin-up       
-        Lo0                  100.1.1.1       protocol-up/link-up/admin-up       
-        Eth1/1.1             201.0.1.1       protocol-up/link-up/admin-up       
-        Eth1/1.2             201.1.1.1       protocol-up/link-up/admin-up       
-        Eth1/1.4             201.4.1.1       protocol-up/link-up/admin-up       
-        Eth1/2.1             201.0.2.1       protocol-up/link-up/admin-up       
-        Eth1/2.2             201.1.2.1       protocol-up/link-up/admin-up       
-        Eth1/2.4             201.4.2.1       protocol-up/link-up/admin-up       
+        Vlan100              10.51.1.1        protocol-up/link-up/admin-up       
+        Vlan101              10.154.1.1        protocol-up/link-up/admin-up       
+        Lo0                  10.1.1.1       protocol-up/link-up/admin-up       
+        Eth1/1.1             192.168.4.1       protocol-up/link-up/admin-up       
+        Eth1/1.2             192.168.154.1       protocol-up/link-up/admin-up       
+        Eth1/1.4             192.168.106.1       protocol-up/link-up/admin-up       
+        Eth1/2.1             192.168.154.1       protocol-up/link-up/admin-up       
+        Eth1/2.2             192.168.51.1       protocol-up/link-up/admin-up       
+        Eth1/2.4             192.168.9.1       protocol-up/link-up/admin-up       
 
         IP Interface Status for VRF "management"(2)
         Interface            IP Address      Interface Status
@@ -3169,8 +3169,8 @@ class test_show_ip_interface_brief_vrf_all(unittest.TestCase):
 
         IP Interface Status for VRF "VRF1"(3)
         Interface            IP Address      Interface Status
-        Vlan200              55.1.1.1        protocol-up/link-up/admin-up       
-        Lo1                  110.1.1.1       protocol-up/link-up/admin-up    
+        Vlan200              10.76.1.1        protocol-up/link-up/admin-up       
+        Lo1                  10.81.1.1       protocol-up/link-up/admin-up    
     '''
     }
 

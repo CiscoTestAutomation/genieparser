@@ -313,8 +313,8 @@ class ShowAccessLists(ShowAccessListsSchema):
             # 10 permit ip any any (10031 matches)
             # 10 permit tcp any any eq 443
             # 30 deny ip any any
-            # 10 permit tcp 192.168.1.0 0.0.0.255 host 1.1.1.1 established log
-            # 20 permit tcp host 2.2.2.2 eq www telnet 443 any precedence network ttl eq 255
+            # 10 permit tcp 192.168.1.0 0.0.0.255 host 10.4.1.1 established log
+            # 20 permit tcp host 10.16.2.2 eq www telnet 443 any precedence network ttl eq 255
             m_v4 = p_ip_acl.match(line)
 
             # permit ipv6 host 2001::1 host 2001:1::2 sequence 20

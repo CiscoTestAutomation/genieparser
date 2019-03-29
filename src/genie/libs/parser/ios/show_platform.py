@@ -11,6 +11,9 @@
     * show processes cpu sorted <1min|5min|5sec>
     * show processes cpu sorted | include <WORD>
     * show processes cpu sorted <1min|5min|5sec> | include <WORD>
+    * show processes cpu
+    * show processes cpu | include <WORD>
+
 """
 # python
 import re
@@ -18,15 +21,32 @@ import re
 # genie
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, \
-                                         Any, Optional
+    Any, Optional
 
 # import iosxe parser
 from genie.libs.parser.iosxe.show_platform import \
-        ShowVersion as ShowVersion_iosxe, \
-        Dir as Dir_iosxe, \
-        ShowInventorySchema as ShowInventorySchema_iosxe, \
-        ShowRedundancy as ShowRedundancy_iosxe, \
-        ShowProcessesCpuSorted as ShowProcessesCpuSorted_iosxe
+    ShowVersion as ShowVersion_iosxe, \
+    Dir as Dir_iosxe, \
+    ShowInventorySchema as ShowInventorySchema_iosxe, \
+    ShowRedundancy as ShowRedundancy_iosxe, \
+    ShowProcessesCpuSorted as ShowProcessesCpuSorted_iosxe, \
+    ShowProcessesCpu as ShowProcessesCpu_iosxe, \
+    ShowVersionRp as ShowVersionRp_iosxe, \
+    ShowPlatform as ShowPlatform_iosxe, \
+    ShowPlatformPower as ShowPlatformPower_iosxe, \
+    ShowProcessesCpuHistory as ShowProcessesCpuHistory_iosxe, \
+    ShowProcessesCpuPlatform as ShowProcessesCpuPlatform_iosxe, \
+    ShowPlatformSoftwareStatusControl as ShowPlatformSoftwareStatusControl_iosxe, \
+    ShowPlatformSoftwareSlotActiveMonitorMem as ShowPlatformSoftwareSlotActiveMonitorMem_iosxe, \
+    ShowPlatformHardware as ShowPlatformHardware_iosxe, \
+    ShowPlatformHardwarePlim as ShowPlatformHardwarePlim_iosxe, \
+    ShowPlatformHardwareQfpBqsOpmMapping as ShowPlatformHardwareQfpBqsOpmMapping_iosxe, \
+    ShowPlatformHardwareQfpBqsIpmMapping as ShowPlatformHardwareQfpBqsIpmMapping_iosxe, \
+    ShowPlatformHardwareSerdes as ShowPlatformHardwareSerdes_iosxe, \
+    ShowPlatformHardwareSerdesInternal as ShowPlatformHardwareSerdesInternal_iosxe, \
+    ShowPlatformHardwareQfpBqsStatisticsChannelAll as ShowPlatformHardwareQfpBqsStatisticsChannelAll_iosxe, \
+    ShowPlatformHardwareQfpInterfaceIfnameStatistics as ShowPlatformHardwareQfpInterfaceIfnameStatistics_iosxe, \
+    ShowPlatformHardwareQfpStatisticsDrop as ShowPlatformHardwareQfpStatisticsDrop_iosxe
 
 
 class ShowVersion(ShowVersion_iosxe):
@@ -44,30 +64,30 @@ class Dir(Dir_iosxe):
 class ShowRedundancyIosSchema(MetaParser):
     """Schema for show redundancy """
     schema = {
-                'red_sys_info': {
-                    'available_system_uptime': str,
-                    'switchovers_system_experienced': str,
-                    'standby_failures': str,
-                    'last_switchover_reason': str,
-                    'hw_mode': str,
-                    Optional('conf_red_mode'): str,
-                    Optional('oper_red_mode'): str,
-                    'maint_mode': str,
-                    'communications': str,
-                    Optional('communications_reason'): str,
-                    },
-                'slot': {
-                    Any(): {
-                        'curr_sw_state': str,
-                        'uptime_in_curr_state': str,
-                        'image_ver': str,
-                        Optional('boot'): str,
-                        Optional('config_file'): str,
-                        Optional('bootldr'): str,
-                        'config_register': str,
-                    }
-                }
+        'red_sys_info': {
+            'available_system_uptime': str,
+            'switchovers_system_experienced': str,
+            'standby_failures': str,
+            'last_switchover_reason': str,
+            'hw_mode': str,
+            Optional('conf_red_mode'): str,
+            Optional('oper_red_mode'): str,
+            'maint_mode': str,
+            'communications': str,
+            Optional('communications_reason'): str,
+        },
+        'slot': {
+            Any(): {
+                'curr_sw_state': str,
+                'uptime_in_curr_state': str,
+                'image_ver': str,
+                Optional('boot'): str,
+                Optional('config_file'): str,
+                Optional('bootldr'): str,
+                'config_register': str,
             }
+        }
+    }
 
 
 class ShowRedundancy(ShowRedundancyIosSchema, ShowRedundancy_iosxe):
@@ -80,7 +100,8 @@ class ShowInventory(ShowInventorySchema_iosxe):
     """Parser for show Inventory
     """
     cli_command = 'show inventory'
-    def cli(self,output=None):
+
+    def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command)
         else:
@@ -91,7 +112,7 @@ class ShowInventory(ShowInventorySchema_iosxe):
         # NAME: "CISCO2921/K9 chassis", DESCR: "CISCO2921/K9 chassis"
         # NAME: "IOSv", DESCR: "IOSv chassis, Hw Serial#: 1234567890, Hw Revision: 1.0"
         p1 = re.compile(r'^NAME\:\s+\"(?P<name>.*)\",\s+DESCR\:\s+\"(?P<descr>.*)\"')
-        
+
         # IOSv
         p1_1 = re.compile(r'\w+')
 
@@ -154,16 +175,17 @@ class ShowInventory(ShowInventorySchema_iosxe):
                         chassis_dict = inventory_dict.setdefault('main', {})\
                             .setdefault('chassis', {}).setdefault(pid, {})
                         chassis_dict.update({'name': name, 'descr': descr,
-                                            'pid': pid, 'vid': vid, 'sn': sn})
+                                             'pid': pid, 'vid': vid, 'sn': sn})
                     if slot:
                         if 'WS-C' in pid or 'IOSv' in pid:
-                            rp_dict = slot_dict.setdefault('rp', {}).setdefault(pid, {})
+                            rp_dict = slot_dict.setdefault(
+                                'rp', {}).setdefault(pid, {})
                             rp_dict.update({'name': name, 'descr': descr,
-                                                'pid': pid, 'vid': vid, 'sn': sn})
+                                            'pid': pid, 'vid': vid, 'sn': sn})
                         else:
                             other_dict = slot_dict.setdefault('other', {}).setdefault(pid, {})
                             other_dict.update({'name': name, 'descr': descr,
-                                                'pid': pid, 'vid': vid, 'sn': sn})
+                                               'pid': pid, 'vid': vid, 'sn': sn})
                 name = descr = slot = subslot = ''
                 continue
 
@@ -173,18 +195,19 @@ class ShowInventory(ShowInventorySchema_iosxe):
 class ShowBootvarSchema(MetaParser):
     """Schema for show bootvar"""
 
-    schema = {Optional('current_boot_variable'): str,
-              Optional('next_reload_boot_variable'): str,
-              Optional('config_file'): str,
-              Optional('bootldr'): str,
-              Optional('active'): {
-                  'configuration_register': str,
-                  Optional('boot_variable'): str,
-              },
-              Optional('standby'): {              
-                  'configuration_register': str,
-                  Optional('boot_variable'): str,
-              },
+    schema = {
+        Optional('current_boot_variable'): str,
+        Optional('next_reload_boot_variable'): str,
+        Optional('config_file'): str,
+        Optional('bootldr'): str,
+        Optional('active'): {
+            'configuration_register': str,
+            Optional('boot_variable'): str,
+        },
+        Optional('standby'): {
+            'configuration_register': str,
+            Optional('boot_variable'): str,
+        },
     }
 
 
@@ -215,16 +238,16 @@ class ShowBootvar(ShowBootvarSchema):
         # Standby Configuration register is 0x2002
         p4 = re.compile(r'^Standby +Configuration +register +is +(?P<var>\w+)$')
 
-        # CONFIG_FILE variable = 
+        # CONFIG_FILE variable =
         p5 = re.compile(r'^CONFIG_FILE +variable += +(?P<var>\S+)$')
 
-        # BOOTLDR variable = 
+        # BOOTLDR variable =
         p6 = re.compile(r'^BOOTLDR +variable += +(?P<var>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
 
-            # BOOT variable = disk0:s72033-adventerprisek9-mz.122-33.SRE0a-ssr-nxos-76k-1,12;            
+            # BOOT variable = disk0:s72033-adventerprisek9-mz.122-33.SRE0a-ssr-nxos-76k-1,12;
             m = p1.match(line)
             if m:
                 boot = m.groupdict()['var']
@@ -253,14 +276,14 @@ class ShowBootvar(ShowBootvarSchema):
                 boot_dict.setdefault('standby', {})['configuration_register'] = m.groupdict()['var']
                 continue
 
-            # CONFIG_FILE variable = 
+            # CONFIG_FILE variable =
             m = p5.match(line)
             if m:
                 if m.groupdict()['var']:
                     boot_dict.setdefault('active', {})['config_file'] = m.groupdict()['var']
                 continue
 
-            # BOOTLDR variable = 
+            # BOOTLDR variable =
             m = p6.match(line)
             if m:
                 if m.groupdict()['var']:
@@ -275,4 +298,101 @@ class ShowProcessesCpuSorted(ShowProcessesCpuSorted_iosxe):
                   show processes cpu sorted | include <WORD>
                   show processes cpu sorted <1min|5min|5sec> | include <WORD>
     """
+    pass
+
+
+class ShowProcessesCpu(ShowProcessesCpu_iosxe):
+    """Parser for show processes cpu
+                  show processes cpu | include <WORD>"""
+    pass
+
+
+class ShowVersionRp(ShowVersionRp_iosxe):
+    """Parser for show version RP active [running|provisioned|installed]
+                  show version RP standby [running|provisioned|installed]"""
+    pass
+
+
+class ShowPlatform(ShowPlatform_iosxe):
+    """Parser for Parser for show platform"""
+    pass
+
+
+class ShowPlatformPower(ShowPlatformPower_iosxe):
+    """Parser for Parser for show platform power"""
+    pass
+
+
+class ShowProcessesCpuHistory(ShowProcessesCpuHistory_iosxe):
+    """Parser for show processes cpu history"""
+    pass
+
+
+class ShowProcessesCpuPlatform(ShowProcessesCpuPlatform_iosxe):
+    """Parser for show processes cpu platform"""
+    pass
+
+
+class ShowPlatformSoftwareStatusControl(ShowPlatformSoftwareStatusControl_iosxe):
+    """Parser for show platform software status control-processor brief"""
+    pass
+
+
+class ShowPlatformSoftwareSlotActiveMonitorMem(ShowPlatformSoftwareSlotActiveMonitorMem_iosxe):
+    """Parser for show platform software process slot switch active R0 monitor | inc Mem :|Swap:"""
+    pass
+
+
+class ShowPlatformHardware(ShowPlatformHardware_iosxe):
+    """Parser for show platform hardware qfp active infrastructure bqs queue output default all"""
+    pass
+
+
+class ShowPlatformHardwarePlim(ShowPlatformHardwarePlim_iosxe):
+    """Parser for show platform hardware port <x/x/x> plim statistics
+                  show platform hardware slot <x> plim statistics
+                  show platform hardware slot <x> plim statistics internal
+                  show platform hardware subslot <x/x> plim statistics"""
+    pass
+
+
+class ShowPlatformHardwareQfpBqsOpmMapping(ShowPlatformHardwareQfpBqsOpmMapping_iosxe):
+    """Parser for show platform hardware qfp active bqs <x> opm mapping
+                  show platform hardware qfp standby bqs <x> opm mapping"""
+    pass
+
+
+class ShowPlatformHardwareQfpBqsIpmMapping(ShowPlatformHardwareQfpBqsIpmMapping_iosxe):
+    """Parser for show platform hardware qfp active bqs <x> ipm mapping
+                  show platform hardware qfp standby bqs <x> ipm mapping"""
+    pass
+
+
+class ShowPlatformHardwareSerdes(ShowPlatformHardwareSerdes_iosxe):
+    """Parser for show platform hardware slot <x> serdes statistics"""
+    pass
+
+
+class ShowPlatformHardwareSerdesInternal(ShowPlatformHardwareSerdesInternal_iosxe):
+    """Parser for show platform hardware slot <x> serdes statistics internal"""
+    pass
+
+
+class ShowPlatformHardwareQfpBqsStatisticsChannelAll(ShowPlatformHardwareQfpBqsStatisticsChannelAll_iosxe):
+    """Parser for show platform hardware qfp active bqs <x> ipm statistics channel all
+                  show platform hardware qfp standby bqs <x> ipm statistics channel all
+                  show platform hardware qfp active bqs <x> opm statistics channel all
+                  show platform hardware qfp standby bqs <x> opm statistics channel all"""
+    pass
+
+
+class ShowPlatformHardwareQfpInterfaceIfnameStatistics(ShowPlatformHardwareQfpInterfaceIfnameStatistics_iosxe):
+    """Parser for show platform hardware qfp active interface if-name <interface> statistics
+                  show platform hardware qfp standby interface if-name <interface> statistics"""
+    pass
+
+
+class ShowPlatformHardwareQfpStatisticsDrop(ShowPlatformHardwareQfpStatisticsDrop_iosxe):
+    """Parser for show platform hardware qfp active statistics drop
+                  show platform hardware qfp standby statistics drop"""
     pass

@@ -30,9 +30,6 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   ShowPlatformHardwareQfpBqsStatisticsChannelAll, \
                                                   ShowPlatformHardwareQfpInterfaceIfnameStatistics, \
                                                   ShowPlatformHardwareQfpStatisticsDrop, \
-                                                  ShowPlatformHardwareSerdes, \
-                                                  ShowPlatformHardwareSerdesInternal, \
-                                                  ShowPlatformPower, \
                                                   ShowProcessesCpuHistory
 
 
@@ -4294,7 +4291,7 @@ class test_show_processes_cpu_platform(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         Router#show processes cpu platform 
         Load for five secs: 1%/0%; one minute: 9%; five minutes: 19%
-        Time source is NTP, 17:48:03.994 JST Wed Oct 19 2016
+        Time source is NTP, 17:48:03.994 EST Wed Oct 19 2016
         CPU utilization for five seconds:  2%, one minute:  5%, five minutes: 22%
         Core 0: CPU utilization for five seconds:  2%, one minute:  8%, five minutes: 18%
         Core 1: CPU utilization for five seconds:  0%, one minute:  3%, five minutes: 23%
@@ -4893,7 +4890,7 @@ class test_show_env(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         Router#show environment
         Load for five secs: 4%/0%; one minute: 8%; five minutes: 6%
-        Time source is NTP, 17:41:24.716 JST Wed Oct 19 2016
+        Time source is NTP, 17:41:24.716 EST Wed Oct 19 2016
 
 
         Number of Critical alarms:  0
@@ -8755,7 +8752,7 @@ class test_show_processes_cpu(unittest.TestCase):
                 'invoked': 65763,
                 'one_min_cpu': 0.0,
                 'pid': 407,
-                'process': 'OSPF-9996 Router',
+                'process': 'OSPF-65109 Router',
                 'runtime': 914,
                 'tty': 0,
                 'usecs': 13},
@@ -10123,7 +10120,7 @@ class test_show_processes_cpu(unittest.TestCase):
                 'invoked': 10680,
                 'one_min_cpu': 0.0,
                 'pid': 559,
-                'process': 'OSPF-9996 Hello',
+                'process': 'OSPF-65109 Hello',
                 'runtime': 311,
                 'tty': 0,
                 'usecs': 29},
@@ -10692,7 +10689,7 @@ class test_show_processes_cpu(unittest.TestCase):
                         'QOS PERUSER',
                         'RPMS_PROC_MAIN',
                         'http client proc',
-                        'OSPF-9996 Router',
+                        'OSPF-65109 Router',
                         'SEGMENT ROUTING',
                         'AAA SEND STOP EV',
                         'Test AAA Client',
@@ -10842,7 +10839,7 @@ class test_show_processes_cpu(unittest.TestCase):
                         'NTP',
                         'EM Action CNS',
                         'DiagCard5/-1',
-                        'OSPF-9996 Hello',
+                        'OSPF-65109 Hello',
                         'BGP VA',
                         'IFCOM Msg Hdlr',
                         'IFCOM Msg Hdlr',
@@ -10865,7 +10862,7 @@ class test_show_processes_cpu(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         Router#show process cpu
         Load for five secs: 1%/0%; one minute: 2%; five minutes: 3%
-        Time source is NTP, 19:10:39.512 JST Mon Oct 17 2016
+        Time source is NTP, 19:10:39.512 EST Mon Oct 17 2016
 
         CPU utilization for five seconds: 1%/0%; one minute: 2%; five minutes: 3%
          PID Runtime(ms)     Invoked      uSecs   5Sec   1Min   5Min TTY Process 
@@ -11275,7 +11272,7 @@ class test_show_processes_cpu(unittest.TestCase):
          404           0           1          0  0.00%  0.00%  0.00%   0 QOS PERUSER      
          405           0           1          0  0.00%  0.00%  0.00%   0 RPMS_PROC_MAIN   
          406           0           1          0  0.00%  0.00%  0.00%   0 http client proc 
-         407         914       65763         13  0.00%  0.00%  0.00%   0 OSPF-9996 Router 
+         407         914       65763         13  0.00%  0.00%  0.00%   0 OSPF-65109 Router 
          408           0           2          0  0.00%  0.00%  0.00%   0 SEGMENT ROUTING  
          409           1          44         22  0.00%  0.00%  0.00%   0 AAA SEND STOP EV 
          410           0           1          0  0.00%  0.00%  0.00%   0 Test AAA Client  
@@ -11427,7 +11424,7 @@ class test_show_processes_cpu(unittest.TestCase):
          556           0           1          0  0.00%  0.00%  0.00%   0 EM Action CNS    
          557           0           2          0  0.00%  0.00%  0.00%   0 DiagCard5/-1     
          558      307942       78644       3915  0.55%  0.72%  0.73%   0 BGP Router       
-         559         311       10680         29  0.00%  0.00%  0.00%   0 OSPF-9996 Hello  
+         559         311       10680         29  0.00%  0.00%  0.00%   0 OSPF-65109 Hello  
          560           0           1          0  0.00%  0.00%  0.00%   0 BGP VA           
          561           0           1          0  0.00%  0.00%  0.00%   0 IFCOM Msg Hdlr   
          562           0           1          0  0.00%  0.00%  0.00%   0 IFCOM Msg Hdlr   
@@ -11691,7 +11688,7 @@ class test_show_version_rp(unittest.TestCase):
     golden_output_active = {'execute.return_value': '''\
         Router#show version RP active running
         Load for five secs: 1%/0%; one minute: 28%; five minutes: 44%
-        Time source is NTP, 18:31:35.860 JST Mon Oct 24 2016
+        Time source is NTP, 18:31:35.860 EST Mon Oct 24 2016
         Package: Provisioning File, version: n/a, status: active
           File: consolidated:packages.conf, on: RP0
           Built: n/a, by: n/a
@@ -11968,7 +11965,7 @@ class test_show_version_rp(unittest.TestCase):
     golden_output_standby = {'execute.return_value': '''\
         Router#show version RP standby running
         Load for five secs: 22%/0%; one minute: 18%; five minutes: 45%
-        Time source is NTP, 18:37:42.222 JST Mon Oct 24 2016
+        Time source is NTP, 18:37:42.222 EST Mon Oct 24 2016
         Package: Provisioning File, version: n/a, status: active
           File: consolidated:packages.conf, on: RP0
           Built: n/a, by: n/a
@@ -12119,7 +12116,7 @@ class test_show_version_rp(unittest.TestCase):
     golden_output_standby_offline = {'execute.return_value': '''\
         Router#show version RP standby running
         Load for five secs: 1%/0%; one minute: 24%; five minutes: 43%
-        Time source is NTP, 18:31:45.991 JST Mon Oct 24 2016
+        Time source is NTP, 18:31:45.991 EST Mon Oct 24 2016
         The standby Route-Processor is currently offline
     '''
     }
@@ -13267,7 +13264,7 @@ class test_show_platform_hardware(unittest.TestCase):
     golden_output_active = {'execute.return_value': '''\
         Router#    show platform hardware qfp active infrastructure bqs queue output default all
         Load for five secs: 2%/1%; one minute: 9%; five minutes: 8%
-        Time source is NTP, 07:47:13.438 JST Thu Sep 8 2016
+        Time source is NTP, 07:47:13.438 EST Thu Sep 8 2016
 
         Interface: internal0/0/recycle:0 QFP: 0.0 if_h: 1 Num Queues/Schedules: 0
           No Queue/Schedule Info
@@ -15083,7 +15080,7 @@ class test_show_platform_hardware_qfp_bqs_opm_mapping(unittest.TestCase):
     golden_output_active_opm = {'execute.return_value': '''\ 
         Router#show platform hardware qfp active bqs 0 opm mapping 
         Load for five secs: 5%/3%; one minute: 7%; five minutes: 8%
-        Time source is NTP, 07:43:32.664 JST Thu Sep 8 2016
+        Time source is NTP, 07:43:32.664 EST Thu Sep 8 2016
 
         BQS OPM Channel Mapping
 
@@ -15319,7 +15316,7 @@ class test_show_platform_hardware_qfp_bqs_ipm_mapping(unittest.TestCase):
     golden_output_active_ipm = {'execute.return_value': '''\
         Router#show platform hardware qfp active bqs 0 ipm mapping 
         Load for five secs: 29%/1%; one minute: 8%; five minutes: 9%
-        Time source is NTP, 07:42:52.908 JST Thu Sep 8 2016
+        Time source is NTP, 07:42:52.908 EST Thu Sep 8 2016
 
         BQS IPM Channel Mapping
 
@@ -15567,7 +15564,7 @@ class test_show_platform_hardware_serdes_statistics(unittest.TestCase):
     golden_output_serdes = {'execute.return_value': '''\
         Router#show platform hardware slot F0 serdes statistics 
         Load for five secs: 22%/1%; one minute: 8%; five minutes: 9%
-        Time source is NTP, 07:42:08.304 JST Thu Sep 8 2016
+        Time source is NTP, 07:42:08.304 EST Thu Sep 8 2016
         From Slot R1-Link A
           Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0         
           Bytes High: 0          Low: 0          Bad: 0          Dropped: 0         
@@ -15750,7 +15747,7 @@ class test_show_platform_hardware_serdes_statistics_internal(unittest.TestCase):
     golden_output_serdes_internal = {'execute.return_value': '''\
         Router#show platform hardware slot F0 serdes statistics internal 
         Load for five secs: 5%/1%; one minute: 8%; five minutes: 9%
-        Time source is NTP, 07:42:13.752 JST Thu Sep 8 2016
+        Time source is NTP, 07:42:13.752 EST Thu Sep 8 2016
         Warning: Clear option may not clear all the counters
 
         Network-Processor-0 Link:
@@ -16352,7 +16349,7 @@ class show_platform_hardware_qfp_bqs_statistics_channel_all(unittest.TestCase):
     golden_output_active_ipm = {'execute.return_value': '''\
         Router#show platform hardware qfp active bqs 0 ipm statistics channel all
         Load for five secs: 25%/2%; one minute: 9%; five minutes: 9%
-        Time source is NTP, 07:43:10.431 JST Thu Sep 8 2016
+        Time source is NTP, 07:43:10.431 EST Thu Sep 8 2016
 
         BQS IPM Channel Statistics
 
@@ -16387,7 +16384,7 @@ class show_platform_hardware_qfp_bqs_statistics_channel_all(unittest.TestCase):
     golden_output_active_opm = {'execute.return_value': '''\
         Router#show platform hardware qfp active bqs 0 opm statistics channel all
         Load for five secs: 6%/0%; one minute: 9%; five minutes: 9%
-        Time source is NTP, 07:45:18.968 JST Thu Sep 8 2016
+        Time source is NTP, 07:45:18.968 EST Thu Sep 8 2016
 
         BQS OPM Channel Statistics
 
@@ -16587,7 +16584,7 @@ class show_platform_hardware_qfp_interface(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         Router#show platform hardware qfp active interface if-name gigabitEthernet 0/0/0 statistics
         Load for five secs: 2%/0%; one minute: 8%; five minutes: 8%
-        Time source is NTP, 07:55:23.913 JST Thu Sep 8 2016
+        Time source is NTP, 07:55:23.913 EST Thu Sep 8 2016
         Platform Handle 7
         ----------------------------------------------------------------
         Receive Stats                             Packets        Octets
@@ -16677,7 +16674,7 @@ class test_show_platform_hardware_qfp_statistics_drop(unittest.TestCase):
     golden_output_active = {'execute.return_value': '''\
         Router#show platform hardware qfp active statistics drop | exclude _0_
         Load for five secs: 2%/1%; one minute: 9%; five minutes: 8%
-        Time source is NTP, 07:47:11.317 JST Thu Sep 8 2016
+        Time source is NTP, 07:47:11.317 EST Thu Sep 8 2016
         -------------------------------------------------------------------------
         Global Drop Stats                         Packets                  Octets  
         -------------------------------------------------------------------------
@@ -16907,7 +16904,7 @@ class test_show_processes_cpu_history(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
 Router#show processes cpu history 
 Load for five secs: 9%/1%; one minute: 18%; five minutes: 19%
-Time source is NTP, 15:54:30.599 JST Tue Oct 18 2016                                       
+Time source is NTP, 15:54:30.599 EST Tue Oct 18 2016                                       
                                                                   
                 888886666611111                    11111          
       777775555599999666664444466666333335555544444666667777777777
