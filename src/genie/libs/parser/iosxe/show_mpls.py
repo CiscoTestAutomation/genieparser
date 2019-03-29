@@ -45,7 +45,7 @@ class ShowMplsLdpParametersSchema(MetaParser):
     """Schema for show mpls ldp Parameters"""
 
     schema = {
-        'ldp_featureset_manager': {
+        Optional('ldp_featureset_manager'): {
             Any(): {
                 'ldp_features': list,
             }
@@ -54,12 +54,12 @@ class ShowMplsLdpParametersSchema(MetaParser):
             'initial': int,
             'maximum': int,
         },
-        'ldp_loop_detection': str,
-        'ldp_nsr': str,
+        Optional('ldp_loop_detection'): str,
+        Optional('ldp_nsr'): str,
         'version': int,
         'session_hold_time': int,
         'keep_alive_interval': int,
-        'ldp_for_targeted_sessions': bool,
+        Optional('ldp_for_targeted_sessions'): bool,
         'discovery_targeted_hello': {
             'holdtime': int,
             'interval': int,
@@ -68,7 +68,7 @@ class ShowMplsLdpParametersSchema(MetaParser):
             'holdtime': int,
             'interval': int,
         },
-        'downstream_on_demand_max_hop_count': int,
+        Optional('downstream_on_demand_max_hop_count'): int,
     }
 
 class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
@@ -83,7 +83,7 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             out = output
 
         # initial return dictionary
-        result_dict = {}
+        ldp_dict = {}
         ldp_feature_flag = False
         ldp_feature_list = []
 
@@ -123,7 +123,6 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             # LDP Feature Set Manager: State Initialized
             m = p1.match(line)
             if m:
-                ldp_dict = result_dict
                 ldp_feature_dict = ldp_dict.setdefault('ldp_featureset_manager', {}).setdefault('State Initialized', {})
                 continue
 
@@ -219,7 +218,7 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
                 ldp_dict.update({'ldp_nsr': group['nsr'].lower()})
                 continue
 
-        return result_dict
+        return ldp_dict
 
 
 class ShowMplsLdpNsrStatisticsSchema(MetaParser):
@@ -530,14 +529,14 @@ class ShowMplsLdpNeighborSchema(MetaParser):
                                 'downstream': bool,
                                 Optional('last_tib_rev_sent'): int,
                                 Optional('password'): str,
-                                'uptime': str,
+                                Optional('uptime'): str,
                                 Optional('peer_holdtime_ms'): str,
                                 Optional('ka_interval_ms'): str,
                                 Optional('peer_state'): str,
-                                'ldp_discovery_sources': {
+                                Optional('ldp_discovery_sources'): {
                                     'interface':{
                                           Any():{
-                                          'ip_address': {
+                                          Optional('ip_address'): {
                                               Any(): {
                                                   Optional('holdtime_ms'): int,
                                                   Optional('hello_interval_ms'): int,
@@ -546,7 +545,7 @@ class ShowMplsLdpNeighborSchema(MetaParser):
                                         }
                                     }
                                 },
-                                'address_bound': list,
+                                Optional('address_bound'): list,
                                 Optional('nsr'): str,
                                 Optional('capabilities'):{
                                      'sent': {
@@ -616,8 +615,9 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
 
         #     State: Oper; Msgs sent/rcvd: 824/825; Downstream
         #     State: Oper; Msgs sent/rcvd: 824/825; Downstream; Last TIB rev sent 4103
+        #     State: Oper; Msgs sent/rcvd: 5855/6371; Downstream on demand
         p3 = re.compile(r'^State: +(?P<state>\w+); +Msgs +sent\/rcvd: +(?P<msg_sent>\d+)\/(?P<msg_rcvd>\d+);'
-                                ' +(?P<downstream>\w+)(; +Last +TIB +rev +sent +(?P<last_tib_rev_sent>\d+))?$')
+                                ' +(?P<downstream>[\w\s]+)(; +Last +TIB +rev +sent +(?P<last_tib_rev_sent>\d+))?$')
 
         #  Up time: 04:26:14
         #  Up time: 3d21h; UID: 4; Peer Id 0
@@ -625,7 +625,8 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
 
         #     LDP discovery sources:
         #       GigabitEthernet0/0/0, Src IP addr: 10.169.197.93
-        p5 = re.compile(r'^(?P<interface>[\S]+)(,|;) +Src +IP +addr: +(?P<src_ip_address>[\d\.]+)$')
+        #       ATM3/0.1
+        p5 = re.compile(r'^(?P<interface>[A-Za-z]+[\d/.]+)((,|;) +Src +IP +addr: +(?P<src_ip_address>[\d\.]+))?$')
 
         #       holdtime: 15000 ms, hello interval: 5000 ms
         p5_1 = re.compile(r'^holdtime: +(?P<holdtime>\d+) +ms, +hello +interval: +(?P<hello_interval>\d+) +ms$')
@@ -718,8 +719,9 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
                 ldp_source_dict = peer_dict.setdefault('ldp_discovery_sources',{}).\
                                             setdefault('interface',{}).\
                                             setdefault(group['interface'],{})
-                ldp_source_ip_address_dict = ldp_source_dict.setdefault('ip_address',{}).\
-                                                             setdefault(group['src_ip_address'],{})
+                if group['src_ip_address']:
+                    ldp_source_ip_address_dict = ldp_source_dict.setdefault('ip_address',{}).\
+                                                    setdefault(group['src_ip_address'],{})
                 continue
 
             # holdtime: 15000 ms, hello interval: 5000 ms
