@@ -140,9 +140,9 @@ class ShowVersion(ShowVersionSchema):
 
             # Cisco IOS Software [Fuji], ASR1000 Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.7.1prd4, RELEASE SOFTWARE (fc1)
             # Cisco IOS Software [Fuji], Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Experimental Version 16.8.20170924:182909 [polaris_dev-/nobackup/mcpre/BLD-BLD_POLARIS_DEV_LATEST_20170924_191550 132]
-
+            # Cisco IOS Software, 901 Software (ASR901-UNIVERSALK9-M), Version 15.6(2)SP4, RELEASE SOFTWARE (fc3)
             p1_1 = re.compile(
-                r'^\s*[Cc]isco +IOS +[Ss]oftware(.+)?, +(?P<platform>.+) '
+                r'^\s*[Cc]isco +(?P<os>([A-Z]+)) +[Ss]oftware(.+)?, +(?P<platform>.+) '
                  'Software +\((?P<image_id>.+)\).+( +Experimental)? +'
                  '[Vv]ersion +(?P<version>[a-zA-Z0-9\.\:\(\)]+) *,?.*')
             m = p1_1.match(line)
@@ -161,6 +161,8 @@ class ShowVersion(ShowVersionSchema):
                         m.groupdict()['version']
                     version_dict['version']['image_id'] = \
                         m.groupdict()['image_id']
+                    if m.groupdict()['os']:
+                        version_dict['version']['os'] = m.groupdict()['os']
                     continue
 
             # Copyright (c) 1986-2016 by Cisco Systems, Inc.
@@ -999,7 +1001,7 @@ class ShowInventory(ShowInventorySchema):
                     if slot not in inventory_dict['slot']:
                         inventory_dict['slot'][slot] = {}
 
-                p1_2 = re.compile(r'SPA subslot (?P<slot>\d+)/(?P<subslot>\d+)')
+                p1_2 = re.compile(r'(SPA|IM) subslot (?P<slot>\d+)/(?P<subslot>\d+)')
                 m = p1_2.match(name)
                 if m:
                     slot = m.groupdict()['slot']
@@ -1024,10 +1026,13 @@ class ShowInventory(ShowInventorySchema):
 
             # check 2nd line
 
-            # PID: SFP-GE-T            , VID: V02  , SN: MTC2139029X
+            # PID: SFP-GE-T          , VID: V02  , SN: MTC2139029X
             # PID: ISR4331-3x1GE     , VID: V01  , SN:
-            # PID: ISR4331/K9        , VID:   , SN: FDO21520TGH
+            # PID: ISR4331/K9        , VID:      , SN: FDO21520TGH
             # PID: ISR4331/K9        , VID:      , SN:
+            # PID: ASR-920-24SZ-IM   , VID: V01  , SN: CAT1902V19M
+            # PID: SFP-10G-LR        , VID: CSCO , SN: CD180456291
+            # PID: A900-IMA3G-IMSG   , VID: V01  , SN: FOC2204PAP1
             p2 = re.compile(r'^\s*PID: +(?P<pid>\S+) +, +VID: +((?P<vid>\S+) +)?, +SN:( +(?P<sn>.*))?$')
             m = p2.match(line)
             if m:
@@ -1064,7 +1069,7 @@ class ShowInventory(ShowInventorySchema):
                                         inventory_dict['slot'][slot]['rp'][pid]['pid'] = pid
                                         inventory_dict['slot'][slot]['rp'][pid]['vid'] = vid
                                         inventory_dict['slot'][slot]['rp'][pid]['sn'] = sn
-                        elif 'SIP' in pid or 'ISR' in pid:
+                        elif 'SIP' in pid or 'ISR' in pid in pid or 'ONS' in pid:
                             if 'lc' not in inventory_dict['slot'][slot]:
                                 inventory_dict['slot'][slot]['lc'] = {}
                                 if pid not in inventory_dict['slot'][slot]['lc']:

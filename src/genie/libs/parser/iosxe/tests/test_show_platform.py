@@ -43,6 +43,7 @@ class test_show_version(unittest.TestCase):
     dev_asr1k = Device(name='asr1k')
     dev_c3850 = Device(name='c3850')
     dev_isr4k = Device(name='isr4k')
+    dev_asr901 = Device(name='asr901')
     empty_output = {'execute.return_value': ''}
     semi_empty_output = {'execute.return_value': '''\
         Cisco IOS-XE software, Copyright (c) 2005-2017 by cisco Systems, Inc.
@@ -589,6 +590,86 @@ class test_show_version(unittest.TestCase):
         Configuration register is 0x2102
 ''' }
 
+    golden_parsed_output_asr901 = {
+        'version': 
+            {'chassis': 'A901-6CZ-FT-D',
+            'chassis_sn': 'CAT1733U070',
+            'curr_config_register': '0x2102',
+            'hostname': 'LAB-ASR901T',
+            'image_id': 'ASR901-UNIVERSALK9-M',
+            'image_type': 'production image',
+            'last_reload_reason': 'Reload Command',
+            'license_level': 'AdvancedMetroIPAccess',
+            'license_type': 'Smart License',
+            'main_mem': '393216',
+            'mem_size': {'non-volatile configuration': '256'},
+            'next_reload_license_level': 'AdvancedMetroIPAccess',
+            'number_of_intfs': {'Gigabit Ethernet': '12',
+                             'Ten Gigabit Ethernet': '2'},
+            'os': 'IOS',
+            'platform': '901',
+            'processor_type': 'P2020',
+            'rom': 'System Bootstrap, Version 15.6(2r)SP4, RELEASE SOFTWARE '
+                '(fc1)',
+            'rtr_type': 'A901-6CZ-FT-D',
+            'system_image': 'flash:asr901-universalk9-mz.156-2.SP4.bin',
+            'system_restarted_at': '15:59:27 CDT Mon Sep 24 2018',
+            'uptime': '26 weeks, 21 hours, 26 minutes',
+            'version': '15.6(2)SP4',
+            'version_short': '15.6'}}
+    
+    golden_output_asr901 = {'execute.return_value': '''
+        show version
+        Cisco IOS Software, 901 Software (ASR901-UNIVERSALK9-M), Version 15.6(2)SP4, RELEASE SOFTWARE (fc3)
+        Technical Support: http://www.cisco.com/techsupport
+        Copyright (c) 1986-2018 by Cisco Systems, Inc.
+        Compiled Mon 19-Mar-18 16:39 by prod_rel_team
+
+        ROM: System Bootstrap, Version 15.6(2r)SP4, RELEASE SOFTWARE (fc1)
+
+        LAB-ASR901T uptime is 26 weeks, 21 hours, 26 minutes
+        System returned to ROM by reload at 15:57:52 CDT Mon Sep 24 2018
+        System restarted at 15:59:27 CDT Mon Sep 24 2018
+        System image file is "flash:asr901-universalk9-mz.156-2.SP4.bin"
+        Last reload type: Normal Reload
+        Last reload reason: Reload Command
+
+
+
+        This product contains cryptographic features and is subject to United
+        States and local country laws governing import, export, transfer and
+        use. Delivery of Cisco cryptographic products does not imply
+        third-party authority to import, export, distribute or use encryption.
+        Importers, exporters, distributors and users are responsible for
+        compliance with U.S. and local country laws. By using this product you
+        agree to comply with applicable laws and regulations. If you are unable
+        to comply with U.S. and local laws, return this product immediately.
+
+        A summary of U.S. laws governing Cisco cryptographic products may be found at:
+        http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+
+        If you require further assistance please contact us by sending email to
+        export@cisco.com.
+
+        License Level: AdvancedMetroIPAccess
+        License Type: Smart License
+        Next reload license Level: AdvancedMetroIPAccess
+
+        Cisco A901-6CZ-FT-D (P2020) processor (revision 1.0) with 393216K/131072K bytes of memory.
+        Processor board ID CAT1733U070
+        P2020 CPU at 800MHz, E500v2 core, 512KB L2 Cache
+        1 External Alarm interface
+        1 FastEthernet interface
+        12 Gigabit Ethernet interfaces
+        2 Ten Gigabit Ethernet interfaces
+        1 terminal line
+        8 Channelized T1 ports
+        256K bytes of non-volatile configuration memory.
+        98304K bytes of processor board System flash (Read/Write)
+
+        Configuration register is 0x2102
+        '''}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         version_obj = ShowVersion(device=self.dev1)
@@ -621,6 +702,13 @@ class test_show_version(unittest.TestCase):
         version_obj = ShowVersion(device=self.dev_isr4k)
         parsed_output = version_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_isr4k)
+
+    def test_golden_asr901(self):
+        self.maxDiff = None
+        self.dev_asr901 = Mock(**self.golden_output_asr901)
+        version_obj = ShowVersion(device=self.dev_asr901)
+        parsed_output = version_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_asr901)
 
 class test_dir(unittest.TestCase):
     dev1 = Device(name='empty')
@@ -1145,6 +1233,7 @@ class test_show_inventory(unittest.TestCase):
     dev2 = Device(name='semi_empty')
     dev_asr1k = Device(name='asr1k')
     dev_c3850 = Device(name='c3850')
+    dev_asr901 = Device(name='asr901')
     empty_output = {'execute.return_value': ''}
     semi_empty_output = {'execute.return_value': '''/
         NAME: "c38xx Stack", DESCR: "c38xx Stack"
@@ -1717,6 +1806,50 @@ class test_show_inventory(unittest.TestCase):
         PID: ISR4331/K9        , VID:      , SN:            
 '''}
 
+    golden_parsed_output2 = {
+        'main': 
+            {'chassis': 
+                {'ASR-920-24SZ-IM': 
+                    {'descr': 'Cisco ASR920 Series - 24GE and 4-10GE- Modular PSU and IM',
+                    'name': 'Chassis',
+                    'pid': 'ASR-920-24SZ-IM',
+                    'sn': 'CAT1902V19M',
+                    'vid': 'V01'}}},
+        'slot': 
+            {'0': 
+                {'P0': 
+                    {'other': 
+                        {'ASR-920-PWR-D': 
+                            {'descr': 'ASR 920 250W DC Power Supply',
+                            'name': 'Power Supply Module 0',
+                            'pid': 'ASR-920-PWR-D',
+                            'sn': 'ART1832F11X',
+                            'vid': 'V01'}}}}}}
+
+    golden_output2 = {'execute.return_value': '''
+        Router#show inventory
+        NAME: "Chassis", DESCR: "Cisco ASR920 Series - 24GE and 4-10GE- Modular PSU and IM"
+        PID: ASR-920-24SZ-IM   , VID: V01  , SN: CAT1902V19M
+
+        NAME: "subslot 0/0 transceiver 26", DESCR: "SFP+ 10GBASE-LR"
+        PID: SFP-10G-LR          , VID: CSCO , SN: CD180456291     
+
+        NAME: "subslot 0/0 transceiver 27", DESCR: "SFP+ 10GBASE-LR"
+        PID: SFP-10G-LR          , VID: CSCO , SN: CD180456292     
+
+        NAME: "IM subslot 0/1", DESCR: "ASR 900 Combo 4 port DS3 12 DS1 and 4 OCx"
+        PID: A900-IMA3G-IMSG   , VID: V01  , SN: FOC2204PAP1
+
+        NAME: "subslot 0/1 transceiver 16", DESCR: "Dual-Rate OC3/12 IR-1"
+        PID: ONS-SI-622-I1       , VID: A    , SN: ECL133706C3     
+
+        NAME: "Power Supply Module 0", DESCR: "ASR 920 250W DC Power Supply"
+        PID: ASR-920-PWR-D     , VID: V01  , SN: ART1832F11X
+
+        NAME: "Fan Tray", DESCR: "ASR 920 Fan tray"
+        PID: ASR-920-FAN-M     , VID: V01  , SN: CAT1903V028
+        '''}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         inventory_obj = ShowInventory(device=self.dev1)
@@ -1750,6 +1883,13 @@ class test_show_inventory(unittest.TestCase):
         inventory_obj = ShowInventory(device=self.dev_asr1k)
         parsed_output = inventory_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_asr1k)
+
+    # def test_golden_asr901(self):
+    #     self.maxDiff = None
+    #     self.dev_asr901 = Mock(**self.golden_output2)
+    #     inventory_obj = ShowInventory(device=self.dev_asr901)
+    #     parsed_output = inventory_obj.parse()
+    #     self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 class test_show_platform(unittest.TestCase):
     dev1 = Device(name='empty')
