@@ -332,7 +332,7 @@
 --------------------------------------------------------------------------------
                                    L2VPN
 --------------------------------------------------------------------------------
-* IOSXE
+* IOSXE & IOS
     * Add ShowBridgeDomain for:
             show bridge-domain
             show bridge-domain <WORD>
@@ -347,10 +347,9 @@
             show ethernet service instance summary
     * Add ShowL2vpnVfi for:
             show l2vpn vfi
+    * Add ShowL2vpnServiceAll for:
+            show l2vpn service all
 
-* IOS
-    * Add ShowL2vpnVfi for:
-            show l2vpn vfi
 --------------------------------------------------------------------------------
                                    LAG
 --------------------------------------------------------------------------------
