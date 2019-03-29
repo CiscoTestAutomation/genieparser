@@ -169,7 +169,12 @@
     * Add ShowServiceGroupTrafficStats for:
         show service-group traffic-stats
         show service-group traffic-stats <group>
-
+        
+* IOS
+    * Add ShowServiceGroupState for:
+        show service-group state
+    * Add ShowServiceGroupStats for:
+        show service-group stats
 --------------------------------------------------------------------------------
                                    CONFIG
 --------------------------------------------------------------------------------

@@ -12,15 +12,9 @@ from genie.libs.parser.iosxe.show_service import ShowServiceGroupState as \
 
 
 class ShowServiceGroupState(ShowServiceGroupState_iosxe):
-    '''show_service.py
-	IOS parser for the following show command
-		* show service-group state
-	'''
+    '''Parser for show service-group state'''
     pass
 
 class ShowServiceGroupStats(ShowServiceGroupStats_iosxe):
-    '''show_service.py
-	IOS parser for the following show command
-		* show service-group stats
-	'''
+    '''Parser for show service-group stats'''
     pass
