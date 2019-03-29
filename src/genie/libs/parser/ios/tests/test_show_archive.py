@@ -11,13 +11,14 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
 
 from genie.libs.parser.iosxe.tests.test_show_archive import test_show_archive as test_show_archive_iosxe, \
                                                             test_show_archive_config_differences as \
-                                                            test_show_archive_config_differences_iosxe
+                                                            test_show_archive_config_differences_iosxe, \
+                                                            test_show_archive_config_incremental_diff as \
+                                                            test_show_archive_config_incremental_diff_iosxe
 # Parser
 from genie.libs.parser.ios.show_archive import ShowArchive, \
                                                ShowArchiveConfigDifferences, \
                                                ShowArchiveConfigIncrementalDiffs
 
-import json
 
 # ============================================
 # unit test for 'show archive'
@@ -88,7 +89,6 @@ class test_show_archive_ios(unittest.TestCase):
 # * show archive config differences
 # * show archive config differences {fileA} {fileB}
 # * show archive config differences {fileA}
-# * show archive config incremental-diff {fileA}
 #=====================================================
 class test_show_archive_config_differences(test_show_archive_config_differences_iosxe):
 
@@ -118,7 +118,19 @@ class test_show_archive_config_differences(test_show_archive_config_differences_
         obj = ShowArchiveConfigDifferences(device=self.device)
         parsed_output = obj.parse(fileA='file1.txt', fileB='file2.txt')
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+#=====================================================
+# Unit test for the following commands:
+# * show archive config incremental-diff {fileA}
+#=====================================================
+class test_show_archive_config_incremental_diff(test_show_archive_config_incremental_diff_iosxe):
     
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowArchiveConfigDifferences(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(fileA='file1.txt')
+
     # Test case for 'show archive config incremental-diff {fileA}
     def test_golden_incremental_diffs(self):
         self.device = Mock(**self.golden_output_incremental_diff)
