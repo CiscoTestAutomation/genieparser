@@ -1153,4 +1153,4 @@ class ShowIpv6RouteWord(ShowIpv6RouteWordSchema, ShowIpRouteWord):
     """Parser for :
        show ipv6 route <Hostname or A.B.C.D>
        show ipv6 route vrf <vrf> <Hostname or A.B.C.D>"""
-    IP_VER = 'ipv6'    IP_VER = 'ipv6'
+    IP_VER = 'ipv6'
