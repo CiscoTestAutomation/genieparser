@@ -14055,7 +14055,7 @@ class test_show_bgp_neighbors_received_routes(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output = {'vrf':
+    golden_parsed_output1 = {'vrf':
                             {'default':
                               {'neighbor':
                                 {'21.0.0.2':
@@ -14139,7 +14139,7 @@ class test_show_bgp_neighbors_received_routes(unittest.TestCase):
                                         },
                                        'route_distinguisher': '300:1'}}}}}}}
 
-    golden_output = {'execute.return_value': '''
+    golden_output1 = {'execute.return_value': '''
         R4_iosv#show bgp all neighbors 10.4.6.6 received-routes 
         For address family: VPNv4 Unicast
         BGP table version is 66, local router ID is 4.4.4.4
@@ -14488,12 +14488,12 @@ class test_show_bgp_neighbors_received_routes(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(neighbor='21.0.0.2')
 
-    def test_show_bgp_vrf_all_neighbors_received_routes_golden(self):
+    def test_show_bgp_vrf_all_neighbors_received_routes_golden1(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output)
+        self.device = Mock(**self.golden_output1)
         obj = ShowBgpAllNeighborsReceivedRoutes(device=self.device)
         parsed_output = obj.parse(neighbor='21.0.0.2')
-        self.assertEqual(parsed_output,self.golden_parsed_output)
+        self.assertEqual(parsed_output,self.golden_parsed_output1)
 
     def test_show_bgp_vrf_all_neighbors_received_routes_golden2(self):
         self.maxDiff = None
