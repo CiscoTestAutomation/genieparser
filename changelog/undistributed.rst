@@ -235,7 +235,13 @@
         show archive config incremental-diffs {fileA}
     * Add ShowConfigurationLock for:
         show configuration lock
-
+* IOS
+    * Add ShowArchiveConfigDifferences for:
+        show archive config differences
+        show archive config differences {fileA} {fileB}
+        show archive config differences {fielA}
+    * Add ShowArchiveConfigIncrementalDiffs for:
+        show archive config incremental-diffs {fileA}
 --------------------------------------------------------------------------------
                                    L2VPN
 --------------------------------------------------------------------------------
