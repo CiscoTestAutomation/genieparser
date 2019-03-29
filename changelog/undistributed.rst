@@ -87,7 +87,6 @@
           show install inactive summary
     * Add ShowInstallCommitSummary for:
           show install commit summary
-    * Update AdminShowDiagChassis for 'sn' to be optional
 
 --------------------------------------------------------------------------------
                                    MPLS LDP

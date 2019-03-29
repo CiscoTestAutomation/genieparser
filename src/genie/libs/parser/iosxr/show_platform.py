@@ -761,7 +761,7 @@ class AdminShowDiagChassisSchema(MetaParser):
         'num_line_cards': int,
         'chassis_feature': str,
         'rack_num': int,
-        Optional('sn'): str,
+        'sn': str,
         'pid': str,
         'vid': str,
         'desc': str,
