@@ -154,12 +154,12 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 			'(?P<holdown_timer>\d+)\s+\((?P<holdown_timer_multiplier>\d+)\s+\)' \
 			'\s+(?P<state>\w+)\s+(?P<interface>[\w\W]+)')
 
-		# 106.162.197.93 					4097/4097		Up 		Up 	Gi0/0/0
+		# 10.169.197.93 					4097/4097		Up 		Up 	Gi0/0/0
 		p4 = re.compile(r'^(?P<our_neighbor>[\d\.]+)\s+(?P<ld_rd>\d+'\
 			'\/\d+)\s+(?P<rh_rs>\S+)\s+(?P<state>\w+)\s+(?P<interface>'\
 			'[\w\W]+)$')
 
-		# OurAddr: 123.213.213.12
+		# OurAddr: 10.186.213.12
 		p5 = re.compile(r'^OurAddr:\s+(?P<our_address>[\d\.]+)$')
 
 		# Session state is UP and using echo function with 500 ms interval.
@@ -365,7 +365,7 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 					Common.convert_intf_name(group['interface'])})
 				continue
 
-			# 106.162.197.93 					4097/4097		Up 		Up 	Gi0/0/0
+			# 10.169.197.93 					4097/4097		Up 		Up 	Gi0/0/0
 			m = p4.match(line)
 			if m:
 				group = m.groupdict()
@@ -378,7 +378,7 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 					Common.convert_intf_name(group['interface'])})
 				continue
 
-			# OurAddr: 123.213.213.12
+			# OurAddr: 10.186.213.12
 			m = p5.match(line)
 			if m:
 				group = m.groupdict()

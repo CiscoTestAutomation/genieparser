@@ -115,7 +115,7 @@ class ShowVtpStatus(ShowVtpStatusSchema):
                 ret_dict['vtp']['device_id'] = m.groupdict()['val']
                 continue
 
-            # Configuration last modified by 201.0.12.1 at 12-5-17 09:35:46
+            # Configuration last modified by 192.168.234.1 at 12-5-17 09:35:46
             p7 = re.compile(r'^Configuration +last +modified +by +'
                              '(?P<val>[\w\.\:]+) +at +(?P<val1>[\w\.\:\-\s]+)$')
             m = p7.match(line)
@@ -124,7 +124,7 @@ class ShowVtpStatus(ShowVtpStatusSchema):
                 ret_dict['vtp']['conf_last_modified_time'] = m.groupdict()['val1']
                 continue
 
-            # Local updater ID is 201.0.12.1 on interface Vl100 (lowest numbered VLAN interface found)
+            # Local updater ID is 192.168.234.1 on interface Vl100 (lowest numbered VLAN interface found)
             p8 = re.compile(r'^Local +updater +ID +is +(?P<id>[\w\.\:]+) +on +'
                              'interface +(?P<intf>[\w\.\/\-]+) *'
                              '(\((?P<reason>[\S\s]+)\))?$')

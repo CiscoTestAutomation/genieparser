@@ -42,13 +42,13 @@ class test_show_nve_peers(unittest.TestCase):
         'nve1': {
             'nve_name': 'nve1',
             'peer_ip': {
-                '201.202.1.1': {
+                '192.168.16.1': {
                     'peer_state': 'up',
                     'learn_type': 'CP',
                     'uptime': '01:15:09',
                     'router_mac': 'n/a',
                 },
-                '204.1.1.1': {
+                '192.168.106.1': {
                     'peer_state': 'up',
                     'learn_type': 'CP',
                     'uptime': '00:03:05',
@@ -62,8 +62,8 @@ class test_show_nve_peers(unittest.TestCase):
     BL1# show nve peers
     Interface Peer-IP          State LearnType Uptime   Router-Mac
     --------- ---------------  ----- --------- -------- -----------------
-    nve1      201.202.1.1      Up    CP        01:15:09 n/a
-    nve1      204.1.1.1        Up    CP        00:03:05 5e00.0002.0007
+    nve1      192.168.16.1      Up    CP        01:15:09 n/a
+    nve1      192.168.106.1        Up    CP        00:03:05 5e00.0002.0007
         '''}
 
     def test_show_nve_golden(self):
@@ -282,8 +282,8 @@ class test_show_nve_interface_detail(unittest.TestCase):
             'local_rmac': "5e00.0005.0007",  # Ops Str '5e00.0005.0007'
             'host_reach_mode': "control-plane",  # Ops Str 'control-plane'
             'source_if': "loopback1",  # Conf/Ops Str 'loopback1'
-            'primary_ip': "201.11.11.11",  # Ops Str '201.11.11.11'
-            'secondary_ip': "201.12.11.22",  # Ops Str '201.12.11.22'
+            'primary_ip': "192.168.4.11",  # Ops Str '192.168.4.11'
+            'secondary_ip': "192.168.196.22",  # Ops Str '192.168.196.22'
             'src_if_state': "up",  # Ops Str 'up'
             'ir_cap_mode': "no",  # Ops Str 'no'
             'adv_vmac': True,  # Ops Bool True
@@ -308,7 +308,7 @@ class test_show_nve_interface_detail(unittest.TestCase):
      VPC Capability: VPC-VIP-Only [notified]
      Local Router MAC: 5e00.0005.0007
      Host Learning Mode: Control-Plane
-     Source-Interface: loopback1 (primary: 201.11.11.11, secondary: 201.12.11.22)
+     Source-Interface: loopback1 (primary: 192.168.4.11, secondary: 192.168.196.22)
      Source Interface State: Up
      IR Capability Mode: No
      Virtual RMAC Advertisement: Yes
@@ -335,8 +335,8 @@ class test_show_nve_interface_detail(unittest.TestCase):
             'local_rmac': "6cb2.ae24.3f17",
             'host_reach_mode': "control-plane",
             'source_if': "loopback1",
-            'primary_ip': "201.0.0.11",
-            'secondary_ip': "201.12.11.22",
+            'primary_ip': "192.168.111.11",
+            'secondary_ip': "192.168.196.22",
             'src_if_state': "up",
             'ir_cap_mode': "no",
             'adv_vmac': True,
@@ -351,7 +351,7 @@ class test_show_nve_interface_detail(unittest.TestCase):
             'vip_rmac_ro': "0200.6565.6565",
             'sm_state': "nve-intf-init",
             'multisite_bgw_if': "loopback2",
-            'multisite_bgw_if_ip': '101.101.101.101',
+            'multisite_bgw_if_ip': '10.4.101.101',
             'multisite_bgw_if_admin_state': "down",
             'multisite_bgw_if_oper_state': "down",
             'multisite_bgw_if_oper_state_down_reason': "NVE not up."
@@ -364,7 +364,7 @@ class test_show_nve_interface_detail(unittest.TestCase):
      VPC Capability: VPC-VIP-Only [notified]
      Local Router MAC: 6cb2.ae24.3f17
      Host Learning Mode: Control-Plane
-     Source-Interface: loopback1 (primary: 201.0.0.11, secondary: 201.12.11.22)
+     Source-Interface: loopback1 (primary: 192.168.111.11, secondary: 192.168.196.22)
      Source Interface State: Up
      Virtual RMAC Advertisement: Yes
      NVE Flags:
@@ -377,7 +377,7 @@ class test_show_nve_interface_detail(unittest.TestCase):
      Virtual Router MAC: 0200.c90c.0b16
      Virtual Router MAC Re-origination: 0200.6565.6565
      Interface state: nve-intf-init
-     Multisite bgw-if: loopback2 (ip: 101.101.101.101, admin: Down, oper: Down)
+     Multisite bgw-if: loopback2 (ip: 10.4.101.101, admin: Down, oper: Down)
      Multisite bgw-if oper down reason: NVE not up.
 
     '''}
@@ -524,7 +524,7 @@ class test_show_nve_ethernet_segment(unittest.TestCase):
                             'local_ordinal': 0,
                             'df_timer_st': '00:00:00',
                             'config_status': 'n/a',
-                            'df_list': '201.0.0.55 201.0.0.66',
+                            'df_list': '192.168.111.55 192.168.111.66',
                             'es_rt_added': True,
                             'ead_rt_added': False,
                             'ead_evi_rt_timer_age': 'not running',
@@ -560,7 +560,7 @@ class test_show_nve_ethernet_segment(unittest.TestCase):
       My ordinal: 0
       DF timer start time: 00:00:00
       Config State: N/A
-      DF List: 201.0.0.55 201.0.0.66
+      DF List: 192.168.111.55 192.168.111.66
       ES route added to L2RIB: True
       EAD/ES routes added to L2RIB: False
       EAD/EVI route timer age: not running
@@ -593,14 +593,14 @@ class test_show_l2route_evpn_ethernet_segment(unittest.TestCase):
             'ethernet_segment': {
                 1: {
                     'ethernet_segment': '0300.0000.0001.2c00.0309',
-                    'originating_rtr': '201.0.0.55',
+                    'originating_rtr': '192.168.111.55',
                     'prod_name': 'vxlan',
                     'int_ifhdl': 'nve1',
                     'client_nfn': 64,
                 },
                 2: {
                     'ethernet_segment': '0300.0000.0001.2c00.0309',
-                    'originating_rtr': '201.0.0.66',
+                    'originating_rtr': '192.168.111.66',
                     'prod_name': 'bgp',
                     'int_ifhdl': 'n/a',
                     'client_nfn': 32,
@@ -614,8 +614,8 @@ class test_show_l2route_evpn_ethernet_segment(unittest.TestCase):
 
     ESI                      Orig Rtr. IP Addr  Prod  Ifindex      NFN Bitmap
     ------------------------ -----------------  ----- ----------- ----------
-    0300.0000.0001.2c00.0309 201.0.0.55         VXLAN nve1         64
-    0300.0000.0001.2c00.0309 201.0.0.66         BGP   N/A          32
+    0300.0000.0001.2c00.0309 192.168.111.55         VXLAN nve1         64
+    0300.0000.0001.2c00.0309 192.168.111.66         BGP   N/A          32
 
     '''}
 
@@ -653,9 +653,9 @@ class test_show_l2route_topology_detail(unittest.TestCase):
                             'encap_type': 0,
                             'iod': 0,
                             'if_hdl': 1224736769,
-                            'vtep_ip': '201.11.11.11',
-                            'emulated_ip': '201.12.11.22',
-                            'emulated_ro_ip': '201.12.11.22',
+                            'vtep_ip': '192.168.4.11',
+                            'emulated_ip': '192.168.196.22',
+                            'emulated_ro_ip': '192.168.196.22',
                             'tx_id': 20,
                             'rcvd_flag': 0,
                             'rmac': '5e00.0005.0007',
@@ -676,9 +676,9 @@ class test_show_l2route_topology_detail(unittest.TestCase):
                             'encap_type': 0,
                             'iod': 0,
                             'if_hdl': 1224736769,
-                            'vtep_ip': '201.11.11.11',
-                            'emulated_ip': '201.12.11.22',
-                            'emulated_ro_ip': '201.12.11.22',
+                            'vtep_ip': '192.168.4.11',
+                            'emulated_ip': '192.168.196.22',
+                            'emulated_ro_ip': '192.168.196.22',
                             'tx_id': 21,
                             'rcvd_flag': 0,
                             'rmac': '5e00.0005.0007',
@@ -699,9 +699,9 @@ class test_show_l2route_topology_detail(unittest.TestCase):
                             'encap_type': 0,
                             'iod': 0,
                             'if_hdl': 1224736769,
-                            'vtep_ip': '201.11.11.11',
-                            'emulated_ip': '201.12.11.22',
-                            'emulated_ro_ip': '201.12.11.22',
+                            'vtep_ip': '192.168.4.11',
+                            'emulated_ip': '192.168.196.22',
+                            'emulated_ro_ip': '192.168.196.22',
                             'tx_id': 22,
                             'rcvd_flag': 0,
                             'rmac': '5e00.0005.0007',
@@ -722,9 +722,9 @@ class test_show_l2route_topology_detail(unittest.TestCase):
                             'encap_type': 0,
                             'iod': 0,
                             'if_hdl': 1224736769,
-                            'vtep_ip': '201.11.11.11',
-                            'emulated_ip': '201.12.11.22',
-                            'emulated_ro_ip': '201.12.11.22',
+                            'vtep_ip': '192.168.4.11',
+                            'emulated_ip': '192.168.196.22',
+                            'emulated_ro_ip': '192.168.196.22',
                             'tx_id': 19,
                             'rcvd_flag': 0,
                             'rmac': '0000.0000.0000',
@@ -745,36 +745,36 @@ class test_show_l2route_topology_detail(unittest.TestCase):
 -----------   -------------   ----------
 101           Vxlan-10001     VNI: 10001
                               Encap:0 IOD:0 IfHdl:1224736769
-                              VTEP IP: 201.11.11.11
-                              Emulated IP: 201.12.11.22
-                              Emulated RO IP: 201.12.11.22
+                              VTEP IP: 192.168.4.11
+                              Emulated IP: 192.168.196.22
+                              Emulated RO IP: 192.168.196.22
                               TX-ID: 20 (Rcvd Ack: 0)
                               RMAC: 5e00.0005.0007, VRFID: 3
                               VMAC: 0200.c90c.0b16
                               Flags: L3cp, Sub_Flags: --, Prev_Flags: -
 102           Vxlan-10002     VNI: 10002
                               Encap:0 IOD:0 IfHdl:1224736769
-                              VTEP IP: 201.11.11.11
-                              Emulated IP: 201.12.11.22
-                              Emulated RO IP: 201.12.11.22
+                              VTEP IP: 192.168.4.11
+                              Emulated IP: 192.168.196.22
+                              Emulated RO IP: 192.168.196.22
                               TX-ID: 21 (Rcvd Ack: 0)
                               RMAC: 5e00.0005.0007, VRFID: 4
                               VMAC: 0200.c90c.0b16
                               Flags: L3cp, Sub_Flags: --, Prev_Flags: -
 103           Vxlan-10003     VNI: 10003
                               Encap:0 IOD:0 IfHdl:1224736769
-                              VTEP IP: 201.11.11.11
-                              Emulated IP: 201.12.11.22
-                              Emulated RO IP: 201.12.11.22
+                              VTEP IP: 192.168.4.11
+                              Emulated IP: 192.168.196.22
+                              Emulated RO IP: 192.168.196.22
                               TX-ID: 22 (Rcvd Ack: 0)
                               RMAC: 5e00.0005.0007, VRFID: 5
                               VMAC: 0200.c90c.0b16
                               Flags: L3cp, Sub_Flags: --, Prev_Flags: -
 1205          Vxlan-8003      VNI: 8003
                               Encap:0 IOD:0 IfHdl:1224736769
-                              VTEP IP: 201.11.11.11
-                              Emulated IP: 201.12.11.22
-                              Emulated RO IP: 201.12.11.22
+                              VTEP IP: 192.168.4.11
+                              Emulated IP: 192.168.196.22
+                              Emulated RO IP: 192.168.196.22
                               TX-ID: 19 (Rcvd Ack: 0)
                               RMAC: 0000.0000.0000, VRFID: 0
                               VMAC: 0200.c90c.0b16
@@ -859,7 +859,7 @@ class test_show_l2route_mac_all_detail(unittest.TestCase):
                             'prod_type': 'vxlan',
                             'flags': 'rmac',
                             'seq_num': 0,
-                            'next_hop1': '204.1.1.1',
+                            'next_hop1': '192.168.106.1',
                             'rte_res': 'regular',
                             'fwd_state': 'Resolved',
                             'peer_id': 2,
@@ -884,7 +884,7 @@ class test_show_l2route_mac_all_detail(unittest.TestCase):
                             'prod_type': 'bgp',
                             'flags': 'splrcv',
                             'seq_num': 0,
-                            'next_hop1': '204.1.1.1',
+                            'next_hop1': '192.168.106.1',
                             'rte_res': 'regular',
                             'fwd_state': 'Resolved',
                             'peer_id': 2,
@@ -906,7 +906,7 @@ class test_show_l2route_mac_all_detail(unittest.TestCase):
 
     Topology    Mac Address    Prod   Flags         Seq No     Next-Hops
     ----------- -------------- ------ ------------- ---------- ----------------
-    101         5e00.0002.0007 VXLAN  Rmac          0          204.1.1.1
+    101         5e00.0002.0007 VXLAN  Rmac          0          192.168.106.1
                 Route Resolution Type: Regular
                 Forwarding State: Resolved (PeerID: 2)
 
@@ -916,7 +916,7 @@ class test_show_l2route_mac_all_detail(unittest.TestCase):
                 Sent To: BGP
                 SOO: 774975538
 
-    1001        fa16.3ec2.34fe BGP    SplRcv        0          204.1.1.1
+    1001        fa16.3ec2.34fe BGP    SplRcv        0          192.168.106.1
                 Route Resolution Type: Regular
                 Forwarding State: Resolved (PeerID: 2)
                 Sent To: L2FWDER
@@ -955,8 +955,8 @@ class test_show_l2route_mac_ip_all_detail(unittest.TestCase):
                             'mac_ip_prod_type': 'bgp',
                             'mac_ip_flags': '--',
                             'seq_num': 0,
-                            'next_hop1': '204.1.1.1',
-                            'host_ip': '5.1.10.11',
+                            'next_hop1': '192.168.106.1',
+                            'host_ip': '10.36.10.11',
                         },
                         'fa16.3ea3.fb66': {
                             'mac_addr': 'fa16.3ea3.fb66',
@@ -964,7 +964,7 @@ class test_show_l2route_mac_ip_all_detail(unittest.TestCase):
                             'mac_ip_flags': '--',
                             'seq_num': 0,
                             'next_hop1': 'local',
-                            'host_ip': '5.1.10.55',
+                            'host_ip': '10.36.10.55',
                             'sent_to': 'bgp',
                             'soo': 774975538,
                             'l3_info': 10001,
@@ -982,8 +982,8 @@ class test_show_l2route_mac_ip_all_detail(unittest.TestCase):
     (Ps):Peer Sync (Ro):Re-Originated
     Topology    Mac Address    Prod   Flags         Seq No     Host IP         Next-Hops
     ----------- -------------- ------ ---------- --------------- ---------------
-    1001        fa16.3ec2.34fe BGP    --            0          5.1.10.11      204.1.1.1
-    1001        fa16.3ea3.fb66 HMM    --            0          5.1.10.55      Local
+    1001        fa16.3ec2.34fe BGP    --            0          10.36.10.11      192.168.106.1
+    1001        fa16.3ea3.fb66 HMM    --            0          10.36.10.55      Local
                 Sent To: BGP
                 SOO: 774975538
                 L3-Info: 10001
@@ -1181,8 +1181,8 @@ class test_show_l2route_mac_ip_all_detail(unittest.TestCase):
                             'mac_ip_prod_type': 'bgp',
                             'mac_ip_flags': '--',
                             'seq_num': 0,
-                            'next_hop1': '204.1.1.1',
-                            'host_ip': '5.1.10.11',
+                            'next_hop1': '192.168.106.1',
+                            'host_ip': '10.36.10.11',
                         },
                         'fa16.3ea3.fb66': {
                             'mac_addr': 'fa16.3ea3.fb66',
@@ -1190,7 +1190,7 @@ class test_show_l2route_mac_ip_all_detail(unittest.TestCase):
                             'mac_ip_flags': '--',
                             'seq_num': 0,
                             'next_hop1': 'local',
-                            'host_ip': '5.1.10.55',
+                            'host_ip': '10.36.10.55',
                             'sent_to': 'bgp',
                             'soo': 774975538,
                             'l3_info': 10001,
@@ -1208,8 +1208,8 @@ class test_show_l2route_mac_ip_all_detail(unittest.TestCase):
     (Ps):Peer Sync (Ro):Re-Originated
     Topology    Mac Address    Prod   Flags         Seq No     Host IP         Next-Hops
     ----------- -------------- ------ ---------- --------------- ---------------
-    1001        fa16.3ec2.34fe BGP    --            0          5.1.10.11      204.1.1.1
-    1001        fa16.3ea3.fb66 HMM    --            0          5.1.10.55      Local
+    1001        fa16.3ec2.34fe BGP    --            0          10.36.10.11      192.168.106.1
+    1001        fa16.3ea3.fb66 HMM    --            0          10.36.10.55      Local
                 Sent To: BGP
                 SOO: 774975538
                 L3-Info: 10001
@@ -1245,19 +1245,19 @@ class test_show_l2route_fl_all(unittest.TestCase):
                         8: {
                             'topo_id': 1001,
                             'peer_id': 8,
-                            'flood_list': '201.34.33.44',
+                            'flood_list': '192.168.169.44',
                             'is_service_node': 'no',
                         },
                         2: {
                             'topo_id': 1001,
                             'peer_id': 2,
-                            'flood_list': '201.0.0.55',
+                            'flood_list': '192.168.111.55',
                             'is_service_node': 'no',
                         },
                         1: {
                             'topo_id': 1001,
                             'peer_id': 1,
-                            'flood_list': '201.0.0.66',
+                            'flood_list': '192.168.111.66',
                             'is_service_node': 'no',
                         },
                     },
@@ -1268,19 +1268,19 @@ class test_show_l2route_fl_all(unittest.TestCase):
                         8: {
                             'topo_id': 1002,
                             'peer_id': 8,
-                            'flood_list': '201.34.33.44',
+                            'flood_list': '192.168.169.44',
                             'is_service_node': 'no',
                         },
                         2: {
                             'topo_id': 1002,
                             'peer_id': 2,
-                            'flood_list': '201.0.0.55',
+                            'flood_list': '192.168.111.55',
                             'is_service_node': 'no',
                         },
                         1: {
                             'topo_id': 1002,
                             'peer_id': 1,
-                            'flood_list': '201.0.0.66',
+                            'flood_list': '192.168.111.66',
                             'is_service_node': 'no',
                         },
                     },
@@ -1293,12 +1293,12 @@ class test_show_l2route_fl_all(unittest.TestCase):
     MS-VPC-BL1(config-if)# sh l2route fl all
     Topology ID Peer-id     Flood List      Service Node
     ----------- ----------- --------------- ------------
-    1001        8           201.34.33.44    no
-    1001        2           201.0.0.55      no
-    1001        1           201.0.0.66      no
-    1002        8           201.34.33.44    no
-    1002        2           201.0.0.55      no
-    1002        1           201.0.0.66      no
+    1001        8           192.168.169.44    no
+    1001        2           192.168.111.55      no
+    1001        1           192.168.111.66      no
+    1002        8           192.168.169.44    no
+    1002        2           192.168.111.55      no
+    1002        1           192.168.111.66      no
 
     '''}
 
@@ -1462,8 +1462,8 @@ class test_show_nve_vni_ingress_replication(unittest.TestCase):
                 10101:{
                     'vni': 10101,
                     'repl_ip': {
-                        "7.7.7.7":{
-                            'repl_ip': "7.7.7.7",
+                        "10.196.7.7":{
+                            'repl_ip': "10.196.7.7",
                             'up_time': "1d02h",
                             'source': "bgp-imet",
                         }
@@ -1472,8 +1472,8 @@ class test_show_nve_vni_ingress_replication(unittest.TestCase):
                 10201: {
                     'vni': 10201,
                     'repl_ip': {
-                        "7.7.7.7": {
-                            'repl_ip': "7.7.7.7",
+                        "10.196.7.7": {
+                            'repl_ip': "10.196.7.7",
                             'up_time': "1d02h",
                             'source': "bgp-imet",
                         }
@@ -1482,8 +1482,8 @@ class test_show_nve_vni_ingress_replication(unittest.TestCase):
                 10202: {
                     'vni': 10202,
                     'repl_ip': {
-                        "7.7.7.7": {
-                            'repl_ip': "7.7.7.7",
+                        "10.196.7.7": {
+                            'repl_ip': "10.196.7.7",
                             'up_time': "1d02h",
                             'source': "bgp-imet",
                         }
@@ -1498,11 +1498,11 @@ class test_show_nve_vni_ingress_replication(unittest.TestCase):
     Interface VNI      Replication List  Source  Up Time
     --------- -------- ----------------- ------- -------
 
-    nve1      10101    7.7.7.7           BGP-IMET 1d02h
+    nve1      10101    10.196.7.7           BGP-IMET 1d02h
 
-    nve1      10201    7.7.7.7           BGP-IMET 1d02h
+    nve1      10201    10.196.7.7           BGP-IMET 1d02h
 
-    nve1      10202    7.7.7.7           BGP-IMET 1d02h
+    nve1      10202    10.196.7.7           BGP-IMET 1d02h
         '''}
 
     golden_parsed_output_empty_repl = {
@@ -1517,8 +1517,8 @@ class test_show_nve_vni_ingress_replication(unittest.TestCase):
                 10202: {
                     'vni': 10202,
                     'repl_ip': {
-                        "7.7.7.7": {
-                            'repl_ip': "7.7.7.7",
+                        "10.196.7.7": {
+                            'repl_ip': "10.196.7.7",
                             'up_time': "1d02h",
                             'source': "bgp-imet",
                         }
@@ -1537,7 +1537,7 @@ class test_show_nve_vni_ingress_replication(unittest.TestCase):
 
         nve1      10201
 
-        nve1      10202    7.7.7.7           BGP-IMET 1d02h
+        nve1      10202    10.196.7.7           BGP-IMET 1d02h
             '''}
 
     def test_show_nve_vni_ingress_replication_golden(self):
@@ -1631,7 +1631,7 @@ class test_show_fabric_multicast_ip_sa_ad_route(unittest.TestCase):
                                     "238.8.4.101/32": {
                                         "grp_len": 32,
                                         "saddr": {
-                                            "100.101.1.3/32": {
+                                            "10.111.1.3/32": {
                                                 "src_len": 32,
                                                 "uptime": "00:01:01",
                                                 "interested_fabric_nodes": {
@@ -1640,7 +1640,7 @@ class test_show_fabric_multicast_ip_sa_ad_route(unittest.TestCase):
                                                     }
                                                 }
                                             },
-                                            "100.101.1.4/32": {
+                                            "10.111.1.4/32": {
                                                 "src_len": 32,
                                                 "uptime": "00:01:01",
                                                 "interested_fabric_nodes": {
@@ -1649,38 +1649,38 @@ class test_show_fabric_multicast_ip_sa_ad_route(unittest.TestCase):
                                                     }
                                                 }
                                             },
-                                            "100.101.6.3/32": {
+                                            "10.111.6.3/32": {
                                                 "src_len": 32,
                                                 "uptime": "00:49:39",
                                                 "interested_fabric_nodes": {
-                                                    "6.6.6.6": {
+                                                    "10.144.6.6": {
                                                         "uptime": "00:49:39",
                                                     }
                                                 }
                                             },
-                                            "100.101.6.4/32": {
+                                            "10.111.6.4/32": {
                                                 "src_len": 32,
                                                 "uptime": "00:49:39",
                                                 "interested_fabric_nodes": {
-                                                    "6.6.6.6": {
+                                                    "10.144.6.6": {
                                                         "uptime": "00:49:39",
                                                     }
                                                 }
                                             },
-                                            "100.101.7.3/32": {
+                                            "10.111.7.3/32": {
                                                 "src_len": 32,
                                                 "uptime": "00:02:38",
                                                 "interested_fabric_nodes": {
-                                                    "7.7.7.7": {
+                                                    "10.196.7.7": {
                                                         "uptime": "00:02:38",
                                                     }
                                                 }
                                             },
-                                            "100.101.8.3/32": {
+                                            "10.111.8.3/32": {
                                                 "src_len": 32,
                                                 "uptime": "00:49:39",
                                                 "interested_fabric_nodes": {
-                                                    "8.8.8.8": {
+                                                    "10.1.8.8": {
                                                         "uptime": "00:49:39",
                                                     }
                                                 }
@@ -1690,7 +1690,7 @@ class test_show_fabric_multicast_ip_sa_ad_route(unittest.TestCase):
                                     "238.8.4.102/32":{
                                         "grp_len": 32,
                                         'saddr': {
-                                            "100.102.1.3/32": {
+                                            "10.4.1.3/32": {
                                                 "src_len": 32,
                                                 "uptime": "00:00:10",
                                                 "interested_fabric_nodes": {
@@ -1699,7 +1699,7 @@ class test_show_fabric_multicast_ip_sa_ad_route(unittest.TestCase):
                                                     }
                                                 }
                                             },
-                                            "100.102.2.3/32": {
+                                            "10.4.2.3/32": {
                                                 "src_len": 32,
                                                 "uptime": "00:47:51",
                                                 "interested_fabric_nodes": {
@@ -1708,11 +1708,11 @@ class test_show_fabric_multicast_ip_sa_ad_route(unittest.TestCase):
                                                     }
                                                 }
                                             },
-                                            "100.102.6.3/32": {
+                                            "10.4.6.3/32": {
                                                 "src_len": 32,
                                                 "uptime": "00:49:39",
                                                 "interested_fabric_nodes": {
-                                                    "6.6.6.6": {
+                                                    "10.144.6.6": {
                                                         "uptime": "00:49:39",
                                                     }
                                                 }
@@ -1733,7 +1733,7 @@ class test_show_fabric_multicast_ip_sa_ad_route(unittest.TestCase):
                                     "238.8.4.201/32": {
                                         "grp_len": 32,
                                         "saddr": {
-                                            "200.201.1.3/32": {
+                                            "192.168.189.3/32": {
                                                 "src_len": 32,
                                                 "uptime": "00:03:24",
                                                 "interested_fabric_nodes": {
@@ -1742,7 +1742,7 @@ class test_show_fabric_multicast_ip_sa_ad_route(unittest.TestCase):
                                                     }
                                                 }
                                             },
-                                            "200.201.2.3/32": {
+                                            "192.168.229.3/32": {
                                                 "src_len": 32,
                                                 "uptime": "00:07:48",
                                                 "interested_fabric_nodes": {
@@ -1751,11 +1751,11 @@ class test_show_fabric_multicast_ip_sa_ad_route(unittest.TestCase):
                                                     }
                                                 }
                                             },
-                                            "200.201.6.3/32": {
+                                            "192.168.154.3/32": {
                                                 "src_len": 32,
                                                 "uptime": "00:49:39",
                                                 "interested_fabric_nodes": {
-                                                    "6.6.6.6": {
+                                                    "10.144.6.6": {
                                                         "uptime": "00:49:39",
                                                     }
                                                 }
@@ -1766,7 +1766,7 @@ class test_show_fabric_multicast_ip_sa_ad_route(unittest.TestCase):
                                     "238.8.4.202/32": {
                                         "grp_len": 32,
                                         "saddr": {
-                                            "200.202.1.3/32": {
+                                            "192.168.229.3/32": {
                                                 "src_len": 32,
                                                 "uptime": "00:02:10",
                                                 "interested_fabric_nodes": {
@@ -1775,7 +1775,7 @@ class test_show_fabric_multicast_ip_sa_ad_route(unittest.TestCase):
                                                     }
                                                 }
                                             },
-                                            "200.202.2.3/32": {
+                                            "192.168.16.3/32": {
                                                 "src_len": 32,
                                                 "uptime": "00:49:39",
                                                 "interested_fabric_nodes": {
@@ -1784,11 +1784,11 @@ class test_show_fabric_multicast_ip_sa_ad_route(unittest.TestCase):
                                                     }
                                                 }
                                             },
-                                            "200.202.6.3/32": {
+                                            "192.168.204.3/32": {
                                                 "src_len": 32,
                                                 "uptime": "00:49:39",
                                                 "interested_fabric_nodes": {
-                                                    "6.6.6.6": {
+                                                    "10.144.6.6": {
                                                         "uptime": "00:49:39",
                                                     }
                                                 }
@@ -1815,67 +1815,67 @@ VRF "default" MVPN SA AD Route Database VNI: 0
 
 VRF "vni_10100" MVPN SA AD Route Database VNI: 10100
 
-Src Active AD Route: (100.101.1.3/32, 238.8.4.101/32) uptime: 00:01:01
+Src Active AD Route: (10.111.1.3/32, 238.8.4.101/32) uptime: 00:01:01
   Interested Fabric Nodes:
     This node, uptime: 00:01:01
 
-Src Active AD Route: (100.101.1.4/32, 238.8.4.101/32) uptime: 00:01:01
+Src Active AD Route: (10.111.1.4/32, 238.8.4.101/32) uptime: 00:01:01
   Interested Fabric Nodes:
     This node, uptime: 00:01:01
 
-Src Active AD Route: (100.101.6.3/32, 238.8.4.101/32) uptime: 00:49:39
+Src Active AD Route: (10.111.6.3/32, 238.8.4.101/32) uptime: 00:49:39
   Interested Fabric Nodes:
-    6.6.6.6, uptime: 00:49:39
+    10.144.6.6, uptime: 00:49:39
 
-Src Active AD Route: (100.101.6.4/32, 238.8.4.101/32) uptime: 00:49:39
+Src Active AD Route: (10.111.6.4/32, 238.8.4.101/32) uptime: 00:49:39
   Interested Fabric Nodes:
-    6.6.6.6, uptime: 00:49:39
+    10.144.6.6, uptime: 00:49:39
 
-Src Active AD Route: (100.101.7.3/32, 238.8.4.101/32) uptime: 00:02:38
+Src Active AD Route: (10.111.7.3/32, 238.8.4.101/32) uptime: 00:02:38
   Interested Fabric Nodes:
-    7.7.7.7, uptime: 00:02:38
+    10.196.7.7, uptime: 00:02:38
 
-Src Active AD Route: (100.101.8.3/32, 238.8.4.101/32) uptime: 00:49:39
+Src Active AD Route: (10.111.8.3/32, 238.8.4.101/32) uptime: 00:49:39
   Interested Fabric Nodes:
-    8.8.8.8, uptime: 00:49:39
+    10.1.8.8, uptime: 00:49:39
 
-Src Active AD Route: (100.102.1.3/32, 238.8.4.102/32) uptime: 00:00:10
+Src Active AD Route: (10.4.1.3/32, 238.8.4.102/32) uptime: 00:00:10
   Interested Fabric Nodes:
     This node, uptime: 00:00:10
 
-Src Active AD Route: (100.102.2.3/32, 238.8.4.102/32) uptime: 00:47:51
+Src Active AD Route: (10.4.2.3/32, 238.8.4.102/32) uptime: 00:47:51
   Interested Fabric Nodes:
     This node, uptime: 00:47:51
 
-Src Active AD Route: (100.102.6.3/32, 238.8.4.102/32) uptime: 00:49:39
+Src Active AD Route: (10.4.6.3/32, 238.8.4.102/32) uptime: 00:49:39
   Interested Fabric Nodes:
-    6.6.6.6, uptime: 00:49:39
+    10.144.6.6, uptime: 00:49:39
 
 VRF "vni_10200" MVPN SA AD Route Database VNI: 10200
 
-Src Active AD Route: (200.201.1.3/32, 238.8.4.201/32) uptime: 00:03:24
+Src Active AD Route: (192.168.189.3/32, 238.8.4.201/32) uptime: 00:03:24
   Interested Fabric Nodes:
     This node, uptime: 00:03:24
 
-Src Active AD Route: (200.201.2.3/32, 238.8.4.201/32) uptime: 00:07:48
+Src Active AD Route: (192.168.229.3/32, 238.8.4.201/32) uptime: 00:07:48
   Interested Fabric Nodes:
     This node, uptime: 00:07:48
 
-Src Active AD Route: (200.201.6.3/32, 238.8.4.201/32) uptime: 00:49:39
+Src Active AD Route: (192.168.154.3/32, 238.8.4.201/32) uptime: 00:49:39
   Interested Fabric Nodes:
-    6.6.6.6, uptime: 00:49:39
+    10.144.6.6, uptime: 00:49:39
 
-Src Active AD Route: (200.202.1.3/32, 238.8.4.202/32) uptime: 00:02:10
+Src Active AD Route: (192.168.229.3/32, 238.8.4.202/32) uptime: 00:02:10
   Interested Fabric Nodes:
     This node, uptime: 00:02:10
 
-Src Active AD Route: (200.202.2.3/32, 238.8.4.202/32) uptime: 00:49:39
+Src Active AD Route: (192.168.16.3/32, 238.8.4.202/32) uptime: 00:49:39
   Interested Fabric Nodes:
     This node, uptime: 00:49:39
 
-Src Active AD Route: (200.202.6.3/32, 238.8.4.202/32) uptime: 00:49:39
+Src Active AD Route: (192.168.204.3/32, 238.8.4.202/32) uptime: 00:49:39
   Interested Fabric Nodes:
-    6.6.6.6, uptime: 00:49:39
+    10.144.6.6, uptime: 00:49:39
 
 VRF "vpc-keepalive" MVPN SA AD Route Database VNI: 0
 
@@ -1979,8 +1979,8 @@ class test_show_fabric_multicast_ip_l2_mroute(unittest.TestCase):
                                     "saddr": {
                                         "*": {
                                             "interested_fabric_nodes": {
-                                                "6.6.6.6": {
-                                                    "node": "6.6.6.6"
+                                                "10.144.6.6": {
+                                                    "node": "10.144.6.6"
                                                 }
                                             },
                                         },
@@ -1990,8 +1990,8 @@ class test_show_fabric_multicast_ip_l2_mroute(unittest.TestCase):
                                     "saddr": {
                                         "*": {
                                             "interested_fabric_nodes": {
-                                                "6.6.6.6":{
-                                                    "node": "6.6.6.6"
+                                                "10.144.6.6":{
+                                                    "node": "10.144.6.6"
                                                 }
                                             },
                                         },
@@ -2001,8 +2001,8 @@ class test_show_fabric_multicast_ip_l2_mroute(unittest.TestCase):
                                     "saddr": {
                                         "*": {
                                             "interested_fabric_nodes": {
-                                                "8.8.8.8": {
-                                                    "node": "8.8.8.8"
+                                                "10.1.8.8": {
+                                                    "node": "10.1.8.8"
                                                 }
                                             },
                                         },
@@ -2019,8 +2019,8 @@ class test_show_fabric_multicast_ip_l2_mroute(unittest.TestCase):
                                     "saddr": {
                                         "*": {
                                             "interested_fabric_nodes": {
-                                                "8.8.8.8": {
-                                                    "node": "8.8.8.8"
+                                                "10.1.8.8": {
+                                                    "node": "10.1.8.8"
                                                 },
                                             },
                                         }
@@ -2037,8 +2037,8 @@ class test_show_fabric_multicast_ip_l2_mroute(unittest.TestCase):
                                     "saddr": {
                                         "*": {
                                             "interested_fabric_nodes": {
-                                                "8.8.8.8": {
-                                                    "node": "8.8.8.8"
+                                                "10.1.8.8": {
+                                                    "node": "10.1.8.8"
                                                     }
                                                 },
                                             },
@@ -2055,8 +2055,8 @@ class test_show_fabric_multicast_ip_l2_mroute(unittest.TestCase):
                                     "saddr": {
                                         "*": {
                                             "interested_fabric_nodes": {
-                                                "8.8.8.8": {
-                                                    "node": "8.8.8.8"
+                                                "10.1.8.8": {
+                                                    "node": "10.1.8.8"
                                                 }
                                             },
                                         },
@@ -2101,33 +2101,33 @@ Fabric L2-Mroute: (*, 233.3.4.101/32)
 
 Fabric L2-Mroute: (*, 236.6.3.101/32)
   Interested Fabric Nodes:
-    6.6.6.6
+    10.144.6.6
 
 Fabric L2-Mroute: (*, 236.6.4.101/32)
   Interested Fabric Nodes:
-    6.6.6.6
+    10.144.6.6
 
 Fabric L2-Mroute: (*, 237.7.3.101/32)
   Interested Fabric Nodes:
-    8.8.8.8
+    10.1.8.8
 
 EVPN C-Mcast Route Database for VNI: 10102
 
 Fabric L2-Mroute: (*, 238.8.4.102/32)
   Interested Fabric Nodes:
-    8.8.8.8
+    10.1.8.8
 
 EVPN C-Mcast Route Database for VNI: 10201
 
 Fabric L2-Mroute: (*, 238.8.4.201/32)
   Interested Fabric Nodes:
-    8.8.8.8
+    10.1.8.8
 
 EVPN C-Mcast Route Database for VNI: 10202
 
 Fabric L2-Mroute: (*, 238.8.4.202/32)
   Interested Fabric Nodes:
-    8.8.8.8
+    10.1.8.8
 
         '''}
 

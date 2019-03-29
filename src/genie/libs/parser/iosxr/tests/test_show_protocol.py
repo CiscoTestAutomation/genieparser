@@ -34,7 +34,7 @@ class test_show_protocols_afi_all_all(unittest.TestCase):
                             'internal': 200,
                             'local': 200},
                         'neighbors': 
-                            {'4.4.4.4': 
+                            {'10.64.4.4': 
                                 {'gr_enable': 'No',
                                 'last_update': '00:01:28',
                                 'nsr_state': 'None'}}},
@@ -44,7 +44,7 @@ class test_show_protocols_afi_all_all(unittest.TestCase):
                             'internal': 200,
                             'local': 200},
                         'neighbors': 
-                            {'4.4.4.4': 
+                            {'10.64.4.4': 
                                 {'gr_enable': 'No',
                                 'last_update': '00:01:28',
                                 'nsr_state': 'None'}}}},
@@ -89,7 +89,7 @@ class test_show_protocols_afi_all_all(unittest.TestCase):
                                             'static': 
                                                 {'enabled': True,
                                                 'metric': 10}},
-                                        'router_id': '3.3.3.3'}}}}}}}}}
+                                        'router_id': '10.36.3.3'}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         RP/0/0/CPU0:R3_ospf_xr#show protocols afi-all all
@@ -105,16 +105,16 @@ class test_show_protocols_afi_all_all(unittest.TestCase):
           Distance: external 20 internal 200 local 200
           Routing Information Sources:
             Neighbor          State/Last update received  NSR-State  GR-Enabled
-            4.4.4.4           00:01:28                    None         No
+            10.64.4.4           00:01:28                    None         No
 
         Address Family VPNv6 Unicast:
           Distance: external 20 internal 200 local 200
           Routing Information Sources:
             Neighbor          State/Last update received  NSR-State  GR-Enabled
-            4.4.4.4           00:01:28                    None         No
+            10.64.4.4           00:01:28                    None         No
 
         Routing Protocol OSPF 1
-          Router Id: 3.3.3.3
+          Router Id: 10.36.3.3
           Distance: 110
           Distance: IntraArea 112 InterArea 113 External/NSSA 114
           Non-Stop Forwarding: Disabled
@@ -144,7 +144,7 @@ class test_show_protocols_afi_all_all(unittest.TestCase):
                                                            "all": 110
                                                       }
                                                  },
-                                                 "router_id": "200.5.0.1",
+                                                 "router_id": "192.168.205.1",
                                                  "nsf": True,
                                                  "areas": {
                                                       "0.0.0.1": {
@@ -263,7 +263,7 @@ class test_show_protocols_afi_all_all(unittest.TestCase):
             GigabitEthernet0/0/0/1.104 is disabled (active in configuration)
 
         Routing Protocol OSPF 1
-          Router Id: 200.5.0.1
+          Router Id: 192.168.205.1
           Distance: 110
           Non-Stop Forwarding: Enabled
           Redistribution:

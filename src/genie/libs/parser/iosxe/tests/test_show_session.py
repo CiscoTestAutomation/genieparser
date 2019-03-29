@@ -259,7 +259,7 @@ class test_show_line(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         Router#show line
         Load for five secs: 52%/0%; one minute: 37%; five minutes: 33%
-        Time source is NTP, 17:11:11.421 JST Tue Sep 13 2016
+        Time source is NTP, 17:11:11.421 EST Tue Sep 13 2016
 
            Tty Typ     Tx/Rx    A Modem  Roty AccO AccI   Uses   Noise  Overruns   Int
               0 CTY              -    -      -    -    -      0       2     0/0       -
@@ -334,7 +334,7 @@ class test_show_users(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         Router#show users
         Load for five secs: 14%/0%; one minute: 23%; five minutes: 31%
-        Time source is NTP, 16:53:22.622 JST Tue Sep 13 2016
+        Time source is NTP, 16:53:22.622 EST Tue Sep 13 2016
 
             Line       User       Host(s)              Idle       Location
            2 vty 0     nos        idle                 00:35:32 10.0.0.1

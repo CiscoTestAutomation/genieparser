@@ -813,14 +813,14 @@ class test_show_ip_pim_df(unittest.TestCase):
                         'rp':{
                             'bidir':{
                                 'interface_df_election':{
-                                    '2.2.2.2 Loopback0':{
-                                        'address': '2.2.2.2',
+                                    '10.16.2.2 Loopback0':{
+                                        'address': '10.16.2.2',
                                         'interface_name': 'Loopback0',
                                         'df_bits': '00000002 (1)',
                                         'metric_pref': 0,
                                         'metric': 0,
                                         'group_range': '224.128.0.0/9',
-                                        'df_address': '1.1.1.1',
+                                        'df_address': '10.4.1.1',
                                         'interface_state': 'win',
                                         'winner_metric_pref': 0,
                                         'winner_metric': 0,
@@ -828,8 +828,8 @@ class test_show_ip_pim_df(unittest.TestCase):
                                         'df_ordinal': 2,
 
                                     },
-                                    '2.2.2.2 Ethernet2/2': {
-                                        'address': '2.2.2.2',
+                                    '10.16.2.2 Ethernet2/2': {
+                                        'address': '10.16.2.2',
                                         'interface_name': 'Ethernet2/2',
                                         'df_bits': '00000002 (1)',
                                         'metric_pref': 0,
@@ -858,14 +858,14 @@ class test_show_ip_pim_df(unittest.TestCase):
                         'rp': {
                             'bidir': {
                                 'interface_df_election': {
-                                    '12.12.12.12 Loopback1': {
-                                        'address': '12.12.12.12',
+                                    '10.66.12.12 Loopback1': {
+                                        'address': '10.66.12.12',
                                         'interface_name': 'Loopback1',
                                         'df_bits': '00000002 (1)',
                                         'metric_pref': 0,
                                         'metric': 0,
                                         'group_range': '224.128.0.0/9',
-                                        'df_address': '1.1.1.1',
+                                        'df_address': '10.4.1.1',
                                         'interface_state': 'win',
                                         'winner_metric_pref': 0,
                                         'winner_metric': 0,
@@ -885,18 +885,18 @@ class test_show_ip_pim_df(unittest.TestCase):
         R1# show ip pim df vrf all
         Bidir-PIM Designated Forwarder Information for VRF "default"
         RP Address (ordinal)   DF-bits          RP Metric  Group Range
-        2.2.2.2 (2)            00000002 (1)     [0/0]      224.128.0.0/9
+        10.16.2.2 (2)            00000002 (1)     [0/0]      224.128.0.0/9
 
           Interface            DF Address       DF State   DF Metric    DF Uptime
-          Loopback0            1.1.1.1          Winner     [0/0]        00:28:14
+          Loopback0            10.4.1.1          Winner     [0/0]        00:28:14
           Ethernet2/2                 10.2.0.2         Lose       [0/0]        00:28:14  (RPF)
 
         Bidir-PIM Designated Forwarder Information for VRF "VRF1"
         RP Address (ordinal)   DF-bits          RP Metric  Group Range
-        12.12.12.12 (3)            00000002 (1)     [0/0]      224.128.0.0/9
+        10.66.12.12 (3)            00000002 (1)     [0/0]      224.128.0.0/9
 
           Interface            DF Address       DF State   DF Metric    DF Uptime
-          Loopback1            1.1.1.1          Winner     [0/0]        02:28:14
+          Loopback1            10.4.1.1          Winner     [0/0]        02:28:14
 
     '''}
 
@@ -1285,7 +1285,7 @@ class test_show_ip_pim_route(unittest.TestCase):
                                     'expiration': '00:01:58',
                                     'incoming_interface': 'Null',
                                     'rpf_neighbor': '0.0.0.0',
-                                    'rp_address':'12.12.12.12',
+                                    'rp_address':'10.66.12.12',
                                     'mode':'bidir',
                                     'jp_holdtime_roundup': 3,
                                     'oif': '00000000',
@@ -1302,8 +1302,8 @@ class test_show_ip_pim_route(unittest.TestCase):
                                     'mode': 'bidir',
                                     'expiration': '00:01:58',
                                     'incoming_interface': 'loopback0',
-                                    'rpf_neighbor': '1.1.1.1',
-                                    'rp_address': '1.1.1.1',
+                                    'rpf_neighbor': '10.4.1.1',
+                                    'rp_address': '10.4.1.1',
                                     'jp_holdtime_roundup': 3,
                                     'oif': '00000000',
                                     'oif_count': 0,
@@ -1338,13 +1338,13 @@ class test_show_ip_pim_route(unittest.TestCase):
       Sgr-prune-list: (0) 00000000
       Timeout-interval: 3, JP-holdtime round-up: 3
 
-    (*, 233.0.0.0/24), RP 12.12.12.12, bidir, expires 00:01:58, RP-bit
+    (*, 233.0.0.0/24), RP 10.66.12.12, bidir, expires 00:01:58, RP-bit
       Incoming interface: Null, RPF nbr 0.0.0.0
       Oif-list: (0) 00000000, timeout-list: (0) 00000000
       Timeout-interval: 2, JP-holdtime round-up: 3
 
-    (*, 238.0.0.0/24), RP 1.1.1.1*, bidir, expires 00:01:58, RP-bit
-      Incoming interface: loopback0, RPF nbr 1.1.1.1
+    (*, 238.0.0.0/24), RP 10.4.1.1*, bidir, expires 00:01:58, RP-bit
+      Incoming interface: loopback0, RPF nbr 10.4.1.1
       Oif-list: (0) 00000000, timeout-list: (0) 00000000
       Timeout-interval: 2, JP-holdtime round-up: 3
     '''}
@@ -1588,7 +1588,7 @@ class test_show_ip_pim_vrf_detail(unittest.TestCase):
                         'sm':{
                             'asm':{
                                 'register_source': 'loopback0',
-                                'register_source_address': '1.1.1.1',
+                                'register_source_address': '10.4.1.1',
                                 'sg_expiry_timer': {
                                     'sg_list': 'sg-expiry-timer-sg-list',
                                     'infinity': True,
@@ -1622,7 +1622,7 @@ class test_show_ip_pim_vrf_detail(unittest.TestCase):
                         'sm': {
                             'asm': {
                                 'register_source': 'loopback1',
-                                'register_source_address': '11.11.11.11',
+                                'register_source_address': '10.229.11.11',
                                 'sg_expiry_timer': {
                                     'sg_expiry_timer': 1200,
                                     'sg_expiry_timer_configured': True,
@@ -1658,7 +1658,7 @@ class test_show_ip_pim_vrf_detail(unittest.TestCase):
         default               1        0x00000001  3          no          no
           State Limit: None
           Register Rate Limit: none
-          Register source  interface : loopback0 address : 1.1.1.1
+          Register source  interface : loopback0 address : 10.4.1.1
           Shared tree ranges: none
           (S,G)-expiry timer: configured, infinity
             (S,G)-list policy: sg-expiry-timer-sg-list
@@ -1671,7 +1671,7 @@ class test_show_ip_pim_vrf_detail(unittest.TestCase):
         VRF1                  3        0x00000003  3          no          no
           State Limit: None
           Register Rate Limit: none
-          Register source  interface : loopback1 address : 11.11.11.11
+          Register source  interface : loopback1 address : 10.229.11.11
           Shared tree ranges: none
           (S,G)-expiry timer: configured, 1200 secs
             (S,G)-list policy: none
@@ -1877,7 +1877,7 @@ class test_show_ip_pim_group_range(unittest.TestCase):
                             'asm':{
                                 '224.0.0.0/4': {
                                     'mode': 'asm',
-                                    'rp_address': '33.33.33.33',
+                                    'rp_address': '10.21.33.33',
                                 },
                             },
                         },
@@ -1898,7 +1898,7 @@ class test_show_ip_pim_group_range(unittest.TestCase):
                             'asm':{
                                 '224.0.0.0/4': {
                                     'mode': 'asm',
-                                    'rp_address': '2.2.2.2',
+                                    'rp_address': '10.16.2.2',
                                 },
                                 '224.0.0.0/5': {
                                     'mode': 'asm',
@@ -1916,12 +1916,12 @@ class test_show_ip_pim_group_range(unittest.TestCase):
     PIM Group-Range Configuration for VRF "VRF1"
     Group-range        Action    Mode      RP-address       Shared-tree-only range
     232.0.0.0/8        Accept    SSM       -                -         Local
-    224.0.0.0/4        -         ASM       33.33.33.33      -
+    224.0.0.0/4        -         ASM       10.21.33.33      -
 
     PIM Group-Range Configuration for VRF "default"
     Group-range        Action    Mode      RP-address       Shared-tree-only range
     232.0.0.0/8        Accept    SSM       -                -         Local
-    224.0.0.0/4        -         ASM       2.2.2.2          -
+    224.0.0.0/4        -         ASM       10.16.2.2          -
     224.0.0.0/5        -         ASM       10.1.5.1         -
     '''}
 
@@ -2158,12 +2158,12 @@ class test_show_ip_pim_rp(unittest.TestCase):
                                                "policy_name": "224.0.0.0/4"
                                           }
                                      },
-                                     "2.2.2.2": {
+                                     "10.16.2.2": {
                                           "sm": {
                                                "policy_name": "224.0.0.0/4"
                                           }
                                      },
-                                     "12.12.12.12": {
+                                     "10.66.12.12": {
                                           "bidir": {
                                                "policy_name": "233.0.0.0/24"
                                           }
@@ -2179,22 +2179,22 @@ class test_show_ip_pim_rp(unittest.TestCase):
                                           "address": "10.111.111.111",
                                           "info_source_type": "static"
                                      },
-                                     "2.2.2.2 SM static": {
+                                     "10.16.2.2 SM static": {
                                           "mode": "SM",
                                           "group_ranges": "224.0.0.0/4",
                                           "df_ordinal": 0,
                                           "expiration": "never",
                                           "up_time": "03:52:52",
-                                          "address": "2.2.2.2",
+                                          "address": "10.16.2.2",
                                           "info_source_type": "static"
                                      },
-                                     "12.12.12.12 BIDIR static": {
+                                     "10.66.12.12 BIDIR static": {
                                           "mode": "BIDIR",
                                           "group_ranges": "233.0.0.0/24",
                                           "df_ordinal": 1,
                                           "expiration": "never",
                                           "up_time": "00:00:54",
-                                          "address": "12.12.12.12",
+                                          "address": "10.66.12.12",
                                           "info_source_type": "static"
                                      },
                                      "10.1.5.1 SM bootstrap": {
@@ -2210,10 +2210,10 @@ class test_show_ip_pim_rp(unittest.TestCase):
                                      }
                                 },
                                 "rp_mappings": {
-                                     "224.0.0.0/4 2.2.2.2 static": {
+                                     "224.0.0.0/4 10.16.2.2 static": {
                                           "group": "224.0.0.0/4",
                                           "protocol": "static",
-                                          "rp_address": "2.2.2.2",
+                                          "rp_address": "10.16.2.2",
                                           "up_time": "03:52:52",
                                           "expiration": "never"
                                      },
@@ -2231,10 +2231,10 @@ class test_show_ip_pim_rp(unittest.TestCase):
                                           "up_time": "01:56:07",
                                           "expiration": "00:02:05"
                                      },
-                                     "233.0.0.0/24 12.12.12.12 static": {
+                                     "233.0.0.0/24 10.66.12.12 static": {
                                           "group": "233.0.0.0/24",
                                           "protocol": "static",
-                                          "rp_address": "12.12.12.12",
+                                          "rp_address": "10.66.12.12",
                                           "up_time": "00:00:54",
                                           "expiration": "never"
                                      }
@@ -2288,56 +2288,56 @@ class test_show_ip_pim_rp(unittest.TestCase):
                            "rp": {
                                 "autorp": {
                                      "send_rp_announce": {
-                                          "rp_source": "200.12.0.2",
+                                          "rp_source": "192.168.64.2",
                                           "bidir": True,
                                           "scope": 0,
                                           "group_list": "226.0.0.0/8",
                                           "group": "226.0.0.0"
                                      },
-                                     "address": "11.11.11.11",
+                                     "address": "10.229.11.11",
                                      "bsr_next_discovery": "00:00:15"
                                 },
                                 "static_rp": {
-                                     "33.33.33.33": {
+                                     "10.21.33.33": {
                                           "sm": {
                                                "policy_name": "224.0.0.0/4"
                                           }
                                      }
                                 },
                                 "rp_list": {
-                                     "200.12.0.2 BIDIR autorp": {
+                                     "192.168.64.2 BIDIR autorp": {
                                           "mode": "BIDIR",
                                           "group_ranges": "226.0.0.0/8",
                                           "df_ordinal": 0,
                                           "expiration": "00:02:24",
                                           "up_time": "04:30:45",
                                           "priority": 255,
-                                          "address": "200.12.0.2",
-                                          "info_source_address": "200.12.0.2",
+                                          "address": "192.168.64.2",
+                                          "info_source_address": "192.168.64.2",
                                           "info_source_type": "autorp"
                                      },
-                                     "33.33.33.33 SM static": {
+                                     "10.21.33.33 SM static": {
                                           "mode": "SM",
                                           "group_ranges": "224.0.0.0/4",
                                           "df_ordinal": 0,
                                           "expiration": "never",
                                           "up_time": "03:52:52",
-                                          "address": "33.33.33.33",
+                                          "address": "10.21.33.33",
                                           "info_source_type": "static"
                                      }
                                 },
                                 "rp_mappings": {
-                                     "224.0.0.0/4 33.33.33.33 static": {
+                                     "224.0.0.0/4 10.21.33.33 static": {
                                           "group": "224.0.0.0/4",
                                           "protocol": "static",
-                                          "rp_address": "33.33.33.33",
+                                          "rp_address": "10.21.33.33",
                                           "up_time": "03:52:52",
                                           "expiration": "never"
                                      },
-                                     "226.0.0.0/8 200.12.0.2 autorp": {
+                                     "226.0.0.0/8 192.168.64.2 autorp": {
                                           "group": "226.0.0.0/8",
                                           "protocol": "autorp",
-                                          "rp_address": "200.12.0.2",
+                                          "rp_address": "192.168.64.2",
                                           "up_time": "04:30:45",
                                           "expiration": "00:02:24"
                                      }
@@ -2353,20 +2353,20 @@ class test_show_ip_pim_rp(unittest.TestCase):
         R1# show ip pim rp vrf all
         PIM RP Status Information for VRF "VRF1"
         BSR: Not Operational
-        Auto-RP RPA: 11.11.11.11*, next Discovery message in: 00:00:15
+        Auto-RP RPA: 10.229.11.11*, next Discovery message in: 00:00:15
         BSR RP Candidate policy: None
         BSR RP policy: None
         Auto-RP Announce policy: None
         Auto-RP Discovery policy: None
 
-        RP: 33.33.33.33, (0), 
+        RP: 10.21.33.33, (0), 
           uptime: 03:52:52  priority: 0,
           RP-source: (local),
           group ranges:
               224.0.0.0/4, expires: never
-        RP: 200.12.0.2, (0), 
+        RP: 192.168.64.2, (0), 
           uptime: 04:30:45   priority: 255, 
-          RP-source: 200.12.0.2 (A),
+          RP-source: 192.168.64.2 (A),
           group ranges:
             226.0.0.0/8   (bidir)  ,  expires: 00:02:24 (A)
 
@@ -2390,13 +2390,13 @@ class test_show_ip_pim_rp(unittest.TestCase):
         Anycast-RP 10.111.111.111 members:
           10.1.2.1*  10.1.5.1*
 
-        RP: 2.2.2.2, (0), uptime: 03:52:52, expires: never,
+        RP: 10.16.2.2, (0), uptime: 03:52:52, expires: never,
           priority: 0, RP-source: (local), group ranges:
               224.0.0.0/4
         RP: 10.1.5.1*, (0), uptime: 01:56:07, expires: 00:02:05,
           priority: 92, RP-source: 10.1.5.1 (B), group ranges:
               224.0.0.0/5
-        RP: 12.12.12.12, (1), uptime: 00:00:54, expires: never,
+        RP: 10.66.12.12, (1), uptime: 00:00:54, expires: never,
           priority: 0, RP-source: (local), group ranges:
               233.0.0.0/24  (bidir)
         RP: 10.111.111.111, (0), uptime: 00:01:06, expires: never,
@@ -2446,7 +2446,7 @@ class test_show_ip_pim_rp(unittest.TestCase):
 
 
         PIM RP Status Information for VRF "default"
-        BSR: 1.1.1.1*, next Bootstrap message in: 00:00:42,
+        BSR: 10.4.1.1*, next Bootstrap message in: 00:00:42,
              priority: 64, hash-length: 30
         Auto-RP disabled
         BSR RP Candidate policy: None
@@ -2454,11 +2454,11 @@ class test_show_ip_pim_rp(unittest.TestCase):
         Auto-RP Announce policy: None
         Auto-RP Discovery policy: None
 
-        RP: 2.2.2.2, (0), uptime: 18:05:36, expires: 00:02:18,
-          priority: 10, RP-source: 2.2.2.2 (B), group ranges:
+        RP: 10.16.2.2, (0), uptime: 18:05:36, expires: 00:02:18,
+          priority: 10, RP-source: 10.16.2.2 (B), group ranges:
               239.0.0.0/24
-        RP: 3.3.3.3, (0), uptime: 18:07:42, expires: 00:01:50 (B),
-          priority: 5, RP-source: 3.3.3.3 (B), (local), group ranges:
+        RP: 10.36.3.3, (0), uptime: 18:07:42, expires: 00:01:50 (B),
+          priority: 5, RP-source: 10.36.3.3 (B), (local), group ranges:
               239.0.0.0/24   224.0.0.0/4
     '''
 
@@ -2474,14 +2474,14 @@ class test_show_ip_pim_rp(unittest.TestCase):
                                      "bsr": {
                                           "hash_mask_length": 30,
                                           "priority": 64,
-                                          "address": "1.1.1.1"
+                                          "address": "10.4.1.1"
                                      },
                                      "bsr_next_bootstrap": "00:00:42",
                                      'rp_candidate_next_advertisement': '00:02:18',
                                      "bsr_address": {
-                                          "2.2.2.2": {
+                                          "10.16.2.2": {
                                                "priority": 10,
-                                               "address": "2.2.2.2",
+                                               "address": "10.16.2.2",
                                                "mode": "SM",
                                                "policy": "239.0.0.0/24"
                                           }
@@ -2489,28 +2489,28 @@ class test_show_ip_pim_rp(unittest.TestCase):
                                      "rp": {
                                           "group_policy": "239.0.0.0/24",
                                           "up_time": "18:05:36",
-                                          "rp_address": "2.2.2.2"
+                                          "rp_address": "10.16.2.2"
                                      },
                                      "bsr_candidate": {
                                           "hash_mask_length": 30,
                                           "priority": 64,
-                                          "address": "1.1.1.1"
+                                          "address": "10.4.1.1"
                                      }
                                 },
                                 "rp_mappings": {
-                                     "239.0.0.0/24 2.2.2.2 bootstrap": {
+                                     "239.0.0.0/24 10.16.2.2 bootstrap": {
                                           "protocol": "bootstrap",
                                           "expiration": "00:02:18",
                                           "group": "239.0.0.0/24",
                                           "up_time": "18:05:36",
-                                          "rp_address": "2.2.2.2"
+                                          "rp_address": "10.16.2.2"
                                      }
                                 },
                                 "rp_list": {
-                                     "2.2.2.2 SM bootstrap": {
-                                          "info_source_address": "2.2.2.2",
+                                     "10.16.2.2 SM bootstrap": {
+                                          "info_source_address": "10.16.2.2",
                                           "priority": 10,
-                                          "address": "2.2.2.2",
+                                          "address": "10.16.2.2",
                                           "mode": "SM",
                                           "group_ranges": "239.0.0.0/24",
                                           "df_ordinal": 0,
