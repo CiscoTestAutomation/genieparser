@@ -128,7 +128,7 @@ class test_show_ip_interfaces_brief_pipe_ip(unittest.TestCase):
 #     device = Device(name='aDevice')
 #     device1 = Device(name='bDevice')
 #     golden_parsed_output = {'interface': {'Vlan1': {'vlan_id': {'1': {'ip_address': 'unassigned'}}},
-#                                           'Vlan100': {'vlan_id': {'100': {'ip_address': '201.0.12.1'}}}}}
+#                                           'Vlan100': {'vlan_id': {'100': {'ip_address': '192.168.234.1'}}}}}
 
 #     class etree_holder():
 #       def __init__(self):
@@ -150,7 +150,7 @@ class test_show_ip_interfaces_brief_pipe_ip(unittest.TestCase):
 #                   <ip>
 #                     <address>
 #                       <primary>
-#                         <address>201.0.12.1</address>
+#                         <address>192.168.234.1</address>
 #                         <mask>255.255.255.0</mask>
 #                       </primary>
 #                     </address>
@@ -706,9 +706,9 @@ class test_show_interfaces(unittest.TestCase):
                  "queue_strategy": "fifo"
             },
             "ipv4": {
-                 "200.2.1.1/24": {
+                 "192.168.154.1/24": {
                       "prefix_length": "24",
-                      "ip": "200.2.1.1"
+                      "ip": "192.168.154.1"
                  },
                  "unnumbered": {
                       "interface_ref": "Loopback0"
@@ -793,9 +793,9 @@ class test_show_interfaces(unittest.TestCase):
             },
             "enabled": True,
             "ipv4": {
-                 "200.2.1.1/24": {
+                 "192.168.154.1/24": {
                       "prefix_length": "24",
-                      "ip": "200.2.1.1"
+                      "ip": "192.168.154.1"
                  }
             },
             "rxload": "1/255",
@@ -852,9 +852,9 @@ class test_show_interfaces(unittest.TestCase):
             "rxload": "1/255",
             "output_hang": "never",
             "ipv4": {
-                 "201.0.12.1/24": {
+                 "192.168.234.1/24": {
                       "prefix_length": "24",
-                      "ip": "201.0.12.1"
+                      "ip": "192.168.234.1"
                  }
             },
             "encapsulations": {
@@ -1099,7 +1099,7 @@ class test_show_interfaces(unittest.TestCase):
              0 output buffer failures, 0 output buffers swapped out
         GigabitEthernet3 is up, line protocol is up 
           Hardware is CSR vNIC, address is 5254.0072.9b0c (bia 5254.0072.9b0c)
-          Interface is unnumbered. Using address of Loopback0 (200.2.1.1)
+          Interface is unnumbered. Using address of Loopback0 (192.168.154.1)
           MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
              reliability 255/255, txload 1/255, rxload 1/255
           Encapsulation ARPA, loopback not set
@@ -1127,7 +1127,7 @@ class test_show_interfaces(unittest.TestCase):
              0 output buffer failures, 0 output buffers swapped out
         Loopback0 is up, line protocol is up 
           Hardware is Loopback
-          Internet address is 200.2.1.1/24
+          Internet address is 192.168.154.1/24
           MTU 1514 bytes, BW 8000000 Kbit/sec, DLY 5000 usec, 
              reliability 255/255, txload 1/255, rxload 1/255
           Encapsulation LOOPBACK, loopback not set
@@ -1149,7 +1149,7 @@ class test_show_interfaces(unittest.TestCase):
              0 output buffer failures, 0 output buffers swapped out
         Vlan100 is up, line protocol is up 
           Hardware is Ethernet SVI, address is 0057.d228.1a51 (bia 0057.d228.1a51)
-          Internet address is 201.0.12.1/24
+          Internet address is 192.168.234.1/24
           MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
              reliability 255/255, txload 1/255, rxload 1/255
           Encapsulation ARPA, loopback not set
@@ -1407,9 +1407,9 @@ class test_show_ip_interface(unittest.TestCase):
                 "unreachables": "always sent",
             },
             "ipv4": {
-                 "201.11.14.1/24": {
+                 "192.168.76.1/24": {
                       "prefix_length": "24",
-                      "ip": "201.11.14.1",
+                      "ip": "192.168.76.1",
                       "secondary": False,
                       "broadcase_address": "255.255.255.255"
                  }
@@ -1555,7 +1555,7 @@ class test_show_ip_interface(unittest.TestCase):
     }
     golden_output = {'execute.return_value': '''
         Vlan211 is up, line protocol is up
-        Internet address is 201.11.14.1/24
+        Internet address is 192.168.76.1/24
         Broadcast address is 255.255.255.255
         Address determined by configuration file
         MTU is 1500 bytes
@@ -2326,7 +2326,7 @@ class test_show_interfaces_stats(unittest.TestCase):
     golden_output = {'execute.return_value': '''
         Router#show interface stats
         Load for five secs: 5%/1%; one minute: 8%; five minutes: 9%
-        Time source is NTP, 07:38:10.599 JST Thu Sep 8 2016
+        Time source is NTP, 07:38:10.599 EST Thu Sep 8 2016
 
         GigabitEthernet0/0
                   Switching path    Pkts In   Chars In   Pkts Out  Chars Out
@@ -2465,7 +2465,7 @@ class test_show_interfaces_stats(unittest.TestCase):
     golden_output_interface = {'execute.return_value': '''
         Router#show interface gigabitEthernet 0/0/0 stats
         Load for five secs: 5%/1%; one minute: 8%; five minutes: 9%
-        Time source is NTP, 07:38:10.599 JST Thu Sep 8 2016
+        Time source is NTP, 07:38:10.599 EST Thu Sep 8 2016
 
         GigabitEthernet0/0/0
                   Switching path    Pkts In   Chars In   Pkts Out  Chars Out

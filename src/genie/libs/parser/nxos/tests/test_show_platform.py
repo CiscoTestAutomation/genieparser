@@ -52,10 +52,10 @@ class test_show_version(unittest.TestCase):
                                  'bios_compile_time': '05/29/2013',
                                  'kickstart_version': '8.1(1) [build 8.1(0.129)] [gdb]',
                                  'kickstart_compile_time': '4/30/2017 23:00:00 [04/15/2017 ''04:34:05]',
-                                 'kickstart_image_file': 'slot0:///n7000-s2-kickstart.8.1.0.129.gbin',
+                                 'kickstart_image_file': 'slot0:///n7000-s2-kickstart.10.81.0.129.gbin',
                                  'system_version': '8.1(1) [build 8.1(0.129)] [gdb]',
                                  'system_compile_time': '4/30/2017 23:00:00 [04/15/2017 ''06:43:41]',
-                                 'system_image_file': 'slot0:///n7000-s2-dk9.8.1.0.129.gbin'}
+                                 'system_image_file': 'slot0:///n7000-s2-dk10.34.1.0.129.gbin'}
                               }
                             }
 
@@ -104,9 +104,9 @@ Software
   kickstart: version 8.1(1) [build 8.1(0.129)] [gdb]
   system:    version 8.1(1) [build 8.1(0.129)] [gdb]
   BIOS compile time:       05/29/2013
-  kickstart image file is: slot0:///n7000-s2-kickstart.8.1.0.129.gbin
+  kickstart image file is: slot0:///n7000-s2-kickstart.10.81.0.129.gbin
   kickstart compile time:  4/30/2017 23:00:00 [04/15/2017 04:34:05]
-  system image file is:    slot0:///n7000-s2-dk9.8.1.0.129.gbin
+  system image file is:    slot0:///n7000-s2-dk10.34.1.0.129.gbin
   system compile time:     4/30/2017 23:00:00 [04/15/2017 06:43:41]
 
 
@@ -294,12 +294,12 @@ class test_show_install_active(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {'boot_images':
                               {'kickstart_image': 'slot0:/n7000-s2-kickstart.8.3.0.CV.0.658.gbin',
-                               'system_image': 'slot0:/n7000-s2-dk9.8.3.0.CV.0.658.gbin'},
+                               'system_image': 'slot0:/n7000-s2-dk10.34.3.0.CV.0.658.gbin'},
                             'active_packages':
                               {'active_package_module_0':
-                                {'active_package_name': 'n7700-s2-dk9.7.2.0.D1.1.CSCuo7721.bin'},
+                                {'active_package_name': 'n7700-s2-dk10.1.2.0.D1.1.CSCuo7721.bin'},
                                'active_package_module_3': 
-                                {'active_package_name': 'n7700-s2-dk9.7.2.0.D1.1.CSCuo7721.bin'}
+                                {'active_package_name': 'n7700-s2-dk10.1.2.0.D1.1.CSCuo7721.bin'}
                               }
                             }
 
@@ -307,15 +307,15 @@ class test_show_install_active(unittest.TestCase):
  
     Boot Images:
             Kickstart Image: slot0:/n7000-s2-kickstart.8.3.0.CV.0.658.gbin
-            System Image: slot0:/n7000-s2-dk9.8.3.0.CV.0.658.gbin
+            System Image: slot0:/n7000-s2-dk10.34.3.0.CV.0.658.gbin
 
     Active Packages:
 
-            n7700-s2-dk9.7.2.0.D1.1.CSCuo7721.bin
+            n7700-s2-dk10.1.2.0.D1.1.CSCuo7721.bin
 
     Active Packages on Module #3:
 
-            n7700-s2-dk9.7.2.0.D1.1.CSCuo7721.bin
+            n7700-s2-dk10.1.2.0.D1.1.CSCuo7721.bin
 
     Active Packages on Module #4:
 
@@ -463,11 +463,11 @@ class test_show_boot(unittest.TestCase):
                                 {'sup_number':
                                     {'sup-1':
                                         {'kickstart_variable': 'slot0:/n7000-s2-kickstart.8.3.0.CV.0.658.gbin',
-                                         'system_variable': 'slot0:/n7000-s2-dk9.8.3.0.CV.0.658.gbin',
+                                         'system_variable': 'slot0:/n7000-s2-dk10.34.3.0.CV.0.658.gbin',
                                          'boot_poap':'Disabled'},
                                      'sup-2':
                                         {'kickstart_variable': 'slot0:/n7000-s2-kickstart.8.3.0.CV.0.658.gbin',
-                                         'system_variable': 'slot0:/n7000-s2-dk9.8.3.0.CV.0.658.gbin',
+                                         'system_variable': 'slot0:/n7000-s2-dk10.34.3.0.CV.0.658.gbin',
                                          'boot_poap':'Disabled'}
                                     }
                                 },
@@ -475,11 +475,11 @@ class test_show_boot(unittest.TestCase):
                                 {'sup_number':
                                     {'sup-1':
                                         {'kickstart_variable': 'slot0:/n7000-s2-kickstart.8.3.0.CV.0.658.gbin',
-                                         'system_variable': 'slot0:/n7000-s2-dk9.8.3.0.CV.0.658.gbin',
+                                         'system_variable': 'slot0:/n7000-s2-dk10.34.3.0.CV.0.658.gbin',
                                          'boot_poap':'Disabled'},
                                      'sup-2':
                                         {'kickstart_variable': 'slot0:/n7000-s2-kickstart.8.3.0.CV.0.658.gbin',
-                                         'system_variable': 'slot0:/n7000-s2-dk9.8.3.0.CV.0.658.gbin',
+                                         'system_variable': 'slot0:/n7000-s2-dk10.34.3.0.CV.0.658.gbin',
                                          'boot_poap':'Disabled'}
                                     }
                                 }
@@ -491,11 +491,11 @@ class test_show_boot(unittest.TestCase):
 
     sup-1
     kickstart variable = slot0:/n7000-s2-kickstart.8.3.0.CV.0.658.gbin
-    system variable = slot0:/n7000-s2-dk9.8.3.0.CV.0.658.gbin
+    system variable = slot0:/n7000-s2-dk10.34.3.0.CV.0.658.gbin
     Boot POAP Disabled
     sup-2
     kickstart variable = slot0:/n7000-s2-kickstart.8.3.0.CV.0.658.gbin
-    system variable = slot0:/n7000-s2-dk9.8.3.0.CV.0.658.gbin
+    system variable = slot0:/n7000-s2-dk10.34.3.0.CV.0.658.gbin
     Boot POAP Disabled
     No module boot variable set
 
@@ -503,11 +503,11 @@ class test_show_boot(unittest.TestCase):
 
     sup-1
     kickstart variable = slot0:/n7000-s2-kickstart.8.3.0.CV.0.658.gbin
-    system variable = slot0:/n7000-s2-dk9.8.3.0.CV.0.658.gbin
+    system variable = slot0:/n7000-s2-dk10.34.3.0.CV.0.658.gbin
     Boot POAP Disabled
     sup-2
     kickstart variable = slot0:/n7000-s2-kickstart.8.3.0.CV.0.658.gbin
-    system variable = slot0:/n7000-s2-dk9.8.3.0.CV.0.658.gbin
+    system variable = slot0:/n7000-s2-dk10.34.3.0.CV.0.658.gbin
     Boot POAP Disabled
     No module boot variable set
 
@@ -533,11 +533,11 @@ class test_show_boot_without_sup(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {'current_boot_variable':
                                           {'kickstart_variable': 'bootflash:/n6000-uk9-kickstart.7.3.2.N1.0.420.bin',
-                                           'system_variable': 'bootflash:/n6000-uk9.7.3.2.N1.0.420.bin',
+                                           'system_variable': 'bootflash:/n6000-uk10.1.3.2.N1.0.420.bin',
                                            'boot_poap':'Disabled'},
                                         'next_reload_boot_variable':
                                           {'kickstart_variable': 'bootflash:/n6000-uk9-kickstart.7.3.2.N1.0.420.bin',
-                                           'system_variable': 'bootflash:/n6000-uk9.7.3.2.N1.0.420.bin',
+                                           'system_variable': 'bootflash:/n6000-uk10.1.3.2.N1.0.420.bin',
                                            'boot_poap':'Disabled'}
                                       }
 
@@ -547,14 +547,14 @@ class test_show_boot_without_sup(unittest.TestCase):
 
 
     kickstart variable = bootflash:/n6000-uk9-kickstart.7.3.2.N1.0.420.bin
-    system variable = bootflash:/n6000-uk9.7.3.2.N1.0.420.bin
+    system variable = bootflash:/n6000-uk10.1.3.2.N1.0.420.bin
     Boot POAP Disabled
 
     Boot Variables on next reload:
 
 
     kickstart variable = bootflash:/n6000-uk9-kickstart.7.3.2.N1.0.420.bin
-    system variable = bootflash:/n6000-uk9.7.3.2.N1.0.420.bin
+    system variable = bootflash:/n6000-uk10.1.3.2.N1.0.420.bin
     Boot POAP Disabled
 
 '''}
@@ -987,7 +987,7 @@ class test_dir(unittest.TestCase):
                                     {'size': '24576', 'date': 'Apr 21 2017', 'time': '04:18:28'},
                                  'lost+found/': 
                                     {'size': '4096', 'date': 'Nov 23 2016', 'time': '08:25:40'},
-                                 'n7000-s2-debug-sh.8.1.0.125.gbin': 
+                                 'n7000-s2-debug-sh.10.81.0.125.gbin': 
                                     {'size': '4073830', 'date': 'Apr 20 2017', 'time': '10:19:08'},
                                  'virtual-instance-stby-sync/': 
                                     {'size': '4096', 'date': 'Apr 20 2017', 'time': '10:28:55'}
@@ -1009,7 +1009,7 @@ class test_dir(unittest.TestCase):
     3930383    Mar 15 10:35:55 2017  ethpm_tech.log
       24576    Apr 21 04:18:28 2017  fault-management-logs/
        4096    Nov 23 08:25:40 2016  lost+found/
-    4073830    Apr 20 10:19:08 2017  n7000-s2-debug-sh.8.1.0.125.gbin
+    4073830    Apr 20 10:19:08 2017  n7000-s2-debug-sh.10.81.0.125.gbin
        4096    Apr 20 10:28:55 2017  virtual-instance-stby-sync/
 
 Usage for bootflash://

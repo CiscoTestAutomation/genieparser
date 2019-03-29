@@ -86,8 +86,8 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
 
         #   address         ref clock       st   when   poll reach  delay  offset   disp
         # *~127.127.1.1     .LOCL.           0      6     16   377  0.000   0.000  1.204
-        #  ~1.1.1.1         .INIT.          16      -   1024     0  0.000   0.000 15937.
-        # +~2.2.2.2         127.127.1.1      8    137     64     1 15.917 556.786 7938.0
+        #  ~10.4.1.1        .INIT.          16      -   1024     0  0.000   0.000 15937.
+        # +~10.16.2.2       127.127.1.1      8    137     64     1 15.917 556.786 7938.0
         p1 = re.compile(r'^(?P<mode_code>[x\*\#\+\- ])?(?P<configured>[\~])? *(?P<remote>[\w\.\:]+) +'
                         '(?P<refid>[\w\.]+) +(?P<stratum>\d+) +'
                         '(?P<receive_time>[\d\-]+) +(?P<poll>\d+) +'
@@ -99,7 +99,7 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
             if not line:
                 continue
 
-            # *171.68.38.65     .GNSS.           1 -   59   64  377    1.436   73.819  10.905
+            # *172.16.229.65     .GNSS.           1 -   59   64  377    1.436   73.819  10.905
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
@@ -209,10 +209,10 @@ class ShowNtpConfig(ShowNtpConfigSchema):
         ret_dict = {}
 
         # R1#show ntp config
-        # ntp server 1.1.1.1
-        # ntp server 2.2.2.2
-        # ntp server vrf VRF1 4.4.4.4
-        # ntp server 2.2.2.2 source Loopback0
+        # ntp server 10.4.1.1
+        # ntp server 10.16.2.2
+        # ntp server vrf VRF1 10.64.4.4
+        # ntp server 10.16.2.2 source Loopback0
 
         p1 = re.compile(r"^ntp +(?P<type>\w+)( +vrf +(?P<vrf>[\d\w]+))? "
                         "+(?P<address>[\w\.\:]+)( +source +(?P<source_interface>[\w]+))?$")

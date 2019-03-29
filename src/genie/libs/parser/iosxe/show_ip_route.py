@@ -112,7 +112,7 @@ class ShowIpRoute(ShowIpRouteSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # 15.0.0.0/24 is subnetted, 5 subnets
+            # 10.225.0.0/24 is subnetted, 5 subnets
             p1 = re.compile(r'^\s*(?P<address>[0-9\.]+)(?P<mask>[0-9\/]+)'
                              ' +is +subnetted,'
                              ' +(?P<subnets>[0-9]+) +subnets$')
@@ -128,9 +128,9 @@ class ShowIpRoute(ShowIpRouteSchema):
             # B   646:22:22::/64 [20/2219]
             # B   615:11:11::/64 [200/2219]
             # B   2001:2:2:2::2/128 [200/0]
-            # B        15.1.1.0 [200/2219] via 1.1.1.1, 01:40:40
-            # B        46.2.2.0 [20/2219] via 20.4.6.6 (VRF2), 01:36:26
-            # S*    0.0.0.0/0 [20/0] via 100.1.1.1, 4d22h
+            # B        10.1.1.0 [200/2219] via 10.4.1.1, 01:40:40
+            # B        10.9.2.0 [20/2219] via 10.66.6.6 (VRF2), 01:36:26
+            # S*    0.0.0.0/0 [20/0] via 10.1.1.1, 4d22h
             p2 = re.compile(r'^\s*(?P<protocol>[a-zA-Z0-9\+\%]+)(?P<candidate_dafault>\*)?'
                              ' +(?P<ip_add>[0-9\.\:\/]+)'
                              ' +(\[(?P<preference>[0-9]+)/(?P<metric>[0-9]+)\])'
@@ -203,7 +203,7 @@ class ShowIpRoute(ShowIpRouteSchema):
                 continue
 
             #      via 2001:DB8:1:1::2
-            #      via 1.1.1.1%default, indirectly connected
+            #      via 10.4.1.1%default, indirectly connected
             #      via 2001:DB8:4:6::6
             #      via 2001:DB8:20:4:6::6%VRF2
             p3 = re.compile(r'^\s*via +(?P<next_hop>[a-zA-Z0-9\.\/\:]+)'

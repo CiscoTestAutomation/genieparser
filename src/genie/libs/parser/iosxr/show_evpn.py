@@ -400,7 +400,7 @@ class ShowEvpnInternalLabelDetail(MetaParser):
                 res['entries'][-1]['mp_resolved'] = m.group('mp_resolved')
                 res['entries'][-1]['mp_single_active'] = m.group('mp_single_active')
 
-            # MAC     20.20.20.20                              24212
+            # MAC     10.70.20.20                              24212
             m = re.match(r'^\s+MAC\s+'
                           '(?P<nexthop>[\d.]+)\s+'
                           '(?P<label>\d+)$',line)
@@ -448,7 +448,7 @@ class ShowEvpnInternalLabelDetail(MetaParser):
                      'label' : m.group('label')}
                 )
 
-            # Summary 20.20.20.20                              24212
+            # Summary 10.70.20.20                              24212
             m = re.match(r'^\s+Summary\s+'
                           '(?P<nexthop>[\d.]+)\s+'
                           '(?P<label>\d+)$',line)
@@ -464,7 +464,7 @@ class ShowEvpnInternalLabelDetail(MetaParser):
                      'label' : m.group('label')}
                 )
 
-            #         20.20.20.20                              0
+            #         10.70.20.20                              0
             m = re.match(r'^\s+'
                          '(?P<nexthop>[\d.]+)\s+'
                          '(?P<label>\d+)$',line)

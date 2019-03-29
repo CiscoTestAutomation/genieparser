@@ -33,26 +33,26 @@ class test_show_ip_route(unittest.TestCase):
 
     Gateway of last resort is not set
 
-          1.0.0.0/32 is subnetted, 1 subnets
-    C        1.1.1.1 is directly connected, Loopback0
-          2.0.0.0/32 is subnetted, 1 subnets
-    S        2.2.2.2 [1/0] via 20.1.2.2, GigabitEthernet0/1
+          10.1.0.0/32 is subnetted, 1 subnets
+    C        10.4.1.1 is directly connected, Loopback0
+          10.4.0.0/32 is subnetted, 1 subnets
+    S        10.16.2.2 [1/0] via 10.186.2.2, GigabitEthernet0/1
                      [1/0] via 10.1.2.2, GigabitEthernet0/0
-          3.0.0.0/32 is subnetted, 1 subnets
-    S        3.3.3.3 is directly connected, GigabitEthernet0/3
+          10.9.0.0/32 is subnetted, 1 subnets
+    S        10.36.3.3 is directly connected, GigabitEthernet0/3
                      is directly connected, GigabitEthernet0/2
           10.0.0.0/8 is variably subnetted, 5 subnets, 2 masks
     C        10.1.2.0/24 is directly connected, GigabitEthernet0/0
     L        10.1.2.1/32 is directly connected, GigabitEthernet0/0
     C        10.1.3.0/24 is directly connected, GigabitEthernet0/2
     L        10.1.3.1/32 is directly connected, GigabitEthernet0/2
-    O        10.2.3.0/24 [110/2] via 20.1.2.2, 06:46:59, GigabitEthernet0/1
+    O        10.2.3.0/24 [110/2] via 10.186.2.2, 06:46:59, GigabitEthernet0/1
                          [110/2] via 10.1.2.2, 06:46:59, GigabitEthernet0/0
-           22.0.0.0/32 is subnetted, 1 subnets
-    i L1     22.22.22.22 [115/20] via 20.1.2.2, 06:47:04, GigabitEthernet0/1
+           10.229.0.0/32 is subnetted, 1 subnets
+    i L1     10.151.22.22 [115/20] via 10.186.2.2, 06:47:04, GigabitEthernet0/1
                      [115/20] via 10.1.2.2, 06:47:04, GigabitEthernet0/0
-          32.0.0.0/32 is subnetted, 1 subnets
-    B        32.32.32.32 [200/0] via 12.12.12.12, 1d00h
+          10.4.0.0/32 is subnetted, 1 subnets
+    B        10.16.32.32 [200/0] via 10.66.12.12, 1d00h
     '''
 }
     golden_parsed_output_1 = {
@@ -61,8 +61,8 @@ class test_show_ip_route(unittest.TestCase):
                 'address_family': {
                     'ipv4': {
                         'routes': {
-                            '1.1.1.1/32': {
-                                'route': '1.1.1.1/32',
+                            '10.4.1.1/32': {
+                                'route': '10.4.1.1/32',
                                 'active': True,
                                 'source_protocol_codes': 'C',
                                 'source_protocol':'connected',
@@ -74,8 +74,8 @@ class test_show_ip_route(unittest.TestCase):
                                     },
                                 },
                             },
-                            '2.2.2.2/32': {
-                                'route': '2.2.2.2/32',
+                            '10.16.2.2/32': {
+                                'route': '10.16.2.2/32',
                                 'active': True,
                                 'route_preference': 1,
                                 'metric': 0,
@@ -85,7 +85,7 @@ class test_show_ip_route(unittest.TestCase):
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '20.1.2.2',
+                                            'next_hop': '10.186.2.2',
                                             'outgoing_interface': 'GigabitEthernet0/1',
                                         },
                                         2: {
@@ -96,8 +96,8 @@ class test_show_ip_route(unittest.TestCase):
                                     },
                                 },
                             },
-                            '3.3.3.3/32': {
-                                'route': '3.3.3.3/32',
+                            '10.36.3.3/32': {
+                                'route': '10.36.3.3/32',
                                 'active': True,
                                 'source_protocol_codes': 'S',
                                 'source_protocol': 'static',
@@ -177,7 +177,7 @@ class test_show_ip_route(unittest.TestCase):
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '20.1.2.2',
+                                            'next_hop': '10.186.2.2',
                                             'updated': '06:46:59',
                                             'outgoing_interface': 'GigabitEthernet0/1',
                                         },
@@ -190,8 +190,8 @@ class test_show_ip_route(unittest.TestCase):
                                     },
                                 },
                             },
-                            '22.22.22.22/32': {
-                                'route': '22.22.22.22/32',
+                            '10.151.22.22/32': {
+                                'route': '10.151.22.22/32',
                                 'active': True,
                                 'route_preference': 115,
                                 'metric': 20,
@@ -201,7 +201,7 @@ class test_show_ip_route(unittest.TestCase):
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '20.1.2.2',
+                                            'next_hop': '10.186.2.2',
                                             'updated': '06:47:04',
                                             'outgoing_interface': 'GigabitEthernet0/1',
                                         },
@@ -214,8 +214,8 @@ class test_show_ip_route(unittest.TestCase):
                                     },
                                 },
                             },
-                            '32.32.32.32/32': {
-                                'route': '32.32.32.32/32',
+                            '10.16.32.32/32': {
+                                'route': '10.16.32.32/32',
                                 'active': True,
                                 'route_preference': 200,
                                 'metric': 0,
@@ -225,7 +225,7 @@ class test_show_ip_route(unittest.TestCase):
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '12.12.12.12',
+                                            'next_hop': '10.66.12.12',
                                             'updated': '1d00h',
                                         },
                                     },
@@ -255,17 +255,17 @@ class test_show_ip_route(unittest.TestCase):
     Gateway of last resort is not set
 
           10.0.0.0/24 is subnetted, 50 subnets
-    O        10.0.0.0 [110/1] via 111.0.1.2, 01:02:20, GigabitEthernet0/0/2.100
-    O        10.0.1.0 [110/1] via 111.0.1.2, 01:02:20, GigabitEthernet0/0/2.100
-    O        10.0.2.0 [110/1] via 111.0.1.2, 01:02:20, GigabitEthernet0/0/2.100
-          20.0.0.0/24 is subnetted, 50 subnets
-    B        20.0.0.0 [200/1] via 200.0.4.1, 01:01:10
-    B        20.0.1.0 [200/1] via 200.0.4.1, 01:01:10
-    B        20.0.2.0 [200/1] via 200.0.4.1, 01:01:10
-          111.0.0.0/8 is variably subnetted, 2 subnets, 2 masks
-    C        111.0.1.0/24 is directly connected, GigabitEthernet0/0/2.100
-    L        111.0.1.1/32 is directly connected, GigabitEthernet0/0/2.100
-    B     222.0.1.0/24 [200/0] via 200.0.4.1, 01:01:10
+    O        10.0.0.0 [110/1] via 10.81.1.2, 01:02:20, GigabitEthernet0/0/2.100
+    O        10.0.1.0 [110/1] via 10.81.1.2, 01:02:20, GigabitEthernet0/0/2.100
+    O        10.0.2.0 [110/1] via 10.81.1.2, 01:02:20, GigabitEthernet0/0/2.100
+          10.145.0.0/24 is subnetted, 50 subnets
+    B        10.145.0.0 [200/1] via 192.168.51.1, 01:01:10
+    B        10.145.1.0 [200/1] via 192.168.51.1, 01:01:10
+    B        10.145.2.0 [200/1] via 192.168.51.1, 01:01:10
+          10.81.0.0/8 is variably subnetted, 2 subnets, 2 masks
+    C        10.81.1.0/24 is directly connected, GigabitEthernet0/0/2.100
+    L        10.81.1.1/32 is directly connected, GigabitEthernet0/0/2.100
+    B     192.168.4.0/24 [200/0] via 192.168.51.1, 01:01:10
 
 '''}
     golden_parsed_output_2_with_vrf = {
@@ -285,7 +285,7 @@ class test_show_ip_route(unittest.TestCase):
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '111.0.1.2',
+                                            'next_hop': '10.81.1.2',
                                             'updated': '01:02:20',
                                             'outgoing_interface': 'GigabitEthernet0/0/2.100',
                                         },
@@ -303,7 +303,7 @@ class test_show_ip_route(unittest.TestCase):
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '111.0.1.2',
+                                            'next_hop': '10.81.1.2',
                                             'updated': '01:02:20',
                                             'outgoing_interface': 'GigabitEthernet0/0/2.100',
                                         },
@@ -321,15 +321,15 @@ class test_show_ip_route(unittest.TestCase):
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '111.0.1.2',
+                                            'next_hop': '10.81.1.2',
                                             'updated': '01:02:20',
                                             'outgoing_interface': 'GigabitEthernet0/0/2.100',
                                         },
                                     },
                                 },
                             },
-                            '20.0.0.0/24': {
-                                'route': '20.0.0.0/24',
+                            '10.145.0.0/24': {
+                                'route': '10.145.0.0/24',
                                 'active': True,
                                 'route_preference': 200,
                                 'metric': 1,
@@ -339,14 +339,14 @@ class test_show_ip_route(unittest.TestCase):
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '200.0.4.1',
+                                            'next_hop': '192.168.51.1',
                                             'updated': '01:01:10',
                                         },
                                     },
                                 },
                             },
-                            '20.0.1.0/24': {
-                                'route': '20.0.1.0/24',
+                            '10.145.1.0/24': {
+                                'route': '10.145.1.0/24',
                                 'active': True,
                                 'route_preference': 200,
                                 'metric': 1,
@@ -356,14 +356,14 @@ class test_show_ip_route(unittest.TestCase):
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '200.0.4.1',
+                                            'next_hop': '192.168.51.1',
                                             'updated': '01:01:10',
                                         },
                                     },
                                 },
                             },
-                            '20.0.2.0/24': {
-                                'route': '20.0.2.0/24',
+                            '10.145.2.0/24': {
+                                'route': '10.145.2.0/24',
                                 'active': True,
                                 'route_preference': 200,
                                 'metric': 1,
@@ -373,14 +373,14 @@ class test_show_ip_route(unittest.TestCase):
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '200.0.4.1',
+                                            'next_hop': '192.168.51.1',
                                             'updated': '01:01:10',
                                         },
                                     },
                                 },
                             },
-                            '111.0.1.0/24': {
-                                'route': '111.0.1.0/24',
+                            '10.81.1.0/24': {
+                                'route': '10.81.1.0/24',
                                 'active': True,
                                 'source_protocol_codes': 'C',
                                 'source_protocol': 'connected',
@@ -392,8 +392,8 @@ class test_show_ip_route(unittest.TestCase):
                                     },
                                 },
                             },
-                            '111.0.1.1/32': {
-                                'route': '111.0.1.1/32',
+                            '10.81.1.1/32': {
+                                'route': '10.81.1.1/32',
                                 'active': True,
                                 'source_protocol_codes': 'L',
                                 'source_protocol': 'local',
@@ -405,8 +405,8 @@ class test_show_ip_route(unittest.TestCase):
                                     },
                                 },
                             },
-                            '222.0.1.0/24': {
-                                'route': '222.0.1.0/24',
+                            '192.168.4.0/24': {
+                                'route': '192.168.4.0/24',
                                 'active': True,
                                 'route_preference':200,
                                 'metric':0,
@@ -416,7 +416,7 @@ class test_show_ip_route(unittest.TestCase):
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '200.0.4.1',
+                                            'next_hop': '192.168.51.1',
                                             'updated': '01:01:10',
                                         },
                                     },
@@ -485,7 +485,7 @@ class test_show_ipv6_route_updated(unittest.TestCase):
          via GigabitEthernet0/3, directly connected
           Last updated 22:57:43 04 December 2017
     B   20:0:0:1::/64 [200/1]
-        via 200.0.4.1%default, indirectly connected
+        via 192.168.51.1%default, indirectly connected
         Last updated 09:43:27 06 December 2017
     '''}
     golden_parsed_output_1 = {
@@ -566,7 +566,7 @@ class test_show_ipv6_route_updated(unittest.TestCase):
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '200.0.4.1',
+                                            'next_hop': '192.168.51.1',
                                             'updated': '09:43:27 06 December 2017',
                                         },
                                     },
@@ -699,23 +699,23 @@ class test_show_ip_route_word(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output_with_route = {'execute.return_value': '''
-        show ip route 200.1.2.0
-        Routing entry for 200.1.2.0/24
+        show ip route 192.168.154.0
+        Routing entry for 192.168.154.0/24
           Known via "eigrp 1", distance 130, metric 10880, type internal
           Redistributing via eigrp 1
-          Last update from 201.1.12.2 on Vlan101, 2w3d ago
+          Last update from 192.168.151.2 on Vlan101, 2w3d ago
           Routing Descriptor Blocks:
-          * 201.1.12.2, from 201.1.12.2, 2w3d ago, via Vlan101
+          * 192.168.151.2, from 192.168.151.2, 2w3d ago, via Vlan101
               Route metric is 10880, traffic share count is 1
     '''}
 
     golden_parsed_output_with_route = {
         "entry": {
-            "200.1.2.0/24": {
+            "192.168.154.0/24": {
                "mask": "24",
                "type": "type internal",
                "known_via": "eigrp 1",
-               "ip": "200.1.2.0",
+               "ip": "192.168.154.0",
                "redist_via": "eigrp",
                "distance": "130",
                "metric": "10880",
@@ -723,16 +723,16 @@ class test_show_ip_route_word(unittest.TestCase):
                "update": {
                     "age": "2w3d",
                     "interface": "Vlan101",
-                    "from": "201.1.12.2"
+                    "from": "192.168.151.2"
                },
                "paths": {
                     1: {
                          "age": "2w3d",
                          "interface": "Vlan101",
-                         "from": "201.1.12.2",
+                         "from": "192.168.151.2",
                          "metric": "10880",
                          "share_count": "1",
-                         "nexthop": "201.1.12.2"
+                         "nexthop": "192.168.151.2"
                     }
                 }
             }
@@ -744,13 +744,13 @@ class test_show_ip_route_word(unittest.TestCase):
         self.device = Mock(**self.empty_output)
         obj = ShowIpRouteWord(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(route='200.1.2.0')
+            parsed_output = obj.parse(route='192.168.154.0')
 
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_with_route)
         obj = ShowIpRouteWord(device=self.device)
-        parsed_output = obj.parse(route='200.1.2.0')
+        parsed_output = obj.parse(route='192.168.154.0')
         self.assertEqual(parsed_output,self.golden_parsed_output_with_route)
 
 

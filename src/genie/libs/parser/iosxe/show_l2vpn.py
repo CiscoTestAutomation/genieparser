@@ -105,7 +105,7 @@ class ShowBridgeDomain(ShowBridgeDomainSchema):
         # Load for five secs: 10%/1%; one minute: 11%; five minutes: 12%
         p4 = re.compile(r'^Load +for.*$')
 
-        # Time source is NTP, 19:54:46.940 JST Wed Nov 2 2016
+        # Time source is NTP, 19:54:46.940 EST Wed Nov 2 2016
         p4_1 = re.compile(r'^Time +source.*$')
 
         # AED MAC address    Policy  Tag       Age  Pseudoport
@@ -114,7 +114,7 @@ class ShowBridgeDomain(ShowBridgeDomainSchema):
         # 1 ports belonging to split-horizon group 0
         p5 = re.compile(r'^(?P<num_of_ports>\d+) +ports +belonging +to +(?P<port_belonging_group>[\w\-\d]+) +group +(?P<group_number>\d+)$')
 
-        #     vfi VPLS-2051 neighbor 27.93.202.64 2051
+        #     vfi VPLS-2051 neighbor 10.120.202.64 2051
         #     Port-channel1 service instance 2051 (split-horizon)
         #     GigabitEthernet0/0/3 service instance 3051 (split-horizon)
         p6 = re.compile(r'^(?P<member_port>[\w\d\-\/\s\.]+)( +\(.*\))?$')
@@ -671,7 +671,7 @@ class ShowL2vpnVfi(ShowL2vpnVfiSchema):
         p2_1 = re.compile(r'^VPN +ID: +(?P<vpn_id>\d+), +VPLS-ID: +(?P<vpls_id>\S+),'
                          ' Bridge-domain +vlan: +(?P<bridge_domain_vlan>\d+)$')
 
-        #   RD: 9996:2051, RT: 9996:2051, 9996:2051,
+        #   RD: 65109:2051, RT: 65109:2051, 65109:2051,
         #   RD: 9:10, RT: 10.10.10.10:150
         p3 = re.compile(r'^RD: +(?P<rd>[\d\:]+), +RT: +(?P<rt>[\S\s]+)$')
 
@@ -683,14 +683,14 @@ class ShowL2vpnVfi(ShowL2vpnVfiSchema):
         p5 = re.compile(r'^Pseudo-port +[I|i]nterface: +(?P<pseudo_port_interface>\S+)$')
 
         #   Interface          Peer Address    VE-ID  Local Label  Remote Label    S
-        #   pseudowire100202   27.93.202.64    1      16           327810          Y
+        #   pseudowire100202   10.120.202.64    1      16           327810          Y
         p6 = re.compile(r'^(?P<pw_intf>\S+) +(?P<pw_peer_id>[\d\.]+)'
                          ' +(?P<ve_id>\d+) +(?P<local_label>\d+) +(?P<remote_label>\d+) +(?P<split_horizon>\w+)$')
 
         # Interface          Peer Address     VC ID        S
-        # pseudowire3        4.4.4.4          14           Y
-        # pseudowire2        3.3.3.3          13           Y
-        # pseudowire1        2.2.2.2          12           Y
+        # pseudowire3        10.64.4.4        14           Y
+        # pseudowire2        10.36.3.3        13           Y
+        # pseudowire1        10.16.2.2        12           Y
         p6_1 = re.compile(r'^(?P<pw_intf>\S+) +(?P<pw_peer_id>[\d\.]+)'
                          ' +(?P<vc_id>\d+) +(?P<split_horizon>\w+)$')
 

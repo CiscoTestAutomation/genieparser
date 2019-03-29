@@ -18,14 +18,14 @@ class test_show_clock(unittest.TestCase):
         'time': '18:56:04.554',
         'day_of_week': 'Mon',
         'year': '2016',
-        'timezone': 'JST'}
+        'timezone': 'EST'}
 
     golden_output = {'execute.return_value': '''\
         Router#show clock
         Load for five secs: 1%/0%; one minute: 2%; five minutes: 3%
-        Time source is NTP, 18:56:04.554 JST Mon Oct 17 2016
+        Time source is NTP, 18:56:04.554 EST Mon Oct 17 2016
 
-        18:56:04.554 JST Mon Oct 17 2016
+        18:56:04.554 EST Mon Oct 17 2016
     '''
     }
 

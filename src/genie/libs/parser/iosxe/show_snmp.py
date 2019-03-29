@@ -52,8 +52,8 @@ class ShowSnmpMib(ShowSnmpMibSchema):
         p1 = re.compile(r'^(?P<snmp>([a-zA-Z0-9]+))(?:\.(?P<num>(\d+)))?$')
 
         # optIfObjects.1.1.1
-        # mib-2.90.1.3.1.1.9
-        # rmon.19.10.1.1
+        # mib-10.49.1.3.1.1.9
+        # rmon.10.76.1.1
         # rmon.19.1
         p2 = re.compile(r'^(?P<snmp>([a-zA-Z0-9\-\.]+))$')
 
