@@ -2072,7 +2072,7 @@ class ShowBgpSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
             if address_family and vrf:
                 cmd = self.cli_command[0].format(address_family=address_family,
                                                  vrf=vrf)
-            if address_family and rd:
+            elif address_family and rd:
                 cmd = self.cli_command[1].format(address_family=address_family,
                                                  rd=rd)
             elif address_family:
