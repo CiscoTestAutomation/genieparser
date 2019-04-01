@@ -12,7 +12,7 @@ from genie.libs.parser.iosxe.show_bfd import ShowBfdNeighborsDetails as \
 class ShowBfdNeighborsDetails(ShowBfdNeighborsDetails_iosxe):
     """
     IOS parser for the following show command
-	* show bfd neighbors details
-	* show bfd neighbors client {client} details
+	  'show bfd neighbors details'
+	  'show bfd neighbors client {client} details'
 	"""
     pass
