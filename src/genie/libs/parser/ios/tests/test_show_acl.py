@@ -16,14 +16,14 @@ class test_show_access_lists(test_show_access_lists_iosxe):
         Standard IP access list 1
             permit 172.20.10.10
         Standard IP access list 10
-            permit 12.12.12.12
+            permit 10.66.12.12
         Standard IP access list 12
-            deny   1.3.3.2
+            deny   10.16.3.2
         Standard IP access list 32
             permit 172.20.20.20
         Standard IP access list 34
             permit 10.24.35.56
-            permit 23.45.56.34
+            permit 10.34.56.34
     '''}
 
     golden_parsed_output_standard = {
@@ -70,13 +70,13 @@ class test_show_access_lists(test_show_access_lists_iosxe):
                             "ipv4": {
                                 "protocol": "ipv4",
                                 "source_network": {
-                                    "12.12.12.12": {
-                                        "source_network": "12.12.12.12"
+                                    "10.66.12.12": {
+                                        "source_network": "10.66.12.12"
                                     }
                                 },
                                 "destination_network": {
-                                    "12.12.12.12": {
-                                        "destination_network": "12.12.12.12"
+                                    "10.66.12.12": {
+                                        "destination_network": "10.66.12.12"
                                     }
                                 }
                             }
@@ -99,13 +99,13 @@ class test_show_access_lists(test_show_access_lists_iosxe):
                             "ipv4": {
                                 "protocol": "ipv4",
                                 "source_network": {
-                                    "1.3.3.2": {
-                                        "source_network": "1.3.3.2"
+                                    "10.16.3.2": {
+                                        "source_network": "10.16.3.2"
                                     }
                                 },
                                 "destination_network": {
-                                    "1.3.3.2": {
-                                        "destination_network": "1.3.3.2"
+                                    "10.16.3.2": {
+                                        "destination_network": "10.16.3.2"
                                     }
                                 }
                             }
@@ -180,13 +180,13 @@ class test_show_access_lists(test_show_access_lists_iosxe):
                             "ipv4": {
                                 "protocol": "ipv4",
                                 "source_network": {
-                                    "23.45.56.34": {
-                                        "source_network": "23.45.56.34"
+                                    "10.34.56.34": {
+                                        "source_network": "10.34.56.34"
                                     }
                                 },
                                 "destination_network": {
-                                    "23.45.56.34": {
-                                        "destination_network": "23.45.56.34"
+                                    "10.34.56.34": {
+                                        "destination_network": "10.34.56.34"
                                     }
                                 }
                             }
