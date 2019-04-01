@@ -20,9 +20,12 @@ from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, And, D
 from genie.libs.parser.utils.common import Common
 
 
-# ===========================================
-# Schema for 'show policy map control plane'
-# ===========================================
+# =====================================================================
+# Schema for :
+#   *'show policy map control plane'
+#   *'show policy-map interface {interface}'
+#   *'show policy-map interface {interface} output class {class_name}'
+# ======================================================================
 class ShowPolicyMapControlPlaneSchema(MetaParser):
 
     ''' Schema for "show policy map control plane" '''
@@ -38,10 +41,22 @@ class ShowPolicyMapControlPlaneSchema(MetaParser):
                                     {'match_all': bool,
                                      Optional('packets'): int,
                                      Optional('bytes'): int,
-                                     'rate':
-                                         {'interval': int,
-                                          'offered_rate_bps': int,
-                                          'drop_rate_bps': int,
+                                     Optional('queueing'):
+                                         {Optional('queue_limit'): str,
+                                          Optional('queue_depth'): int,
+                                          Optional('total_drops'): int,
+                                          Optional('no_buffer_drops'): int,
+                                          Optional('pkts_output'): int,
+                                          Optional('bytes_output'): int,
+                                          Optional('shape_cir_bps'): int,
+                                          Optional('shape_bc_bps'): int,
+                                          Optional('shape_be_bps'): int,
+                                          Optional('target_shape_rate'): int,
+                                         },
+                                     Optional('rate'):
+                                         {Optional('interval'): int,
+                                          Optional('offered_rate_bps'): int,
+                                          Optional('drop_rate_bps'): int,
                                          },
                                      'match': str,
                                      Optional('qos_set'):
@@ -83,19 +98,31 @@ class ShowPolicyMapControlPlaneSchema(MetaParser):
         }
 
 
-# ===========================================
-# Parser for 'show policy map control plane'
-# ===========================================
-class ShowPolicyMapControlPlane(ShowPolicyMapControlPlaneSchema):
+# =====================================================================
+# Parser for:
+#   * 'show policy map control plane'
+#   * 'show policy-map interface {interface} output class {class_name}'
+#   * 'show policy-map interface {interface}'
+# =====================================================================
+class ShowPolicyMapType(ShowPolicyMapControlPlaneSchema):
     ''' Parser for
         * "show policy map control plane"
+        * "show policy-map interface {interface} output class {class_name}"
+        * "show policy-map interface {interface}"
     '''
 
-    cli_command = 'show policy-map control-plane'
+    cli_command = ['show policy-map interface {interface} output class {class_name}',
+                   'show policy-map interface {interface}',
+                   'show policy-map control-plane']
 
-    def cli(self, output=None):
+    def cli(self, class_name='', interface='', output=None):
         if output is None:
-            cmd = self.cli_command
+            if interface and class_name:
+                cmd = self.cli_command[0].format(class_name=class_name,interface=interface)
+            elif interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[2]
             # Execute command on device
             out = self.device.execute(cmd)
         else:
@@ -106,12 +133,12 @@ class ShowPolicyMapControlPlane(ShowPolicyMapControlPlaneSchema):
         ret_dict = collections.OrderedDict(ret_dict)
 
         # Control Plane
-        # Interface
+        # GigabitEthernet0/1/5
         # Something else
-        p0 = re.compile(r'^(?P<top_level>(Control Plane|Interface))$')
+        p0 = re.compile(r'^(?P<top_level>(Control Plane|GigabitEthernet.*))$')
 
         # Service-policy input: Control_Plane_In
-        # Service-policy output: Control_Plane_Out
+        # Service-policy output: shape-out
         # Service-policy input:TEST
         p1 = re.compile(r'^Service-policy +(?P<service_policy>(input|output)):+ *(?P<policy_name>([\w\-]+))$')
 
@@ -124,6 +151,9 @@ class ShowPolicyMapControlPlane(ShowPolicyMapControlPlaneSchema):
 
         # 5 minute offered rate 0000 bps, drop rate 0000 bps
         p4 = re.compile(r'^(?P<interval>(\d+)) +minute +offered +rate +(?P<offered_rate>(\d+)) bps, +drop +rate +(?P<drop_rate>(\d+)) bps$')
+
+        # 5 minute offered rate 0000 bps
+        p4_1 = re.compile(r'^(?P<interval>(\d+)) +minute +offered +rate +(?P<offered_rate>(\d+)) bps$')
 
         # Match: access-group name Ping_Option
         p5 = re.compile(r'^Match *:+(?P<match>([\w\-\s]+))$')
@@ -180,6 +210,25 @@ class ShowPolicyMapControlPlane(ShowPolicyMapControlPlaneSchema):
         # Marker statistics: Disabled
         p15 = re.compile(r'^Marker +statistics: +(?P<marker_statistics>(\w+))$')
 
+        # Queueing
+        p16 = re.compile(r'^Queueing$')
+
+        #queue limit 64 packets
+        p16_1 = re.compile(r'^queue +limit +(?P<queue_limit>([\s\w]+))$')
+
+        # (queue depth/total drops/no-buffer drops) 0/0/0
+        p16_2 = re.compile(r'\(+queue +depth/+total +drops/+no-buffer +drops+\) +(?P<queue_depth>(\d+))/'
+                            '+(?P<total_drops>(\d+))/+(?P<no_buffer_drops>(\d+))$')
+        # (pkts output/bytes output) 0/0
+        p16_3 = re.compile(r'\(+pkts +output/+bytes +output+\) +(?P<pkts_output>(\d+))/+(?P<bytes_output>(\d+))')
+
+        # shape (average) cir 474656, bc 1899, be 1899
+        p16_4 = re.compile(r'^shape +\(average\) +cir +(?P<shape_cir_bps>(\d+)), +bc +'
+                            '(?P<shape_bc_bps>(\d+)), +be +(?P<shape_be_bps>(\d+))$')
+
+        # target shape rate 474656
+        p16_5 = re.compile(r'^target +shape +rate +(?P<target_shape_rate>(\d+))$')
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -234,6 +283,14 @@ class ShowPolicyMapControlPlane(ShowPolicyMapControlPlaneSchema):
                 rate_dict['interval'] = int(m.groupdict()['interval']) * 60
                 rate_dict['offered_rate_bps'] = int(m.groupdict()['offered_rate'])
                 rate_dict['drop_rate_bps'] = int(m.groupdict()['drop_rate'])
+                continue
+
+            # 5 minute offered rate 0000 bps
+            m = p4_1.match(line)
+            if m:
+                rate_dict = class_map_dict.setdefault('rate', {})
+                rate_dict['interval'] = int(m.groupdict()['interval']) * 60
+                rate_dict['offered_rate_bps'] = int(m.groupdict()['offered_rate'])
                 continue
 
             # Match: access-group name Ping_Option
@@ -362,6 +419,47 @@ class ShowPolicyMapControlPlane(ShowPolicyMapControlPlaneSchema):
                 qos_dict['marker_statistics'] = m.groupdict()['marker_statistics']
                 continue
 
+            # Queueing
+            m = p16.match(line)
+            if m:
+                queue_dict = class_map_dict.setdefault('queueing', {})
+                continue
+
+            # queue limit 64 packets
+            m = p16_1.match(line)
+            if m:
+                queue_dict['queue_limit'] = m.groupdict()['queue_limit']
+                continue
+
+            # (queue depth/total drops/no-buffer drops) 0/0/0
+            m = p16_2.match(line)
+            if m:
+                queue_dict['queue_depth'] = int(m.groupdict()['queue_depth'])
+                queue_dict['total_drops'] = int(m.groupdict()['total_drops'])
+                queue_dict['no_buffer_drops'] = int(m.groupdict()['no_buffer_drops'])
+                continue
+
+            # (pkts output/bytes output) 0/0
+            m = p16_3.match(line)
+            if m:
+                queue_dict['pkts_output'] = int(m.groupdict()['pkts_output'])
+                queue_dict['bytes_output'] = int(m.groupdict()['bytes_output'])
+                continue
+
+            # shape (average) cir 474656, bc 1899, be 1899
+            m = p16_4.match(line)
+            if m:
+                queue_dict['shape_cir_bps'] = int(m.groupdict()['shape_cir_bps'])
+                queue_dict['shape_bc_bps'] = int(m.groupdict()['shape_bc_bps'])
+                queue_dict['shape_be_bps'] = int(m.groupdict()['shape_be_bps'])
+                continue
+
+            # target shape rate 474656
+            m = p16_5.match(line)
+            if m:
+                queue_dict['target_shape_rate'] = int(m.groupdict()['target_shape_rate'])
+                continue
+
         return ret_dict
 
 
@@ -375,11 +473,11 @@ class ShowPolicyMapSchema(MetaParser):
     schema = {
         'policy_map': 
             {Any():
-                {'class_map':
+                {'class':
                     {Any():
                         {Optional('priority_level'):
-                             {Any():
-                                  {'kb_per_sec':int}},
+                            {Any():
+                                {'kbps': int}},
                         Optional('police'):
                             {Optional('cir_bps'): int,
                              Optional('bc_bytes'): int,
@@ -390,31 +488,30 @@ class ShowPolicyMapSchema(MetaParser):
                              Optional('violate_action'): str,
                              Optional('service_policy'): str,
                             },
-                        Optional('bandwidth'): int,
+                        Optional('bandwidth_kbps'): int,
                         Optional('conform_burst'): int,
                         Optional('pir'): int,
                         Optional('peak_burst'): int,
-                        Optional('average'): str,
+                        Optional('average_rate_traffic_shaping'): bool,
                         Optional('cir_bps'): int,
-                        Optional('weighted_fair'):
-                            {Any():
-                                {'bandwidth': int,
-                                 'exponential_weight': int,
-                                 'explicit_congestion': str,
-                                 'class':
-                                     {Any():
-                                         {'min_threshold': str,
-                                          'max_threshold': str,
-                                          'mark_probability': str,
-                                         },
+                        Optional('weighted_fair_queueing'):
+                            {'bandwidth_percent': int,
+                             'exponential_weight': int,
+                             'explicit_congestion_notification': bool,
+                             'class':
+                                 {Any():
+                                     {'min_threshold': str,
+                                      'max_threshold': str,
+                                      'mark_probability': str,
                                      },
                                  },
-                            },
+                             },
                         },
                     },
                 },
             },
         }
+
 
 
 # ===================================
@@ -473,7 +570,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         p3_5 = re.compile(r'^service-policy +(?P<service_policy>([\w\-\s]+))$')
 
         # Average Rate Traffic Shaping
-        p4 = re.compile(r'^Average+(?P<average>([\w\-\s]+))$')
+        p4 = re.compile(r'^Average +Rate +Traffic +Shaping$')
 
         # cir 1000000 (bps)
         p5 = re.compile(r'^cir +(?P<cir_bps>(\d+))')
@@ -486,13 +583,13 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         p7 = re.compile(r'^(?P<key>bandwidth|Bandwidth) +(?P<bandwidth>(\d+))')
 
         # Weighted Fair Queueing
-        p8 = re.compile(r'^Weighted +Fair +(?P<weighted_fair>(\w+))$')
+        p8 = re.compile(r'^Weighted +Fair +Queueing$')
 
         # exponential weight 9
         p8_1 = re.compile(r'^exponential +weight +(?P<exponential_weight>(\d+))$')
 
         # explicit congestion notification
-        p8_2 = re.compile(r'^explicit +congestion +(?P<explicit_congestion>(\w+))$')
+        p8_2 = re.compile(r'^explicit +congestion +notification$')
 
         # class    min-threshold    max-threshold    mark-probability
         # ----------------------------------------------------------
@@ -525,7 +622,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
             m = p2.match(line)
             if m:
                 class_map = m.groupdict()['class_map']
-                class_map_dict = policy_map_dict.setdefault('class_map', {}).setdefault(class_map, {})
+                class_map_dict = policy_map_dict.setdefault('class', {}).setdefault(class_map, {})
                 continue
 
             # police cir 445500 bc 83619
@@ -578,7 +675,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
             # Average Rate Traffic Shaping
             m = p4.match(line)
             if m:
-                class_map_dict['average'] = m.groupdict()['average']
+                class_map_dict['average_rate_traffic_shaping'] = True
                 continue
 
             # cir 1000000 (bps)
@@ -593,24 +690,24 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 priority_level = m.groupdict()['priority_level']
                 kb_per_sec = m.groupdict()['kb_per_sec']
                 priority_dict = class_map_dict.setdefault('priority_level', {}).setdefault(priority_level, {})
-                priority_dict['kb_per_sec'] = int(kb_per_sec)
+                priority_dict['kbps'] = int(kb_per_sec)
                 continue
 
             # bandwidth 20000 (kb/s)
+            # Bandwidth 70( %)
             m = p7.match(line)
             if m:
                 key = m.groupdict()['key']
                 if key == 'bandwidth':
-                    class_map_dict['bandwidth'] = int(m.groupdict()['bandwidth'])
+                    class_map_dict['bandwidth_kbps'] = int(m.groupdict()['bandwidth'])
                 elif key == 'Bandwidth':
-                    weight_dict['bandwidth'] = int(m.groupdict()['bandwidth'])
+                    weight_dict['bandwidth_percent'] = int(m.groupdict()['bandwidth'])
                 continue
 
             # Weighted Fair Queueing
             m = p8.match(line)
             if m:
-                weighted_fair= m.groupdict()['weighted_fair']
-                weight_dict = class_map_dict.setdefault('weighted_fair', {}).setdefault(weighted_fair, {})
+                weight_dict = class_map_dict.setdefault('weighted_fair_queueing', {})
                 continue
 
             # exponential weight 9
@@ -622,8 +719,8 @@ class ShowPolicyMap(ShowPolicyMapSchema):
             # explicit congestion notification
             m = p8_2.match(line)
             if m:
-                weight_dict['explicit_congestion'] = m.groupdict()['explicit_congestion']
-                p8_2 = re.compile(r'^explicit +congestion +(?P<explicit_congestion>(\w+))$')
+                weight_dict['explicit_congestion_notification'] = True
+                continue
 
             # class    min-threshold    max-threshold    mark-probability
             # ----------------------------------------------------------

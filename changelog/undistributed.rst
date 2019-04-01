@@ -12,8 +12,9 @@
     * Added ShowPolicyMapControlPlane Parser for:
        'show policy map control plane'
        'show policy map'
-       'show policy map{name}'
-
+       'show policy map {name}'
+       'show policy-map interface {interface}'
+       'show policy-map interface {interface} output class {class_name}'
 --------------------------------------------------------------------------------
                                     MONITOR
 --------------------------------------------------------------------------------

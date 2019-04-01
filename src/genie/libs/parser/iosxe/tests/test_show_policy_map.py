@@ -10,14 +10,22 @@ from ats.topology import loader
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
 # iosxe show_monitor
-from genie.libs.parser.iosxe.show_policy_map import ShowPolicyMapControlPlane,ShowPolicyMap
+from genie.libs.parser.iosxe.show_policy_map import ShowPolicyMapType,\
+                                                    ShowPolicyMap
 
 
-# =============================================
-# Unit test for 'show policy map control plane'
-# =============================================
-class test_show_policy_map_control_plane(unittest.TestCase):
-    '''Unit test for "show policy map control plane" '''
+# ====================================================================
+# Unit test for :
+#   *'show policy map control plane'
+#   *'show policy-map interface {interface}'
+#   *'show policy-map interface {interface} output class {class_name}'
+# =====================================================================
+class test_show_policy_map_type(unittest.TestCase):
+    '''Unit test for
+       "show policy map control plane"
+       "show policy-map interface {interface}"
+       "show policy-map interface {interface} output class {class_name}"
+    '''
 
     device = Device(name='aDevice')
 
@@ -468,7 +476,6 @@ class test_show_policy_map_control_plane(unittest.TestCase):
                                           'drop_rate_bps': 0},
                                       'match': 'any'}}}}}}}}
 
-
     golden_output2 = {'execute.return_value': '''
         Device# show policy-map control-plane
 
@@ -664,40 +671,243 @@ class test_show_policy_map_control_plane(unittest.TestCase):
 
     '''}
 
+    golden_parsed_output5 = {
+        'GigabitEthernet0/1/5': {
+            'service_policy': {
+                'output': {
+                    'policy_name': {
+                        'shape-out': {
+                            'class_map': {
+                                ' class-default': {
+                                    'match_all': False,
+                                    'packets': 0,
+                                    'bytes': 0,
+                                    'rate': {
+                                        'interval': 300,
+                                        'offered_rate_bps': 0,
+                                        'drop_rate_bps': 0},
+                                    'match': ' any',
+                                    'queueing': {
+                                        'queue_limit': '64 packets',
+                                        'queue_depth': 0,
+                                        'total_drops': 0,
+                                        'no_buffer_drops': 0,
+                                        'pkts_output': 0,
+                                        'bytes_output': 0,
+                                        'shape_cir_bps': 474656,
+                                        'shape_bc_bps': 1899,
+                                        'shape_be_bps': 1899,
+                                        'target_shape_rate': 474656}}}}}}}}}
+
+    golden_output5 = {'execute.return_value': '''
+        Router#show policy-map interface gigabitEthernet 0/1/5 output class class-default
+
+        Load for five secs: 1%/0%; one minute: 5%; five minutes: 6%
+        Time source is NTP, 11:16:50.635 JST Tue Oct 25 2016
+
+        GigabitEthernet0/1/5
+
+        Service-policy output: shape-out
+
+        Class-map: class-default (match-any)
+            0 packets, 0 bytes
+            5 minute offered rate 0000 bps, drop rate 0000 bps
+            Match: any
+            Queueing
+                queue limit 64 packets
+                (queue depth/total drops/no-buffer drops) 0/0/0
+                (pkts output/bytes output) 0/0
+                shape (average) cir 474656, bc 1899, be 1899
+                target shape rate 474656
+    Router#'''}
+
+    golden_parsed_output6 = {
+        'GigabitEthernet0/0/0': {
+            'service_policy': {
+                'output': {
+                    'policy_name': {
+                        'CORE-Out': {
+                            'class_map': {
+                                ' EXP0': {
+                                    'match_all': True,
+                                    'packets': 0,
+                                    'bytes': 0,
+                                    'rate': {
+                                        'interval': 300,
+                                        'offered_rate_bps': 0},
+                                    'match': ' mpls experimental topmost 0'},
+                                ' EXP1': {
+                                    'match_all': True,
+                                    'packets': 0,
+                                    'bytes': 0,
+                                    'rate': {
+                                        'interval': 300,
+                                        'offered_rate_bps': 0},
+                                    'match': ' mpls experimental topmost 1'},
+                                ' EXP2': {
+                                    'match_all': True,
+                                    'packets': 0,
+                                    'bytes': 0,
+                                    'rate': {
+                                        'interval': 300,
+                                        'offered_rate_bps': 0},
+                                    'match': ' mpls experimental topmost 2'},
+                                ' EXP3': {
+                                    'match_all': True,
+                                    'packets': 0,
+                                    'bytes': 0,
+                                    'rate': {
+                                        'interval': 300,
+                                        'offered_rate_bps': 0},
+                                    'match': ' mpls experimental topmost 3'},
+                                ' EXP4': {
+                                    'match_all': True,
+                                    'packets': 0,
+                                    'bytes': 0,
+                                    'rate': {
+                                        'interval': 300,
+                                        'offered_rate_bps': 0},
+                                    'match': ' mpls experimental topmost 4'},
+                                ' EXP5': {
+                                    'match_all': True,
+                                    'packets': 0,
+                                    'bytes': 0,
+                                    'rate': {
+                                        'interval': 300,
+                                        'offered_rate_bps': 0},
+                                    'match': ' mpls experimental topmost 5'},
+                                ' EXP6': {
+                                    'match_all': True,
+                                    'packets': 27,
+                                    'bytes': 1869,
+                                    'rate': {
+                                        'interval': 300,
+                                        'offered_rate_bps': 0},
+                                    'match': ' mpls experimental topmost 6'},
+                                ' EXP7': {
+                                    'match_all': True,
+                                    'packets': 0,
+                                    'bytes': 0,
+                                    'rate': {
+                                        'interval': 300,
+                                        'offered_rate_bps': 0},
+                                    'match': ' mpls experimental topmost 7'},
+                                ' class-default': {
+                                    'match_all': False,
+                                    'packets': 193,
+                                    'bytes': 19600,
+                                    'rate': {
+                                        'interval': 300,
+                                        'offered_rate_bps': 0,
+                                        'drop_rate_bps': 0},
+                                    'match': ' any'}}}}}}}}
+
+    golden_output6 = {'execute.return_value': '''
+        Router#show policy-map interface gigabitEthernet 0/0/0
+        Load for five secs: 1%/0%; one minute: 4%; five minutes: 5%
+        Time source is NTP, 14:58:52.473 JST Fri Oct 28 2016
+
+        GigabitEthernet0/0/0 
+
+        Service-policy output: CORE-Out
+
+        Class-map: EXP0 (match-all)  
+            0 packets, 0 bytes
+            5 minute offered rate 0000 bps
+            Match: mpls experimental topmost 0 
+
+        Class-map: EXP1 (match-all)  
+            0 packets, 0 bytes
+            5 minute offered rate 0000 bps
+            Match: mpls experimental topmost 1 
+
+        Class-map: EXP2 (match-all)  
+            0 packets, 0 bytes
+            5 minute offered rate 0000 bps
+            Match: mpls experimental topmost 2 
+
+        Class-map: EXP3 (match-all)  
+            0 packets, 0 bytes
+            5 minute offered rate 0000 bps
+            Match: mpls experimental topmost 3 
+
+        Class-map: EXP4 (match-all)  
+            0 packets, 0 bytes
+            5 minute offered rate 0000 bps
+            Match: mpls experimental topmost 4 
+
+        Class-map: EXP5 (match-all)  
+            0 packets, 0 bytes
+            5 minute offered rate 0000 bps
+            Match: mpls experimental topmost 5 
+
+        Class-map: EXP6 (match-all)  
+            27 packets, 1869 bytes
+            5 minute offered rate 0000 bps
+            Match: mpls experimental topmost 6 
+
+        Class-map: EXP7 (match-all)  
+            0 packets, 0 bytes
+            5 minute offered rate 0000 bps
+            Match: mpls experimental topmost 7 
+
+        Class-map: class-default (match-any)  
+            193 packets, 19600 bytes
+            5 minute offered rate 0000 bps, drop rate 0000 bps
+            Match: any 
+    Router#    '''}
+
     def test_show_policy_map_control_plane_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
-        obj = ShowPolicyMapControlPlane(device=self.device)
+        obj = ShowPolicyMapType(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
     def test_show_policy_map_control_plane_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
-        obj = ShowPolicyMapControlPlane(device=self.device)
+        obj = ShowPolicyMapType(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_show_policy_map_control_plane_full2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
-        obj = ShowPolicyMapControlPlane(device=self.device)
+        obj = ShowPolicyMapType(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
     def test_show_policy_map_control_plane_full3(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output3)
-        obj = ShowPolicyMapControlPlane(device=self.device)
+        obj = ShowPolicyMapType(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output3)
 
     def test_show_policy_map_control_plane_full4(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output4)
-        obj = ShowPolicyMapControlPlane(device=self.device)
+        obj = ShowPolicyMapType(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output4)
+
+    def test_show_policy_map_interface_full5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output5)
+        obj = ShowPolicyMapType(device=self.device)
+        parsed_output = obj.parse(interface='gigabitEthernet 0/1/5', class_name='class-default')
+        #import pdb; pdb.set_trace()
+        self.assertEqual(parsed_output, self.golden_parsed_output5)
+
+    def test_show_policy_map_interface_full6(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output6)
+        obj = ShowPolicyMapType(device=self.device)
+        parsed_output = obj.parse(interface='gigabitEthernet 0/0/0')
+        #import pdb; pdb.set_trace()
+        self.assertEqual(parsed_output, self.golden_parsed_output6)
+
 
 # =============================================
 # Unit test for 'show policy map '
@@ -711,13 +921,13 @@ class test_show_policy_map(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output1 ={
-        'policy_map':
-            {'shape-out':
-                {'class_map':
-                    {'class-default':
-                        {'average': ' Rate Traffic Shaping',
-                         'cir_bps': 1000000}}}}}
+    golden_parsed_output1 = {
+        'policy_map': {
+            'shape-out': {
+                'class': {
+                    'class-default': {
+                        'average_rate_traffic_shaping': True,
+                        'cir_bps': 1000000}}}}}
 
     golden_output1 = {'execute.return_value':'''
         Router#show policy-map shape-out
@@ -732,15 +942,15 @@ class test_show_policy_map(unittest.TestCase):
     '''}
 
     golden_parsed_output2 = {
-        'policy_map':
-            {'police-in':
-                {'class_map':
-                    {'class-default':
-                        {'police':
-                            {'cir_bps': 445500,
-                             'bc_bytes': 83619,
-                             'conform_action': 'transmit',
-                             'exceed_action': 'drop'}}}}}}
+        'policy_map': {
+            'police-in': {
+                'class': {
+                    'class-default': {
+                        'police': {
+                            'cir_bps': 445500,
+                            'bc_bytes': 83619,
+                            'conform_action': 'transmit',
+                            'exceed_action': 'drop'}}}}}}
 
     golden_output2 = {'execute.return_value':'''
 
@@ -756,51 +966,51 @@ class test_show_policy_map(unittest.TestCase):
     '''}
 
     golden_parsed_output3 = {
-        'policy_map':
-            {'parent-policy':
-                {'class_map':
-                    {'class-default':
-                        {'police':
-                            {'cir_bps': 50000,
-                             'bc_bytes': 3000,
-                             'be_bytes': 3000,
-                             'conform_color': 'hipri-conform',
-                             'conform_action': 'transmit',
-                             'exceed_action': 'transmit',
-                             'violate_action': 'drop',
-                             'service_policy': 'child-policy'}}}},
-            'police':
-                {'class_map':
-                    {'prec1':
-                        {'priority_level':
-                            {'1':
-                                {'kb_per_sec': 20000}}},
-                    'prec2':
-                        {'bandwidth': 20000},
-                    'class-default':
-                        {'bandwidth': 20000}}},
-            'child-policy':
-                {'class_map':
-                    {'user1-acl-child':
-                        {'police':
-                            {'cir_bps': 10000,
-                             'bc_bytes': 1500,
-                             'conform_action': 'set-qos-transmit 5',
-                             'exceed_action': 'drop'}},
-                    'user2-acl-child':
-                        {'police':
-                            {'cir_bps': 20000,
-                             'bc_bytes': 1500,
-                             'conform_action': 'set-qos-transmit 5',
-                             'exceed_action': 'drop'}},
-                    'class-default':
-                        {'police':
-                            {'cir_bps': 50000,
-                             'bc_bytes': 1500,
-                             'conform_action': 'transmit',
-                             'exceed_action': 'drop'}}}}}}
+        'policy_map': {
+            'parent-policy': {
+                'class': {
+                    'class-default': {
+                        'police': {
+                            'cir_bps': 50000,
+                            'bc_bytes': 3000,
+                            'be_bytes': 3000,
+                            'conform_color': 'hipri-conform',
+                            'conform_action': 'transmit',
+                            'exceed_action': 'transmit',
+                            'violate_action': 'drop',
+                            'service_policy': 'child-policy'}}}},
+            'police': {
+                'class': {
+                    'prec1': {
+                        'priority_level': {
+                            '1': {
+                                'kbps': 20000}}},
+                    'prec2': {
+                        'bandwidth_kbps': 20000},
+                    'class-default': {
+                        'bandwidth_kbps': 20000}}},
+            'child-policy': {
+                'class': {
+                    'user1-acl-child': {
+                        'police': {
+                            'cir_bps': 10000,
+                            'bc_bytes': 1500,
+                            'conform_action': 'set-qos-transmit 5',
+                            'exceed_action': 'drop'}},
+                    'user2-acl-child': {
+                        'police': {
+                            'cir_bps': 20000,
+                            'bc_bytes': 1500,
+                            'conform_action': 'set-qos-transmit 5',
+                            'exceed_action': 'drop'}},
+                    'class-default': {
+                        'police': {
+                            'cir_bps': 50000,
+                            'bc_bytes': 1500,
+                            'conform_action': 'transmit',
+                            'exceed_action': 'drop'}}}}}}
 
-    golden_output3 = {'execute.return_value':'''
+    golden_output3 = {'execute.return_value': '''
         Router# show policy-map
         Policy Map parent-policy
             Class class-default
@@ -833,52 +1043,51 @@ class test_show_policy_map(unittest.TestCase):
     '''}
 
     golden_parsed_output4 = {
-        'policy_map':
-            {'pol1':
-                {'class_map':
-                    {'class-default':
-                        {'weighted_fair':
-                            {'Queueing':
-                                {'bandwidth': 70,
-                                 'exponential_weight': 9,
-                                 'explicit_congestion': 'notification',
-                                 'class':
-                                     {'0':
-                                         {'min_threshold': '-',
-                                          'max_threshold': '-',
-                                          'mark_probability': '1/10'},
-                                     '1':
-                                         {'min_threshold': '-',
-                                          'max_threshold': '-',
-                                          'mark_probability': '1/10'},
-                                     '2':
-                                         {'min_threshold': '-',
-                                          'max_threshold': '-',
-                                          'mark_probability': '1/10'},
-                                     '3':
-                                         {'min_threshold': '-',
-                                          'max_threshold': '-',
-                                          'mark_probability': '1/10'},
-                                     '4':
-                                         {'min_threshold': '-',
-                                          'max_threshold': '-',
-                                          'mark_probability': '1/10'},
-                                     '5':
-                                         {'min_threshold': '-',
-                                          'max_threshold': '-',
-                                          'mark_probability': '1/10'},
-                                     '6':
-                                         {'min_threshold': '-',
-                                          'max_threshold': '-',
-                                          'mark_probability': '1/10'},
-                                     '7':
-                                         {'min_threshold': '-',
-                                          'max_threshold': '-',
-                                          'mark_probability': '1/10'},
-                                     'rsvp':
-                                         {'min_threshold': '-',
-                                          'max_threshold': '-',
-                                          'mark_probability': '1/10'}}}}}}}}}
+        'policy_map': {
+            'pol1': {
+                'class': {
+                    'class-default': {
+                        'weighted_fair_queueing': {
+                            'bandwidth_percent': 70,
+                            'exponential_weight': 9,
+                            'explicit_congestion_notification': True,
+                            'class': {
+                                '0': {
+                                    'min_threshold': '-',
+                                    'max_threshold': '-',
+                                    'mark_probability': '1/10'},
+                                '1': {
+                                    'min_threshold': '-',
+                                    'max_threshold': '-',
+                                    'mark_probability': '1/10'},
+                                '2': {
+                                    'min_threshold': '-',
+                                    'max_threshold': '-',
+                                    'mark_probability': '1/10'},
+                                '3': {
+                                    'min_threshold': '-',
+                                    'max_threshold': '-',
+                                    'mark_probability': '1/10'},
+                                '4': {
+                                    'min_threshold': '-',
+                                    'max_threshold': '-',
+                                    'mark_probability': '1/10'},
+                                '5': {
+                                    'min_threshold': '-',
+                                    'max_threshold': '-',
+                                    'mark_probability': '1/10'},
+                                '6': {
+                                    'min_threshold': '-',
+                                    'max_threshold': '-',
+                                    'mark_probability': '1/10'},
+                                '7': {
+                                    'min_threshold': '-',
+                                    'max_threshold': '-',
+                                    'mark_probability': '1/10'},
+                                'rsvp': {
+                                    'min_threshold': '-',
+                                    'max_threshold': '-',
+                                    'mark_probability': '1/10'}}}}}}}}
 
     golden_output4 = {'execute.return_value': '''
         Router# show policy-map
