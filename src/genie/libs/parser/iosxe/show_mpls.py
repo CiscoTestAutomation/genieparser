@@ -932,11 +932,11 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
         # lib entry: 10.120.202.64/32, rev 12, chkpt: none
         # tib entry: 10.0.0.0/8, rev 4
         # 10.16.16.16/32, rev 775
-        p1 = re.compile(r'^([\w]+ +entry: +)?(?P<lib_entry>[\d\.\/]+), +rev +(?P<rev>\d+),?( +chkpt: +(?P<checkpoint>\S+))?$')
+        p1 = re.compile(r'^([\w]+ +entry: +)?(?P<lib_entry>[\d\.\/]+), +rev +(?P<rev>\d+),?( +chkpt: +(?P<checkpoint>\S+))?(, +elc)?$')
 
         #  local binding:  label: 2536
         #  local binding:  label: 2027 (owner LDP)
-        p2 = re.compile(r'^local +binding:  +label: +(?P<local_label>\S+)( +\(owner +(?P<owner>\w+)\))?$')
+        p2 = re.compile(r'^local +binding: +label: +(?P<local_label>\S+)( +\(owner +(?P<owner>\w+)\))?$')
 
         #  Advertised to:
         # 10.169.197.252:0      10.169.197.253:0
@@ -945,7 +945,7 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
         #  remote binding: lsr: 10.169.197.252:0, label: 508
         #  remote binding: lsr: 10.169.197.253:0, label: 308016 checkpointed
         p4 = re.compile(r'^remote +binding: +lsr: +(?P<lsr>[\d\.]+):(?P<label_space_id>[\d]+),'
-                        ' +label: +(?P<remote_label>\S+)( +(?P<checkpointed>\w+))?$')
+                        ' +label: +(?P<remote_label>\S+)( +(?P<checkpointed>\w+))?(, +elc)?$')
 
 
         for line in out.splitlines():
@@ -1133,7 +1133,7 @@ class ShowMplsLdpDiscoverySchema(MetaParser):
             Any(): {
                 'local_ldp_identifier': {
                     Any(): {
-                        'discovery_sources': {
+                        Optional('discovery_sources'): {
                             'interfaces': {
                                 Any(): {
                                     Optional('enabled'): str,
@@ -1223,7 +1223,8 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
 
         # Local LDP Identifier:
         # VRF vpn1:Local LDP Identifier:
-        p1 = re.compile(r'^(VRF +(?P<vrf>\S+):)?Local +LDP +Identifier:$')
+        # VRF vpn1: Local LDP Identifier:
+        p1 = re.compile(r'^(VRF +(?P<vrf>\S+):)? *Local +LDP +Identifier:$')
 
         # 10.169.197.254:0
         p2 = re.compile(r'^(?P<local_ldp_identifier>[\d\.\:]+)$')
