@@ -93,15 +93,15 @@ class ShowLispSession(ShowLispSessionSchema):
         parsed_dict = {}
 
         # Sessions for VRF default, total: 3, established: 3
-        p1 = re.compile(r'Sessions +for +VRF +(?P<vrf>(\S+)),'
-                         ' +total: +(?P<total>(\d+)),'
-                         ' +established: +(?P<established>(\d+))$')
+        p1 = re.compile(r'Sessions +for +VRF +(?P<vrf>\S+),'
+                         ' +total: +(?P<total>\d+),'
+                         ' +established: +(?P<established>\d+)$')
 
         # Peer                           State      Up/Down        In/Out    Users
         # 10.16.2.2                      Up         00:51:38        8/13     3
         # 2001:DB8:B:2::2                Init       never           0/0      1
-        p2 = re.compile(r'(?P<peer>(\S+)) +(?P<state>(\S+)) +(?P<time>(\S+))'
-                         ' +(?P<in>(\d+))\/(?P<out>(\d+)) +(?P<users>(\d+))$')
+        p2 = re.compile(r'(?P<peer>\S+) +(?P<state>\S+) +(?P<time>\S+)'
+                         ' +(?P<in>\d+)\/(?P<out>\d+) +(?P<users>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
