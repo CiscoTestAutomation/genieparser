@@ -213,7 +213,7 @@ class ShowPolicyMapType(ShowPolicyMapControlPlaneSchema):
         # Queueing
         p16 = re.compile(r'^Queueing$')
 
-        #queue limit 64 packets
+        # queue limit 64 packets
         p16_1 = re.compile(r'^queue +limit +(?P<queue_limit>([\s\w]+))$')
 
         # (queue depth/total drops/no-buffer drops) 0/0/0
@@ -319,7 +319,6 @@ class ShowPolicyMapType(ShowPolicyMapControlPlaneSchema):
                 police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
                 police_dict['bc_bytes'] = int(m.groupdict()['bc_bytes'])
                 continue
-
 
             # 8000 bps, 1500 limit, 1500 extended limit
             m = p7_1.match(line)

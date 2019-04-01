@@ -16,13 +16,13 @@ from genie.libs.parser.iosxe.show_policy_map import ShowPolicyMapType,\
 
 # ====================================================================
 # Unit test for :
-#   *'show policy map control plane'
+#   *'show policy-map control-plane'
 #   *'show policy-map interface {interface}'
 #   *'show policy-map interface {interface} output class {class_name}'
 # =====================================================================
 class test_show_policy_map_type(unittest.TestCase):
     '''Unit test for
-       "show policy map control plane"
+       "show policy-map control-plane"
        "show policy-map interface {interface}"
        "show policy-map interface {interface} output class {class_name}"
     '''
@@ -897,7 +897,6 @@ class test_show_policy_map_type(unittest.TestCase):
         self.device = Mock(**self.golden_output5)
         obj = ShowPolicyMapType(device=self.device)
         parsed_output = obj.parse(interface='gigabitEthernet 0/1/5', class_name='class-default')
-        #import pdb; pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output5)
 
     def test_show_policy_map_interface_full6(self):
@@ -905,16 +904,17 @@ class test_show_policy_map_type(unittest.TestCase):
         self.device = Mock(**self.golden_output6)
         obj = ShowPolicyMapType(device=self.device)
         parsed_output = obj.parse(interface='gigabitEthernet 0/0/0')
-        #import pdb; pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output6)
 
 
 # =============================================
-# Unit test for 'show policy map '
+# Unit test for :
+#    *'show policy map'
+#    *'show policy map {name}'
 # =============================================
 class test_show_policy_map(unittest.TestCase):
     '''Unit test for "show policy map"
-                     "show policy map{name}"
+                     "show policy map {name}"
     '''
 
     device = Device(name='aDevice')
