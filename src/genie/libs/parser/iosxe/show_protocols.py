@@ -34,8 +34,8 @@ class ShowIpProtocolsSchema(MetaParser):
                                         'distance': int,
                                         'maximum_paths': int,
                                         Optional('output_delay'): int,
-                                        'send_version': str,
-                                        'receive_version': str,
+                                        'send_version': Or(int,str),
+                                        'receive_version': Or(int,str),
                                         Optional('automatic_network_summarization_in_effect'): bool,
                                         'outgoing_update_filterlist': {
                                             'outgoing_update_filterlist': str,
@@ -664,7 +664,7 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                 m = p112.match(line)
                 if m:
                     group = m.groupdict()
-                    rip_dict.update({k: v for k, v in group.items() if v})
+                    rip_dict.update({k: int(v) for k, v in group.items() if v})
                     continue
 
                 m = p112_1.match(line)
