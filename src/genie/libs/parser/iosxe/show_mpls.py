@@ -530,8 +530,8 @@ class ShowMplsLdpNeighborSchema(MetaParser):
                                 Optional('last_tib_rev_sent'): int,
                                 Optional('password'): str,
                                 Optional('uptime'): str,
-                                Optional('peer_holdtime_ms'): str,
-                                Optional('ka_interval_ms'): str,
+                                Optional('peer_holdtime_ms'): int,
+                                Optional('ka_interval_ms'): int,
                                 Optional('peer_state'): str,
                                 Optional('ldp_discovery_sources'): {
                                     'interface':{
@@ -549,15 +549,15 @@ class ShowMplsLdpNeighborSchema(MetaParser):
                                 Optional('nsr'): str,
                                 Optional('capabilities'):{
                                      'sent': {
-                                         'ICCP':{
+                                         Optional('ICCP'):{
                                             'type': str,
                                             'maj_ver': int,
                                             'min_ver': int,
                                          },
-                                        'dynamic_anouncement': str,
-                                        'mldp_point_to_multipoint': str,
-                                        'mldp_multipoint_to_multipoint': str,
-                                        'typed_wildcard': str,
+                                        Optional('dynamic_anouncement'): str,
+                                        Optional('mldp_point_to_multipoint'): str,
+                                        Optional('mldp_multipoint_to_multipoint'): str,
+                                        Optional('typed_wildcard'): str,
                                      },
                                     Optional('received'): {
                                         Optional('ICCP'):{
@@ -608,28 +608,28 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
         sent_flag = False
 
         # Peer LDP Ident: 10.169.197.252:0; Local LDP Ident 10.169.197.254:0
-        p1 = re.compile(r'^Peer +LDP +Ident: +(?P<peer_ldp>[\d\.]+):(?P<label_space_id>\d+); +Local +LDP +Ident +(?P<local_ldp>\S+)$')
+        p1 = re.compile(r'^Peer +LDP +Ident: *(?P<peer_ldp>[\d\.]+):(?P<label_space_id>\d+); +Local +LDP +Ident +(?P<local_ldp>\S+)$')
 
         #     TCP connection: 10.169.197.252.646 - 10.169.197.254.20170
-        p2 = re.compile(r'^TCP +connection: +(?P<tcp_connection>[\S\s]+)$')
+        p2 = re.compile(r'^TCP +connection: *(?P<tcp_connection>[\S\s]+)$')
 
         #     State: Oper; Msgs sent/rcvd: 824/825; Downstream
         #     State: Oper; Msgs sent/rcvd: 824/825; Downstream; Last TIB rev sent 4103
         #     State: Oper; Msgs sent/rcvd: 5855/6371; Downstream on demand
-        p3 = re.compile(r'^State: +(?P<state>\w+); +Msgs +sent\/rcvd: +(?P<msg_sent>\d+)\/(?P<msg_rcvd>\d+);'
+        p3 = re.compile(r'^State: *(?P<state>\w+); +Msgs +sent\/rcvd: *(?P<msg_sent>\d+)\/(?P<msg_rcvd>\d+);'
                                 ' +(?P<downstream>[\w\s]+)(; +Last +TIB +rev +sent +(?P<last_tib_rev_sent>\d+))?$')
 
         #  Up time: 04:26:14
         #  Up time: 3d21h; UID: 4; Peer Id 0
-        p4 = re.compile(r'^Up +time: +(?P<up_time>[\w\:]+)(; +UID: (?P<uid>\d+); +Peer +Id +(?P<peer_id>\d+))?$')
+        p4 = re.compile(r'^Up +time: *(?P<up_time>[\w\:]+)(; +UID: *(?P<uid>\d+); +Peer +Id +(?P<peer_id>\d+))?$')
 
         #     LDP discovery sources:
         #       GigabitEthernet0/0/0, Src IP addr: 10.169.197.93
         #       ATM3/0.1
-        p5 = re.compile(r'^(?P<interface>[A-Za-z]+[\d/.]+)((,|;) +Src +IP +addr: +(?P<src_ip_address>[\d\.]+))?$')
+        p5 = re.compile(r'^(?P<interface>[A-Za-z]+[\d/.]+)((,|;) +Src +IP +addr: *(?P<src_ip_address>[\d\.]+))?$')
 
         #       holdtime: 15000 ms, hello interval: 5000 ms
-        p5_1 = re.compile(r'^holdtime: +(?P<holdtime>\d+) +ms, +hello +interval: +(?P<hello_interval>\d+) +ms$')
+        p5_1 = re.compile(r'^holdtime: *(?P<holdtime>\d+) +ms, +hello +interval: *(?P<hello_interval>\d+) +ms$')
 
         #     Addresses bound to peer LDP Ident:
         p6 = re.compile(r'^Addresses +bound +to +peer +LDP +Ident:$')
@@ -638,8 +638,8 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
         p7 = re.compile(r'^(?P<address_bound_peer_ldp>[\d\.\s]+)$')
 
         # Peer holdtime: 180000 ms; KA interval: 60000 ms; Peer state: estab
-        p8 = re.compile(r'^Peer +holdtime: +(?P<peer_holdtime>\d+) +ms, +KA +interval: +(?P<ka_interval>\d+) +ms;'
-                         ' +Peer +state +(?P<peer_state>\S+)$')
+        p8 = re.compile(r'^Peer +holdtime: *(?P<peer_holdtime>\d+) +ms; +KA +interval: *(?P<ka_interval>\d+) +ms;'
+                         ' +Peer +state: +(?P<peer_state>\S+)$')
 
         # Password: not required, none, in use
         p9 = re.compile(r'^Password: +(?P<password>[\S\s]+)$')
@@ -928,10 +928,11 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
         # VRF vrf1:
         p0 = re.compile(r'^VRF +(?P<vrf>\S+):$')
         # lib entry: 10.186.1.0/24, rev 1028
+        # lib entry: 10.186.1.0/24, rev 1028,
         # lib entry: 10.120.202.64/32, rev 12, chkpt: none
         # tib entry: 10.0.0.0/8, rev 4
         # 10.16.16.16/32, rev 775
-        p1 = re.compile(r'^([\w]+ +entry: +)?(?P<lib_entry>[\d\.\/]+), +rev +(?P<rev>\d+)(, +chkpt: +(?P<checkpoint>\S+))?$')
+        p1 = re.compile(r'^([\w]+ +entry: +)?(?P<lib_entry>[\d\.\/]+), +rev +(?P<rev>\d+),?( +chkpt: +(?P<checkpoint>\S+))?$')
 
         #  local binding:  label: 2536
         #  local binding:  label: 2027 (owner LDP)
@@ -1231,7 +1232,8 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
 
         #     GigabitEthernet0/0/0 (ldp): xmit/recv
         #     ATM1/1/0.1 (tdp):xmit/recv
-        p3 = re.compile(r'^(?P<interface>\S+) +\((?P<session>[\w]+)\):(?P<space>\s{1})?xmit\/recv$')
+        #     Ethernet3/0 (ldp): xmit
+        p3 = re.compile(r'^(?P<interface>\S+) +\((?P<session>[\w]+)\):(?P<space>\s{1})?(xmit|xmit\/recv)$')
 
         #         Enabled: Interface config
         p4 = re.compile(r'^Enabled: +(?P<enabled>[\S\s]+)$')
