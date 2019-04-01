@@ -23,9 +23,10 @@ class ShowCdpNeighborsSchema(MetaParser):
 
     schema = {
         'cdp':
-            {'device_id':
+            {Optional('index'):
                 {Any():
-                    {'local_interface': str,
+                    {'device_id': str,
+                     'local_interface': str,
                      'hold_time': int,
                      Optional('capability'): str,
                      'platform': str,
@@ -92,6 +93,10 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
                         '(?P<platform>([a-zA-Z0-9\-]+)) +'
                         '(?P<port_id>([a-zA-Z0-9\/\s]+))$')
 
+        device_id_index = 0
+        devices_info_dict = parsed_dict.setdefault('cdp', {}).\
+                                        setdefault('index', {})
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -99,26 +104,21 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
 
             if not result:
                 result = p2.match(line)
+    
+            if result:                
 
-            if result:
+                device_id_index += 1
 
-                if not parsed_dict:
-
-                    device_id_dict = parsed_dict.setdefault('cdp', {}).\
-                                        setdefault('device_id', {})
+                device_dict = devices_info_dict.setdefault(device_id_index, {})                    
 
                 group = result.groupdict()
-                device_id = group['device_id'].lower().strip()
 
-                devices_dict = device_id_dict.setdefault(device_id, {})
-
-                devices_dict['local_interface'] = \
-                    group['local_interface'].lower().strip()
-                devices_dict['hold_time'] = int(group['hold_time'])
-                devices_dict['capability'] = \
-                    group['capability'].lower().strip()
-                devices_dict['platform'] = group['platform'].lower().strip()
-                devices_dict['port_id'] = group['port_id'].lower().strip()
+                device_dict['device_id'] = group['device_id'].strip()
+                device_dict['local_interface'] = group['local_interface'].strip()
+                device_dict['hold_time'] = int(group['hold_time'])
+                device_dict['capability'] = group['capability'].strip()
+                device_dict['platform'] = group['platform'].strip()
+                device_dict['port_id'] = group['port_id'].strip()               
 
         return parsed_dict
 
