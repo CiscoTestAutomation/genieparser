@@ -56,9 +56,9 @@ def get_parser(command, device):
         lookup = Lookup.from_device(device, packages={'parser':parser})
         # Check if all the tokens exists; take the farthest one
         data = parser_data[command]
-
-        tokens = list(lookup._tokens)
-        data = token_lookup(tokens, data)
+        for token in lookup._tokens:
+            if token in data:
+                data = data[token]
 
         try:
             return _find_parser_cls(device, data), kwargs
@@ -78,14 +78,6 @@ def get_parser(command, device):
                             "'{c}'".format(c=command)) from None
 
         return _find_parser_cls(device, found_data), kwargs
-
-def token_lookup(tokens, data):
-    if tokens:
-        token = tokens.pop(0)
-        if token in data:
-            data = token_lookup(tokens, data[token])
-
-    return data
 
 def _find_command(command, data, device):
     ratio = 0
