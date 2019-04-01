@@ -1,3 +1,13 @@
+'''  show_cdp.py
+
+IOSXE parsers for the following show commands:
+
+    * 'show cdp neighbors'
+    * 'show cdp neighbors detail'
+
+'''
+
+# Python
 import re
 
 # Metaparser
@@ -6,6 +16,10 @@ from genie.metaparser.util.schemaengine import Any, Optional
 
 
 class ShowCdpNeighborsSchema(MetaParser):
+
+    ''' Schema for:
+        * 'show cdp neighbors'
+    '''
 
     schema = {
         'cdp':
@@ -18,29 +32,35 @@ class ShowCdpNeighborsSchema(MetaParser):
                      'port_id': str, }, }, },
     }
 
-class ShowCdpNeighborsSchemaDetail(MetaParser):
+
+class ShowCdpNeighborsDetailSchema(MetaParser):
+    ''' Schema for:
+        * 'show cdp neighbors detail'
+    '''
 
     schema = {
         'entries': int,
-        'devices': 
-            {'device_id':
-                {Any():
-                    {'platform': str,
-                     'capabilities': str,
-                     'local_interface': str,
-                     'port_id': str,
-                     'hold_time': int,
-                     'version': str,
-                     'entry_addresses':
-                        {Any(): str},
-                     'management_addresses':
-                        {Any(): str},
-                     Optional('duplex'): str,
-                     'advertisement_ver': int,},
-                },
-
+        Optional('index'):
+            {Any():
+                {'device_id': str,
+                 'platform': str,
+                 'capabilities': str,
+                 'local_interface': str,
+                 'port_id': str,
+                 'hold_time': int,
+                 'entry_addresses':
+                    {Any():
+                        {Optional('type'): str, }, },
+                 'management_addresses':
+                    {Any():
+                        {Optional('type'): str, }, },
+                 Optional('duplex_mode'): str,
+                 Optional('advertisement_ver'): int,
+                 Optional('native_vlan'): str,
+                 Optional('vtp_mng_domain'): str},
             },
         }
+
 
 # ================================
 # Parser for 'show cdp neighbors'
@@ -106,7 +126,7 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
 # =======================================
 # Parser for 'show cdp neighbors details'
 # =======================================
-class  ShowCdpNeighborsDetail(ShowCdpNeighborsSchemaDetail):
+class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
     cli_command = 'show cdp neighbors detail'
 
     def cli(self, output=None):
@@ -116,112 +136,183 @@ class  ShowCdpNeighborsDetail(ShowCdpNeighborsSchemaDetail):
         else:
             out = output
 
-        deviceid_re   = re.compile(r'Device\s+ID:\s*(?P<device_id>\S+)')
+        # Device ID: R7(9QBDKB58F76)
+        deviceid_re = re.compile(r'Device\s+ID:\s*(?P<device_id>\S+)')
 
-        platf_cap_re  = re.compile(r'Platform:\s*(?P<platform>[a-zA-Z\d +\-]+)'
-                                    '\s*\,\s*Capabilities:\s*'
-                                    '(?P<capabilities>[a-zA-Z\d\s*\-\/]+)')
+        # Platform: N9K-9000v,  Capabilities: Router Switch CVTA phone port
+        platf_cap_re = re.compile(r'Platform:\s*(?P<platform>[a-zA-Z\d +\-]+)'
+                                 '\s*\,\s*Capabilities:\s*'
+                                 '(?P<capabilities>[a-zA-Z\d\s*\-\/]+)')
 
-        interface_port_re  = re.compile(r'Interface:\s*'
-                                         '(?P<interface>[\w\s\-\/\/]+)\s*\,'
-                                         '*\s*Port\s*ID\s*[\(\w\)\s]+:\s*'
-                                         '(?P<port_id>\w+)')
+        # Interface: GigabitEthernet0/0,  Port ID (outgoing port): mgmt0
+        interface_port_re = re.compile(r'Interface:\s*'
+                                      '(?P<interface>[\w\s\-\/\/]+)\s*\,'
+                                      '*\s*Port\s*ID\s*[\(\w\)\s]+:\s*'
+                                      '(?P<port_id>\w+)')
 
-        holdtime_re   = re.compile(r'Holdtime\s*:\s*\s*(?P<holdtime>\d+)')
+        # Native VLAN: 42
+        native_vlan_re = re.compile(r'Native\s*VLAN\s*:\s*'
+                                    '(?P<native_vlan>\d+)')
 
-        ipaddress_re  = re.compile(r'\S*IP\s*address:\s*(?P<id_adress>\S*)')
+        # VTP Management Domain: ‘Accounting Group’
+        mng_domain_re = re.compile(r'VTP\s*Management\s*Domain\s*:\s*'
+                                    '\‘(?P<vtp_mng_domain>([a-zA-Z\s]+))\’')
 
-        advertver_re  = re.compile(r'advertisement\s*version:\s*'
-                                    '(?P<advertisement_ver>\d+)')
+        # Holdtime : 126 sec
+        hold_time_re = re.compile(r'Holdtime\s*:\s*\s*(?P<hold_time>\d+)')
 
-        entries_re    = re.compile(r'Total\s*cdp\s*entries\s*displayed\s*:\s*'
-                                    '(?P<total_entries>\d*)')
+        # advertisement version: 2
+        advertver_re = re.compile(r'advertisement\s*version:\s*'
+                                 '(?P<advertisement_ver>\d+)')
 
-        duplex_re     = re.compile(r'Duplex\s*:\s*(?P<duplex>\w+)')
+        # Duplex: full
+        # Duplex Mode: half
+        duplex_re = re.compile(r'Duplex\s*(Mode)*:\s*(?P<duplex_mode>\w+)')
 
+        # Management address(es):
         mngaddress_re = re.compile(r'Management\s*address\s*\([\w]+\)\s*\:\s*')
+        # Entry address(es):
         entryaddress_re = re.compile(r'Entry\s*address\s*\(\w+\)\s*\:\s*')
+
+        # IPv6 address: FE80::203:E3FF:FE6A:BF81  (link-local)
+        # IPv6 address: 4000::BC:0:0:C0A8:BC06  (global unicast)
+        ipv6_adress_re = re.compile('IPv6\s*address\s*:\s*(?P<ip_adress>\S+)'
+                                    '\s*\((?P<type>[\s\w\-]+)\)')
+        # IP address: 172.16.1.204
+        ipaddress_re = re.compile(r'\S*IP\s*address:\s*(?P<id_adress>\S*)')
 
         entry_address_flag = 0
         management_address_flag = 0
 
-        parsed_dict = {'entries' : 0}
+        parsed_dict = {'entries': 0}
+        index_device = 0
+        devices_dict = {}
 
         for line in out.splitlines():
             line = line.strip()
 
             result = deviceid_re.match(line)
 
-            if result:                
+            if result:
+                index_device += 1
+                devices_dict[index_device] = {}
                 device_id = result.group('device_id')
-                device_dict = {}
-                device_dict[device_id] = {}
+                devices_dict[index_device]['device_id'] = device_id
                 management_address_flag = 0
+
+                # Init keys
+                devices_dict[index_device]['duplex_mode'] = ''
+                devices_dict[index_device]['vtp_mng_domain'] = ''
+                devices_dict[index_device]['native_vlan'] = ''
+                devices_dict[index_device]['management_addresses'] = {}
+                devices_dict[index_device]['entry_addresses'] = {}
+
                 continue
 
             result = platf_cap_re.match(line)
 
-            if result:                
+            if result:
                 platf_cap_dict = result.groupdict()
-                device_dict[device_id]['capabilities'] = platf_cap_dict['capabilities']
-                device_dict[device_id]['platform'] = platf_cap_dict['platform']
+
+                devices_dict[index_device]['capabilities'] = \
+                    platf_cap_dict['capabilities']
+                devices_dict[index_device]['platform'] = \
+                    platf_cap_dict['platform']
 
                 entry_address_flag = 0
 
                 continue
 
+            result = advertver_re.match(line)
+
+            if result:
+                devices_dict[index_device]['advertisement_ver'] = \
+                    result.group('advertisement_ver')
+
             result = interface_port_re.match(line)
 
             if result:
                 interface_port_dict = result.groupdict()
-                device_dict[device_id]['port_id'] = interface_port_dict['port_id']
-                device_dict[device_id]['interface'] = interface_port_dict['interface']
+                devices_dict[index_device]['port_id'] = \
+                    interface_port_dict['port_id']
+                devices_dict[index_device]['local_interface'] = \
+                    interface_port_dict['interface']
                 continue
 
-            result = holdtime_re.match(line)
+            result = hold_time_re.match(line)
 
             if result:
-                device_dict[device_id]['holdtime'] = int(result.group('holdtime'))
+                devices_dict[index_device]['hold_time'] = \
+                    int(result.group('hold_time'))
                 continue
 
-            if mngaddress_re.match(line): management_address_flag = 1
+            if mngaddress_re.match(line):
+                management_address_flag = 1
 
-            if entryaddress_re.match(line): entry_address_flag = 1
+            if entryaddress_re.match(line):
+                entry_address_flag = 1
 
             result = ipaddress_re.match(line)
 
-            if result:              
-            
+            if result:
+
                 ip_adress = result.group('id_adress')
 
-                if management_address_flag:                    
-                    ip_list = device_dict[device_id].get('entry_addresses', [])
-                    ip_list.append(ip_adress)
-                    device_dict[device_id]['entry_addresses'] = ip_list
+                if management_address_flag:
+                    devices_dict[index_device]['management_addresses']\
+                        [ip_adress] = {}
 
                 if entry_address_flag:
-                    ip_list = device_dict[device_id].get('management_addresses', [])
-                    ip_list.append(ip_adress)
-                    device_dict[device_id]['management_addresses'] = ip_list
-                
+                    devices_dict[index_device]['entry_addresses']\
+                        [ip_adress] = {}
+
+                continue
+
+            result = ipv6_adress_re.match(line)
+
+            if result:
+                ipv6_address_dict = result.groupdict()
+
+                if management_address_flag:
+                    devices_dict[index_device]['management_addresses']\
+                        [ipv6_address_dict['ip_adress']] = \
+                        {'type': ipv6_address_dict['type']}
+
+                if entry_address_flag:
+                    devices_dict[index_device]['entry_addresses']\
+                        [ipv6_address_dict['ip_adress']] = \
+                        {'type': ipv6_address_dict['type']}
+
                 continue
 
             result = advertver_re.match(line)
 
             if result:
-                device_dict[device_id]['advertisement_ver'] = result.group('advertisement_ver')
+                devices_dict[index_device]['advertisement_ver'] = \
+                    int(result.group('advertisement_ver'))
                 continue
 
-            result = entries_re.match(line)
+            result = native_vlan_re.match(line)
 
             if result:
-                parsed_dict['entries'] = int(result.group('total_entries'))
+                devices_dict[index_device]['native_vlan'] = \
+                    result.group('native_vlan')
+                continue
+
+            result = mng_domain_re.match(line)
+
+            if result:
+                devices_dict[index_device]['vtp_mng_domain'] = \
+                    result.group('vtp_mng_domain')
                 continue
 
             result = duplex_re.match(line)
 
             if result:
-                device_dict[device_id]['duplex'] = result.group('duplex')
+                devices_dict[index_device]['duplex_mode'] = \
+                    result.group('duplex_mode')
                 continue
 
+        parsed_dict.setdefault('index', devices_dict)
+        parsed_dict['entries'] = index_device
         return parsed_dict
