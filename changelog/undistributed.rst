@@ -6,6 +6,84 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
+                                   BGP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added parsers for:
+        * 'show bgp all'
+        * 'show bgp {address_family} all'
+        * 'show bgp {address_family} rd {rd}'
+        * 'show bgp {address_family} vrf {vrf}'
+        * 'show ip bgp all'
+        * 'show ip bgp {address_family} all'
+        * 'show ip bgp'
+        * 'show ip bgp {address_family}'
+        * 'show ip bgp {address_family} rd {rd}'
+        * 'show ip bgp {address_family} vrf {vrf}'
+        * 'show bgp all detail'
+        * 'show ip bgp all detail'
+        * 'show bgp {address_family} vrf {vrf} detail'
+        * 'show bgp {address_family} rd {rd} detail'
+        * 'show ip bgp {address_family} vrf {vrf} detail'
+        * 'show ip bgp {address_family} rd {rd} detail'
+        * 'show bgp summary'
+        * 'show bgp {address_family} summary'
+        * 'show bgp {address_family} vrf {vrf} summary'
+        * 'show bgp {address_family} rd {rd} summary'
+        * 'show bgp all summary'
+        * 'show bgp {address_family} all summary'
+        * 'show ip bgp summary'
+        * 'show ip bgp {address_family} summary'
+        * 'show ip bgp {address_family} vrf {vrf} summary'
+        * 'show ip bgp {address_family} rd {rd} summary'
+        * 'show ip bgp all summary'
+        * 'show ip bgp {address_family} all summary'
+        * 'show bgp all neighbors'
+        * 'show bgp all neighbors {neighbor}'
+        * 'show bgp {address_family} all neighbors'
+        * 'show bgp {address_family} all neighbors {neighbor}'
+        * 'show bgp neighbors'
+        * 'show bgp neighbors {neighbor}'
+        * 'show bgp {address_family} neighbors'
+        * 'show bgp {address_family} neighbors {neighbor}'
+        * 'show bgp {address_family} vrf {vrf} neighbors'
+        * 'show bgp {address_family} vrf {vrf} neighbors {neighbor}'
+        * 'show ip bgp all neighbors',
+        * 'show ip bgp all neighbors {neighbor}'
+        * 'show ip bgp {address_family} all neighbors'
+        * 'show ip bgp {address_family} all neighbors {neighbor}'
+        * 'show ip bgp neighbors'
+        * 'show ip bgp neighbors {neighbor}'
+        * 'show ip bgp {address_family} neighbors'
+        * 'show ip bgp {address_family} neighbors {neighbor}'
+        * 'show ip bgp {address_family} vrf {vrf} neighbors'
+        * 'show ip bgp {address_family} vrf {vrf} neighbors {neighbor}'
+        * 'show bgp all neighbors {neighbor} advertised-routes'
+        * 'show bgp {address_family} all neighbors {neighbor} advertised-routes'
+        * 'show bgp neighbors {neighbor} advertised-routes'
+        * 'show bgp {address_family} neighbors {neighbor} advertised-routes'
+        * 'show ip bgp all neighbors {neighbor} advertised-routes'
+        * 'show ip bgp {address_family} all neighbors {neighbor} advertised-routes'
+        * 'show ip bgp neighbors {neighbor} advertised-routes'
+        * 'show ip bgp {address_family} neighbors {neighbor} advertised-routes'
+        * 'show bgp all neighbors {neighbor} received-routes'
+        * 'show bgp {address_family} all neighbors {neighbor} received-routes'
+        * 'show bgp neighbors {neighbor} received-routes'
+        * 'show bgp {address_family} neighbors {neighbor} received-routes'
+        * 'show ip bgp all neighbors {neighbor} received-routes'
+        * 'show ip bgp {address_family} all neighbors {neighbor} received-routes'
+        * 'show ip bgp neighbors {neighbor} received-routes'
+        * 'show ip bgp {address_family} neighbors {neighbor} received-routes'
+        * 'show bgp all neighbors {neighbor} routes'
+        * 'show bgp {address_family} all neighbors {neighbor} routes'
+        * 'show bgp neighbors {neighbor} routes'
+        * 'show bgp {address_family} neighbors {neighbor} routes'
+        * 'show ip bgp all neighbors {neighbor} routes'
+        * 'show ip bgp {address_family} all neighbors {neighbor} routes'
+        * 'show ip bgp neighbors {neighbor} routes'
+        * 'show ip bgp {address_family} neighbors {neighbor} routes'
+
+--------------------------------------------------------------------------------
                                    POLICY MAP
 --------------------------------------------------------------------------------
 * IOSXE
@@ -254,7 +332,7 @@
 --------------------------------------------------------------------------------
                                    L2VPN
 --------------------------------------------------------------------------------
-* IOSXE
+* IOSXE & IOS
     * Add ShowBridgeDomain for:
             show bridge-domain
             show bridge-domain <WORD>
@@ -269,10 +347,9 @@
             show ethernet service instance summary
     * Add ShowL2vpnVfi for:
             show l2vpn vfi
+    * Add ShowL2vpnServiceAll for:
+            show l2vpn service all
 
-* IOS
-    * Add ShowL2vpnVfi for:
-            show l2vpn vfi
 --------------------------------------------------------------------------------
                                    LAG
 --------------------------------------------------------------------------------
