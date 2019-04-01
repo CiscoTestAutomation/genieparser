@@ -45,7 +45,7 @@ class ShowL2vpnMacLearning(MetaParser):
             # -------   --------       -----------       --------------    ----------
 
             # 1         0/0/CPU0       BE1.7             7777.7777.0002
-            # 0         0/0/CPU0       BV1               fc00.0001.0006    192.0.3.3
+            # 0         0/0/CPU0       BV1               fc00.0001.0006    192.168.30.3
             m = re.match(r'^(?P<topo_id>\d+)'
                          r' +(?P<producer>\S+)'
                          r' +(?:none|(?P<next_hop>\S+))'
@@ -112,8 +112,8 @@ class ShowL2vpnForwardingBridgeDomainMacAddress(MetaParser):
         # 1234.0001.0002 EVPN    BD id: 0                    N/A        N/A                    N/A
         # 1234.0001.0003 EVPN    BD id: 0                    N/A        N/A                    N/A
         # 1234.0001.0004 EVPN    BD id: 0                    N/A        N/A                    N/A
-        # 0021.0001.0002 dynamic (40.40.40.40, 10007)        N/A        14 Mar 12:46:04        N/A
-        # 1234.0001.0005 static  (40.40.40.40, 10007)        N/A        N/A                    N/A
+        # 0021.0001.0002 dynamic (10.25.40.40, 10007)        N/A        14 Mar 12:46:04        N/A
+        # 1234.0001.0005 static  (10.25.40.40, 10007)        N/A        N/A                    N/A
         # 0021.0002.0005 dynamic BE1.2                       N/A        14 Mar 12:46:04        N/A
         # 1234.0002.0004 static  BE1.2                       N/A        N/A                    N/A
 
@@ -201,13 +201,13 @@ class ShowL2vpnForwardingProtectionMainInterface(MetaParser):
         # VFI:ves-vfi-3                    1          BLOCKED
         # VFI:ves-vfi-4                    0          FORWARDING
         # VFI:ves-vfi-4                    1          FORWARDING
-        # PW:40.40.40.40,10001             0          FORWARDING
-        # PW:40.40.40.40,10001             1          BLOCKED
-        # PW:40.40.40.40,10007             0          FORWARDING
-        # PW:40.40.40.40,10007             1          FORWARDING
-        # PW:40.40.40.40,10011             0          FORWARDING
-        # PW:40.40.40.40,10011             1          FORWARDING
-        # PW:40.40.40.40,10017             0          FORWARDING
+        # PW:10.25.40.40,10001             0          FORWARDING
+        # PW:10.25.40.40,10001             1          BLOCKED
+        # PW:10.25.40.40,10007             0          FORWARDING
+        # PW:10.25.40.40,10007             1          FORWARDING
+        # PW:10.25.40.40,10011             0          FORWARDING
+        # PW:10.25.40.40,10011             1          FORWARDING
+        # PW:10.25.40.40,10017             0          FORWARDING
 
         title_found = False
         header_processed = False

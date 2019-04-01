@@ -20,7 +20,7 @@ class test_show_interface_brief_pipe_vlan_yang(unittest.TestCase):
     device = Device(name='aDevice')
     device1 = Device(name='bDevice')
     golden_parsed_output = {'interface': {'Vlan1': {'vlan_id': {'1': {'ip_address': 'unassigned'}}},
-                                          'Vlan100': {'vlan_id': {'100': {'ip_address': '201.0.12.1'}}}}}
+                                          'Vlan100': {'vlan_id': {'100': {'ip_address': '192.168.234.1'}}}}}
 
     class etree_holder():
       def __init__(self):
@@ -42,7 +42,7 @@ class test_show_interface_brief_pipe_vlan_yang(unittest.TestCase):
                   <ip>
                     <address>
                       <primary>
-                        <address>201.0.12.1</address>
+                        <address>192.168.234.1</address>
                         <mask>255.255.255.0</mask>
                       </primary>
                     </address>

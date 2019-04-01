@@ -26,7 +26,7 @@ class test_show_vtp_status(unittest.TestCase):
         "pruning_mode": False,
         "device_id": "3820.5622.a580",
         "traps_generation": False,
-        "updater_id": "201.0.12.1",
+        "updater_id": "192.168.234.1",
         "updater_interface": "Vl100",
         "updater_reason": "lowest numbered VLAN interface found",
         "configuration_revision": 55,
@@ -37,7 +37,7 @@ class test_show_vtp_status(unittest.TestCase):
         "enabled": True,
         "operating_mode": "server",
         "conf_last_modified_time": "12-5-17 09:35:46",
-        "conf_last_modified_by": "201.0.12.1",
+        "conf_last_modified_by": "192.168.234.1",
         "version": "1",
         "version_capable": [1,2,3],
         }
@@ -51,8 +51,8 @@ class test_show_vtp_status(unittest.TestCase):
         VTP Pruning Mode                : Disabled
         VTP Traps Generation            : Disabled
         Device ID                       : 3820.5622.a580
-        Configuration last modified by 201.0.12.1 at 12-5-17 09:35:46
-        Local updater ID is 201.0.12.1 on interface Vl100 (lowest numbered VLAN interface found)
+        Configuration last modified by 192.168.234.1 at 12-5-17 09:35:46
+        Local updater ID is 192.168.234.1 on interface Vl100 (lowest numbered VLAN interface found)
 
         Feature VLAN:
         --------------

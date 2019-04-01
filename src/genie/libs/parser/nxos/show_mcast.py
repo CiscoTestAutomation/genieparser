@@ -483,7 +483,7 @@ class ShowIpStaticRouteMulticast(ShowIpStaticRouteMulticastSchema):
                     static_routemulticast_dict['vrf'][vrf]['address_family'][address_family] = {}
                 continue
 
-            #112.0.0.0/8, configured nh: 0.0.0.0/32 Null0 
+            #10.49.0.0/8, configured nh: 0.0.0.0/32 Null0 
             p3 =  re.compile(r'^\s*(?P<mroute>[0-9\.\/]+), +configured +nh:'
                               ' +(?P<neighbor_address>[a-zA-Z0-9\.\/]+)'
                               ' +(?P<interface_name>[a-zA-Z0-9\.]+)$')
@@ -830,7 +830,7 @@ class ShowForwardingDistributionMulticastRoute(ShowForwardingDistributionMultica
 
         # IPv4 Multicast Routing Table for table-id: 1
         # IPv4 Multicast Routing Table for table-id: 0x3
-        p1 = re.compile(r'^\s*IPv4 +Multicast +Routing +Table +for +table\-id: +(?P<vrf_id>[\S]+)$')
+        p1 = re.compile(r'^\s*IPv4 +Multicast +Routing +Table +for +table\-id: +(?P<vrf_id>(?!wildcard)[\S]+)$')
 
         # Total number of groups: 5
         p2 = re.compile(r'^\s*Total +number +of +groups: +(?P<total_number_group>[\d]+)$')

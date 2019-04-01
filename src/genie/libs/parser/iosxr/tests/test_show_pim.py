@@ -231,7 +231,7 @@ class test_show_pim_vrf_interface_detail(unittest.TestCase):
                     'Loopback0': 
                         {'address_family': 
                             {'ipv4': 
-                                {'address': ['2.2.2.2'],
+                                {'address': ['10.16.2.2'],
                                 'bfd': 
                                     {'enable': False,
                                     'interval': 0.150,
@@ -246,7 +246,7 @@ class test_show_pim_vrf_interface_detail(unittest.TestCase):
                                 'neighbor_filter': '-',
                                 'override_interval': 2500,
                                 'oper_status': 'on',
-                                'primary_address': '2.2.2.2',
+                                'primary_address': '10.16.2.2',
                                 'propagation_delay': 500}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
@@ -264,7 +264,7 @@ class test_show_pim_vrf_interface_detail(unittest.TestCase):
                                         Count Intvl  Prior
 
         Loopback0                   on   1     30     1     
-            Primary Address : 2.2.2.2
+            Primary Address : 10.16.2.2
                       Flags : B P V
                         BFD : Off/150 ms/3
                          DR : this system

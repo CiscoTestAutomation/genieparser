@@ -140,9 +140,9 @@ class ShowVersion(ShowVersionSchema):
 
             # Cisco IOS Software [Fuji], ASR1000 Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.7.1prd4, RELEASE SOFTWARE (fc1)
             # Cisco IOS Software [Fuji], Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Experimental Version 16.8.20170924:182909 [polaris_dev-/nobackup/mcpre/BLD-BLD_POLARIS_DEV_LATEST_20170924_191550 132]
-
+            # Cisco IOS Software, 901 Software (ASR901-UNIVERSALK9-M), Version 15.6(2)SP4, RELEASE SOFTWARE (fc3)
             p1_1 = re.compile(
-                r'^\s*[Cc]isco +IOS +[Ss]oftware(.+)?, +(?P<platform>.+) '
+                r'^\s*[Cc]isco +(?P<os>([A-Z]+)) +[Ss]oftware(.+)?, +(?P<platform>.+) '
                  'Software +\((?P<image_id>.+)\).+( +Experimental)? +'
                  '[Vv]ersion +(?P<version>[a-zA-Z0-9\.\:\(\)]+) *,?.*')
             m = p1_1.match(line)
@@ -161,6 +161,8 @@ class ShowVersion(ShowVersionSchema):
                         m.groupdict()['version']
                     version_dict['version']['image_id'] = \
                         m.groupdict()['image_id']
+                    if m.groupdict()['os']:
+                        version_dict['version']['os'] = m.groupdict()['os']
                     continue
 
             # Copyright (c) 1986-2016 by Cisco Systems, Inc.
@@ -999,7 +1001,7 @@ class ShowInventory(ShowInventorySchema):
                     if slot not in inventory_dict['slot']:
                         inventory_dict['slot'][slot] = {}
 
-                p1_2 = re.compile(r'SPA subslot (?P<slot>\d+)/(?P<subslot>\d+)')
+                p1_2 = re.compile(r'(SPA|IM) subslot (?P<slot>\d+)/(?P<subslot>\d+)')
                 m = p1_2.match(name)
                 if m:
                     slot = m.groupdict()['slot']
@@ -1024,10 +1026,13 @@ class ShowInventory(ShowInventorySchema):
 
             # check 2nd line
 
-            # PID: SFP-GE-T            , VID: V02  , SN: MTC2139029X
+            # PID: SFP-GE-T          , VID: V02  , SN: MTC2139029X
             # PID: ISR4331-3x1GE     , VID: V01  , SN:
-            # PID: ISR4331/K9        , VID:   , SN: FDO21520TGH
+            # PID: ISR4331/K9        , VID:      , SN: FDO21520TGH
             # PID: ISR4331/K9        , VID:      , SN:
+            # PID: ASR-920-24SZ-IM   , VID: V01  , SN: CAT1902V19M
+            # PID: SFP-10G-LR        , VID: CSCO , SN: CD180456291
+            # PID: A900-IMA3G-IMSG   , VID: V01  , SN: FOC2204PAP1
             p2 = re.compile(r'^\s*PID: +(?P<pid>\S+) +, +VID: +((?P<vid>\S+) +)?, +SN:( +(?P<sn>.*))?$')
             m = p2.match(line)
             if m:
@@ -1064,7 +1069,7 @@ class ShowInventory(ShowInventorySchema):
                                         inventory_dict['slot'][slot]['rp'][pid]['pid'] = pid
                                         inventory_dict['slot'][slot]['rp'][pid]['vid'] = vid
                                         inventory_dict['slot'][slot]['rp'][pid]['sn'] = sn
-                        elif 'SIP' in pid or 'ISR' in pid:
+                        elif 'SIP' in pid or 'ISR' in pid in pid or 'ONS' in pid:
                             if 'lc' not in inventory_dict['slot'][slot]:
                                 inventory_dict['slot'][slot]['lc'] = {}
                                 if pid not in inventory_dict['slot'][slot]['lc']:
@@ -3487,7 +3492,7 @@ class ShowPlatformHardwareSerdes(ShowPlatformHardwareSerdesSchema):
         p1 = re.compile(r'^From +Slot +(?P<link>[\w\d\-\s]+)$')
 
         #   Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0 
-        p2 = re.compile(r'^Pkts  +High: +(?P<high>\d+) +Low: +(?P<low>\d+)( +Bad: +(?P<bad>\d+) +Dropped: +(?P<dropped>\d+))?$')
+        p2 = re.compile(r'^Pkts +High: +(?P<high>\d+) +Low: +(?P<low>\d+)( +Bad: +(?P<bad>\d+) +Dropped: +(?P<dropped>\d+))?$')
 
         #   Bytes High: 0          Low: 0          Bad: 0          Dropped: 0
         p3 = re.compile(r'^Bytes +High: +(?P<high>\d+) +Low: +(?P<low>\d+) +Bad: +(?P<bad>\d+) +Dropped: +(?P<dropped>\d+)$')
@@ -3567,7 +3572,8 @@ class ShowPlatformHardwareSerdesInternal(ShowPlatformHardwareSerdesSchema):
         ret_dict = {}
 
         # Network-Processor-0 Link:
-        p1 = re.compile(r'^(?P<link>[\w\d\-\s]+) +Link:$')
+        # RP/ESP Link:
+        p1 = re.compile(r'^(?P<link>[\w\d\-\s/]+) +Link:$')
 
         #   Local TX in sync, Local RX in sync                                   
         p2 = re.compile(r'^Local +TX +in +sync, +Local +RX +in +sync$')
@@ -3576,11 +3582,13 @@ class ShowPlatformHardwareSerdesInternal(ShowPlatformHardwareSerdesSchema):
         p3 = re.compile(r'^Remote +TX +in +sync, +Remote +RX +in +sync$')
 
         #   To Network-Processor       Packets:    21763844  Bytes:  7343838083 
-        #   To Encryption Processor   Packets:           0  Bytes:           0                                   
-        p4 = re.compile(r'^To +(?P<link_name_1>[\w\-\d\s]+) +Packets: +(?P<to_packets>\d+) +Bytes: +(?P<to_bytes>\d+)$')
+        #   To Encryption Processor   Packets:           0  Bytes:           0     
+        #   To RP/ESP Packets: 1150522 Bytes: 166031138
+        p4 = re.compile(r'^To +(?P<link_name_1>[\w\-\d\s/]+) +Packets: +(?P<to_packets>\d+) +Bytes: +(?P<to_bytes>\d+)$')
 
-        #   From Network-Processor     Packets:    21259012  Bytes:  7397920802                                  
-        p5 = re.compile(r'^From +(?P<link_name_2>[\w\-\d\s]+) +Packets: +(?P<from_packets>\d+) +Bytes: +(?P<from_bytes>\d+)$')
+        #   From Network-Processor     Packets:    21259012  Bytes:  7397920802     
+        #   From RP/ESP Packets: 4364008 Bytes: 697982854
+        p5 = re.compile(r'^From +(?P<link_name_2>[\w\-\d\s/]+) +Packets: +(?P<from_packets>\d+) +Bytes: +(?P<from_bytes>\d+)$')
 
         #     Drops                   Packets:           0  Bytes:           0
         p6 = re.compile(r'^Drops +Packets: +(?P<dropped_packets>\d+) +Bytes: +(?P<dropped_bytes>\d+)$')
@@ -4115,7 +4123,7 @@ class ShowPlatformHardwareQfpInterfaceIfnameStatisticsSchema(MetaParser):
             'active': {
                 'interface': {
                     Any(): {
-                        'platform_handle': int,
+                        Optional('platform_handle'): int,
                         'receive_stats': {
                             Any(): {
                                 'packets': int,
@@ -4164,7 +4172,8 @@ class ShowPlatformHardwareQfpInterfaceIfnameStatistics(ShowPlatformHardwareQfpIn
         # initial return dictionary
         ret_dict = {}
         current_stats = None
-
+        final_dict = {}
+        
         # Platform Handle 7
         p1 = re.compile(r'^Platform +Handle +(?P<platform_handle>\d+)$')
 
@@ -4192,6 +4201,11 @@ class ShowPlatformHardwareQfpInterfaceIfnameStatistics(ShowPlatformHardwareQfpIn
 
             m = p2.match(line)
             if m:
+                if not final_dict:
+                    converted_interface = Common.convert_intf_name(interface)
+                    final_dict = ret_dict.setdefault('qfp', {}).setdefault(
+                        'active', {}).setdefault('interface', {}).setdefault(converted_interface, {})
+
                 group = m.groupdict()
                 status = group['transmit_receive']
                 if 'Receive' in status:

@@ -117,7 +117,7 @@ class test_show_ip_igmp_interface(unittest.TestCase):
                            "configured_querier_timeout": 266,
                            "max_groups": 10,
                            "multicast": {
-                                "designated_router": "20.1.2.1",
+                                "designated_router": "10.186.2.1",
                                 "ttl_threshold": 0,
                                 "routing_enable": True,
                                 "routing_table": "VRF1",
@@ -131,7 +131,7 @@ class test_show_ip_igmp_interface(unittest.TestCase):
                                "joins": 9,
                                "leaves": 0,
                            },
-                           "interface_adress": "20.1.2.1/24",
+                           "interface_adress": "10.186.2.1/24",
                            "joined_group": {
                                 "224.0.1.40": {
                                      "number_of_users": 1
@@ -154,7 +154,7 @@ class test_show_ip_igmp_interface(unittest.TestCase):
                            "last_member_query_count": 2,
                            "query_interval": 133,
                            "enable": True,
-                           "querier": "20.1.2.1",
+                           "querier": "10.186.2.1",
                            "query_this_system": True,
                            "configured_query_interval": 133,
                            "last_member_query_interval": 100,
@@ -170,7 +170,7 @@ class test_show_ip_igmp_interface(unittest.TestCase):
     golden_output_1 = {'execute.return_value': '''\
         Global IGMP State Limit : 0 active out of 20 max
         GigabitEthernet2 is up, line protocol is up
-          Internet address is 20.1.2.1/24
+          Internet address is 10.186.2.1/24
           IGMP is enabled on interface
           Multicast Routing table VRF1
           Current IGMP host version is 3
@@ -187,8 +187,8 @@ class test_show_ip_igmp_interface(unittest.TestCase):
           Interface IGMP State Limit : 0 active out of 10 max
           Multicast routing is enabled on interface
           Multicast TTL threshold is 0
-          Multicast designated router (DR) is 20.1.2.1 (this system)
-          IGMP querying router is 20.1.2.1 (this system)
+          Multicast designated router (DR) is 10.186.2.1 (this system)
+          IGMP querying router is 10.186.2.1 (this system)
           Multicast groups joined by this system (number of users):
               224.0.1.40(1)  239.1.1.1(1)  239.2.2.2(1)
               239.3.3.3(1)  239.4.4.4(1)
@@ -245,7 +245,7 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                      "up_time": "00:05:06",
                                      "flags": "L",
                                      "source": {
-                                          "1.1.1.2": {
+                                          "10.4.1.2": {
                                                "up_time": "00:05:06",
                                                "flags": "L",
                                                "forward": True,
@@ -260,14 +260,14 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                      "up_time": "00:05:06",
                                      "flags": "SS",
                                      "source": {
-                                          "2.2.2.1": {
+                                          "10.16.2.1": {
                                                "up_time": "00:05:06",
                                                "flags": "S",
                                                "forward": True,
                                                "csr_exp": "stopped",
                                                "v3_exp": "stopped",
                                           },
-                                          "2.2.2.2": {
+                                          "10.16.2.2": {
                                                "up_time": "00:05:06",
                                                "flags": "S",
                                                "forward": True,
@@ -288,7 +288,7 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                      "up_time": "00:05:06",
                                      "flags": "SS",
                                      "source": {
-                                          "2.2.2.1": {
+                                          "10.16.2.1": {
                                                "up_time": "00:05:06",
                                                "flags": "S",
                                                "forward": True,
@@ -322,7 +322,7 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                      "up_time": "00:05:06",
                                      "flags": "L",
                                      "source": {
-                                          "1.1.1.1": {
+                                          "10.4.1.1": {
                                                "up_time": "00:05:06",
                                                "flags": "L",
                                                "forward": True,
@@ -350,9 +350,9 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                 }
                            },
                            "join_group": {
-                                "239.8.8.8 2.2.2.2": {
+                                "239.8.8.8 10.16.2.2": {
                                      "group": "239.8.8.8",
-                                     "source": "2.2.2.2",
+                                     "source": "10.16.2.2",
                                      "up_time": "00:05:06",
                                      "forward": True,
                                      "csr_exp": "stopped",
@@ -360,9 +360,9 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                      "flags": "SS",
                                      "last_reporter": "0.0.0.0"
                                 },
-                                "239.8.8.8 2.2.2.1": {
+                                "239.8.8.8 10.16.2.1": {
                                      "group": "239.8.8.8",
-                                     "source": "2.2.2.1",
+                                     "source": "10.16.2.1",
                                      "up_time": "00:05:06",
                                      "forward": True,
                                      "csr_exp": "stopped",
@@ -370,9 +370,9 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                      "flags": "SS",
                                      "last_reporter": "0.0.0.0"
                                 },
-                                "239.4.4.4 1.1.1.2": {
+                                "239.4.4.4 10.4.1.2": {
                                      "group": "239.4.4.4",
-                                     "source": "1.1.1.2",
+                                     "source": "10.4.1.2",
                                      "up_time": "00:05:06",
                                      "forward": True,
                                      "csr_exp": "stopped",
@@ -395,9 +395,9 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                      "flags": "L U",
                                      "last_reporter": "10.1.2.1"
                                 },
-                                "239.7.7.7 2.2.2.1": {
+                                "239.7.7.7 10.16.2.1": {
                                      "group": "239.7.7.7",
-                                     "source": "2.2.2.1",
+                                     "source": "10.16.2.1",
                                      "up_time": "00:05:06",
                                      "forward": True,
                                      "csr_exp": "stopped",
@@ -405,9 +405,9 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                      "flags": "SS",
                                      "last_reporter": "0.0.0.0"
                                 },
-                                "239.3.3.3 1.1.1.1": {
+                                "239.3.3.3 10.4.1.1": {
                                      "group": "239.3.3.3",
-                                     "source": "1.1.1.1",
+                                     "source": "10.4.1.1",
                                      "up_time": "00:05:06",
                                      "forward": True,
                                      "csr_exp": "stopped",
@@ -459,7 +459,7 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                             V - Virtual, M - SSM Mapping, L - Local,
                             Ac - Channel accounted towards access control limit)
           Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
-          1.1.1.1          00:05:06  stopped   stopped   Yes  L
+          10.4.1.1         00:05:06  stopped   stopped   Yes  L
 
         Interface:        GigabitEthernet1
         Group:                239.2.2.2
@@ -487,7 +487,7 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                             V - Virtual, M - SSM Mapping, L - Local,
                             Ac - Channel accounted towards access control limit)
           Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
-          1.1.1.2          00:05:06  stopped   stopped   Yes  L
+          10.4.1.2         00:05:06  stopped   stopped   Yes  L
 
         Interface:        GigabitEthernet1
         Group:                239.7.7.7
@@ -499,7 +499,7 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                             V - Virtual, M - SSM Mapping, L - Local,
                             Ac - Channel accounted towards access control limit)
           Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
-          2.2.2.1          00:05:06  stopped   stopped   Yes  S
+          10.16.2.1        00:05:06  stopped   stopped   Yes  S
 
         Interface:        GigabitEthernet1
         Group:                239.6.6.6
@@ -527,8 +527,8 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                             V - Virtual, M - SSM Mapping, L - Local,
                             Ac - Channel accounted towards access control limit)
           Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
-          2.2.2.1          00:05:06  stopped   stopped   Yes  S
-          2.2.2.2          00:05:06  stopped   stopped   Yes  S
+          10.16.2.1        00:05:06  stopped   stopped   Yes  S
+          10.16.2.2        00:05:06  stopped   stopped   Yes  S
 
         Interface:        GigabitEthernet1
         Group:                224.0.1.40
@@ -561,9 +561,9 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                 }
                            },
                            "join_group": {
-                                "239.8.8.8 2.2.2.2": {
+                                "239.8.8.8 10.16.2.2": {
                                      "group": "239.8.8.8",
-                                     "source": "2.2.2.2",
+                                     "source": "10.16.2.2",
                                      "last_reporter": "0.0.0.0",
                                      "flags": "SS",
                                      "forward": True,
@@ -571,10 +571,10 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                      "up_time": "00:05:59",
                                      "v3_exp": "stopped"
                                 },
-                                "239.3.3.3 1.1.1.1": {
+                                "239.3.3.3 10.4.1.1": {
                                      "group": "239.3.3.3",
-                                     "source": "1.1.1.1",
-                                     "last_reporter": "20.1.2.1",
+                                     "source": "10.4.1.1",
+                                     "last_reporter": "10.186.2.1",
                                      "flags": "L",
                                      "forward": True,
                                      "csr_exp": "stopped",
@@ -584,24 +584,24 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                 "239.1.1.1 *": {
                                      "group": "239.1.1.1",
                                      "source": "*",
-                                     "last_reporter": "20.1.2.1",
+                                     "last_reporter": "10.186.2.1",
                                      "up_time": "00:06:24",
                                      "flags": "L U",
                                      "expire": "never"
                                 },
-                                "239.4.4.4 1.1.1.2": {
+                                "239.4.4.4 10.4.1.2": {
                                      "group": "239.4.4.4",
-                                     "source": "1.1.1.2",
-                                     "last_reporter": "20.1.2.1",
+                                     "source": "10.4.1.2",
+                                     "last_reporter": "10.186.2.1",
                                      "flags": "L",
                                      "forward": True,
                                      "csr_exp": "stopped",
                                      "up_time": "00:06:23",
                                      "v3_exp": "stopped"
                                 },
-                                "239.7.7.7 2.2.2.1": {
+                                "239.7.7.7 10.16.2.1": {
                                      "group": "239.7.7.7",
-                                     "source": "2.2.2.1",
+                                     "source": "10.16.2.1",
                                      "last_reporter": "0.0.0.0",
                                      "flags": "SS",
                                      "forward": True,
@@ -612,14 +612,14 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                 "239.2.2.2 *": {
                                      "group": "239.2.2.2",
                                      "source": "*",
-                                     "last_reporter": "20.1.2.1",
+                                     "last_reporter": "10.186.2.1",
                                      "up_time": "00:06:24",
                                      "flags": "L U",
                                      "expire": "never"
                                 },
-                                "239.8.8.8 2.2.2.1": {
+                                "239.8.8.8 10.16.2.1": {
                                      "group": "239.8.8.8",
-                                     "source": "2.2.2.1",
+                                     "source": "10.16.2.1",
                                      "last_reporter": "0.0.0.0",
                                      "flags": "SS",
                                      "forward": True,
@@ -630,7 +630,7 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                 "224.0.1.40 *": {
                                      "group": "224.0.1.40",
                                      "source": "*",
-                                     "last_reporter": "20.1.2.1",
+                                     "last_reporter": "10.186.2.1",
                                      "up_time": "00:25:55",
                                      "flags": "L U"
                                 }
@@ -638,10 +638,10 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                            "group": {
                                 "239.4.4.4": {
                                      "group_mode": "include",
-                                     "last_reporter": "20.1.2.1",
+                                     "last_reporter": "10.186.2.1",
                                      "flags": "L",
                                      "source": {
-                                          "1.1.1.2": {
+                                          "10.4.1.2": {
                                                "forward": True,
                                                "flags": "L",
                                                "up_time": "00:06:23",
@@ -659,17 +659,17 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                 },
                                 "239.1.1.1": {
                                      "group_mode": "exclude",
-                                     "last_reporter": "20.1.2.1",
+                                     "last_reporter": "10.186.2.1",
                                      "flags": "L U",
                                      "up_time": "00:06:24",
                                      "expire": "never"
                                 },
                                 "239.3.3.3": {
                                      "group_mode": "include",
-                                     "last_reporter": "20.1.2.1",
+                                     "last_reporter": "10.186.2.1",
                                      "flags": "L",
                                      "source": {
-                                          "1.1.1.1": {
+                                          "10.4.1.1": {
                                                "forward": True,
                                                "flags": "L",
                                                "up_time": "00:06:24",
@@ -690,14 +690,14 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                      "last_reporter": "0.0.0.0",
                                      "flags": "SS",
                                      "source": {
-                                          "2.2.2.1": {
+                                          "10.16.2.1": {
                                                "forward": True,
                                                "flags": "S",
                                                "up_time": "00:03:56",
                                                "v3_exp": "stopped",
                                                "csr_exp": "stopped",
                                           },
-                                          "2.2.2.2": {
+                                          "10.16.2.2": {
                                                "forward": True,
                                                "flags": "S",
                                                "up_time": "00:05:57",
@@ -709,7 +709,7 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                 },
                                 "224.0.1.40": {
                                      "group_mode": "include",
-                                     "last_reporter": "20.1.2.1",
+                                     "last_reporter": "10.186.2.1",
                                      "flags": "L U",
                                      "up_time": "00:25:55"
                                 },
@@ -718,7 +718,7 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                      "last_reporter": "0.0.0.0",
                                      "flags": "SS",
                                      "source": {
-                                          "2.2.2.1": {
+                                          "10.16.2.1": {
                                                "forward": True,
                                                "flags": "S",
                                                "up_time": "00:06:06",
@@ -730,7 +730,7 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                 },
                                 "239.2.2.2": {
                                      "group_mode": "exclude",
-                                     "last_reporter": "20.1.2.1",
+                                     "last_reporter": "10.186.2.1",
                                      "flags": "L U",
                                      "up_time": "00:06:24",
                                      "expire": "never"
@@ -752,7 +752,7 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
         Flags:                L U 
         Uptime:                00:06:24
         Group mode:        EXCLUDE (Expires: never)
-        Last reporter:        20.1.2.1
+        Last reporter:        10.186.2.1
         Source list is empty
 
         Interface:        GigabitEthernet2
@@ -760,19 +760,19 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
         Flags:                L 
         Uptime:                00:06:24
         Group mode:        INCLUDE
-        Last reporter:        20.1.2.1
+        Last reporter:        10.186.2.1
         Group source list: (C - Cisco Src Report, U - URD, R - Remote, S - Static,
                             V - Virtual, M - SSM Mapping, L - Local,
                             Ac - Channel accounted towards access control limit)
           Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
-          1.1.1.1          00:06:24  stopped   stopped   Yes  L
+          10.4.1.1         00:06:24  stopped   stopped   Yes  L
 
         Interface:        GigabitEthernet2
         Group:                239.2.2.2
         Flags:                L U 
         Uptime:                00:06:24
         Group mode:        EXCLUDE (Expires: never)
-        Last reporter:        20.1.2.1
+        Last reporter:        10.186.2.1
         Source list is empty
 
         Interface:        GigabitEthernet2
@@ -788,12 +788,12 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
         Flags:                L 
         Uptime:                00:06:23
         Group mode:        INCLUDE
-        Last reporter:        20.1.2.1
+        Last reporter:        10.186.2.1
         Group source list: (C - Cisco Src Report, U - URD, R - Remote, S - Static,
                             V - Virtual, M - SSM Mapping, L - Local,
                             Ac - Channel accounted towards access control limit)
           Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
-          1.1.1.2          00:06:23  stopped   stopped   Yes  L
+          10.4.1.2         00:06:23  stopped   stopped   Yes  L
 
         Interface:        GigabitEthernet2
         Group:                239.7.7.7
@@ -805,7 +805,7 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                             V - Virtual, M - SSM Mapping, L - Local,
                             Ac - Channel accounted towards access control limit)
           Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
-          2.2.2.1          00:06:06  stopped   stopped   Yes  S
+          10.16.2.1          00:06:06  stopped   stopped   Yes  S
 
         Interface:        GigabitEthernet2
         Group:                239.6.6.6
@@ -825,15 +825,15 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                             V - Virtual, M - SSM Mapping, L - Local,
                             Ac - Channel accounted towards access control limit)
           Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
-          2.2.2.1          00:03:56  stopped   stopped   Yes  S
-          2.2.2.2          00:05:57  stopped   stopped   Yes  S
+          10.16.2.1        00:03:56  stopped   stopped   Yes  S
+          10.16.2.2        00:05:57  stopped   stopped   Yes  S
 
         Interface:        GigabitEthernet2
         Group:                224.0.1.40
         Flags:                L U 
         Uptime:                00:25:55
         Group mode:        INCLUDE
-        Last reporter:        20.1.2.1
+        Last reporter:        10.186.2.1
         Source list is empty
     '''}
 
@@ -866,25 +866,25 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                      "expire": "00:01:29",
                                      "up_time": "1w0d",
                                      "group_mode": "exclude",
-                                     "last_reporter": "201.10.14.2"
+                                     "last_reporter": "192.168.135.2"
                                 },
                                 "227.1.1.1": {
                                      "expire": "00:02:25",
                                      "up_time": "1w0d",
                                      "group_mode": "exclude",
-                                     "last_reporter": "201.10.14.4"
+                                     "last_reporter": "192.168.135.4"
                                 },
                                 "225.1.1.1": {
                                      "expire": "00:02:26",
                                      "up_time": "1w0d",
                                      "group_mode": "exclude",
-                                     "last_reporter": "201.10.14.4"
+                                     "last_reporter": "192.168.135.4"
                                 },
                                 "226.1.1.1": {
                                      "expire": "00:02:22",
                                      "up_time": "1w0d",
                                      "group_mode": "exclude",
-                                     "last_reporter": "201.10.14.4"
+                                     "last_reporter": "192.168.135.4"
                                 }
                            }
                       },
@@ -896,13 +896,13 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                      "group": "224.0.1.40",
                                      "flags": "L U",
                                      "up_time": "1w0d",
-                                     "last_reporter": "200.10.1.1"
+                                     "last_reporter": "192.168.151.1"
                                 }
                            },
                            "group": {
                                 "224.0.1.40": {
                                      "expire": "00:02:08",
-                                     "last_reporter": "200.10.1.1",
+                                     "last_reporter": "192.168.151.1",
                                      "up_time": "1w0d",
                                      "group_mode": "exclude",
                                      "flags": "L U"
@@ -917,7 +917,7 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                      "group": "239.1.1.1",
                                      "flags": "L U SG",
                                      "up_time": "4d11h",
-                                     "last_reporter": "201.11.14.1"
+                                     "last_reporter": "192.168.76.1"
                                 }
                            },
                            "join_group": {
@@ -927,7 +927,7 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                      "group": "239.1.1.1",
                                      "flags": "L U SG",
                                      "up_time": "4d11h",
-                                     "last_reporter": "201.11.14.1"
+                                     "last_reporter": "192.168.76.1"
                                 }
                            },
                            "group": {
@@ -935,17 +935,17 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                      "expire": "00:02:30",
                                      "up_time": "1w0d",
                                      "group_mode": "exclude",
-                                     "last_reporter": "201.11.14.2"
+                                     "last_reporter": "192.168.76.2"
                                 },
                                 "232.1.1.1": {
-                                     "last_reporter": "201.11.14.4",
+                                     "last_reporter": "192.168.76.4",
                                      "up_time": "1w0d",
                                      "group_mode": "include",
                                      "flags": "SSM"
                                 },
                                 "239.1.1.1": {
                                      "expire": "00:02:29",
-                                     "last_reporter": "201.11.14.1",
+                                     "last_reporter": "192.168.76.1",
                                      "up_time": "4d11h",
                                      "group_mode": "exclude",
                                      "flags": "L U SG"
@@ -967,7 +967,7 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
         Flags:    L U SG 
         Uptime:   4d11h
         Group mode: EXCLUDE (Expires: 00:02:29)
-        Last reporter:  201.11.14.1
+        Last reporter:  192.168.76.1
         Source list is empty
 
         Interface:  Vlan211
@@ -975,19 +975,19 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
         Flags:    SSM 
         Uptime:   1w0d
         Group mode: INCLUDE
-        Last reporter:  201.11.14.4
+        Last reporter:  192.168.76.4
         Group source list: (C - Cisco Src Report, U - URD, R - Remote, S - Static,
                             V - Virtual, M - SSM Mapping, L - Local,
                             Ac - Channel accounted towards access control limit)
           Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
-          201.11.26.2      1w0d      00:02:30  stopped   Yes  R
+          192.168.34.2     1w0d      00:02:30  stopped   Yes  R
 
         Interface:  Vlan210
         Group:    227.1.1.1
         Flags:    
         Uptime:   1w0d
         Group mode: EXCLUDE (Expires: 00:02:25)
-        Last reporter:  201.10.14.4
+        Last reporter:  192.168.135.4
         Source list is empty
 
         Interface:  Vlan210
@@ -995,7 +995,7 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
         Flags:    
         Uptime:   1w0d
         Group mode: EXCLUDE (Expires: 00:02:22)
-        Last reporter:  201.10.14.4
+        Last reporter:  192.168.135.4
         Source list is empty
 
         Interface:  Vlan210
@@ -1003,7 +1003,7 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
         Flags:    
         Uptime:   1w0d
         Group mode: EXCLUDE (Expires: 00:02:26)
-        Last reporter:  201.10.14.4
+        Last reporter:  192.168.135.4
         Source list is empty
 
         Interface:  Vlan211
@@ -1011,7 +1011,7 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
         Flags:    
         Uptime:   1w0d
         Group mode: EXCLUDE (Expires: 00:02:30)
-        Last reporter:  201.11.14.2
+        Last reporter:  192.168.76.2
         Source list is empty
 
         Interface:  Vlan210
@@ -1019,7 +1019,7 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
         Flags:    
         Uptime:   1w0d
         Group mode: EXCLUDE (Expires: 00:01:29)
-        Last reporter:  201.10.14.2
+        Last reporter:  192.168.135.2
         Source list is empty
 
         Interface:  Loopback10
@@ -1027,7 +1027,7 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
         Flags:    L U 
         Uptime:   1w0d
         Group mode: EXCLUDE (Expires: 00:02:08)
-        Last reporter:  200.10.1.1
+        Last reporter:  192.168.151.1
         Source list is empty
     '''}
 
@@ -1050,13 +1050,13 @@ class test_show_ip_igmp_ssm_mapping(unittest.TestCase):
         'vrf': {
             'default': {
                 'ssm_map': {
-                    '1.1.1.1 239.1.1.1': {
-                        'source_addr': '1.1.1.1',
+                    '10.4.1.1 239.1.1.1': {
+                        'source_addr': '10.4.1.1',
                         'group_address': '239.1.1.1',
                         'database': 'static',
                     },
-                    '2.2.2.2 239.1.1.1': {
-                        'source_addr': '2.2.2.2',
+                    '10.16.2.2 239.1.1.1': {
+                        'source_addr': '10.16.2.2',
                         'group_address': '239.1.1.1',
                         'database': 'static',
                     },
@@ -1068,21 +1068,21 @@ class test_show_ip_igmp_ssm_mapping(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         Group address: 239.1.1.1
         Database     : Static
-        Source list  : 1.1.1.1
-                       2.2.2.2
+        Source list  : 10.4.1.1
+                       10.16.2.2
     '''}
     
     golden_parsed_output_1 = {
         'vrf': {
             'VRF1': {
                 'ssm_map': {
-                    '1.1.1.1 239.1.1.1': {
-                        'source_addr': '1.1.1.1',
+                    '10.4.1.1 239.1.1.1': {
+                        'source_addr': '10.4.1.1',
                         'group_address': '239.1.1.1',
                         'database': 'static',
                     },
-                    '2.2.2.2 239.1.1.1': {
-                        'source_addr': '2.2.2.2',
+                    '10.16.2.2 239.1.1.1': {
+                        'source_addr': '10.16.2.2',
                         'group_address': '239.1.1.1',
                         'database': 'static',
                     },
@@ -1094,8 +1094,8 @@ class test_show_ip_igmp_ssm_mapping(unittest.TestCase):
     golden_output_1 = {'execute.return_value': '''\
         Group address: 239.1.1.1
         Database     : Static
-        Source list  : 1.1.1.1
-                       2.2.2.2
+        Source list  : 10.4.1.1
+                       10.16.2.2
     '''}
 
     def test_empty(self):

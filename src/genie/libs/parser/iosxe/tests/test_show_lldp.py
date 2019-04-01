@@ -62,7 +62,7 @@ class test_show_lldp_entry(unittest.TestCase):
                            "chassis_id": "843d.c638.b980",
                            "system_description": "Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2011 by Cisco Systems, Inc.\nCompiled Thu 21-Jul-11 01:23 by prod_rel_team",
                            "unit_type": 30,
-                           "management_address": "1.2.1.1",
+                           "management_address": "10.9.1.1",
                            "auto_negotiation": "supported, enabled",
                            "physical_media_capabilities": [
                                 "1000baseT(FD)",
@@ -99,7 +99,7 @@ class test_show_lldp_entry(unittest.TestCase):
                            "chassis_id": "843d.c638.b980",
                            "system_description": "Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2011 by Cisco Systems, Inc.\nCompiled Thu 21-Jul-11 01:23 by prod_rel_team",
                            "unit_type": 30,
-                           "management_address": "1.2.1.1",
+                           "management_address": "10.9.1.1",
                            "auto_negotiation": "supported, enabled",
                            "physical_media_capabilities": [
                                 "1000baseT(FD)",
@@ -136,7 +136,7 @@ class test_show_lldp_entry(unittest.TestCase):
                            "chassis_id": "843d.c638.b980",
                            "system_description": "Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2011 by Cisco Systems, Inc.\nCompiled Thu 21-Jul-11 01:23 by prod_rel_team",
                            "unit_type": 30,
-                           "management_address": "1.2.1.1",
+                           "management_address": "10.9.1.1",
                            "auto_negotiation": "supported, enabled",
                            "physical_media_capabilities": [
                                 "1000baseT(FD)",
@@ -173,7 +173,7 @@ class test_show_lldp_entry(unittest.TestCase):
                            "chassis_id": "843d.c638.b980",
                            "system_description": "Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2011 by Cisco Systems, Inc.\nCompiled Thu 21-Jul-11 01:23 by prod_rel_team",
                            "unit_type": 30,
-                           "management_address": "1.2.1.1",
+                           "management_address": "10.9.1.1",
                            "auto_negotiation": "supported, enabled",
                            "physical_media_capabilities": [
                                 "1000baseT(FD)",
@@ -227,7 +227,7 @@ class test_show_lldp_entry(unittest.TestCase):
         System Capabilities: B,R
         Enabled Capabilities: B,R
         Management Addresses:
-            IP: 1.2.1.1
+            IP: 10.9.1.1
         Auto Negotiation - supported, enabled
         Physical media capabilities:
             1000baseT(FD)
@@ -255,7 +255,7 @@ class test_show_lldp_entry(unittest.TestCase):
         System Capabilities: B,R
         Enabled Capabilities: B,R
         Management Addresses:
-            IP: 1.2.1.1
+            IP: 10.9.1.1
         Auto Negotiation - supported, enabled
         Physical media capabilities:
             1000baseT(FD)
@@ -283,7 +283,7 @@ class test_show_lldp_entry(unittest.TestCase):
         System Capabilities: B,R
         Enabled Capabilities: B,R
         Management Addresses:
-            IP: 1.2.1.1
+            IP: 10.9.1.1
         Auto Negotiation - supported, enabled
         Physical media capabilities:
             1000baseT(FD)
@@ -311,7 +311,7 @@ class test_show_lldp_entry(unittest.TestCase):
         System Capabilities: B,R
         Enabled Capabilities: B,R
         Management Addresses:
-            IP: 1.2.1.1
+            IP: 10.9.1.1
         Auto Negotiation - supported, enabled
         Physical media capabilities:
             1000baseT(FD)
@@ -355,7 +355,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
                            "chassis_id": "843d.c638.b980",
                            "system_description": "Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2011 by Cisco Systems, Inc.\nCompiled Thu 21-Jul-11 01:23 by prod_rel_team",
                            "unit_type": 30,
-                           "management_address": "1.2.1.1",
+                           "management_address": "10.9.1.1",
                            "auto_negotiation": "supported, enabled",
                            "physical_media_capabilities": [
                                 "1000baseT(FD)",
@@ -392,7 +392,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
                            "chassis_id": "843d.c638.b980",
                            "system_description": "Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2011 by Cisco Systems, Inc.\nCompiled Thu 21-Jul-11 01:23 by prod_rel_team",
                            "unit_type": 30,
-                           "management_address": "1.2.1.1",
+                           "management_address": "10.9.1.1",
                            "auto_negotiation": "supported, enabled",
                            "physical_media_capabilities": [
                                 "1000baseT(FD)",
@@ -429,7 +429,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
                            "chassis_id": "843d.c638.b980",
                            "system_description": "Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2011 by Cisco Systems, Inc.\nCompiled Thu 21-Jul-11 01:23 by prod_rel_team",
                            "unit_type": 30,
-                           "management_address": "1.2.1.1",
+                           "management_address": "10.9.1.1",
                            "auto_negotiation": "supported, enabled",
                            "physical_media_capabilities": [
                                 "1000baseT(FD)",
@@ -466,7 +466,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
                            "chassis_id": "843d.c638.b980",
                            "system_description": "Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2011 by Cisco Systems, Inc.\nCompiled Thu 21-Jul-11 01:23 by prod_rel_team",
                            "unit_type": 30,
-                           "management_address": "1.2.1.1",
+                           "management_address": "10.9.1.1",
                            "auto_negotiation": "supported, enabled",
                            "physical_media_capabilities": [
                                 "1000baseT(FD)",
@@ -517,7 +517,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
         System Capabilities: B,R
         Enabled Capabilities: B,R
         Management Addresses:
-            IP: 1.2.1.1
+            IP: 10.9.1.1
         Auto Negotiation - supported, enabled
         Physical media capabilities:
             1000baseT(FD)
@@ -545,7 +545,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
         System Capabilities: B,R
         Enabled Capabilities: B,R
         Management Addresses:
-            IP: 1.2.1.1
+            IP: 10.9.1.1
         Auto Negotiation - supported, enabled
         Physical media capabilities:
             1000baseT(FD)
@@ -573,7 +573,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
         System Capabilities: B,R
         Enabled Capabilities: B,R
         Management Addresses:
-            IP: 1.2.1.1
+            IP: 10.9.1.1
         Auto Negotiation - supported, enabled
         Physical media capabilities:
             1000baseT(FD)
@@ -601,7 +601,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
         System Capabilities: B,R
         Enabled Capabilities: B,R
         Management Addresses:
-            IP: 1.2.1.1
+            IP: 10.9.1.1
         Auto Negotiation - supported, enabled
         Physical media capabilities:
             1000baseT(FD)

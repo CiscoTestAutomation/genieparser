@@ -86,7 +86,7 @@ class ShowArp(ShowArpSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # Internet  201.0.12.1              -   58bf.eab6.2f51  ARPA   Vlan100
+            # Internet  192.168.234.1           -   58bf.eab6.2f51  ARPA   Vlan100
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -552,7 +552,7 @@ class ShowIpTraffic(ShowIpTrafficSchema):
             '+state +acks$')
 
         # Sent: 9456 total
-        p41 = re.compile(r'^Sent: +(?P<ospf_sent_total>\d+) +total$')
+        p41 = re.compile(r'^Sent: +(?P<sent_total>\d+) +total$')
 
         # 8887 hello, 30 database desc, 8 link state req
         p42 = re.compile(r'^(?P<ospf_sent_hello>\d+) +hello, '
@@ -947,11 +947,21 @@ class ShowIpTraffic(ShowIpTrafficSchema):
                 continue
 
             m = p41.match(line)
-            if m and location == 'ospf_statistics':
-                category = 'sent'
+            if m:
                 groups = m.groupdict()
-                ret_dict['ospf_statistics'].update({k: \
-                    int(v) for k, v in groups.items()})
+                if location == 'ospf_statistics':
+                    category = 'sent'
+                    sdict = ret_dict['ospf_statistics']
+                    key = 'ospf_sent_total'
+                elif location == 'tcp_statistics':
+                    sdict = ret_dict['tcp_statistics']
+                    key = 'tcp_sent_total'
+                elif location == 'eigrp_ipv4_statistics':
+                    sdict = ret_dict['eigrp_ipv4_statistics']
+                    key = 'eigrp_ipv4_sent_total'
+                else:
+                    continue
+                sdict[key] = int(groups['sent_total'])
                 continue
 
             m = p42.match(line)
@@ -1073,26 +1083,13 @@ class ShowIpTraffic(ShowIpTrafficSchema):
                     int(v) for k, v in groups.items()})
                 continue
 
-            m = p58.match(line)
-            if m and not 'eigrp_ipv4_statistics' in ret_dict:
-                groups = m.groupdict()
-                ret_dict['tcp_statistics'].update({k: \
-                    int(v) for k, v in groups.items()})
-                continue
-
             m = p59.match(line)
             if m:
                 ret_dict.setdefault('eigrp_ipv4_statistics', {})
+                location = 'eigrp_ipv4_statistics'
                 continue
 
             m = p60.match(line)
-            if m:
-                groups = m.groupdict()
-                ret_dict['eigrp_ipv4_statistics'].update({k: \
-                    int(v) for k, v in groups.items()})
-                continue
-
-            m = p61.match(line)
             if m:
                 groups = m.groupdict()
                 ret_dict['eigrp_ipv4_statistics'].update({k: \

@@ -952,7 +952,7 @@ class test_show_etherchannel_loadbalancing(unittest.TestCase):
     golden_output = {'execute.return_value': '''
         Router#sh etherchannel load-balancing
         Load for five secs: 50%/2%; one minute: 38%; five minutes: 56%
-        Time source is NTP, *16:28:54.625 JST Sat Nov 12 2016
+        Time source is NTP, *16:28:54.625 EST Sat Nov 12 2016
         EtherChannel Load-Balancing Method: 
         Global LB Method: flow-based
         LB Algo type: Source Destination IP
@@ -998,7 +998,7 @@ class test_show_lacp_neighbor_detail(unittest.TestCase):
     golden_output = {'execute.return_value': '''
         Router#show lacp neighbor detail
         Load for five secs: 5%/1%; one minute: 6%; five minutes: 7%
-        Time source is NTP, 20:56:57.454 JST Fri Nov 11 2016
+        Time source is NTP, 20:56:57.454 EST Fri Nov 11 2016
 
         Flags:  S - Device is requesting Slow LACPDUs 
                 F - Device is requesting Fast LACPDUs
