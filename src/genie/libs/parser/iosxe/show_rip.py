@@ -383,6 +383,7 @@ class ShowIpv6Rip(ShowIpv6RipSchema):
 
         # RIP VRF "Default VRF", port 521, multicast-group FF02::9, pid 635
         # RIP VRF "VRF1", port 521, multicast-group FF02::9, pid 635
+        # RIP process "1", port 521, multicast-group FF02::9, pid 615
         p1 = re.compile(r'^\s*RIP +VRF +(?P<vrf>[\S\s]+), +port +(?P<port>\d+),'
                         ' +multicast\-group +(?P<multicast_group>[\w\:]+), +pid +(?P<pid>\d+)$')
         #    Administrative distance is 120. Maximum paths is 16

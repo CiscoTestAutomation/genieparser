@@ -57,11 +57,18 @@ def get_parser(command, device):
         lookup = Lookup.from_device(device, packages={'parser':parser})
         # Check if all the tokens exists; take the farthest one
         data = parser_data[command]
-        for token in lookup._tokens:
-            if token in data:
-                data = data[token]
 
-        return _find_parser_cls(device, data), kwargs
+        tokens = list(lookup._tokens)
+        data = token_lookup(tokens, data)
+
+        try:
+            return _find_parser_cls(device, data), kwargs
+        except KeyError:
+            # Case when the show command is only found under one of
+            # the child level tokens
+            raise Exception("Could not find parser for "
+                            "'{c}' under {l}".format(
+                                c=command, l=lookup._tokens)) from None
     else:
         # Regex world!
         try:
@@ -72,6 +79,14 @@ def get_parser(command, device):
                             "'{c}'".format(c=command)) from None
 
         return _find_parser_cls(device, found_data), kwargs
+
+def token_lookup(tokens, data):
+    if tokens:
+        token = tokens.pop(0)
+        if token in data:
+            data = token_lookup(tokens, data[token])
+
+    return data
 
 def _find_command(command, data, device):
     ratio = 0

@@ -34,8 +34,8 @@ class ShowIpProtocolsSchema(MetaParser):
                                         'distance': int,
                                         'maximum_paths': int,
                                         Optional('output_delay'): int,
-                                        'send_version': int,
-                                        'receive_version': int,
+                                        'send_version': str,
+                                        'receive_version': str,
                                         Optional('automatic_network_summarization_in_effect'): bool,
                                         'outgoing_update_filterlist': {
                                             'outgoing_update_filterlist': str,
@@ -430,6 +430,10 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
         p112 = re.compile(r'^\s*Default +version +control: +send +version +(?P<send_version>\d+)'
                           ', receive version +(?P<receive_version>\d+)$')
 
+        # Default version control: send version 1, receive any version
+        p112_1 = re.compile(r'^\s*Default +version +control: +send +version +(?P<send_version>\d+)'
+                          ', receive +(?P<receive_version>\w+) version$')
+
         #   Interface                           Send  Recv  Triggered RIP  Key-chain
         #   GigabitEthernet3.100                2     2          No        1
         #   GigabitEthernet3.100                1 2   2          No        none
@@ -660,7 +664,13 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                 m = p112.match(line)
                 if m:
                     group = m.groupdict()
-                    rip_dict.update({k: int(v) for k, v in group.items() if v})
+                    rip_dict.update({k: v for k, v in group.items() if v})
+                    continue
+
+                m = p112_1.match(line)
+                if m:
+                    group = m.groupdict()
+                    rip_dict.update({k: v for k, v in group.items() if v})
                     continue
 
                 # Automatic network summarization is not in effect
@@ -1070,7 +1080,7 @@ class ShowIpProtocolsSectionRip(ShowIpProtocols):
        show ip protocols vrf {vrf} | sec rip
        """
 
-    cli_command = ["show ip protocols | sec rip","show ip protocols vrf {vrf} | sec rip"]
+    cli_command = ["show ip protocols | sec rip", "show ip protocols vrf {vrf} | sec rip"]
 
     def cli(self, vrf="", cmd ="",output=None):
         if vrf:
