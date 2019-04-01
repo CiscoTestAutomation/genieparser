@@ -4,11 +4,17 @@
 import re
 import os
 import json
+import sys
 import warnings
+import logging
 import importlib
+
+
 from genie.libs import parser
 from genie.abstract import Lookup
 
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+log = logging.getLogger(__name__)
 # Parser within Genie
 try:
     mod = importlib.import_module('genie.libs.parser')
@@ -26,6 +32,21 @@ else:
     with open(parsers) as f:
         parser_data = json.load(f)
 
+def format_output(parser_data, tab=0):
+    '''Format the parsed output in an aligned intended structure'''
+
+    s = ['{\n']
+    if parser_data is None:
+        return parser_data
+    for k,v in parser_data.items():
+        if isinstance(v, dict):
+            v = format_output(v, tab+2)
+        else:
+            v = repr(v)
+        s.append('%s%r: %s,\n' % ('  '*tab, k, v))
+    s.append('%s}' % ('  '*tab))
+    return ''.join(s)
+
 def get_parser(command, device):
     '''From a show command and device, return parser class and kwargs if any'''
 
@@ -39,7 +60,14 @@ def get_parser(command, device):
             if token in data:
                 data = data[token]
 
-        return _find_parser_cls(device, data), kwargs
+        try:
+            return _find_parser_cls(device, data), kwargs
+        except KeyError:
+            # Case when the show command is only found under one of
+            # the child level tokens
+            raise Exception("Could not find parser for "
+                            "'{c}' under {l}".format(
+                                c=command, l=lookup._tokens)) from None
     else:
         # Regex world!
         try:
@@ -52,6 +80,9 @@ def get_parser(command, device):
         return _find_parser_cls(device, found_data), kwargs
 
 def _find_command(command, data, device):
+    ratio = 0
+    max_lenght = 0
+    matches = None
     for key in data:
         if not '{' in key:
             # Disregard the non regex ones
@@ -59,12 +90,14 @@ def _find_command(command, data, device):
 
         # Okay... this is not optimal
         patterns = re.findall('{.*?}', key)
+        len_normal_words = len(set(key.split()) - set(patterns))
         reg = key
 
         for pattern in patterns:
             word = pattern.replace('{', '').replace('}', '')
             new_pattern = '(?P<{p}>.*)'.format(p=word)
-            reg = re.sub(pattern, new_pattern, key)
+            reg = re.sub(pattern, new_pattern, reg)
+        reg += '$'
 
         match = re.match(reg, command)
         if match:
@@ -75,8 +108,15 @@ def _find_command(command, data, device):
             for token in lookup._tokens:
                 if token in ret_data:
                     ret_data = ret_data[token]
-            return (ret_data, match.groupdict())
+
+            if len_normal_words > max_lenght:
+                max_lenght = len_normal_words
+                matches = (ret_data, match.groupdict())
+
+    if matches:
+        return matches
     raise SyntaxError('Could not find a parser match')
+
 
 def _find_parser_cls(device, data):
     lookup = Lookup.from_device(device, packages={'parser':parser})
@@ -118,11 +158,21 @@ class Common():
                    'Lo': 'Loopback',
                    'Fa': 'FastEthernet',
 	               'Po': 'Port-channel',
+	               'PO': 'Port-channel',
                    'Null': 'Null',
                    'Gi': 'GigabitEthernet',
+                   'GE': 'GigabitEthernet',
                    'Te': 'TenGigabitEthernet',
                    'mgmt': 'mgmt',
-                   'Vl': 'Vlan'}
+                   'Vl': 'Vlan',
+                   'Tu': 'Tunnel',
+                   'Fe': '',
+                   'Hs': 'HSSI',
+                   'AT': 'ATM',
+                   'Et': 'Ethernet',
+                   'BD': 'BridgeDomain',
+                   'Se': 'Serial',
+                   }
         m = re.search('([a-zA-Z]+)', intf) 
         m1 = re.search('([\d\/\.]+)', intf)
         if hasattr(m, 'group') and hasattr(m1, 'group'):
@@ -131,7 +181,10 @@ class Common():
             if int_type in convert.keys():
                 return(convert[int_type] + int_port)
             else:
-                return(intf)
+                # Unifying interface names
+                converted_intf = intf[0].capitalize()+intf[1:].replace(
+                    ' ','').replace('ethernet', 'Ethernet')
+                return(converted_intf)
         else:
             return(intf)
 

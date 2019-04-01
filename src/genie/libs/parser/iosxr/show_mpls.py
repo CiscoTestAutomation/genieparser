@@ -64,7 +64,7 @@ class ShowMplsLdpNeighborBrief(ShowMplsLdpNeighborBriefSchema):
             # Peer               GR  NSR  Up Time     Discovery   Addresses     Labels
             #                                         ipv4  ipv6  ipv4  ipv6  ipv4   ipv6
             # -----------------  --  ---  ----------  ----------  ----------  ------------
-            # 85.205.2.254:0     Y   Y    31w0d       2     0     10    0     77     0
+            # 10.205.2.254:0     Y   Y    31w0d       2     0     10    0     77     0
             p1 = re.compile(r'^\s*(?P<peer>[\d\.:]+)\s+(?P<gr>[\w]+)\s+(?P<nsr>[\w]+)\s+(?P<up_time>[\w\d]+)\s+(?P<discovery_ipv4>[\d]+)\s+(?P<discovery_ipv6>[\d]+)\s+(?P<addresses_ipv4>[\d]+)\s+(?P<addresses_ipv6>[\d]+)\s+(?P<labels_ipv4>[\d]+)\s+(?P<labels_ipv6>[\d]+)\s*$')
             m = p1.match(line)
             if m:

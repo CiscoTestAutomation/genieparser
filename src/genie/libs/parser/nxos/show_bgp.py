@@ -401,7 +401,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                     m.groupdict()['etype']
                 continue
 
-            # VTEP IP                        : 91.1.1.1
+            # VTEP IP                        : 10.49.1.1
             p16_4 = re.compile(r'^\s*VTEP +IP *: +(?P<vtep_ip>(\S+))$')
             m = p16_4.match(line)
             if m:
@@ -409,7 +409,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                     m.groupdict()['vtep_ip']
                 continue
 
-            # VTEP Virtual IP                : 91.1.2.1
+            # VTEP Virtual IP                : 10.49.2.1
             p16_5 = re.compile(r'^\s*VTEP +Virtual +IP *: +(?P<vtep_vip>(\S+))$')
             m = p16_5.match(line)
             if m:
@@ -417,7 +417,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                     m.groupdict()['vtep_vip']
                 continue
 
-            # VTEP VIP-R                     : 91.1.2.1
+            # VTEP VIP-R                     : 10.49.2.1
             p16_6 = re.compile(r'^\s*VTEP +VIP-R *: +(?P<vipr>(\S+))$')
             m = p16_6.match(line)
             if m:
@@ -441,7 +441,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                     m.groupdict()['vipd_mac']
                 continue
 
-            # Router-ID                      : 11.11.11.11
+            # Router-ID                      : 10.229.11.11
             p17 = re.compile(r'^\s*Router-ID *:'
                               ' +(?P<router_id>[0-9\.]+)$')
             m = p17.match(line)
@@ -505,7 +505,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                 continue
             
             # VRF RD                         : 100:100
-            # VRF RD                         : 91.1.1.0:4
+            # VRF RD                         : 10.49.1.0:4
             p24 = re.compile(r'^\s*VRF +RD *:'
                               ' +(?P<vrf_rd>[a-zA-Z0-9\:\.\s]+)$')
             m = p24.match(line)
@@ -515,7 +515,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                 continue
 
             # VRF EVPN RD                    : 100:100
-            # VRF EVPN RD                    : 91.1.1.0:4
+            # VRF EVPN RD                    : 10.49.1.0:4
             p24_1 = re.compile(r'^\s*VRF +EVPN +RD *:'
                               ' +(?P<vrf_evpn_rd>[a-zA-Z0-9\:\.\s]+)$')
             m = p24_1.match(line)
@@ -1246,7 +1246,7 @@ class ShowBgpPeerSession(ShowBgpPeerSessionSchema):
                 
                     # Inherited commands:
                     # Inherited by the following peers:
-                    # VRF default: 2.2.2.5
+                    # VRF default: 10.16.2.5
                     r13 = re.compile(r'^\s*VRF +default *:'
                                      ' +(?P<vrf_default>[0-9\.]+)$')
                     m = r13.match(line)
@@ -1429,7 +1429,7 @@ class ShowBgpPeerPolicy(ShowBgpPeerPolicySchema):
                 
                     # Inherited commands:
                     # Inherited by the following peers:
-                    # VRF default: 2.2.2.5
+                    # VRF default: 10.16.2.5
                     r12 = re.compile(r'^\s*VRF +default *:'
                                      ' +(?P<vrf_default>[0-9\.]+)$')
                     m = r12.match(line)
@@ -1739,8 +1739,8 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                 af_dict = parsed_dict['vrf'][vrf]['address_family'][address_family]
                 continue
 
-            # BGP table version is 35, local router ID is 11.11.11.11
-            # BGP table version is 381, Local Router ID is 1.1.1.2
+            # BGP table version is 35, local router ID is 10.229.11.11
+            # BGP table version is 381, Local Router ID is 10.4.1.2
             p2 = re.compile(r'^\s*BGP +table +version +is'
                              ' +(?P<bgp_table_version>[0-9]+), +(L|l)ocal'
                              ' +(R|r)outer +ID +is +(?P<local_router_id>[0-9\.]+)$')
@@ -1777,8 +1777,8 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
             # Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath
             # Network            Next Hop         Metric   LocPrf   Weight Path
 
-            # *>i[2]:[77][7,0][9.9.9.9,1,151587081][29.1.1.1,22][19.0.101.1,29.0.1.30]/616
-            # *>iaaaa:1::/113       ::ffff:19.0.101.1
+            # *>i[2]:[77][7,0][10.69.9.9,1,151587081][10.135.1.1,22][10.106.101.1,10.76.1.30]/616
+            # *>iaaaa:1::/113       ::ffff:10.106.101.1
             p3_1 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
                              '(?P<path_type>(i|e|c|l|a|r|I))?'
                              '(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,]+)'
@@ -1828,8 +1828,8 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
 
 
             #                     0.0.0.0               100      32768 i
-            #                     19.0.101.1            4444       100 0 3 10 20 30 40 50 60 70 80 90 i
-            # *>i                 19.0.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
+            #                     10.106.101.1            4444       100 0 3 10 20 30 40 50 60 70 80 90 i
+            # *>i                 10.106.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
             p3_3 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
                              '(?P<path_type>(i|e|c|l|a|r|I))?'
                              ' *(?P<next_hop>[a-zA-Z0-9\.\:]+)'
@@ -1837,8 +1837,8 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                              ' +(?P<origin_codes>(i|e|\?|\|))$')
             m = p3_3.match(line)
 
-            # * e                   20.20.2.2                                      0 100 300 ?
-            # *>e                   20.20.1.2                                      0 100 300 ?
+            # * e                   10.70.2.2                                      0 100 300 ?
+            # *>e                   10.70.1.2                                      0 100 300 ?
             p3_3_1 = re.compile(r'^\s*(?P<status_codes>(\*\>|s|x|S|d|h|\*|\>|\s)+)'
                                  '(?P<path_type>(i|e|c|l|a|r|I))?'
                                  '( *(?P<origin_codes>(i|e|\?|\&|\|)+))'
@@ -1934,7 +1934,7 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
             # Network            Next Hop            Metric     LocPrf     Weight Path
             # Route Distinguisher: 100:100     (VRF VRF1)
             # Route Distinguisher: 2:100    (VRF vpn2)
-            # Route Distinguisher: 91.1.1.0:3    (L3VNI 9100)
+            # Route Distinguisher: 10.49.1.0:3    (L3VNI 9100)
             p4 = re.compile(r'^\s*Route +Distinguisher *:'
                              ' +(?P<route_distinguisher>(\S+))'
                              '(?: +\(((VRF +(?P<default_vrf>\S+))|'
@@ -1971,17 +1971,17 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                 continue
 
             # Network            Next Hop            Metric     LocPrf     Weight Path
-            # *>a11.0.0.0/8       0.0.0.0                  100      32768 i
-            # *>i33.33.33.33/32   3.3.3.3         0        100          0 ?
-            # l34.34.34.0/24      0.0.0.0                  100      32768 i
-            # *>i2001::33/128     ::ffff:3.3.3.3  0        100          0 ?
+            # *>a10.121.0.0/8       0.0.0.0                  100      32768 i
+            # *>i10.21.33.33/32   10.36.3.3         0        100          0 ?
+            # l10.34.34.0/24      0.0.0.0                  100      32768 i
+            # *>i2001::33/128     ::ffff:10.36.3.3  0        100          0 ?
             # *>l[2]:[0]:[0]:[48]:[0000.1986.6d99]:[0]:[0.0.0.0]/216
-            # *>i                 21.0.0.2        0        100          0 ?
-            # *>l1.1.1.0/24        0.0.0.0                            100      32768 i
-            # *>r1.3.1.0/24        0.0.0.0                4444        100      32768 ?
-            # *>r1.3.2.0/24        0.0.0.0                4444        100      32768 ?
-            # *>i1.6.0.0/16     19.0.101.1                            100          0 10 20 30 40 50 60 70 80 90 i
-            # *>i1.1.2.0/24     19.0.102.4                            100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
+            # *>i                 10.186.0.2        0        100          0 ?
+            # *>l10.4.1.0/24        0.0.0.0                            100      32768 i
+            # *>r10.16.1.0/24        0.0.0.0                4444        100      32768 ?
+            # *>r10.16.2.0/24        0.0.0.0                4444        100      32768 ?
+            # *>i10.49.0.0/16     10.106.101.1                            100          0 10 20 30 40 50 60 70 80 90 i
+            # *>i10.4.2.0/24     10.106.102.4                            100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
             p3_2 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)'
                              '(?P<path_type>(i|e|c|l|a|r|I))'
                              '(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,]+)'
@@ -1990,7 +1990,7 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                              ' +(?P<origin_codes>(i|e|\?|\&|\|))$')
             m = p3_2.match(line)
 
-            # *&i20.0.1.0/24        192.1.1.2                0        100          0 ?
+            # *&i10.145.1.0/24        192.168.151.2                0        100          0 ?
             p3_2_1 = re.compile(r'^\s*(?P<status_codes>(\*\>|s|x|S|d|h|\*|\>|\s)+)'
                                  '(?P<path_type>(i|e|c|l|a|r|I))?'
                                  '( *(?P<origin_codes>(i|e|\?|\&|\|)+))'
@@ -2292,9 +2292,9 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
         for line in out.splitlines():
             line = line.rstrip()
 
-            # BGP neighbor is 2.2.2.2,  remote AS 100, ibgp link,  Peer index 1
-            # BGP neighbor is 2.2.2.5,  remote AS 200, local AS 333, ebgp link,  Peer index 2
-            # BGP neighbor is 81.0.0.4, remote AS 1, ibgp link, fabric-internal, Peer index 2
+            # BGP neighbor is 10.16.2.2,  remote AS 100, ibgp link,  Peer index 1
+            # BGP neighbor is 10.16.2.5,  remote AS 200, local AS 333, ebgp link,  Peer index 2
+            # BGP neighbor is 10.186.0.4, remote AS 1, ibgp link, fabric-internal, Peer index 2
             p1 = re.compile(r'^\s*BGP +neighbor +is +(?P<neighbor_id>[a-zA-Z0-9\.\:]+),'
                              ' +remote +AS +(?P<remote_as>[0-9]+),'
                              '(?: +local +AS +(?P<local_as>[0-9]+),)?'
@@ -2333,7 +2333,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                         str(m.groupdict()['description'])
                 continue
 
-            # BGP version 4, remote router ID 2.2.2.2
+            # BGP version 4, remote router ID 10.16.2.2
             p3 = re.compile(r'^\s*BGP +version +(?P<bgp_version>[0-9]+),'
                              ' +remote +router +ID +(?P<router_id>[0-9\.]+)$')
             m = p3.match(line)
@@ -3033,7 +3033,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                         [policy_name]['inherit_peer_seq'] = inherit_peer_seq
                     continue
 
-            # Local host: 1.1.1.1, Local port: 179
+            # Local host: 10.4.1.1, Local port: 179
             p49 = re.compile(r'^\s*Local +host *: +(?P<local_host>[0-9\.\:]+),'
                               ' +Local +port *: +(?P<local_port>[0-9]+)$')
             m = p49.match(line)
@@ -3054,7 +3054,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                         str(m.groupdict()['local_port'])
                 continue
 
-            # Foreign host: 2.2.2.2, Foreign port: 4466
+            # Foreign host: 10.16.2.2, Foreign port: 4466
             p50 = re.compile(r'^\s*Foreign +host *:'
                               ' +(?P<foreign_host>[0-9\.\:]+), +Foreign'
                               ' +port *: +(?P<foreign_port>[0-9]+)$')
@@ -3234,7 +3234,7 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
                 continue
 
             # Nexthop: 0.0.0.0, Refcount: 4, IGP cost: 0
-            # Nexthop: 200.0.3.1, Flags: 0x41, Refcount: 1, IGP cost: 3
+            # Nexthop: 192.168.154.1, Flags: 0x41, Refcount: 1, IGP cost: 3
             # Nexthop: 50:1::1:101, Flags: 0x5, Refcount: 3, IGP cost: 0, Multipath: No
             p3 = re.compile(r'^\s*Nexthop *: +(?P<nh>[a-zA-Z0-9\.\:]+),'
                              '( +Flags *: +(?P<flags>\w+),)?'
@@ -3300,8 +3300,8 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
                 continue
 
             # Nexthop last resolved: never, using 0.0.0.0/0
-            # Nexthop last resolved: 00:00:39, using 95.1.1.0/32
-            # Nexthop last resolved: 0.596958, using 95.1.1.0/32
+            # Nexthop last resolved: 00:00:39, using 10.36.1.0/32
+            # Nexthop last resolved: 0.596958, using 10.36.1.0/32
             p6 = re.compile(r'^\s*Nexthop +last +resolved *:'
                              ' +(?P<nexthop_last_resolved>[a-zA-Z0-9\:\.\s]+),'
                              ' +using +(?P<nexthop_resolved_using>[\w\:\-\.\/]+)$')
@@ -3455,7 +3455,7 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
 
                 continue
 
-            # BGP router identifier 4.4.4.4, local AS number 100
+            # BGP router identifier 10.64.4.4, local AS number 100
             p2 = re.compile(r'^\s*BGP +router +identifier'
                              ' +(?P<route_identifier>[0-9\.\:]+), +local +AS'
                              ' +number +(?P<local_as>[0-9]+)$')
@@ -3545,7 +3545,7 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
                 continue
 
             # Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-            # 2.2.2.10        4     0       0       0        0    0    0     5w6d Idle 
+            # 10.16.2.10        4     0       0       0        0    0    0     5w6d Idle 
             p8 = re.compile(r'^\s*(?P<neighbor>[a-zA-Z0-9\.\:]+) +(?P<v>[0-9]+)'
                              ' +(?P<as>[0-9]+) +(?P<msg_rcvd>[0-9]+)'
                              ' +(?P<msg_sent>[0-9]+) +(?P<tbl_ver>[0-9]+)'
@@ -3621,7 +3621,7 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
                     continue
 
             # Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-            # 2.2.2.10
+            # 10.16.2.10
             p8_1 = re.compile(r'^\s*(?P<neighbor>[a-zA-Z0-9\.\:]+)$')
             m = p8_1.match(line)
             if m:
@@ -3743,7 +3743,7 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
             except Exception:
                 break
 
-            # <vrf-router-id>19.0.0.6</vrf-router-id>
+            # <vrf-router-id>10.106.0.6</vrf-router-id>
             try:
                 route_identifier = vrf_tree.find('{}vrf-router-id'.format(namespace)).text
             except Exception:
@@ -4457,7 +4457,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
             if m:
                 continue
 
-            # Peer 21.0.0.2 routes for address family IPv4 Unicast:
+            # Peer 10.186.0.2 routes for address family IPv4 Unicast:
             p1 = re.compile(r'^\s*Peer +(?P<neighbor_id>(\S+)) +routes +for'
                              ' +address +family'
                              ' +(?P<address_family>[a-zA-Z0-9\s\-\_]+) *:$')
@@ -4468,7 +4468,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
                 original_address_family = address_family
                 continue
 
-            # BGP table version is 25, Local Router ID is 21.0.101.1
+            # BGP table version is 25, Local Router ID is 10.186.101.1
             p2 = re.compile(r'^\s*BGP +table +version +is'
                              ' +(?P<bgp_table_version>[0-9]+), +[Ll]ocal +[Rr]outer'
                              ' +ID +is +(?P<local_router_id>(\S+))$')
@@ -4515,8 +4515,8 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
             # Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
             # Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
 
-            # *>i[2]:[77][7,0][9.9.9.9,1,151587081][29.1.1.1,22][19.0.101.1,29.0.1.30]/616
-            # *>iaaaa:1::/113       ::ffff:19.0.101.1
+            # *>i[2]:[77][7,0][10.69.9.9,1,151587081][10.135.1.1,22][10.106.101.1,10.76.1.30]/616
+            # *>iaaaa:1::/113       ::ffff:10.106.101.1
             p3_1 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
                              '(?P<path_type>(i|e|c|l|a|r|I))?'
                              '(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,]+)'
@@ -4550,7 +4550,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
                 continue
 
             #                     0.0.0.0               100      32768 i
-            #                     19.0.101.1            4444       100 0 3 10 20 30 40 50 60 70 80 90 i
+            #                     10.106.101.1            4444       100 0 3 10 20 30 40 50 60 70 80 90 i
             p3_3 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
                              '(?P<path_type>(i|e|c|l|a|r|I))?'
                              ' *(?P<next_hop>[a-zA-Z0-9\.\:]+)'
@@ -4558,8 +4558,8 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
                              ' +(?P<origin_codes>(i|e|\?|\|))$')
             m = p3_3.match(line)
 
-            # * e                   20.20.2.2                                      0 100 300 ?
-            # *>e                   20.20.1.2                                      0 100 300 ?
+            # * e                   10.70.2.2                                      0 100 300 ?
+            # *>e                   10.70.1.2                                      0 100 300 ?
             p3_3_1 = re.compile(r'^\s*(?P<status_codes>(\*\>|s|x|S|d|h|\*|\>|\s)+)'
                                  '(?P<path_type>(i|e|c|l|a|r|I))?'
                                  '( *(?P<origin_codes>(i|e|\?|\&|\|)+))'
@@ -4647,11 +4647,11 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
                     continue
 
             # Network            Next Hop            Metric     LocPrf     Weight Path
-            # *>l1.1.1.0/24         0.0.0.0                           100      32768 i
-            # *>r1.3.1.0/24         0.0.0.0               4444        100      32768 ?
-            # *>r1.3.2.0/24         0.0.0.0               4444        100      32768 ?
-            # *>i1.6.0.0/16         19.0.101.1                        100          0 10 20 30 40 50 60 70 80 90 i
-            # *>i1.1.2.0/24         19.0.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
+            # *>l10.4.1.0/24         0.0.0.0                           100      32768 i
+            # *>r10.16.1.0/24         0.0.0.0               4444        100      32768 ?
+            # *>r10.16.2.0/24         0.0.0.0               4444        100      32768 ?
+            # *>i10.49.0.0/16         10.106.101.1                        100          0 10 20 30 40 50 60 70 80 90 i
+            # *>i10.4.2.0/24         10.106.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
             p3_2 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)'
                              '(?P<path_type>(i|e|c|l|a|r|I))'
                              '(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,]+)'
@@ -4660,7 +4660,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
                              ' +(?P<origin_codes>(i|e|\?|\&|\|))$')
             m = p3_2.match(line)
 
-            # *&i20.0.1.0/24        192.1.1.2                0        100          0 ?
+            # *&i10.145.1.0/24        192.168.151.2                0        100          0 ?
             p3_2_1 = re.compile(r'^\s*(?P<status_codes>(\*\>|s|x|S|d|h|\*|\>|\s)+)'
                                  '(?P<path_type>(i|e|c|l|a|r|I))?'
                                  '( *(?P<origin_codes>(i|e|\?|\&|\|)+))'
@@ -4890,7 +4890,7 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
             if m:
                 continue
 
-            # Peer 21.0.0.2 routes for address family IPv4 Unicast:
+            # Peer 10.186.0.2 routes for address family IPv4 Unicast:
             p1 = re.compile(r'^\s*Peer +(?P<neighbor_id>(\S+)) +routes +for'
                              ' +address +family'
                              ' +(?P<address_family>[a-zA-Z0-9\s\-\_]+) *:$')
@@ -4901,8 +4901,8 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
                 original_address_family = address_family
                 continue
 
-            # BGP table version is 25, Local Router ID is 21.0.101.1
-            # BGP table version is 381, Local Router ID is 1.1.1.2
+            # BGP table version is 25, Local Router ID is 10.186.101.1
+            # BGP table version is 381, Local Router ID is 10.4.1.2
             p2 = re.compile(r'^\s*BGP +table +version +is'
                              ' +(?P<bgp_table_version>[0-9]+), +[Ll]ocal +[Rr]outer'
                              ' +ID +is +(?P<local_router_id>(\S+))$')
@@ -4949,8 +4949,8 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
             # Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
             # Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
 
-            # *>i[2]:[77][7,0][9.9.9.9,1,151587081][29.1.1.1,22][19.0.101.1,29.0.1.30]/616
-            # *>iaaaa:1::/113       ::ffff:19.0.101.1
+            # *>i[2]:[77][7,0][10.69.9.9,1,151587081][10.135.1.1,22][10.106.101.1,10.76.1.30]/616
+            # *>iaaaa:1::/113       ::ffff:10.106.101.1
             p3_1 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
                              '(?P<path_type>(i|e|c|l|a|r|I))?'
                              '(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,]+)'
@@ -4984,8 +4984,8 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
                 continue
 
             #                     0.0.0.0               100      32768 i
-            #                     19.0.101.1            4444       100 0 3 10 20 30 40 50 60 70 80 90 i
-            # *>i                 19.0.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
+            #                     10.106.101.1            4444       100 0 3 10 20 30 40 50 60 70 80 90 i
+            # *>i                 10.106.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
             p3_3 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
                              '(?P<path_type>(i|e|c|l|a|r|I))?'
                              ' *(?P<next_hop>[a-zA-Z0-9\.\:]+)'
@@ -4993,8 +4993,8 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
                              ' +(?P<origin_codes>(i|e|\?|\|))$')
             m = p3_3.match(line)
 
-            # * e                   20.20.2.2                                      0 100 300 ?
-            # *>e                   20.20.1.2                                      0 100 300 ?
+            # * e                   10.70.2.2                                      0 100 300 ?
+            # *>e                   10.70.1.2                                      0 100 300 ?
             p3_3_1 = re.compile(r'^\s*(?P<status_codes>(\*\>|s|x|S|d|h|\*|\>|\s)+)'
                                  '(?P<path_type>(i|e|c|l|a|r|I))?'
                                  '( *(?P<origin_codes>(i|e|\?|\&|\|)+))'
@@ -5082,11 +5082,11 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
                     continue
 
             # Network            Next Hop            Metric     LocPrf     Weight Path
-            # *>l1.1.1.0/24         0.0.0.0                           100      32768 i
-            # *>r1.3.1.0/24         0.0.0.0               4444        100      32768 ?
-            # *>r1.3.2.0/24         0.0.0.0               4444        100      32768 ?
-            # *>i1.6.0.0/16         19.0.101.1                        100          0 10 20 30 40 50 60 70 80 90 i
-            # *>i1.1.2.0/24         19.0.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
+            # *>l10.4.1.0/24         0.0.0.0                           100      32768 i
+            # *>r10.16.1.0/24         0.0.0.0               4444        100      32768 ?
+            # *>r10.16.2.0/24         0.0.0.0               4444        100      32768 ?
+            # *>i10.49.0.0/16         10.106.101.1                        100          0 10 20 30 40 50 60 70 80 90 i
+            # *>i10.4.2.0/24         10.106.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
             p3_2 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)'
                              '(?P<path_type>(i|e|c|l|a|r|I))'
                              '(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,]+)'
@@ -5095,7 +5095,7 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
                              ' +(?P<origin_codes>(i|e|\?|\&|\|))$')
             m = p3_2.match(line)
 
-            # *&i20.0.1.0/24        192.1.1.2                0        100          0 ?
+            # *&i10.145.1.0/24        192.168.151.2                0        100          0 ?
             p3_2_1 = re.compile(r'^\s*(?P<status_codes>(\*\>|s|x|S|d|h|\*|\>|\s)+)'
                                  '(?P<path_type>(i|e|c|l|a|r|I))?'
                                  '( *(?P<origin_codes>(i|e|\?|\&|\|)+))'
@@ -5186,7 +5186,7 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
             # Network            Next Hop            Metric     LocPrf     Weight Path
             # Route Distinguisher: 100:100     (VRF VRF1)
             # Route Distinguisher: 2:100    (VRF vpn2)
-            # Route Distinguisher: 91.1.1.0:3    (L3VNI 9100)
+            # Route Distinguisher: 10.49.1.0:3    (L3VNI 9100)
             p4 = re.compile(r'^\s*Route +Distinguisher *:'
                              ' +(?P<route_distinguisher>(\S+))'
                              '(?: +\(((VRF +(?P<default_vrf>\S+))|'
@@ -5328,7 +5328,7 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
             if m:
                 continue
 
-            # Peer 21.0.0.2 routes for address family IPv4 Unicast:
+            # Peer 10.186.0.2 routes for address family IPv4 Unicast:
             p1 = re.compile(r'^\s*Peer +(?P<neighbor_id>(\S+)) +routes +for'
                              ' +address +family'
                              ' +(?P<address_family>[a-zA-Z0-9\s\-\_]+) *:$')
@@ -5339,7 +5339,7 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
                 original_address_family = address_family
                 continue
 
-            # BGP table version is 25, Local Router ID is 21.0.101.1
+            # BGP table version is 25, Local Router ID is 10.186.101.1
             p2 = re.compile(r'^\s*BGP +table +version +is'
                              ' +(?P<bgp_table_version>[0-9]+), +[Ll]ocal +[Rr]outer'
                              ' +ID +is +(?P<local_router_id>(\S+))$')
@@ -5386,8 +5386,8 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
             # Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
             # Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
 
-            # *>i[2]:[77][7,0][9.9.9.9,1,151587081][29.1.1.1,22][19.0.101.1,29.0.1.30]/616
-            # *>iaaaa:1::/113       ::ffff:19.0.101.1
+            # *>i[2]:[77][7,0][10.69.9.9,1,151587081][10.135.1.1,22][10.106.101.1,10.76.1.30]/616
+            # *>iaaaa:1::/113       ::ffff:10.106.101.1
             p3_1 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
                              '(?P<path_type>(i|e|c|l|a|r|I))?'
                              '(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,]+)'
@@ -5421,8 +5421,8 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
                 continue
 
             #                     0.0.0.0               100      32768 i
-            #                     19.0.101.1            4444       100 0 3 10 20 30 40 50 60 70 80 90 i
-            # *>i                 19.0.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
+            #                     10.106.101.1            4444       100 0 3 10 20 30 40 50 60 70 80 90 i
+            # *>i                 10.106.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
             p3_3 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
                              '(?P<path_type>(i|e|c|l|a|r|I))?'
                              ' *(?P<next_hop>[a-zA-Z0-9\.\:]+)'
@@ -5430,8 +5430,8 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
                              ' +(?P<origin_codes>(i|e|\?|\|))$')
             m = p3_3.match(line)
 
-            # * e                   20.20.2.2                                      0 100 300 ?
-            # *>e                   20.20.1.2                                      0 100 300 ?
+            # * e                   10.70.2.2                                      0 100 300 ?
+            # *>e                   10.70.1.2                                      0 100 300 ?
             p3_3_1 = re.compile(r'^\s*(?P<status_codes>(\*\>|s|x|S|d|h|\*|\>|\s)+)'
                                  '(?P<path_type>(i|e|c|l|a|r|I))?'
                                  '( *(?P<origin_codes>(i|e|\?|\&|\|)+))'
@@ -5519,11 +5519,11 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
                     continue
 
             # Network            Next Hop            Metric     LocPrf     Weight Path
-            # *>l1.1.1.0/24         0.0.0.0                           100      32768 i
-            # *>r1.3.1.0/24         0.0.0.0               4444        100      32768 ?
-            # *>r1.3.2.0/24         0.0.0.0               4444        100      32768 ?
-            # *>i1.6.0.0/16         19.0.101.1                        100          0 10 20 30 40 50 60 70 80 90 i
-            # *>i1.1.2.0/24         19.0.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
+            # *>l10.4.1.0/24         0.0.0.0                           100      32768 i
+            # *>r10.16.1.0/24         0.0.0.0               4444        100      32768 ?
+            # *>r10.16.2.0/24         0.0.0.0               4444        100      32768 ?
+            # *>i10.49.0.0/16         10.106.101.1                        100          0 10 20 30 40 50 60 70 80 90 i
+            # *>i10.4.2.0/24         10.106.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
             p3_2 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)'
                              '(?P<path_type>(i|e|c|l|a|r|I))'
                              '(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,]+)'
@@ -5532,7 +5532,7 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
                              ' +(?P<origin_codes>(i|e|\?|\&|\|))$')
             m = p3_2.match(line)
 
-            # *&i20.0.1.0/24        192.1.1.2                0        100          0 ?
+            # *&i10.145.1.0/24        192.168.151.2                0        100          0 ?
             p3_2_1 = re.compile(r'^\s*(?P<status_codes>(\*\>|s|x|S|d|h|\*|\>|\s)+)'
                                  '(?P<path_type>(i|e|c|l|a|r|I))?'
                                  '( *(?P<origin_codes>(i|e|\?|\&|\|)+))'
@@ -5622,7 +5622,7 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
             # Network            Next Hop            Metric     LocPrf     Weight Path
             # Route Distinguisher: 100:100     (VRF VRF1)
             # Route Distinguisher: 2:100    (VRF vpn2)
-            # Route Distinguisher: 91.1.1.0:3    (L3VNI 9100)
+            # Route Distinguisher: 10.49.1.0:3    (L3VNI 9100)
             p4 = re.compile(r'^\s*Route +Distinguisher *:'
                              ' +(?P<route_distinguisher>(\S+))'
                              '(?: +\(((VRF +(?P<default_vrf>\S+))|'
@@ -7286,8 +7286,8 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
                         ['route_identifier'][route_identifier]
                 continue
 
-            # d e 2.3.1.0/24       19.0.102.3                38   00:09:36 00:01:40  35/30/10
-            # *>e 83.0.0.0/24       210.1.1.1                 1   00:20:56          570/1500/1000
+            # d e 10.25.1.0/24       10.106.102.3                38   00:09:36 00:01:40  35/30/10
+            # *>e 10.4.0.0/24       192.168.64.1                 1   00:20:56          570/1500/1000
             p4 = re.compile(r'^(?P<status>[\*|d|s|h|\s])?'
                              '(?P<best>[\>|\s])?'
                              '(?P<pathtype>[e|i])?'
@@ -7300,7 +7300,7 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
                              '(?P<suppress_limit>\d+)\/(?P<reuse_limit>\d+)$')
             m = p4.match(line)
 
-            # d e [2]:[77][7,0][39.39.39.39,2,656877351][39.1.1.1,22][19.0.102.3,39.0.1.31]/61619.0.102.3                38   00:09:36 00:01:40 34/30/10
+            # d e [2]:[77][7,0][10.219.39.39,2,656877351][10.70.1.1,22][10.106.102.3,10.246.1.31]/61610.106.102.3                38   00:09:36 00:01:40 34/30/10
             p4_1 = re.compile(r'^(?P<status>[\*|d|s|h|\s])?'
                              '(?P<best>[\>|\s])?'
                              '(?P<pathtype>[e|i|\s])?'
@@ -7479,7 +7479,7 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
                     # -----   loop prefix  -----
                     for prefix_root in prefix.findall('{}ROW_prefix'.format(namespace)):
 
-                        # <ipprefix>2.3.1.0/24</ipprefix>
+                        # <ipprefix>10.25.1.0/24</ipprefix>
                         try:
                             network = prefix_root.find('{}ipprefix'.format(namespace)).text
                         except Exception:
@@ -7491,7 +7491,7 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
                         except Exception:
                             pass
 
-                        # <nonipprefix>[2]:[0]:[0]:[48]:[0201.0201.0201]:[32]:[2.7.1.1]/248</nonipprefix>
+                        # <nonipprefix>[2]:[0]:[0]:[48]:[0201.0201.0201]:[32]:[10.81.1.1]/248</nonipprefix>
                         try:
                             network = prefix_root.find('{}nonipprefix'.format(namespace)).text
                         except Exception:
@@ -7511,7 +7511,7 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
                         sub_dict['network'][network]['pathtype'] = \
                             prefix_root.find('{}pathtype'.format(namespace)).text
 
-                        # <peer>19.0.102.3</peer>
+                        # <peer>10.106.102.3</peer>
                         try:
                             sub_dict['network'][network]['peer'] = \
                                 prefix_root.find('{}peer'.format(namespace)).text
@@ -7655,7 +7655,7 @@ class ShowBgpAllNexthopDatabase(ShowBgpVrfAllAllNextHopDatabase):
                 # -----   loop nexthop  -----
                 for nexthop_root in next_hop.findall('{}ROW_nexthop'.format(namespace)):
                     # nexthop
-                    # <ipnexthop-out>200.0.3.1</ipnexthop-out>
+                    # <ipnexthop-out>192.168.154.1</ipnexthop-out>
                     try:
                         nexthop = nexthop_root.find('{}ipnexthop-out'.format(namespace)).text
                     except Exception:
@@ -7746,7 +7746,7 @@ class ShowBgpAllNexthopDatabase(ShowBgpVrfAllAllNextHopDatabase):
                     sub_dict['resolve_time'] = \
                         nexthop_root.find('{}resolvetime'.format(namespace)).text
 
-                    # <ribroute>200.0.3.1/32</ribroute>
+                    # <ribroute>192.168.154.1/32</ribroute>
                     try:
                         sub_dict['rib_route'] = \
                             nexthop_root.find('{}ribroute'.format(namespace)).text
@@ -7777,7 +7777,7 @@ class ShowBgpAllNexthopDatabase(ShowBgpVrfAllAllNextHopDatabase):
                     # -----   loop attachedhops  -----
                     for attach_root in attached.findall('{}ROW_attachedhops'.format(namespace)):
 
-                        # <attachedhop>201.7.23.2</attachedhop>
+                        # <attachedhop>192.168.66.2</attachedhop>
                         try:
                             att_hop = attach_root.find('{}attachedhop'.format(namespace)).text
                         except Exception:
@@ -8036,7 +8036,7 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
                 sub_dict['max_pfx'] = int(m.groupdict()['max_pfx'])
                 continue
 
-            # SOO Extcommunity: SOO:1.1.1.1:100
+            # SOO Extcommunity: SOO:10.4.1.1:100
             p14 = re.compile(r'^SOO +Extcommunity: +(?P<soo>[\w\:\.]+)$')
             m = p14.match(line)
             if m:
@@ -8133,7 +8133,7 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
                 continue
 
             # Members of peer-template PEER1:
-            # default: 21.0.201.1
+            # default: 10.186.201.1
             p22 = re.compile(r'^Members +of +peer\-template +(?P<peer>[\w\-]+):$')
             m = p22.match(line)
             if m:
@@ -8278,7 +8278,7 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
                     for inherit_root in inherit_tree.findall('{}ROW_inheritingpeer'
                                                              .format(namespace)):
 
-                        # <inheritingpeer>21.0.201.1</inheritingpeer>
+                        # <inheritingpeer>10.186.201.1</inheritingpeer>
                         try:
                             inherit_peer = inherit_root.find('{}inheritingpeer'
                                                              .format(namespace)).text.lower()
@@ -8422,7 +8422,7 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
                 except Exception:
                     pass
 
-                # <soo>SOO:1.1.1.1:100</soo>
+                # <soo>SOO:10.4.1.1:100</soo>
                 try:
                     sub_dict['soo'] = \
                         af_root.find('{}soo'.format(namespace)).text
@@ -9053,7 +9053,7 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
                     int(m.groupdict()['asn'])
                 continue
 
-            # peers 4, established peers 3, local router-id 100.1.1.1
+            # peers 4, established peers 3, local router-id 10.1.1.1
             p4 = re.compile(r'^peers +(?P<peer>\d+), +'
                              'established +peers +(?P<established>\d+), +'
                              'local +router\-id +(?P<id>[\w\.\:]+)$')
@@ -9069,7 +9069,7 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
                     m.groupdict()['id']
                 continue
 
-            # 50.1.1.101        300 2     00:30:01|never   |never    I   0/0          2/0
+            # 10.51.1.101        300 2     00:30:01|never   |never    I   0/0          2/0
             p5 = re.compile(r'^(?P<nei>[\w\.\:]+) +'
                              '(?P<asn>\d+) +'
                              '(?P<dropped>\d+) +'
@@ -9214,7 +9214,7 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
             etree_dict['vrf'][vrf]['vrf_established_peers'] = \
                 int(vrf_tree.find('{}vrfestablishedpeers'.format(namespace)).text)
                 
-            # <router-id>19.0.0.6</router-id>
+            # <router-id>10.106.0.6</router-id>
             etree_dict['vrf'][vrf]['router_id'] = \
                 vrf_tree.find('{}router-id'.format(namespace)).text
                 
@@ -9435,8 +9435,8 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
                 address_family = m.groupdict()['af'].lower()
                 continue
 
-            # BGP table version is 7, Local Router ID is 19.0.0.6
-            # BGP table version is 3, local router ID is 92.1.1.0
+            # BGP table version is 7, Local Router ID is 10.106.0.6
+            # BGP table version is 3, local router ID is 10.234.1.0
             p2 = re.compile(r'^BGP +table +version +is +(?P<ver>\d+), +'
                              '(L|l)ocal +(R|r)outer +ID +is +(?P<router_id>[\w\.\:]+)$')
             m = p2.match(line)
@@ -9456,7 +9456,7 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
                 sub_dict['router_id'] = m.groupdict()['router_id']
                 continue
 
-            # Route Distinguisher: 92.1.1.0:3    (VRF vrf-9100)
+            # Route Distinguisher: 10.234.1.0:3    (VRF vrf-9100)
             p4 = re.compile(r'^Route +Distinguisher: +(?P<rd>[\w\.\:]+) +'
                              '\(VRF +(?P<vrf>\S+)\)$')
             m = p4.match(line)
@@ -9486,12 +9486,12 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
                 continue
 
 
-            # *>i1.5.210.0/24       19.0.101.1          nolabel/nolabel
-            # * i0.0.0.0/0          95.1.1.0            nolabel/9100
-            # *>i                   90.1.1.0            nolabel/9100
-            # a83.0.0.0/16        0.0.0.0             nolabel/nolabel
-            # *>e85.0.0.0/24        55.1.1.101          492288/nolabel (VRF1)
-            # *>e88::/112           ::ffff:50.1.1.101
+            # *>i10.36.210.0/24       10.106.101.1          nolabel/nolabel
+            # * i0.0.0.0/0          10.36.1.0            nolabel/9100
+            # *>i                   10.121.1.0            nolabel/9100
+            # a10.4.0.0/16        0.0.0.0             nolabel/nolabel
+            # *>e10.85.0.0/24        10.76.1.101          492288/nolabel (VRF1)
+            # *>e88::/112           ::ffff:10.51.1.101
             p3 = re.compile(r'^(?P<status>s|S|x|d|h|\*)?'
                              '(?P<best>\>)?'
                              ' *(?P<type_code>i|e|c|l|a|r|I)'
@@ -9645,7 +9645,7 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
                     except Exception:
                         table_version = None
 
-                    # <router-id>19.0.0.6</router-id>
+                    # <router-id>10.106.0.6</router-id>
                     try:
                         router_id = \
                             saf_root.find('{}router-id'.format(namespace)).text
@@ -9773,7 +9773,7 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
                                 except Exception:
                                     pass
 
-                                # <ipnexthop>19.0.101.1</ipnexthop>
+                                # <ipnexthop>10.106.101.1</ipnexthop>
                                 try:
                                     sub_dict['prefix'][prefix]['index'][index]['nexthop'] = \
                                         index_root.find('{}ipnexthop'.format(namespace)).text
@@ -9878,14 +9878,14 @@ class ShowBgpL2vpnEvpnSummary(ShowBgpL2vpnEvpnSummarySchema):
 
         result_dict = {}
         # BGP summary information for VRF default, address family L2VPN EVPN
-        # BGP router identifier 201.11.11.11, local AS number 100
+        # BGP router identifier 192.168.4.11, local AS number 100
         # BGP table version is 155, L2VPN EVPN config peers 2, capable peers 2
         # 32 network entries and 32 paths using 5708 bytes of memory
         # BGP attribute entries [20/3200], BGP AS path entries [0/0]
         # BGP community entries [1/32], BGP clusterlist entries [3/12]
         #
         # Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-        # 191.13.1.8      4   200     130     139      155    0    0 02:05:01 0L2ROUTE Summary
+        # 172.16.205.8      4   200     130     139      155    0    0 02:05:01 0L2ROUTE Summary
 
         p1 = re.compile(r'^\s*BGP +summary +information +for +VRF +(?P<vrf_name_out>[\w]+),'
                         ' +address +family +(?P<af_name>[\w\s]+)$')
@@ -10082,8 +10082,8 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
         result_dict = {}
 
         # BGP routing table information for VRF default, address family L2VPN EVPN
-        # Route Distinguisher: 11.0.0.55:27001   (ES [0300.0000.0001.2c00.0309 0])
-        # BGP routing table entry for [4]:[0300.0000.0001.2c00.0309]:[32]:[201.0.0.55]/136, version 13144
+        # Route Distinguisher: 10.121.0.55:27001   (ES [0300.0000.0001.2c00.0309 0])
+        # BGP routing table entry for [4]:[0300.0000.0001.2c00.0309]:[32]:[192.168.111.55]/136, version 13144
         # Paths: (1 available, best #1)
         # Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
         # Multipath: iBGP
@@ -10091,14 +10091,14 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
         #   Advertised path-id 1
         #   Path type: local (0xcf9bdc54), path is valid, is best path, no labeled nexthop
         #   AS-Path: NONE, path locally originated
-        #     201.0.0.55 (metric 0) from 0.0.0.0 (11.0.0.55)
+        #     192.168.111.55 (metric 0) from 0.0.0.0 (10.121.0.55)
         #       Origin IGP, MED not set, localpref 100, weight 32768
         #       Received label 25000
         #       Extcommunity: ENCAP:8 RT:0000.0000.012c
         #
         #   Path-id 1 advertised to peers:
-        #     11.0.0.11          11.0.0.22          11.0.0.33          11.0.0.44
-        #     14.0.0.11
+        #     10.121.0.11          10.121.0.22          10.121.0.33          10.121.0.44
+        #     10.196.0.11
 
         p1 = re.compile(r'^\s*BGP +routing +table +information +for +VRF +(?P<vrf_name_out>[\w]+),'
                         ' +address +family +(?P<af_name>[\w\s]+)$')
@@ -10124,7 +10124,7 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
         p17 = re.compile(r'^\s*(?P<attribute>[\w]+) +Tunnel +Attribute:$')
         #         flags: 0x00, Tunnel type: Ingress Replication
         p18 = re.compile(r'^\s*flags: +(?P<flags>[\w]+), +Tunnel type: +(?P<tunnel_type>[\w\s]+)$')
-        #         Label: 10101, Tunnel Id: 7.7.7.7
+        #         Label: 10101, Tunnel Id: 10.196.7.7
         p19 = re.compile(r'^\s*Label: +(?P<label>[\d]+), +Tunnel +Id: +(?P<tunnel_id>[\d\.]+)$')
 
         for line in out.splitlines():
@@ -10472,8 +10472,8 @@ class ShowBgpL2vpnEvpnNeighbors(ShowBgpL2vpnEvpnNeighborsSchema):
             out = output
         result_dict = {}
         recieve_flag = gr_adv_flag = gr_recv_flag = gr_fwd_flag = gr_flag = False
-        # BGP neighbor is 191.13.1.8, remote AS 200, ebgp link, Peer index 3
-        # BGP version 4, remote router ID 201.33.33.33
+        # BGP neighbor is 172.16.205.8, remote AS 200, ebgp link, Peer index 3
+        # BGP version 4, remote router ID 192.168.144.33
         # BGP state = Idle, down for 4w6d, retry in 0.000000
         # BGP state = Shut (Admin), down for 5w0d
         # BGP state = Established, up for 02:11:53
@@ -10532,8 +10532,8 @@ class ShowBgpL2vpnEvpnNeighbors(ShowBgpL2vpnEvpnNeighborsSchema):
         # Last End-of-RIB sent 00:00:01 after session start
         # First convergence 00:00:01 after session start with 5 routes sent
         #
-        # Local host: 191.13.1.6, Local port: 179
-        # Foreign host: 191.13.1.8, Foreign port: 52715
+        # Local host: 172.16.205.6, Local port: 179
+        # Foreign host: 172.16.205.8, Foreign port: 52715
         # fd = 84
 
         p1 = re.compile(r'^\s*BGP +neighbor +is +(?P<neighbor>[\d\.]+), remote AS +(?P<remoteas>[\d]+), +(?P<link>[\w]+) +link,'
@@ -10932,7 +10932,7 @@ class ShowBgpL2vpnEvpnWord(ShowBgpL2vpnEvpnWordSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # 3.0.0.101 (metric 9) from 2.0.0.66 (2.0.0.66)
+            # 10.9.0.101 (metric 9) from 10.4.0.66 (10.4.0.66)
             p1 = re.compile(r'^(?P<next_hop>[0-9\.]+) +\(metric +(?P<metric>[0-9]+)\).*$')
             m = p1.match(line)
             if m:
@@ -11045,23 +11045,23 @@ class ShowBgpIpMvpnRouteType(ShowBgpIpMvpnRouteTypeSchema):
         p1 = re.compile(r'^\s*BGP +routing +table +information +for +VRF +(?P<vrf>\S+),'
                 ' +address +family +(?P<af>[\w\s]+)$')
 
-        # BGP table version is 390, Local Router ID is 2.2.2.2
+        # BGP table version is 390, Local Router ID is 10.16.2.2
         p2 = re.compile(r'^\s*BGP +table +version +is +(?P<table_version>[\d]+),'
                         ' +Local +Router +ID +is +(?P<router_id>[\d\.]+)$')
 
         #    Network            Next Hop            Metric     LocPrf     Weight Path
-        # Route Distinguisher: 2.2.2.2:3    (L3VNI 10100)
+        # Route Distinguisher: 10.16.2.2:3    (L3VNI 10100)
         p3 = re.compile(r'^\s*Route +Distinguisher: +(?P<rd>[\d\.\:]+)'
                         '( +\((L[2|3]VNI|Local VNI:) +(?P<rd_vrf>[\d]+)\))?$')
 
-        # *>l[5][100.101.1.3][238.8.4.101]/64
+        # *>l[5][10.111.1.3][238.8.4.101]/64
         p4 = re.compile(r'^\s*(?P<statuscode>[s|S|x|d|h|>|s|*\s]+)?'
                             '(?P<typecode>(i|e|c|l|a|r|I)+)?'
                             '(?P<prefix>[\w\]\/\:\.\]\[]+)$')
 
         #                       Next Hop            Metric     LocPrf     Weight Path
-        #                       7.7.7.7                           100          0 i
-        # *>i                   7.7.7.7                           100          0 i
+        #                       10.196.7.7                           100          0 i
+        # *>i                   10.196.7.7                           100          0 i
         p6 = re.compile(r'^\s*(?P<statuscode>[s|S|x|d|h|>|s|*\s]+)?'
                         '(?P<typecode>(i|e|c|l|a|r|I)+)?'
                         '(?P<space>\s{15,20})(?P<ipnexthop>[\d\.]+)?'
@@ -11278,11 +11278,11 @@ class ShowBgpIpMvpnSaadDetail(ShowBgpIpMvpnSaadDetailSchema):
         p1 = re.compile(r'^\s*BGP +routing +table +information +for +VRF +(?P<vrf_name_out>\S+),'
                         ' +address +family +(?P<af_name>[\w\s]+)$')
 
-        # Route Distinguisher: 2.2.2.2:3    (L3VNI 10100)
+        # Route Distinguisher: 10.16.2.2:3    (L3VNI 10100)
         p2 = re.compile(r'^\s*Route Distinguisher: +(?P<rd>[\w\.\:]+)'
                         '( +\((L[2|3]VNI|Local VNI:) +(?P<rd_vrf>[\d]+)\))?$')
 
-        # BGP routing table entry for [5][100.101.1.3][238.8.4.s101]/64, version 388
+        # BGP routing table entry for [5][10.111.1.3][238.8.4.s101]/64, version 388
         p3 = re.compile(
             r'^\s*BGP +routing +table +entry +for +(?P<nonipprefix>[\d\[\]\:\.\/]+),'
             ' +version +(?P<prefixversion>[\d]+)$')
@@ -11310,8 +11310,8 @@ class ShowBgpIpMvpnSaadDetail(ShowBgpIpMvpnSaadDetailSchema):
             r'^\s*AS-Path: +(?P<as_path>[\w]+)(, +path locally originated)?'
                 '(, +path sourced +(?P<internal_external>[\w]+) to AS)?$')
 
-        #     0.0.0.0 (metric 0) from 0.0.0.0 (2.2.2.2)
-        #     6.6.6.6 (inaccessible, metric 4294967295) from 4.4.4.4 (4.4.4.4)
+        #     0.0.0.0 (metric 0) from 0.0.0.0 (10.16.2.2)
+        #     10.144.6.6 (inaccessible, metric 4294967295) from 10.64.4.4 (10.64.4.4)
         p10 = re.compile(
             r'^\s*(?P<ipnexthop>[\d\.]+) +\(((?P<nexthop_status>[\w]+), )?metric +(?P<nexthopmetric>[\d]+)\)'
             ' +from +(?P<neighbor>[\d\.]+)'
@@ -11325,12 +11325,12 @@ class ShowBgpIpMvpnSaadDetail(ShowBgpIpMvpnSaadDetailSchema):
         #       Extcommunity: RT:100:10100
         p12 = re.compile(r'^\s*Extcommunity: +(?P<extcommunity>[\w\s\:\.]+)$')
 
-        # Originator: 6.6.6.6 Cluster list: 5.5.5.5 
+        # Originator: 10.144.6.6 Cluster list: 10.100.5.5 
         p13 = re.compile(r'^\s*Originator: +(?P<originatorid>[\d\.]+)'
                          ' +Cluster +list: +(?P<clusterlist>[\d\.]+)$')
 
         #   Path-id 1 advertised to peers:
-        #     4.4.4.4            5.5.5.5        
+        #     10.64.4.4            10.100.5.5        
         p14 = re.compile(r'^\s*Path-id +(?P<path_id>[\d]+) +advertised to peers:$')
         p15 = re.compile(r'^\s*(?P<advertisedto>[\d\s\.]+)$')
 

@@ -28,7 +28,8 @@ from genie.libs.parser.iosxe.show_interface import ShowInterfacesSwitchport,\
                                         ShowInterfacesTrunk, \
                                         ShowInterfacesCounters, \
                                         ShowInterfacesAccounting, \
-                                        ShowIpInterfaceBriefPipeIp
+                                        ShowIpInterfaceBriefPipeIp,\
+                                        ShowInterfacesStats
 
 
 class test_show_interface_parsergen(unittest.TestCase):
@@ -127,7 +128,7 @@ class test_show_ip_interfaces_brief_pipe_ip(unittest.TestCase):
 #     device = Device(name='aDevice')
 #     device1 = Device(name='bDevice')
 #     golden_parsed_output = {'interface': {'Vlan1': {'vlan_id': {'1': {'ip_address': 'unassigned'}}},
-#                                           'Vlan100': {'vlan_id': {'100': {'ip_address': '201.0.12.1'}}}}}
+#                                           'Vlan100': {'vlan_id': {'100': {'ip_address': '192.168.234.1'}}}}}
 
 #     class etree_holder():
 #       def __init__(self):
@@ -149,7 +150,7 @@ class test_show_ip_interfaces_brief_pipe_ip(unittest.TestCase):
 #                   <ip>
 #                     <address>
 #                       <primary>
-#                         <address>201.0.12.1</address>
+#                         <address>192.168.234.1</address>
 #                         <mask>255.255.255.0</mask>
 #                       </primary>
 #                     </address>
@@ -705,9 +706,9 @@ class test_show_interfaces(unittest.TestCase):
                  "queue_strategy": "fifo"
             },
             "ipv4": {
-                 "200.2.1.1/24": {
+                 "192.168.154.1/24": {
                       "prefix_length": "24",
-                      "ip": "200.2.1.1"
+                      "ip": "192.168.154.1"
                  },
                  "unnumbered": {
                       "interface_ref": "Loopback0"
@@ -792,9 +793,9 @@ class test_show_interfaces(unittest.TestCase):
             },
             "enabled": True,
             "ipv4": {
-                 "200.2.1.1/24": {
+                 "192.168.154.1/24": {
                       "prefix_length": "24",
-                      "ip": "200.2.1.1"
+                      "ip": "192.168.154.1"
                  }
             },
             "rxload": "1/255",
@@ -851,9 +852,9 @@ class test_show_interfaces(unittest.TestCase):
             "rxload": "1/255",
             "output_hang": "never",
             "ipv4": {
-                 "201.0.12.1/24": {
+                 "192.168.234.1/24": {
                       "prefix_length": "24",
-                      "ip": "201.0.12.1"
+                      "ip": "192.168.234.1"
                  }
             },
             "encapsulations": {
@@ -1098,7 +1099,7 @@ class test_show_interfaces(unittest.TestCase):
              0 output buffer failures, 0 output buffers swapped out
         GigabitEthernet3 is up, line protocol is up 
           Hardware is CSR vNIC, address is 5254.0072.9b0c (bia 5254.0072.9b0c)
-          Interface is unnumbered. Using address of Loopback0 (200.2.1.1)
+          Interface is unnumbered. Using address of Loopback0 (192.168.154.1)
           MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
              reliability 255/255, txload 1/255, rxload 1/255
           Encapsulation ARPA, loopback not set
@@ -1126,7 +1127,7 @@ class test_show_interfaces(unittest.TestCase):
              0 output buffer failures, 0 output buffers swapped out
         Loopback0 is up, line protocol is up 
           Hardware is Loopback
-          Internet address is 200.2.1.1/24
+          Internet address is 192.168.154.1/24
           MTU 1514 bytes, BW 8000000 Kbit/sec, DLY 5000 usec, 
              reliability 255/255, txload 1/255, rxload 1/255
           Encapsulation LOOPBACK, loopback not set
@@ -1148,7 +1149,7 @@ class test_show_interfaces(unittest.TestCase):
              0 output buffer failures, 0 output buffers swapped out
         Vlan100 is up, line protocol is up 
           Hardware is Ethernet SVI, address is 0057.d228.1a51 (bia 0057.d228.1a51)
-          Internet address is 201.0.12.1/24
+          Internet address is 192.168.234.1/24
           MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
              reliability 255/255, txload 1/255, rxload 1/255
           Encapsulation ARPA, loopback not set
@@ -1406,9 +1407,9 @@ class test_show_ip_interface(unittest.TestCase):
                 "unreachables": "always sent",
             },
             "ipv4": {
-                 "201.11.14.1/24": {
+                 "192.168.76.1/24": {
                       "prefix_length": "24",
-                      "ip": "201.11.14.1",
+                      "ip": "192.168.76.1",
                       "secondary": False,
                       "broadcase_address": "255.255.255.255"
                  }
@@ -1554,7 +1555,7 @@ class test_show_ip_interface(unittest.TestCase):
     }
     golden_output = {'execute.return_value': '''
         Vlan211 is up, line protocol is up
-        Internet address is 201.11.14.1/24
+        Internet address is 192.168.76.1/24
         Broadcast address is 255.255.255.255
         Address determined by configuration file
         MTU is 1500 bytes
@@ -2310,6 +2311,221 @@ No traffic sent or received on this interface.
         obj = ShowInterfacesAccounting(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+###################################################
+# unit test for show interfaces stats
+####################################################
+class test_show_interfaces_stats(unittest.TestCase):
+    """unit test for show interfaces stats """
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        Router#show interface stats
+        Load for five secs: 5%/1%; one minute: 8%; five minutes: 9%
+        Time source is NTP, 07:38:10.599 EST Thu Sep 8 2016
+
+        GigabitEthernet0/0
+                  Switching path    Pkts In   Chars In   Pkts Out  Chars Out
+                       Processor          0          0        225      77625
+                     Route cache          0          0          0          0
+          Multi-Processor Fwding        950     221250        500      57000
+                           Total        950     221250        725     134625
+        GigabitEthernet0/1
+                  Switching path    Pkts In   Chars In   Pkts Out  Chars Out
+                       Processor          1         60        226      77685
+                     Route cache          0          0          0          0
+          Multi-Processor Fwding        500      57000        500      57000
+                           Total        501      57060        726     134685
+        GigabitEthernet0/2
+                  Switching path    Pkts In   Chars In   Pkts Out  Chars Out
+                       Processor          1         60        226      77685
+                     Route cache          0          0          0          0
+          Multi-Processor Fwding          0          0          0          0
+                           Total          1         60        226      77685
+        FastEthernet1/0
+                  Switching path    Pkts In   Chars In   Pkts Out  Chars Out
+                       Processor      34015    5331012       1579     158190
+                     Route cache          0          0          0          0
+                           Total      34015    5331012       1579     158190
+    '''}
+
+    golden_parsed_output = {
+        "GigabitEthernet0/0": {
+            "switching_path": {
+                "processor": {
+                    "pkts_in": 0,
+                    "chars_in": 0,
+                    "pkts_out": 225,
+                    "chars_out": 77625
+                },
+                "route_cache": {
+                    "pkts_in": 0,
+                    "chars_in": 0,
+                    "pkts_out": 0,
+                    "chars_out": 0
+                },
+                "multi_processor_fwding": {
+                    "pkts_in": 950,
+                    "chars_in": 221250,
+                    "pkts_out": 500,
+                    "chars_out": 57000
+                },
+                "total": {
+                    "pkts_in": 950,
+                    "chars_in": 221250,
+                    "pkts_out": 725,
+                    "chars_out": 134625
+                }
+            }
+        },
+        "GigabitEthernet0/1": {
+            "switching_path": {
+                "processor": {
+                    "pkts_in": 1,
+                    "chars_in": 60,
+                    "pkts_out": 226,
+                    "chars_out": 77685
+                },
+                "route_cache": {
+                    "pkts_in": 0,
+                    "chars_in": 0,
+                    "pkts_out": 0,
+                    "chars_out": 0
+                },
+                "multi_processor_fwding": {
+                    "pkts_in": 500,
+                    "chars_in": 57000,
+                    "pkts_out": 500,
+                    "chars_out": 57000
+                },
+                "total": {
+                    "pkts_in": 501,
+                    "chars_in": 57060,
+                    "pkts_out": 726,
+                    "chars_out": 134685
+                }
+            }
+        },
+        "GigabitEthernet0/2": {
+            "switching_path": {
+                "processor": {
+                    "pkts_in": 1,
+                    "chars_in": 60,
+                    "pkts_out": 226,
+                    "chars_out": 77685
+                },
+                "route_cache": {
+                    "pkts_in": 0,
+                    "chars_in": 0,
+                    "pkts_out": 0,
+                    "chars_out": 0
+                },
+                "multi_processor_fwding": {
+                    "pkts_in": 0,
+                    "chars_in": 0,
+                    "pkts_out": 0,
+                    "chars_out": 0
+                },
+                "total": {
+                    "pkts_in": 1,
+                    "chars_in": 60,
+                    "pkts_out": 226,
+                    "chars_out": 77685
+                }
+            }
+        },
+        "FastEthernet1/0": {
+            "switching_path": {
+                "processor": {
+                    "pkts_in": 34015,
+                    "chars_in": 5331012,
+                    "pkts_out": 1579,
+                    "chars_out": 158190
+                },
+                "route_cache": {
+                    "pkts_in": 0,
+                    "chars_in": 0,
+                    "pkts_out": 0,
+                    "chars_out": 0
+                },
+                "total": {
+                    "pkts_in": 34015,
+                    "chars_in": 5331012,
+                    "pkts_out": 1579,
+                    "chars_out": 158190
+                }
+            }
+        }
+    }
+
+    golden_output_interface = {'execute.return_value': '''
+        Router#show interface gigabitEthernet 0/0/0 stats
+        Load for five secs: 5%/1%; one minute: 8%; five minutes: 9%
+        Time source is NTP, 07:38:10.599 EST Thu Sep 8 2016
+
+        GigabitEthernet0/0/0
+                  Switching path    Pkts In   Chars In   Pkts Out  Chars Out
+                       Processor         33       2507         33       2490
+                     Route cache          0          0          0          0
+               Distributed cache      62581   53049894     125156   29719204
+                           Total      62614   53052401     125189   29721694
+    '''}
+
+    golden_parsed_output_interface = {
+        "GigabitEthernet0/0/0": {
+            "switching_path": {
+                "processor": {
+                    "pkts_in": 33,
+                    "chars_in": 2507,
+                    "pkts_out": 33,
+                    "chars_out": 2490
+                },
+                "route_cache": {
+                    "pkts_in": 0,
+                    "chars_in": 0,
+                    "pkts_out": 0,
+                    "chars_out": 0
+                },
+                "distributed_cache": {
+                    "pkts_in": 62581,
+                    "chars_in": 53049894,
+                    "pkts_out": 125156,
+                    "chars_out": 29719204
+                },
+                "total": {
+                    "pkts_in": 62614,
+                    "chars_in": 53052401,
+                    "pkts_out": 125189,
+                    "chars_out": 29721694
+                }
+            }
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowInterfacesStats(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowInterfacesStats(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_show_interfaces(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_interface)
+        obj = ShowInterfacesStats(device=self.device)
+        parsed_output = obj.parse(interface='GigabitEthernet0/0/0')
+        self.assertEqual(parsed_output,self.golden_parsed_output_interface)
+
 
 if __name__ == '__main__':
     unittest.main()

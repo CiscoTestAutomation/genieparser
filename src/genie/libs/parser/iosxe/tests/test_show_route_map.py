@@ -44,7 +44,7 @@ class test_show_route_map(unittest.TestCase):
                                      'set_metric_type': 'external',
                                      'set_metric': 100,
                                      'set_next_hop_self': True,
-                                     'set_next_hop': ['1.1.1.1', '2.2.2.2'],
+                                     'set_next_hop': ['10.4.1.1', '10.16.2.2'],
                                      'set_next_hop_v6': ['2001:DB8:1::1', '2001:DB8:2::1'],
                                      'set_route_origin': 'incomplete',
                                      'set_tag': '10'},
@@ -56,7 +56,7 @@ class test_show_route_map(unittest.TestCase):
                                     {'route_disposition': 'permit',
                                      'set_metric': -20,
                                      'set_ospf_metric_type': 'type-1',
-                                     'set_next_hop': ['3.3.3.3'],
+                                     'set_next_hop': ['10.36.3.3'],
                                      'set_next_hop_self': False,
                                      'set_next_hop_v6': ['2001:DB8:3::1'],
                                      'set_route_origin': 'igp'},
@@ -98,7 +98,7 @@ class test_show_route_map(unittest.TestCase):
           extended community RT:100:10 RT:100:100 RT:200:200 additive
           extended community VD:100:100
           origin incomplete
-          ip next-hop 1.1.1.1 2.2.2.2
+          ip next-hop 10.4.1.1 10.16.2.2
            ipv6 next-hop 2001:DB8:1::1 2001:DB8:2::1
         Policy routing matches: 0 packets, 0 bytes
       route-map test2, permit, sequence 20
@@ -113,7 +113,7 @@ class test_show_route_map(unittest.TestCase):
           metric -20
           metric-type type-1
           origin igp
-          ip next-hop 3.3.3.3
+          ip next-hop 10.36.3.3
            ipv6 next-hop 2001:DB8:3::1
         Policy routing matches: 0 packets, 0 bytes
       DYNAMIC routemaps

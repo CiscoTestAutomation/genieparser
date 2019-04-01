@@ -8,6 +8,8 @@ IOSXE parsers for the following show commands:
     * show ip arp
     * show ip arp summary
     * show ip traffic
+    * show arp application
+    * show arp summary
 '''
 
 # Python
@@ -84,7 +86,7 @@ class ShowArp(ShowArpSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # Internet  201.0.12.1              -   58bf.eab6.2f51  ARPA   Vlan100
+            # Internet  192.168.234.1           -   58bf.eab6.2f51  ARPA   Vlan100
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -550,7 +552,7 @@ class ShowIpTraffic(ShowIpTrafficSchema):
             '+state +acks$')
 
         # Sent: 9456 total
-        p41 = re.compile(r'^Sent: +(?P<ospf_sent_total>\d+) +total$')
+        p41 = re.compile(r'^Sent: +(?P<sent_total>\d+) +total$')
 
         # 8887 hello, 30 database desc, 8 link state req
         p42 = re.compile(r'^(?P<ospf_sent_hello>\d+) +hello, '
@@ -945,11 +947,21 @@ class ShowIpTraffic(ShowIpTrafficSchema):
                 continue
 
             m = p41.match(line)
-            if m and location == 'ospf_statistics':
-                category = 'sent'
+            if m:
                 groups = m.groupdict()
-                ret_dict['ospf_statistics'].update({k: \
-                    int(v) for k, v in groups.items()})
+                if location == 'ospf_statistics':
+                    category = 'sent'
+                    sdict = ret_dict['ospf_statistics']
+                    key = 'ospf_sent_total'
+                elif location == 'tcp_statistics':
+                    sdict = ret_dict['tcp_statistics']
+                    key = 'tcp_sent_total'
+                elif location == 'eigrp_ipv4_statistics':
+                    sdict = ret_dict['eigrp_ipv4_statistics']
+                    key = 'eigrp_ipv4_sent_total'
+                else:
+                    continue
+                sdict[key] = int(groups['sent_total'])
                 continue
 
             m = p42.match(line)
@@ -1071,26 +1083,13 @@ class ShowIpTraffic(ShowIpTrafficSchema):
                     int(v) for k, v in groups.items()})
                 continue
 
-            m = p58.match(line)
-            if m and not 'eigrp_ipv4_statistics' in ret_dict:
-                groups = m.groupdict()
-                ret_dict['tcp_statistics'].update({k: \
-                    int(v) for k, v in groups.items()})
-                continue
-
             m = p59.match(line)
             if m:
                 ret_dict.setdefault('eigrp_ipv4_statistics', {})
+                location = 'eigrp_ipv4_statistics'
                 continue
 
             m = p60.match(line)
-            if m:
-                groups = m.groupdict()
-                ret_dict['eigrp_ipv4_statistics'].update({k: \
-                    int(v) for k, v in groups.items()})
-                continue
-
-            m = p61.match(line)
             if m:
                 groups = m.groupdict()
                 ret_dict['eigrp_ipv4_statistics'].update({k: \
@@ -1131,5 +1130,153 @@ class ShowIpTraffic(ShowIpTrafficSchema):
                 ret_dict['bgp_statistics'].update({k: \
                     int(v) for k, v in groups.items()})
                 continue
+
+        return ret_dict
+
+
+# ===========================================================
+# Parser for 'show arp application'
+# ===========================================================
+class ShowArpApplicationSchema(MetaParser):
+    """
+    Schema for show arp application
+    """
+    
+    schema = {
+        'num_of_clients_registered': int,
+        'applications': {
+            Any(): {
+                'id': int,
+                'num_of_subblocks': int
+            }
+        }
+    }
+
+class ShowArpApplication(ShowArpApplicationSchema):
+    """
+    Parser for show arp application
+    """
+    
+    cli_command = 'show arp application'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        # initial variables
+        ret_dict = {}
+        
+        # Number of clients registered: 16
+        p1 = re.compile(r'^\s*Number +of +clients +registered: +' \
+                '(?P<num_of_clients>\d+)$')
+
+        # ASR1000-RP SPA Ether215 10024
+        p2 = re.compile(r'^(?P<application_name>[\w\W]{0,20})(?P<id>\d+)\s+(?P<num_of_subblocks>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            # Number of clients registered: 16
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('num_of_clients_registered', \
+                    int(group['num_of_clients']))
+                continue
+            
+            # ASR1000-RP SPA Ether215 10024
+            m = p2.match(line)
+            if m:
+                application = ret_dict.setdefault('applications', {})
+                group = m.groupdict()
+                application[group['application_name'].rstrip()] = {'id': \
+                    int(group['id']), 'num_of_subblocks': \
+                    int(group['num_of_subblocks'])}
+                continue
+        return ret_dict
+
+
+# ========================================
+# Parser for 'show arp summary'
+# ========================================
+class ShowArpSummarySchema(MetaParser):
+    """
+    Schema for 'show arp summary'
+    """
+
+    schema = {
+        'total_num_of_entries':{
+            Any(): int
+        },
+        'interface_entries': {
+            Any(): int
+        }
+    }
+
+class ShowArpSummary(ShowArpSummarySchema):
+    """ Parser for 'show arp summary'"""
+    
+    cli_command = "show arp summary"
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        # initial variables
+        ret_dict = {}
+        interface_found = False
+
+        # Total number of entries in the ARP table: 1233
+        p1 = re.compile(r'^Total +number +of +entries +in +the +ARP +table: +' \
+                '(?P<arp_table_entries>\d+)\.$')
+        
+        # Total number of Dynamic ARP entries: 1123
+        p2 = re.compile(r'^Total +number +of +(?P<entry_name>[\S\s]+): +' \
+                '(?P<num_of_entries>\d+)\.$')
+
+        # Interface         Entry Count
+        p3 = re.compile(r'^Interface +Entry +Count$')
+
+        # GigabitEthernet0/0/4  4
+        p4 = re.compile(r'^(?P<interface_name>[\w\/\.]+) +(?P<entry_count>\d+)')
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not interface_found:
+                # Total number of entries in the ARP table: 1233
+                m = p1.match(line)
+                if m:
+                    group = m.groupdict()
+                    total_num_of_entries = ret_dict.setdefault( \
+                        'total_num_of_entries', {})
+                    total_num_of_entries.update({'arp_table_entries': 
+                        int(group['arp_table_entries'])})
+                    continue
+                
+                # Total number of Dynamic ARP entries: 1123
+                m = p2.match(line)
+                if m:
+                    group = m.groupdict()
+                    key = group['entry_name'].replace(' ', '_').lower()
+                    total_num_of_entries.update({key: int(group['num_of_entries'])})
+                    continue
+                
+                # Interface     Entry Count
+                m = p3.match(line)
+                if m:
+                    interfaces = ret_dict.setdefault('interface_entries', {})
+                    interface_found = True
+                    continue
+            else:
+                # GigabitEthernet0/0/4  4
+                m = p4.match(line)
+                if m:
+                    group = m.groupdict()
+                    interfaces.update({Common.convert_intf_name(group['interface_name']) : 
+                        int(group['entry_count'])})
+                    continue
 
         return ret_dict

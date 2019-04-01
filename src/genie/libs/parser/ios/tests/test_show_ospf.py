@@ -137,7 +137,7 @@ class test_show_ip_ospf(test_show_ip_ospf_iosxe):
                             "db_exchange_summary_list_optimization": True,
                             "lsa_group_pacing_timer": 240,
                             "total_nssa_areas": 0,
-                            "router_id": "100.1.1.1",
+                            "router_id": "10.1.1.1",
                             "total_stub_areas": 0,
                             "area_transit": True,
                             "stub_router": {
@@ -204,7 +204,7 @@ class test_show_ip_ospf(test_show_ip_ospf_iosxe):
 
     golden_output_ios =  {'execute.return_value': '''
     N95_1#show ip ospf
- Routing Process "ospf 1" with ID 100.1.1.1
+ Routing Process "ospf 1" with ID 10.1.1.1
  Start time: 00:00:20.892, Time elapsed: 6d06h
  Supports only single TOS(TOS0) routes
  Supports opaque LSA
@@ -437,7 +437,7 @@ class test_show_ip_ospf_virtual_links(test_show_ip_ospf_virtual_links_iosxe):
                                 {'areas': 
                                     {'0.0.0.1': 
                                         {'virtual_links': 
-                                            {'0.0.0.1 3.3.3.3': 
+                                            {'0.0.0.1 10.36.3.3': 
                                                 {'adjacency_state': 'full',
                                                 'dcbitless_lsa_count': 7,
                                                 'dead_interval': 40,
@@ -457,7 +457,7 @@ class test_show_ip_ospf_virtual_links(test_show_ip_ospf_virtual_links_iosxe):
                                                 'next': '0x0(0)/0x0(0)',
                                                 'retrans_qlen': 0,
                                                 'retransmit_interval': 5,
-                                                'router_id': '3.3.3.3',
+                                                'router_id': '10.36.3.3',
                                                 'state': 'point-to-point,',
                                                 'topology': 
                                                     {0: 
@@ -628,7 +628,7 @@ class test_show_ip_ospf_mpls_traffic_eng_link(test_show_ip_ospf_mpls_traffic_eng
         raw1 = '''\
             R1_ospf_xe#show ip ospf mpls traffic-eng link
 
-            OSPF Router with ID (1.1.1.1) (Process ID 1)
+            OSPF Router with ID (10.4.1.1) (Process ID 1)
 
             Area 0 has 2 MPLS TE links. Area instance is 2.
 
@@ -662,7 +662,7 @@ class test_show_ip_ospf_mpls_traffic_eng_link(test_show_ip_ospf_mpls_traffic_eng
               Priority 6 : 93750000     Priority 7 : 93750000
               Affinity Bit : 0x0
 
-                OSPF Router with ID (11.11.11.11) (Process ID 2)
+                OSPF Router with ID (10.229.11.11) (Process ID 2)
 
             Area 1 MPLS TE not initialized
             '''

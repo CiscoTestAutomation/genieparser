@@ -124,8 +124,8 @@ class ShowIpMroute(ShowIpMrouteSchema):
                     mroute_dict['vrf'][vrf]['address_family'][address_family] = {}
                 continue
 
-            # (*, 239.1.1.1), 00:00:03/stopped, RP 1.1.1.1, flags: SPF
-            # (1.1.1.1, 239.1.1.1), 00:00:03/00:02:57, flags: PFT
+            # (*, 239.1.1.1), 00:00:03/stopped, RP 10.4.1.1, flags: SPF
+            # (10.4.1.1, 239.1.1.1), 00:00:03/00:02:57, flags: PFT
             # (*, FF07::1), 00:04:45/00:02:47, RP 2001:DB8:6::6, flags:S
             # (2001:DB8:999::99, FF07::1), 00:02:06/00:01:23, flags:SFT
             p2 = re.compile(r'^\((?P<source_address>[\w\:\.\*\/]+),'

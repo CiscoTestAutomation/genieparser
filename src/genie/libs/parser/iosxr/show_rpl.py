@@ -168,7 +168,7 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
                 ['set_local_pref'] = int(m.groupdict()['set_local_pref'])
                 continue
 
-            # set next-hop 1.1.1.1
+            # set next-hop 10.4.1.1
             p5 =  re.compile(r'^\s*set +next-hop +(?P<set_next_hop>[0-9\.]+)$')
             m = p5.match(line)
             if m:
@@ -479,7 +479,7 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
                         ['match_local_pref_eq'] = match_local_pref_eq
 
                     if 'ospf-area is' in m.groupdict()[cond]:
-                        v = re.match('ospf-area is (?P<match_area_eq>[0-9]+)', m.groupdict()[cond])
+                        v = re.match('ospf-area is (?P<match_area_eq>(\d+\.\d+\.\d+\.\d+|[0-9]+))', m.groupdict()[cond])
                         match_area_eq = v.groupdict()['match_area_eq']
                         rpl_route_policy_dict[name]['statements'][statements]['conditions']\
                         ['match_area_eq'] = match_area_eq
