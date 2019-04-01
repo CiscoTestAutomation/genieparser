@@ -6,6 +6,84 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
+                                   BGP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added parsers for:
+        * 'show bgp all'
+        * 'show bgp {address_family} all'
+        * 'show bgp {address_family} rd {rd}'
+        * 'show bgp {address_family} vrf {vrf}'
+        * 'show ip bgp all'
+        * 'show ip bgp {address_family} all'
+        * 'show ip bgp'
+        * 'show ip bgp {address_family}'
+        * 'show ip bgp {address_family} rd {rd}'
+        * 'show ip bgp {address_family} vrf {vrf}'
+        * 'show bgp all detail'
+        * 'show ip bgp all detail'
+        * 'show bgp {address_family} vrf {vrf} detail'
+        * 'show bgp {address_family} rd {rd} detail'
+        * 'show ip bgp {address_family} vrf {vrf} detail'
+        * 'show ip bgp {address_family} rd {rd} detail'
+        * 'show bgp summary'
+        * 'show bgp {address_family} summary'
+        * 'show bgp {address_family} vrf {vrf} summary'
+        * 'show bgp {address_family} rd {rd} summary'
+        * 'show bgp all summary'
+        * 'show bgp {address_family} all summary'
+        * 'show ip bgp summary'
+        * 'show ip bgp {address_family} summary'
+        * 'show ip bgp {address_family} vrf {vrf} summary'
+        * 'show ip bgp {address_family} rd {rd} summary'
+        * 'show ip bgp all summary'
+        * 'show ip bgp {address_family} all summary'
+        * 'show bgp all neighbors'
+        * 'show bgp all neighbors {neighbor}'
+        * 'show bgp {address_family} all neighbors'
+        * 'show bgp {address_family} all neighbors {neighbor}'
+        * 'show bgp neighbors'
+        * 'show bgp neighbors {neighbor}'
+        * 'show bgp {address_family} neighbors'
+        * 'show bgp {address_family} neighbors {neighbor}'
+        * 'show bgp {address_family} vrf {vrf} neighbors'
+        * 'show bgp {address_family} vrf {vrf} neighbors {neighbor}'
+        * 'show ip bgp all neighbors',
+        * 'show ip bgp all neighbors {neighbor}'
+        * 'show ip bgp {address_family} all neighbors'
+        * 'show ip bgp {address_family} all neighbors {neighbor}'
+        * 'show ip bgp neighbors'
+        * 'show ip bgp neighbors {neighbor}'
+        * 'show ip bgp {address_family} neighbors'
+        * 'show ip bgp {address_family} neighbors {neighbor}'
+        * 'show ip bgp {address_family} vrf {vrf} neighbors'
+        * 'show ip bgp {address_family} vrf {vrf} neighbors {neighbor}'
+        * 'show bgp all neighbors {neighbor} advertised-routes'
+        * 'show bgp {address_family} all neighbors {neighbor} advertised-routes'
+        * 'show bgp neighbors {neighbor} advertised-routes'
+        * 'show bgp {address_family} neighbors {neighbor} advertised-routes'
+        * 'show ip bgp all neighbors {neighbor} advertised-routes'
+        * 'show ip bgp {address_family} all neighbors {neighbor} advertised-routes'
+        * 'show ip bgp neighbors {neighbor} advertised-routes'
+        * 'show ip bgp {address_family} neighbors {neighbor} advertised-routes'
+        * 'show bgp all neighbors {neighbor} received-routes'
+        * 'show bgp {address_family} all neighbors {neighbor} received-routes'
+        * 'show bgp neighbors {neighbor} received-routes'
+        * 'show bgp {address_family} neighbors {neighbor} received-routes'
+        * 'show ip bgp all neighbors {neighbor} received-routes'
+        * 'show ip bgp {address_family} all neighbors {neighbor} received-routes'
+        * 'show ip bgp neighbors {neighbor} received-routes'
+        * 'show ip bgp {address_family} neighbors {neighbor} received-routes'
+        * 'show bgp all neighbors {neighbor} routes'
+        * 'show bgp {address_family} all neighbors {neighbor} routes'
+        * 'show bgp neighbors {neighbor} routes'
+        * 'show bgp {address_family} neighbors {neighbor} routes'
+        * 'show ip bgp all neighbors {neighbor} routes'
+        * 'show ip bgp {address_family} all neighbors {neighbor} routes'
+        * 'show ip bgp neighbors {neighbor} routes'
+        * 'show ip bgp {address_family} neighbors {neighbor} routes'
+
+--------------------------------------------------------------------------------
                                    POLICY MAP
 --------------------------------------------------------------------------------
 * IOSXE
@@ -79,14 +157,68 @@
     * Add ShowPlatformHardwareSerdes for 'show platform hardware slot <x> serdes statistics'
     * Add ShowPlatformHardwareSerdesInternal for 'show platform hardware slot <x> serdes statistics internal'
     * Add ShowProcessesCpuHistory for 'show processes cpu history'
+    * Add ShowPlatformHardwareQfpBqsStatisticsChannelAll for:
+        show platform hardware qfp active bqs <x> ipm statistics channel all
+        show platform hardware qfp standby bqs <x> ipm statistics channel all
+        show platform hardware qfp active bqs <x> opm statistics channel all
+        show platform hardware qfp standby bqs <x> opm statistics channel all
 
     * Update ShowVersion to support more output
+
+*IOS
+    * Add ShowProcessesCpu for:
+        show processes cpu
+        show processes cpu | include <WORD>
+    * Add ShowVersionRp for:
+        show version RP active [running|provisioned|installed]
+        show version RP standby [running|provisioned|installed]
+    * Add ShowPlatform for:
+        show platform
+    * Add ShowPlatformPower for:
+        show platform power
+    * Add ShowProcessesCpuHistory for:
+        show processes cpu history
+    * Add ShowProcessesCpuPlatform for:
+        show processes cpu platform
+    * Add ShowPlatformSoftwareStatusControl for:
+        show platform software status control-processor brief
+    * Add ShowPlatformSoftwareSlotActiveMonitorMem for:
+        show platform software process slot switch active R0 monitor | inc Mem :|Swap:
+    * Add ShowPlatformHardware for:
+        show platform hardware qfp active infrastructure bqs queue output default all
+    * Add ShowPlatformHardwarePlim for:
+        show platform hardware port <x/x/x> plim statistics
+        show platform hardware slot <x> plim statistics
+        show platform hardware slot <x> plim statistics internal
+        show platform hardware subslot <x/x> plim statistics
+    * Add ShowPlatformHardwareQfpBqsOpmMapping for:
+        show platform hardware qfp active bqs <x> opm mapping
+        show platform hardware qfp standby bqs <x> opm mapping
+    * Add ShowPlatformHardwareQfpBqsIpmMapping for:
+        show platform hardware qfp active bqs <x> ipm mapping
+        show platform hardware qfp standby bqs <x> ipm mapping
+    * Add ShowPlatformHardwareSerdes for:
+        show platform hardware slot <x> serdes statistics
+    * Add ShowPlatformHardwareSerdesInternal for:
+        show platform hardware slot <x> serdes statistics internal
+    * Add ShowPlatformHardwareQfpBqsStatisticsChannelAll for:
+        show platform hardware qfp active bqs <x> ipm statistics channel all
+        show platform hardware qfp standby bqs <x> ipm statistics channel all
+        show platform hardware qfp active bqs <x> opm statistics channel all
+        show platform hardware qfp standby bqs <x> opm statistics channel all
+    * Add ShowPlatformHardwareQfpInterfaceIfnameStatistics for:
+        show platform hardware qfp active interface if-name <interface> statistics
+        show platform hardware qfp standby interface if-name <interface> statistics
+    * Add ShowPlatformHardwareQfpStatisticsDrop for:
+        show platform hardware qfp active statistics drop
+        show platform hardware qfp standby statistics drop
 
 * IOSXR
     * Add ShowInstallInactiveSummary for:
           show install inactive summary
     * Add ShowInstallCommitSummary for:
           show install commit summary
+
 --------------------------------------------------------------------------------
                                    MPLS LDP
 --------------------------------------------------------------------------------
@@ -145,7 +277,7 @@
                                    BFD 
 ---------------------------------------------------------------------------------
 * IOSXE
-    * Add ShowBfdNeighborsDetails
+    * Add ShowBfdNeighborsDetails for:
         show bfd neighbors client <client> details
         show bfd neighbors details
 
@@ -169,7 +301,12 @@
     * Add ShowServiceGroupTrafficStats for:
         show service-group traffic-stats
         show service-group traffic-stats <group>
-
+        
+* IOS
+    * Add ShowServiceGroupState for:
+        show service-group state
+    * Add ShowServiceGroupStats for:
+        show service-group stats
 --------------------------------------------------------------------------------
                                    CONFIG
 --------------------------------------------------------------------------------
@@ -182,11 +319,20 @@
         show archive config incremental-diffs {fileA}
     * Add ShowConfigurationLock for:
         show configuration lock
+* IOS
+    * Add ShowArchiveConfigDifferences for:
+        show archive config differences
+        show archive config differences {fileA} {fileB}
+        show archive config differences {fielA}
+    * Add ShowArchiveConfigIncrementalDiffs for:
+        show archive config incremental-diffs {fileA}
+    * Add ShowConfigurationLock for:
+        show configuration lock
 
 --------------------------------------------------------------------------------
                                    L2VPN
 --------------------------------------------------------------------------------
-* IOSXE
+* IOSXE & IOS
     * Add ShowBridgeDomain for:
             show bridge-domain
             show bridge-domain <WORD>
@@ -201,10 +347,9 @@
             show ethernet service instance summary
     * Add ShowL2vpnVfi for:
             show l2vpn vfi
+    * Add ShowL2vpnServiceAll for:
+            show l2vpn service all
 
-* IOS
-    * Add ShowL2vpnVfi for:
-            show l2vpn vfi
 --------------------------------------------------------------------------------
                                    LAG
 --------------------------------------------------------------------------------
@@ -293,3 +438,8 @@
     * Add ShowRunRouterIsis for:
         show run router isis
 
+--------------------------------------------------------------------------------
+                                   ROUTING
+--------------------------------------------------------------------------------
+* IOSXE
+    * Update ShowIpRoute for different output

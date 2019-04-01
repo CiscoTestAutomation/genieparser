@@ -185,6 +185,7 @@ class ShowIpRoute(ShowIpRouteSchema):
 
             # C        10.4.1.1 is directly connected, Loopback0
             # S        10.16.2.2 [1/0] via 10.186.2.2, GigabitEthernet0/1
+            # S*       10.16.2.2 [1/0] via 10.186.2.2, GigabitEthernet0/1
             # O        10.2.3.0/24 [110/2] via 10.186.2.2, 06:46:59, GigabitEthernet0/1
             # i L1     10.151.22.22 [115/20] via 10.186.2.2, 06:47:04, GigabitEthernet0/1
             # D        192.168.205.1
@@ -197,7 +198,8 @@ class ShowIpRoute(ShowIpRouteSchema):
                 if m.groupdict()['code']:
                     source_protocol_codes = m.groupdict()['code'].strip()
                     for key,val in source_protocol_dict.items():
-                        if source_protocol_codes in val:
+                        source_protocol_replaced = source_protocol_codes.split('*')[0]
+                        if source_protocol_replaced in val:
                             source_protocol = key
 
                 if m.groupdict()['code1']:
@@ -1003,9 +1005,9 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
 
         # ipv6 specific
         p7 = re.compile(r'^Route +count +is +(?P<route_count>[\d\/]+), +'
-        	             'share +count +(?P<share_count>[\d\/]+)$')
+                         'share +count +(?P<share_count>[\d\/]+)$')
         p8 = re.compile(r'^(?P<fwd_ip>[\w\:]+)(, +(?P<fwd_intf>[\w\.\/\-]+)'
-        	             '( indirectly connected)?)?$')
+                         '( indirectly connected)?)?$')
         p8_1 = re.compile(r'^receive +via +(?P<fwd_intf>[\w\.\/\-]+)$')
         p9 = re.compile(r'^Last +updated +(?P<age>[\w\:\.]+) +ago$')
         p10 = re.compile(r'^From +(?P<from>[\w\:]+)$')
