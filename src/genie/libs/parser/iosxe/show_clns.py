@@ -22,7 +22,55 @@ class ShowClnsInterfaceSchema(MetaParser):
                   show clns interface {interface}"""
 
     schema = {
-
+        'interfaces':{
+            Any():{
+                'status':str,
+                'line_protocol': str,
+                Optional('clns_protocol_processing'): bool,
+                Optional('checksum_enabled'): bool,
+                Optional('mtu'): int,
+                Optional('enncapsulation'): str,
+                Optional('erpdus_enabled'): bool,
+                Optional('min_interval_msec'): int,
+                Optional('clns_fast_switching'): bool,
+                Optional('clns_sse_switching'): bool,
+                Optional('dec_compatibility_mode'): str,
+                Optional('next_esh_ish_in'): int,
+                Optional('routing_protocol'): {
+                    Any(): {
+                        'process_id': {
+                            Any(): {
+                                'level_type': str,
+                                'interface_number': str,
+                                'local_circuit_id': str,
+                                'neighbor_extended_local_circuit_id': str,
+                                'hello_interval': {
+                                    Any(): {
+                                        'next_is_is_lan_hello_in': int,
+                                    }
+                                },
+                                Any(): {  # level-1 , level-2
+                                    'metric': int,
+                                    'dr_id': str,
+                                    'circuit_id': str,
+                                    'ipv6_metric': int,
+                                },
+                                'priority': {
+                                    Any(): {  # level-1 , level-2
+                                        'priority': int,
+                                    },
+                                },
+                                Optional('adjacencies'): {
+                                    Any(): {   # level-1 level-2
+                                        'number_of_active_adjancies': int
+                                    },
+                                }
+                            }
+                        },
+                    }
+                }
+            }
+        }
     }
 
 class ShowClnsInterface(ShowClnsInterfaceSchema):
@@ -44,11 +92,12 @@ class ShowClnsInterface(ShowClnsInterfaceSchema):
 
         # initial return dictionary
         result_dict = {}
-        feature_flag = False
+        flag_level_1 = False
+        flag_level_2 = False
 
         # GigabitEthernet1 is up, line protocol is up
         # TokenRing 0 is administratively down, line protocol is down
-        p1 = re.compile(r'^(?P<interface>[\S\s]+)is +(?P<status>[\w\s]+), +line +protocol +is +(?P<line_protocol>\w+)$')
+        p1 = re.compile(r'^(?P<interface>[\w]+[\d/.|\s]+) +is +(?P<status>[\w\s]+), +line +protocol +is +(?P<line_protocol>\w+)$')
         #   CLNS protocol processing disabled
         p2 = re.compile(r'^CLNS +protocol +processing +disabled$')
         #   Checksums enabled, MTU 1497, Encapsulation SAP
@@ -65,13 +114,14 @@ class ShowClnsInterface(ShowClnsInterfaceSchema):
         #   Routing Protocol: IS-IS (test)
         p8 = re.compile(r'^Routing +Protocol: +(?P<routing_protocol>[\S]+) +\((?P<process_id>\w+)\)$')
         #     Circuit Type: level-1-2
-        p9 = re.compile(r'^Circuit +Type: +(?P<circut_type>\S+)$')
+        p9 = re.compile(r'^Circuit +Type: +(?P<circuit_type>\S+)$')
         #     Interface number 0x1, local circuit ID 0x1
-        p10 = re.compile(r'^Interface +number +(?P<interface_number>\w+), +local +circuit +ID +(?P<loacl_circut>\w+)$')
+        p10 = re.compile(r'^Interface +number +(?P<interface_number>\w+), +local +circuit +ID +(?P<local_circuit>\w+)$')
         #     Neighbor Extended Local Circuit ID: 0x0
         p11 = re.compile(r'^Neighbor +Extended +Local +Circuit +ID: +(?P<neighbor_extended_local_circute_id>\w+)$')
         #     Level-1 Metric: 10, Priority: 64, Circuit ID: R2.01
-        p12 = re.compile(r'^(?P<level>\S+) +Metric: +(?P<level_metric>\d+), Priority: +(?P<priority>\d+), Circuit ID: +(?P<curcuit_id>\S+)$')
+        p12 = re.compile(r'^(?P<level>\S+) +Metric: +(?P<level_metric>\d+), +Priority: +(?P<priority>\d+), +Circuit +ID:'
+                         ' +(?P<circuit_id>\S+)$')
         #     DR ID: R2.01
         p13 = re.compile(r'^DR +ID: +(?P<dr_id>\S+)$')
         #     Level-1 IPv6 Metric: 10
@@ -84,26 +134,27 @@ class ShowClnsInterface(ShowClnsInterfaceSchema):
 
         for line in out.splitlines():
             line = line.strip()
-
+            #import pdb;pdb.set_trace()
             # GigabitEthernet1 is up, line protocol is up
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 clns_dict = result_dict.setdefault('interfaces', {}).setdefault(group['interface'], {})
                 clns_dict.update({'line_protocol': group['line_protocol']})
+                clns_dict.update({'status': group['status']})
                 continue
 
             #   CLNS protocol processing disabled
             m = p2.match(line)
             if m:
-                clns_dict.update({'clns_protocol_processing_enabled': False})
+                clns_dict.update({'clns_protocol_processing': False})
                 continue
 
             #   Checksums enabled, MTU 1497, Encapsulation SAP
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                clns_dict.update({'checksum': True if 'enabled' in group['checksum'] else False})
+                clns_dict.update({'checksum_enabled': True if 'enabled' in group['checksum'] else False})
                 clns_dict.update({'mtu': int(group['mtu'])})
                 clns_dict.update({'encapsulation': group['encapsulation']})
                 continue
@@ -112,7 +163,7 @@ class ShowClnsInterface(ShowClnsInterfaceSchema):
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                clns_dict.update({'erpdus': True if 'enabled' in group['erpdus'] else False})
+                clns_dict.update({'erpdus_enabled': True if 'enabled' in group['erpdus'] else False})
                 clns_dict.update({'min_interval_msec': int(group['min_interval'])})
                 continue
 
@@ -121,7 +172,8 @@ class ShowClnsInterface(ShowClnsInterfaceSchema):
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                clns_dict.update({'{}_switching'.format(fast_sse): True if 'enabled' in group['switching_status'] else False})
+                fast_sse =  group['fast_sse']
+                clns_dict.update({'clns_{}_switching'.format(fast_sse): True if 'enabled' in group['switching_status'] else False})
                 continue
 
             #   DEC compatibility mode OFF for this interface
@@ -142,38 +194,38 @@ class ShowClnsInterface(ShowClnsInterfaceSchema):
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                instance_id = group['process_id']
-                isis_dict = clns_dict.setdefault('routing_protocol',{}).setdefault(group['routing_protocol'],{})
+                isis_dict = clns_dict.setdefault('routing_protocol',{}).\
+                                      setdefault(group['routing_protocol'],{}).\
+                                      setdefault('process_id' ,{}).setdefault(group['process_id'],{})
                 continue
 
             #     Circuit Type: level-1-2
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                clns_dict.update({'routing_protocol': group['routing_protocol']})
-                clns_dict.update({'level_type': group['circut_type']})
+                isis_dict.update({'level_type': group['circuit_type']})
                 continue
 
             #     Interface number 0x1, local circuit ID 0x1
             m = p10.match(line)
             if m:
                 group = m.groupdict()
-                isis_dict.update({'interface_name': group['interface_number']})
-                isis_dict.update({'loacl_circut_id': group['loacl_circut']})
+                isis_dict.update({'interface_number': group['interface_number']})
+                isis_dict.update({'local_circuit_id': group['local_circuit']})
                 continue
 
             #     Neighbor Extended Local Circuit ID: 0x0
             m = p11.match(line)
             if m:
                 group = m.groupdict()
-                isis_dict.update({'neighbor_extended_local_circut_id': group['neighbor_extended_local_circute_id']})
+                isis_dict.update({'neighbor_extended_local_circuit_id': group['neighbor_extended_local_circute_id']})
                 continue
 
             #     Level-1 Metric: 10, Priority: 64, Circuit ID: R2.01
             m = p12.match(line)
             if m:
                 group = m.groupdict()
-                level = group['level']
+                level = group['level'].lower()
                 if 'level-1' in level:
                     flag_level_1 = True
                     flag_level_2 = False
@@ -182,10 +234,11 @@ class ShowClnsInterface(ShowClnsInterfaceSchema):
                     flag_level_2 = True
                     flag_level_1 = False
 
-                level_dict = isis_dict.setdefault(level,{})
-                level_dict.update({'metric': group['level_metric'])
-                level_dict.update({'priority': group['priority'])
-                level_dict.update({'circuit_id': group['circuit_id'])
+                level_dict = isis_dict.setdefault( level, {})
+                level_dict.update({'metric': int(group['level_metric'])})
+                level_dict.update({'circuit_id': group['circuit_id']})
+                priority_dict = isis_dict.setdefault('priority', {}).setdefault(level, {})
+                priority_dict.update({'priority': int(group['priority'])})
                 continue
 
             #     DR ID: R2.01
@@ -193,32 +246,35 @@ class ShowClnsInterface(ShowClnsInterfaceSchema):
             if m:
                 group = m.groupdict()
                 if flag_level_1:
-                    level_dict = isis_dict_dict.setdefault('level_1', {})
+                    level_dict = isis_dict.setdefault('level-1', {})
                 if flag_level_2:
-                    level_dict = isis_dict_dict.setdefault('level_2', {})
+                    level_dict = isis_dict.setdefault('level-2', {})
 
-                level_dict.update({'dr_id': group['dr_id'])
+                level_dict.update({'dr_id': group['dr_id']})
                 continue
 
             #     Level-1 IPv6 Metric: 10
             m = p14.match(line)
             if m:
                 group = m.groupdict()
-                level_dict.update({'ipv6_metric': int(group['level_ipv6_metric'])
+                level_dict = isis_dict.setdefault(group['level'].lower(),{})
+                level_dict.update({'ipv6_metric': int(group['level_ipv6_metric'])})
                 continue
 
             #     Number of active level-1 adjacencies: 1
             m = p15.match(line)
             if m:
                 group = m.groupdict()
-                level_dict.update({'ipv6_metric': int(group['level_ipv6_metric'])
+                active_dict = isis_dict.setdefault('adjacencies',{}).setdefault(group['level'].lower(), {})
+                active_dict.update({'number_of_active_adjancies': int(group['adjacencies'])})
                 continue
 
             # Next IS-IS LAN Level-1 Hello in 1 seconds
-            m = p15.match(line)
+            m = p16.match(line)
             if m:
                 group = m.groupdict()
-                level_dict.update({'hello_interval': int(group['level_hello'])
+                next_dict = isis_dict.setdefault('hello_interval', {}).setdefault(group['level'].lower(), {})
+                next_dict.update({'next_is_is_lan_hello_in': int(group['level_hello'])})
                 continue
 
 
