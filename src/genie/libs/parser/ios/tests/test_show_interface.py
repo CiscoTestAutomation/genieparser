@@ -32,7 +32,6 @@ from genie.libs.parser.ios.show_interface import \
                                         ShowInterfacesTrunk, \
                                         ShowInterfacesStats
 
-# iosxe tests/test_show_interface
 from genie.libs.parser.iosxe.tests.test_show_interface import \
                 test_show_interfaces_counters as test_show_interfaces_counters_iosxe,\
                 test_show_interfaces_switchport as test_show_interfaces_switchport_iosxe,\

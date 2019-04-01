@@ -17,7 +17,6 @@ from genie.libs.parser.ios.show_lag import ShowLacpSysId,\
                                     ShowEtherChannelLoadBalancing,\
                                     ShowLacpNeighborDetail
 
-# iosxe tests/test_show_lag
 from genie.libs.parser.iosxe.tests.test_show_lag import \
             test_show_lacp_sysid as test_show_lacp_sysid_iosxe,\
             test_show_lacp_counters as test_show_lacp_counters_iosxe,\
