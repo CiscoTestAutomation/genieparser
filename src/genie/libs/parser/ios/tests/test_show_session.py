@@ -14,35 +14,35 @@ from genie.libs.parser.iosxe.tests.test_show_session import \
         test_show_users as test_show_users_iosxe
 
 class test_show_line(test_show_line_iosxe):
-    pass
-    # def test_golden(self):
-    #     self.device = Mock(**self.golden_output)
-    #     line_obj = ShowLine(device=self.device)
-    #     parsed_output = line_obj.parse()
-    #     self.maxDiff = None
-    #     self.assertEqual(parsed_output,self.golden_parsed_output)
 
-    # def test_empty(self):
-    #     self.device1 = Mock(**self.empty_output)
-    #     line_obj = ShowLine(device=self.device1)
-    #     with self.assertRaises(SchemaEmptyParserError):
-    #         parsed_output = line_obj.parse()
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        line_obj = ShowLine(device=self.device)
+        parsed_output = line_obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        line_obj = ShowLine(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = line_obj.parse()
 
 
 class test_show_users(test_show_users_iosxe):
-    pass
-    # def test_golden(self):
-    #     self.device = Mock(**self.golden_output)
-    #     users_obj = ShowUsers(device=self.device)
-    #     parsed_output = users_obj.parse()
-    #     self.maxDiff = None
-    #     self.assertEqual(parsed_output,self.golden_parsed_output)
 
-    # def test_empty(self):
-    #     self.device1 = Mock(**self.empty_output)
-    #     users_obj = ShowUsers(device=self.device1)
-    #     with self.assertRaises(SchemaEmptyParserError):
-    #         parsed_output = users_obj.parse()
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        users_obj = ShowUsers(device=self.device)
+        parsed_output = users_obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        users_obj = ShowUsers(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = users_obj.parse()
 
 
 if __name__ == '__main__':

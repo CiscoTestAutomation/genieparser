@@ -13,20 +13,19 @@ from genie.libs.parser.iosxe.tests.test_show_access_session import \
 
 
 class test_show_access_session(test_show_access_session_iosxe):
-    pass
 
-    # def test_empty(self):
-    #     self.dev1 = Mock(**self.empty_output)
-    #     obj = ShowAccessSession(device=self.dev1)
-    #     with self.assertRaises(SchemaEmptyParserError):
-    #         parsed_output = obj.parse()
+    def test_empty(self):
+        self.dev1 = Mock(**self.empty_output)
+        obj = ShowAccessSession(device=self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
 
-    # def test_golden(self):
-    #     self.maxDiff = None
-    #     self.dev_c3850 = Mock(**self.golden_output)
-    #     obj = ShowAccessSession(device=self.dev_c3850)
-    #     parsed_output = obj.parse()
-    #     self.assertEqual(parsed_output,self.golden_parsed_output)
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output)
+        obj = ShowAccessSession(device=self.dev_c3850)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()

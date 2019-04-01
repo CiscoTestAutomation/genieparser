@@ -22,21 +22,20 @@ from genie.libs.parser.iosxe.tests.test_show_snmp import \
 # Unit test for 'show snmp mib'
 # =============================
 class test_show_snmp_mib(test_show_snmp_mib_iosxe):
-
     '''Unit test for "show snmp mib" '''
-    pass
-    # def test_empty(self):
-    #     self.device = Mock(**self.empty_output)
-    #     obj = ShowSnmpMib(device=self.device)
-    #     with self.assertRaises(SchemaEmptyParserError):
-    #         parsed_output = obj.parse()
 
-    # def test_golden_1(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.golden_output1)
-    #     obj = ShowSnmpMib(device=self.device)
-    #     parsed_output = obj.parse()
-    #     self.assertEqual(parsed_output, self.golden_parsed_output1)
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowSnmpMib(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowSnmpMib(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 
 if __name__ == '__main__':
