@@ -9,7 +9,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional
+
 # import iosxe parser
 from genie.libs.parser.iosxe.show_vtp import ShowVtpStatus as ShowVtpStatus_iosxe
 

@@ -9,7 +9,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
+
 # import iosxe parser
 from genie.libs.parser.iosxe.show_snmp import ShowSnmpMib as ShowSnmpMib_iosxe
 
