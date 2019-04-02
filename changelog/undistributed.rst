@@ -79,14 +79,68 @@
     * Add ShowPlatformHardwareSerdes for 'show platform hardware slot <x> serdes statistics'
     * Add ShowPlatformHardwareSerdesInternal for 'show platform hardware slot <x> serdes statistics internal'
     * Add ShowProcessesCpuHistory for 'show processes cpu history'
+    * Add ShowPlatformHardwareQfpBqsStatisticsChannelAll for:
+        show platform hardware qfp active bqs <x> ipm statistics channel all
+        show platform hardware qfp standby bqs <x> ipm statistics channel all
+        show platform hardware qfp active bqs <x> opm statistics channel all
+        show platform hardware qfp standby bqs <x> opm statistics channel all
 
     * Update ShowVersion to support more output
+
+*IOS
+    * Add ShowProcessesCpu for:
+        show processes cpu
+        show processes cpu | include <WORD>
+    * Add ShowVersionRp for:
+        show version RP active [running|provisioned|installed]
+        show version RP standby [running|provisioned|installed]
+    * Add ShowPlatform for:
+        show platform
+    * Add ShowPlatformPower for:
+        show platform power
+    * Add ShowProcessesCpuHistory for:
+        show processes cpu history
+    * Add ShowProcessesCpuPlatform for:
+        show processes cpu platform
+    * Add ShowPlatformSoftwareStatusControl for:
+        show platform software status control-processor brief
+    * Add ShowPlatformSoftwareSlotActiveMonitorMem for:
+        show platform software process slot switch active R0 monitor | inc Mem :|Swap:
+    * Add ShowPlatformHardware for:
+        show platform hardware qfp active infrastructure bqs queue output default all
+    * Add ShowPlatformHardwarePlim for:
+        show platform hardware port <x/x/x> plim statistics
+        show platform hardware slot <x> plim statistics
+        show platform hardware slot <x> plim statistics internal
+        show platform hardware subslot <x/x> plim statistics
+    * Add ShowPlatformHardwareQfpBqsOpmMapping for:
+        show platform hardware qfp active bqs <x> opm mapping
+        show platform hardware qfp standby bqs <x> opm mapping
+    * Add ShowPlatformHardwareQfpBqsIpmMapping for:
+        show platform hardware qfp active bqs <x> ipm mapping
+        show platform hardware qfp standby bqs <x> ipm mapping
+    * Add ShowPlatformHardwareSerdes for:
+        show platform hardware slot <x> serdes statistics
+    * Add ShowPlatformHardwareSerdesInternal for:
+        show platform hardware slot <x> serdes statistics internal
+    * Add ShowPlatformHardwareQfpBqsStatisticsChannelAll for:
+        show platform hardware qfp active bqs <x> ipm statistics channel all
+        show platform hardware qfp standby bqs <x> ipm statistics channel all
+        show platform hardware qfp active bqs <x> opm statistics channel all
+        show platform hardware qfp standby bqs <x> opm statistics channel all
+    * Add ShowPlatformHardwareQfpInterfaceIfnameStatistics for:
+        show platform hardware qfp active interface if-name <interface> statistics
+        show platform hardware qfp standby interface if-name <interface> statistics
+    * Add ShowPlatformHardwareQfpStatisticsDrop for:
+        show platform hardware qfp active statistics drop
+        show platform hardware qfp standby statistics drop
 
 * IOSXR
     * Add ShowInstallInactiveSummary for:
           show install inactive summary
     * Add ShowInstallCommitSummary for:
           show install commit summary
+
 --------------------------------------------------------------------------------
                                    MPLS LDP
 --------------------------------------------------------------------------------
@@ -145,7 +199,7 @@
                                    BFD 
 ---------------------------------------------------------------------------------
 * IOSXE
-    * Add ShowBfdNeighborsDetails
+    * Add ShowBfdNeighborsDetails for:
         show bfd neighbors client <client> details
         show bfd neighbors details
 
@@ -173,11 +227,25 @@
     * Add ShowServiceGroupTrafficStats for:
         show service-group traffic-stats
         show service-group traffic-stats <group>
-
+        
+* IOS
+    * Add ShowServiceGroupState for:
+        show service-group state
+    * Add ShowServiceGroupStats for:
+        show service-group stats
 --------------------------------------------------------------------------------
                                    CONFIG
 --------------------------------------------------------------------------------
 * IOSXE
+    * Add ShowArchiveConfigDifferences for:
+        show archive config differences
+        show archive config differences {fileA} {fileB}
+        show archive config differences {fielA}
+    * Add ShowArchiveConfigIncrementalDiffs for:
+        show archive config incremental-diffs {fileA}
+    * Add ShowConfigurationLock for:
+        show configuration lock
+* IOS
     * Add ShowArchiveConfigDifferences for:
         show archive config differences
         show archive config differences {fileA} {fileB}
@@ -265,3 +333,8 @@
     * Add ShowRunRouterIsis for:
         show run router isis
 
+--------------------------------------------------------------------------------
+                                   ROUTING
+--------------------------------------------------------------------------------
+* IOSXE
+    * Update ShowIpRoute for different output
