@@ -15,29 +15,32 @@ from genie.libs.parser.utils.common import Common
 
 """show isis neighbors"""
 
-class ShowIsisNeighborSchema(MetaParser):
-    """Schema for show isis neighbor"""
+class ShowIsisNeighborsSchema(MetaParser):
+    """Schema for show isis neighbors"""
     schema = {
         'isis': {
             Any(): {
                 'neighbors': {
                     Any(): {
-                        'circuit_id': str,
-                        'holdtime': str,
-                        'interface': str,
-                        'ip_address': str,
-                        'state': str,
-                        'type': str,
-                        },
-                     }
+                        'type': {
+                            Any(): {
+                                'circuit_id': str,
+                                'holdtime': str,
+                                'interface': str,
+                                'ip_address': str,
+                                'state': str,
+                            }
+                        }
+                    }
                 }
             }
         }
+    }
 
-class ShowIsisNeighbor(ShowIsisNeighborSchema):
-    """Parser for show isis neighbor"""
+class ShowIsisNeighbors(ShowIsisNeighborsSchema):
+    """Parser for show isis neighbors"""
 
-    cli_command = 'show isis neighbor'
+    cli_command = 'show isis neighbors'
 
     def cli(self, output=None):
         if output is None:
@@ -64,15 +67,13 @@ class ShowIsisNeighbor(ShowIsisNeighborSchema):
             m = p2.match(line)
             if m:
                 system_id = m.groupdict()['system_id']
-                ret_dict.setdefault('isis', {}).setdefault(isis_name, {}).setdefault('neighbors', {}).setdefault(system_id, {})
-                ret_dict['isis'][isis_name]['neighbors'][system_id]['type'] = m.groupdict()['type']
-                ret_dict['isis'][isis_name]['neighbors'][system_id]['interface'] = Common.convert_intf_name(m.groupdict()['interface'])
-                ret_dict['isis'][isis_name]['neighbors'][system_id]['ip_address'] = m.groupdict()[
-                    'ip_address']
-                ret_dict['isis'][isis_name]['neighbors'][system_id]['state'] = m.groupdict()['state']
-                ret_dict['isis'][isis_name]['neighbors'][system_id]['holdtime'] = m.groupdict()['holdtime']
-                ret_dict['isis'][isis_name]['neighbors'][system_id]['circuit_id'] = m.groupdict()[
-                    'circuit_id']
+                isis_type = m.groupdict()['type']
+                ret_dict.setdefault('isis', {}).setdefault(isis_name, {}).setdefault('neighbors', {}).setdefault(system_id, {}).setdefault('type', {}).setdefault(isis_type, {})
+                ret_dict['isis'][isis_name]['neighbors'][system_id]['type'][isis_type]['interface'] = Common.convert_intf_name(m.groupdict()['interface'])
+                ret_dict['isis'][isis_name]['neighbors'][system_id]['type'][isis_type]['ip_address'] = m.groupdict()['ip_address']
+                ret_dict['isis'][isis_name]['neighbors'][system_id]['type'][isis_type]['state'] = m.groupdict()['state']
+                ret_dict['isis'][isis_name]['neighbors'][system_id]['type'][isis_type]['holdtime'] = m.groupdict()['holdtime']
+                ret_dict['isis'][isis_name]['neighbors'][system_id]['type'][isis_type]['circuit_id'] = m.groupdict()['circuit_id']
                 continue
 
         return ret_dict
