@@ -12,7 +12,6 @@ class test_show_cdp_neighbors(unittest.TestCase):
 
     device = Device(name='aDevice')    
 
-
     expected_parsed_output_1 = {
         'cdp': {
             'index': {
@@ -55,9 +54,45 @@ class test_show_cdp_neighbors(unittest.TestCase):
             }
         }
 
-    expected_parsed_output_2 = {}
+    expected_parsed_output_2 = {
+        'cdp': {
+            'index': {
+                1: {
+                    'capability': 'R B',
+                    'device_id': 'R5.cisco.com',
+                    'hold_time': 125,
+                    'local_interface': 'Gig 0/0',
+                    'platform': '',
+                    'port_id': 'Gig 0/0'},
+                2: {
+                    'capability': 'R B',
+                    'device_id': 'R8.cisco.com',
+                    'hold_time': 148,
+                    'local_interface': 'Gig 0/0',
+                    'platform': '',
+                    'port_id': 'Gig 0/0'},
+                3: {
+                    'capability': 'R B',
+                    'device_id': 'R9.cisco.com',
+                    'hold_time': 156,
+                    'local_interface': 'Gig 0/0',
+                    'platform': '',
+                    'port_id': 'Gig 0/0'},
+                4: {
+                    'capability': 'R S I',
+                    'device_id': 'device6',
+                    'hold_time': 157,
+                    'local_interface': 'Gig 0',
+                    'platform': 'C887VA-W-',
+                    'port_id': 'WGi 0'}
+                }
+            }
+        }
 
-    expected_parsed_output_3 = {}
+
+    expected_parsed_empty_output = {
+        'cdp': {}
+    }
 
     empty_device_output = {'execute.return_value': '''
         Device# show cdp neighbors
@@ -129,103 +164,107 @@ class test_show_cdp_neighbors(unittest.TestCase):
         self.device = Mock(**self.device_output_2)
         obj = ShowCdpNeighbors(device=self.device)
         parsed_output = obj.parse()
-        import pdb; pdb.set_trace()
         self.assertEqual(parsed_output, self.expected_parsed_output_2)
 
     def test_show_cdp_neighbors_empty_output(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_device_output)
         obj = ShowCdpNeighbors(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_empty_output)
 
 
 class test_show_cdp_neighbors_detail(unittest.TestCase):
     device = Device(name='aDevice')
 
     expected_parsed_output_1 = {
-        'entries': 3,
+        'total_entries_displayed': 3,
         'index': {
             1: {
                 'advertisement_ver': 2,
                 'capabilities': 'Router Switch CVTA phone port',
                 'device_id': 'R6(9P57K4EJ8CA)',
                 'duplex_mode': 'full',
-                'entry_addresses': {},
+                'entry_addresses': {'172.16.1.203': {}},
                 'hold_time': 133,
                 'local_interface': 'GigabitEthernet0/0',
                 'management_addresses': {'172.16.1.203': {}},
                 'native_vlan': '',
                 'platform': 'N9K-9000v',
                 'port_id': 'mgmt0',
+                'software_version': 'Cisco Nexus Operating System (NX-OS) Software, Version 9.2(1)',
                 'vtp_mng_domain': ''},
             2: {
                 'advertisement_ver': 2,
                 'capabilities': 'Router Switch CVTA phone port',
                 'device_id': 'R7(9QBDKB58F76)',
                 'duplex_mode': 'full',
-                'entry_addresses': {},
+                'entry_addresses': {'172.16.1.204': {}},
                 'hold_time': 126,
                 'local_interface': 'GigabitEthernet0/0',
                 'management_addresses': {'172.16.1.204': {}},
                 'native_vlan': '',
                 'platform': 'N9K-9000v',
                 'port_id': 'mgmt0',
+                'software_version': 'Cisco Nexus Operating System (NX-OS) Software, Version 9.2(1)',
                 'vtp_mng_domain': ''},
             3: {
                 'advertisement_ver': 2,
                 'capabilities': 'Router Source-Route-Bridge',
                 'device_id': 'R5.cisco.com',
                 'duplex_mode': '',
-                'entry_addresses': {},
+                'entry_addresses': {'172.16.1.202': {}},
                 'hold_time': 177,
                 'local_interface': 'GigabitEthernet0/0',
                 'management_addresses': {'172.16.1.202': {}},
                 'native_vlan': '',
                 'platform': 'Cisco ',
                 'port_id': 'GigabitEthernet0',
+                'software_version': 'Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)',
                 'vtp_mng_domain': ''},
             
             },
         }
 
     expected_parsed_output_2 = {
-        'entries': 2,
+        'total_entries_displayed': 2,
             'index': {
                 1: {
                     'advertisement_ver': 2,
                     'capabilities': 'Router Source-Route-Bridge',
                     'device_id': 'R8.cisco.com',
                     'duplex_mode': '',
-                    'entry_addresses': {},
+                    'entry_addresses': {'172.16.1.205': {}},
                     'hold_time': 143,
                     'local_interface': 'GigabitEthernet0/0',
                     'management_addresses': {'172.16.1.205': {}},
                     'native_vlan': '',
                     'platform': 'Cisco ',
                     'port_id': 'GigabitEthernet0',
+                    'software_version': 'Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)',
                     'vtp_mng_domain': ''},
                 2: {
                     'advertisement_ver': 2,
                     'capabilities': 'Router Source-Route-Bridge',
                     'device_id': 'R9.cisco.com',
                     'duplex_mode': '',
-                    'entry_addresses': {},
+                    'entry_addresses': {'172.16.1.206': {}},
                     'hold_time': 151,
                     'local_interface': 'GigabitEthernet0/0',
                     'management_addresses': {'172.16.1.206': {}},
                     'native_vlan': '',
                     'platform': 'Cisco ',
                     'port_id': 'GigabitEthernet0',
+                    'software_version': 'Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)',
                     'vtp_mng_domain': ''},
                 },
         }
 
-    expected_parsed_output_3_empty = {'entries': 0}
+    expected_parsed_output_3_empty = {'total_entries_displayed': 0}
 
 
     expected_parsed_output_4_ipv6 = {
-        'entries': 1,  
+        'total_entries_displayed': 1,  
             'index': {
                 1: {
                     'advertisement_ver': 2,
@@ -242,11 +281,11 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
                     'native_vlan': '42',
                     'platform': 'cisco 3640',
                     'port_id': 'Ethernet0',
-                    'vtp_mng_domain': ''},
+                    'software_version': 'Cisco Internetwork Operating System Software IOS (tm) 3600 Software (C3640-A2IS-M), Version 12.2(25)SEB4, RELE)',
+                    'vtp_mng_domain': 'Accounting Group'},
                 }
             }
-            
-
+          
 
     device_output_1 = {'execute.return_value': '''
         Device ID: R6(9P57K4EJ8CA)
@@ -299,8 +338,8 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
           IP address: 172.16.1.202
 
 
-        Total cdp entries displayed : 3''' 
-    }
+        Total cdp entries displayed : 3
+    '''}
 
     device_output_2 = {'execute.return_value': '''
         Device ID: R8.cisco.com
@@ -354,8 +393,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         Interface: Ethernet0/1,  Port ID (outgoing port): Ethernet0/1
         Holdtime : 160 sec
         Version :
-            Cisco Internetwork Operating System Software
-            IOS (tm) 3600 Software (C3640-A2IS-M), Version 12.2(25)SEB4, RELE)
+        Cisco Internetwork Operating System Software IOS (tm) 3600 Software (C3640-A2IS-M), Version 12.2(25)SEB4, RELE)
         advertisement version: 2
         Duplex Mode: half
         Native VLAN: 42
@@ -363,34 +401,33 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         
     '''}
 
-    # def test_show_cdp_neighbors_detail_full_1(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.device_output_1)
-    #     obj = ShowCdpNeighborsDetail(device=self.device)
-    #     parsed_output = obj.parse()
-    #     self.assertEqual(parsed_output, self.expected_parsed_output_1)
+    def test_show_cdp_neighbors_detail_full_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_1)
+        obj = ShowCdpNeighborsDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_1)
 
-    # def test_show_cdp_neighbors_detail_full_2(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.device_output_2)
-    #     obj = ShowCdpNeighborsDetail(device=self.device)
-    #     parsed_output = obj.parse()
-    #     self.assertEqual(parsed_output, self.expected_parsed_output_2)
+    def test_show_cdp_neighbors_detail_full_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_2)
+        obj = ShowCdpNeighborsDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_2)
 
+    def test_show_cdp_neighbors_detail_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_3_empty)
+        obj = ShowCdpNeighborsDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_3_empty)
 
-    # def test_show_cdp_neighbors_detail_empty(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.device_output_3_empty)
-    #     obj = ShowCdpNeighborsDetail(device=self.device)
-    #     parsed_output = obj.parse()
-    #     self.assertEqual(parsed_output, self.expected_parsed_output_3_empty)
-
-    # def test_show_cdp_neighbors_detail_ipv6(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.device_output_4_ipv6)
-    #     obj = ShowCdpNeighborsDetail(device=self.device)         
-    #     parsed_output = obj.parse()
-    #     self.assertEqual(parsed_output, self.expected_parsed_output_4_ipv6)
+    def test_show_cdp_neighbors_detail_ipv6(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_4_ipv6)
+        obj = ShowCdpNeighborsDetail(device=self.device)         
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_4_ipv6)
 
 
 if __name__ == '__main__':

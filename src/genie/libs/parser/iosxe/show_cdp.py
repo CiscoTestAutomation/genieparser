@@ -29,7 +29,7 @@ class ShowCdpNeighborsSchema(MetaParser):
                      'local_interface': str,
                      'hold_time': int,
                      Optional('capability'): str,
-                     'platform': str,
+                     Optional('platform'): str,
                      'port_id': str, }, }, },
     }
 
@@ -40,7 +40,7 @@ class ShowCdpNeighborsDetailSchema(MetaParser):
     '''
 
     schema = {
-        'entries': int,
+        'total_entries_displayed': int,
         Optional('index'):
             {Any():
                 {'device_id': str,
@@ -49,6 +49,7 @@ class ShowCdpNeighborsDetailSchema(MetaParser):
                  'local_interface': str,
                  'port_id': str,
                  'hold_time': int,
+                 'software_version': str, 
                  'entry_addresses':
                     {Any():
                         {Optional('type'): str, }, },
@@ -77,25 +78,24 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
         else:
             out = output
 
-        parsed_dict = {}
+        parsed_dict = {'cdp': {}}
 
-        p1 = re.compile('^(?P<device_id>(\S+)) +'
-                        '(?P<local_interface>([a-zA-Z0-9\s]+)) +'
-                        '(?P<hold_time>(\d+))'
-                        '(?: +(?P<capability>([A-Z\s]+)))? +'
-                        '(?P<platform>([A-Z0-9\-]+)) +'
-                        '(?P<port_id>([a-zA-Z0-9\/\s]+))$')
+        # R5.cisco.com Gig 0/0 125 R B Gig 0/0 
+        p1 = re.compile(r'^(?P<device_id>\S+) +'
+                         '(?P<local_interface>[a-zA-Z]+[\s]+[\d\/\.]+) +'
+                         '(?P<hold_time>\d+) +(?P<capability>[A-Z\s]+)'
+                         '(?: +(?P<platform>[\w\-]+) )? +'
+                         '(?P<port_id>[a-zA-Z0-9\/\s]+)$')                     
 
-        p2 = re.compile('^(?P<device_id>(\S+)) +'
-                        '(?P<local_interface>([a-zA-Z0-9\s\/]+)) +'
-                        '(?P<hold_time>(\d+))'
-                        '(?: +(?P<capability>([A-Z\s]+)))? +'
-                        '(?P<platform>([a-zA-Z0-9\-]+)) +'
-                        '(?P<port_id>([a-zA-Z0-9\/\s]+))$')
+        # device6 Gig 0 157 R S I C887VA-W- WGi 0 
+        p2 = re.compile(r'^(?P<device_id>\S+) +'
+                         '(?P<local_interface>[a-zA-Z]+[\s]+[\d\/\.]+) +'
+                         '(?P<hold_time>\d+) +(?P<capability>[A-Z\s]+) +'
+                         '(?P<platform>\S+) (?P<port_id>[a-zA-Z0-9\/\s]+)$') 
 
-        device_id_index = 0
-        devices_info_dict = parsed_dict.setdefault('cdp', {}).\
-                                        setdefault('index', {})
+        device_id_index = 0        
+
+        devices_dict_info = {}
 
         for line in out.splitlines():
             line = line.strip()
@@ -109,7 +109,7 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
 
                 device_id_index += 1
 
-                device_dict = devices_info_dict.setdefault(device_id_index, {})                    
+                device_dict = devices_dict_info.setdefault(device_id_index, {})                    
 
                 group = result.groupdict()
 
@@ -117,8 +117,16 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
                 device_dict['local_interface'] = group['local_interface'].strip()
                 device_dict['hold_time'] = int(group['hold_time'])
                 device_dict['capability'] = group['capability'].strip()
-                device_dict['platform'] = group['platform'].strip()
-                device_dict['port_id'] = group['port_id'].strip()               
+                if group['platform']:
+                    device_dict['platform'] = group['platform'].strip()
+                elif not group['platform']:
+                    device_dict['platform'] = ''
+
+                device_dict['port_id'] = group['port_id'].strip()
+        if device_id_index:
+             parsed_dict.setdefault('cdp', {}).\
+                            setdefault('index', devices_dict_info)
+
 
         return parsed_dict
 
@@ -155,8 +163,8 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
                                     '(?P<native_vlan>\d+)')
 
         # VTP Management Domain: ‘Accounting Group’
-        mng_domain_re = re.compile(r'VTP\s*Management\s*Domain\s*:\s*'
-                                    '\‘(?P<vtp_mng_domain>([a-zA-Z\s]+))\’')
+        vtp_mng_domain_re = re.compile(r'VTP\s*Management\s*Domain\s*:\s*'
+                                    '\W*(?P<vtp_mng_domain>([a-zA-Z\s]+))\W*')
 
         # Holdtime : 126 sec
         hold_time_re = re.compile(r'Holdtime\s*:\s*\s*(?P<hold_time>\d+)')
@@ -165,10 +173,17 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
         advertver_re = re.compile(r'advertisement\s*version:\s*'
                                  '(?P<advertisement_ver>\d+)')
 
+        # Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)
+        software_version_re = re.compile(r'(?P<software_version>[\s\S]+)')
+
+
         # Duplex: full
         # Duplex Mode: half
         duplex_re = re.compile(r'Duplex\s*(Mode)*:\s*(?P<duplex_mode>\w+)')
 
+        # Regexes for Flags:
+        # Version:
+        software_version_flag_re = re.compile(r'Version\s*:\s*')
         # Management address(es):
         mngaddress_re = re.compile(r'Management\s*address\s*\([\w]+\)\s*\:\s*')
         # Entry address(es):
@@ -181,10 +196,12 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
         # IP address: 172.16.1.204
         ipaddress_re = re.compile(r'\S*IP\s*address:\s*(?P<id_adress>\S*)')
 
+        # 0 or 1 flags
         entry_address_flag = 0
         management_address_flag = 0
+        software_version_flag = 0
 
-        parsed_dict = {'entries': 0}
+        parsed_dict = {'total_entries_displayed': 0}
         index_device = 0
         devices_dict = {}
 
@@ -292,6 +309,18 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
                     int(result.group('advertisement_ver'))
                 continue
 
+            if software_version_flag_re.match(line):
+                software_version_flag = 1
+                continue
+
+            result = software_version_re.match(line)
+
+            if result and software_version_flag:
+                devices_dict[index_device]['software_version'] = result.group('software_version')
+                software_version_flag = 0
+
+                continue
+
             result = native_vlan_re.match(line)
 
             if result:
@@ -299,7 +328,7 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
                     result.group('native_vlan')
                 continue
 
-            result = mng_domain_re.match(line)
+            result = vtp_mng_domain_re.match(line)
 
             if result:
                 devices_dict[index_device]['vtp_mng_domain'] = \
@@ -313,6 +342,8 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
                     result.group('duplex_mode')
                 continue
 
-        parsed_dict.setdefault('index', devices_dict)
-        parsed_dict['entries'] = index_device
+        if index_device:
+            parsed_dict.setdefault('index', devices_dict)
+
+        parsed_dict['total_entries_displayed'] = index_device
         return parsed_dict
