@@ -885,7 +885,7 @@ class ShowL2vpnServiceAll(ShowL2vpnServiceAllSchema):
         #   pw100214           core_pw     1:2051(MPLS)                    0     UP  UP  
         #   pw100001                       VPLS-2051(VFI)                  0     UP  UP   
         #   Eth2/1:20          access_conn EVC 55                  0     UP  UP
-        #   Pw2                core        MPLS 6.6.6.6:200        1     SB  IA
+        #   Pw2                core        MPLS 10.144.6.6:200        1     SB  IA
         p2 = re.compile(r'^(?P<pw_intf>\S+)( +(?P<group>\S+))? +(?P<encapsulation>\S+(\s{1})?\S+(\s{1}\S+)?)'
                          ' +(?P<priority>\d+) +(?P<intf_state>\w+) +(?P<state_in_l2vpn_service>\w+)$')
 

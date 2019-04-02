@@ -123,14 +123,14 @@ class test_show_l2vpn_service_all(unittest.TestCase):
             'state': 'UP',
             'interface': {
                 'Pw4': {
-                    'encapsulation': 'MPLS 8.8.8.8:300',
+                    'encapsulation': 'MPLS 10.1.8.8:300',
                     'state': 'UP',
                     'priority': 0,
                     'group': 'right',
                     'state_in_l2vpn_service': 'UP',
                     },
                 'Pw3': {
-                    'encapsulation': 'MPLS 7.7.7.7:300',
+                    'encapsulation': 'MPLS 10.196.7.7:300',
                     'state': 'UP',
                     'priority': 0,
                     'group': 'left',
@@ -149,14 +149,14 @@ class test_show_l2vpn_service_all(unittest.TestCase):
                     'state_in_l2vpn_service': 'IA',
                     },
                 'Pw2': {
-                    'encapsulation': 'MPLS 6.6.6.6:200',
+                    'encapsulation': 'MPLS 10.144.6.6:200',
                     'state': 'SB',
                     'priority': 1,
                     'group': 'core',
                     'state_in_l2vpn_service': 'IA',
                     },
                 'Pw1': {
-                    'encapsulation': 'MPLS 5.5.5.5:100',
+                    'encapsulation': 'MPLS 10.100.5.5:100',
                     'state': 'UP',
                     'priority': 0,
                     'group': 'core',
@@ -199,15 +199,15 @@ class test_show_l2vpn_service_all(unittest.TestCase):
       ---------          -----       -------------           ----  --  -----
     XC name: serviceWire1, State: UP
       Eth1/1:10          access      EVC 45                  0     UP  UP
-      Pw1                core        MPLS 5.5.5.5:100        0     UP  UP
-      Pw2                core        MPLS 6.6.6.6:200        1     SB  IA
+      Pw1                core        MPLS 10.100.5.5:100        0     UP  UP
+      Pw2                core        MPLS 10.144.6.6:200        1     SB  IA
     XC name: serviceConn2, State:UP
       Eth2/1:20          access_conn EVC 55                  0     UP  UP
       Eth3/1:20          core_conn   EVC 55                  0     DN  IA
       Eth4/1:20          core_conn   EVC 55                  1     UP  UP
     XC name: serviceStit3, State: UP
-      Pw3                left        MPLS 7.7.7.7:300        0     UP  UP
-      Pw4                right       MPLS 8.8.8.8:300        0     UP  UP
+      Pw3                left        MPLS 10.196.7.7:300        0     UP  UP
+      Pw4                right       MPLS 10.1.8.8:300        0     UP  UP
     '''
     }
 
@@ -217,7 +217,7 @@ class test_show_l2vpn_service_all(unittest.TestCase):
         'Gi1/1/1-1001': {
             'interface': {
                 'pw100001': {
-                    'encapsulation': '2.1.1.2:1234000(MPLS)',
+                    'encapsulation': '10.9.1.2:1234000(MPLS)',
                     'priority': 0,
                     'state_in_l2vpn_service': 'UP',
                     'state': 'UP',
@@ -247,7 +247,7 @@ class test_show_l2vpn_service_all(unittest.TestCase):
       ---------          -----       -------------                   ----  --  -----
     VPWS name: Gi1/1/1-1001, State: UP
       Gi1/1/1            left        Gi1/1/1:1001(Gi VLAN)          0     UP  UP
-      pw100001           right       2.1.1.2:1234000(MPLS)           0     UP  UP
+      pw100001           right       10.9.1.2:1234000(MPLS)           0     UP  UP
     '''
     }
 
@@ -574,7 +574,7 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         Router#show ethernet service instance stats
         Load for five secs: 4%/0%; one minute: 9%; five minutes: 8%
-        Time source is NTP, 13:26:05.117 JST Tue Nov 12 2016
+        Time source is NTP, 13:26:05.117 EST Tue Nov 12 2016
 
         System maximum number of service instances: 32768
         Service Instance 2051, Interface GigabitEthernet0/0/5
@@ -780,7 +780,7 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
     golden_output_shrinked = {'execute.return_value': '''\
         1006#show ethernet service instance stats
         Load for five secs: 1%/0%; one minute: 0%; five minutes: 0%
-        Time source is NTP, 15:44:40.696 JST Fri Nov 11 2016
+        Time source is NTP, 15:44:40.696 EST Fri Nov 11 2016
 
         System maximum number of service instances: 32768
     '''
@@ -982,7 +982,7 @@ class test_show_ethernet_service_instance_summary(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         Router#show ethernet service instance summary
         Load for five secs: 2%/0%; one minute: 5%; five minutes: 4%
-        Time source is NTP, 16:31:09.005 JST Tue Nov 8 2016
+        Time source is NTP, 16:31:09.005 EST Tue Nov 8 2016
 
         System summary
                     Total       Up  AdminDo     Down  ErrorDi  Unknown  Deleted  BdAdmDo  
