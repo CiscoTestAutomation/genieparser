@@ -29,7 +29,7 @@ class ShowClnsInterfaceSchema(MetaParser):
                 Optional('clns_protocol_processing'): bool,
                 Optional('checksum_enabled'): bool,
                 Optional('mtu'): int,
-                Optional('enncapsulation'): str,
+                Optional('encapsulation'): str,
                 Optional('erpdus_enabled'): bool,
                 Optional('min_interval_msec'): int,
                 Optional('clns_fast_switching'): bool,
@@ -134,7 +134,7 @@ class ShowClnsInterface(ShowClnsInterfaceSchema):
 
         for line in out.splitlines():
             line = line.strip()
-            #import pdb;pdb.set_trace()
+
             # GigabitEthernet1 is up, line protocol is up
             m = p1.match(line)
             if m:
@@ -172,7 +172,7 @@ class ShowClnsInterface(ShowClnsInterfaceSchema):
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                fast_sse =  group['fast_sse']
+                fast_sse =  group['fast_sse'].lower()
                 clns_dict.update({'clns_{}_switching'.format(fast_sse): True if 'enabled' in group['switching_status'] else False})
                 continue
 
@@ -180,14 +180,14 @@ class ShowClnsInterface(ShowClnsInterfaceSchema):
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                clns_dict.update({'dec_compatibilty_mod': group['dec_compatibilty_mod']})
+                clns_dict.update({'dec_compatibility_mode': group['dec_compatibilty_mod']})
                 continue
 
             #   Next ESH/ISH in 20 seconds
             m = p7.match(line)
             if m:
                 group = m.groupdict()
-                clns_dict.update({'next_esh_ish': int(group['next_esh_ish'])})
+                clns_dict.update({'next_esh_ish_in': int(group['next_esh_ish'])})
                 continue
 
             # Routing Protocol: IS-IS (test)
@@ -285,7 +285,29 @@ class ShowClnsProtocolSchema(MetaParser):
     """Schema for show clns protocol"""
 
     schema = {
+        'IS-IS': {
+            'process_tag': str,
+            'system_id': str,
+            'process_handle': str,
+            'is_type': str,
+            'manual_area_address': list,
+            'routing_for_area_address': list,
+            'interfaces': {
+                Any(): {
+                    'topology': list,
+                },
+            },
+            'redistribute': str,
+            'distance_for_l2_clns_routes': int,
+            'rrr_level': str,
+            'metrics': {
+              'generate_narrow': str,
+              'accept_narrow': str,
+              'generate_wide': str,
+              'accept_wide': str,
+            }
 
+        }
     }
 
 class ShowClnsProtocol(ShowClnsProtocolSchema):
@@ -301,10 +323,14 @@ class ShowClnsProtocol(ShowClnsProtocolSchema):
 
         # initial return dictionary
         result_dict = {}
+        manaual_area_address_flag = False
+        routing_area_address_flag = False
+        redistribute = False
+
         # IS-IS Router: VRF1 (0x10001)
         p1 = re.compile(r'^\s*IS-IS Router: +(?P<tag_process>\w+) +\((?P<tag>\w+)\)$')
         # System Id: 2222.2222.2222.00  IS-Type: level-1-2
-        p2 = re.compile(r'^\s*System Id: +(?P<sytem_id>[\w\.\+) +IS\-Type: +(?P<is_type>[\w\-]+)$')
+        p2 = re.compile(r'^\s*System Id: +(?P<system_id>[\w\.]+) +IS\-Type: +(?P<is_type>[\w\-]+)$')
         # Manual area address(es):
         p3 = re.compile(r'^\s*Manual +area +address\(es\):$')
         # 49.0001
@@ -315,7 +341,7 @@ class ShowClnsProtocol(ShowClnsProtocolSchema):
         p6 = re.compile(r'^\s*Interfaces +supported +by +IS\-IS:$')
         # GigabitEthernet4 - IP - IPv6
         # Loopback1 - IP - IPv6
-        p7 = re.compile(r'^\s*(?P<interface>^[A-Z][\S]+) \- +(?P<topology>[\w\-\s]+)$')
+        p7 = re.compile(r'^\s*(?P<interface>[A-Za-z]+[\d/.]+) \- +(?P<topology>[\w\-\ ]+)$')
         # Redistribute:
         p8 = re.compile(r'^\s*Redistribute:$')
         #   static (on by default)
@@ -327,7 +353,7 @@ class ShowClnsProtocol(ShowClnsProtocolSchema):
         # Generate narrow metrics: none
         p12 = re.compile(r'^\s*Generate +narrow +metrics: +(?P<generate_narrow_metric>\S+)$')
         # Accept narrow metrics:   none
-        p15 = re.compile(r'^\s*Accept +narrow +metrics: +(?P<accept_narrow_metric>\S+)$')
+        p13 = re.compile(r'^\s*Accept +narrow +metrics: +(?P<accept_narrow_metric>\S+)$')
         # Generate wide metrics:   level-1-2
         p14 = re.compile(r'^\s*Generate +wide +metrics: +(?P<generate_wide_metric>\S+)$')
         # Accept wide metrics:     level-1-2
@@ -336,20 +362,154 @@ class ShowClnsProtocol(ShowClnsProtocolSchema):
         for line in out.splitlines():
             line = line.rstrip()
 
-
+            # IS-IS Router: VRF1 (0x10001)
             m = p1.match(line)
             if m:
                 group = m.groupdict()
+                clns_dict = result_dict.setdefault('IS-IS', {})
+                clns_dict.update({'process_tag': group['tag_process']})
+                clns_dict.update({'process_handle': group['tag']})
                 continue
 
-            return result_dict
+            # System Id: 2222.2222.2222.00  IS-Type: level-1-2
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                clns_dict.update({'is_type': group['is_type']})
+                clns_dict.update({'system_id': group['system_id']})
+                continue
+
+            # Manual area address(es):
+            m = p3.match(line)
+            if m:
+                manaual_area_address_flag = True
+                routing_area_address_flag = False
+                manual_area_list = []
+                continue
+
+            # 49.0001
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                if manaual_area_address_flag:
+                    manual_area_list.append(group['area_address'])
+                    clns_dict.update({'manual_area_address': manual_area_list})
+
+                if routing_area_address_flag:
+                    routing_area_list.append(group['area_address'])
+                    clns_dict.update({'routing_for_area_address': routing_area_list})
+                continue
+
+            # Routing for area address(es):
+            m = p5.match(line)
+            if m:
+                routing_area_address_flag = True
+                manaual_area_address_flag = False
+                routing_area_list = []
+                continue
+
+            # Interfaces supported by IS-IS:
+            m = p6.match(line)
+            if m:
+                interface_dict = clns_dict.setdefault('interfaces', {})
+                continue
+
+            # GigabitEthernet4 - IP - IPv6
+            # Loopback1 - IP - IPv6
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                topology = group['topology'].lower().split('-')
+                interface_dict.setdefault(group['interface'],{}).\
+                    update({'topology': [x.strip() if x.strip() !='ip' else 'ipv4' for x in topology ]})
+                continue
+
+            # Redistribute:
+            m = p8.match(line)
+            if m:
+                redistribute = True
+                continue
+
+            #   static (on by default)
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                if redistribute:
+                    clns_dict.update({'redistribute': group['redistribute'].strip()})
+
+                redistribute = False
+                continue
+
+            # Distance for L2 CLNS routes: 110
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                clns_dict.update({'distance_for_l2_clns_routes': int(group['distance'])})
+                continue
+
+            # RRR level: none
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                clns_dict.update({'rrr_level': group['rrr_level']})
+                continue
+
+            # Generate narrow metrics: none
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                metric_dict = clns_dict.setdefault('metrics', {})
+                metric_dict.update({'generate_narrow': group['generate_narrow_metric']})
+                continue
+
+            # Accept narrow metrics:   none
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                metric_dict = clns_dict.setdefault('metrics', {})
+                metric_dict.update({'accept_narrow': group['accept_narrow_metric']})
+                continue
+
+            # Generate wide metrics:   level-1-2
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                metric_dict = clns_dict.setdefault('metrics', {})
+                metric_dict.update({'generate_wide': group['generate_wide_metric']})
+                continue
+
+            # Accept wide metrics:     level-1-2
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                metric_dict = clns_dict.setdefault('metrics', {})
+                metric_dict.update({'accept_wide': group['accept_wide_metric']})
+                continue
+
+        return result_dict
 
 
 class ShowClnsNeighborsDetailSchema(MetaParser):
     """Schema for show clns neighbors detail"""
 
     schema = {
-
+        'tag': {
+            Any(): {
+                'system_id': str,
+                'interface': str,
+                'state': str,
+                'type': str,
+                'snpa': str,
+                'holdtime': int,
+                'protocol': str,
+                'area_address': list,
+                'ip_address': list,
+                'ipv6_address': list,
+                'uptime': str,
+                'nsf': str,
+                'topology': list,
+            }
+        }
     }
 
 class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
@@ -370,18 +530,18 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
         p1 = re.compile(r'^Tag +(?P<tag>\S+):$')
         # System Id       Interface     SNPA                State  Holdtime  Type Protocol
         # R7              Gi4           5e00.c006.0007      Up     26        L2   M-ISIS
-        p2 = re.compile(r'^(?P<system_id>[\w\.] +(?P<interface>\S+) +(?P<snpa>[\w\.]+)'
+        p2 = re.compile(r'^(?P<system_id>[\w\.]+) +(?P<interface>\S+) +(?P<snpa>[\w\.]+)'
                         ' +(?P<state>\w+) +(?P<holdtime>\d+) +(?P<type>\w+) +(?P<protocol>[\w\-]+)$')
         #   Area Address(es): 49.0002
-        p3 = re.compile(r'^Area +Address(es): +(?P<area_address>\S+)$')
+        p3 = re.compile(r'^Area +Address\(es\): +(?P<area_address>\S+)$')
         #   IP Address(es):  20.2.7.7*
-        p4 = re.compile(r'^IP +Address(es): +(?P<ip_address>\S+)$')
+        p4 = re.compile(r'^IP +Address\(es\): +(?P<ip_address>\S+)$')
         #   IPv6 Address(es): FE80::5C00:C0FF:FE06:7
-        p5 = re.compile(r'^IPv6 +Address(es): +(?P<ipv6_address>\S+)$')
+        p5 = re.compile(r'^IPv6 +Address\(es\): +(?P<ipv6_address>\S+)$')
         #   Uptime: 00:23:58
         p6 = re.compile(r'^Uptime: +(?P<uptime>[\w\:]+)$')
         #   NSF capable
-        p7 = re.compile(r'^NSF +(?P<nfs>\w+)$')
+        p7 = re.compile(r'^NSF +(?P<nsf>\w+)$')
         #   Topology: IPv4, IPv6
         p8 = re.compile(r'^Topology: +(?P<topology>[\S\s]+)$')
         #   Interface name: GigabitEthernet4
@@ -393,16 +553,91 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
+                clns_dict = result_dict.setdefault('tag', {}).setdefault(group['tag'], {})
+                continue
+            # System Id       Interface     SNPA                State  Holdtime  Type Protocol
+            # R7              Gi4           5e00.c006.0007      Up     26        L2   M-ISIS
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                clns_dict.update({key.lower():value for key,value in group.items()})
+                clns_dict.update({'holdtime': int(group['holdtime'])})
+                clns_dict.update({'state': group['state'].lower()})
+                clns_dict.update({'interface': Common.convert_intf_name(group['interface'])})
                 continue
 
-            return result_dict
+            #   Area Address(es): 49.0002
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                clns_dict.update({'area_address': group['area_address'].split()})
+                continue
+
+            #   IP Address(es):  20.2.7.7*
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                clns_dict.update({'ip_address': group['ip_address'].split()})
+                continue
+
+            #   IPv6 Address(es): FE80::5C00:C0FF:FE06:7
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                clns_dict.update({'ipv6_address': group['ipv6_address'].split()})
+                continue
+
+            #   Uptime: 00:23:58
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                clns_dict.update({'uptime': group['uptime']})
+                continue
+
+            #   NSF capable
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                clns_dict.update({'nsf': group['nsf']})
+                continue
+
+            #   Topology: IPv4, IPv6
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                clns_dict.update({'topology': group['topology'].lower().replace(" ","").split(',')})
+                continue
+
+            #   Interface name: GigabitEthernet4
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                clns_dict.update({'interface': Common.convert_intf_name(group['interface'])})
+                continue
+        return result_dict
 
 
 class ShowClnsIsNeighborsDetailSchema(MetaParser):
     """Schema for show clns is-neighbors detail"""
 
     schema = {
-
+        'tag': {
+            Any(): {
+                'system_id': str,
+                'interface': str,
+                'state': str,
+                'type': str,
+                'format': str,
+                'priority': int,
+                'circuit_id': str,
+                'area_address': list,
+                'ip_address': list,
+                'ipv6_address': list,
+                'uptime': str,
+                'nsf': str,
+                'topology': list,
+            }
+        }
     }
 
 class ShowClnsIsNeighborsDetail(ShowClnsIsNeighborsDetailSchema):
@@ -420,21 +655,21 @@ class ShowClnsIsNeighborsDetail(ShowClnsIsNeighborsDetailSchema):
         result_dict = {}
 
         # Tag VRF1:
-        p1 = re.compile(r'^Tag +(?P<process_tag>\S+):$')
+        p1 = re.compile(r'^Tag +(?P<tag>\S+):$')
         # System Id       Interface     State  Type Priority  Circuit Id         Format
         # R7              Gi4           Up     L2   64        R2.01              Phase V
-        p2 = re.compile(r'^(?P<system_id>[\w\.] +(?P<interface>\S+) +(?P<state>\w+)'
-                        ' +(?P<type>\w+) +(?P<priority>\d+) +(?P<circut_id>[\w\.]+) +(?P<format>[\S\s]+)$')
+        p2 = re.compile(r'^(?P<system_id>[\w\.]+) +(?P<interface>\S+) +(?P<state>\w+)'
+                        ' +(?P<type>\w+) +(?P<priority>\d+) +(?P<circuit_id>[\w\.]+) +(?P<format>[\S\s]+)$')
         #   Area Address(es): 49.0002
-        p3 = re.compile(r'^Area +Address(es): +(?P<area_address>\S+)$')
+        p3 = re.compile(r'^Area +Address\(es\): +(?P<area_address>\S+)$')
         #   IP Address(es):  20.2.7.7*
-        p4 = re.compile(r'^IP +Address(es): +(?P<ip_address>\S+)$')
+        p4 = re.compile(r'^IP +Address\(es\): +(?P<ip_address>\S+)$')
         #   IPv6 Address(es): FE80::5C00:C0FF:FE06:7
-        p5 = re.compile(r'^IPv6 +Address(es): +(?P<ipv6_address>\S+)$')
+        p5 = re.compile(r'^IPv6 +Address\(es\): +(?P<ipv6_address>\S+)$')
         #   Uptime: 00:24:24
         p6 = re.compile(r'^Uptime: +(?P<uptime>[\w\:]+)$')
         #   NSF capable
-        p7 = re.compile(r'^NSF +(?P<nfs>\w+)$')
+        p7 = re.compile(r'^NSF +(?P<nsf>\w+)$')
         #   Topology: IPv4, IPv6
         p8 = re.compile(r'^Topology: +(?P<topology>[\S\s]+)$')
         #   Interface name: GigabitEthernet4
@@ -446,17 +681,195 @@ class ShowClnsIsNeighborsDetail(ShowClnsIsNeighborsDetailSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
+                clns_dict = result_dict.setdefault('tag', {}).setdefault(group['tag'], {})
                 continue
 
-            return result_dict
+            # System Id       Interface     State  Type Priority  Circuit Id         Format
+            # R7              Gi4           Up     L2   64        R2.01              Phase V
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                clns_dict.update({key.lower(): value for key, value in group.items()})
+                clns_dict.update({'priority': int(group['priority'])})
+                clns_dict.update({'state': group['state'].lower()})
+                clns_dict.update({'interface': Common.convert_intf_name(group['interface'])})
+                continue
+
+            # Area Address(es): 49.0002
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                clns_dict.update({'area_address': group['area_address'].split()})
+                continue
+
+            # IP Address(es):  20.2.7.7*
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                clns_dict.update({'ip_address': group['ip_address'].split()})
+                continue
+
+            # IPv6 Address(es): FE80::5C00:C0FF:FE06:7
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                clns_dict.update({'ipv6_address': group['ipv6_address'].split()})
+                continue
+
+            # Uptime: 00:23:58
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                clns_dict.update({'uptime': group['uptime']})
+                continue
+
+            # NSF capable
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                clns_dict.update({'nsf': group['nsf']})
+                continue
+
+            # Topology: IPv4, IPv6
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                clns_dict.update({'topology': group['topology'].lower().replace(" ", "").split(',')})
+                continue
+
+            # Interface name: GigabitEthernet4
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                clns_dict.update({'interface': Common.convert_intf_name(group['interface'])})
+                continue
+        return result_dict
 
 
 class ShowClnsTrafficSchema(MetaParser):
     """Schema for show clns traffic"""
 
     schema = {
-
+        'clns': {
+            'last_clear': str,
+            'output': int,
+            'input': int,
+            'local': int,
+            'forward': int,
+            'dropped_protocol': int,
+            'discards': {
+                'hdr_syntax': int,
+                'checksum': int,
+                'lifetime': int,
+                'output_cngstn': int,
+                'no_route': int,
+                'discard_route': int,
+                'dst_unreachable': int,
+                'encaps_failed': int,
+                'nlp_unknown': int,
+                'not_an_is': int,
+            },
+            'options': {
+                'packets': int,
+                'total': int,
+                'bad': int,
+                'gqos': int,
+                'cngstn_exprncd': int,
+            },
+            'segments': {
+                'segmented': int,
+                'failed': int,
+            },
+            'broadcasts': {
+                'sent': int,
+                'rcvd': int,
+            },
+        },
+        'echos': {
+            Any(): {
+                'requests': int,
+                'replied': int,
+            },
+        },
+        'packet_counters': {
+            'level': {
+                'level-all': {
+                    Any(): {
+                        'rcvd': int,
+                        'sent': int,
+                    },
+                },
+            },
+        },
+        'tunneling': {
+            Any(): {
+                'rcvd': int,
+                'sent': int,
+                'rcvd_dropped': int,
+            },
+        },
+        'iso-igrp': {
+            Any(): {
+                'rcvd': int,
+                'sent': int,
+            },
+            'syntax_errors': int
+        },
+        'tag': {
+            'VRF1': {
+                'IS-IS': {
+                    'last_clear': str,
+                    'hello': {
+                        Any(): {
+                            'rcvd': int,
+                            'sent': int,
+                        }
+                    },
+                    'lsp_sourced': {
+                        Any(): {
+                            'new': int,
+                            'refresh': int,
+                        },
+                    },
+                    'lsp_flooded': {
+                        Any(): {
+                            'sent': int,
+                            'rcvd': int,
+                        },
+                    },
+                    'lsp_retransmissions': int,
+                    'csnp': {
+                        Any(): {
+                            'rcvd': int,
+                            'sent': int,
+                        },
+                    },
+                    'psnp': {
+                        Any(): {
+                            'rcvd': int,
+                            'sent': int,
+                        },
+                    },
+                    'dr_election': {
+                        'level-1': int,
+                        'level-2': int,
+                    },
+                    'spf_calculation': {
+                        'level-1': int,
+                        'level-2': int,
+                    },
+                    'partial_route_calculation': {
+                        'level-1': int,
+                        'level-2': int,
+                    },
+                    'lsp_checksum_errors_received': int,
+                    'update_process_queue_depth': str,
+                    'update_process_packets_dropped': int
+                }
+            }
+        }
     }
+
 
 class ShowClnsTraffic(ShowClnsTrafficSchema):
     """Parser for show clns traffic"""
@@ -475,7 +888,7 @@ class ShowClnsTraffic(ShowClnsTrafficSchema):
         # CLNS:  Time since last clear: never
         p1 = re.compile(r'^CLNS:  +Time +since +last +clear: (?P<last_clear>\w+)$')
         # CLNS & ESIS Output: 168, Input: 4021
-        p2 = re.compile(r'^CLNS \& +ESIS +Output: +(?P<clns_output>\d+) +(?P<clns_input>\d+)$')
+        p2 = re.compile(r'^CLNS \& +ESIS +Output: +(?P<clns_output>\d+), +Input: +(?P<clns_input>\d+)$')
         # Dropped Protocol not enabled on interface: 0
         p3 = re.compile(r'^Dropped Protocol not enabled on interface: +(?P<dropped_protocol>\d+)$')
         # CLNS Local: 0, Forward: 0
@@ -484,50 +897,421 @@ class ShowClnsTraffic(ShowClnsTrafficSchema):
         p5 = re.compile(r'CLNS +Discards:$')
         #   Hdr Syntax: 0, Checksum: 0, Lifetime: 0, Output cngstn: 0
         p6 = re.compile(r'^Hdr +Syntax: +(?P<hdr_syntax>\d+), +Checksum: +(?P<checksum>\d+),'
-                        ' +Lifetime: +(?P<lifetime>\d+), +Output +cngstn: +(?P<output_cngtn>\d+)$')
+                        ' +Lifetime: +(?P<lifetime>\d+), +Output +cngstn: +(?P<output_cngstn>\d+)$')
         #   No Route: 0, Discard Route: 0, Dst Unreachable 0, Encaps. Failed: 0
         p7 = re.compile(r'^No +Route: +(?P<no_route>\d+), +Discard +Route: +(?P<discard_route>\d+),'
-                        ' +Dst +Unreachable: +(?P<dst_unreachable>\d+), +Encaps. +Failed: +(?P<encaps_failed>\d+)$')
+                        ' +Dst +Unreachable +(?P<dst_unreachable>\d+), +Encaps. +Failed: +(?P<encaps_failed>\d+)$')
         #   NLP Unknown: 0, Not an IS: 0
         p8 = re.compile(r'^NLP +Unknown: +(?P<nlp_unknown>\d+), +Not +an +IS: +(?P<not_an_is>\d+)$')
         # CLNS Options: Packets 0, total 0 , bad 0, GQOS 0, cngstn exprncd 0
-        p9 = re.compile(r'^CLNS +Options: +Packets +(?P<packet>\d+), +total +(?P<total>\d+),'
-                        ' +bad +(?P<bad>\d+), +GQOS +(?P<gqos>\d+) +cngstn +exprncd +(?P<cngstn_exprncd>\d+)$')
+        p9 = re.compile(r'^CLNS +Options: +Packets +(?P<packets>\d+), +total +(?P<total>\d+) ,'
+                        ' +bad +(?P<bad>\d+), +GQOS +(?P<gqos>\d+), +cngstn +exprncd +(?P<cngstn_exprncd>\d+)$')
         # CLNS Segments:  Segmented: 0, Failed: 0
         p10 = re.compile(r'^CLNS +Segments:  +Segmented: +(?P<segmented>\d+), +Failed: +(?P<failed>\d+)$')
         # CLNS Broadcasts: sent: 0, rcvd: 0
         p11 = re.compile(r'^CLNS +Broadcasts: sent: +(?P<sent>\d+), +rcvd: +(?P<rcvd>\d+)$')
         # Echos: Rcvd 0 requests, 0 replies
-        p12 = re.compile(r'^Echos: +Rcvd +(?P<rcvd>\d+) +requests, +(?P<replied>\d+) +replies$')
+        p12 = re.compile(r'^Echos: +Rcvd +(?P<requests>\d+) +requests, +(?P<replied>\d+) +replies$')
         #       Sent 0 requests, 0 replies
-        p13 = re.compile(r'^Sent +(?P<sent>\d+) +requests, +(?P<replied>\d+) +replies$')
+        p13 = re.compile(r'^Sent +(?P<requests>\d+) +requests, +(?P<replied>\d+) +replies$')
         # ESIS(sent/rcvd): ESHs: 0/0, ISHs: 168/0, RDs: 0/0, QCF: 0/0
         p14 = re.compile(r'^ESIS\(sent\/rcvd\): +ESHs: +(?P<esh_sent>\d+)/(?P<esh_rcvd>\d+),'
-                         ' +(?P<ish_sent>\d+)/(?P<ish_rcvd>\d+),'
-                         ' +(?P<rd_sent>\d+)/(?P<rd_rcvd>\d+), +(?P<qcf_sent>\d+)/(?P<qcf_rcvd>\d+)$')
+                         ' +ISHs: +(?P<ish_sent>\d+)/(?P<ish_rcvd>\d+),'
+                         ' +RDs: +(?P<rd_sent>\d+)/(?P<rd_rcvd>\d+), +QCF: +(?P<qcf_sent>\d+)/(?P<qcf_rcvd>\d+)$')
         # Tunneling (sent/rcvd): IP: 0/0, IPv6: 0/0
         p15 = re.compile(r'^Tunneling +\(sent\/rcvd\): +IP: +(?P<ip_sent>\d+)/(?P<ip_rcvd>\d+),'
-                         ' +(?P<ish_sent>\d+)/(?P<ish_rcvd>\d+),'
-                         ' +(?P<rd_sent>\d+)/(?P<rd_rcvd>\d+), +(?P<qcf_sent>\d+)/(?P<qcf_rcvd>\d+)$')
+                         ' +IPv6: +(?P<ipv6_sent>\d+)/(?P<ipv6_rcvd>\d+)$')
         # Tunneling dropped (rcvd) IP/IPV6:  0
         p16 = re.compile(r'^Tunneling +dropped +\(rcvd\) +IP\/IPV6:  +(?P<tunneling_dropped>\d+)$')
         # ISO-IGRP: Querys (sent/rcvd): 0/0 Updates (sent/rcvd): 0/0
-        p17 = re.compile(r'^ISO-IGRP: +Querys +\(sent\/rcvd\): (?P<query_sent>\d+)/(?P<query_rcvd>\d+),'
-                         ' +Updates +(?P<update_sent>\d+)/(?P<update_rcvd>\d+)$')
+        p17 = re.compile(r'^ISO-IGRP: +Querys +\(sent\/rcvd\): (?P<query_sent>\d+)/(?P<query_rcvd>\d+)'
+                         ' +Updates +\(sent\/rcvd\): +(?P<update_sent>\d+)/(?P<update_rcvd>\d+)$')
         # ISO-IGRP: Router Hellos: (sent/rcvd): 0/0
         p18 = re.compile(r'^ISO-IGRP: +Router +Hellos: +\(sent\/rcvd\): +(?P<hello_sent>\d+)\/+(?P<hello_rcvd>\d+)$')
         # ISO-IGRP Syntax Errors: 0
-        p18 = re.compile(r'^ISO-IGRP: +Router +Hellos: +\(sent\/rcvd\): +(?P<hello_sent>\d+)\/+(?P<hello_rcvd>\d+)$')
-
+        p19 = re.compile(r'^ISO\-IGRP +Syntax +Errors: +(?P<syntax_errors>\d+)$')
+        # Tag VRF1:
+        p20 = re.compile(r'^Tag +(?P<tag>\S+):$')
+        #     IS-IS: Time since last clear: never
+        p21 = re.compile(r'^IS\-IS: +Time +since +last +clear: +(?P<last_clear>\S+)$')
+        #     IS-IS: Level-1 Hellos (sent/rcvd): 497/533
+        p22 = re.compile(r'^IS\-IS: +Level\-1 +Hellos \(sent\/rcvd\): +(?P<sent>\d+)\/(?P<rcvd>\d+)$')
+        #     IS-IS: Level-2 Hellos (sent/rcvd): 843/611
+        p23 = re.compile(r'^IS\-IS: +Level\-2 +Hellos \(sent\/rcvd\): +(?P<sent>\d+)\/(?P<rcvd>\d+)$')
+        #     IS-IS: PTP Hellos     (sent/rcvd): 0/0
+        p24 = re.compile(r'^IS\-IS: +PTP +Hellos *\(sent\/rcvd\): +(?P<sent>\d+)\/(?P<rcvd>\d+)$')
+        #     IS-IS: Level-1 LSPs sourced (new/refresh): 3/4
+        p25 = re.compile(r'^IS\-IS: +Level\-1 +LSPs +sourced \(new\/refresh\): +(?P<new>\d+)\/(?P<refresh>\d+)$')
+        #     IS-IS: Level-2 LSPs sourced (new/refresh): 4/5
+        p26 = re.compile(r'^IS\-IS: +Level\-2 +LSPs +sourced \(new\/refresh\): +(?P<new>\d+)\/(?P<refresh>\d+)$')
+        #     IS-IS: Level-1 LSPs flooded (sent/rcvd): 0/0
+        p27 = re.compile(r'^IS\-IS: +Level\-1 +LSPs +flooded \(sent\/rcvd\): +(?P<sent>\d+)\/(?P<rcvd>\d+)$')
+        #     IS-IS: Level-2 LSPs flooded (sent/rcvd): 5/5
+        p28 = re.compile(r'^IS\-IS: +Level\-2 +LSPs +flooded \(sent\/rcvd\): +(?P<sent>\d+)\/(?P<rcvd>\d+)$')
+        #     IS-IS: LSP Retransmissions: 0
+        p29 = re.compile(r'^IS\-IS: +LSP +Retransmissions: +(?P<lsp_retransmissions>\d+)$')
+        #     IS-IS: Level-1 CSNPs (sent/rcvd): 0/0
+        p30 = re.compile(r'^IS\-IS: +Level\-1 +CSNPs \(sent\/rcvd\): +(?P<sent>\d+)\/(?P<rcvd>\d+)$')
+        #     IS-IS: Level-2 CSNPs (sent/rcvd): 170/0
+        p31 = re.compile(r'^IS\-IS: +Level\-2 +CSNPs \(sent\/rcvd\): +(?P<sent>\d+)\/(?P<rcvd>\d+)$')
+        #     IS-IS: Level-1 PSNPs (sent/rcvd): 0/0
+        p32 = re.compile(r'^IS\-IS: +Level\-1 +PSNPs \(sent\/rcvd\): +(?P<sent>\d+)\/(?P<rcvd>\d+)$')
+        #     IS-IS: Level-2 PSNPs (sent/rcvd): 0/0
+        p33 = re.compile(r'^IS\-IS: +Level\-2 +PSNPs \(sent\/rcvd\): +(?P<sent>\d+)\/(?P<rcvd>\d+)$')
+        #     IS-IS: Level-1 DR Elections: 1
+        p34 = re.compile(r'^IS\-IS: +Level\-1 +DR +Elections: +(?P<dr_elections>\d+)$')
+        #     IS-IS: Level-2 DR Elections: 2
+        p35 = re.compile(r'^IS\-IS: +Level\-2 +DR +Elections: +(?P<dr_elections>\d+)$')
+        #     IS-IS: Level-1 SPF Calculations: 14
+        p36 = re.compile(r'^IS\-IS: +Level\-1 +SPF +Calculations: +(?P<spf_calculation>\d+)$')
+        #     IS-IS: Level-2 SPF Calculations: 17
+        p37 = re.compile(r'^IS\-IS: +Level\-2 +SPF +Calculations: +(?P<spf_calculation>\d+)$')
+        #     IS-IS: Level-1 Partial Route Calculations: 0
+        p38 = re.compile(r'^IS\-IS: +Level\-1 +Partial +Route +Calculations: +(?P<partial_route_calculations>\d+)$')
+        #     IS-IS: Level-2 Partial Route Calculations: 1
+        p39 = re.compile(r'^IS\-IS: +Level\-2 +Partial +Route +Calculations: +(?P<partial_route_calculations>\d+)$')
+        #     IS-IS: LSP checksum errors received: 0
+        p40 = re.compile(r'^IS\-IS: +LSP +checksum +errors +received: +(?P<lsp_checksum_errors_received>\d+)$')
+        #     IS-IS: Update process queue depth: 0/200
+        p41 = re.compile(r'^IS\-IS: +Update +process +queue +depth: +(?P<update_process_queue_depth>[\d\/]+)$')
+        #     IS-IS: Update process packets dropped: 0
+        p42 = re.compile(r'^IS\-IS: +Update +process +packets +dropped: +(?P<update_process_packets_dropped>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
 
-            # GigabitEthernet1 is up, line protocol is up
+            # CLNS:  Time since last clear: never
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-
+                clns_dict = result_dict.setdefault('clns', {})
+                clns_dict.update({'last_clear': group['last_clear']})
                 continue
 
-            return result_dict
+            # CLNS & ESIS Output: 168, Input: 4021
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                clns_dict.update({'input': int(group['clns_input'])})
+                clns_dict.update({'output': int(group['clns_output'])})
+                continue
+
+            # Dropped Protocol not enabled on interface: 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                clns_dict.update({'dropped_protocol': int(group['dropped_protocol'])})
+                continue
+
+            # CLNS Local: 0, Forward: 0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                clns_dict.update({'local': int(group['clns_local'])})
+                clns_dict.update({'forward': int(group['clns_forward'])})
+                continue
+
+            # CLNS Discards:
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                discard_dict = clns_dict.setdefault('discards',{})
+                continue
+
+            #   Hdr Syntax: 0, Checksum: 0, Lifetime: 0, Output cngstn: 0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                discard_dict.update({k:int(val) for k,val in group.items()})
+                continue
+
+            #   No Route: 0, Discard Route: 0, Dst Unreachable 0, Encaps. Failed: 0
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                discard_dict.update({k: int(val) for k, val in group.items()})
+                continue
+
+            #   NLP Unknown: 0, Not an IS: 0
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                discard_dict.update({k: int(val) for k, val in group.items()})
+                continue
+
+            # CLNS Options: Packets 0, total 0 , bad 0, GQOS 0, cngstn exprncd 0
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                option_dict = clns_dict.setdefault('options', {})
+                option_dict.update({k: int(val) for k, val in group.items()})
+                continue
+
+            # CLNS Segments:  Segmented: 0, Failed: 0
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                segment_dict = clns_dict.setdefault('segments', {})
+                segment_dict.update({k: int(val) for k, val in group.items()})
+                continue
+
+            # CLNS Broadcasts: sent: 0, rcvd: 0
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                broadcast_dict = clns_dict.setdefault('broadcasts', {})
+                broadcast_dict.update({k: int(val) for k, val in group.items()})
+                continue
+
+            # Echos: Rcvd 0 requests, 0 replies
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                echo_dict = result_dict.setdefault('echos', {}).setdefault('rcvd', {})
+                echo_dict.update({k: int(val) for k, val in group.items()})
+                continue
+
+            #       Sent 0 requests, 0 replies
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                echo_dict = result_dict.setdefault('echos', {}).setdefault('sent', {})
+                echo_dict.update({k: int(val) for k, val in group.items()})
+                continue
+
+            # ESIS(sent/rcvd): ESHs: 0/0, ISHs: 168/0, RDs: 0/0, QCF: 0/0
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                esis_dict = result_dict.setdefault('packet_counters', {}).\
+                                        setdefault('level', {}).\
+                                        setdefault('level-all', {})
+                esis_dict.setdefault('esh', {}).update({'rcvd': int(group['esh_rcvd'])})
+                esis_dict.setdefault('esh', {}).update({'sent': int(group['esh_sent'])})
+                esis_dict.setdefault('ish', {}).update({'rcvd': int(group['ish_rcvd'])})
+                esis_dict.setdefault('ish', {}).update({'sent': int(group['ish_sent'])})
+                esis_dict.setdefault('rd', {}).update({'sent': int(group['rd_sent'])})
+                esis_dict.setdefault('rd', {}).update({'rcvd': int(group['rd_rcvd'])})
+                esis_dict.setdefault('qcf', {}).update({'rcvd': int(group['qcf_rcvd'])})
+                esis_dict.setdefault('qcf', {}).update({'sent': int(group['qcf_sent'])})
+                continue
+
+            # Tunneling (sent/rcvd): IP: 0/0, IPv6: 0/0
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                tunneling_dict = result_dict.setdefault('tunneling', {})
+                tunneling_dict.setdefault('ip', {}).update({'rcvd': int(group['ip_rcvd'])})
+                tunneling_dict.setdefault('ip', {}).update({'sent': int(group['ip_sent'])})
+                tunneling_dict.setdefault('ipv6', {}).update({'rcvd': int(group['ipv6_rcvd'])})
+                tunneling_dict.setdefault('ipv6', {}).update({'sent': int(group['ipv6_sent'])})
+                continue
+
+            # Tunneling dropped (rcvd) IP/IPV6:  0
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                tunneling_dict = result_dict.setdefault('tunneling', {})
+                tunneling_dict.setdefault('ip', {}).update({'rcvd_dropped': int(group['tunneling_dropped'])})
+                tunneling_dict.setdefault('ipv6', {}).update({'rcvd_dropped': int(group['tunneling_dropped'])})
+                continue
+
+            # ISO-IGRP: Querys (sent/rcvd): 0/0 Updates (sent/rcvd): 0/0
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                iso_dict = result_dict.setdefault('iso-igrp', {})
+                iso_dict.setdefault('query', {}).update({'rcvd': int(group['query_rcvd'])})
+                iso_dict.setdefault('query', {}).update({'sent': int(group['query_sent'])})
+                iso_dict.setdefault('update', {}).update({'rcvd': int(group['update_rcvd'])})
+                iso_dict.setdefault('update', {}).update({'sent': int(group['update_sent'])})
+                continue
+
+            # ISO-IGRP: Router Hellos: (sent/rcvd): 0/0
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                iso_dict = result_dict.setdefault('iso-igrp', {})
+                iso_dict.setdefault('router_hello', {}).update({'rcvd': int(group['hello_rcvd'])})
+                iso_dict.setdefault('router_hello', {}).update({'sent': int(group['hello_sent'])})
+                continue
+
+            # ISO-IGRP Syntax Errors: 0
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                iso_dict.update({'syntax_errors': int(group['syntax_errors']) })
+                continue
+
+            # Tag VRF1:
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                isis_dict = result_dict.setdefault('tag',{}).setdefault(group['tag'], {}).setdefault('IS-IS', {})
+                continue
+
+            #     IS-IS: Time since last clear: never
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                isis_dict.update({'last_clear': group['last_clear']})
+                continue
+            #     IS-IS: Level-1 Hellos (sent/rcvd): 497/533
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                hello_dict = isis_dict.setdefault('hello',{}).setdefault('level-1',{})
+                hello_dict.update({key:int(value) for key,value in group.items()})
+                continue
+
+            #     IS-IS: Level-2 Hellos (sent/rcvd): 843/611
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                hello_dict = isis_dict.setdefault('hello', {}).setdefault('level-2', {})
+                hello_dict.update({key: int(value) for key, value in group.items()})
+                continue
+
+            #     IS-IS: PTP Hellos     (sent/rcvd): 0/0
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                hello_dict = isis_dict.setdefault('hello', {}).setdefault('ptp', {})
+                hello_dict.update({key: int(value) for key, value in group.items()})
+                continue
+
+            #     IS-IS: Level-1 LSPs sourced (new/refresh): 3/4
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                hello_dict = isis_dict.setdefault('lsp_sourced', {}).setdefault('level-1', {})
+                hello_dict.update({key: int(value) for key, value in group.items()})
+                continue
+
+            #     IS-IS: Level-2 LSPs sourced (new/refresh): 4/5
+            m = p26.match(line)
+            if m:
+                group = m.groupdict()
+                hello_dict = isis_dict.setdefault('lsp_sourced', {}).setdefault('level-2', {})
+                hello_dict.update({key: int(value) for key, value in group.items()})
+                continue
+
+            #     IS-IS: Level-1 LSPs flooded (sent/rcvd): 0/0
+            m = p27.match(line)
+            if m:
+                group = m.groupdict()
+                hello_dict = isis_dict.setdefault('lsp_flooded', {}).setdefault('level-1', {})
+                hello_dict.update({key: int(value) for key, value in group.items()})
+                continue
+
+            #     IS-IS: Level-2 LSPs flooded (sent/rcvd): 5/5
+            m = p28.match(line)
+            if m:
+                group = m.groupdict()
+                hello_dict = isis_dict.setdefault('lsp_flooded', {}).setdefault('level-2', {})
+                hello_dict.update({key: int(value) for key, value in group.items()})
+                continue
+
+            #     IS-IS: LSP Retransmissions: 0
+            m = p29.match(line)
+            if m:
+                group = m.groupdict()
+                isis_dict.update({'lsp_retransmissions': int(group['lsp_retransmissions'])})
+                continue
+
+            #     IS-IS: Level-1 CSNPs (sent/rcvd): 0/0
+            m = p30.match(line)
+            if m:
+                group = m.groupdict()
+                csnp_dict = isis_dict.setdefault('csnp', {}).setdefault('level-1', {})
+                csnp_dict.update({key: int(value) for key, value in group.items()})
+                continue
+
+            #     IS-IS: Level-2 CSNPs (sent/rcvd): 170/0
+            m = p31.match(line)
+            if m:
+                group = m.groupdict()
+                csnp_dict = isis_dict.setdefault('csnp', {}).setdefault('level-2', {})
+                csnp_dict.update({key: int(value) for key, value in group.items()})
+                continue
+
+            #     IS-IS: Level-1 PSNPs (sent/rcvd): 0/0
+            m = p32.match(line)
+            if m:
+                group = m.groupdict()
+                psnp_dict = isis_dict.setdefault('psnp', {}).setdefault('level-1', {})
+                psnp_dict.update({key: int(value) for key, value in group.items()})
+                continue
+
+            #     IS-IS: Level-2 PSNPs (sent/rcvd): 0/0
+            m = p33.match(line)
+            if m:
+                group = m.groupdict()
+                psnp_dict = isis_dict.setdefault('psnp', {}).setdefault('level-2', {})
+                psnp_dict.update({key: int(value) for key, value in group.items()})
+                continue
+
+            #     IS-IS: Level-1 DR Elections: 1
+            m = p34.match(line)
+            if m:
+                group = m.groupdict()
+                isis_dict.setdefault('dr_election', {}).update({'level-1': int(group['dr_elections'])})
+                continue
+
+            #     IS-IS: Level-2 DR Elections: 2
+            m = p35.match(line)
+            if m:
+                group = m.groupdict()
+                isis_dict.setdefault('dr_election', {}).update({'level-2': int(group['dr_elections'])})
+                continue
+
+            #     IS-IS: Level-1 SPF Calculations: 14
+            m = p36.match(line)
+            if m:
+                group = m.groupdict()
+                isis_dict.setdefault('spf_calculation', {}).update({'level-1': int(group['spf_calculation'])})
+                continue
+
+            #     IS-IS: Level-2 SPF Calculations: 17
+            m = p37.match(line)
+            if m:
+                group = m.groupdict()
+                isis_dict.setdefault('spf_calculation', {}).update({'level-2': int(group['spf_calculation'])})
+                continue
+
+            #     IS-IS: Level-1 Partial Route Calculations: 0
+            m = p38.match(line)
+            if m:
+                group = m.groupdict()
+                isis_dict.setdefault('partial_route_calculation', {}).update({'level-1': int(group['partial_route_calculations'])})
+                continue
+
+            #     IS-IS: Level-2 Partial Route Calculations: 1
+            m = p39.match(line)
+            if m:
+                group = m.groupdict()
+                isis_dict.setdefault('partial_route_calculation', {}).update({'level-2': int(group['partial_route_calculations'])})
+                continue
+
+            #     IS-IS: LSP checksum errors received: 0
+            m = p40.match(line)
+            if m:
+                group = m.groupdict()
+                isis_dict.update({'lsp_checksum_errors_received': int(group['lsp_checksum_errors_received'])})
+                continue
+
+            #     IS-IS: Update process queue depth: 0/200
+            m = p41.match(line)
+            if m:
+                group = m.groupdict()
+                isis_dict.update({'update_process_queue_depth': group['update_process_queue_depth']})
+                continue
+
+            #     IS-IS: Update process packets dropped: 0
+            m = p42.match(line)
+            if m:
+                group = m.groupdict()
+                isis_dict.update({'update_process_packets_dropped': int(group['update_process_packets_dropped'])})
+                continue
+
+        return result_dict
