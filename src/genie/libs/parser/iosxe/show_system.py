@@ -47,7 +47,7 @@ class ShowClock(ShowClockSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # 18:56:04.554 JST Mon Oct 17 2016
+            # 18:56:04.554 EST Mon Oct 17 2016
             m = p1.match(line)
             if m:
                 group = m.groupdict()

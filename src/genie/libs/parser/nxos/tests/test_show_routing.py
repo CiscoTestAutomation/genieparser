@@ -33,7 +33,7 @@ class test_show_routing_vrf_all(unittest.TestCase):
                         {'bgp_distance_internal_as': 33,
                         'bgp_distance_local': 55,
                         'ip':
-                            {'11.0.0.0/8':
+                            {'10.121.0.0/8':
                                 {'ubest_num': '1',
                                 'mbest_num': '0',
                                 'best_route':
@@ -48,27 +48,27 @@ class test_show_routing_vrf_all(unittest.TestCase):
                                                         'protocol_id': '100',
                                                         'attribute': 'discard',
                                                         'tag': '100'}}}}}}},
-                            '30.5.0.1/32':
+                            '10.205.0.1/32':
                                 {'ubest_num': '1',
                                 'mbest_num': '0',
                                 'attach': 'attached',
                                 'best_route':
                                     {'unicast':
                                         {'nexthop':
-                                            {'30.5.0.1':
+                                            {'10.205.0.1':
                                                 {'protocol':
                                                     {'local':
                                                         {'uptime': '2w6d',
                                                         'interface': 'Bdi1255',
                                                         'preference': '0',
                                                         'metric': '0'}}}}}}},
-                            '57.0.1.0/24':
+                            '10.189.1.0/24':
                                 {'ubest_num': '1',
                                 'mbest_num': '0',
                                 'best_route':
                                     {'unicast':
                                         {'nexthop':
-                                            {'100.0.130.3':
+                                            {'10.55.130.3':
                                                 {'protocol':
                                                     {'bgp':
                                                         {'uptime': '3d10h',
@@ -82,13 +82,13 @@ class test_show_routing_vrf_all(unittest.TestCase):
                                                         'route_table': 'default',
                                                         'tunnelid': '0x64008203',
                                                         'encap': 'vxlan'}}}}}}},
-                            '33.33.33.33/32':
+                            '10.21.33.33/32':
                                 {'ubest_num': '1',
                                 'mbest_num': '1',
                                 'best_route':
                                     {'unicast':
                                         {'nexthop':
-                                            {'3.3.3.3':
+                                            {'10.36.3.3':
                                                 {'protocol':
                                                     {'bgp':
                                                         {'uptime': '5w0d',
@@ -101,7 +101,7 @@ class test_show_routing_vrf_all(unittest.TestCase):
                                                         'tag': '100'}}}}},
                                     'multicast':
                                         {'nexthop':
-                                            {'3.3.3.3':
+                                            {'10.36.3.3':
                                                 {'protocol':
                                                     {'bgp':
                                                         {'uptime': '5w0d',
@@ -112,7 +112,7 @@ class test_show_routing_vrf_all(unittest.TestCase):
                                                         'route_table': 'default',
                                                         'mpls_vpn': True,
                                                         'tag': '100'}}}}}}},
-                            "2.2.2.2/32": {
+                            "10.16.2.2/32": {
                                "mbest_num": "0",
                                "ubest_num": "1",
                                "best_route": {
@@ -128,7 +128,7 @@ class test_show_routing_vrf_all(unittest.TestCase):
                                                              "mpls": True,
                                                              "attribute": "intra",
                                                              "interface": "Ethernet2/4"}}}}}}},
-                            "1.1.1.1/32": {
+                            "10.4.1.1/32": {
                                "mbest_num": "0",
                                "ubest_num": "2",
                                "best_route": {
@@ -154,14 +154,14 @@ class test_show_routing_vrf_all(unittest.TestCase):
                                                              "mpls": True,
                                                              "attribute": "intra",
                                                              "interface": "Ethernet2/1"}}}}}}},
-                            '11.11.11.11/32':
+                            '10.229.11.11/32':
                                 {'ubest_num': '2',
                                 'mbest_num': '0',
                                 'attach': 'attached',
                                 'best_route':
                                     {'unicast':
                                         {'nexthop':
-                                            {'11.11.11.11':
+                                            {'10.229.11.11':
                                                 {'protocol':
                                                     {'local':
                                                         {'uptime': '5w4d',
@@ -179,7 +179,7 @@ class test_show_routing_vrf_all(unittest.TestCase):
                         {'bgp_distance_extern_as': 20,
                         'bgp_distance_internal_as': 200,
                         'ip':
-                            {'104.0.0.0/8':
+                            {'10.106.0.0/8':
                                 {'ubest_num': '1',
                                 'mbest_num': '0',
                                 'best_route':
@@ -195,7 +195,7 @@ class test_show_routing_vrf_all(unittest.TestCase):
                                                         'attribute': 'external',
                                                         'tag': '333',
                                                         'interface': 'Null0'}}}}}}},
-                            '1.3.1.0/24':
+                            '10.16.1.0/24':
                                 {'ubest_num': '1',
                                 'mbest_num': '0',
                                 'best_route':
@@ -212,7 +212,7 @@ class test_show_routing_vrf_all(unittest.TestCase):
                                                         'route_table': 'default',
                                                         'tag': '333',
                                                         'interface': 'Ethernet1/1'}}}}}}},
-                            '104.0.0.5/8':
+                            '10.106.0.5/8':
                                 {'ubest_num': '1',
                                 'mbest_num': '0',
                                 'best_route':
@@ -231,11 +231,11 @@ class test_show_routing_vrf_all(unittest.TestCase):
         '**' denotes best mcast next-hop
         '[x/y]' denotes [preference/metric]
 
-        104.0.0.0/8, ubest/mbest: 1/0
+        10.106.0.0/8, ubest/mbest: 1/0
             *via vrf default, Null0, [20/0], 18:11:28, bgp-333, external, tag 333
-        1.3.1.0/24, ubest/mbest: 1/0
+        10.16.1.0/24, ubest/mbest: 1/0
             *via fec1::1002%default, Eth1/1, [200/4444], 15:57:39, bgp-333, internal, tag 333
-        104.0.0.5/8, ubest/mbest: 1/0
+        10.106.0.5/8, ubest/mbest: 1/0
             *via Null0, [1/0], 18:47:42, static
 
 
@@ -249,22 +249,22 @@ class test_show_routing_vrf_all(unittest.TestCase):
         '**' denotes best mcast next-hop
         '[x/y]' denotes [preference/metric]
 
-        11.0.0.0/8, ubest/mbest: 1/0
+        10.121.0.0/8, ubest/mbest: 1/0
             *via Null0, [55/0], 5w0d, bgp-100, discard, tag 100
-        30.5.0.1/32, ubest/mbest: 1/0 time, attached
-            *via 30.5.0.1, Bdi1255, [0/0], 2w6d, local
-        33.33.33.33/32, ubest/mbest: 1/1
-            *via 3.3.3.3%default, [33/0], 5w0d, bgp-100, internal, tag 100 (mpls-vpn)
-            **via 3.3.3.3%default, [33/0], 5w0d, bgp-100, internal, tag 100 (mpls-vpn)
-        57.0.1.0/24, ubest/mbest: 1/0 time
-            *via 100.0.130.3%default, [33/0], 3d10h, bgp-1, internal, tag 1 (evpn), segid: 50051 tunnelid: 0x64008203 encap: VXLAN
-        11.11.11.11/32, ubest/mbest: 2/0, attached
-            *via 11.11.11.11, Lo1, [0/0], 5w4d, local
-            *via 11.11.11.11, Lo1, [0/0], 5w4d, direct
-        1.1.1.1/32, ubest/mbest: 2/0
+        10.205.0.1/32, ubest/mbest: 1/0 time, attached
+            *via 10.205.0.1, Bdi1255, [0/0], 2w6d, local
+        10.21.33.33/32, ubest/mbest: 1/1
+            *via 10.36.3.3%default, [33/0], 5w0d, bgp-100, internal, tag 100 (mpls-vpn)
+            **via 10.36.3.3%default, [33/0], 5w0d, bgp-100, internal, tag 100 (mpls-vpn)
+        10.189.1.0/24, ubest/mbest: 1/0 time
+            *via 10.55.130.3%default, [33/0], 3d10h, bgp-1, internal, tag 1 (evpn), segid: 50051 tunnelid: 0x64008203 encap: VXLAN
+        10.229.11.11/32, ubest/mbest: 2/0, attached
+            *via 10.229.11.11, Lo1, [0/0], 5w4d, local
+            *via 10.229.11.11, Lo1, [0/0], 5w4d, direct
+        10.4.1.1/32, ubest/mbest: 2/0
             *via 10.2.4.2, Eth2/4, [110/81], 00:18:35, ospf-1, intra (mpls)
             *via 10.3.4.3, Eth2/1, [110/81], 00:18:35, ospf-1, intra (mpls)
-        2.2.2.2/32, ubest/mbest: 1/0
+        10.16.2.2/32, ubest/mbest: 1/0
             *via 10.2.4.2, Eth2/4, [110/41], 00:18:35, ospf-1, intra (mpls)
         '''}
 
@@ -382,7 +382,7 @@ class test_show_routing_ipv6_vrf_all(unittest.TestCase):
                                    "best_route": {
                                         "unicast": {
                                              "nexthop": {
-                                                  "::ffff:1.1.1.1": {
+                                                  "::ffff:10.4.1.1": {
                                                        "protocol": {
                                                             "bgp": {
                                                                  "uptime": "00:35:51",
@@ -419,7 +419,7 @@ class test_show_routing_ipv6_vrf_all(unittest.TestCase):
                                    "best_route": {
                                         "unicast": {
                                              "nexthop": {
-                                                  "::ffff:1.1.1.1": {
+                                                  "::ffff:10.4.1.1": {
                                                        "protocol": {
                                                             "bgp": {
                                                                  "uptime": "00:35:51",
@@ -451,7 +451,7 @@ class test_show_routing_ipv6_vrf_all(unittest.TestCase):
         2001:db8:2:2::2/128, ubest/mbest: 1/0, attached
             *via 2001:db8:2:2::2, Eth1/1, [0/0], 00:15:46, local, tag 222
         615:11:11::/64, ubest/mbest: 1/0
-            *via ::ffff:1.1.1.1%default:IPv4, [200/2219], 00:35:51, bgp-100, internal, tag 200  (mpls)
+            *via ::ffff:10.4.1.1%default:IPv4, [200/2219], 00:35:51, bgp-100, internal, tag 200  (mpls)
 
         IPv6 Routing Table for VRF "VRF1"
         '*' denotes best ucast next-hop
@@ -459,7 +459,7 @@ class test_show_routing_ipv6_vrf_all(unittest.TestCase):
         '[x/y]' denotes [preference/metric]
 
         615:11:11:1::/64, ubest/mbest: 1/0
-            *via ::ffff:1.1.1.1%default:IPv4, [200/2219], 00:35:51, bgp-100, internal, tag 200  (mpls-vpn)
+            *via ::ffff:10.4.1.1%default:IPv4, [200/2219], 00:35:51, bgp-100, internal, tag 200  (mpls-vpn)
         '''}
 
     def test_golden(self):
@@ -493,23 +493,23 @@ class test_show_ip_route(unittest.TestCase):
         '[x/y]' denotes [preference/metric]
         '%<string>' in via output denotes VRF <string>
 
-        1.1.1.1/32, ubest/mbest: 2/0
+        10.4.1.1/32, ubest/mbest: 2/0
             *via 10.1.3.1, Eth1/2, [1/0], 01:01:30, static
-            *via 20.1.3.1, Eth1/3, [1/0], 01:01:30, static
-        2.2.2.2/32, ubest/mbest: 2/0
+            *via 10.186.3.1, Eth1/3, [1/0], 01:01:30, static
+        10.16.2.2/32, ubest/mbest: 2/0
             *via 10.2.3.2, Eth1/4, [1/0], 01:01:30, static
-            *via 20.2.3.2, Eth1/1, [1/0], 01:01:29, static
-        3.3.3.3/32, ubest/mbest: 2/0, attached
-            *via 3.3.3.3, Lo0, [0/0], 01:01:31, local
-            *via 3.3.3.3, Lo0, [0/0], 01:01:31, direct
+            *via 10.229.3.2, Eth1/1, [1/0], 01:01:29, static
+        10.36.3.3/32, ubest/mbest: 2/0, attached
+            *via 10.36.3.3, Lo0, [0/0], 01:01:31, local
+            *via 10.36.3.3, Lo0, [0/0], 01:01:31, direct
         10.1.2.0/24, ubest/mbest: 4/0
             *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra
             *via 10.2.3.2, Eth1/4, [110/41], 01:01:18, ospf-1, intra
-            *via 20.1.3.1, Eth1/3, [110/41], 01:01:18, ospf-1, intra
-            *via 20.2.3.2, Eth1/1, [110/41], 01:01:18, ospf-1, intra
-        33.33.33.33/32, ubest/mbest: 2/0, attached
-            *via 33.33.33.33, Lo3, [0/0], 01:01:30, local
-            *via 33.33.33.33, Lo3, [0/0], 01:01:30, direct
+            *via 10.186.3.1, Eth1/3, [110/41], 01:01:18, ospf-1, intra
+            *via 10.229.3.2, Eth1/1, [110/41], 01:01:18, ospf-1, intra
+        10.21.33.33/32, ubest/mbest: 2/0, attached
+            *via 10.21.33.33, Lo3, [0/0], 01:01:30, local
+            *via 10.21.33.33, Lo3, [0/0], 01:01:30, direct
 
         IP Route Table for VRF "VRF1"
         '*' denotes best ucast next-hop
@@ -517,9 +517,9 @@ class test_show_ip_route(unittest.TestCase):
         '[x/y]' denotes [preference/metric]
         '%<string>' in via output denotes VRF <string>
 
-        1.1.1.1/32, ubest/mbest: 2/0, attached
-            *via 1.1.1.1, Lo4, [0/0], 00:00:10, local
-            *via 1.1.1.1, Lo4, [0/0], 00:00:10, direct
+        10.4.1.1/32, ubest/mbest: 2/0, attached
+            *via 10.4.1.1, Lo4, [0/0], 00:00:10, local
+            *via 10.4.1.1, Lo4, [0/0], 00:00:10, direct
         '''
      }
     golden_parsed_output_1 = {
@@ -528,8 +528,8 @@ class test_show_ip_route(unittest.TestCase):
                 'address_family': {
                     'ipv4': {
                         'routes': {
-                            '1.1.1.1/32': {
-                                'route': '1.1.1.1/32',
+                            '10.4.1.1/32': {
+                                'route': '10.4.1.1/32',
                                 'active': True,
                                 'ubest':2,
                                 'mbest':0,
@@ -547,7 +547,7 @@ class test_show_ip_route(unittest.TestCase):
                                         },
                                         2: {
                                             'index': 2,
-                                            'next_hop': '20.1.3.1',
+                                            'next_hop': '10.186.3.1',
                                             'best_ucast_nexthop': True,
                                             'outgoing_interface': 'Ethernet1/3',
                                             'updated': '01:01:30',
@@ -555,8 +555,8 @@ class test_show_ip_route(unittest.TestCase):
                                     },
                                 },
                             },
-                            '2.2.2.2/32': {
-                                'route': '2.2.2.2/32',
+                            '10.16.2.2/32': {
+                                'route': '10.16.2.2/32',
                                 'active': True,
                                 'ubest': 2,
                                 'mbest': 0,
@@ -574,7 +574,7 @@ class test_show_ip_route(unittest.TestCase):
                                         },
                                         2: {
                                             'index': 2,
-                                            'next_hop': '20.2.3.2',
+                                            'next_hop': '10.229.3.2',
                                             'best_ucast_nexthop': True,
                                             'outgoing_interface': 'Ethernet1/1',
                                             'updated': '01:01:29',
@@ -582,8 +582,8 @@ class test_show_ip_route(unittest.TestCase):
                                     },
                                 },
                             },
-                            '3.3.3.3/32': {
-                                'route': '3.3.3.3/32',
+                            '10.36.3.3/32': {
+                                'route': '10.36.3.3/32',
                                 'active': True,
                                 'attached': True,
                                 'ubest': 2,
@@ -595,14 +595,14 @@ class test_show_ip_route(unittest.TestCase):
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '3.3.3.3',
+                                            'next_hop': '10.36.3.3',
                                             'best_ucast_nexthop': True,
                                             'outgoing_interface': 'Loopback0',
                                             'updated': '01:01:31',
                                         },
                                         2: {
                                             'index': 2,
-                                            'next_hop': '3.3.3.3',
+                                            'next_hop': '10.36.3.3',
                                             'best_ucast_nexthop': True,
                                             'outgoing_interface': 'Loopback0',
                                             'updated': '01:01:31',
@@ -638,14 +638,14 @@ class test_show_ip_route(unittest.TestCase):
                                         },
                                         3: {
                                             'index': 3,
-                                            'next_hop': '20.1.3.1',
+                                            'next_hop': '10.186.3.1',
                                             'best_ucast_nexthop': True,
                                             'outgoing_interface': 'Ethernet1/3',
                                             'updated': '01:01:18',
                                         },
                                         4: {
                                             'index': 4,
-                                            'next_hop': '20.2.3.2',
+                                            'next_hop': '10.229.3.2',
                                             'best_ucast_nexthop': True,
                                             'outgoing_interface': 'Ethernet1/1',
                                             'updated': '01:01:18',
@@ -654,8 +654,8 @@ class test_show_ip_route(unittest.TestCase):
                                     },
                                 },
                             },
-                            '33.33.33.33/32': {
-                                'route': '33.33.33.33/32',
+                            '10.21.33.33/32': {
+                                'route': '10.21.33.33/32',
                                 'active': True,
                                 'attached': True,
                                 'ubest': 2,
@@ -667,14 +667,14 @@ class test_show_ip_route(unittest.TestCase):
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '33.33.33.33',
+                                            'next_hop': '10.21.33.33',
                                             'outgoing_interface': 'Loopback3',
                                             'best_ucast_nexthop': True,
                                             'updated': '01:01:30',
                                         },
                                         2: {
                                             'index': 2,
-                                            'next_hop': '33.33.33.33',
+                                            'next_hop': '10.21.33.33',
                                             'outgoing_interface': 'Loopback3',
                                             'best_ucast_nexthop': True,
                                             'updated': '01:01:30',
@@ -690,8 +690,8 @@ class test_show_ip_route(unittest.TestCase):
                 'address_family': {
                     'ipv4': {
                         'routes': {
-                            '1.1.1.1/32': {
-                                'route': '1.1.1.1/32',
+                            '10.4.1.1/32': {
+                                'route': '10.4.1.1/32',
                                 'attached': True,
                                 'active': True,
                                 'ubest': 2,
@@ -703,14 +703,14 @@ class test_show_ip_route(unittest.TestCase):
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '1.1.1.1',
+                                            'next_hop': '10.4.1.1',
                                             'outgoing_interface': 'Loopback4',
                                             'best_ucast_nexthop': True,
                                             'updated': '00:00:10',
                                         },
                                         2: {
                                             'index': 2,
-                                            'next_hop': '1.1.1.1',
+                                            'next_hop': '10.4.1.1',
                                             'outgoing_interface': 'Loopback4',
                                             'best_ucast_nexthop': True,
                                             'updated': '00:00:10',
@@ -859,7 +859,7 @@ class test_show_ipv6_route(unittest.TestCase):
         *via fe80::5054:ff:feb3:b312, Eth1/1, [110/41], 01:01:10, ospfv3-1, intra
 
     2001:31:31:31::31/128, ubest/mbest: 1/0
-        *via ::ffff:11.11.11.11%default:IPv4, [200/0], 01:01:43, bgp-100, internal,
+        *via ::ffff:10.229.11.11%default:IPv4, [200/0], 01:01:43, bgp-100, internal,
     tag 100
     2001:32:32:32::32/128, ubest/mbest: 2/0
         *via fe80::5054:ff:fea7:1341, Eth1/4, [200/0], 01:01:24, bgp-100, internal,
@@ -977,7 +977,7 @@ class test_show_ipv6_route(unittest.TestCase):
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '::ffff:11.11.11.11',
+                                            'next_hop': '::ffff:10.229.11.11',
                                             'next_hop_vrf': 'default',
                                             'next_hop_af': 'ipv4',
                                             'best_ucast_nexthop': True,

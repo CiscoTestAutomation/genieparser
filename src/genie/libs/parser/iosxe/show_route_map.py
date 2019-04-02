@@ -229,8 +229,8 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 ['match_ext_community_list'])
                 continue
 
-            # ip next-hop 4.4.4.4
-            # ip next-hop 1.1.1.1 2.2.2.2
+            # ip next-hop 10.64.4.4
+            # ip next-hop 10.4.1.1 10.16.2.2
             p12 = re.compile(r'^\s*ip *next-hop *(?P<set_next_hop>[0-9\.\s]+)$')
             m = p12.match(line)
             if m:

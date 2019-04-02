@@ -71,7 +71,7 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
         else:
             out = output
 
-        # Loopback500                    200.0.0.1       Up              Up       default
+        # Loopback500                    192.168.220.1       Up              Up       default
         p = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.\-]+) '
             '+(?P<ip_address>[a-z0-9\.]+) +(?P<interface_status>[a-zA-Z]+) '
             '+(?P<protocol_status>[a-zA-Z]+) +(?P<vrf_name>[A-Za-z0-9]+)$')
@@ -1337,7 +1337,7 @@ class ShowIpv4VrfAllInterface(ShowIpv4VrfAllInterfaceSchema):
                 ipv4_vrf_all_interface_dict[interface]['vrf_id'] = vrf_id
                 continue
 
-            # Interface is unnumbered.  Using address of Loopback11 (111.111.111.111/32)
+            # Interface is unnumbered.  Using address of Loopback11 (10.69.111.111/32)
             p2_1 = re.compile(r'^\s*Interface is unnumbered. +Using +address'
                                ' +of +(?P<unnumbered_intf_ref>\S+)'
                                ' +\((?P<ip>[0-9\.]+)\/(?P<prefix_length>[0-9]+)\)$')

@@ -257,7 +257,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # Description: desc
-            # Description: Pim Register Tunnel (Encap) for RP 11.10.1.1
+            # Description: Pim Register Tunnel (Encap) for RP 10.186.1.1
             p3 = re.compile(r'^Description: *(?P<description>.*)$')
             m = p3.match(line)
             if m:
@@ -419,8 +419,9 @@ class ShowInterfaces(ShowInterfacesSchema):
             # Auto-duplex, 1000Mb/s, media type is 10/100/1000BaseTX
             # Full-duplex, 1000Mb/s, link type is auto, media type is
             # Full Duplex, 1000Mbps, link type is auto, media type is RJ45
+            # Full Duplex, Auto Speed, link type is auto, media type is RJ45
             p11 = re.compile(r'^(?P<duplex_mode>\w+)[\-\s]+[d|D]uplex, +'
-                              '(?P<port_speed>\d+|Auto-speed)(?: *(Mbps|Mb/s))?,'
+                              '(?P<port_speed>\d+|Auto-(S|s)peed|Auto (S|s)peed)(?: *(Mbps|Mb/s))?,'
                               '( *link +type +is +(?P<link_type>\w+),)?'
                               ' *media +type +is *(?P<media_type>[\w\/]+)?$')
             m = p11.match(line)
@@ -796,8 +797,8 @@ class ShowInterfaces(ShowInterfacesSchema):
                     int(m.groupdict()['out_buffers_swapped'])
                 continue
 
-            # Interface is unnumbered. Using address of Loopback0 (1.1.1.1)
-            # Interface is unnumbered. Using address of GigabitEthernet0/2.1 (201.0.2.1)
+            # Interface is unnumbered. Using address of Loopback0 (10.4.1.1)
+            # Interface is unnumbered. Using address of GigabitEthernet0/2.1 (192.168.154.1)
             p35 = re.compile(r'^Interface +is +unnumbered. +Using +address +of +'
                               '(?P<unnumbered_intf>[\w\/\.]+) +'
                               '\((?P<unnumbered_ip>[\w\.\:]+)\)$')
@@ -944,9 +945,11 @@ class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBrief):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
 
+    cli_command = "show ip interface brief | include Vlan"
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.cmd = 'show ip interface brief | include Vlan'.format()
+        self.cmd = self.cli_command
 
     def cli(self):
         super(ShowIpInterfaceBriefPipeVlan, self).cli()
@@ -1595,7 +1598,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                 multicast_groups = []
                 continue
 
-            # Internet address is 201.11.14.1/24
+            # Internet address is 192.168.76.1/24
             p2 = re.compile(r'^Internet +[A|a]ddress +is +(?P<ipv4>(?P<ip>[0-9\.]+)'
                              '\/(?P<prefix_length>[0-9]+))$')
             m = p2.match(line)
@@ -2082,7 +2085,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                     interface_dict[interface]['wccp']\
                         ['redirect_exclude'] = True
 
-            # Interface is unnumbered. Using address of Loopback11 (200.11.3.1)
+            # Interface is unnumbered. Using address of Loopback11 (192.168.151.1)
             p40 = re.compile(r'^Interface +is +unnumbered. +Using +address +of +'
                               '(?P<unnumbered_intf>[\w\/\-\.]+) +'
                               '\((?P<unnumbered_ip>[\w\.\:]+)\)$')
@@ -2755,7 +2758,7 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
         # GigabitEthernet0/0/0/0
         p1 = re.compile(r'^(?P<interface>[a-zA-Z\-\d\/\.]+)$')
 
-        # Tunnel0 Pim Register Tunnel (Encap) for RP 11.10.1.1
+        # Tunnel0 Pim Register Tunnel (Encap) for RP 10.186.1.1
         p1_1 = re.compile(r'^(?P<interface>Tunnel\d+) +Pim +Register +'
                            'Tunnel +\(Encap\) +for +RP +(?P<rp>[\w\.]+)$')
 
@@ -2787,3 +2790,76 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
                 continue
 
         return ret_dict
+
+
+# ====================================================
+#  schema for show interfaces stats
+# ====================================================
+class ShowInterfacesStatsSchema(MetaParser):
+    """Schema for:
+        show interfaces <interface> stats
+        show interfaces stats"""
+
+    schema = {
+        Any(): {
+            'switching_path': {
+                Any(): {
+                    'pkts_in': int, 
+                    'pkts_out': int, 
+                    'chars_in': int, 
+                    'chars_out': int, 
+                },
+            }
+        },
+    }
+
+
+# ====================================================
+#  parser for show interfaces stats
+# ====================================================
+class ShowInterfacesStats(ShowInterfacesStatsSchema):
+    """Parser for :
+        show interfaces <interface> stats
+        show interfaces stats"""
+
+    cli_command = ['show interfaces stats' ,'show interfaces {interface} stats']
+
+    def cli(self, interface="", output=None):
+        if output is None:
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # initialize result dict
+        result_dict = {}
+        
+        # GigabitEthernet0/0/0
+        p1 = re.compile(r'^\s*(?P<interface>[\w./]+)$')
+
+        #    Switching path    Pkts In   Chars In   Pkts Out  Chars Out
+        #         Processor         33       2507         33       2490
+        p2 = re.compile(r'^\s*(?P<path>[\w\- ]*?) +(?P<pkts_in>[\d]+) +(?P<chars_in>[\d]+)'
+                        ' +(?P<pkts_out>[\d]+) +(?P<chars_out>[\d]+)$')
+
+        for line in out.splitlines():
+            line = line.rstrip()
+
+            m = p1.match(line)
+            if m:
+                interface = m.groupdict()['interface']
+                path_dict = result_dict.setdefault(interface, {}).setdefault('switching_path', {})
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                path = group.pop('path').replace(" ", "_").replace("-", "_").lower()
+                tmp_dict = path_dict.setdefault(path, {})
+                tmp_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+        return result_dict

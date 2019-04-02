@@ -18,7 +18,19 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   ShowProcessesCpuSorted, \
                                                   ShowProcessesCpuPlatform, \
                                                   ShowEnvironment, \
-                                                  ShowProcessesCpu
+                                                  ShowProcessesCpu, \
+                                                  ShowVersionRp, \
+                                                  ShowPlatformHardware, \
+                                                  ShowPlatformHardwarePlim, \
+                                                  ShowPlatformHardwareQfpBqsOpmMapping, \
+                                                  ShowPlatformHardwareQfpBqsIpmMapping, \
+                                                  ShowPlatformHardwareSerdes, \
+                                                  ShowPlatformHardwareSerdesInternal, \
+                                                  ShowPlatformPower, \
+                                                  ShowPlatformHardwareQfpBqsStatisticsChannelAll, \
+                                                  ShowPlatformHardwareQfpInterfaceIfnameStatistics, \
+                                                  ShowPlatformHardwareQfpStatisticsDrop, \
+                                                  ShowProcessesCpuHistory
 
 
 class test_show_version(unittest.TestCase):
@@ -28,6 +40,7 @@ class test_show_version(unittest.TestCase):
     dev_asr1k = Device(name='asr1k')
     dev_c3850 = Device(name='c3850')
     dev_isr4k = Device(name='isr4k')
+    dev_asr901 = Device(name='asr901')
     empty_output = {'execute.return_value': ''}
     semi_empty_output = {'execute.return_value': '''\
         Cisco IOS-XE software, Copyright (c) 2005-2017 by cisco Systems, Inc.
@@ -574,6 +587,86 @@ class test_show_version(unittest.TestCase):
         Configuration register is 0x2102
 ''' }
 
+    golden_parsed_output_asr901 = {
+        'version': 
+            {'chassis': 'A901-6CZ-FT-D',
+            'chassis_sn': 'CAT1733U070',
+            'curr_config_register': '0x2102',
+            'hostname': 'LAB-ASR901T',
+            'image_id': 'ASR901-UNIVERSALK9-M',
+            'image_type': 'production image',
+            'last_reload_reason': 'Reload Command',
+            'license_level': 'AdvancedMetroIPAccess',
+            'license_type': 'Smart License',
+            'main_mem': '393216',
+            'mem_size': {'non-volatile configuration': '256'},
+            'next_reload_license_level': 'AdvancedMetroIPAccess',
+            'number_of_intfs': {'Gigabit Ethernet': '12',
+                             'Ten Gigabit Ethernet': '2'},
+            'os': 'IOS',
+            'platform': '901',
+            'processor_type': 'P2020',
+            'rom': 'System Bootstrap, Version 15.6(2r)SP4, RELEASE SOFTWARE '
+                '(fc1)',
+            'rtr_type': 'A901-6CZ-FT-D',
+            'system_image': 'flash:asr901-universalk9-mz.156-2.SP4.bin',
+            'system_restarted_at': '15:59:27 CDT Mon Sep 24 2018',
+            'uptime': '26 weeks, 21 hours, 26 minutes',
+            'version': '15.6(2)SP4',
+            'version_short': '15.6'}}
+    
+    golden_output_asr901 = {'execute.return_value': '''
+        show version
+        Cisco IOS Software, 901 Software (ASR901-UNIVERSALK9-M), Version 15.6(2)SP4, RELEASE SOFTWARE (fc3)
+        Technical Support: http://www.cisco.com/techsupport
+        Copyright (c) 1986-2018 by Cisco Systems, Inc.
+        Compiled Mon 19-Mar-18 16:39 by prod_rel_team
+
+        ROM: System Bootstrap, Version 15.6(2r)SP4, RELEASE SOFTWARE (fc1)
+
+        LAB-ASR901T uptime is 26 weeks, 21 hours, 26 minutes
+        System returned to ROM by reload at 15:57:52 CDT Mon Sep 24 2018
+        System restarted at 15:59:27 CDT Mon Sep 24 2018
+        System image file is "flash:asr901-universalk9-mz.156-2.SP4.bin"
+        Last reload type: Normal Reload
+        Last reload reason: Reload Command
+
+
+
+        This product contains cryptographic features and is subject to United
+        States and local country laws governing import, export, transfer and
+        use. Delivery of Cisco cryptographic products does not imply
+        third-party authority to import, export, distribute or use encryption.
+        Importers, exporters, distributors and users are responsible for
+        compliance with U.S. and local country laws. By using this product you
+        agree to comply with applicable laws and regulations. If you are unable
+        to comply with U.S. and local laws, return this product immediately.
+
+        A summary of U.S. laws governing Cisco cryptographic products may be found at:
+        http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+
+        If you require further assistance please contact us by sending email to
+        export@cisco.com.
+
+        License Level: AdvancedMetroIPAccess
+        License Type: Smart License
+        Next reload license Level: AdvancedMetroIPAccess
+
+        Cisco A901-6CZ-FT-D (P2020) processor (revision 1.0) with 393216K/131072K bytes of memory.
+        Processor board ID CAT1733U070
+        P2020 CPU at 800MHz, E500v2 core, 512KB L2 Cache
+        1 External Alarm interface
+        1 FastEthernet interface
+        12 Gigabit Ethernet interfaces
+        2 Ten Gigabit Ethernet interfaces
+        1 terminal line
+        8 Channelized T1 ports
+        256K bytes of non-volatile configuration memory.
+        98304K bytes of processor board System flash (Read/Write)
+
+        Configuration register is 0x2102
+        '''}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         version_obj = ShowVersion(device=self.dev1)
@@ -606,6 +699,13 @@ class test_show_version(unittest.TestCase):
         version_obj = ShowVersion(device=self.dev_isr4k)
         parsed_output = version_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_isr4k)
+
+    def test_golden_asr901(self):
+        self.maxDiff = None
+        self.dev_asr901 = Mock(**self.golden_output_asr901)
+        version_obj = ShowVersion(device=self.dev_asr901)
+        parsed_output = version_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_asr901)
 
 class test_dir(unittest.TestCase):
     dev1 = Device(name='empty')
@@ -1130,6 +1230,7 @@ class test_show_inventory(unittest.TestCase):
     dev2 = Device(name='semi_empty')
     dev_asr1k = Device(name='asr1k')
     dev_c3850 = Device(name='c3850')
+    dev_asr901 = Device(name='asr901')
     empty_output = {'execute.return_value': ''}
     semi_empty_output = {'execute.return_value': '''/
         NAME: "c38xx Stack", DESCR: "c38xx Stack"
@@ -1702,6 +1803,50 @@ class test_show_inventory(unittest.TestCase):
         PID: ISR4331/K9        , VID:      , SN:            
 '''}
 
+    golden_parsed_output2 = {
+        'main': 
+            {'chassis': 
+                {'ASR-920-24SZ-IM': 
+                    {'descr': 'Cisco ASR920 Series - 24GE and 4-10GE- Modular PSU and IM',
+                    'name': 'Chassis',
+                    'pid': 'ASR-920-24SZ-IM',
+                    'sn': 'CAT1902V19M',
+                    'vid': 'V01'}}},
+        'slot': 
+            {'0': 
+                {'P0': 
+                    {'other': 
+                        {'ASR-920-PWR-D': 
+                            {'descr': 'ASR 920 250W DC Power Supply',
+                            'name': 'Power Supply Module 0',
+                            'pid': 'ASR-920-PWR-D',
+                            'sn': 'ART1832F11X',
+                            'vid': 'V01'}}}}}}
+
+    golden_output2 = {'execute.return_value': '''
+        Router#show inventory
+        NAME: "Chassis", DESCR: "Cisco ASR920 Series - 24GE and 4-10GE- Modular PSU and IM"
+        PID: ASR-920-24SZ-IM   , VID: V01  , SN: CAT1902V19M
+
+        NAME: "subslot 0/0 transceiver 26", DESCR: "SFP+ 10GBASE-LR"
+        PID: SFP-10G-LR          , VID: CSCO , SN: CD180456291     
+
+        NAME: "subslot 0/0 transceiver 27", DESCR: "SFP+ 10GBASE-LR"
+        PID: SFP-10G-LR          , VID: CSCO , SN: CD180456292     
+
+        NAME: "IM subslot 0/1", DESCR: "ASR 900 Combo 4 port DS3 12 DS1 and 4 OCx"
+        PID: A900-IMA3G-IMSG   , VID: V01  , SN: FOC2204PAP1
+
+        NAME: "subslot 0/1 transceiver 16", DESCR: "Dual-Rate OC3/12 IR-1"
+        PID: ONS-SI-622-I1       , VID: A    , SN: ECL133706C3     
+
+        NAME: "Power Supply Module 0", DESCR: "ASR 920 250W DC Power Supply"
+        PID: ASR-920-PWR-D     , VID: V01  , SN: ART1832F11X
+
+        NAME: "Fan Tray", DESCR: "ASR 920 Fan tray"
+        PID: ASR-920-FAN-M     , VID: V01  , SN: CAT1903V028
+        '''}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         inventory_obj = ShowInventory(device=self.dev1)
@@ -1735,6 +1880,13 @@ class test_show_inventory(unittest.TestCase):
         inventory_obj = ShowInventory(device=self.dev_asr1k)
         parsed_output = inventory_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_asr1k)
+
+    # def test_golden_asr901(self):
+    #     self.maxDiff = None
+    #     self.dev_asr901 = Mock(**self.golden_output2)
+    #     inventory_obj = ShowInventory(device=self.dev_asr901)
+    #     parsed_output = inventory_obj.parse()
+    #     self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 class test_show_platform(unittest.TestCase):
     dev1 = Device(name='empty')
@@ -4279,7 +4431,7 @@ class test_show_processes_cpu_platform(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         Router#show processes cpu platform 
         Load for five secs: 1%/0%; one minute: 9%; five minutes: 19%
-        Time source is NTP, 17:48:03.994 JST Wed Oct 19 2016
+        Time source is NTP, 17:48:03.994 EST Wed Oct 19 2016
         CPU utilization for five seconds:  2%, one minute:  5%, five minutes: 22%
         Core 0: CPU utilization for five seconds:  2%, one minute:  8%, five minutes: 18%
         Core 1: CPU utilization for five seconds:  0%, one minute:  3%, five minutes: 23%
@@ -4878,7 +5030,7 @@ class test_show_env(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         Router#show environment
         Load for five secs: 4%/0%; one minute: 8%; five minutes: 6%
-        Time source is NTP, 17:41:24.716 JST Wed Oct 19 2016
+        Time source is NTP, 17:41:24.716 EST Wed Oct 19 2016
 
 
         Number of Critical alarms:  0
@@ -5102,12 +5254,5755 @@ class test_show_processes_cpu(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output = {}
+    golden_parsed_output = {'five_min_cpu': 3,
+ 'five_sec_cpu_interrupts': 0,
+ 'five_sec_cpu_total': 1,
+ 'nonzero_cpu_processes': ['Check heaps',
+                           'IOSD ipc task',
+                           'IOSXE-RP Punt Se',
+                           'Per-Second Jobs',
+                           'VRRS Main thread',
+                           'IP ARP Retry Age',
+                           'BGP Scanner',
+                           'MMA DB TIMER',
+                           'MFI LFD Stats Pr',
+                           'BGP Router',
+                           'Virtual Exec'],
+ 'one_min_cpu': 2,
+ 'sort': {1: {'five_min_cpu': 0.0,
+              'five_sec_cpu': 0.0,
+              'invoked': 1016,
+              'one_min_cpu': 0.0,
+              'pid': 1,
+              'process': 'Chunk Manager',
+              'runtime': 15,
+              'tty': 0,
+              'usecs': 14},
+          2: {'five_min_cpu': 0.0,
+              'five_sec_cpu': 0.0,
+              'invoked': 6576,
+              'one_min_cpu': 0.0,
+              'pid': 2,
+              'process': 'Load Meter',
+              'runtime': 1883,
+              'tty': 0,
+              'usecs': 286},
+          3: {'five_min_cpu': 0.0,
+              'five_sec_cpu': 0.0,
+              'invoked': 2,
+              'one_min_cpu': 0.0,
+              'pid': 3,
+              'process': 'SpanTree Helper',
+              'runtime': 2,
+              'tty': 0,
+              'usecs': 1000},
+          4: {'five_min_cpu': 0.0,
+              'five_sec_cpu': 0.0,
+              'invoked': 120,
+              'one_min_cpu': 0.0,
+              'pid': 4,
+              'process': 'Retransmission o',
+              'runtime': 2,
+              'tty': 0,
+              'usecs': 16},
+          5: {'five_min_cpu': 0.0,
+              'five_sec_cpu': 0.0,
+              'invoked': 4,
+              'one_min_cpu': 0.0,
+              'pid': 5,
+              'process': 'IPC ISSU Dispatc',
+              'runtime': 1,
+              'tty': 0,
+              'usecs': 250},
+          6: {'five_min_cpu': 0.0,
+              'five_sec_cpu': 0.0,
+              'invoked': 210,
+              'one_min_cpu': 0.0,
+              'pid': 6,
+              'process': 'RF Slave Main Th',
+              'runtime': 48,
+              'tty': 0,
+              'usecs': 228},
+          7: {'five_min_cpu': 0.0,
+              'five_sec_cpu': 0.0,
+              'invoked': 1,
+              'one_min_cpu': 0.0,
+              'pid': 7,
+              'process': 'EDDRI_MAIN',
+              'runtime': 0,
+              'tty': 0,
+              'usecs': 0},
+          8: {'five_min_cpu': 0.0,
+              'five_sec_cpu': 0.0,
+              'invoked': 34,
+              'one_min_cpu': 0.0,
+              'pid': 8,
+              'process': 'RO Notify Timers',
+              'runtime': 0,
+              'tty': 0,
+              'usecs': 0},
+          9: {'five_min_cpu': 0.46,
+              'five_sec_cpu': 0.0,
+              'invoked': 11390,
+              'one_min_cpu': 0.59,
+              'pid': 9,
+              'process': 'Check heaps',
+              'runtime': 192629,
+              'tty': 0,
+              'usecs': 16912},
+          10: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 556,
+               'one_min_cpu': 0.0,
+               'pid': 10,
+               'process': 'Pool Manager',
+               'runtime': 60,
+               'tty': 0,
+               'usecs': 107},
+          11: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 4,
+               'one_min_cpu': 0.0,
+               'pid': 11,
+               'process': 'DiscardQ Backgro',
+               'runtime': 21,
+               'tty': 0,
+               'usecs': 5250},
+          12: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 2,
+               'one_min_cpu': 0.0,
+               'pid': 12,
+               'process': 'Timers',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          13: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 6865,
+               'one_min_cpu': 0.0,
+               'pid': 13,
+               'process': 'WATCH_AFS',
+               'runtime': 8,
+               'tty': 0,
+               'usecs': 1},
+          14: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 14,
+               'process': 'MEMLEAK PROCESS',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          15: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 50568,
+               'one_min_cpu': 0.0,
+               'pid': 15,
+               'process': 'ARP Input',
+               'runtime': 2538,
+               'tty': 0,
+               'usecs': 50},
+          16: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 34824,
+               'one_min_cpu': 0.0,
+               'pid': 16,
+               'process': 'ARP Background',
+               'runtime': 413,
+               'tty': 0,
+               'usecs': 11},
+          17: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 2,
+               'one_min_cpu': 0.0,
+               'pid': 17,
+               'process': 'ATM Idle Timer',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          18: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 18,
+               'process': 'ATM ASYNC PROC',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          19: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 19,
+               'process': 'AAA_SERVER_DEADT',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          20: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 20,
+               'process': 'Policy Manager',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          21: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 2,
+               'one_min_cpu': 0.0,
+               'pid': 21,
+               'process': 'DDR Timers',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          22: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 54,
+               'one_min_cpu': 0.0,
+               'pid': 22,
+               'process': 'Entity MIB API',
+               'runtime': 65,
+               'tty': 0,
+               'usecs': 1203},
+          23: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 254,
+               'one_min_cpu': 0.0,
+               'pid': 23,
+               'process': 'PrstVbl',
+               'runtime': 148,
+               'tty': 0,
+               'usecs': 582},
+          24: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 24,
+               'process': 'RMI RM Notify Wa',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          25: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 16446,
+               'one_min_cpu': 0.0,
+               'pid': 25,
+               'process': 'IOSXE heartbeat',
+               'runtime': 150,
+               'tty': 0,
+               'usecs': 9},
+          26: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 2,
+               'one_min_cpu': 0.0,
+               'pid': 26,
+               'process': 'ATM AutoVC Perio',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          27: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 2,
+               'one_min_cpu': 0.0,
+               'pid': 27,
+               'process': 'ATM VC Auto Crea',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          28: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 73,
+               'one_min_cpu': 0.0,
+               'pid': 28,
+               'process': 'IPC Apps Task',
+               'runtime': 3,
+               'tty': 0,
+               'usecs': 41},
+          29: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 11,
+               'one_min_cpu': 0.0,
+               'pid': 29,
+               'process': 'ifIndex Receive',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          30: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 6580,
+               'one_min_cpu': 0.0,
+               'pid': 30,
+               'process': 'IPC Event Notifi',
+               'runtime': 36,
+               'tty': 0,
+               'usecs': 5},
+          31: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 32091,
+               'one_min_cpu': 0.0,
+               'pid': 31,
+               'process': 'IPC Mcast Pendin',
+               'runtime': 161,
+               'tty': 0,
+               'usecs': 5},
+          32: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 32,
+               'process': 'ASR1000 appsess',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          33: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 549,
+               'one_min_cpu': 0.0,
+               'pid': 33,
+               'process': 'IPC Dynamic Cach',
+               'runtime': 12,
+               'tty': 0,
+               'usecs': 21},
+          34: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 6678,
+               'one_min_cpu': 0.0,
+               'pid': 34,
+               'process': 'IPC Service NonC',
+               'runtime': 593,
+               'tty': 0,
+               'usecs': 88},
+          35: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 35,
+               'process': 'IPC Zone Manager',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          36: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 32091,
+               'one_min_cpu': 0.0,
+               'pid': 36,
+               'process': 'IPC Periodic Tim',
+               'runtime': 239,
+               'tty': 0,
+               'usecs': 7},
+          37: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 32090,
+               'one_min_cpu': 0.0,
+               'pid': 37,
+               'process': 'IPC Deferred Por',
+               'runtime': 176,
+               'tty': 0,
+               'usecs': 5},
+          38: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 38,
+               'process': 'IPC Process leve',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          39: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 15214,
+               'one_min_cpu': 0.0,
+               'pid': 39,
+               'process': 'IPC Seat Manager',
+               'runtime': 464,
+               'tty': 0,
+               'usecs': 30},
+          40: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1881,
+               'one_min_cpu': 0.0,
+               'pid': 40,
+               'process': 'IPC Check Queue',
+               'runtime': 10,
+               'tty': 0,
+               'usecs': 5},
+          41: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 556,
+               'one_min_cpu': 0.0,
+               'pid': 41,
+               'process': 'IPC Seat RX Cont',
+               'runtime': 20,
+               'tty': 0,
+               'usecs': 35},
+          42: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 42,
+               'process': 'IPC Seat TX Cont',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          43: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 3291,
+               'one_min_cpu': 0.0,
+               'pid': 43,
+               'process': 'IPC Keep Alive M',
+               'runtime': 100,
+               'tty': 0,
+               'usecs': 30},
+          44: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 6580,
+               'one_min_cpu': 0.0,
+               'pid': 44,
+               'process': 'IPC Loadometer',
+               'runtime': 687,
+               'tty': 0,
+               'usecs': 104},
+          45: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 45,
+               'process': 'IPC Session Deta',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          46: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 46,
+               'process': 'SENSOR-MGR event',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          47: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 3292,
+               'one_min_cpu': 0.0,
+               'pid': 47,
+               'process': 'Compute SRP rate',
+               'runtime': 17,
+               'tty': 0,
+               'usecs': 5},
+          48: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 48,
+               'process': 'CEF MIB API',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          49: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 2,
+               'one_min_cpu': 0.0,
+               'pid': 49,
+               'process': 'Serial Backgroun',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          50: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 32875,
+               'one_min_cpu': 0.0,
+               'pid': 50,
+               'process': 'GraphIt',
+               'runtime': 267,
+               'tty': 0,
+               'usecs': 8},
+          51: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 2,
+               'one_min_cpu': 0.0,
+               'pid': 51,
+               'process': 'Dialer event',
+               'runtime': 1,
+               'tty': 0,
+               'usecs': 500},
+          52: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 52,
+               'process': 'IOSXE signals IO',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          53: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 2,
+               'one_min_cpu': 0.0,
+               'pid': 53,
+               'process': 'SMART',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          54: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 17,
+               'one_min_cpu': 0.0,
+               'pid': 54,
+               'process': 'client_entity_se',
+               'runtime': 1,
+               'tty': 0,
+               'usecs': 58},
+          55: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 55,
+               'process': 'RF SCTPthread',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          56: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 56,
+               'process': 'CHKPT RG SCTPthr',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          57: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 4,
+               'one_min_cpu': 0.0,
+               'pid': 58,
+               'process': 'Critical Bkgnd',
+               'runtime': 3,
+               'tty': 0,
+               'usecs': 750},
+          58: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 51594,
+               'one_min_cpu': 0.0,
+               'pid': 59,
+               'process': 'Net Background',
+               'runtime': 1949,
+               'tty': 0,
+               'usecs': 37},
+          59: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 3,
+               'one_min_cpu': 0.0,
+               'pid': 60,
+               'process': 'IDB Work',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          60: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 728,
+               'one_min_cpu': 0.0,
+               'pid': 61,
+               'process': 'Logger',
+               'runtime': 11,
+               'tty': 0,
+               'usecs': 15},
+          61: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 32836,
+               'one_min_cpu': 0.0,
+               'pid': 62,
+               'process': 'TTY Background',
+               'runtime': 385,
+               'tty': 0,
+               'usecs': 11},
+          62: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 63,
+               'process': 'BACK CHECK',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          63: {'five_min_cpu': 0.05,
+               'five_sec_cpu': 0.07,
+               'invoked': 282755,
+               'one_min_cpu': 0.04,
+               'pid': 64,
+               'process': 'IOSD ipc task',
+               'runtime': 17768,
+               'tty': 0,
+               'usecs': 62},
+          64: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 79222,
+               'one_min_cpu': 0.0,
+               'pid': 65,
+               'process': 'IOSD chasfs task',
+               'runtime': 1119,
+               'tty': 0,
+               'usecs': 14},
+          65: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 4712,
+               'one_min_cpu': 0.0,
+               'pid': 66,
+               'process': 'REDUNDANCY FSM',
+               'runtime': 41,
+               'tty': 0,
+               'usecs': 8},
+          66: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 9,
+               'one_min_cpu': 0.0,
+               'pid': 67,
+               'process': 'SBC IPC Hold Que',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          67: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 68,
+               'process': 'Punt FP Stats Du',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          68: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 16390,
+               'one_min_cpu': 0.0,
+               'pid': 69,
+               'process': 'PuntInject Keepa',
+               'runtime': 912,
+               'tty': 0,
+               'usecs': 55},
+          69: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 260,
+               'one_min_cpu': 0.0,
+               'pid': 70,
+               'process': 'IF-MGR control p',
+               'runtime': 340,
+               'tty': 0,
+               'usecs': 1307},
+          70: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 34,
+               'one_min_cpu': 0.0,
+               'pid': 71,
+               'process': 'IF-MGR event pro',
+               'runtime': 2,
+               'tty': 0,
+               'usecs': 58},
+          71: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 290,
+               'one_min_cpu': 0.0,
+               'pid': 72,
+               'process': 'cpf_msg_holdq_pr',
+               'runtime': 48,
+               'tty': 0,
+               'usecs': 165},
+          72: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 6715,
+               'one_min_cpu': 0.0,
+               'pid': 73,
+               'process': 'cpf_msg_rcvq_pro',
+               'runtime': 176,
+               'tty': 0,
+               'usecs': 26},
+          73: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 13566,
+               'one_min_cpu': 0.0,
+               'pid': 74,
+               'process': 'cpf_process_tpQ',
+               'runtime': 17155,
+               'tty': 0,
+               'usecs': 1264},
+          74: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 2,
+               'one_min_cpu': 0.0,
+               'pid': 75,
+               'process': 'Network-rf Notif',
+               'runtime': 1,
+               'tty': 0,
+               'usecs': 500},
+          75: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 32866,
+               'one_min_cpu': 0.0,
+               'pid': 76,
+               'process': 'Environmental Mo',
+               'runtime': 1034,
+               'tty': 0,
+               'usecs': 31},
+          76: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 32866,
+               'one_min_cpu': 0.0,
+               'pid': 77,
+               'process': 'RP HA Periodic',
+               'runtime': 206,
+               'tty': 0,
+               'usecs': 6},
+          77: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 78,
+               'process': 'CONSOLE helper p',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          78: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 355,
+               'one_min_cpu': 0.0,
+               'pid': 79,
+               'process': 'CEF RRP RF waite',
+               'runtime': 5,
+               'tty': 0,
+               'usecs': 14},
+          79: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 3,
+               'one_min_cpu': 0.0,
+               'pid': 80,
+               'process': 'CWAN APS HA Proc',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          80: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 42450,
+               'one_min_cpu': 0.0,
+               'pid': 81,
+               'process': 'REDUNDANCY peer',
+               'runtime': 1041,
+               'tty': 0,
+               'usecs': 24},
+          81: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 328370,
+               'one_min_cpu': 0.0,
+               'pid': 82,
+               'process': '100ms check',
+               'runtime': 2062,
+               'tty': 0,
+               'usecs': 6},
+          82: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 554,
+               'one_min_cpu': 0.0,
+               'pid': 83,
+               'process': 'RF CWAN HA Proce',
+               'runtime': 11,
+               'tty': 0,
+               'usecs': 19},
+          83: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 9,
+               'one_min_cpu': 0.0,
+               'pid': 84,
+               'process': 'CWAN IF EVENT HA',
+               'runtime': 1,
+               'tty': 0,
+               'usecs': 111},
+          84: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 5,
+               'one_min_cpu': 0.0,
+               'pid': 85,
+               'process': 'ANCP HA',
+               'runtime': 1,
+               'tty': 0,
+               'usecs': 200},
+          85: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 18,
+               'one_min_cpu': 0.0,
+               'pid': 86,
+               'process': 'ANCP HA IPC flow',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          86: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 87,
+               'process': 'QoS HA ID RETAIN',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          87: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 88,
+               'process': 'CHKPT Test clien',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          88: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 89,
+               'process': 'CHKPT Test clien',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          89: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 90,
+               'process': 'CHKPT Test clien',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          90: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 91,
+               'process': 'CHKPT Test clien',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          91: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 92,
+               'process': 'CHKPT Test clien',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          92: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 93,
+               'process': 'CHKPT Test clien',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          93: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 94,
+               'process': 'CHKPT Test clien',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          94: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 95,
+               'process': 'CHKPT Test clien',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          95: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 96,
+               'process': 'CHKPT Test clien',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          96: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 97,
+               'process': 'CHKPT Test clien',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          97: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 1,
+               'one_min_cpu': 0.0,
+               'pid': 98,
+               'process': 'CHKPT Test clien',
+               'runtime': 0,
+               'tty': 0,
+               'usecs': 0},
+          98: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 7,
+               'one_min_cpu': 0.0,
+               'pid': 99,
+               'process': 'DHCPC HA',
+               'runtime': 1,
+               'tty': 0,
+               'usecs': 142},
+          99: {'five_min_cpu': 0.0,
+               'five_sec_cpu': 0.0,
+               'invoked': 7,
+               'one_min_cpu': 0.0,
+               'pid': 100,
+               'process': 'DHCPD HA',
+               'runtime': 1,
+               'tty': 0,
+               'usecs': 142},
+          100: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 8,
+                'one_min_cpu': 0.0,
+                'pid': 101,
+                'process': 'DHCPv6 Relay HA',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          101: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 8,
+                'one_min_cpu': 0.0,
+                'pid': 102,
+                'process': 'DHCPv6 Server HA',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          102: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 5,
+                'one_min_cpu': 0.0,
+                'pid': 103,
+                'process': 'Metadata HA',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          103: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 18,
+                'one_min_cpu': 0.0,
+                'pid': 104,
+                'process': 'FMD HA IPC flow',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          104: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 3,
+                'one_min_cpu': 0.0,
+                'pid': 105,
+                'process': 'SISF HA Process',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 333},
+          105: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 174,
+                'one_min_cpu': 0.0,
+                'pid': 106,
+                'process': 'ARP HA',
+                'runtime': 15,
+                'tty': 0,
+                'usecs': 86},
+          106: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 107,
+                'process': 'XDR RRP RF waite',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          107: {'five_min_cpu': 0.02,
+                'five_sec_cpu': 0.0,
+                'invoked': 407444,
+                'one_min_cpu': 0.03,
+                'pid': 108,
+                'process': 'IOSXE-RP Punt Se',
+                'runtime': 13441,
+                'tty': 0,
+                'usecs': 32},
+          108: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 109,
+                'process': 'IOSXE-RP Punt IP',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          109: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 4,
+                'one_min_cpu': 0.0,
+                'pid': 110,
+                'process': 'IOSXE-RP SPA TSM',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 250},
+          110: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 8256,
+                'one_min_cpu': 0.0,
+                'pid': 111,
+                'process': 'RF Master Main T',
+                'runtime': 78,
+                'tty': 0,
+                'usecs': 9},
+          111: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 8220,
+                'one_min_cpu': 0.0,
+                'pid': 112,
+                'process': 'RF Master Status',
+                'runtime': 488,
+                'tty': 0,
+                'usecs': 59},
+          112: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 7528,
+                'one_min_cpu': 0.0,
+                'pid': 113,
+                'process': 'Net Input',
+                'runtime': 92,
+                'tty': 0,
+                'usecs': 12},
+          113: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 5,
+                'one_min_cpu': 0.0,
+                'pid': 114,
+                'process': 'OTV Event Dispat',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 200},
+          114: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 3290,
+                'one_min_cpu': 0.0,
+                'pid': 115,
+                'process': 'Compute load avg',
+                'runtime': 161,
+                'tty': 0,
+                'usecs': 48},
+          115: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1097,
+                'one_min_cpu': 0.0,
+                'pid': 116,
+                'process': 'Per-minute Jobs',
+                'runtime': 3720,
+                'tty': 0,
+                'usecs': 3391},
+          116: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.07,
+                'invoked': 32944,
+                'one_min_cpu': 0.01,
+                'pid': 117,
+                'process': 'Per-Second Jobs',
+                'runtime': 4496,
+                'tty': 0,
+                'usecs': 136},
+          117: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 32847,
+                'one_min_cpu': 0.0,
+                'pid': 118,
+                'process': 'mLDP Process',
+                'runtime': 247,
+                'tty': 0,
+                'usecs': 7},
+          118: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 46,
+                'one_min_cpu': 0.0,
+                'pid': 119,
+                'process': 'Transport Port A',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 21},
+          119: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 310,
+                'one_min_cpu': 0.0,
+                'pid': 120,
+                'process': 'EEM ED ND',
+                'runtime': 3,
+                'tty': 0,
+                'usecs': 9},
+          120: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 121,
+                'process': 'IOSXE-RP FastPat',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          121: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 122,
+                'process': 'Src Fltr backgro',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          122: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 123,
+                'process': 'DSX3MIB ll handl',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          123: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 32087,
+                'one_min_cpu': 0.0,
+                'pid': 124,
+                'process': 'fanrp_l2fib',
+                'runtime': 223,
+                'tty': 0,
+                'usecs': 6},
+          124: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 125,
+                'process': 'POS APS Event Pr',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          125: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 3,
+                'one_min_cpu': 0.0,
+                'pid': 126,
+                'process': 'netclk_process',
+                'runtime': 5,
+                'tty': 0,
+                'usecs': 1666},
+          126: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 3,
+                'one_min_cpu': 0.0,
+                'pid': 127,
+                'process': 'netclk_ha_proces',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 333},
+          127: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 7,
+                'one_min_cpu': 0.0,
+                'pid': 128,
+                'process': 'FPD Management P',
+                'runtime': 4,
+                'tty': 0,
+                'usecs': 571},
+          128: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 129,
+                'process': 'FPD Action Proce',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          129: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 130,
+                'process': 'BFD HW EVENT',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          130: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 131,
+                'process': 'BFD IPV6 ADDR CH',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          131: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 132,
+                'process': 'FEC_Link_event_h',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          132: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 255002,
+                'one_min_cpu': 0.0,
+                'pid': 133,
+                'process': 'MCP RP autovc pr',
+                'runtime': 1395,
+                'tty': 0,
+                'usecs': 5},
+          133: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 134,
+                'process': 'VMI Background',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          134: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 6563,
+                'one_min_cpu': 0.0,
+                'pid': 135,
+                'process': 'MGMTE stats Proc',
+                'runtime': 259,
+                'tty': 0,
+                'usecs': 39},
+          135: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 44788,
+                'one_min_cpu': 0.0,
+                'pid': 136,
+                'process': 'Ether-SPA backgr',
+                'runtime': 386,
+                'tty': 0,
+                'usecs': 8},
+          136: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 32863,
+                'one_min_cpu': 0.0,
+                'pid': 137,
+                'process': 'CWAN CHOCX PROCE',
+                'runtime': 207,
+                'tty': 0,
+                'usecs': 6},
+          137: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 138,
+                'process': 'CE3 Mailbox',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          138: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 139,
+                'process': 'CT3 Mailbox',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          139: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 140,
+                'process': 'HAL Mailbox',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          140: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 141,
+                'process': 'MIP Mailbox',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          141: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1198,
+                'one_min_cpu': 0.0,
+                'pid': 142,
+                'process': 'CWAN OIR Handler',
+                'runtime': 1001,
+                'tty': 0,
+                'usecs': 835},
+          142: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 143,
+                'process': 'TP CUTOVER EVENT',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          143: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 144,
+                'process': 'ASR1K ESMC Proce',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          144: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 145,
+                'process': 'ASR1000-RP SPA A',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          145: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 146,
+                'process': 'RTTYS Process',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          146: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 130,
+                'one_min_cpu': 0.0,
+                'pid': 147,
+                'process': 'AAA Server',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 7},
+          147: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 148,
+                'process': 'AAA ACCT Proc',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          148: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 149,
+                'process': 'ACCT Periodic Pr',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          149: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 32863,
+                'one_min_cpu': 0.0,
+                'pid': 150,
+                'process': 'cdp init process',
+                'runtime': 140,
+                'tty': 0,
+                'usecs': 4},
+          150: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 565,
+                'one_min_cpu': 0.0,
+                'pid': 151,
+                'process': 'Call Home Timer',
+                'runtime': 6,
+                'tty': 0,
+                'usecs': 10},
+          151: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 152,
+                'process': 'CEF switching ba',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          152: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 153,
+                'process': 'ADJ NSF process',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          153: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 154,
+                'process': 'AAA Dictionary R',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          154: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 32863,
+                'one_min_cpu': 0.0,
+                'pid': 155,
+                'process': 'FHRP Main thread',
+                'runtime': 504,
+                'tty': 0,
+                'usecs': 15},
+          155: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 156,
+                'process': 'TRACK Main threa',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          156: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 157,
+                'process': 'TRACK Client thr',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          157: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 158,
+                'process': 'VRRP Main thread',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          158: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.07,
+                'invoked': 510138,
+                'one_min_cpu': 0.0,
+                'pid': 159,
+                'process': 'VRRS Main thread',
+                'runtime': 4663,
+                'tty': 0,
+                'usecs': 9},
+          159: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 160,
+                'process': 'ATM OAM Input',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          160: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 161,
+                'process': 'ATM OAM TIMER',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          161: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 162,
+                'process': 'HQF TARGET DYNAM',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          162: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 247,
+                'one_min_cpu': 0.0,
+                'pid': 163,
+                'process': 'IP ARP Adjacency',
+                'runtime': 45,
+                'tty': 0,
+                'usecs': 182},
+          163: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.07,
+                'invoked': 1006869,
+                'one_min_cpu': 0.01,
+                'pid': 164,
+                'process': 'IP ARP Retry Age',
+                'runtime': 5672,
+                'tty': 0,
+                'usecs': 5},
+          164: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 549,
+                'one_min_cpu': 0.0,
+                'pid': 165,
+                'process': 'IP Input',
+                'runtime': 2,
+                'tty': 0,
+                'usecs': 3},
+          165: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 166,
+                'process': 'ICMP event handl',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          166: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 32863,
+                'one_min_cpu': 0.0,
+                'pid': 167,
+                'process': 'mDNS',
+                'runtime': 283,
+                'tty': 0,
+                'usecs': 8},
+          167: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 3,
+                'one_min_cpu': 0.0,
+                'pid': 168,
+                'process': 'PIM register asy',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          168: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 169,
+                'process': 'IPv6 ping proces',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          169: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 32063,
+                'one_min_cpu': 0.0,
+                'pid': 170,
+                'process': 'BGP Scheduler',
+                'runtime': 589,
+                'tty': 0,
+                'usecs': 18},
+          170: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 116,
+                'one_min_cpu': 0.0,
+                'pid': 171,
+                'process': 'MOP Protocols',
+                'runtime': 11,
+                'tty': 0,
+                'usecs': 94},
+          171: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 172,
+                'process': 'PPP SIP',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          172: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 173,
+                'process': 'PPP Bind',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          173: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 174,
+                'process': 'PPP IP Route',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          174: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 175,
+                'process': 'LSP Verification',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 1000},
+          175: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 176,
+                'process': 'RIB LM VALIDATE',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          176: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 346,
+                'one_min_cpu': 0.0,
+                'pid': 177,
+                'process': 'SSM connection m',
+                'runtime': 170,
+                'tty': 0,
+                'usecs': 491},
+          177: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 549,
+                'one_min_cpu': 0.0,
+                'pid': 178,
+                'process': 'SSS Manager',
+                'runtime': 2,
+                'tty': 0,
+                'usecs': 3},
+          178: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 179,
+                'process': 'SSS Policy Manag',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          179: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 180,
+                'process': 'SSS Feature Mana',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          180: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 128492,
+                'one_min_cpu': 0.0,
+                'pid': 181,
+                'process': 'SSS Feature Time',
+                'runtime': 932,
+                'tty': 0,
+                'usecs': 7},
+          181: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 182,
+                'process': 'Spanning Tree',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          182: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 183,
+                'process': 'VRRS',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          183: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 184,
+                'process': 'Ethernet LMI',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          184: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 185,
+                'process': 'Ethernet OAM Pro',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          185: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 186,
+                'process': 'Ethernet CFM',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 500},
+          186: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 5561,
+                'one_min_cpu': 0.0,
+                'pid': 187,
+                'process': 'mcp callhome per',
+                'runtime': 357,
+                'tty': 0,
+                'usecs': 64},
+          187: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 188,
+                'process': 'PPCP RP Stats Ba',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          188: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 110,
+                'one_min_cpu': 0.0,
+                'pid': 189,
+                'process': 'Appnav auto disc',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          189: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 190,
+                'process': 'L2FIB Timer Disp',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          190: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 71,
+                'one_min_cpu': 0.0,
+                'pid': 191,
+                'process': 'MLRIB L2 Msg Thr',
+                'runtime': 10,
+                'tty': 0,
+                'usecs': 140},
+          191: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 192,
+                'process': 'Spanning Tree St',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          192: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 193,
+                'process': 'IGMP Route Msg H',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          193: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 36,
+                'one_min_cpu': 0.0,
+                'pid': 194,
+                'process': 'IGMP Route Rx Pr',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          194: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 3,
+                'one_min_cpu': 0.0,
+                'pid': 195,
+                'process': 'RABAPOL HA',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          195: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 18,
+                'one_min_cpu': 0.0,
+                'pid': 196,
+                'process': 'RABAPOL HA IPC f',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          196: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 9,
+                'one_min_cpu': 0.0,
+                'pid': 197,
+                'process': 'TEMPLATE HA',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 111},
+          197: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 4,
+                'one_min_cpu': 0.0,
+                'pid': 198,
+                'process': 'DVLAN HA',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          198: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 90,
+                'one_min_cpu': 0.0,
+                'pid': 199,
+                'process': 'CCM',
+                'runtime': 13,
+                'tty': 0,
+                'usecs': 144},
+          199: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 18,
+                'one_min_cpu': 0.0,
+                'pid': 200,
+                'process': 'CCM IPC flow con',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          200: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 201,
+                'process': 'RG Faults Timer',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          201: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 202,
+                'process': 'RG VP',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          202: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 203,
+                'process': 'RG AR',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          203: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 204,
+                'process': 'RG Protocol Time',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          204: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 205,
+                'process': 'RG Transport Tim',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          205: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 206,
+                'process': 'HDLC HA',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          206: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 207,
+                'process': 'SBC initializer',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 1000},
+          207: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 3,
+                'one_min_cpu': 0.0,
+                'pid': 208,
+                'process': 'SVM HA',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          208: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 32876,
+                'one_min_cpu': 0.0,
+                'pid': 209,
+                'process': 'UDLD',
+                'runtime': 423,
+                'tty': 0,
+                'usecs': 12},
+          209: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 210,
+                'process': 'AC Switch',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          210: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 211,
+                'process': 'IEDGE ACCT TIMER',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          211: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 212,
+                'process': 'ISG CMD HANDLER',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          212: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 213,
+                'process': 'IMA PROC',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          213: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 8033,
+                'one_min_cpu': 0.0,
+                'pid': 214,
+                'process': 'IP Lite session',
+                'runtime': 35,
+                'tty': 0,
+                'usecs': 4},
+          214: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 215,
+                'process': 'IP PORTBUNDLE',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          215: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 216,
+                'process': 'SSS Mobility mes',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          216: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 8026,
+                'one_min_cpu': 0.0,
+                'pid': 217,
+                'process': 'IP Static Sessio',
+                'runtime': 35,
+                'tty': 0,
+                'usecs': 4},
+          217: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 218,
+                'process': 'DVLAN Config Pro',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          218: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 219,
+                'process': 'IPAM/ODAP Events',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          219: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1006869,
+                'one_min_cpu': 0.0,
+                'pid': 220,
+                'process': 'IPAM Manager',
+                'runtime': 6054,
+                'tty': 0,
+                'usecs': 6},
+          220: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 221,
+                'process': 'IPAM Events',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          221: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 222,
+                'process': 'OCE punted Pkts',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          222: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 223,
+                'process': 'O-UNI Client Msg',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          223: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 224,
+                'process': 'LSP Tunnel FRR',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          224: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 5,
+                'one_min_cpu': 0.0,
+                'pid': 225,
+                'process': 'MPLS Auto-Tunnel',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          225: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 226,
+                'process': 'st_pw_oam',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          226: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 227,
+                'process': 'AAA EPD HANDLER',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          227: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 228,
+                'process': 'PM EPD API',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          228: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 229,
+                'process': 'DM Proc',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          229: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 230,
+                'process': 'RADIUS Proxy',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          230: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 231,
+                'process': 'SSS PM SHIM QOS',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          231: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 232,
+                'process': 'LONG TO SHORT NA',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          232: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 233,
+                'process': 'Timer handler fo',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          233: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 234,
+                'process': 'Prepaid response',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          234: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 235,
+                'process': 'Timed Policy act',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          235: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 236,
+                'process': 'AAA response han',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          236: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 237,
+                'process': 'AAA System Acct',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          237: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 238,
+                'process': 'VPWS Thread',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          238: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 239,
+                'process': 'IP Traceroute',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          239: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 240,
+                'process': 'Tunnel',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          240: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 241,
+                'process': 'ATIP_UDP_TSK',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          241: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 242,
+                'process': 'XDR background p',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          242: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 18357,
+                'one_min_cpu': 0.0,
+                'pid': 243,
+                'process': 'XDR mcast',
+                'runtime': 19944,
+                'tty': 0,
+                'usecs': 1086},
+          243: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 3,
+                'one_min_cpu': 0.0,
+                'pid': 244,
+                'process': 'XDR RP Ping Back',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          244: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 211,
+                'one_min_cpu': 0.0,
+                'pid': 245,
+                'process': 'XDR receive',
+                'runtime': 46,
+                'tty': 0,
+                'usecs': 218},
+          245: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 4,
+                'one_min_cpu': 0.0,
+                'pid': 246,
+                'process': 'IPC LC Message H',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          246: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 247,
+                'process': 'XDR RP Test Back',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          247: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 549,
+                'one_min_cpu': 0.0,
+                'pid': 248,
+                'process': 'FRR Background P',
+                'runtime': 2,
+                'tty': 0,
+                'usecs': 3},
+          248: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 3521,
+                'one_min_cpu': 0.0,
+                'pid': 249,
+                'process': 'CEF background p',
+                'runtime': 26621,
+                'tty': 0,
+                'usecs': 7560},
+          249: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 250,
+                'process': 'fib_fib_bfd_sb e',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          250: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 251,
+                'process': 'IP IRDP',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          251: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 7,
+                'one_min_cpu': 0.0,
+                'pid': 252,
+                'process': 'SNMP Timers',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          252: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 5,
+                'one_min_cpu': 0.0,
+                'pid': 253,
+                'process': 'LSD HA Proc',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 200},
+          253: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 148,
+                'one_min_cpu': 0.0,
+                'pid': 254,
+                'process': 'CEF RP Backgroun',
+                'runtime': 14,
+                'tty': 0,
+                'usecs': 94},
+          254: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 255,
+                'process': 'Routing Topology',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          255: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 7171,
+                'one_min_cpu': 0.0,
+                'pid': 256,
+                'process': 'IP RIB Update',
+                'runtime': 337307,
+                'tty': 0,
+                'usecs': 47037},
+          256: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 915,
+                'one_min_cpu': 0.0,
+                'pid': 257,
+                'process': 'IP Background',
+                'runtime': 1371,
+                'tty': 0,
+                'usecs': 1498},
+          257: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 837,
+                'one_min_cpu': 0.0,
+                'pid': 258,
+                'process': 'IP Connected Rou',
+                'runtime': 229,
+                'tty': 0,
+                'usecs': 273},
+          258: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 259,
+                'process': 'PPP Compress Inp',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          259: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 260,
+                'process': 'PPP Compress Res',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          260: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 261,
+                'process': 'Tunnel FIB',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          261: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 68,
+                'one_min_cpu': 0.0,
+                'pid': 263,
+                'process': 'ADJ background',
+                'runtime': 9,
+                'tty': 0,
+                'usecs': 132},
+          262: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 523,
+                'one_min_cpu': 0.0,
+                'pid': 264,
+                'process': 'Collection proce',
+                'runtime': 12855,
+                'tty': 0,
+                'usecs': 24579},
+          263: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 3,
+                'one_min_cpu': 0.0,
+                'pid': 265,
+                'process': 'ADJ resolve proc',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          264: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 62,
+                'one_min_cpu': 0.0,
+                'pid': 266,
+                'process': 'Socket Timers',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          265: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 75126,
+                'one_min_cpu': 0.0,
+                'pid': 267,
+                'process': 'TCP Timer',
+                'runtime': 3096,
+                'tty': 0,
+                'usecs': 41},
+          266: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 49,
+                'one_min_cpu': 0.0,
+                'pid': 268,
+                'process': 'TCP Protocols',
+                'runtime': 5,
+                'tty': 0,
+                'usecs': 102},
+          267: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 269,
+                'process': 'COPS',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          268: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1097,
+                'one_min_cpu': 0.0,
+                'pid': 270,
+                'process': 'NGCP SCHEDULER P',
+                'runtime': 12,
+                'tty': 0,
+                'usecs': 10},
+          269: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 32840,
+                'one_min_cpu': 0.0,
+                'pid': 271,
+                'process': 'STILE PERIODIC T',
+                'runtime': 178,
+                'tty': 0,
+                'usecs': 5},
+          270: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 549,
+                'one_min_cpu': 0.0,
+                'pid': 272,
+                'process': 'UV AUTO CUSTOM P',
+                'runtime': 4,
+                'tty': 0,
+                'usecs': 7},
+          271: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 273,
+                'process': 'Dialer Forwarder',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          272: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 3,
+                'one_min_cpu': 0.0,
+                'pid': 274,
+                'process': 'Service Routing',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          273: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 196,
+                'one_min_cpu': 0.0,
+                'pid': 275,
+                'process': 'SR CapMan Proces',
+                'runtime': 32,
+                'tty': 0,
+                'usecs': 163},
+          274: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 151,
+                'one_min_cpu': 0.0,
+                'pid': 276,
+                'process': 'Flow Exporter Ti',
+                'runtime': 2,
+                'tty': 0,
+                'usecs': 13},
+          275: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 277,
+                'process': 'Flow Exporter Pa',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          276: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 110,
+                'one_min_cpu': 0.0,
+                'pid': 278,
+                'process': 'HTTP CORE',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 9},
+          277: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 279,
+                'process': 'SBC Msg Ack Time',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          278: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 111,
+                'one_min_cpu': 0.0,
+                'pid': 280,
+                'process': 'MFIB Master back',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 9},
+          279: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 51,
+                'one_min_cpu': 0.0,
+                'pid': 281,
+                'process': 'VFI Mgr',
+                'runtime': 21,
+                'tty': 0,
+                'usecs': 411},
+          280: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 330,
+                'one_min_cpu': 0.0,
+                'pid': 282,
+                'process': 'MVPN Mgr Process',
+                'runtime': 56,
+                'tty': 0,
+                'usecs': 169},
+          281: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 283,
+                'process': 'Multicast Offloa',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          282: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 284,
+                'process': 'RARP Input',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          283: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 128,
+                'one_min_cpu': 0.0,
+                'pid': 285,
+                'process': 'static',
+                'runtime': 12,
+                'tty': 0,
+                'usecs': 93},
+          284: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 286,
+                'process': 'App Route Proces',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          285: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 287,
+                'process': 'IPv6 RIB Cleanup',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          286: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 3,
+                'one_min_cpu': 0.0,
+                'pid': 288,
+                'process': 'IPv6 RIB Event H',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          287: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 289,
+                'process': 'IPv6 Static Hand',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          288: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 290,
+                'process': 'DHCPv6 LQ client',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          289: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 12,
+                'one_min_cpu': 0.0,
+                'pid': 291,
+                'process': 'AToM manager',
+                'runtime': 68,
+                'tty': 0,
+                'usecs': 5666},
+          290: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 292,
+                'process': 'PPP NBF',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          291: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 32559,
+                'one_min_cpu': 0.0,
+                'pid': 293,
+                'process': 'PfR BR Learn',
+                'runtime': 209,
+                'tty': 0,
+                'usecs': 6},
+          292: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 294,
+                'process': 'PAD InCall',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          293: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 3289,
+                'one_min_cpu': 0.0,
+                'pid': 297,
+                'process': 'QoS stats proces',
+                'runtime': 82,
+                'tty': 0,
+                'usecs': 24},
+          294: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 298,
+                'process': 'RBSCP Background',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          295: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 299,
+                'process': 'SCTP Main Proces',
+                'runtime': 2,
+                'tty': 0,
+                'usecs': 1000},
+          296: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 300,
+                'process': 'VPDN call manage',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          297: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 15,
+                'one_min_cpu': 0.0,
+                'pid': 301,
+                'process': 'XC RIB MGR',
+                'runtime': 95,
+                'tty': 0,
+                'usecs': 6333},
+          298: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 302,
+                'process': 'AToM LDP manager',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          299: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 303,
+                'process': 'EFP Errd',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          300: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 304,
+                'process': 'Ether EFP Proces',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          301: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 305,
+                'process': 'Ether Infra RP',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          302: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 18,
+                'one_min_cpu': 0.0,
+                'pid': 306,
+                'process': 'CFM HA IPC messa',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          303: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 307,
+                'process': 'Ethernet PM Proc',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          304: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 308,
+                'process': 'Ethernet PM Soft',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          305: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 9857,
+                'one_min_cpu': 0.0,
+                'pid': 309,
+                'process': 'Ethernet PM Moni',
+                'runtime': 83,
+                'tty': 0,
+                'usecs': 8},
+          306: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 310,
+                'process': 'Ethernet Datapla',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          307: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 18,
+                'one_min_cpu': 0.0,
+                'pid': 311,
+                'process': 'ELB HA IPC flow',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          308: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 42,
+                'one_min_cpu': 0.0,
+                'pid': 312,
+                'process': 'IGMPSN L2MCM',
+                'runtime': 31,
+                'tty': 0,
+                'usecs': 738},
+          309: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 313,
+                'process': 'IGMPSN MRD',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          310: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 314,
+                'process': 'IGMPSN',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          311: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 131016,
+                'one_min_cpu': 0.0,
+                'pid': 315,
+                'process': 'TCP HA PROC',
+                'runtime': 4917,
+                'tty': 0,
+                'usecs': 37},
+          312: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 5076,
+                'one_min_cpu': 0.0,
+                'pid': 316,
+                'process': 'BGP HA SSO',
+                'runtime': 49197,
+                'tty': 0,
+                'usecs': 9692},
+          313: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 5,
+                'one_min_cpu': 0.0,
+                'pid': 317,
+                'process': 'RSVP SYNC',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          314: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 318,
+                'process': 'RETRY_REPOPULATE',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          315: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 4,
+                'one_min_cpu': 0.0,
+                'pid': 319,
+                'process': 'XDR FOF process',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          316: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 320,
+                'process': 'BD Route Msg Hol',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          317: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 321,
+                'process': 'BD Route Rx Proc',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          318: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 3,
+                'one_min_cpu': 0.0,
+                'pid': 322,
+                'process': 'BD MACSEC HA',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          319: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 323,
+                'process': 'BD MACSEC HA CHK',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          320: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 128,
+                'one_min_cpu': 0.0,
+                'pid': 324,
+                'process': 'L2FIB Event Disp',
+                'runtime': 121,
+                'tty': 0,
+                'usecs': 945},
+          321: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 18,
+                'one_min_cpu': 0.0,
+                'pid': 325,
+                'process': 'STP HA IPC flow',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          322: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 326,
+                'process': 'IGMPQR',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          323: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 4,
+                'one_min_cpu': 0.0,
+                'pid': 327,
+                'process': 'AAA HA',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          324: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 328,
+                'process': 'AAA HA cleanup',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          325: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 329,
+                'process': 'ac_atm_state_eve',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          326: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 330,
+                'process': 'ac_atm_mraps_hsp',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          327: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 331,
+                'process': 'AC HA Bulk Sync',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          328: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 332,
+                'process': 'ATM HA',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          329: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 18,
+                'one_min_cpu': 0.0,
+                'pid': 333,
+                'process': 'ATM HA IPC flow',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          330: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 334,
+                'process': 'ATM HA AC',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          331: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 335,
+                'process': 'BFD HA',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          332: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 336,
+                'process': 'FR HA',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          333: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 10,
+                'one_min_cpu': 0.0,
+                'pid': 337,
+                'process': 'GLBP HA',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          334: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 10,
+                'one_min_cpu': 0.0,
+                'pid': 338,
+                'process': 'HSRP HA',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          335: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 64077,
+                'one_min_cpu': 0.0,
+                'pid': 339,
+                'process': 'Inspect process',
+                'runtime': 397,
+                'tty': 0,
+                'usecs': 6},
+          336: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 76816,
+                'one_min_cpu': 0.0,
+                'pid': 340,
+                'process': 'BGP I/O',
+                'runtime': 5548,
+                'tty': 0,
+                'usecs': 72},
+          337: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 8026,
+                'one_min_cpu': 0.0,
+                'pid': 341,
+                'process': 'IP SIP Process',
+                'runtime': 69,
+                'tty': 0,
+                'usecs': 8},
+          338: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 342,
+                'process': 'MRIB RP Proxy',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          339: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 343,
+                'process': 'IPv6 ACL RP Proc',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          340: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 18,
+                'one_min_cpu': 0.0,
+                'pid': 344,
+                'process': 'Netsync IPC flow',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          341: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 345,
+                'process': 'PPPoE VRRS EVT M',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          342: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 346,
+                'process': 'RG If-Mgr Timer',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          343: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 347,
+                'process': 'RG Media Timer',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          344: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 13,
+                'one_min_cpu': 0.0,
+                'pid': 348,
+                'process': 'MCPRP RG Timer',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 76},
+          345: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 349,
+                'process': 'URL filter proc',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          346: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 5,
+                'one_min_cpu': 0.0,
+                'pid': 350,
+                'process': 'VFI HA Bulk Sync',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          347: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 3,
+                'one_min_cpu': 0.0,
+                'pid': 351,
+                'process': 'XC RIB HA Bulk S',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          348: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 4,
+                'one_min_cpu': 0.0,
+                'pid': 352,
+                'process': 'XC BGP SIG RIB H',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          349: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 353,
+                'process': 'VPDN CCM Backgro',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          350: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 10,
+                'one_min_cpu': 0.0,
+                'pid': 354,
+                'process': 'VRRP HA',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          351: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 18,
+                'one_min_cpu': 0.0,
+                'pid': 355,
+                'process': 'VTEMPLATE IPC fl',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          352: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 187,
+                'one_min_cpu': 0.0,
+                'pid': 356,
+                'process': 'CEM PROC',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 5},
+          353: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 357,
+                'process': 'CEM HA',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          354: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 358,
+                'process': 'CEM HA AC',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          355: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 359,
+                'process': 'L2X Switching Ev',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          356: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 360,
+                'process': 'Probe Input',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          357: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 361,
+                'process': 'IP Inband Sessio',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 500},
+          358: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 362,
+                'process': 'DHCP SIP',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          359: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 8223,
+                'one_min_cpu': 0.0,
+                'pid': 363,
+                'process': 'FRR Manager',
+                'runtime': 77,
+                'tty': 0,
+                'usecs': 9},
+          360: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 364,
+                'process': 'MFI Comm RP Proc',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          361: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 365,
+                'process': 'Path set broker',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          362: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 366,
+                'process': 'LFD Label Block',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          363: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 5273,
+                'one_min_cpu': 0.0,
+                'pid': 367,
+                'process': 'LDP HA',
+                'runtime': 439,
+                'tty': 0,
+                'usecs': 83},
+          364: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 3,
+                'one_min_cpu': 0.0,
+                'pid': 368,
+                'process': 'MPLS VPN HA Clie',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          365: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 7,
+                'one_min_cpu': 0.0,
+                'pid': 369,
+                'process': 'TSPTUN HA',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          366: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 370,
+                'process': 'RSVP HA Services',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          367: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 371,
+                'process': 'TE NSR OOS DB Pr',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          368: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 17,
+                'one_min_cpu': 0.0,
+                'pid': 372,
+                'process': 'MPLS TP HA',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          369: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 5,
+                'one_min_cpu': 0.0,
+                'pid': 373,
+                'process': 'AToM HA Bulk Syn',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          370: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 17,
+                'one_min_cpu': 0.0,
+                'pid': 374,
+                'process': 'AToM MGR HA IPC',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          371: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 375,
+                'process': 'LFDp Input Proc',
+                'runtime': 2,
+                'tty': 0,
+                'usecs': 1000},
+          372: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 376,
+                'process': 'AAA Cached Serve',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          373: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 6,
+                'one_min_cpu': 0.0,
+                'pid': 377,
+                'process': 'ENABLE AAA',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          374: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 378,
+                'process': 'EM Background Pr',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          375: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 3,
+                'one_min_cpu': 0.0,
+                'pid': 379,
+                'process': 'LDAP process',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          376: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 380,
+                'process': 'Opaque Database',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          377: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 381,
+                'process': 'Key chain liveke',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          378: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 382,
+                'process': 'LINE AAA',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          379: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 17,
+                'one_min_cpu': 0.0,
+                'pid': 383,
+                'process': 'LOCAL AAA',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          380: {'five_min_cpu': 0.64,
+                'five_sec_cpu': 0.0,
+                'invoked': 6202,
+                'one_min_cpu': 0.44,
+                'pid': 384,
+                'process': 'BGP Scanner',
+                'runtime': 278040,
+                'tty': 0,
+                'usecs': 44830},
+          381: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 472,
+                'one_min_cpu': 0.0,
+                'pid': 385,
+                'process': 'TPLUS',
+                'runtime': 20,
+                'tty': 0,
+                'usecs': 42},
+          382: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 319,
+                'one_min_cpu': 0.0,
+                'pid': 386,
+                'process': 'DynCmd Package P',
+                'runtime': 6,
+                'tty': 0,
+                'usecs': 18},
+          383: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 510125,
+                'one_min_cpu': 0.01,
+                'pid': 387,
+                'process': 'MMA DB TIMER',
+                'runtime': 4924,
+                'tty': 0,
+                'usecs': 9},
+          384: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 388,
+                'process': 'FLEX DSPRM MAIN',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          385: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 389,
+                'process': 'VSP_MGR',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          386: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 390,
+                'process': 'STUN_APP',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 500},
+          387: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 391,
+                'process': 'STUN_TEST',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          388: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 392,
+                'process': 'Manet Infra Back',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          389: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 393,
+                'process': 'IDMGR CORE',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          390: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 18101,
+                'one_min_cpu': 0.0,
+                'pid': 394,
+                'process': 'MPLS Auto Mesh P',
+                'runtime': 188,
+                'tty': 0,
+                'usecs': 10},
+          391: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 32875,
+                'one_min_cpu': 0.0,
+                'pid': 395,
+                'process': 'RSCMSM VOLUME MO',
+                'runtime': 678,
+                'tty': 0,
+                'usecs': 20},
+          392: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 396,
+                'process': 'CCSIP_EVENT_TRAC',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          393: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 397,
+                'process': 'Sip MPA',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          394: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 398,
+                'process': 'QOS_MODULE_MAIN',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 1000},
+          395: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 399,
+                'process': 'IP TRUST Registe',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          396: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 400,
+                'process': 'VoIP AAA',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          397: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 18,
+                'one_min_cpu': 0.0,
+                'pid': 401,
+                'process': 'COND_DEBUG HA IP',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          398: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 23,
+                'one_min_cpu': 0.0,
+                'pid': 402,
+                'process': 'PIM HA',
+                'runtime': 2,
+                'tty': 0,
+                'usecs': 86},
+          399: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 403,
+                'process': 'MMON PROCESS',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          400: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 404,
+                'process': 'QOS PERUSER',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          401: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 405,
+                'process': 'RPMS_PROC_MAIN',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          402: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 406,
+                'process': 'http client proc',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          403: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 65763,
+                'one_min_cpu': 0.0,
+                'pid': 407,
+                'process': 'OSPF-65109 Router',
+                'runtime': 914,
+                'tty': 0,
+                'usecs': 13},
+          404: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 408,
+                'process': 'SEGMENT ROUTING',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          405: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 44,
+                'one_min_cpu': 0.0,
+                'pid': 409,
+                'process': 'AAA SEND STOP EV',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 22},
+          406: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 410,
+                'process': 'Test AAA Client',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          407: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 411,
+                'process': 'dcm_cli_engine',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          408: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 3,
+                'one_min_cpu': 0.0,
+                'pid': 412,
+                'process': 'dcm_cli_provider',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 333},
+          409: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 5,
+                'one_min_cpu': 0.0,
+                'pid': 413,
+                'process': 'DCM Core Thread',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          410: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 580,
+                'one_min_cpu': 0.0,
+                'pid': 414,
+                'process': 'EEM ED Syslog',
+                'runtime': 14,
+                'tty': 0,
+                'usecs': 24},
+          411: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 4,
+                'one_min_cpu': 0.0,
+                'pid': 415,
+                'process': 'EEM ED Generic',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 250},
+          412: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 4,
+                'one_min_cpu': 0.0,
+                'pid': 416,
+                'process': 'EEM ED Track',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 250},
+          413: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 4,
+                'one_min_cpu': 0.0,
+                'pid': 417,
+                'process': 'EEM ED Routing',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 250},
+          414: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 4,
+                'one_min_cpu': 0.0,
+                'pid': 418,
+                'process': 'EEM ED Resource',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          415: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 419,
+                'process': 'Syslog Traps',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          416: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 420,
+                'process': 'Policy HA Timer',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          417: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 421,
+                'process': 'BGP Consistency',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          418: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 422,
+                'process': 'ICRM',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          419: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 423,
+                'process': 'Online Diag EEM',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          420: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 10469,
+                'one_min_cpu': 0.0,
+                'pid': 424,
+                'process': 'SPA ENTITY Proce',
+                'runtime': 1362,
+                'tty': 0,
+                'usecs': 130},
+          421: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 425,
+                'process': 'SONET Traps',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          422: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 426,
+                'process': 'ISG MIB jobs Man',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          423: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 427,
+                'process': 'SBC RF config sy',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          424: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 6,
+                'one_min_cpu': 0.0,
+                'pid': 428,
+                'process': 'DCM snmp dp Thre',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          425: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 3,
+                'one_min_cpu': 0.0,
+                'pid': 429,
+                'process': 'snmp dcm ma shim',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          426: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 3291,
+                'one_min_cpu': 0.0,
+                'pid': 430,
+                'process': 'Bulkstat-Client',
+                'runtime': 50,
+                'tty': 0,
+                'usecs': 15},
+          427: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 3,
+                'one_min_cpu': 0.0,
+                'pid': 431,
+                'process': 'dcm_expression_p',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          428: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 510,
+                'one_min_cpu': 0.0,
+                'pid': 432,
+                'process': 'EEM Server',
+                'runtime': 12,
+                'tty': 0,
+                'usecs': 23},
+          429: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 33,
+                'one_min_cpu': 0.0,
+                'pid': 433,
+                'process': 'Call Home proces',
+                'runtime': 3,
+                'tty': 0,
+                'usecs': 90},
+          430: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 434,
+                'process': 'Call Home DS',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 1000},
+          431: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 435,
+                'process': 'Call Home DSfile',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          432: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 3,
+                'one_min_cpu': 0.0,
+                'pid': 436,
+                'process': 'EEM Policy Direc',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 333},
+          433: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 6580,
+                'one_min_cpu': 0.0,
+                'pid': 437,
+                'process': 'LSD Main Proc',
+                'runtime': 70,
+                'tty': 0,
+                'usecs': 10},
+          434: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 4,
+                'one_min_cpu': 0.0,
+                'pid': 438,
+                'process': 'EEM ED CLI',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          435: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 4,
+                'one_min_cpu': 0.0,
+                'pid': 439,
+                'process': 'EEM ED Counter',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          436: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 4,
+                'one_min_cpu': 0.0,
+                'pid': 440,
+                'process': 'EEM ED Interface',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          437: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 4,
+                'one_min_cpu': 0.0,
+                'pid': 441,
+                'process': 'EEM ED IOSWD',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          438: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 4,
+                'one_min_cpu': 0.0,
+                'pid': 442,
+                'process': 'EEM ED None',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          439: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 4,
+                'one_min_cpu': 0.0,
+                'pid': 443,
+                'process': 'EEM ED OIR',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          440: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 16,
+                'one_min_cpu': 0.0,
+                'pid': 444,
+                'process': 'EEM ED RF',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          441: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 32933,
+                'one_min_cpu': 0.0,
+                'pid': 445,
+                'process': 'EEM ED SNMP',
+                'runtime': 1455,
+                'tty': 0,
+                'usecs': 44},
+          442: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 4,
+                'one_min_cpu': 0.0,
+                'pid': 446,
+                'process': 'EEM ED SNMP Obje',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          443: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 4,
+                'one_min_cpu': 0.0,
+                'pid': 447,
+                'process': 'EEM ED SNMP Noti',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          444: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 555,
+                'one_min_cpu': 0.0,
+                'pid': 448,
+                'process': 'EEM ED Timer',
+                'runtime': 11,
+                'tty': 0,
+                'usecs': 19},
+          445: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 4,
+                'one_min_cpu': 0.0,
+                'pid': 449,
+                'process': 'EEM ED Ipsla',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          446: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 4,
+                'one_min_cpu': 0.0,
+                'pid': 450,
+                'process': 'EEM ED Test',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 250},
+          447: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 4,
+                'one_min_cpu': 0.0,
+                'pid': 451,
+                'process': 'EEM ED Config',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          448: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 4,
+                'one_min_cpu': 0.0,
+                'pid': 452,
+                'process': 'EEM ED Env',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          449: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 4,
+                'one_min_cpu': 0.0,
+                'pid': 453,
+                'process': 'EEM ED DS',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 250},
+          450: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 4,
+                'one_min_cpu': 0.0,
+                'pid': 454,
+                'process': 'EEM ED CRASH',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          451: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 4,
+                'one_min_cpu': 0.0,
+                'pid': 455,
+                'process': 'EM ED GOLD',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          452: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 417,
+                'one_min_cpu': 0.0,
+                'pid': 456,
+                'process': 'Syslog',
+                'runtime': 73,
+                'tty': 0,
+                'usecs': 175},
+          453: {'five_min_cpu': 0.05,
+                'five_sec_cpu': 0.07,
+                'invoked': 3284,
+                'one_min_cpu': 0.06,
+                'pid': 457,
+                'process': 'MFI LFD Stats Pr',
+                'runtime': 21526,
+                'tty': 0,
+                'usecs': 6554},
+          454: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 458,
+                'process': 'IP SLAs Ethernet',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          455: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 6579,
+                'one_min_cpu': 0.0,
+                'pid': 459,
+                'process': 'VDC process',
+                'runtime': 58,
+                'tty': 0,
+                'usecs': 8},
+          456: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 460,
+                'process': 'udp_transport Se',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          457: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 3290,
+                'one_min_cpu': 0.0,
+                'pid': 461,
+                'process': 'qos_mon_periodic',
+                'runtime': 55,
+                'tty': 0,
+                'usecs': 16},
+          458: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 462,
+                'process': 'ISSU Utility Pro',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          459: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 463,
+                'process': 'IOSXE-RP Virtual',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          460: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 464,
+                'process': 'Online Diag CNS',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          461: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 465,
+                'process': 'Online Diag CNS',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          462: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 9,
+                'one_min_cpu': 0.0,
+                'pid': 466,
+                'process': 'MPLS IFMIB Proce',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          463: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 467,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          464: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 468,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          465: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 469,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          466: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 470,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          467: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 471,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          468: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 472,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          469: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 473,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          470: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 474,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          471: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 475,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          472: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 476,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          473: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 477,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          474: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 478,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          475: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 479,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          476: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 480,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          477: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 481,
+                'process': 'MPLS TE OAM Clie',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          478: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 482,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          479: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 483,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          480: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 484,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          481: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 485,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          482: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 486,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          483: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 487,
+                'process': 'IPC ISSU Version',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 1000},
+          484: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 488,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          485: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 489,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          486: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 490,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          487: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 491,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          488: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 492,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          489: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 493,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          490: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 494,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          491: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 495,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          492: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 496,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          493: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 13140,
+                'one_min_cpu': 0.0,
+                'pid': 497,
+                'process': 'DiagCard1/-1',
+                'runtime': 829,
+                'tty': 0,
+                'usecs': 63},
+          494: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 498,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          495: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 499,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          496: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 500,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          497: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 501,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          498: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 502,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          499: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 503,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          500: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 504,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          501: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 505,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          502: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 506,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          503: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 507,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          504: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 508,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          505: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 509,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          506: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 510,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          507: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 511,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          508: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 512,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          509: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 13143,
+                'one_min_cpu': 0.0,
+                'pid': 513,
+                'process': 'DiagCard2/-1',
+                'runtime': 252,
+                'tty': 0,
+                'usecs': 19},
+          510: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 514,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          511: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 515,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          512: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 516,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          513: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 517,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          514: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 518,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          515: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 519,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          516: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 520,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          517: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 521,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          518: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 522,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          519: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 523,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          520: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 524,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          521: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 525,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          522: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 526,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          523: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 527,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          524: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 528,
+                'process': 'IPC ISSU Version',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          525: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 5,
+                'one_min_cpu': 0.0,
+                'pid': 529,
+                'process': 'CWAN OIR IPC Rea',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          526: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2008,
+                'one_min_cpu': 0.0,
+                'pid': 530,
+                'process': 'mdns Timer Proce',
+                'runtime': 261,
+                'tty': 0,
+                'usecs': 129},
+          527: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 65670,
+                'one_min_cpu': 0.0,
+                'pid': 531,
+                'process': 'SBC main process',
+                'runtime': 977,
+                'tty': 0,
+                'usecs': 14},
+          528: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 532,
+                'process': 'MRIB Process',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          529: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 560,
+                'one_min_cpu': 0.0,
+                'pid': 533,
+                'process': 'EEM Helper Threa',
+                'runtime': 8,
+                'tty': 0,
+                'usecs': 14},
+          530: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 6209,
+                'one_min_cpu': 0.0,
+                'pid': 534,
+                'process': 'MFI LFD Timer Pr',
+                'runtime': 39,
+                'tty': 0,
+                'usecs': 6},
+          531: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 4702,
+                'one_min_cpu': 0.0,
+                'pid': 535,
+                'process': 'LCON Main',
+                'runtime': 354,
+                'tty': 0,
+                'usecs': 75},
+          532: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 4,
+                'one_min_cpu': 0.0,
+                'pid': 536,
+                'process': 'MFI LFD Main Pro',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 250},
+          533: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 6,
+                'one_min_cpu': 0.0,
+                'pid': 537,
+                'process': 'Inter Chassis Pr',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          534: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 3,
+                'one_min_cpu': 0.0,
+                'pid': 538,
+                'process': 'DiagCard3/-1',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          535: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 3,
+                'one_min_cpu': 0.0,
+                'pid': 539,
+                'process': 'DiagCard4/-1',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          536: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 549,
+                'one_min_cpu': 0.0,
+                'pid': 540,
+                'process': 'LDP Background',
+                'runtime': 266,
+                'tty': 0,
+                'usecs': 484},
+          537: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 254919,
+                'one_min_cpu': 0.0,
+                'pid': 541,
+                'process': 'MCP RP EFP proce',
+                'runtime': 1468,
+                'tty': 0,
+                'usecs': 5},
+          538: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 207,
+                'one_min_cpu': 0.0,
+                'pid': 542,
+                'process': 'BGP Event',
+                'runtime': 9701,
+                'tty': 0,
+                'usecs': 46864},
+          539: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2902,
+                'one_min_cpu': 0.0,
+                'pid': 543,
+                'process': 'LDP Main',
+                'runtime': 149,
+                'tty': 0,
+                'usecs': 51},
+          540: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 15020,
+                'one_min_cpu': 0.0,
+                'pid': 544,
+                'process': 'LDP Hello',
+                'runtime': 854,
+                'tty': 0,
+                'usecs': 56},
+          541: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1320,
+                'one_min_cpu': 0.0,
+                'pid': 545,
+                'process': 'BGP Task',
+                'runtime': 13752,
+                'tty': 0,
+                'usecs': 10418},
+          542: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 546,
+                'process': 'BGP BMP Server',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          543: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 93,
+                'one_min_cpu': 0.0,
+                'pid': 547,
+                'process': 'TCP Listener',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          544: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 551,
+                'one_min_cpu': 0.0,
+                'pid': 548,
+                'process': 'IPRM',
+                'runtime': 2,
+                'tty': 0,
+                'usecs': 3},
+          545: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 673,
+                'one_min_cpu': 0.0,
+                'pid': 549,
+                'process': 'IP SNMP',
+                'runtime': 36,
+                'tty': 0,
+                'usecs': 53},
+          546: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 550,
+                'process': 'PDU DISPATCHER',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          547: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 4,
+                'one_min_cpu': 0.0,
+                'pid': 551,
+                'process': 'SNMP ENGINE',
+                'runtime': 1,
+                'tty': 0,
+                'usecs': 250},
+          548: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 552,
+                'process': 'IP SNMPV6',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          549: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 553,
+                'process': 'SNMP ConfCopyPro',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          550: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 387,
+                'one_min_cpu': 0.0,
+                'pid': 554,
+                'process': 'SNMP Traps',
+                'runtime': 416,
+                'tty': 0,
+                'usecs': 1074},
+          551: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 33806,
+                'one_min_cpu': 0.0,
+                'pid': 555,
+                'process': 'NTP',
+                'runtime': 851,
+                'tty': 0,
+                'usecs': 25},
+          552: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 556,
+                'process': 'EM Action CNS',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          553: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 557,
+                'process': 'DiagCard5/-1',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          554: {'five_min_cpu': 0.73,
+                'five_sec_cpu': 0.55,
+                'invoked': 78644,
+                'one_min_cpu': 0.72,
+                'pid': 558,
+                'process': 'BGP Router',
+                'runtime': 307942,
+                'tty': 0,
+                'usecs': 3915},
+          555: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 10680,
+                'one_min_cpu': 0.0,
+                'pid': 559,
+                'process': 'OSPF-65109 Hello',
+                'runtime': 311,
+                'tty': 0,
+                'usecs': 29},
+          556: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 560,
+                'process': 'BGP VA',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          557: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 561,
+                'process': 'IFCOM Msg Hdlr',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          558: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 562,
+                'process': 'IFCOM Msg Hdlr',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          559: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 563,
+                'process': 'IFCOM Msg Hdlr',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          560: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 564,
+                'process': 'IFCOM Msg Hdlr',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          561: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 565,
+                'process': 'Network Synchron',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          562: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 127232,
+                'one_min_cpu': 0.0,
+                'pid': 566,
+                'process': 'CCM Subscriber P',
+                'runtime': 862,
+                'tty': 0,
+                'usecs': 6},
+          563: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 4,
+                'one_min_cpu': 0.0,
+                'pid': 567,
+                'process': 'Process to do EH',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          564: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 11,
+                'one_min_cpu': 0.0,
+                'pid': 568,
+                'process': 'RFS server proce',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          565: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 569,
+                'process': 'IP MPLS Service',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          566: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 1,
+                'one_min_cpu': 0.0,
+                'pid': 570,
+                'process': 'HA-IDB-SYNC',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          567: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 2,
+                'one_min_cpu': 0.0,
+                'pid': 571,
+                'process': 'VTEMPLATE Backgr',
+                'runtime': 0,
+                'tty': 0,
+                'usecs': 0},
+          568: {'five_min_cpu': 0.75,
+                'five_sec_cpu': 0.0,
+                'invoked': 9517,
+                'one_min_cpu': 0.28,
+                'pid': 573,
+                'process': 'Virtual Exec',
+                'runtime': 4487,
+                'tty': 2,
+                'usecs': 471},
+          569: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 15,
+                'one_min_cpu': 0.0,
+                'pid': 574,
+                'process': 'L2FIB HA Flow Th',
+                'runtime': 4,
+                'tty': 0,
+                'usecs': 266},
+          570: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 75795,
+                'one_min_cpu': 0.0,
+                'pid': 575,
+                'process': 'Virtual Exec',
+                'runtime': 66557,
+                'tty': 3,
+                'usecs': 878},
+          571: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 19063,
+                'one_min_cpu': 0.0,
+                'pid': 576,
+                'process': 'Virtual Exec',
+                'runtime': 13105,
+                'tty': 4,
+                'usecs': 687},
+          572: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 797,
+                'one_min_cpu': 0.0,
+                'pid': 577,
+                'process': 'Virtual Exec',
+                'runtime': 4208,
+                'tty': 5,
+                'usecs': 5279},
+          573: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 542,
+                'one_min_cpu': 0.0,
+                'pid': 578,
+                'process': 'Virtual Exec',
+                'runtime': 71,
+                'tty': 6,
+                'usecs': 130},
+          574: {'five_min_cpu': 0.0,
+                'five_sec_cpu': 0.0,
+                'invoked': 448,
+                'one_min_cpu': 0.0,
+                'pid': 606,
+                'process': 'LCON Addr',
+                'runtime': 17,
+                'tty': 0,
+                'usecs': 37}},
+'zero_cpu_processes': ['Chunk Manager',
+                        'Load Meter',
+                        'SpanTree Helper',
+                        'Retransmission o',
+                        'IPC ISSU Dispatc',
+                        'RF Slave Main Th',
+                        'EDDRI_MAIN',
+                        'RO Notify Timers',
+                        'Pool Manager',
+                        'DiscardQ Backgro',
+                        'Timers',
+                        'WATCH_AFS',
+                        'MEMLEAK PROCESS',
+                        'ARP Input',
+                        'ARP Background',
+                        'ATM Idle Timer',
+                        'ATM ASYNC PROC',
+                        'AAA_SERVER_DEADT',
+                        'Policy Manager',
+                        'DDR Timers',
+                        'Entity MIB API',
+                        'PrstVbl',
+                        'RMI RM Notify Wa',
+                        'IOSXE heartbeat',
+                        'ATM AutoVC Perio',
+                        'ATM VC Auto Crea',
+                        'IPC Apps Task',
+                        'ifIndex Receive',
+                        'IPC Event Notifi',
+                        'IPC Mcast Pendin',
+                        'ASR1000 appsess',
+                        'IPC Dynamic Cach',
+                        'IPC Service NonC',
+                        'IPC Zone Manager',
+                        'IPC Periodic Tim',
+                        'IPC Deferred Por',
+                        'IPC Process leve',
+                        'IPC Seat Manager',
+                        'IPC Check Queue',
+                        'IPC Seat RX Cont',
+                        'IPC Seat TX Cont',
+                        'IPC Keep Alive M',
+                        'IPC Loadometer',
+                        'IPC Session Deta',
+                        'SENSOR-MGR event',
+                        'Compute SRP rate',
+                        'CEF MIB API',
+                        'Serial Backgroun',
+                        'GraphIt',
+                        'Dialer event',
+                        'IOSXE signals IO',
+                        'SMART',
+                        'client_entity_se',
+                        'RF SCTPthread',
+                        'CHKPT RG SCTPthr',
+                        'Critical Bkgnd',
+                        'Net Background',
+                        'IDB Work',
+                        'Logger',
+                        'TTY Background',
+                        'BACK CHECK',
+                        'IOSD chasfs task',
+                        'REDUNDANCY FSM',
+                        'SBC IPC Hold Que',
+                        'Punt FP Stats Du',
+                        'PuntInject Keepa',
+                        'IF-MGR control p',
+                        'IF-MGR event pro',
+                        'cpf_msg_holdq_pr',
+                        'cpf_msg_rcvq_pro',
+                        'cpf_process_tpQ',
+                        'Network-rf Notif',
+                        'Environmental Mo',
+                        'RP HA Periodic',
+                        'CONSOLE helper p',
+                        'CEF RRP RF waite',
+                        'CWAN APS HA Proc',
+                        'REDUNDANCY peer',
+                        '100ms check',
+                        'RF CWAN HA Proce',
+                        'CWAN IF EVENT HA',
+                        'ANCP HA',
+                        'ANCP HA IPC flow',
+                        'QoS HA ID RETAIN',
+                        'CHKPT Test clien',
+                        'CHKPT Test clien',
+                        'CHKPT Test clien',
+                        'CHKPT Test clien',
+                        'CHKPT Test clien',
+                        'CHKPT Test clien',
+                        'CHKPT Test clien',
+                        'CHKPT Test clien',
+                        'CHKPT Test clien',
+                        'CHKPT Test clien',
+                        'CHKPT Test clien',
+                        'DHCPC HA',
+                        'DHCPD HA',
+                        'DHCPv6 Relay HA',
+                        'DHCPv6 Server HA',
+                        'Metadata HA',
+                        'FMD HA IPC flow',
+                        'SISF HA Process',
+                        'ARP HA',
+                        'XDR RRP RF waite',
+                        'IOSXE-RP Punt IP',
+                        'IOSXE-RP SPA TSM',
+                        'RF Master Main T',
+                        'RF Master Status',
+                        'Net Input',
+                        'OTV Event Dispat',
+                        'Compute load avg',
+                        'Per-minute Jobs',
+                        'mLDP Process',
+                        'Transport Port A',
+                        'EEM ED ND',
+                        'IOSXE-RP FastPat',
+                        'Src Fltr backgro',
+                        'DSX3MIB ll handl',
+                        'fanrp_l2fib',
+                        'POS APS Event Pr',
+                        'netclk_process',
+                        'netclk_ha_proces',
+                        'FPD Management P',
+                        'FPD Action Proce',
+                        'BFD HW EVENT',
+                        'BFD IPV6 ADDR CH',
+                        'FEC_Link_event_h',
+                        'MCP RP autovc pr',
+                        'VMI Background',
+                        'MGMTE stats Proc',
+                        'Ether-SPA backgr',
+                        'CWAN CHOCX PROCE',
+                        'CE3 Mailbox',
+                        'CT3 Mailbox',
+                        'HAL Mailbox',
+                        'MIP Mailbox',
+                        'CWAN OIR Handler',
+                        'TP CUTOVER EVENT',
+                        'ASR1K ESMC Proce',
+                        'ASR1000-RP SPA A',
+                        'RTTYS Process',
+                        'AAA Server',
+                        'AAA ACCT Proc',
+                        'ACCT Periodic Pr',
+                        'cdp init process',
+                        'Call Home Timer',
+                        'CEF switching ba',
+                        'ADJ NSF process',
+                        'AAA Dictionary R',
+                        'FHRP Main thread',
+                        'TRACK Main threa',
+                        'TRACK Client thr',
+                        'VRRP Main thread',
+                        'ATM OAM Input',
+                        'ATM OAM TIMER',
+                        'HQF TARGET DYNAM',
+                        'IP ARP Adjacency',
+                        'IP Input',
+                        'ICMP event handl',
+                        'mDNS',
+                        'PIM register asy',
+                        'IPv6 ping proces',
+                        'BGP Scheduler',
+                        'MOP Protocols',
+                        'PPP SIP',
+                        'PPP Bind',
+                        'PPP IP Route',
+                        'LSP Verification',
+                        'RIB LM VALIDATE',
+                        'SSM connection m',
+                        'SSS Manager',
+                        'SSS Policy Manag',
+                        'SSS Feature Mana',
+                        'SSS Feature Time',
+                        'Spanning Tree',
+                        'VRRS',
+                        'Ethernet LMI',
+                        'Ethernet OAM Pro',
+                        'Ethernet CFM',
+                        'mcp callhome per',
+                        'PPCP RP Stats Ba',
+                        'Appnav auto disc',
+                        'L2FIB Timer Disp',
+                        'MLRIB L2 Msg Thr',
+                        'Spanning Tree St',
+                        'IGMP Route Msg H',
+                        'IGMP Route Rx Pr',
+                        'RABAPOL HA',
+                        'RABAPOL HA IPC f',
+                        'TEMPLATE HA',
+                        'DVLAN HA',
+                        'CCM',
+                        'CCM IPC flow con',
+                        'RG Faults Timer',
+                        'RG VP',
+                        'RG AR',
+                        'RG Protocol Time',
+                        'RG Transport Tim',
+                        'HDLC HA',
+                        'SBC initializer',
+                        'SVM HA',
+                        'UDLD',
+                        'AC Switch',
+                        'IEDGE ACCT TIMER',
+                        'ISG CMD HANDLER',
+                        'IMA PROC',
+                        'IP Lite session',
+                        'IP PORTBUNDLE',
+                        'SSS Mobility mes',
+                        'IP Static Sessio',
+                        'DVLAN Config Pro',
+                        'IPAM/ODAP Events',
+                        'IPAM Manager',
+                        'IPAM Events',
+                        'OCE punted Pkts',
+                        'O-UNI Client Msg',
+                        'LSP Tunnel FRR',
+                        'MPLS Auto-Tunnel',
+                        'st_pw_oam',
+                        'AAA EPD HANDLER',
+                        'PM EPD API',
+                        'DM Proc',
+                        'RADIUS Proxy',
+                        'SSS PM SHIM QOS',
+                        'LONG TO SHORT NA',
+                        'Timer handler fo',
+                        'Prepaid response',
+                        'Timed Policy act',
+                        'AAA response han',
+                        'AAA System Acct',
+                        'VPWS Thread',
+                        'IP Traceroute',
+                        'Tunnel',
+                        'ATIP_UDP_TSK',
+                        'XDR background p',
+                        'XDR mcast',
+                        'XDR RP Ping Back',
+                        'XDR receive',
+                        'IPC LC Message H',
+                        'XDR RP Test Back',
+                        'FRR Background P',
+                        'CEF background p',
+                        'fib_fib_bfd_sb e',
+                        'IP IRDP',
+                        'SNMP Timers',
+                        'LSD HA Proc',
+                        'CEF RP Backgroun',
+                        'Routing Topology',
+                        'IP RIB Update',
+                        'IP Background',
+                        'IP Connected Rou',
+                        'PPP Compress Inp',
+                        'PPP Compress Res',
+                        'Tunnel FIB',
+                        'ADJ background',
+                        'Collection proce',
+                        'ADJ resolve proc',
+                        'Socket Timers',
+                        'TCP Timer',
+                        'TCP Protocols',
+                        'COPS',
+                        'NGCP SCHEDULER P',
+                        'STILE PERIODIC T',
+                        'UV AUTO CUSTOM P',
+                        'Dialer Forwarder',
+                        'Service Routing',
+                        'SR CapMan Proces',
+                        'Flow Exporter Ti',
+                        'Flow Exporter Pa',
+                        'HTTP CORE',
+                        'SBC Msg Ack Time',
+                        'MFIB Master back',
+                        'VFI Mgr',
+                        'MVPN Mgr Process',
+                        'Multicast Offloa',
+                        'RARP Input',
+                        'static',
+                        'App Route Proces',
+                        'IPv6 RIB Cleanup',
+                        'IPv6 RIB Event H',
+                        'IPv6 Static Hand',
+                        'DHCPv6 LQ client',
+                        'AToM manager',
+                        'PPP NBF',
+                        'PfR BR Learn',
+                        'PAD InCall',
+                        'QoS stats proces',
+                        'RBSCP Background',
+                        'SCTP Main Proces',
+                        'VPDN call manage',
+                        'XC RIB MGR',
+                        'AToM LDP manager',
+                        'EFP Errd',
+                        'Ether EFP Proces',
+                        'Ether Infra RP',
+                        'CFM HA IPC messa',
+                        'Ethernet PM Proc',
+                        'Ethernet PM Soft',
+                        'Ethernet PM Moni',
+                        'Ethernet Datapla',
+                        'ELB HA IPC flow',
+                        'IGMPSN L2MCM',
+                        'IGMPSN MRD',
+                        'IGMPSN',
+                        'TCP HA PROC',
+                        'BGP HA SSO',
+                        'RSVP SYNC',
+                        'RETRY_REPOPULATE',
+                        'XDR FOF process',
+                        'BD Route Msg Hol',
+                        'BD Route Rx Proc',
+                        'BD MACSEC HA',
+                        'BD MACSEC HA CHK',
+                        'L2FIB Event Disp',
+                        'STP HA IPC flow',
+                        'IGMPQR',
+                        'AAA HA',
+                        'AAA HA cleanup',
+                        'ac_atm_state_eve',
+                        'ac_atm_mraps_hsp',
+                        'AC HA Bulk Sync',
+                        'ATM HA',
+                        'ATM HA IPC flow',
+                        'ATM HA AC',
+                        'BFD HA',
+                        'FR HA',
+                        'GLBP HA',
+                        'HSRP HA',
+                        'Inspect process',
+                        'BGP I/O',
+                        'IP SIP Process',
+                        'MRIB RP Proxy',
+                        'IPv6 ACL RP Proc',
+                        'Netsync IPC flow',
+                        'PPPoE VRRS EVT M',
+                        'RG If-Mgr Timer',
+                        'RG Media Timer',
+                        'MCPRP RG Timer',
+                        'URL filter proc',
+                        'VFI HA Bulk Sync',
+                        'XC RIB HA Bulk S',
+                        'XC BGP SIG RIB H',
+                        'VPDN CCM Backgro',
+                        'VRRP HA',
+                        'VTEMPLATE IPC fl',
+                        'CEM PROC',
+                        'CEM HA',
+                        'CEM HA AC',
+                        'L2X Switching Ev',
+                        'Probe Input',
+                        'IP Inband Sessio',
+                        'DHCP SIP',
+                        'FRR Manager',
+                        'MFI Comm RP Proc',
+                        'Path set broker',
+                        'LFD Label Block',
+                        'LDP HA',
+                        'MPLS VPN HA Clie',
+                        'TSPTUN HA',
+                        'RSVP HA Services',
+                        'TE NSR OOS DB Pr',
+                        'MPLS TP HA',
+                        'AToM HA Bulk Syn',
+                        'AToM MGR HA IPC',
+                        'LFDp Input Proc',
+                        'AAA Cached Serve',
+                        'ENABLE AAA',
+                        'EM Background Pr',
+                        'LDAP process',
+                        'Opaque Database',
+                        'Key chain liveke',
+                        'LINE AAA',
+                        'LOCAL AAA',
+                        'TPLUS',
+                        'DynCmd Package P',
+                        'FLEX DSPRM MAIN',
+                        'VSP_MGR',
+                        'STUN_APP',
+                        'STUN_TEST',
+                        'Manet Infra Back',
+                        'IDMGR CORE',
+                        'MPLS Auto Mesh P',
+                        'RSCMSM VOLUME MO',
+                        'CCSIP_EVENT_TRAC',
+                        'Sip MPA',
+                        'QOS_MODULE_MAIN',
+                        'IP TRUST Registe',
+                        'VoIP AAA',
+                        'COND_DEBUG HA IP',
+                        'PIM HA',
+                        'MMON PROCESS',
+                        'QOS PERUSER',
+                        'RPMS_PROC_MAIN',
+                        'http client proc',
+                        'OSPF-65109 Router',
+                        'SEGMENT ROUTING',
+                        'AAA SEND STOP EV',
+                        'Test AAA Client',
+                        'dcm_cli_engine',
+                        'dcm_cli_provider',
+                        'DCM Core Thread',
+                        'EEM ED Syslog',
+                        'EEM ED Generic',
+                        'EEM ED Track',
+                        'EEM ED Routing',
+                        'EEM ED Resource',
+                        'Syslog Traps',
+                        'Policy HA Timer',
+                        'BGP Consistency',
+                        'ICRM',
+                        'Online Diag EEM',
+                        'SPA ENTITY Proce',
+                        'SONET Traps',
+                        'ISG MIB jobs Man',
+                        'SBC RF config sy',
+                        'DCM snmp dp Thre',
+                        'snmp dcm ma shim',
+                        'Bulkstat-Client',
+                        'dcm_expression_p',
+                        'EEM Server',
+                        'Call Home proces',
+                        'Call Home DS',
+                        'Call Home DSfile',
+                        'EEM Policy Direc',
+                        'LSD Main Proc',
+                        'EEM ED CLI',
+                        'EEM ED Counter',
+                        'EEM ED Interface',
+                        'EEM ED IOSWD',
+                        'EEM ED None',
+                        'EEM ED OIR',
+                        'EEM ED RF',
+                        'EEM ED SNMP',
+                        'EEM ED SNMP Obje',
+                        'EEM ED SNMP Noti',
+                        'EEM ED Timer',
+                        'EEM ED Ipsla',
+                        'EEM ED Test',
+                        'EEM ED Config',
+                        'EEM ED Env',
+                        'EEM ED DS',
+                        'EEM ED CRASH',
+                        'EM ED GOLD',
+                        'Syslog',
+                        'IP SLAs Ethernet',
+                        'VDC process',
+                        'udp_transport Se',
+                        'qos_mon_periodic',
+                        'ISSU Utility Pro',
+                        'IOSXE-RP Virtual',
+                        'Online Diag CNS',
+                        'Online Diag CNS',
+                        'MPLS IFMIB Proce',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'MPLS TE OAM Clie',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'DiagCard1/-1',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'DiagCard2/-1',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'IPC ISSU Version',
+                        'CWAN OIR IPC Rea',
+                        'mdns Timer Proce',
+                        'SBC main process',
+                        'MRIB Process',
+                        'EEM Helper Threa',
+                        'MFI LFD Timer Pr',
+                        'LCON Main',
+                        'MFI LFD Main Pro',
+                        'Inter Chassis Pr',
+                        'DiagCard3/-1',
+                        'DiagCard4/-1',
+                        'LDP Background',
+                        'MCP RP EFP proce',
+                        'BGP Event',
+                        'LDP Main',
+                        'LDP Hello',
+                        'BGP Task',
+                        'BGP BMP Server',
+                        'TCP Listener',
+                        'IPRM',
+                        'IP SNMP',
+                        'PDU DISPATCHER',
+                        'SNMP ENGINE',
+                        'IP SNMPV6',
+                        'SNMP ConfCopyPro',
+                        'SNMP Traps',
+                        'NTP',
+                        'EM Action CNS',
+                        'DiagCard5/-1',
+                        'OSPF-65109 Hello',
+                        'BGP VA',
+                        'IFCOM Msg Hdlr',
+                        'IFCOM Msg Hdlr',
+                        'IFCOM Msg Hdlr',
+                        'IFCOM Msg Hdlr',
+                        'Network Synchron',
+                        'CCM Subscriber P',
+                        'Process to do EH',
+                        'RFS server proce',
+                        'IP MPLS Service',
+                        'HA-IDB-SYNC',
+                        'VTEMPLATE Backgr',
+                        'L2FIB HA Flow Th',
+                        'Virtual Exec',
+                        'Virtual Exec',
+                        'Virtual Exec',
+                        'Virtual Exec',
+                        'LCON Addr']}
 
     golden_output = {'execute.return_value': '''\
         Router#show process cpu
         Load for five secs: 1%/0%; one minute: 2%; five minutes: 3%
-        Time source is NTP, 19:10:39.512 JST Mon Oct 17 2016
+        Time source is NTP, 19:10:39.512 EST Mon Oct 17 2016
 
         CPU utilization for five seconds: 1%/0%; one minute: 2%; five minutes: 3%
          PID Runtime(ms)     Invoked      uSecs   5Sec   1Min   5Min TTY Process 
@@ -5517,7 +11412,7 @@ class test_show_processes_cpu(unittest.TestCase):
          404           0           1          0  0.00%  0.00%  0.00%   0 QOS PERUSER      
          405           0           1          0  0.00%  0.00%  0.00%   0 RPMS_PROC_MAIN   
          406           0           1          0  0.00%  0.00%  0.00%   0 http client proc 
-         407         914       65763         13  0.00%  0.00%  0.00%   0 OSPF-9996 Router 
+         407         914       65763         13  0.00%  0.00%  0.00%   0 OSPF-65109 Router 
          408           0           2          0  0.00%  0.00%  0.00%   0 SEGMENT ROUTING  
          409           1          44         22  0.00%  0.00%  0.00%   0 AAA SEND STOP EV 
          410           0           1          0  0.00%  0.00%  0.00%   0 Test AAA Client  
@@ -5669,7 +11564,7 @@ class test_show_processes_cpu(unittest.TestCase):
          556           0           1          0  0.00%  0.00%  0.00%   0 EM Action CNS    
          557           0           2          0  0.00%  0.00%  0.00%   0 DiagCard5/-1     
          558      307942       78644       3915  0.55%  0.72%  0.73%   0 BGP Router       
-         559         311       10680         29  0.00%  0.00%  0.00%   0 OSPF-9996 Hello  
+         559         311       10680         29  0.00%  0.00%  0.00%   0 OSPF-65109 Hello  
          560           0           1          0  0.00%  0.00%  0.00%   0 BGP VA           
          561           0           1          0  0.00%  0.00%  0.00%   0 IFCOM Msg Hdlr   
          562           0           1          0  0.00%  0.00%  0.00%   0 IFCOM Msg Hdlr   
@@ -5796,7 +11691,7 @@ class test_show_processes_cpu(unittest.TestCase):
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
-    def test_golden(self):
+    def test_golden_1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
         obj = ShowProcessesCpu(device=self.device)
@@ -5810,6 +11705,5414 @@ class test_show_processes_cpu(unittest.TestCase):
             parsed_output = obj.parse()
 
 
+class test_show_version_rp(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_active = {
+        'rp': {
+            'active': {
+                'slot': {
+                    'ESP0': {
+                        'package': {
+                            'espx86base': {
+                                'built_by': 'mcpre',
+                                'built_time': '2016-10-04_12.28',
+                                'file': 'asr1000rp2-espx86base.03.16.04a.S.155-3.S4a-ext.pkg',
+                                'file_sha1_checksum': 'e9401142366cf5c9fdeb2e570eae233d1a211803',
+                                'status': 'active',
+                                'version': '03.16.04a.S.155-3.S4a-ext',
+                            }
+                        }
+                    },
+                    'ESP1': {
+                        'package': {
+                            'espx86base': {'built_by': 'mcpre',
+                                                                'built_time': '2016-10-04_12.28',
+                                                                'file': 'asr1000rp2-espx86base.03.16.04a.S.155-3.S4a-ext.pkg',
+                                                                'file_sha1_checksum': 'e9401142366cf5c9fdeb2e570eae233d1a211803',
+                                                                'status': 'active',
+                                                                'version': '03.16.04a.S.155-3.S4a-ext'}}},
+                            'RP0': {'package': {'Provisioning File': {'built_by': 'n/a',
+                                                                      'built_time': 'n/a',
+                                                                      'file': 'packages.conf',
+                                                                      'file_sha1_checksum': 'e9cc713ad9eacbdc1ac59d598a99cd1755351d44',
+                                                                      'status': 'active',
+                                                                      'version': 'n/a'},
+                                                'rpbase': {'built_by': 'mcpre',
+                                                           'built_time': '2016-10-04_12.28',
+                                                           'file': 'asr1000rp2-rpbase.03.16.04a.S.155-3.S4a-ext.pkg',
+                                                           'file_sha1_checksum': '79e234871520fd480dc1128058160b4e2acee9f7',
+                                                           'status': 'n/a',
+                                                           'version': '03.16.04a.S.155-3.S4a-ext'}}},
+                            'RP0/0': {'package': {'rpaccess': {'built_by': 'mcpre',
+                                                               'built_time': '2016-10-04_12.28',
+                                                               'file': 'asr1000rp2-rpaccess.03.16.04a.S.155-3.S4a-ext.pkg',
+                                                               'file_sha1_checksum': '7ae3f198743db3011eaeb9311d0b26bdf0e41f09',
+                                                               'status': 'n/a',
+                                                               'version': '03.16.04a.S.155-3.S4a-ext'},
+                                                  'rpcontrol': {'built_by': 'mcpre',
+                                                                'built_time': '2016-10-04_12.31',
+                                                                'file': 'asr1000rp2-rpios-adventerprise.03.16.04a.S.155-3.S4a-ext.pkg',
+                                                                'file_sha1_checksum': 'ead482a384b287a9a518d6514a495546cdbf7e85',
+                                                                'status': 'n/a',
+                                                                'version': '03.16.04a.S.155-3.S4a-ext'}}},
+                            'RP1': {'package': {'rpbase': {'built_by': 'mcpre',
+                                                           'built_time': '2016-10-04_12.28',
+                                                           'file': 'asr1000rp2-rpbase.03.16.04a.S.155-3.S4a-ext.pkg',
+                                                           'file_sha1_checksum': '79e234871520fd480dc1128058160b4e2acee9f7',
+                                                           'status': 'active',
+                                                           'version': '03.16.04a.S.155-3.S4a-ext'}}},
+                            'RP1/0': {'package': {'rpaccess': {'built_by': 'mcpre',
+                                                               'built_time': '2016-10-04_12.28',
+                                                               'file': 'asr1000rp2-rpaccess.03.16.04a.S.155-3.S4a-ext.pkg',
+                                                               'file_sha1_checksum': '7ae3f198743db3011eaeb9311d0b26bdf0e41f09',
+                                                               'status': 'active',
+                                                               'version': '03.16.04a.S.155-3.S4a-ext'},
+                                                  'rpcontrol': {'built_by': 'mcpre',
+                                                                'built_time': '2016-10-04_12.31',
+                                                                'file': 'asr1000rp2-rpios-adventerprise.03.16.04a.S.155-3.S4a-ext.pkg',
+                                                                'file_sha1_checksum': 'ead482a384b287a9a518d6514a495546cdbf7e85',
+                                                                'status': 'active',
+                                                                'version': '03.16.04a.S.155-3.S4a-ext'}}},
+                            'SIP0': {'package': {'sipbase': {'built_by': 'mcpre',
+                                                             'built_time': '2016-10-04_09.39',
+                                                             'file': 'asr1000rp2-sipbase.03.16.04a.S.155-3.S4a-ext.pkg',
+                                                             'file_sha1_checksum': '39f3451d1e4d84297ba6c696c450c2d8fed22fb7',
+                                                             'status': 'active',
+                                                             'version': '03.16.04a.S.155-3.S4a-ext'}}},
+                            'SIP0/0': {'package': {'sipspa': {'built_by': 'mcpre',
+                                                              'built_time': '2016-10-04_09.39',
+                                                              'file': 'asr1000rp2-sipspa.03.16.04a.S.155-3.S4a-ext.pkg',
+                                                              'file_sha1_checksum': 'bcd8cb438dd1829f31e361bd35287c392e641490',
+                                                              'status': 'active',
+                                                              'version': '03.16.04a.S.155-3.S4a-ext'}}},
+                            'SIP0/1': {'package': {'sipspa': {'built_by': 'mcpre',
+                                                              'built_time': '2016-10-04_09.39',
+                                                              'file': 'asr1000rp2-sipspa.03.16.04a.S.155-3.S4a-ext.pkg',
+                                                              'file_sha1_checksum': 'bcd8cb438dd1829f31e361bd35287c392e641490',
+                                                              'status': 'active',
+                                                              'version': '03.16.04a.S.155-3.S4a-ext'}}},
+                            'SIP0/2': {'package': {'sipspa': {'built_by': 'mcpre',
+                                                              'built_time': '2016-10-04_09.39',
+                                                              'file': 'asr1000rp2-sipspa.03.16.04a.S.155-3.S4a-ext.pkg',
+                                                              'file_sha1_checksum': 'bcd8cb438dd1829f31e361bd35287c392e641490',
+                                                              'status': 'active',
+                                                              'version': '03.16.04a.S.155-3.S4a-ext'}}},
+                            'SIP0/3': {'package': {'sipspa': {'built_by': 'mcpre',
+                                                              'built_time': '2016-10-04_09.39',
+                                                              'file': 'asr1000rp2-sipspa.03.16.04a.S.155-3.S4a-ext.pkg',
+                                                              'file_sha1_checksum': 'bcd8cb438dd1829f31e361bd35287c392e641490',
+                                                              'status': 'active',
+                                                              'version': '03.16.04a.S.155-3.S4a-ext'}}},
+                            'SIP1': {'package': {'sipbase': {'built_by': 'mcpre',
+                                                             'built_time': '2016-10-04_09.39',
+                                                             'file': 'asr1000rp2-sipbase.03.16.04a.S.155-3.S4a-ext.pkg',
+                                                             'file_sha1_checksum': '39f3451d1e4d84297ba6c696c450c2d8fed22fb7',
+                                                             'status': 'active',
+                                                             'version': '03.16.04a.S.155-3.S4a-ext'}}},
+                            'SIP1/0': {'package': {'sipspa': {'built_by': 'mcpre',
+                                                              'built_time': '2016-10-04_09.39',
+                                                              'file': 'asr1000rp2-sipspa.03.16.04a.S.155-3.S4a-ext.pkg',
+                                                              'file_sha1_checksum': 'bcd8cb438dd1829f31e361bd35287c392e641490',
+                                                              'status': 'active',
+                                                              'version': '03.16.04a.S.155-3.S4a-ext'}}},
+                            'SIP1/1': {'package': {'sipspa': {'built_by': 'mcpre',
+                                                              'built_time': '2016-10-04_09.39',
+                                                              'file': 'asr1000rp2-sipspa.03.16.04a.S.155-3.S4a-ext.pkg',
+                                                              'file_sha1_checksum': 'bcd8cb438dd1829f31e361bd35287c392e641490',
+                                                              'status': 'active',
+                                                              'version': '03.16.04a.S.155-3.S4a-ext'}}}}}}}
+
+    golden_output_active = {'execute.return_value': '''\
+        Router#show version RP active running
+        Load for five secs: 1%/0%; one minute: 28%; five minutes: 44%
+        Time source is NTP, 18:31:35.860 EST Mon Oct 24 2016
+        Package: Provisioning File, version: n/a, status: active
+          File: consolidated:packages.conf, on: RP0
+          Built: n/a, by: n/a
+          File SHA1 checksum: e9cc713ad9eacbdc1ac59d598a99cd1755351d44
+
+        Package: rpbase, version: 03.16.04a.S.155-3.S4a-ext, status: n/a
+          File: consolidated:asr1000rp2-rpbase.03.16.04a.S.155-3.S4a-ext.pkg, on: RP0
+          Built: 2016-10-04_12.28, by: mcpre
+          File SHA1 checksum: 79e234871520fd480dc1128058160b4e2acee9f7
+
+        Package: rpcontrol, version: 03.16.04a.S.155-3.S4a-ext, status: n/a
+          File: consolidated:asr1000rp2-rpcontrol.03.16.04a.S.155-3.S4a-ext.pkg, on: RP0/0
+          Built: 2016-10-04_12.28, by: mcpre
+          File SHA1 checksum: 16c8c12376cc94bdd9442fe64c429bdb034cd224
+
+        Package: rpios-adventerprise, version: 03.16.04a.S.155-3.S4a-ext, status: n/a
+          File: consolidated:asr1000rp2-rpios-adventerprise.03.16.04a.S.155-3.S4a-ext.pkg, on: RP0/0
+          Built: 2016-10-04_12.31, by: mcpre
+          File SHA1 checksum: ead482a384b287a9a518d6514a495546cdbf7e85
+
+        Package: rpaccess, version: 03.16.04a.S.155-3.S4a-ext, status: n/a
+          File: consolidated:asr1000rp2-rpaccess.03.16.04a.S.155-3.S4a-ext.pkg, on: RP0/0
+          Built: 2016-10-04_12.28, by: mcpre
+          File SHA1 checksum: 7ae3f198743db3011eaeb9311d0b26bdf0e41f09
+
+        Package: rpbase, version: 03.16.04a.S.155-3.S4a-ext, status: active
+          File: consolidated:asr1000rp2-rpbase.03.16.04a.S.155-3.S4a-ext.pkg, on: RP1
+          Built: 2016-10-04_12.28, by: mcpre
+          File SHA1 checksum: 79e234871520fd480dc1128058160b4e2acee9f7
+
+        Package: rpcontrol, version: 03.16.04a.S.155-3.S4a-ext, status: active
+          File: consolidated:asr1000rp2-rpcontrol.03.16.04a.S.155-3.S4a-ext.pkg, on: RP1/0
+          Built: 2016-10-04_12.28, by: mcpre
+          File SHA1 checksum: 16c8c12376cc94bdd9442fe64c429bdb034cd224
+
+        Package: rpios-adventerprise, version: 03.16.04a.S.155-3.S4a-ext, status: active
+          File: consolidated:asr1000rp2-rpios-adventerprise.03.16.04a.S.155-3.S4a-ext.pkg, on: RP1/0
+          Built: 2016-10-04_12.31, by: mcpre
+          File SHA1 checksum: ead482a384b287a9a518d6514a495546cdbf7e85
+
+        Package: rpaccess, version: 03.16.04a.S.155-3.S4a-ext, status: active
+          File: consolidated:asr1000rp2-rpaccess.03.16.04a.S.155-3.S4a-ext.pkg, on: RP1/0
+          Built: 2016-10-04_12.28, by: mcpre
+          File SHA1 checksum: 7ae3f198743db3011eaeb9311d0b26bdf0e41f09
+
+        Package: espx86base, version: 03.16.04a.S.155-3.S4a-ext, status: active
+          File: consolidated:asr1000rp2-espx86base.03.16.04a.S.155-3.S4a-ext.pkg, on: ESP0
+          Built: 2016-10-04_12.28, by: mcpre
+          File SHA1 checksum: e9401142366cf5c9fdeb2e570eae233d1a211803
+
+        Package: espx86base, version: 03.16.04a.S.155-3.S4a-ext, status: active
+          File: consolidated:asr1000rp2-espx86base.03.16.04a.S.155-3.S4a-ext.pkg, on: ESP1
+          Built: 2016-10-04_12.28, by: mcpre
+          File SHA1 checksum: e9401142366cf5c9fdeb2e570eae233d1a211803
+
+        Package: sipbase, version: 03.16.04a.S.155-3.S4a-ext, status: active
+          File: consolidated:asr1000rp2-sipbase.03.16.04a.S.155-3.S4a-ext.pkg, on: SIP0
+          Built: 2016-10-04_09.39, by: mcpre
+          File SHA1 checksum: 39f3451d1e4d84297ba6c696c450c2d8fed22fb7
+
+        Package: sipspa, version: 03.16.04a.S.155-3.S4a-ext, status: active
+          File: consolidated:asr1000rp2-sipspa.03.16.04a.S.155-3.S4a-ext.pkg, on: SIP0/0
+          Built: 2016-10-04_09.39, by: mcpre
+          File SHA1 checksum: bcd8cb438dd1829f31e361bd35287c392e641490
+
+        Package: sipspa, version: 03.16.04a.S.155-3.S4a-ext, status: active
+          File: consolidated:asr1000rp2-sipspa.03.16.04a.S.155-3.S4a-ext.pkg, on: SIP0/1
+          Built: 2016-10-04_09.39, by: mcpre
+          File SHA1 checksum: bcd8cb438dd1829f31e361bd35287c392e641490
+
+        Package: sipspa, version: 03.16.04a.S.155-3.S4a-ext, status: active
+          File: consolidated:asr1000rp2-sipspa.03.16.04a.S.155-3.S4a-ext.pkg, on: SIP0/2
+          Built: 2016-10-04_09.39, by: mcpre
+          File SHA1 checksum: bcd8cb438dd1829f31e361bd35287c392e641490
+
+        Package: sipspa, version: 03.16.04a.S.155-3.S4a-ext, status: active
+          File: consolidated:asr1000rp2-sipspa.03.16.04a.S.155-3.S4a-ext.pkg, on: SIP0/3
+          Built: 2016-10-04_09.39, by: mcpre
+          File SHA1 checksum: bcd8cb438dd1829f31e361bd35287c392e641490
+
+        Package: sipbase, version: 03.16.04a.S.155-3.S4a-ext, status: active
+          File: consolidated:asr1000rp2-sipbase.03.16.04a.S.155-3.S4a-ext.pkg, on: SIP1
+          Built: 2016-10-04_09.39, by: mcpre
+          File SHA1 checksum: 39f3451d1e4d84297ba6c696c450c2d8fed22fb7
+
+        Package: sipspa, version: 03.16.04a.S.155-3.S4a-ext, status: active
+          File: consolidated:asr1000rp2-sipspa.03.16.04a.S.155-3.S4a-ext.pkg, on: SIP1/0
+          Built: 2016-10-04_09.39, by: mcpre
+          File SHA1 checksum: bcd8cb438dd1829f31e361bd35287c392e641490
+
+        Package: sipspa, version: 03.16.04a.S.155-3.S4a-ext, status: active
+          File: consolidated:asr1000rp2-sipspa.03.16.04a.S.155-3.S4a-ext.pkg, on: SIP1/1
+          Built: 2016-10-04_09.39, by: mcpre
+          File SHA1 checksum: bcd8cb438dd1829f31e361bd35287c392e641490
+    '''
+    }
+
+    golden_parsed_output_standby = {
+        'rp': {
+            'standby': {
+                'slot': {
+                    'ESP0': {
+                        'package': {
+                            'espbase': {
+                                'built_by': 'mcpre',
+                                'built_time': '2016-06-10_03.48',
+                                'file': 'asr1000rp2-espbase.03.16.03.S.155-3.S3-ext.pkg',
+                                'file_sha1_checksum': '4699d60fdb5fad4cc56927917309de4a4027e4e5',
+                                'status': 'n/a',
+                                'version': '03.16.03.S.155-3.S3-ext',
+                            },
+                            'espx86base': {
+                                'built_by': 'mcpre',
+                                'built_time': '2016-06-10_04.41',
+                                'file': 'asr1000rp2-espx86base.03.16.03.S.155-3.S3-ext.pkg',
+                                'file_sha1_checksum': '1d7393ac1fc1569797e62b8ce3bf5b3354ba3572',
+                                'status': 'n/a',
+                                'version': '03.16.03.S.155-3.S3-ext',
+                            }
+                        }
+                    },
+                    'ESP1': {
+                        'package': {'espbase': {'built_by': 'mcpre',
+                                                              'built_time': '2016-06-10_03.48',
+                                                              'file': 'asr1000rp2-espbase.03.16.03.S.155-3.S3-ext.pkg',
+                                                              'file_sha1_checksum': '4699d60fdb5fad4cc56927917309de4a4027e4e5',
+                                                              'status': 'n/a',
+                                                              'version': '03.16.03.S.155-3.S3-ext'},
+                                                  'espx86base': {'built_by': 'mcpre',
+                                                                 'built_time': '2016-06-10_04.41',
+                                                                 'file': 'asr1000rp2-espx86base.03.16.03.S.155-3.S3-ext.pkg',
+                                                                 'file_sha1_checksum': '1d7393ac1fc1569797e62b8ce3bf5b3354ba3572',
+                                                                 'status': 'n/a',
+                                                                 'version': '03.16.03.S.155-3.S3-ext'}}},
+                             'RP0': {'package': {'Provisioning File': {'built_by': 'n/a',
+                                                                       'built_time': 'n/a',
+                                                                       'file': 'packages.conf',
+                                                                       'file_sha1_checksum': '7055efa3e5674ba91b149dd669ff26bf6c375648',
+                                                                       'status': 'active',
+                                                                       'version': 'n/a'},
+                                                 'rpbase': {'built_by': 'mcpre',
+                                                            'built_time': '2016-06-10_04.41',
+                                                            'file': 'asr1000rp2-rpbase.03.16.03.S.155-3.S3-ext.pkg',
+                                                            'file_sha1_checksum': '8539d83af5a332779fe9424d7cb08061258c1af9',
+                                                            'status': 'active',
+                                                            'version': '03.16.03.S.155-3.S3-ext'}}},
+                             'RP0/0': {'package': {'rpaccess': {'built_by': 'mcpre',
+                                                                'built_time': '2016-06-10_04.41',
+                                                                'file': 'asr1000rp2-rpaccess.03.16.03.S.155-3.S3-ext.pkg',
+                                                                'file_sha1_checksum': '32547e24130869ad9985aca9370a0d7214d256e9',
+                                                                'status': 'active',
+                                                                'version': '03.16.03.S.155-3.S3-ext'},
+                                                   'rpcontrol': {'built_by': 'mcpre',
+                                                                 'built_time': '2016-06-10_04.43',
+                                                                 'file': 'asr1000rp2-rpios-adventerprise.03.16.03.S.155-3.S3-ext.pkg',
+                                                                 'file_sha1_checksum': '095f51f1d35ab539f6b26773c9413a41f918ad42',
+                                                                 'status': 'active',
+                                                                 'version': '03.16.03.S.155-3.S3-ext'}}},
+                             'RP1': {'package': {'rpbase': {'built_by': 'mcpre',
+                                                            'built_time': '2016-06-10_04.41',
+                                                            'file': 'asr1000rp2-rpbase.03.16.03.S.155-3.S3-ext.pkg',
+                                                            'file_sha1_checksum': '8539d83af5a332779fe9424d7cb08061258c1af9',
+                                                            'status': 'n/a',
+                                                            'version': '03.16.03.S.155-3.S3-ext'}}},
+                             'RP1/0': {'package': {'rpaccess': {'built_by': 'mcpre',
+                                                                'built_time': '2016-06-10_04.41',
+                                                                'file': 'asr1000rp2-rpaccess.03.16.03.S.155-3.S3-ext.pkg',
+                                                                'file_sha1_checksum': '32547e24130869ad9985aca9370a0d7214d256e9',
+                                                                'status': 'n/a',
+                                                                'version': '03.16.03.S.155-3.S3-ext'},
+                                                   'rpcontrol': {'built_by': 'mcpre',
+                                                                 'built_time': '2016-06-10_04.43',
+                                                                 'file': 'asr1000rp2-rpios-adventerprise.03.16.03.S.155-3.S3-ext.pkg',
+                                                                 'file_sha1_checksum': '095f51f1d35ab539f6b26773c9413a41f918ad42',
+                                                                 'status': 'n/a',
+                                                                 'version': '03.16.03.S.155-3.S3-ext'}}},
+                             'SIP0': {'package': {'elcbase': {'built_by': 'mcpre',
+                                                              'built_time': '2016-06-10_03.48',
+                                                              'file': 'asr1000rp2-elcbase.03.16.03.S.155-3.S3-ext.pkg',
+                                                              'file_sha1_checksum': 'e4573bf9a752b31a0c2d713990ad13e11b9b3387',
+                                                              'status': 'n/a',
+                                                              'version': '03.16.03.S.155-3.S3-ext'},
+                                                  'sipbase': {'built_by': 'mcpre',
+                                                              'built_time': '2016-06-10_03.48',
+                                                              'file': 'asr1000rp2-sipbase.03.16.03.S.155-3.S3-ext.pkg',
+                                                              'file_sha1_checksum': 'db8fb38d845c23b0e0f74b05f1a86aadcaa34972',
+                                                              'status': 'n/a',
+                                                              'version': '03.16.03.S.155-3.S3-ext'}}},
+                             'SIP0/0': {'package': {'elcspa': {'built_by': 'mcpre',
+                                                               'built_time': '2016-06-10_03.48',
+                                                               'file': 'asr1000rp2-elcspa.03.16.03.S.155-3.S3-ext.pkg',
+                                                               'file_sha1_checksum': 'a912595d72b5be9890810042ec2a529d5d9a18b7',
+                                                               'status': 'n/a',
+                                                               'version': '03.16.03.S.155-3.S3-ext'},
+                                                    'sipspa': {'built_by': 'mcpre',
+                                                               'built_time': '2016-06-10_03.48',
+                                                               'file': 'asr1000rp2-sipspa.03.16.03.S.155-3.S3-ext.pkg',
+                                                               'file_sha1_checksum': 'bab5367d34c07e1522c102a95b4bfa3b099a3e0e',
+                                                               'status': 'n/a',
+                                                               'version': '03.16.03.S.155-3.S3-ext'}}},
+                             'SIP0/1': {'package': {'elcspa': {'built_by': 'mcpre',
+                                                               'built_time': '2016-06-10_03.48',
+                                                               'file': 'asr1000rp2-elcspa.03.16.03.S.155-3.S3-ext.pkg',
+                                                               'file_sha1_checksum': 'a912595d72b5be9890810042ec2a529d5d9a18b7',
+                                                               'status': 'n/a',
+                                                               'version': '03.16.03.S.155-3.S3-ext'},
+                                                    'sipspa': {'built_by': 'mcpre',
+                                                               'built_time': '2016-06-10_03.48',
+                                                               'file': 'asr1000rp2-sipspa.03.16.03.S.155-3.S3-ext.pkg',
+                                                               'file_sha1_checksum': 'bab5367d34c07e1522c102a95b4bfa3b099a3e0e',
+                                                               'status': 'n/a',
+                                                               'version': '03.16.03.S.155-3.S3-ext'}}},
+                             'SIP0/2': {'package': {'elcspa': {'built_by': 'mcpre',
+                                                               'built_time': '2016-06-10_03.48',
+                                                               'file': 'asr1000rp2-elcspa.03.16.03.S.155-3.S3-ext.pkg',
+                                                               'file_sha1_checksum': 'a912595d72b5be9890810042ec2a529d5d9a18b7',
+                                                               'status': 'n/a',
+                                                               'version': '03.16.03.S.155-3.S3-ext'},
+                                                    'sipspa': {'built_by': 'mcpre',
+                                                               'built_time': '2016-06-10_03.48',
+                                                               'file': 'asr1000rp2-sipspa.03.16.03.S.155-3.S3-ext.pkg',
+                                                               'file_sha1_checksum': 'bab5367d34c07e1522c102a95b4bfa3b099a3e0e',
+                                                               'status': 'n/a',
+                                                               'version': '03.16.03.S.155-3.S3-ext'}}},
+                             'SIP0/3': {'package': {'elcspa': {'built_by': 'mcpre',
+                                                               'built_time': '2016-06-10_03.48',
+                                                               'file': 'asr1000rp2-elcspa.03.16.03.S.155-3.S3-ext.pkg',
+                                                               'file_sha1_checksum': 'a912595d72b5be9890810042ec2a529d5d9a18b7',
+                                                               'status': 'n/a',
+                                                               'version': '03.16.03.S.155-3.S3-ext'},
+                                                    'sipspa': {'built_by': 'mcpre',
+                                                               'built_time': '2016-06-10_03.48',
+                                                               'file': 'asr1000rp2-sipspa.03.16.03.S.155-3.S3-ext.pkg',
+                                                               'file_sha1_checksum': 'bab5367d34c07e1522c102a95b4bfa3b099a3e0e',
+                                                               'status': 'n/a',
+                                                               'version': '03.16.03.S.155-3.S3-ext'}}},
+                             'SIP1': {'package': {'elcbase': {'built_by': 'mcpre',
+                                                              'built_time': '2016-06-10_03.48',
+                                                              'file': 'asr1000rp2-elcbase.03.16.03.S.155-3.S3-ext.pkg',
+                                                              'file_sha1_checksum': 'e4573bf9a752b31a0c2d713990ad13e11b9b3387',
+                                                              'status': 'n/a',
+                                                              'version': '03.16.03.S.155-3.S3-ext'},
+                                                  'sipbase': {'built_by': 'mcpre',
+                                                              'built_time': '2016-06-10_03.48',
+                                                              'file': 'asr1000rp2-sipbase.03.16.03.S.155-3.S3-ext.pkg',
+                                                              'file_sha1_checksum': 'db8fb38d845c23b0e0f74b05f1a86aadcaa34972',
+                                                              'status': 'n/a',
+                                                              'version': '03.16.03.S.155-3.S3-ext'}}},
+                             'SIP1/0': {'package': {'elcspa': {'built_by': 'mcpre',
+                                                               'built_time': '2016-06-10_03.48',
+                                                               'file': 'asr1000rp2-elcspa.03.16.03.S.155-3.S3-ext.pkg',
+                                                               'file_sha1_checksum': 'a912595d72b5be9890810042ec2a529d5d9a18b7',
+                                                               'status': 'n/a',
+                                                               'version': '03.16.03.S.155-3.S3-ext'},
+                                                    'sipspa': {'built_by': 'mcpre',
+                                                               'built_time': '2016-06-10_03.48',
+                                                               'file': 'asr1000rp2-sipspa.03.16.03.S.155-3.S3-ext.pkg',
+                                                               'file_sha1_checksum': 'bab5367d34c07e1522c102a95b4bfa3b099a3e0e',
+                                                               'status': 'n/a',
+                                                               'version': '03.16.03.S.155-3.S3-ext'}}},
+                             'SIP1/1': {'package': {'elcspa': {'built_by': 'mcpre',
+                                                               'built_time': '2016-06-10_03.48',
+                                                               'file': 'asr1000rp2-elcspa.03.16.03.S.155-3.S3-ext.pkg',
+                                                               'file_sha1_checksum': 'a912595d72b5be9890810042ec2a529d5d9a18b7',
+                                                               'status': 'n/a',
+                                                               'version': '03.16.03.S.155-3.S3-ext'},
+                                                    'sipspa': {'built_by': 'mcpre',
+                                                               'built_time': '2016-06-10_03.48',
+                                                               'file': 'asr1000rp2-sipspa.03.16.03.S.155-3.S3-ext.pkg',
+                                                               'file_sha1_checksum': 'bab5367d34c07e1522c102a95b4bfa3b099a3e0e',
+                                                               'status': 'n/a',
+                                                               'version': '03.16.03.S.155-3.S3-ext'}}}}}}}
+
+    golden_output_standby = {'execute.return_value': '''\
+        Router#show version RP standby running
+        Load for five secs: 22%/0%; one minute: 18%; five minutes: 45%
+        Time source is NTP, 18:37:42.222 EST Mon Oct 24 2016
+        Package: Provisioning File, version: n/a, status: active
+          File: consolidated:packages.conf, on: RP0
+          Built: n/a, by: n/a
+          File SHA1 checksum: 7055efa3e5674ba91b149dd669ff26bf6c375648
+
+        Package: rpbase, version: 03.16.03.S.155-3.S3-ext, status: active
+          File: consolidated:asr1000rp2-rpbase.03.16.03.S.155-3.S3-ext.pkg, on: RP0
+          Built: 2016-06-10_04.41, by: mcpre
+          File SHA1 checksum: 8539d83af5a332779fe9424d7cb08061258c1af9
+
+        Package: rpcontrol, version: 03.16.03.S.155-3.S3-ext, status: active
+          File: consolidated:asr1000rp2-rpcontrol.03.16.03.S.155-3.S3-ext.pkg, on: RP0/0
+          Built: 2016-06-10_04.41, by: mcpre
+          File SHA1 checksum: 4c6e5a1b052aadb2665ddb6f869e823970f9d4ee
+
+        Package: rpios-adventerprise, version: 03.16.03.S.155-3.S3-ext, status: active
+          File: consolidated:asr1000rp2-rpios-adventerprise.03.16.03.S.155-3.S3-ext.pkg, on: RP0/0
+          Built: 2016-06-10_04.43, by: mcpre
+          File SHA1 checksum: 095f51f1d35ab539f6b26773c9413a41f918ad42
+
+        Package: rpaccess, version: 03.16.03.S.155-3.S3-ext, status: active
+          File: consolidated:asr1000rp2-rpaccess.03.16.03.S.155-3.S3-ext.pkg, on: RP0/0
+          Built: 2016-06-10_04.41, by: mcpre
+          File SHA1 checksum: 32547e24130869ad9985aca9370a0d7214d256e9
+
+        Package: rpbase, version: 03.16.03.S.155-3.S3-ext, status: n/a
+          File: consolidated:asr1000rp2-rpbase.03.16.03.S.155-3.S3-ext.pkg, on: RP1
+          Built: 2016-06-10_04.41, by: mcpre
+          File SHA1 checksum: 8539d83af5a332779fe9424d7cb08061258c1af9
+
+        Package: rpcontrol, version: 03.16.03.S.155-3.S3-ext, status: n/a
+          File: consolidated:asr1000rp2-rpcontrol.03.16.03.S.155-3.S3-ext.pkg, on: RP1/0
+          Built: 2016-06-10_04.41, by: mcpre
+          File SHA1 checksum: 4c6e5a1b052aadb2665ddb6f869e823970f9d4ee
+
+        Package: rpios-adventerprise, version: 03.16.03.S.155-3.S3-ext, status: n/a
+          File: consolidated:asr1000rp2-rpios-adventerprise.03.16.03.S.155-3.S3-ext.pkg, on: RP1/0
+          Built: 2016-06-10_04.43, by: mcpre
+          File SHA1 checksum: 095f51f1d35ab539f6b26773c9413a41f918ad42
+
+        Package: rpaccess, version: 03.16.03.S.155-3.S3-ext, status: n/a
+          File: consolidated:asr1000rp2-rpaccess.03.16.03.S.155-3.S3-ext.pkg, on: RP1/0
+          Built: 2016-06-10_04.41, by: mcpre
+          File SHA1 checksum: 32547e24130869ad9985aca9370a0d7214d256e9
+
+        Package: espbase, version: 03.16.03.S.155-3.S3-ext, status: n/a
+          File: consolidated:asr1000rp2-espbase.03.16.03.S.155-3.S3-ext.pkg, on: ESP0
+          Built: 2016-06-10_03.48, by: mcpre
+          File SHA1 checksum: 4699d60fdb5fad4cc56927917309de4a4027e4e5
+
+        Package: espx86base, version: 03.16.03.S.155-3.S3-ext, status: n/a
+          File: consolidated:asr1000rp2-espx86base.03.16.03.S.155-3.S3-ext.pkg, on: ESP0
+          Built: 2016-06-10_04.41, by: mcpre
+          File SHA1 checksum: 1d7393ac1fc1569797e62b8ce3bf5b3354ba3572
+
+        Package: espbase, version: 03.16.03.S.155-3.S3-ext, status: n/a
+          File: consolidated:asr1000rp2-espbase.03.16.03.S.155-3.S3-ext.pkg, on: ESP1
+          Built: 2016-06-10_03.48, by: mcpre
+          File SHA1 checksum: 4699d60fdb5fad4cc56927917309de4a4027e4e5
+
+        Package: espx86base, version: 03.16.03.S.155-3.S3-ext, status: n/a
+          File: consolidated:asr1000rp2-espx86base.03.16.03.S.155-3.S3-ext.pkg, on: ESP1
+          Built: 2016-06-10_04.41, by: mcpre
+          File SHA1 checksum: 1d7393ac1fc1569797e62b8ce3bf5b3354ba3572
+
+        Package: sipbase, version: 03.16.03.S.155-3.S3-ext, status: n/a
+          File: consolidated:asr1000rp2-sipbase.03.16.03.S.155-3.S3-ext.pkg, on: SIP0
+          Built: 2016-06-10_03.48, by: mcpre
+          File SHA1 checksum: db8fb38d845c23b0e0f74b05f1a86aadcaa34972
+
+        Package: elcbase, version: 03.16.03.S.155-3.S3-ext, status: n/a
+          File: consolidated:asr1000rp2-elcbase.03.16.03.S.155-3.S3-ext.pkg, on: SIP0
+          Built: 2016-06-10_03.48, by: mcpre
+          File SHA1 checksum: e4573bf9a752b31a0c2d713990ad13e11b9b3387
+
+        Package: sipspa, version: 03.16.03.S.155-3.S3-ext, status: n/a
+          File: consolidated:asr1000rp2-sipspa.03.16.03.S.155-3.S3-ext.pkg, on: SIP0/0
+          Built: 2016-06-10_03.48, by: mcpre
+          File SHA1 checksum: bab5367d34c07e1522c102a95b4bfa3b099a3e0e
+
+        Package: elcspa, version: 03.16.03.S.155-3.S3-ext, status: n/a
+          File: consolidated:asr1000rp2-elcspa.03.16.03.S.155-3.S3-ext.pkg, on: SIP0/0
+          Built: 2016-06-10_03.48, by: mcpre
+          File SHA1 checksum: a912595d72b5be9890810042ec2a529d5d9a18b7
+
+        Package: sipspa, version: 03.16.03.S.155-3.S3-ext, status: n/a
+          File: consolidated:asr1000rp2-sipspa.03.16.03.S.155-3.S3-ext.pkg, on: SIP0/1
+          Built: 2016-06-10_03.48, by: mcpre
+          File SHA1 checksum: bab5367d34c07e1522c102a95b4bfa3b099a3e0e
+
+        Package: elcspa, version: 03.16.03.S.155-3.S3-ext, status: n/a
+          File: consolidated:asr1000rp2-elcspa.03.16.03.S.155-3.S3-ext.pkg, on: SIP0/1
+          Built: 2016-06-10_03.48, by: mcpre
+          File SHA1 checksum: a912595d72b5be9890810042ec2a529d5d9a18b7
+
+        Package: sipspa, version: 03.16.03.S.155-3.S3-ext, status: n/a
+          File: consolidated:asr1000rp2-sipspa.03.16.03.S.155-3.S3-ext.pkg, on: SIP0/2
+          Built: 2016-06-10_03.48, by: mcpre
+          File SHA1 checksum: bab5367d34c07e1522c102a95b4bfa3b099a3e0e
+
+        Package: elcspa, version: 03.16.03.S.155-3.S3-ext, status: n/a
+          File: consolidated:asr1000rp2-elcspa.03.16.03.S.155-3.S3-ext.pkg, on: SIP0/2
+          Built: 2016-06-10_03.48, by: mcpre
+          File SHA1 checksum: a912595d72b5be9890810042ec2a529d5d9a18b7
+
+        Package: sipspa, version: 03.16.03.S.155-3.S3-ext, status: n/a
+          File: consolidated:asr1000rp2-sipspa.03.16.03.S.155-3.S3-ext.pkg, on: SIP0/3
+          Built: 2016-06-10_03.48, by: mcpre
+          File SHA1 checksum: bab5367d34c07e1522c102a95b4bfa3b099a3e0e
+
+        Package: elcspa, version: 03.16.03.S.155-3.S3-ext, status: n/a
+          File: consolidated:asr1000rp2-elcspa.03.16.03.S.155-3.S3-ext.pkg, on: SIP0/3
+          Built: 2016-06-10_03.48, by: mcpre
+          File SHA1 checksum: a912595d72b5be9890810042ec2a529d5d9a18b7
+
+        Package: sipbase, version: 03.16.03.S.155-3.S3-ext, status: n/a
+          File: consolidated:asr1000rp2-sipbase.03.16.03.S.155-3.S3-ext.pkg, on: SIP1
+          Built: 2016-06-10_03.48, by: mcpre
+          File SHA1 checksum: db8fb38d845c23b0e0f74b05f1a86aadcaa34972
+
+        Package: elcbase, version: 03.16.03.S.155-3.S3-ext, status: n/a
+          File: consolidated:asr1000rp2-elcbase.03.16.03.S.155-3.S3-ext.pkg, on: SIP1
+          Built: 2016-06-10_03.48, by: mcpre
+          File SHA1 checksum: e4573bf9a752b31a0c2d713990ad13e11b9b3387
+
+        Package: sipspa, version: 03.16.03.S.155-3.S3-ext, status: n/a
+          File: consolidated:asr1000rp2-sipspa.03.16.03.S.155-3.S3-ext.pkg, on: SIP1/0
+          Built: 2016-06-10_03.48, by: mcpre
+          File SHA1 checksum: bab5367d34c07e1522c102a95b4bfa3b099a3e0e
+
+        Package: elcspa, version: 03.16.03.S.155-3.S3-ext, status: n/a
+          File: consolidated:asr1000rp2-elcspa.03.16.03.S.155-3.S3-ext.pkg, on: SIP1/0
+          Built: 2016-06-10_03.48, by: mcpre
+          File SHA1 checksum: a912595d72b5be9890810042ec2a529d5d9a18b7
+
+        Package: sipspa, version: 03.16.03.S.155-3.S3-ext, status: n/a
+          File: consolidated:asr1000rp2-sipspa.03.16.03.S.155-3.S3-ext.pkg, on: SIP1/1
+          Built: 2016-06-10_03.48, by: mcpre
+          File SHA1 checksum: bab5367d34c07e1522c102a95b4bfa3b099a3e0e
+
+        Package: elcspa, version: 03.16.03.S.155-3.S3-ext, status: n/a
+          File: consolidated:asr1000rp2-elcspa.03.16.03.S.155-3.S3-ext.pkg, on: SIP1/1
+          Built: 2016-06-10_03.48, by: mcpre
+          File SHA1 checksum: a912595d72b5be9890810042ec2a529d5d9a18b7
+    '''
+    }
+
+    golden_output_standby_offline = {'execute.return_value': '''\
+        Router#show version RP standby running
+        Load for five secs: 1%/0%; one minute: 24%; five minutes: 43%
+        Time source is NTP, 18:31:45.991 EST Mon Oct 24 2016
+        The standby Route-Processor is currently offline
+    '''
+    }
+
+    def test_golden_active(self):
+        self.device = Mock(**self.golden_output_active)
+        obj = ShowVersionRp(device=self.device)
+        parsed_output = obj.parse(rp='active', status='running')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_active)
+
+    def test_golden_standby(self):
+        self.device = Mock(**self.golden_output_standby)
+        obj = ShowVersionRp(device=self.device)
+        parsed_output = obj.parse(rp='standby', status='running')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_standby)
+
+    def test_golden_standby_offline(self):
+        self.device = Mock(**self.golden_output_standby_offline)
+        obj = ShowVersionRp(device=self.device)
+        self.maxDiff = None
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(rp='standby', status='running')
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowVersionRp(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+
+class test_show_platform_hardware(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_active = {
+        'BG4001.1020892': {
+            'if_h': 4256},
+        'BG4002.1020893': {'if_h': 4257},
+        'BG4006.1020894': {'if_h': 4258},
+        'BG4010.1020895': {'if_h': 4259},
+        'BG4033.10207fd': {'if_h': 4107},
+        'BG4044.10207fe': {'if_h': 4108},
+        'BG4045.10207ff': {'if_h': 4109},
+        'BG4048.10207e1': {'if_h': 4079},
+        'BG4111.1020807': {'if_h': 4117},
+        'BG4117.1020808': {'if_h': 4118},
+        'BG4118.1020809': {'if_h': 4119},
+        'CPP_Null': {'if_h': 5},
+        'GigabitEthernet0/0/0': {
+            'if_h': 7,
+            'index': {
+                '0': {
+                    'name': 'GigabitEthernet0/0/0',
+                    'queue_id': '0x8d',
+                    'software_control_info': {
+                        'cache_queue_id': '0x0000008d',
+                        'debug_name': 'GigabitEthernet0/0/0',
+                        'defer_obj_refcnt': 0,
+                        'max': 0,
+                        'max_dflt': 0,
+                        'max_qos': 0,
+                        'min': 105000000,
+                        'min_dflt': 0,
+                        'min_qos': 0,
+                        'orig_max': 0,
+                        'orig_min': 0,
+                        'parent_sid': '0x268',
+                        'plevel': 0,
+                        'port_uidb': 245753,
+                        'priority': 65535,
+                        'qlimit_bytes': 3281312,
+                        'share': 1,
+                        'sw_flags': '0x08000011',
+                        'sw_state': '0x00000c01',
+                        'wred': '0x88b16932',
+                    },
+                    'statistics': {
+                        'lic_throughput_oversub_drops_bytes': 0,
+                        'lic_throughput_oversub_drops_packets': 0,
+                        'queue_depth_bytes': 0,
+                        'tail_drops_bytes': 0,
+                        'tail_drops_packets': 0,
+                        'total_enqs_bytes': 103120085,
+                        'total_enqs_packets': 518314,
+                    }
+                }
+            }
+        },
+        'GigabitEthernet0/0/1': {'if_h': 8,
+                          'index': {'0': {'name': 'GigabitEthernet0/0/1',
+                                          'queue_id': '0x8e',
+                                          'software_control_info': {'cache_queue_id': '0x0000008e',
+                                                                    'debug_name': 'GigabitEthernet0/0/1',
+                                                                    'defer_obj_refcnt': 0,
+                                                                    'max': 0,
+                                                                    'max_dflt': 0,
+                                                                    'max_qos': 0,
+                                                                    'min': 105000000,
+                                                                    'min_dflt': 0,
+                                                                    'min_qos': 0,
+                                                                    'orig_max': 0,
+                                                                    'orig_min': 0,
+                                                                    'parent_sid': '0x269',
+                                                                    'plevel': 0,
+                                                                    'port_uidb': 245752,
+                                                                    'priority': 65535,
+                                                                    'qlimit_bytes': 3281312,
+                                                                    'share': 1,
+                                                                    'sw_flags': '0x08000011',
+                                                                    'sw_state': '0x00000c01',
+                                                                    'wred': '0x88b16942'},
+                                          'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                         'lic_throughput_oversub_drops_packets': 0,
+                                                         'queue_depth_bytes': 0,
+                                                         'tail_drops_bytes': 0,
+                                                         'tail_drops_packets': 0,
+                                                         'total_enqs_bytes': 649104074,
+                                                         'total_enqs_packets': 7688841}}}},
+ 'GigabitEthernet0/0/1.11': {'if_h': 37},
+ 'GigabitEthernet0/0/1.12': {'if_h': 38},
+ 'GigabitEthernet0/0/1.13': {'if_h': 39},
+ 'GigabitEthernet0/0/1.14': {'if_h': 40},
+ 'GigabitEthernet0/0/1.15': {'if_h': 41},
+ 'GigabitEthernet0/0/1.16': {'if_h': 42},
+ 'GigabitEthernet0/0/1.17': {'if_h': 43},
+ 'GigabitEthernet0/0/1.1795': {'if_h': 1821},
+ 'GigabitEthernet0/0/1.1796': {'if_h': 1822},
+ 'GigabitEthernet0/0/1.1797': {'if_h': 1823},
+ 'GigabitEthernet0/0/1.18': {'if_h': 44},
+ 'GigabitEthernet0/0/1.19': {'if_h': 45},
+ 'GigabitEthernet0/0/1.2': {'if_h': 35},
+ 'GigabitEthernet0/0/1.20': {'if_h': 46},
+ 'GigabitEthernet0/0/1.21': {'if_h': 47},
+ 'GigabitEthernet0/0/1.22': {'if_h': 48},
+ 'GigabitEthernet0/0/1.23': {'if_h': 49},
+ 'GigabitEthernet0/0/1.24': {'if_h': 50},
+ 'GigabitEthernet0/0/1.25': {'if_h': 51},
+ 'GigabitEthernet0/0/1.26': {'if_h': 52},
+ 'GigabitEthernet0/0/1.27': {'if_h': 53},
+ 'GigabitEthernet0/0/1.28': {'if_h': 54},
+ 'GigabitEthernet0/0/1.29': {'if_h': 55},
+ 'GigabitEthernet0/0/1.30': {'if_h': 56},
+ 'GigabitEthernet0/0/1.31': {'if_h': 57},
+ 'GigabitEthernet0/0/1.32': {'if_h': 58},
+ 'GigabitEthernet0/0/1.33': {'if_h': 59},
+ 'GigabitEthernet0/0/1.34': {'if_h': 60},
+ 'GigabitEthernet0/0/1.35': {'if_h': 61},
+ 'GigabitEthernet0/0/1.36': {'if_h': 62},
+ 'GigabitEthernet0/0/1.37': {'if_h': 63},
+ 'GigabitEthernet0/0/1.38': {'if_h': 64},
+ 'GigabitEthernet0/0/1.400': {'if_h': 426},
+ 'GigabitEthernet0/0/1.401': {'if_h': 427},
+ 'GigabitEthernet0/0/1.402': {'if_h': 428},
+ 'GigabitEthernet0/0/1.403': {'if_h': 429},
+ 'GigabitEthernet0/0/1.404': {'if_h': 430},
+ 'GigabitEthernet0/0/1.405': {'if_h': 431},
+ 'GigabitEthernet0/0/1.406': {'if_h': 432},
+ 'GigabitEthernet0/0/1.407': {'if_h': 433},
+ 'GigabitEthernet0/0/1.408': {'if_h': 434},
+ 'GigabitEthernet0/0/1.409': {'if_h': 435},
+ 'GigabitEthernet0/0/1.410': {'if_h': 436},
+ 'GigabitEthernet0/0/1.411': {'if_h': 437},
+ 'GigabitEthernet0/0/1.412': {'if_h': 438},
+ 'GigabitEthernet0/0/1.413': {'if_h': 439},
+ 'GigabitEthernet0/0/1.414': {'if_h': 440},
+ 'GigabitEthernet0/0/1.415': {'if_h': 441},
+ 'GigabitEthernet0/0/1.416': {'if_h': 442},
+ 'GigabitEthernet0/0/1.417': {'if_h': 443},
+ 'GigabitEthernet0/0/1.418': {'if_h': 444},
+ 'GigabitEthernet0/0/1.419': {'if_h': 445},
+ 'GigabitEthernet0/0/1.420': {'if_h': 446},
+ 'GigabitEthernet0/0/1.421': {'if_h': 447},
+ 'GigabitEthernet0/0/1.422': {'if_h': 448},
+ 'GigabitEthernet0/0/1.423': {'if_h': 449},
+ 'GigabitEthernet0/0/1.424': {'if_h': 450},
+ 'GigabitEthernet0/0/1.425': {'if_h': 451},
+ 'GigabitEthernet0/0/1.426': {'if_h': 452},
+ 'GigabitEthernet0/0/1.427': {'if_h': 453},
+ 'GigabitEthernet0/0/1.428': {'if_h': 454},
+ 'GigabitEthernet0/0/1.429': {'if_h': 455},
+ 'GigabitEthernet0/0/1.430': {'if_h': 456},
+ 'GigabitEthernet0/0/1.431': {'if_h': 457},
+ 'GigabitEthernet0/0/1.432': {'if_h': 458},
+ 'GigabitEthernet0/0/1.433': {'if_h': 459},
+ 'GigabitEthernet0/0/1.434': {'if_h': 460},
+ 'GigabitEthernet0/0/1.57': {'if_h': 83},
+ 'GigabitEthernet0/0/1.58': {'if_h': 84},
+ 'GigabitEthernet0/0/1.59': {'if_h': 85},
+ 'GigabitEthernet0/0/1.60': {'if_h': 86},
+ 'GigabitEthernet0/0/1.61': {'if_h': 87},
+ 'GigabitEthernet0/0/1.62': {'if_h': 88},
+ 'GigabitEthernet0/0/1.63': {'if_h': 89},
+ 'GigabitEthernet0/0/1.720': {'if_h': 746},
+ 'GigabitEthernet0/0/1.721': {'if_h': 747},
+ 'GigabitEthernet0/0/1.722': {'if_h': 748},
+ 'GigabitEthernet0/0/1.723': {'if_h': 749},
+ 'GigabitEthernet0/0/1.724': {'if_h': 750},
+ 'GigabitEthernet0/0/1.725': {'if_h': 751},
+ 'GigabitEthernet0/0/1.726': {'if_h': 752},
+ 'GigabitEthernet0/0/1.727': {'if_h': 753},
+ 'GigabitEthernet0/0/1.728': {'if_h': 754},
+ 'GigabitEthernet0/0/1.729': {'if_h': 755},
+ 'GigabitEthernet0/0/1.730': {'if_h': 756},
+ 'GigabitEthernet0/0/1.731': {'if_h': 757},
+ 'GigabitEthernet0/0/1.732': {'if_h': 758},
+ 'GigabitEthernet0/0/1.733': {'if_h': 759},
+ 'GigabitEthernet0/0/1.734': {'if_h': 760},
+ 'GigabitEthernet0/0/1.735': {'if_h': 761},
+ 'GigabitEthernet0/0/1.736': {'if_h': 762},
+ 'GigabitEthernet0/0/1.737': {'if_h': 763},
+ 'GigabitEthernet0/0/1.738': {'if_h': 764},
+ 'GigabitEthernet0/0/1.EFP2054': {'if_h': 36},
+ 'GigabitEthernet0/0/2': {'if_h': 9,
+                          'index': {'0': {'name': 'GigabitEthernet0/0/2',
+                                          'queue_id': '0x8f',
+                                          'software_control_info': {'cache_queue_id': '0x0000008f',
+                                                                    'debug_name': 'GigabitEthernet0/0/2',
+                                                                    'defer_obj_refcnt': 0,
+                                                                    'max': 0,
+                                                                    'max_dflt': 0,
+                                                                    'max_qos': 0,
+                                                                    'min': 105000000,
+                                                                    'min_dflt': 0,
+                                                                    'min_qos': 0,
+                                                                    'orig_max': 0,
+                                                                    'orig_min': 0,
+                                                                    'parent_sid': '0x26a',
+                                                                    'plevel': 0,
+                                                                    'port_uidb': 245751,
+                                                                    'priority': 65535,
+                                                                    'qlimit_bytes': 3281312,
+                                                                    'share': 1,
+                                                                    'sw_flags': '0x08000011',
+                                                                    'sw_state': '0x00000c01',
+                                                                    'wred': '0x88b16952'},
+                                          'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                         'lic_throughput_oversub_drops_packets': 0,
+                                                         'queue_depth_bytes': 0,
+                                                         'tail_drops_bytes': 0,
+                                                         'tail_drops_packets': 0,
+                                                         'total_enqs_bytes': 779830,
+                                                         'total_enqs_packets': 10261}}}},
+ 'GigabitEthernet0/0/3': {'if_h': 10,
+                          'index': {'0': {'name': 'GigabitEthernet0/0/3',
+                                          'queue_id': '0x90',
+                                          'software_control_info': {'cache_queue_id': '0x00000090',
+                                                                    'debug_name': 'GigabitEthernet0/0/3',
+                                                                    'defer_obj_refcnt': 0,
+                                                                    'max': 0,
+                                                                    'max_dflt': 0,
+                                                                    'max_qos': 0,
+                                                                    'min': 105000000,
+                                                                    'min_dflt': 0,
+                                                                    'min_qos': 0,
+                                                                    'orig_max': 0,
+                                                                    'orig_min': 0,
+                                                                    'parent_sid': '0x26b',
+                                                                    'plevel': 0,
+                                                                    'port_uidb': 245750,
+                                                                    'priority': 65535,
+                                                                    'qlimit_bytes': 3281312,
+                                                                    'share': 1,
+                                                                    'sw_flags': '0x08000011',
+                                                                    'sw_state': '0x00000c01',
+                                                                    'wred': '0x88b16962'},
+                                          'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                         'lic_throughput_oversub_drops_packets': 0,
+                                                         'queue_depth_bytes': 0,
+                                                         'tail_drops_bytes': 0,
+                                                         'tail_drops_packets': 0,
+                                                         'total_enqs_bytes': 5698,
+                                                         'total_enqs_packets': 74}}}},
+ 'GigabitEthernet0/0/3.EFP2051': {'if_h': 2077},
+ 'GigabitEthernet0/0/3.EFP2052': {'if_h': 2078},
+ 'GigabitEthernet0/0/3.EFP2053': {'if_h': 2079},
+ 'GigabitEthernet0/0/3.EFP2054': {'if_h': 2080},
+ 'GigabitEthernet0/0/3.EFP2055': {'if_h': 2081},
+ 'GigabitEthernet0/0/3.EFP2174': {'if_h': 2200},
+ 'GigabitEthernet0/0/3.EFP2175': {'if_h': 2201},
+ 'GigabitEthernet0/0/3.EFP2176': {'if_h': 2202},
+ 'GigabitEthernet0/0/3.EFP2177': {'if_h': 2203},
+ 'GigabitEthernet0/0/3.EFP2178': {'if_h': 2204},
+ 'GigabitEthernet0/0/3.EFP2179': {'if_h': 2205},
+ 'GigabitEthernet0/0/4': {'if_h': 11,
+                          'index': {'0': {'name': 'GigabitEthernet0/0/4',
+                                          'queue_id': '0x91',
+                                          'software_control_info': {'cache_queue_id': '0x00000091',
+                                                                    'debug_name': 'GigabitEthernet0/0/4',
+                                                                    'defer_obj_refcnt': 0,
+                                                                    'max': 0,
+                                                                    'max_dflt': 0,
+                                                                    'max_qos': 0,
+                                                                    'min': 105000000,
+                                                                    'min_dflt': 0,
+                                                                    'min_qos': 0,
+                                                                    'orig_max': 0,
+                                                                    'orig_min': 0,
+                                                                    'parent_sid': '0x26c',
+                                                                    'plevel': 0,
+                                                                    'port_uidb': 245749,
+                                                                    'priority': 65535,
+                                                                    'qlimit_bytes': 3281312,
+                                                                    'share': 1,
+                                                                    'sw_flags': '0x08000011',
+                                                                    'sw_state': '0x00000c01',
+                                                                    'wred': '0x88b16972'},
+                                          'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                         'lic_throughput_oversub_drops_packets': 0,
+                                                         'queue_depth_bytes': 0,
+                                                         'tail_drops_bytes': 0,
+                                                         'tail_drops_packets': 0,
+                                                         'total_enqs_bytes': 2754752998,
+                                                         'total_enqs_packets': 2765893}}}},
+ 'GigabitEthernet0/0/5': {'if_h': 12,
+                          'index': {'0': {'name': 'GigabitEthernet0/0/5',
+                                          'queue_id': '0x92',
+                                          'software_control_info': {'cache_queue_id': '0x00000092',
+                                                                    'debug_name': 'GigabitEthernet0/0/5',
+                                                                    'defer_obj_refcnt': 0,
+                                                                    'max': 0,
+                                                                    'max_dflt': 0,
+                                                                    'max_qos': 0,
+                                                                    'min': 105000000,
+                                                                    'min_dflt': 0,
+                                                                    'min_qos': 0,
+                                                                    'orig_max': 0,
+                                                                    'orig_min': 0,
+                                                                    'parent_sid': '0x26d',
+                                                                    'plevel': 0,
+                                                                    'port_uidb': 245748,
+                                                                    'priority': 65535,
+                                                                    'qlimit_bytes': 3281312,
+                                                                    'share': 1,
+                                                                    'sw_flags': '0x08000011',
+                                                                    'sw_state': '0x00000c01',
+                                                                    'wred': '0x88b16982'},
+                                          'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                         'lic_throughput_oversub_drops_packets': 0,
+                                                         'queue_depth_bytes': 0,
+                                                         'tail_drops_bytes': 0,
+                                                         'tail_drops_packets': 0,
+                                                         'total_enqs_bytes': 2754752998,
+                                                         'total_enqs_packets': 2765893}}}},
+ 'GigabitEthernet0/0/6': {'if_h': 13,
+                          'index': {'0': {'name': 'GigabitEthernet0/0/6',
+                                          'queue_id': '0x93',
+                                          'software_control_info': {'cache_queue_id': '0x00000093',
+                                                                    'debug_name': 'GigabitEthernet0/0/6',
+                                                                    'defer_obj_refcnt': 0,
+                                                                    'max': 0,
+                                                                    'max_dflt': 0,
+                                                                    'max_qos': 0,
+                                                                    'min': 105000000,
+                                                                    'min_dflt': 0,
+                                                                    'min_qos': 0,
+                                                                    'orig_max': 0,
+                                                                    'orig_min': 0,
+                                                                    'parent_sid': '0x26e',
+                                                                    'plevel': 0,
+                                                                    'port_uidb': 245747,
+                                                                    'priority': 65535,
+                                                                    'qlimit_bytes': 3281312,
+                                                                    'share': 1,
+                                                                    'sw_flags': '0x08000011',
+                                                                    'sw_state': '0x00000c01',
+                                                                    'wred': '0x88b16992'},
+                                          'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                         'lic_throughput_oversub_drops_packets': 0,
+                                                         'queue_depth_bytes': 0,
+                                                         'tail_drops_bytes': 0,
+                                                         'tail_drops_packets': 0,
+                                                         'total_enqs_bytes': 5998,
+                                                         'total_enqs_packets': 79}}}},
+ 'GigabitEthernet0/0/7': {'if_h': 14,
+                          'index': {'0': {'name': 'GigabitEthernet0/0/7',
+                                          'queue_id': '0x94',
+                                          'software_control_info': {'cache_queue_id': '0x00000094',
+                                                                    'debug_name': 'GigabitEthernet0/0/7',
+                                                                    'defer_obj_refcnt': 0,
+                                                                    'max': 0,
+                                                                    'max_dflt': 0,
+                                                                    'max_qos': 0,
+                                                                    'min': 105000000,
+                                                                    'min_dflt': 0,
+                                                                    'min_qos': 0,
+                                                                    'orig_max': 0,
+                                                                    'orig_min': 0,
+                                                                    'parent_sid': '0x270',
+                                                                    'plevel': 0,
+                                                                    'port_uidb': 245746,
+                                                                    'priority': 65535,
+                                                                    'qlimit_bytes': 3281312,
+                                                                    'share': 1,
+                                                                    'sw_flags': '0x08000011',
+                                                                    'sw_state': '0x00000c01',
+                                                                    'wred': '0x88b169a2'},
+                                          'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                         'lic_throughput_oversub_drops_packets': 0,
+                                                         'queue_depth_bytes': 0,
+                                                         'tail_drops_bytes': 0,
+                                                         'tail_drops_packets': 0,
+                                                         'total_enqs_bytes': 0,
+                                                         'total_enqs_packets': 0}}}},
+ 'GigabitEthernet0/1/0': {'if_h': 15,
+                          'index': {'0': {'name': 'GigabitEthernet0/1/0',
+                                          'queue_id': '0x95',
+                                          'software_control_info': {'cache_queue_id': '0x00000095',
+                                                                    'debug_name': 'GigabitEthernet0/1/0',
+                                                                    'defer_obj_refcnt': 0,
+                                                                    'max': 0,
+                                                                    'max_dflt': 0,
+                                                                    'max_qos': 0,
+                                                                    'min': 105000000,
+                                                                    'min_dflt': 0,
+                                                                    'min_qos': 0,
+                                                                    'orig_max': 0,
+                                                                    'orig_min': 0,
+                                                                    'parent_sid': '0x271',
+                                                                    'plevel': 0,
+                                                                    'port_uidb': 245745,
+                                                                    'priority': 65535,
+                                                                    'qlimit_bytes': 3281312,
+                                                                    'share': 1,
+                                                                    'sw_flags': '0x08000011',
+                                                                    'sw_state': '0x00000c01',
+                                                                    'wred': '0x88b169b2'},
+                                          'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                         'lic_throughput_oversub_drops_packets': 0,
+                                                         'queue_depth_bytes': 0,
+                                                         'tail_drops_bytes': 0,
+                                                         'tail_drops_packets': 0,
+                                                         'total_enqs_bytes': 0,
+                                                         'total_enqs_packets': 0}}}},
+ 'GigabitEthernet0/1/1': {'if_h': 16,
+                          'index': {'0': {'name': 'GigabitEthernet0/1/1',
+                                          'queue_id': '0x96',
+                                          'software_control_info': {'cache_queue_id': '0x00000096',
+                                                                    'debug_name': 'GigabitEthernet0/1/1',
+                                                                    'defer_obj_refcnt': 0,
+                                                                    'max': 0,
+                                                                    'max_dflt': 0,
+                                                                    'max_qos': 0,
+                                                                    'min': 105000000,
+                                                                    'min_dflt': 0,
+                                                                    'min_qos': 0,
+                                                                    'orig_max': 0,
+                                                                    'orig_min': 0,
+                                                                    'parent_sid': '0x272',
+                                                                    'plevel': 0,
+                                                                    'port_uidb': 245744,
+                                                                    'priority': 65535,
+                                                                    'qlimit_bytes': 3281312,
+                                                                    'share': 1,
+                                                                    'sw_flags': '0x08000011',
+                                                                    'sw_state': '0x00000c01',
+                                                                    'wred': '0x88b169c2'},
+                                          'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                         'lic_throughput_oversub_drops_packets': 0,
+                                                         'queue_depth_bytes': 0,
+                                                         'tail_drops_bytes': 0,
+                                                         'tail_drops_packets': 0,
+                                                         'total_enqs_bytes': 0,
+                                                         'total_enqs_packets': 0}}}},
+ 'GigabitEthernet0/1/2': {'if_h': 17,
+                          'index': {'0': {'name': 'GigabitEthernet0/1/2',
+                                          'queue_id': '0x97',
+                                          'software_control_info': {'cache_queue_id': '0x00000097',
+                                                                    'debug_name': 'GigabitEthernet0/1/2',
+                                                                    'defer_obj_refcnt': 0,
+                                                                    'max': 0,
+                                                                    'max_dflt': 0,
+                                                                    'max_qos': 0,
+                                                                    'min': 105000000,
+                                                                    'min_dflt': 0,
+                                                                    'min_qos': 0,
+                                                                    'orig_max': 0,
+                                                                    'orig_min': 0,
+                                                                    'parent_sid': '0x273',
+                                                                    'plevel': 0,
+                                                                    'port_uidb': 245743,
+                                                                    'priority': 65535,
+                                                                    'qlimit_bytes': 3281312,
+                                                                    'share': 1,
+                                                                    'sw_flags': '0x08000011',
+                                                                    'sw_state': '0x00000c01',
+                                                                    'wred': '0x88b169d2'},
+                                          'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                         'lic_throughput_oversub_drops_packets': 0,
+                                                         'queue_depth_bytes': 0,
+                                                         'tail_drops_bytes': 0,
+                                                         'tail_drops_packets': 0,
+                                                         'total_enqs_bytes': 0,
+                                                         'total_enqs_packets': 0}}}},
+ 'GigabitEthernet0/1/3': {'if_h': 18,
+                          'index': {'0': {'name': 'GigabitEthernet0/1/3',
+                                          'queue_id': '0x98',
+                                          'software_control_info': {'cache_queue_id': '0x00000098',
+                                                                    'debug_name': 'GigabitEthernet0/1/3',
+                                                                    'defer_obj_refcnt': 0,
+                                                                    'max': 0,
+                                                                    'max_dflt': 0,
+                                                                    'max_qos': 0,
+                                                                    'min': 105000000,
+                                                                    'min_dflt': 0,
+                                                                    'min_qos': 0,
+                                                                    'orig_max': 0,
+                                                                    'orig_min': 0,
+                                                                    'parent_sid': '0x274',
+                                                                    'plevel': 0,
+                                                                    'port_uidb': 245742,
+                                                                    'priority': 65535,
+                                                                    'qlimit_bytes': 3281312,
+                                                                    'share': 1,
+                                                                    'sw_flags': '0x08000011',
+                                                                    'sw_state': '0x00000c01',
+                                                                    'wred': '0x88b169e2'},
+                                          'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                         'lic_throughput_oversub_drops_packets': 0,
+                                                         'queue_depth_bytes': 0,
+                                                         'tail_drops_bytes': 0,
+                                                         'tail_drops_packets': 0,
+                                                         'total_enqs_bytes': 0,
+                                                         'total_enqs_packets': 0}}}},
+ 'GigabitEthernet0/1/4': {'if_h': 19,
+                          'index': {'0': {'name': 'GigabitEthernet0/1/4',
+                                          'queue_id': '0x99',
+                                          'software_control_info': {'cache_queue_id': '0x00000099',
+                                                                    'debug_name': 'GigabitEthernet0/1/4',
+                                                                    'defer_obj_refcnt': 0,
+                                                                    'max': 0,
+                                                                    'max_dflt': 0,
+                                                                    'max_qos': 0,
+                                                                    'min': 105000000,
+                                                                    'min_dflt': 0,
+                                                                    'min_qos': 0,
+                                                                    'orig_max': 0,
+                                                                    'orig_min': 0,
+                                                                    'parent_sid': '0x275',
+                                                                    'plevel': 0,
+                                                                    'port_uidb': 245741,
+                                                                    'priority': 65535,
+                                                                    'qlimit_bytes': 3281312,
+                                                                    'share': 1,
+                                                                    'sw_flags': '0x08000011',
+                                                                    'sw_state': '0x00000c01',
+                                                                    'wred': '0x88b169f2'},
+                                          'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                         'lic_throughput_oversub_drops_packets': 0,
+                                                         'queue_depth_bytes': 0,
+                                                         'tail_drops_bytes': 0,
+                                                         'tail_drops_packets': 0,
+                                                         'total_enqs_bytes': 0,
+                                                         'total_enqs_packets': 0}}}},
+ 'GigabitEthernet0/1/5': {'if_h': 20,
+                          'index': {'0': {'name': 'GigabitEthernet0/1/5',
+                                          'queue_id': '0x9a',
+                                          'software_control_info': {'cache_queue_id': '0x0000009a',
+                                                                    'debug_name': 'GigabitEthernet0/1/5',
+                                                                    'defer_obj_refcnt': 0,
+                                                                    'max': 0,
+                                                                    'max_dflt': 0,
+                                                                    'max_qos': 0,
+                                                                    'min': 105000000,
+                                                                    'min_dflt': 0,
+                                                                    'min_qos': 0,
+                                                                    'orig_max': 0,
+                                                                    'orig_min': 0,
+                                                                    'parent_sid': '0x276',
+                                                                    'plevel': 0,
+                                                                    'port_uidb': 245740,
+                                                                    'priority': 65535,
+                                                                    'qlimit_bytes': 3281312,
+                                                                    'share': 1,
+                                                                    'sw_flags': '0x08000011',
+                                                                    'sw_state': '0x00000c01',
+                                                                    'wred': '0x88b16a02'},
+                                          'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                         'lic_throughput_oversub_drops_packets': 0,
+                                                         'queue_depth_bytes': 0,
+                                                         'tail_drops_bytes': 0,
+                                                         'tail_drops_packets': 0,
+                                                         'total_enqs_bytes': 0,
+                                                         'total_enqs_packets': 0}}}},
+ 'GigabitEthernet0/1/6': {'if_h': 21,
+                          'index': {'0': {'name': 'GigabitEthernet0/1/6',
+                                          'queue_id': '0x9b',
+                                          'software_control_info': {'cache_queue_id': '0x0000009b',
+                                                                    'debug_name': 'GigabitEthernet0/1/6',
+                                                                    'defer_obj_refcnt': 0,
+                                                                    'max': 0,
+                                                                    'max_dflt': 0,
+                                                                    'max_qos': 0,
+                                                                    'min': 105000000,
+                                                                    'min_dflt': 0,
+                                                                    'min_qos': 0,
+                                                                    'orig_max': 0,
+                                                                    'orig_min': 0,
+                                                                    'parent_sid': '0x278',
+                                                                    'plevel': 0,
+                                                                    'port_uidb': 245739,
+                                                                    'priority': 65535,
+                                                                    'qlimit_bytes': 3281312,
+                                                                    'share': 1,
+                                                                    'sw_flags': '0x08000011',
+                                                                    'sw_state': '0x00000c01',
+                                                                    'wred': '0x88b16a12'},
+                                          'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                         'lic_throughput_oversub_drops_packets': 0,
+                                                         'queue_depth_bytes': 0,
+                                                         'tail_drops_bytes': 0,
+                                                         'tail_drops_packets': 0,
+                                                         'total_enqs_bytes': 0,
+                                                         'total_enqs_packets': 0}}}},
+ 'GigabitEthernet0/1/7': {'if_h': 22,
+                          'index': {'0': {'name': 'GigabitEthernet0/1/7',
+                                          'queue_id': '0x9c',
+                                          'software_control_info': {'cache_queue_id': '0x0000009c',
+                                                                    'debug_name': 'GigabitEthernet0/1/7',
+                                                                    'defer_obj_refcnt': 0,
+                                                                    'max': 0,
+                                                                    'max_dflt': 0,
+                                                                    'max_qos': 0,
+                                                                    'min': 105000000,
+                                                                    'min_dflt': 0,
+                                                                    'min_qos': 0,
+                                                                    'orig_max': 0,
+                                                                    'orig_min': 0,
+                                                                    'parent_sid': '0x279',
+                                                                    'plevel': 0,
+                                                                    'port_uidb': 245738,
+                                                                    'priority': 65535,
+                                                                    'qlimit_bytes': 3281312,
+                                                                    'share': 1,
+                                                                    'sw_flags': '0x08000011',
+                                                                    'sw_state': '0x00000c01',
+                                                                    'wred': '0x88b16a22'},
+                                          'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                         'lic_throughput_oversub_drops_packets': 0,
+                                                         'queue_depth_bytes': 0,
+                                                         'tail_drops_bytes': 0,
+                                                         'tail_drops_packets': 0,
+                                                         'total_enqs_bytes': 0,
+                                                         'total_enqs_packets': 0}}}},
+ 'GigabitEthernet1/0/0': {'if_h': 25,
+                          'index': {'0': {'name': 'GigabitEthernet1/0/0',
+                                          'queue_id': '0x9f',
+                                          'software_control_info': {'cache_queue_id': '0x0000009f',
+                                                                    'debug_name': 'GigabitEthernet1/0/0',
+                                                                    'defer_obj_refcnt': 0,
+                                                                    'max': 0,
+                                                                    'max_dflt': 0,
+                                                                    'max_qos': 0,
+                                                                    'min': 105000000,
+                                                                    'min_dflt': 0,
+                                                                    'min_qos': 0,
+                                                                    'orig_max': 0,
+                                                                    'orig_min': 0,
+                                                                    'parent_sid': '0x27c',
+                                                                    'plevel': 0,
+                                                                    'port_uidb': 245735,
+                                                                    'priority': 65535,
+                                                                    'qlimit_bytes': 3281312,
+                                                                    'share': 1,
+                                                                    'sw_flags': '0x08000011',
+                                                                    'sw_state': '0x00000c01',
+                                                                    'wred': '0x88b16a52'},
+                                          'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                         'lic_throughput_oversub_drops_packets': 0,
+                                                         'queue_depth_bytes': 0,
+                                                         'tail_drops_bytes': 0,
+                                                         'tail_drops_packets': 0,
+                                                         'total_enqs_bytes': 0,
+                                                         'total_enqs_packets': 0}}}},
+ 'GigabitEthernet1/0/1': {'if_h': 26,
+                          'index': {'0': {'name': 'GigabitEthernet1/0/1',
+                                          'queue_id': '0xa0',
+                                          'software_control_info': {'cache_queue_id': '0x000000a0',
+                                                                    'debug_name': 'GigabitEthernet1/0/1',
+                                                                    'defer_obj_refcnt': 0,
+                                                                    'max': 0,
+                                                                    'max_dflt': 0,
+                                                                    'max_qos': 0,
+                                                                    'min': 105000000,
+                                                                    'min_dflt': 0,
+                                                                    'min_qos': 0,
+                                                                    'orig_max': 0,
+                                                                    'orig_min': 0,
+                                                                    'parent_sid': '0x27d',
+                                                                    'plevel': 0,
+                                                                    'port_uidb': 245734,
+                                                                    'priority': 65535,
+                                                                    'qlimit_bytes': 3281312,
+                                                                    'share': 1,
+                                                                    'sw_flags': '0x08000011',
+                                                                    'sw_state': '0x00000c01',
+                                                                    'wred': '0x88b16a62'},
+                                          'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                         'lic_throughput_oversub_drops_packets': 0,
+                                                         'queue_depth_bytes': 0,
+                                                         'tail_drops_bytes': 0,
+                                                         'tail_drops_packets': 0,
+                                                         'total_enqs_bytes': 0,
+                                                         'total_enqs_packets': 0}}}},
+ 'GigabitEthernet1/0/2': {'if_h': 27,
+                          'index': {'0': {'name': 'GigabitEthernet1/0/2',
+                                          'queue_id': '0xa1',
+                                          'software_control_info': {'cache_queue_id': '0x000000a1',
+                                                                    'debug_name': 'GigabitEthernet1/0/2',
+                                                                    'defer_obj_refcnt': 0,
+                                                                    'max': 0,
+                                                                    'max_dflt': 0,
+                                                                    'max_qos': 0,
+                                                                    'min': 105000000,
+                                                                    'min_dflt': 0,
+                                                                    'min_qos': 0,
+                                                                    'orig_max': 0,
+                                                                    'orig_min': 0,
+                                                                    'parent_sid': '0x27e',
+                                                                    'plevel': 0,
+                                                                    'port_uidb': 245733,
+                                                                    'priority': 65535,
+                                                                    'qlimit_bytes': 3281312,
+                                                                    'share': 1,
+                                                                    'sw_flags': '0x08000011',
+                                                                    'sw_state': '0x00000c01',
+                                                                    'wred': '0x88b16a72'},
+                                          'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                         'lic_throughput_oversub_drops_packets': 0,
+                                                         'queue_depth_bytes': 0,
+                                                         'tail_drops_bytes': 0,
+                                                         'tail_drops_packets': 0,
+                                                         'total_enqs_bytes': 0,
+                                                         'total_enqs_packets': 0}}}},
+ 'GigabitEthernet1/0/3': {'if_h': 28,
+                          'index': {'0': {'name': 'GigabitEthernet1/0/3',
+                                          'queue_id': '0xa2',
+                                          'software_control_info': {'cache_queue_id': '0x000000a2',
+                                                                    'debug_name': 'GigabitEthernet1/0/3',
+                                                                    'defer_obj_refcnt': 0,
+                                                                    'max': 0,
+                                                                    'max_dflt': 0,
+                                                                    'max_qos': 0,
+                                                                    'min': 105000000,
+                                                                    'min_dflt': 0,
+                                                                    'min_qos': 0,
+                                                                    'orig_max': 0,
+                                                                    'orig_min': 0,
+                                                                    'parent_sid': '0x280',
+                                                                    'plevel': 0,
+                                                                    'port_uidb': 245732,
+                                                                    'priority': 65535,
+                                                                    'qlimit_bytes': 3281312,
+                                                                    'share': 1,
+                                                                    'sw_flags': '0x08000011',
+                                                                    'sw_state': '0x00000c01',
+                                                                    'wred': '0x88b16a82'},
+                                          'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                         'lic_throughput_oversub_drops_packets': 0,
+                                                         'queue_depth_bytes': 0,
+                                                         'tail_drops_bytes': 0,
+                                                         'tail_drops_packets': 0,
+                                                         'total_enqs_bytes': 0,
+                                                         'total_enqs_packets': 0}}}},
+ 'GigabitEthernet1/0/4': {'if_h': 29,
+                          'index': {'0': {'name': 'GigabitEthernet1/0/4',
+                                          'queue_id': '0xa3',
+                                          'software_control_info': {'cache_queue_id': '0x000000a3',
+                                                                    'debug_name': 'GigabitEthernet1/0/4',
+                                                                    'defer_obj_refcnt': 0,
+                                                                    'max': 0,
+                                                                    'max_dflt': 0,
+                                                                    'max_qos': 0,
+                                                                    'min': 105000000,
+                                                                    'min_dflt': 0,
+                                                                    'min_qos': 0,
+                                                                    'orig_max': 0,
+                                                                    'orig_min': 0,
+                                                                    'parent_sid': '0x281',
+                                                                    'plevel': 0,
+                                                                    'port_uidb': 245731,
+                                                                    'priority': 65535,
+                                                                    'qlimit_bytes': 3281312,
+                                                                    'share': 1,
+                                                                    'sw_flags': '0x08000011',
+                                                                    'sw_state': '0x00000c01',
+                                                                    'wred': '0x88b16a92'},
+                                          'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                         'lic_throughput_oversub_drops_packets': 0,
+                                                         'queue_depth_bytes': 0,
+                                                         'tail_drops_bytes': 0,
+                                                         'tail_drops_packets': 0,
+                                                         'total_enqs_bytes': 0,
+                                                         'total_enqs_packets': 0}}}},
+ 'GigabitEthernet1/0/5': {'if_h': 30,
+                          'index': {'0': {'name': 'GigabitEthernet1/0/5',
+                                          'queue_id': '0xa4',
+                                          'software_control_info': {'cache_queue_id': '0x000000a4',
+                                                                    'debug_name': 'GigabitEthernet1/0/5',
+                                                                    'defer_obj_refcnt': 0,
+                                                                    'max': 0,
+                                                                    'max_dflt': 0,
+                                                                    'max_qos': 0,
+                                                                    'min': 105000000,
+                                                                    'min_dflt': 0,
+                                                                    'min_qos': 0,
+                                                                    'orig_max': 0,
+                                                                    'orig_min': 0,
+                                                                    'parent_sid': '0x282',
+                                                                    'plevel': 0,
+                                                                    'port_uidb': 245730,
+                                                                    'priority': 65535,
+                                                                    'qlimit_bytes': 3281312,
+                                                                    'share': 1,
+                                                                    'sw_flags': '0x08000011',
+                                                                    'sw_state': '0x00000c01',
+                                                                    'wred': '0x88b16aa2'},
+                                          'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                         'lic_throughput_oversub_drops_packets': 0,
+                                                         'queue_depth_bytes': 0,
+                                                         'tail_drops_bytes': 0,
+                                                         'tail_drops_packets': 0,
+                                                         'total_enqs_bytes': 0,
+                                                         'total_enqs_packets': 0}}}},
+ 'GigabitEthernet1/0/6': {'if_h': 31,
+                          'index': {'0': {'name': 'GigabitEthernet1/0/6',
+                                          'queue_id': '0xa5',
+                                          'software_control_info': {'cache_queue_id': '0x000000a5',
+                                                                    'debug_name': 'GigabitEthernet1/0/6',
+                                                                    'defer_obj_refcnt': 0,
+                                                                    'max': 0,
+                                                                    'max_dflt': 0,
+                                                                    'max_qos': 0,
+                                                                    'min': 105000000,
+                                                                    'min_dflt': 0,
+                                                                    'min_qos': 0,
+                                                                    'orig_max': 0,
+                                                                    'orig_min': 0,
+                                                                    'parent_sid': '0x283',
+                                                                    'plevel': 0,
+                                                                    'port_uidb': 245729,
+                                                                    'priority': 65535,
+                                                                    'qlimit_bytes': 3281312,
+                                                                    'share': 1,
+                                                                    'sw_flags': '0x08000011',
+                                                                    'sw_state': '0x00000c01',
+                                                                    'wred': '0x88b16ab2'},
+                                          'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                         'lic_throughput_oversub_drops_packets': 0,
+                                                         'queue_depth_bytes': 0,
+                                                         'tail_drops_bytes': 0,
+                                                         'tail_drops_packets': 0,
+                                                         'total_enqs_bytes': 0,
+                                                         'total_enqs_packets': 0}}}},
+ 'GigabitEthernet1/0/7': {'if_h': 32,
+                          'index': {'0': {'name': 'GigabitEthernet1/0/7',
+                                          'queue_id': '0xa6',
+                                          'software_control_info': {'cache_queue_id': '0x000000a6',
+                                                                    'debug_name': 'GigabitEthernet1/0/7',
+                                                                    'defer_obj_refcnt': 0,
+                                                                    'max': 0,
+                                                                    'max_dflt': 0,
+                                                                    'max_qos': 0,
+                                                                    'min': 105000000,
+                                                                    'min_dflt': 0,
+                                                                    'min_qos': 0,
+                                                                    'orig_max': 0,
+                                                                    'orig_min': 0,
+                                                                    'parent_sid': '0x284',
+                                                                    'plevel': 0,
+                                                                    'port_uidb': 245728,
+                                                                    'priority': 65535,
+                                                                    'qlimit_bytes': 3281312,
+                                                                    'share': 1,
+                                                                    'sw_flags': '0x08000011',
+                                                                    'sw_state': '0x00000c01',
+                                                                    'wred': '0x88b16ac2'},
+                                          'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                         'lic_throughput_oversub_drops_packets': 0,
+                                                         'queue_depth_bytes': 0,
+                                                         'tail_drops_bytes': 0,
+                                                         'tail_drops_packets': 0,
+                                                         'total_enqs_bytes': 0,
+                                                         'total_enqs_packets': 0}}}},
+ 'Loopback0': {'if_h': 33},
+ 'Loopback2': {'if_h': 34},
+ 'Null0': {'if_h': 6},
+ 'TenGigabitEthernet0/2/0': {'if_h': 23,
+                             'index': {'0': {'name': 'TenGigabitEthernet0/2/0',
+                                             'queue_id': '0x9d',
+                                             'software_control_info': {'cache_queue_id': '0x0000009d',
+                                                                       'debug_name': 'TenGigabitEthernet0/2/0',
+                                                                       'defer_obj_refcnt': 0,
+                                                                       'max': 0,
+                                                                       'max_dflt': 0,
+                                                                       'max_qos': 0,
+                                                                       'min': 1050000000,
+                                                                       'min_dflt': 0,
+                                                                       'min_qos': 0,
+                                                                       'orig_max': 0,
+                                                                       'orig_min': 0,
+                                                                       'parent_sid': '0x27a',
+                                                                       'plevel': 0,
+                                                                       'port_uidb': 245737,
+                                                                       'priority': 65535,
+                                                                       'qlimit_bytes': 32812544,
+                                                                       'share': 1,
+                                                                       'sw_flags': '0x08000011',
+                                                                       'sw_state': '0x00000c01',
+                                                                       'wred': '0x88b16a32'},
+                                             'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                            'lic_throughput_oversub_drops_packets': 0,
+                                                            'queue_depth_bytes': 0,
+                                                            'tail_drops_bytes': 0,
+                                                            'tail_drops_packets': 0,
+                                                            'total_enqs_bytes': 0,
+                                                            'total_enqs_packets': 0}}}},
+ 'TenGigabitEthernet0/3/0': {'if_h': 24,
+                             'index': {'0': {'name': 'TenGigabitEthernet0/3/0',
+                                             'queue_id': '0x9e',
+                                             'software_control_info': {'cache_queue_id': '0x0000009e',
+                                                                       'debug_name': 'TenGigabitEthernet0/3/0',
+                                                                       'defer_obj_refcnt': 0,
+                                                                       'max': 0,
+                                                                       'max_dflt': 0,
+                                                                       'max_qos': 0,
+                                                                       'min': 1050000000,
+                                                                       'min_dflt': 0,
+                                                                       'min_qos': 0,
+                                                                       'orig_max': 0,
+                                                                       'orig_min': 0,
+                                                                       'parent_sid': '0x27b',
+                                                                       'plevel': 0,
+                                                                       'port_uidb': 245736,
+                                                                       'priority': 65535,
+                                                                       'qlimit_bytes': 32812544,
+                                                                       'share': 1,
+                                                                       'sw_flags': '0x08000011',
+                                                                       'sw_state': '0x00000c01',
+                                                                       'wred': '0x88b16a42'},
+                                             'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                            'lic_throughput_oversub_drops_packets': 0,
+                                                            'queue_depth_bytes': 0,
+                                                            'tail_drops_bytes': 0,
+                                                            'tail_drops_packets': 0,
+                                                            'total_enqs_bytes': 0,
+                                                            'total_enqs_packets': 0}}}},
+ 'VPLS-2320.1020896': {'if_h': 4260},
+ 'VPLS-2321.1020897': {'if_h': 4261},
+ 'VPLS-2322.1020898': {'if_h': 4262},
+ 'VPLS-2816.102080a': {'if_h': 4120},
+ 'VPLS-2817.102080b': {'if_h': 4121},
+ 'VPLS-2818.102080c': {'if_h': 4122},
+ 'VPLS-2819.102080d': {'if_h': 4123},
+ 'VPLS-2820.102080e': {'if_h': 4124},
+ 'VPLS-2944.10207e2': {'if_h': 4080},
+ 'VPLS-2945.10207e3': {'if_h': 4081},
+ 'VPLS-2946.10207e4': {'if_h': 4082},
+ 'VPLS-2974.10207fb': {'if_h': 4105},
+ 'VPLS-2975.10207fc': {'if_h': 4106},
+ 'VPLS-3049.1020890': {'if_h': 4254},
+ 'VPLS-3050.1020891': {'if_h': 4255},
+ 'VPLS_maint.1020a6b': {'if_h': 4729},
+ 'internal0/0/crypto:0': {'if_h': 4,
+                          'index': {'0': {'name': 'i2l_if_4_cpp_0_prio0',
+                                          'queue_id': '0x8b',
+                                          'software_control_info': {'cache_queue_id': '0x0000008b',
+                                                                    'debug_name': 'i2l_if_4_cpp_0_prio0',
+                                                                    'defer_obj_refcnt': 0,
+                                                                    'max': 0,
+                                                                    'max_dflt': 0,
+                                                                    'max_qos': 0,
+                                                                    'min': 0,
+                                                                    'min_dflt': 0,
+                                                                    'min_qos': 0,
+                                                                    'orig_max': 0,
+                                                                    'orig_min': 0,
+                                                                    'parent_sid': '0x265',
+                                                                    'plevel': 0,
+                                                                    'port_uidb': 245756,
+                                                                    'priority': 65535,
+                                                                    'qlimit_bytes': 80000064,
+                                                                    'share': 1,
+                                                                    'sw_flags': '0x08001001',
+                                                                    'sw_state': '0x00000c01',
+                                                                    'wred': '0x88b168f1'},
+                                          'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                         'lic_throughput_oversub_drops_packets': 0,
+                                                         'queue_depth_bytes': 0,
+                                                         'tail_drops_bytes': 0,
+                                                         'tail_drops_packets': 0,
+                                                         'total_enqs_bytes': 0,
+                                                         'total_enqs_packets': 0}},
+                                    '1': {'name': 'i2l_if_4_cpp_0_prio1',
+                                          'queue_id': '0x8c',
+                                          'software_control_info': {'cache_queue_id': '0x0000008c',
+                                                                    'debug_name': 'i2l_if_4_cpp_0_prio1',
+                                                                    'defer_obj_refcnt': 0,
+                                                                    'max': 0,
+                                                                    'max_dflt': 0,
+                                                                    'max_qos': 0,
+                                                                    'min': 0,
+                                                                    'min_dflt': 0,
+                                                                    'min_qos': 0,
+                                                                    'orig_max': 0,
+                                                                    'orig_min': 0,
+                                                                    'parent_sid': '0x266',
+                                                                    'plevel': 1,
+                                                                    'port_uidb': 245756,
+                                                                    'priority': 0,
+                                                                    'qlimit_bytes': 80000064,
+                                                                    'share': 0,
+                                                                    'sw_flags': '0x18001001',
+                                                                    'sw_state': '0x00000c01',
+                                                                    'wred': '0x88b16901'},
+                                          'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                         'lic_throughput_oversub_drops_packets': 0,
+                                                         'queue_depth_bytes': 0,
+                                                         'tail_drops_bytes': 0,
+                                                         'tail_drops_packets': 0,
+                                                         'total_enqs_bytes': 0,
+                                                         'total_enqs_packets': 0}}}},
+ 'internal0/0/recycle:0': {'if_h': 1},
+ 'internal0/0/rp:0': {'if_h': 2,
+                      'index': {'0': {'name': 'i2l_if_2_cpp_0_prio0',
+                                      'queue_id': '0x87',
+                                      'software_control_info': {'cache_queue_id': '0x00000087',
+                                                                'debug_name': 'i2l_if_2_cpp_0_prio0',
+                                                                'defer_obj_refcnt': 0,
+                                                                'max': 0,
+                                                                'max_dflt': 0,
+                                                                'max_qos': 0,
+                                                                'min': 0,
+                                                                'min_dflt': 0,
+                                                                'min_qos': 0,
+                                                                'orig_max': 0,
+                                                                'orig_min': 0,
+                                                                'parent_sid': '0x263',
+                                                                'plevel': 0,
+                                                                'port_uidb': 245758,
+                                                                'priority': 65535,
+                                                                'qlimit_bytes': 3125056,
+                                                                'share': 1,
+                                                                'sw_flags': '0x08000001',
+                                                                'sw_state': '0x00000c01',
+                                                                'wred': '0x88b16872'},
+                                      'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                     'lic_throughput_oversub_drops_packets': 0,
+                                                     'queue_depth_bytes': 0,
+                                                     'tail_drops_bytes': 0,
+                                                     'tail_drops_packets': 0,
+                                                     'total_enqs_bytes': 294475395,
+                                                     'total_enqs_packets': 4297477}},
+                                '1': {'name': 'i2l_if_2_cpp_0_prio1',
+                                      'queue_id': '0x88',
+                                      'software_control_info': {'cache_queue_id': '0x00000088',
+                                                                'debug_name': 'i2l_if_2_cpp_0_prio1',
+                                                                'defer_obj_refcnt': 0,
+                                                                'max': 0,
+                                                                'max_dflt': 0,
+                                                                'max_qos': 0,
+                                                                'min': 0,
+                                                                'min_dflt': 0,
+                                                                'min_qos': 0,
+                                                                'orig_max': 0,
+                                                                'orig_min': 0,
+                                                                'parent_sid': '0x263',
+                                                                'plevel': 1,
+                                                                'port_uidb': 245758,
+                                                                'priority': 0,
+                                                                'qlimit_bytes': 3125056,
+                                                                'share': 0,
+                                                                'sw_flags': '0x18000001',
+                                                                'sw_state': '0x00000c01',
+                                                                'wred': '0x88b16882'},
+                                      'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                     'lic_throughput_oversub_drops_packets': 0,
+                                                     'queue_depth_bytes': 0,
+                                                     'tail_drops_bytes': 0,
+                                                     'tail_drops_packets': 0,
+                                                     'total_enqs_bytes': 203225236,
+                                                     'total_enqs_packets': 1201820}}}},
+ 'internal0/0/rp:1': {'if_h': 3,
+                      'index': {'0': {'name': 'i2l_if_3_cpp_0_prio0',
+                                      'queue_id': '0x89',
+                                      'software_control_info': {'cache_queue_id': '0x00000089',
+                                                                'debug_name': 'i2l_if_3_cpp_0_prio0',
+                                                                'defer_obj_refcnt': 0,
+                                                                'max': 0,
+                                                                'max_dflt': 0,
+                                                                'max_qos': 0,
+                                                                'min': 0,
+                                                                'min_dflt': 0,
+                                                                'min_qos': 0,
+                                                                'orig_max': 0,
+                                                                'orig_min': 0,
+                                                                'parent_sid': '0x264',
+                                                                'plevel': 0,
+                                                                'port_uidb': 245757,
+                                                                'priority': 65535,
+                                                                'qlimit_bytes': 3125056,
+                                                                'share': 1,
+                                                                'sw_flags': '0x08000001',
+                                                                'sw_state': '0x00000c01',
+                                                                'wred': '0x88b168b2'},
+                                      'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                     'lic_throughput_oversub_drops_packets': 0,
+                                                     'queue_depth_bytes': 0,
+                                                     'tail_drops_bytes': 0,
+                                                     'tail_drops_packets': 0,
+                                                     'total_enqs_bytes': 46447411,
+                                                     'total_enqs_packets': 670805}},
+                                '1': {'name': 'i2l_if_3_cpp_0_prio1',
+                                      'queue_id': '0x8a',
+                                      'software_control_info': {'cache_queue_id': '0x0000008a',
+                                                                'debug_name': 'i2l_if_3_cpp_0_prio1',
+                                                                'defer_obj_refcnt': 0,
+                                                                'max': 0,
+                                                                'max_dflt': 0,
+                                                                'max_qos': 0,
+                                                                'min': 0,
+                                                                'min_dflt': 0,
+                                                                'min_qos': 0,
+                                                                'orig_max': 0,
+                                                                'orig_min': 0,
+                                                                'parent_sid': '0x264',
+                                                                'plevel': 1,
+                                                                'port_uidb': 245757,
+                                                                'priority': 0,
+                                                                'qlimit_bytes': 3125056,
+                                                                'share': 0,
+                                                                'sw_flags': '0x18000001',
+                                                                'sw_state': '0x00000c01',
+                                                                'wred': '0x88b168c2'},
+                                      'statistics': {'lic_throughput_oversub_drops_bytes': 0,
+                                                     'lic_throughput_oversub_drops_packets': 0,
+                                                     'queue_depth_bytes': 0,
+                                                     'tail_drops_bytes': 0,
+                                                     'tail_drops_packets': 0,
+                                                     'total_enqs_bytes': 269658370,
+                                                     'total_enqs_packets': 1424992}}}}}
+
+    golden_output_active = {'execute.return_value': '''\
+        Router#    show platform hardware qfp active infrastructure bqs queue output default all
+        Load for five secs: 2%/1%; one minute: 9%; five minutes: 8%
+        Time source is NTP, 07:47:13.438 EST Thu Sep 8 2016
+
+        Interface: internal0/0/recycle:0 QFP: 0.0 if_h: 1 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: internal0/0/rp:0 QFP: 0.0 if_h: 2 Num Queues/Schedules: 2
+          Queue specifics:
+            Index 0 (Queue ID:0x87, Name: i2l_if_2_cpp_0_prio0)
+            Software Control Info:
+              (cache) queue id: 0x00000087, wred: 0x88b16872, qlimit (bytes): 3125056
+              parent_sid: 0x263, debug_name: i2l_if_2_cpp_0_prio0
+              sw_flags: 0x08000001, sw_state: 0x00000c01, port_uidb: 245758
+              orig_min  : 0                   ,      min: 0                   
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 294475395           ,          (packets): 4297477             
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+          Queue specifics:
+            Index 1 (Queue ID:0x88, Name: i2l_if_2_cpp_0_prio1)
+            Software Control Info:
+              (cache) queue id: 0x00000088, wred: 0x88b16882, qlimit (bytes): 3125056
+              parent_sid: 0x263, debug_name: i2l_if_2_cpp_0_prio1
+              sw_flags: 0x18000001, sw_state: 0x00000c01, port_uidb: 245758
+              orig_min  : 0                   ,      min: 0                   
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 0
+              plevel    : 1, priority: 0
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 203225236           ,          (packets): 1201820             
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: internal0/0/rp:1 QFP: 0.0 if_h: 3 Num Queues/Schedules: 2
+          Queue specifics:
+            Index 0 (Queue ID:0x89, Name: i2l_if_3_cpp_0_prio0)
+            Software Control Info:
+              (cache) queue id: 0x00000089, wred: 0x88b168b2, qlimit (bytes): 3125056
+              parent_sid: 0x264, debug_name: i2l_if_3_cpp_0_prio0
+              sw_flags: 0x08000001, sw_state: 0x00000c01, port_uidb: 245757
+              orig_min  : 0                   ,      min: 0                   
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 46447411            ,          (packets): 670805              
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+          Queue specifics:
+            Index 1 (Queue ID:0x8a, Name: i2l_if_3_cpp_0_prio1)
+            Software Control Info:
+              (cache) queue id: 0x0000008a, wred: 0x88b168c2, qlimit (bytes): 3125056
+              parent_sid: 0x264, debug_name: i2l_if_3_cpp_0_prio1
+              sw_flags: 0x18000001, sw_state: 0x00000c01, port_uidb: 245757
+              orig_min  : 0                   ,      min: 0                   
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 0
+              plevel    : 1, priority: 0
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 269658370           ,          (packets): 1424992             
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: internal0/0/crypto:0 QFP: 0.0 if_h: 4 Num Queues/Schedules: 2
+          Queue specifics:
+            Index 0 (Queue ID:0x8b, Name: i2l_if_4_cpp_0_prio0)
+            Software Control Info:
+              (cache) queue id: 0x0000008b, wred: 0x88b168f1, qlimit (bytes): 80000064
+              parent_sid: 0x265, debug_name: i2l_if_4_cpp_0_prio0
+              sw_flags: 0x08001001, sw_state: 0x00000c01, port_uidb: 245756
+              orig_min  : 0                   ,      min: 0                   
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+          Queue specifics:
+            Index 1 (Queue ID:0x8c, Name: i2l_if_4_cpp_0_prio1)
+            Software Control Info:
+              (cache) queue id: 0x0000008c, wred: 0x88b16901, qlimit (bytes): 80000064
+              parent_sid: 0x266, debug_name: i2l_if_4_cpp_0_prio1
+              sw_flags: 0x18001001, sw_state: 0x00000c01, port_uidb: 245756
+              orig_min  : 0                   ,      min: 0                   
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 0
+              plevel    : 1, priority: 0
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: CPP_Null QFP: 0.0 if_h: 5 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: Null0 QFP: 0.0 if_h: 6 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/0 QFP: 0.0 if_h: 7 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x8d, Name: GigabitEthernet0/0/0)
+            Software Control Info:
+              (cache) queue id: 0x0000008d, wred: 0x88b16932, qlimit (bytes): 3281312
+              parent_sid: 0x268, debug_name: GigabitEthernet0/0/0
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245753
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 103120085           ,          (packets): 518314              
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet0/0/1 QFP: 0.0 if_h: 8 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x8e, Name: GigabitEthernet0/0/1)
+            Software Control Info:
+              (cache) queue id: 0x0000008e, wred: 0x88b16942, qlimit (bytes): 3281312
+              parent_sid: 0x269, debug_name: GigabitEthernet0/0/1
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245752
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 649104074           ,          (packets): 7688841             
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet0/0/2 QFP: 0.0 if_h: 9 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x8f, Name: GigabitEthernet0/0/2)
+            Software Control Info:
+              (cache) queue id: 0x0000008f, wred: 0x88b16952, qlimit (bytes): 3281312
+              parent_sid: 0x26a, debug_name: GigabitEthernet0/0/2
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245751
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 779830              ,          (packets): 10261               
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet0/0/3 QFP: 0.0 if_h: 10 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x90, Name: GigabitEthernet0/0/3)
+            Software Control Info:
+              (cache) queue id: 0x00000090, wred: 0x88b16962, qlimit (bytes): 3281312
+              parent_sid: 0x26b, debug_name: GigabitEthernet0/0/3
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245750
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 5698                ,          (packets): 74                  
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet0/0/4 QFP: 0.0 if_h: 11 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x91, Name: GigabitEthernet0/0/4)
+            Software Control Info:
+              (cache) queue id: 0x00000091, wred: 0x88b16972, qlimit (bytes): 3281312
+              parent_sid: 0x26c, debug_name: GigabitEthernet0/0/4
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245749
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 2754752998          ,          (packets): 2765893             
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet0/0/5 QFP: 0.0 if_h: 12 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x92, Name: GigabitEthernet0/0/5)
+            Software Control Info:
+              (cache) queue id: 0x00000092, wred: 0x88b16982, qlimit (bytes): 3281312
+              parent_sid: 0x26d, debug_name: GigabitEthernet0/0/5
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245748
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 2754752998          ,          (packets): 2765893             
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet0/0/6 QFP: 0.0 if_h: 13 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x93, Name: GigabitEthernet0/0/6)
+            Software Control Info:
+              (cache) queue id: 0x00000093, wred: 0x88b16992, qlimit (bytes): 3281312
+              parent_sid: 0x26e, debug_name: GigabitEthernet0/0/6
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245747
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 5998                ,          (packets): 79                  
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet0/0/7 QFP: 0.0 if_h: 14 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x94, Name: GigabitEthernet0/0/7)
+            Software Control Info:
+              (cache) queue id: 0x00000094, wred: 0x88b169a2, qlimit (bytes): 3281312
+              parent_sid: 0x270, debug_name: GigabitEthernet0/0/7
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245746
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet0/1/0 QFP: 0.0 if_h: 15 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x95, Name: GigabitEthernet0/1/0)
+            Software Control Info:
+              (cache) queue id: 0x00000095, wred: 0x88b169b2, qlimit (bytes): 3281312
+              parent_sid: 0x271, debug_name: GigabitEthernet0/1/0
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245745
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet0/1/1 QFP: 0.0 if_h: 16 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x96, Name: GigabitEthernet0/1/1)
+            Software Control Info:
+              (cache) queue id: 0x00000096, wred: 0x88b169c2, qlimit (bytes): 3281312
+              parent_sid: 0x272, debug_name: GigabitEthernet0/1/1
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245744
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet0/1/2 QFP: 0.0 if_h: 17 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x97, Name: GigabitEthernet0/1/2)
+            Software Control Info:
+              (cache) queue id: 0x00000097, wred: 0x88b169d2, qlimit (bytes): 3281312
+              parent_sid: 0x273, debug_name: GigabitEthernet0/1/2
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245743
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet0/1/3 QFP: 0.0 if_h: 18 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x98, Name: GigabitEthernet0/1/3)
+            Software Control Info:
+              (cache) queue id: 0x00000098, wred: 0x88b169e2, qlimit (bytes): 3281312
+              parent_sid: 0x274, debug_name: GigabitEthernet0/1/3
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245742
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet0/1/4 QFP: 0.0 if_h: 19 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x99, Name: GigabitEthernet0/1/4)
+            Software Control Info:
+              (cache) queue id: 0x00000099, wred: 0x88b169f2, qlimit (bytes): 3281312
+              parent_sid: 0x275, debug_name: GigabitEthernet0/1/4
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245741
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet0/1/5 QFP: 0.0 if_h: 20 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x9a, Name: GigabitEthernet0/1/5)
+            Software Control Info:
+              (cache) queue id: 0x0000009a, wred: 0x88b16a02, qlimit (bytes): 3281312
+              parent_sid: 0x276, debug_name: GigabitEthernet0/1/5
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245740
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet0/1/6 QFP: 0.0 if_h: 21 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x9b, Name: GigabitEthernet0/1/6)
+            Software Control Info:
+              (cache) queue id: 0x0000009b, wred: 0x88b16a12, qlimit (bytes): 3281312
+              parent_sid: 0x278, debug_name: GigabitEthernet0/1/6
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245739
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0        
+
+        Interface: GigabitEthernet0/1/7 QFP: 0.0 if_h: 22 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x9c, Name: GigabitEthernet0/1/7)
+            Software Control Info:
+              (cache) queue id: 0x0000009c, wred: 0x88b16a22, qlimit (bytes): 3281312
+              parent_sid: 0x279, debug_name: GigabitEthernet0/1/7
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245738
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: TenGigabitEthernet0/2/0 QFP: 0.0 if_h: 23 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x9d, Name: TenGigabitEthernet0/2/0)
+            Software Control Info:
+              (cache) queue id: 0x0000009d, wred: 0x88b16a32, qlimit (bytes): 32812544
+              parent_sid: 0x27a, debug_name: TenGigabitEthernet0/2/0
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245737
+              orig_min  : 0                   ,      min: 1050000000          
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: TenGigabitEthernet0/3/0 QFP: 0.0 if_h: 24 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x9e, Name: TenGigabitEthernet0/3/0)
+            Software Control Info:
+              (cache) queue id: 0x0000009e, wred: 0x88b16a42, qlimit (bytes): 32812544
+              parent_sid: 0x27b, debug_name: TenGigabitEthernet0/3/0
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245736
+              orig_min  : 0                   ,      min: 1050000000          
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet1/0/0 QFP: 0.0 if_h: 25 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x9f, Name: GigabitEthernet1/0/0)
+            Software Control Info:
+              (cache) queue id: 0x0000009f, wred: 0x88b16a52, qlimit (bytes): 3281312
+              parent_sid: 0x27c, debug_name: GigabitEthernet1/0/0
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245735
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet1/0/1 QFP: 0.0 if_h: 26 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0xa0, Name: GigabitEthernet1/0/1)
+            Software Control Info:
+              (cache) queue id: 0x000000a0, wred: 0x88b16a62, qlimit (bytes): 3281312
+              parent_sid: 0x27d, debug_name: GigabitEthernet1/0/1
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245734
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet1/0/2 QFP: 0.0 if_h: 27 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0xa1, Name: GigabitEthernet1/0/2)
+            Software Control Info:
+              (cache) queue id: 0x000000a1, wred: 0x88b16a72, qlimit (bytes): 3281312
+              parent_sid: 0x27e, debug_name: GigabitEthernet1/0/2
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245733
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet1/0/3 QFP: 0.0 if_h: 28 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0xa2, Name: GigabitEthernet1/0/3)
+            Software Control Info:
+              (cache) queue id: 0x000000a2, wred: 0x88b16a82, qlimit (bytes): 3281312
+              parent_sid: 0x280, debug_name: GigabitEthernet1/0/3
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245732
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet1/0/4 QFP: 0.0 if_h: 29 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0xa3, Name: GigabitEthernet1/0/4)
+            Software Control Info:
+              (cache) queue id: 0x000000a3, wred: 0x88b16a92, qlimit (bytes): 3281312
+              parent_sid: 0x281, debug_name: GigabitEthernet1/0/4
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245731
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet1/0/5 QFP: 0.0 if_h: 30 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0xa4, Name: GigabitEthernet1/0/5)
+            Software Control Info:
+              (cache) queue id: 0x000000a4, wred: 0x88b16aa2, qlimit (bytes): 3281312
+              parent_sid: 0x282, debug_name: GigabitEthernet1/0/5
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245730
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet1/0/6 QFP: 0.0 if_h: 31 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0xa5, Name: GigabitEthernet1/0/6)
+            Software Control Info:
+              (cache) queue id: 0x000000a5, wred: 0x88b16ab2, qlimit (bytes): 3281312
+              parent_sid: 0x283, debug_name: GigabitEthernet1/0/6
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245729
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: GigabitEthernet1/0/7 QFP: 0.0 if_h: 32 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0xa6, Name: GigabitEthernet1/0/7)
+            Software Control Info:
+              (cache) queue id: 0x000000a6, wred: 0x88b16ac2, qlimit (bytes): 3281312
+              parent_sid: 0x284, debug_name: GigabitEthernet1/0/7
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 245728
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 0                   ,          (packets): 0                   
+              queue_depth (bytes): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0                   
+
+        Interface: Loopback0 QFP: 0.0 if_h: 33 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: Loopback2 QFP: 0.0 if_h: 34 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.2 QFP: 0.0 if_h: 35 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.EFP2054 QFP: 0.0 if_h: 36 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.11 QFP: 0.0 if_h: 37 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.12 QFP: 0.0 if_h: 38 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.13 QFP: 0.0 if_h: 39 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.14 QFP: 0.0 if_h: 40 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.15 QFP: 0.0 if_h: 41 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.16 QFP: 0.0 if_h: 42 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.17 QFP: 0.0 if_h: 43 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.18 QFP: 0.0 if_h: 44 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.19 QFP: 0.0 if_h: 45 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.20 QFP: 0.0 if_h: 46 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.21 QFP: 0.0 if_h: 47 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.22 QFP: 0.0 if_h: 48 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.23 QFP: 0.0 if_h: 49 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.24 QFP: 0.0 if_h: 50 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.25 QFP: 0.0 if_h: 51 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.26 QFP: 0.0 if_h: 52 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.27 QFP: 0.0 if_h: 53 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.28 QFP: 0.0 if_h: 54 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.29 QFP: 0.0 if_h: 55 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.30 QFP: 0.0 if_h: 56 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.31 QFP: 0.0 if_h: 57 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.32 QFP: 0.0 if_h: 58 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.33 QFP: 0.0 if_h: 59 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.34 QFP: 0.0 if_h: 60 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.35 QFP: 0.0 if_h: 61 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.36 QFP: 0.0 if_h: 62 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.37 QFP: 0.0 if_h: 63 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.38 QFP: 0.0 if_h: 64 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.57 QFP: 0.0 if_h: 83 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.58 QFP: 0.0 if_h: 84 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.59 QFP: 0.0 if_h: 85 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.60 QFP: 0.0 if_h: 86 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.61 QFP: 0.0 if_h: 87 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.62 QFP: 0.0 if_h: 88 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.63 QFP: 0.0 if_h: 89 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.400 QFP: 0.0 if_h: 426 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.401 QFP: 0.0 if_h: 427 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.402 QFP: 0.0 if_h: 428 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.403 QFP: 0.0 if_h: 429 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.404 QFP: 0.0 if_h: 430 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.405 QFP: 0.0 if_h: 431 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.406 QFP: 0.0 if_h: 432 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.407 QFP: 0.0 if_h: 433 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.408 QFP: 0.0 if_h: 434 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.409 QFP: 0.0 if_h: 435 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.410 QFP: 0.0 if_h: 436 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.411 QFP: 0.0 if_h: 437 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.412 QFP: 0.0 if_h: 438 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.413 QFP: 0.0 if_h: 439 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.414 QFP: 0.0 if_h: 440 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.415 QFP: 0.0 if_h: 441 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.416 QFP: 0.0 if_h: 442 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.417 QFP: 0.0 if_h: 443 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.418 QFP: 0.0 if_h: 444 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.419 QFP: 0.0 if_h: 445 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.420 QFP: 0.0 if_h: 446 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.421 QFP: 0.0 if_h: 447 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.422 QFP: 0.0 if_h: 448 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.423 QFP: 0.0 if_h: 449 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.424 QFP: 0.0 if_h: 450 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.425 QFP: 0.0 if_h: 451 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.426 QFP: 0.0 if_h: 452 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.427 QFP: 0.0 if_h: 453 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.428 QFP: 0.0 if_h: 454 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.429 QFP: 0.0 if_h: 455 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.430 QFP: 0.0 if_h: 456 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.431 QFP: 0.0 if_h: 457 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.432 QFP: 0.0 if_h: 458 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.433 QFP: 0.0 if_h: 459 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.434 QFP: 0.0 if_h: 460 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.720 QFP: 0.0 if_h: 746 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.721 QFP: 0.0 if_h: 747 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.722 QFP: 0.0 if_h: 748 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.723 QFP: 0.0 if_h: 749 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.724 QFP: 0.0 if_h: 750 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.725 QFP: 0.0 if_h: 751 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.726 QFP: 0.0 if_h: 752 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.727 QFP: 0.0 if_h: 753 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.728 QFP: 0.0 if_h: 754 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.729 QFP: 0.0 if_h: 755 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.730 QFP: 0.0 if_h: 756 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.731 QFP: 0.0 if_h: 757 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.732 QFP: 0.0 if_h: 758 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.733 QFP: 0.0 if_h: 759 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.734 QFP: 0.0 if_h: 760 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.735 QFP: 0.0 if_h: 761 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.736 QFP: 0.0 if_h: 762 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.737 QFP: 0.0 if_h: 763 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.738 QFP: 0.0 if_h: 764 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.1795 QFP: 0.0 if_h: 1821 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.1796 QFP: 0.0 if_h: 1822 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/1.1797 QFP: 0.0 if_h: 1823 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/3.EFP2051 QFP: 0.0 if_h: 2077 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/3.EFP2052 QFP: 0.0 if_h: 2078 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/3.EFP2053 QFP: 0.0 if_h: 2079 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/3.EFP2054 QFP: 0.0 if_h: 2080 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/3.EFP2055 QFP: 0.0 if_h: 2081 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/3.EFP2174 QFP: 0.0 if_h: 2200 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/3.EFP2175 QFP: 0.0 if_h: 2201 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/3.EFP2176 QFP: 0.0 if_h: 2202 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/3.EFP2177 QFP: 0.0 if_h: 2203 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/3.EFP2178 QFP: 0.0 if_h: 2204 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: GigabitEthernet0/0/3.EFP2179 QFP: 0.0 if_h: 2205 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: BG4048.10207e1 QFP: 0.0 if_h: 4079 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS-2944.10207e2 QFP: 0.0 if_h: 4080 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS-2945.10207e3 QFP: 0.0 if_h: 4081 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS-2946.10207e4 QFP: 0.0 if_h: 4082 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS-2974.10207fb QFP: 0.0 if_h: 4105 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS-2975.10207fc QFP: 0.0 if_h: 4106 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: BG4033.10207fd QFP: 0.0 if_h: 4107 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: BG4044.10207fe QFP: 0.0 if_h: 4108 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: BG4045.10207ff QFP: 0.0 if_h: 4109 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: BG4111.1020807 QFP: 0.0 if_h: 4117 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: BG4117.1020808 QFP: 0.0 if_h: 4118 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: BG4118.1020809 QFP: 0.0 if_h: 4119 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS-2816.102080a QFP: 0.0 if_h: 4120 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS-2817.102080b QFP: 0.0 if_h: 4121 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS-2818.102080c QFP: 0.0 if_h: 4122 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS-2819.102080d QFP: 0.0 if_h: 4123 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS-2820.102080e QFP: 0.0 if_h: 4124 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+        Interface: VPLS-3049.1020890 QFP: 0.0 if_h: 4254 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS-3050.1020891 QFP: 0.0 if_h: 4255 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: BG4001.1020892 QFP: 0.0 if_h: 4256 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: BG4002.1020893 QFP: 0.0 if_h: 4257 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: BG4006.1020894 QFP: 0.0 if_h: 4258 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: BG4010.1020895 QFP: 0.0 if_h: 4259 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS-2320.1020896 QFP: 0.0 if_h: 4260 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS-2321.1020897 QFP: 0.0 if_h: 4261 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS-2322.1020898 QFP: 0.0 if_h: 4262 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+
+        Interface: VPLS_maint.1020a6b QFP: 0.0 if_h: 4729 Num Queues/Schedules: 0
+          No Queue/Schedule Info
+    '''
+    }
+
+    def test_golden_active(self):
+        self.device = Mock(**self.golden_output_active)
+        obj = ShowPlatformHardware(device=self.device)
+        parsed_output = obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_active)
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowPlatformHardware(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+
+class test_show_platform_hardware_plim(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_port = {
+        'port': {
+            '0/0/0': {
+                'received': {
+                    'high_priority': {
+                        'dropped_bytes': 0,
+                        'dropped_pkts': 0,
+                        'errored_bytes': 0,
+                        'errored_pkts': 0,
+                        'bytes': 327940189,
+                        'pkts': 316215},
+                    'low_priority': {
+                        'dropped_bytes': 0,
+                        'dropped_pkts': 0,
+                        'errored_bytes': 0,
+                        'errored_pkts': 0,
+                        'bytes': 27789,
+                        'pkts': 369}
+                },
+                'transmitted': {
+                    'high_priority': {
+                        'dropped_bytes': 0,
+                        'dropped_pkts': 0,
+                        'bytes': 0,
+                        'pkts': 0},
+                    'low_priority': {
+                        'dropped_bytes': 0,
+                        'dropped_pkts': 0,
+                        'bytes': 250735325722,
+                        'pkts': 1265574622}
+                }
+            }
+        }
+    }
+
+    golden_output_port = {'execute.return_value': '''\
+        Router#show platform hardware port 0/0/0 plim statistics
+        Interface 0/0/0
+          RX Low Priority
+            RX Pkts      369         Bytes 27789      
+            RX Drop Pkts 0           Bytes 0          
+            RX Err  Pkts 0           Bytes 0          
+          TX Low Priority
+            TX Pkts      1265574622  Bytes 250735325722
+            TX Drop Pkts 0           Bytes 0          
+          RX High Priority
+            RX Pkts      316215      Bytes 327940189  
+            RX Drop Pkts 0           Bytes 0          
+            RX Err  Pkts 0           Bytes 0          
+          TX High Priority
+            TX Pkts      0           Bytes 0          
+            TX Drop Pkts 0           Bytes 0   
+    '''
+    }
+
+    golden_parsed_output_slot = {
+        'slot': {
+            '0': {
+                'subslot': {
+                    '0': {
+                        'name': 'SPA-8X1GE-V2',
+                        'received': {
+                            'bytes': 6378454260,
+                            'ipc_bytes': 0,
+                            'ipc_pkts': 0,
+                            'pkts': 13543013},
+                        'status': 'Online',
+                        'transmitted': {
+                            'bytes': 6258449952,
+                            'ipc_bytes': 0,
+                            'ipc_pkts': 0,
+                            'pkts': 13689497}
+                    },
+                    '1': {
+                        'name': 'SPA-8X1GE-V2',
+                        'received': {
+                            'bytes': 0,
+                            'ipc_bytes': 0,
+                            'ipc_pkts': 0,
+                            'pkts': 0},
+                        'status': 'Online',
+                        'transmitted': {
+                            'bytes': 0,
+                            'ipc_bytes': 0,
+                            'ipc_pkts': 0,
+                            'pkts': 0}
+                    },
+                    '2': {
+                        'name': 'SPA-1XTENGE-XFP-V2',
+                        'received': {
+                            'bytes': 0,
+                            'ipc_bytes': 0,
+                            'ipc_pkts': 0,
+                            'pkts': 0},
+                        'status': 'Online',
+                        'transmitted': {
+                            'bytes': 0,
+                            'ipc_bytes': 0,
+                            'ipc_pkts': 0,
+                            'pkts': 0}
+                    },
+                    '3': {
+                        'name': 'SPA-1XTENGE-XFP-V2',
+                        'received': {
+                            'bytes': 0,
+                            'ipc_bytes': 0,
+                            'ipc_pkts': 0,
+                            'pkts': 0},
+                        'status': 'Online',
+                        'transmitted': {
+                            'bytes': 0,
+                            'ipc_bytes': 0,
+                            'ipc_pkts': 0,
+                            'pkts': 0,
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_slot = {'execute.return_value': '''\
+        Router#show platform hardware slot 0 plim statistics 
+        0/0, SPA-8X1GE-V2, Online
+          RX Pkts 13543013    Bytes 6378454260 
+          TX Pkts 13689497    Bytes 6258449952 
+          RX IPC Pkts 0           Bytes 0          
+          TX IPC Pkts 0           Bytes 0          
+
+        0/1, SPA-8X1GE-V2, Online
+          RX Pkts 0           Bytes 0          
+          TX Pkts 0           Bytes 0          
+          RX IPC Pkts 0           Bytes 0          
+          TX IPC Pkts 0           Bytes 0          
+
+        0/2, SPA-1XTENGE-XFP-V2, Online
+          RX Pkts 0           Bytes 0          
+          TX Pkts 0           Bytes 0          
+          RX IPC Pkts 0           Bytes 0          
+          TX IPC Pkts 0           Bytes 0          
+
+        0/3, SPA-1XTENGE-XFP-V2, Online
+          RX Pkts 0           Bytes 0          
+          TX Pkts 0           Bytes 0          
+          RX IPC Pkts 0           Bytes 0          
+          TX IPC Pkts 0           Bytes 0
+    '''
+    }
+
+    golden_parsed_output_subslot = {
+        'slot': {
+            '0': {
+                'subslot': {
+                    '1': {
+                        'name': 'SPA-8X1GE-V2',
+                        'received': {
+                            'bytes': 0,
+                            'ipc_bytes': 0,
+                            'ipc_pkts': 0,
+                            'pkts': 0},
+                        'status': 'Online',
+                        'transmitted': {
+                            'bytes': 0,
+                            'ipc_bytes': 0,
+                            'ipc_pkts': 0,
+                            'pkts': 0,
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_subslot = {'execute.return_value': '''\
+        Router#show platform hardware subslot 0/1 plim statistics
+        0/1, SPA-8X1GE-V2, Online
+          RX Pkts 0           Bytes 0          
+          TX Pkts 0           Bytes 0          
+          RX IPC Pkts 0           Bytes 0          
+          TX IPC Pkts 0           Bytes 0 
+    '''
+    }
+
+    golden_parsed_output_slot_internal = {
+        'slot': {
+            '0': {
+                'subslot': {
+                    '0': {
+                        'name': 'SPA-8X1GE-V2',
+                        'received': {
+                            'ipc_err': 0,
+                            'spi4_interrupt_counters': {
+                                'burst_error': 0,
+                                'control_word_error': 0,
+                                'dip4_error': 0,
+                                'disabled': 0,
+                                'eop_abort': 0,
+                                'loss_of_sync': 0,
+                                'out_of_frame': 0,
+                                'packet_gap_error': 0,
+                                'sequence_error': 0,
+                            }
+                        },
+                        'status': 'Online',
+                        'transmitted': {
+                            'ipc_err': 0,
+                            'spi4_interrupt_counters': {
+                                'dip2_error': 0,
+                                'fifo_over_flow': 0,
+                                'frame_error': 0,
+                                'out_of_frame': 0,
+                            }
+                        }
+                    },
+                    '1': {
+                        'name': 'SPA-8X1GE-V2',
+                        'received': {
+                            'ipc_err': 0,
+                            'spi4_interrupt_counters': {
+                                'burst_error': 0,
+                                'control_word_error': 0,
+                                'dip4_error': 0,
+                                'disabled': 0,
+                                'eop_abort': 0,
+                                'loss_of_sync': 0,
+                                'out_of_frame': 0,
+                                'packet_gap_error': 0,
+                                'sequence_error': 0}
+                            },
+                        'status': 'Online',
+                        'transmitted': {
+                            'ipc_err': 0,
+                            'spi4_interrupt_counters': {
+                                'dip2_error': 0,
+                                'fifo_over_flow': 0,
+                                'frame_error': 0,
+                                'out_of_frame': 0,
+                            }
+                        }
+                    },
+                    '2': {
+                        'name': 'SPA-1XTENGE-XFP-V2',
+                        'received': {
+                            'ipc_err': 0,
+                            'spi4_interrupt_counters': {
+                                'burst_error': 0,
+                                'control_word_error': 0,
+                                'dip4_error': 0,
+                                'disabled': 0,
+                                'eop_abort': 0,
+                                'loss_of_sync': 0,
+                                'out_of_frame': 0,
+                                'packet_gap_error': 0,
+                                'sequence_error': 0,
+                            }
+                        },
+                        'status': 'Online',
+                        'transmitted': {
+                            'ipc_err': 0,
+                            'spi4_interrupt_counters': {
+                                'dip2_error': 0,
+                                'fifo_over_flow': 0,
+                                'frame_error': 0,
+                                'out_of_frame': 0,
+                            }
+                        }
+                    },
+                    '3': {
+                        'name': 'SPA-1XTENGE-XFP-V2',
+                        'received': {
+                            'ipc_err': 0,
+                            'spi4_interrupt_counters': {
+                                'burst_error': 0,
+                                'control_word_error': 0,
+                                'dip4_error': 0,
+                                'disabled': 0,
+                                'eop_abort': 0,
+                                'loss_of_sync': 0,
+                                'out_of_frame': 0,
+                                'packet_gap_error': 0,
+                                'sequence_error': 0,
+                            }
+                        },
+                        'status': 'Online',
+                        'transmitted': {
+                            'ipc_err': 0,
+                            'spi4_interrupt_counters': {
+                                'dip2_error': 0,
+                                'fifo_over_flow': 0,
+                                'frame_error': 0,
+                                'out_of_frame': 0,
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_slot_internal = {'execute.return_value': '''\
+        Router#show platform hardware slot 0 plim statistics internal 
+        0/0, SPA-8X1GE-V2, Online
+          RX IPC Err 0          
+          TX IPC Err 0          
+          RX Spi4 Interrupt Counters
+            Out Of Frame 0          
+            Dip4 Error 0          
+            Disabled 0          
+            Loss Of Sync 0          
+            Sequence Error 0          
+            Burst Error 0          
+            EOP Abort 0          
+            Packet Gap Error 0          
+            Control Word Error 0          
+          TX Spi4 Interrupt Counters
+            Out Of Frame 0          
+            Frame Error 0          
+            FIFO Over Flow 0          
+            Dip2 Error 0          
+
+        0/1, SPA-8X1GE-V2, Online
+          RX IPC Err 0          
+          TX IPC Err 0          
+          RX Spi4 Interrupt Counters
+            Out Of Frame 0          
+            Dip4 Error 0          
+            Disabled 0          
+            Loss Of Sync 0          
+            Sequence Error 0          
+            Burst Error 0          
+            EOP Abort 0          
+            Packet Gap Error 0          
+            Control Word Error 0          
+          TX Spi4 Interrupt Counters
+            Out Of Frame 0          
+            Frame Error 0          
+            FIFO Over Flow 0          
+            Dip2 Error 0          
+
+        0/2, SPA-1XTENGE-XFP-V2, Online
+          RX IPC Err 0          
+          TX IPC Err 0          
+          RX Spi4 Interrupt Counters
+            Out Of Frame 0          
+            Dip4 Error 0          
+            Disabled 0          
+            Loss Of Sync 0          
+            Sequence Error 0          
+            Burst Error 0          
+            EOP Abort 0          
+            Packet Gap Error 0          
+            Control Word Error 0          
+          TX Spi4 Interrupt Counters
+            Out Of Frame 0          
+            Frame Error 0          
+            FIFO Over Flow 0          
+            Dip2 Error 0          
+
+        0/3, SPA-1XTENGE-XFP-V2, Online
+          RX IPC Err 0          
+          TX IPC Err 0          
+          RX Spi4 Interrupt Counters
+            Out Of Frame 0          
+            Dip4 Error 0          
+            Disabled 0          
+            Loss Of Sync 0          
+            Sequence Error 0          
+            Burst Error 0          
+            EOP Abort 0          
+            Packet Gap Error 0          
+            Control Word Error 0          
+          TX Spi4 Interrupt Counters
+            Out Of Frame 0          
+            Frame Error 0          
+            FIFO Over Flow 0          
+            Dip2 Error 0    
+    '''
+    }
+
+    def test_golden_port(self):
+        self.device = Mock(**self.golden_output_port)
+        obj = ShowPlatformHardwarePlim(device=self.device)
+        parsed_output = obj.parse(port='0/0/0')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_port)
+
+    def test_golden_slot(self):
+        self.device = Mock(**self.golden_output_slot)
+        obj = ShowPlatformHardwarePlim(device=self.device)
+        parsed_output = obj.parse(slot='0')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_slot)
+
+    def test_golden_subslot(self):
+        self.device = Mock(**self.golden_output_subslot)
+        obj = ShowPlatformHardwarePlim(device=self.device)
+        parsed_output = obj.parse(subslot='0/1')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_subslot)
+
+    def test_golden_slot_internal(self):
+        self.device = Mock(**self.golden_output_slot_internal)
+        obj = ShowPlatformHardwarePlim(device=self.device)
+        parsed_output = obj.parse(slot='0', internal=True)
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_slot_internal)
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowPlatformHardwarePlim(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(port='0/0/0')
+
+class test_show_platform_hardware_qfp_bqs_opm_mapping(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_active_opm = {
+        'channel': {
+            '0': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 0,
+                'name': 'CC0 Low',
+            },
+            '1': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 1,
+                'name': 'CC0 Hi',
+            },
+            '10': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 10,
+                'name': 'CC2B Low',
+            },
+            '11': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 11,
+                'name': 'CC2B Hi',
+            },
+            '12': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 12,
+                'name': 'CC3 Low',
+            },
+            '13': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 13,
+                'name': 'CC3 Hi',
+            },
+            '14': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 14,
+                'name': 'CC3B Low',
+            },
+            '15': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 15,
+                'name': 'CC3B Hi',
+            },
+            '16': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 16,
+                'name': 'CC4 Low',
+            },
+            '17': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 17,
+                'name': 'CC4 Hi',
+            },
+            '18': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 18,
+                'name': 'CC5 Low',
+            },
+            '19': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 19,
+                'name': 'CC5 Hi',
+            },
+            '2': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 2,
+                'name': 'CC0B Low',
+            },
+            '20': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 20,
+                'name': 'RP0 Low',
+            },
+            '21': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 21,
+                'name': 'RP0 Hi',
+            },
+            '22': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 22,
+                'name': 'RP1 Low',
+            },
+            '23': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 23,
+                'name': 'RP1 Hi',
+            },
+            '24': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 24,
+                'name': 'Peer-FP Low',
+            },
+            '25': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 25,
+                'name': 'Peer-FP Hi',
+            },
+            '26': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 26,
+                'name': 'Nitrox Low',
+            },
+            '27': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 27,
+                'name': 'Nitrox Hi',
+            },
+            '28': {
+                'drain_mode': False,
+                'interface': 'HT',
+                'logical_channel': 0,
+                'name': 'HT Pkt Low',
+            },
+             '29': {
+                'drain_mode': False,
+                'interface': 'HT',
+                'logical_channel': 1,
+                'name': 'HT Pkt Hi',
+            },
+            '3': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 3,
+                'name': 'CC0B Hi',
+            },
+            '30': {
+                'drain_mode': False,
+                'interface': 'HT',
+                'logical_channel': 2,
+                'name': 'HT IPC Low',
+            },
+            '31': {
+                'drain_mode': False,
+                'interface': 'HT',
+                'logical_channel': 3,
+                'name': 'HT IPC Hi',
+            },
+            '32': {
+                'name': 'unmapped',
+            },
+            '33': {
+                'name': 'unmapped',
+            },
+            '34': {
+                'name': 'unmapped',
+            },
+            '35': {
+                'name': 'unmapped',
+            },
+            '36': {
+                'name': 'unmapped',
+            },
+            '37': {
+                'name': 'unmapped',
+            },
+            '38': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 7,
+                'name': 'HighNormal',
+            },
+            '39': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 6,
+                'name': 'HighPriority',
+            },
+            '4': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 4,
+                'name': 'CC1 Low',
+            },
+            '40': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 11,
+                'name': 'LowNormal',
+            },
+            '41': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 10,
+                'name': 'LowPriority',
+            },
+            '42': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 12,
+                'name': 'InternalTrafficHiChannel',
+            },
+            '43': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 13,
+                'name': 'InternalTrafficLoChannel',
+            },
+            '44': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 14,
+                'name': 'AttnTrafficHiChannel',
+            },
+            '45': {
+                'drain_mode': False,
+                'interface': 'GPM',
+                'logical_channel': 15,
+                'name': 'MetaPktTrafficChannel',
+            },
+            '46': {
+                'name': 'unmapped',
+            },
+            '47': {
+                'name': 'unmapped',
+            },
+            '48': {
+                'name': 'unmapped',
+            },
+            '49': {
+                'name': 'unmapped',
+            },
+            '5': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 5,
+                'name': 'CC1 Hi',
+            },
+            '50': {
+                'name': 'unmapped',
+            },
+            '51': {
+                'name': 'unmapped',
+            },
+            '52': {
+                'name': 'unmapped',
+            },
+            '53': {
+                'name': 'unmapped',
+            },
+            '54': {
+                'name': 'unmapped',
+            },
+            '55': {
+                'drain_mode': True,
+                'interface': 'GPM',
+                'logical_channel': 0,
+                'name': 'Drain Low',
+            },
+            '6': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 6,
+                'name': 'CC1B Low',
+            },
+            '7': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 7,
+                'name': 'CC1B Hi',
+            },
+            '8': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 8,
+                'name': 'CC2 Low',
+            },
+            '9': {
+                'drain_mode': False,
+                'interface': 'SPI0',
+                'logical_channel': 9,
+                'name': 'CC2 Hi',
+            },
+        },
+    }
+
+    golden_output_active_opm = {'execute.return_value': '''\ 
+        Router#show platform hardware qfp active bqs 0 opm mapping 
+        Load for five secs: 5%/3%; one minute: 7%; five minutes: 8%
+        Time source is NTP, 07:43:32.664 EST Thu Sep 8 2016
+
+        BQS OPM Channel Mapping
+
+        Chan     Name                          Interface      LogicalChannel
+
+         0       CC0 Low                       SPI0            0             
+         1       CC0 Hi                        SPI0            1             
+         2       CC0B Low                      SPI0            2             
+         3       CC0B Hi                       SPI0            3             
+         4       CC1 Low                       SPI0            4             
+         5       CC1 Hi                        SPI0            5             
+         6       CC1B Low                      SPI0            6             
+         7       CC1B Hi                       SPI0            7             
+         8       CC2 Low                       SPI0            8             
+         9       CC2 Hi                        SPI0            9             
+        10       CC2B Low                      SPI0           10             
+        11       CC2B Hi                       SPI0           11             
+        12       CC3 Low                       SPI0           12             
+        13       CC3 Hi                        SPI0           13             
+        14       CC3B Low                      SPI0           14             
+        15       CC3B Hi                       SPI0           15             
+        16       CC4 Low                       SPI0           16             
+        17       CC4 Hi                        SPI0           17             
+        18       CC5 Low                       SPI0           18             
+        19       CC5 Hi                        SPI0           19             
+        20       RP0 Low                       SPI0           20             
+        21       RP0 Hi                        SPI0           21             
+        22       RP1 Low                       SPI0           22             
+        23       RP1 Hi                        SPI0           23             
+        24       Peer-FP Low                   SPI0           24             
+        25       Peer-FP Hi                    SPI0           25             
+        26       Nitrox Low                    SPI0           26             
+        27       Nitrox Hi                     SPI0           27             
+        28       HT Pkt Low                    HT              0             
+        29       HT Pkt Hi                     HT              1             
+        30       HT IPC Low                    HT              2             
+        31       HT IPC Hi                     HT              3             
+        32       Unmapped                      
+        33       Unmapped                      
+        34       Unmapped                      
+        35       Unmapped                      
+        36       Unmapped                      
+        37       Unmapped                      
+        38       HighNormal                    GPM             7             
+        39       HighPriority                  GPM             6             
+        40       LowNormal                     GPM            11             
+        41       LowPriority                   GPM            10             
+        42       InternalTrafficHiChannel      GPM            12             
+        43       InternalTrafficLoChannel      GPM            13             
+        44       AttnTrafficHiChannel          GPM            14             
+        45       MetaPktTrafficChannel         GPM            15             
+        46       Unmapped                      
+        47       Unmapped                      
+        48       Unmapped                      
+        49       Unmapped                      
+        50       Unmapped                      
+        51       Unmapped                      
+        52       Unmapped                      
+        53       Unmapped                      
+        54       Unmapped                      
+        55*      Drain Low                     GPM             0             
+         * - indicates the drain mode bit is set for this channel
+    '''
+    }
+
+    def test_golden_active_opm(self):
+        self.device = Mock(**self.golden_output_active_opm)
+        obj = ShowPlatformHardwareQfpBqsOpmMapping(device=self.device)
+        parsed_output = obj.parse(status='active', slot='0')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_active_opm)
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowPlatformHardwareQfpBqsOpmMapping(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(status='active', slot='0')
+
+class test_show_platform_hardware_qfp_bqs_ipm_mapping(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_active_ipm = {
+        'channel': {
+            '1': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'CC3 Low',
+                'port': 0,
+            },
+            '10': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'RP1 Hi',
+                'port': 9,
+            },
+            '11': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'RP0 Low',
+                'port': 10,
+            },
+            '12': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'RP0 Hi',
+                'port': 11,
+            },
+            '13': {
+                'cfifo': 3,
+                'interface': 'SPI0',
+                'name': 'Peer-FP Low',
+                'port': 12,
+            },
+            '14': {
+                'cfifo': 2,
+                'interface': 'SPI0',
+                'name': 'Peer-FP Hi',
+                'port': 13,
+            },
+            '15': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'Nitrox Low',
+                'port': 14,
+            },
+            '16': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'Nitrox Hi',
+                'port': 15,
+            },
+            '17': {
+                'cfifo': 1,
+                'interface': 'HT',
+                'name': 'HT Pkt Low',
+                'port': 0,
+            },
+            '18': {
+                'cfifo': 0,
+                'interface': 'HT',
+                'name': 'HT Pkt Hi',
+                'port': 1,
+            },
+            '19': {
+                'cfifo': 3,
+                'interface': 'HT',
+                'name': 'HT IPC Low',
+                'port': 2,
+            },
+            '2': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'CC3 Hi',
+                'port': 1,
+            },
+            '20': {
+                'cfifo': 2,
+                'interface': 'HT',
+                'name': 'HT IPC Hi',
+                'port': 3,
+            },
+            '21': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'CC4 Low',
+                'port': 16,
+            },
+            '22': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'CC4 Hi',
+                'port': 17,
+            },
+            '23': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'CC5 Low',
+                'port': 18,
+            },
+            '24': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'CC5 Hi',
+                'port': 19,
+            },
+            '3': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'CC2 Low',
+                'port': 2,
+            },
+            '4': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'CC2 Hi',
+                'port': 3,
+            },
+            '5': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'CC1 Low',
+                'port': 4,
+            },
+            '6': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'CC1 Hi',
+                'port': 5,
+            },
+            '7': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'CC0 Low',
+                'port': 6,
+            },
+            '8': {
+                'cfifo': 0,
+                'interface': 'SPI0',
+                'name': 'CC0 Hi',
+                'port': 7,
+            },
+            '9': {
+                'cfifo': 1,
+                'interface': 'SPI0',
+                'name': 'RP1 Low',
+                'port': 8,
+            },
+        },
+    }
+
+    golden_output_active_ipm = {'execute.return_value': '''\
+        Router#show platform hardware qfp active bqs 0 ipm mapping 
+        Load for five secs: 29%/1%; one minute: 8%; five minutes: 9%
+        Time source is NTP, 07:42:52.908 EST Thu Sep 8 2016
+
+        BQS IPM Channel Mapping
+
+        Chan   Name                Interface      Port     CFIFO
+
+         1     CC3 Low             SPI0           0        1     
+         2     CC3 Hi              SPI0           1        0     
+         3     CC2 Low             SPI0           2        1     
+         4     CC2 Hi              SPI0           3        0     
+         5     CC1 Low             SPI0           4        1     
+         6     CC1 Hi              SPI0           5        0     
+         7     CC0 Low             SPI0           6        1     
+         8     CC0 Hi              SPI0           7        0     
+         9     RP1 Low             SPI0           8        1     
+        10     RP1 Hi              SPI0           9        0     
+        11     RP0 Low             SPI0          10        1     
+        12     RP0 Hi              SPI0          11        0     
+        13     Peer-FP Low         SPI0          12        3     
+        14     Peer-FP Hi          SPI0          13        2     
+        15     Nitrox Low          SPI0          14        1     
+        16     Nitrox Hi           SPI0          15        0     
+        17     HT Pkt Low          HT             0        1     
+        18     HT Pkt Hi           HT             1        0     
+        19     HT IPC Low          HT             2        3     
+        20     HT IPC Hi           HT             3        2     
+        21     CC4 Low             SPI0          16        1     
+        22     CC4 Hi              SPI0          17        0     
+        23     CC5 Low             SPI0          18        1     
+        24     CC5 Hi              SPI0          19        0   
+    '''
+    }
+
+    def test_golden_active_ipm(self):
+        self.device = Mock(**self.golden_output_active_ipm)
+        obj = ShowPlatformHardwareQfpBqsIpmMapping(device=self.device)
+        parsed_output = obj.parse(status='active', slot='0')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_active_ipm)
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowPlatformHardwareQfpBqsIpmMapping(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(status='active', slot='0')
+
+class test_show_platform_hardware_serdes_statistics(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_serdes = {
+        'link': {
+            '0-Link A': {
+                'from': {
+                    'bytes': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'high': 53361379,
+                        'looped': 0,
+                        'low': 199330758,
+                    },
+                    'flow_ctrl_count': 3680,
+                    'pkts': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'errored': 0,
+                        'high': 63052,
+                        'looped': 0,
+                        'low': 2703601,
+                    },
+                    'qstat_count': 331199,
+                },
+                'to': {
+                    'pkts': {
+                        'high': 0,
+                        'low': 2787636,
+                    }
+                }
+            },
+            '0-Link B': {
+                'from': {
+                    'bytes': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 0,
+                    },
+                    'flow_ctrl_count': 3680,
+                    'pkts': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'errored': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 0,
+                    },
+                    'qstat_count': 331199,
+                },
+                'to': {
+                    'pkts': {
+                        'high': 0,
+                        'low': 0,
+                    }
+                }
+            },
+            '1-Link A': {
+                'from': {
+                    'bytes': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 0,
+                    },
+                    'flow_ctrl_count': 3680,
+                    'pkts': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'errored': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 0,
+                    },
+                    'qstat_count': 294400,
+                },
+                'to': {
+                    'pkts': {
+                        'high': 0,
+                        'low': 0,
+                    }
+                }
+            },
+            '1-Link B': {
+                'from': {
+                    'bytes': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 0,
+                    },
+                    'flow_ctrl_count': 3680,
+                    'pkts': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'errored': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 0,
+                    },
+                    'qstat_count': 0,
+                },
+                'to': {
+                    'pkts': {
+                        'high': 0,
+                        'low': 0,
+                    }
+                }
+            },
+            'F1-Link A': {
+                'from': {
+                    'bytes': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 18648,
+                    },
+                    'flow_ctrl_count': 3680,
+                    'pkts': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'errored': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 518,
+                    },
+                    'qstat_count': 0,
+                },
+                'to': {
+                    'pkts': {
+                        'high': 0,
+                        'low': 518,
+                    }
+                }
+            },
+            'R0-Link A': {
+                'from': {
+                    'bytes': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'high': 1614284,
+                        'looped': 0,
+                        'low': 298734735,
+                    },
+                    'flow_ctrl_count': 3700,
+                    'pkts': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'errored': 0,
+                        'high': 19461,
+                        'looped': 0,
+                        'low': 2777099,
+                    },
+                    'qstat_count': 0,
+                },
+                'to': {
+                    'pkts': {
+                        'high': 1018101,
+                        'low': 1719353,
+                    }
+                }
+            },
+            'R1-Link A': {
+                'from': {
+                    'bytes': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 0,
+                    },
+                    'flow_ctrl_count': 3501,
+                    'pkts': {
+                        'bad': 0,
+                        'dropped': 0,
+                        'errored': 0,
+                        'high': 0,
+                        'looped': 0,
+                        'low': 0,
+                    },
+                    'qstat_count': 0,
+                },
+                'to': {
+                    'pkts': {
+                        'high': 0,
+                        'low': 0,
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_serdes = {'execute.return_value': '''\
+        Router#show platform hardware slot F0 serdes statistics 
+        Load for five secs: 22%/1%; one minute: 8%; five minutes: 9%
+        Time source is NTP, 07:42:08.304 EST Thu Sep 8 2016
+        From Slot R1-Link A
+          Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0         
+          Bytes High: 0          Low: 0          Bad: 0          Dropped: 0         
+          Pkts  Looped: 0          Error: 0         
+          Bytes Looped 0         
+          Qstat count: 0          Flow ctrl count: 3501      
+        To Slot R1-Link A
+          Pkts  High: 0          Low: 0         
+
+        From Slot R0-Link A
+          Pkts  High: 19461      Low: 2777099    Bad: 0          Dropped: 0         
+          Bytes High: 1614284    Low: 298734735  Bad: 0          Dropped: 0         
+          Pkts  Looped: 0          Error: 0         
+          Bytes Looped 0         
+          Qstat count: 0          Flow ctrl count: 3700      
+        To Slot R0-Link A
+          Pkts  High: 1018101    Low: 1719353   
+
+        From Slot F1-Link A
+          Pkts  High: 0          Low: 518        Bad: 0          Dropped: 0         
+          Bytes High: 0          Low: 18648      Bad: 0          Dropped: 0         
+          Pkts  Looped: 0          Error: 0         
+          Bytes Looped 0         
+          Qstat count: 0          Flow ctrl count: 3680      
+        To Slot F1-Link A
+          Pkts  High: 0          Low: 518       
+
+        From Slot 1-Link A
+          Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0         
+          Bytes High: 0          Low: 0          Bad: 0          Dropped: 0         
+          Pkts  Looped: 0          Error: 0         
+          Bytes Looped 0         
+          Qstat count: 294400     Flow ctrl count: 3680      
+        To Slot 1-Link A
+          Pkts  High: 0          Low: 0         
+
+        From Slot 0-Link A
+          Pkts  High: 63052      Low: 2703601    Bad: 0          Dropped: 0         
+          Bytes High: 53361379   Low: 199330758  Bad: 0          Dropped: 0         
+          Pkts  Looped: 0          Error: 0         
+          Bytes Looped 0         
+          Qstat count: 331199     Flow ctrl count: 3680      
+        To Slot 0-Link A
+          Pkts  High: 0          Low: 2787636   
+
+        From Slot 0-Link B
+          Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0         
+          Bytes High: 0          Low: 0          Bad: 0          Dropped: 0         
+          Pkts  Looped: 0          Error: 0         
+          Bytes Looped 0         
+          Qstat count: 331199     Flow ctrl count: 3680      
+        To Slot 0-Link B
+          Pkts  High: 0          Low: 0         
+
+        From Slot 1-Link B
+          Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0         
+          Bytes High: 0          Low: 0          Bad: 0          Dropped: 0         
+          Pkts  Looped: 0          Error: 0         
+          Bytes Looped 0         
+          Qstat count: 0          Flow ctrl count: 3680      
+        To Slot 1-Link B
+          Pkts  High: 0          Low: 0         
+    '''
+    }
+
+    def test_golden_serdes(self):
+        self.device = Mock(**self.golden_output_serdes)
+        obj = ShowPlatformHardwareSerdes(device=self.device)
+        parsed_output = obj.parse(slot='0')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_serdes)
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowPlatformHardwareSerdes(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(slot='0')
+
+class test_show_platform_hardware_serdes_statistics_internal(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_serdes_internal = {
+        'link': {
+            'Encryption Processor': {
+                'errors': {
+                    'rx_parity': 0,
+                    'rx_process': 0,
+                    'rx_schedule': 0,
+                    'rx_statistics': 0,
+                    'tx_process': 0,
+                    'tx_schedule': 0,
+                    'tx_statistics': 0,
+                },
+                'from': {
+                    'bytes': {
+                        'dropped': 0,
+                        'errored': 0,
+                        'total': 0},
+                    'pkts': {
+                        'dropped': 0,
+                        'errored': 0,
+                        'total': 0,
+                    },
+                },
+                'local_rx_in_sync': True,
+                'local_tx_in_sync': True,
+                'remote_rx_in_sync': True,
+                'remote_tx_in_sync': True,
+                'to': {
+                    'bytes': {
+                        'dropped': 0,
+                        'total': 0,
+                    },
+                    'pkts': {
+                        'dropped': 0,
+                        'total': 0,
+                    },
+                },
+            },
+            'Network-Processor-0': {
+                'from': {
+                    'bytes': {
+                        'total': 7397920802,
+                    },
+                    'pkts': {
+                        'total': 21259012,
+                    },
+                },
+                'local_rx_in_sync': True,
+                'local_tx_in_sync': True,
+                'to': {
+                    'bytes': {
+                        'total': 7343838083,
+                    },
+                    'pkts': {
+                        'total': 21763844,
+                    },
+                },
+            },
+        },
+        'serdes_exception_counts': {
+            'c2w': {},
+            'cfg': {},
+            'cilink': {
+                'link': {
+                    '0': {
+                        'chicoEvent': 5,
+                        'msgEccError': 5,
+                        'msgTypeError': 5,
+                    },
+                    '1': {
+                        'chicoEvent': 1,
+                        'msgEccError': 1,
+                        'msgTypeError': 1,
+                    },
+                    '2': {
+                        'chicoEvent': 3,
+                        'msgEccError': 3,
+                        'msgTypeError': 3,
+                    },
+                },
+            },
+            'edh-hi': {},
+            'edh-lo': {},
+            'edm': {},
+            'eqs/fc': {},
+            'idh-hi': {},
+            'idh-lo': {},
+            'idh-shared': {},
+            'ilak': {},
+            'isch': {},
+            'pcie': {},
+            'slb': {},
+            'spi link': {},
+        },
+    }
+
+    golden_output_serdes_internal = {'execute.return_value': '''\
+        Router#show platform hardware slot F0 serdes statistics internal 
+        Load for five secs: 5%/1%; one minute: 8%; five minutes: 9%
+        Time source is NTP, 07:42:13.752 EST Thu Sep 8 2016
+        Warning: Clear option may not clear all the counters
+
+        Network-Processor-0 Link:
+          Local TX in sync, Local RX in sync
+          From Network-Processor     Packets:    21259012  Bytes:  7397920802
+          To Network-Processor       Packets:    21763844  Bytes:  7343838083
+
+        Encryption Processor Link:
+          Local TX in sync, Local RX in sync
+          Remote TX in sync, Remote RX in sync
+          To Encryption Processor   Packets:           0  Bytes:           0
+            Drops                   Packets:           0  Bytes:           0
+          From Encryption Processor Packets:           0  Bytes:           0
+            Drops                   Packets:           0  Bytes:           0
+            Errors                  Packets:           0  Bytes:           0
+          Errors:
+            RX/TX process: 0/0, RX/TX schedule: 0/0
+            RX/TX statistics: 0/0, RX parity: 0
+
+        Serdes Exception Counts:
+          spi link:
+          cilink:
+            link 0: msgTypeError: 5
+            link 0: msgEccError: 5
+            link 0: chicoEvent: 5
+            link 1: msgTypeError: 1
+            link 1: msgEccError: 1
+            link 1: chicoEvent: 1
+            link 2: msgTypeError: 3
+            link 2: msgEccError: 3
+            link 2: chicoEvent: 3
+          ilak:
+          slb:
+          edm:
+          isch:
+          cfg:
+          c2w:
+          pcie:
+          eqs/fc:
+          idh-hi:
+          idh-lo:
+          idh-shared:
+          edh-hi:
+          edh-lo:
+    '''
+    }
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output_serdes_internal)
+        obj = ShowPlatformHardwareSerdesInternal(device=self.device)
+        parsed_output = obj.parse(slot='0')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_serdes_internal)
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowPlatformHardwareSerdesInternal(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(slot='0')
+
+
+class test_show_platform_power(unittest.TestCase):
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'allocation_status': 'Sufficient',
+        'chassis': 'ASR1006-X',
+        'excess_capacity_percent': 72,
+        'excess_power': 3201,
+        'fan_alc': 250,
+        'fru_alc': 949,
+        'load_capacity_percent': 15,
+        'power_capacity': 4400,
+        'redundancy_mode': 'nplus1',
+        'redundant_alc': 0,
+        'slot': {'0': {'allocation': 64.0, 'state': 'ok', 'type': 'ASR1000-SIP40'},
+              '0/0': {'allocation': 14.0,
+                      'state': 'inserted',
+                      'type': 'SPA-8X1GE-V2'},
+              '0/1': {'allocation': 14.0,
+                      'state': 'inserted',
+                      'type': 'SPA-8X1GE-V2'},
+              '0/2': {'allocation': 17.4,
+                      'state': 'inserted',
+                      'type': 'SPA-1X10GE-L-V2'},
+              '0/3': {'allocation': 17.4,
+                      'state': 'inserted',
+                      'type': 'SPA-1X10GE-L-V2'},
+              '1': {'allocation': 64.0, 'state': 'ok', 'type': 'ASR1000-SIP40'},
+              '1/0': {'allocation': 14.0,
+                      'state': 'inserted',
+                      'type': 'SPA-8X1GE-V2'},
+              'F0': {'allocation': 267.0,
+                     'state': 'ok, active',
+                     'type': 'ASR1000-ESP40'},
+              'F1': {'allocation': 267.0,
+                     'state': 'ok, standby',
+                     'type': 'ASR1000-ESP40'},
+              'P0': {'capacity': 1100,
+                     'load': 132,
+                     'state': 'ok',
+                     'type': 'ASR1000X-AC-1100W'},
+              'P1': {'capacity': 1100,
+                     'load': 204,
+                     'state': 'ok',
+                     'type': 'ASR1000X-AC-1100W'},
+              'P2': {'capacity': 1100,
+                     'load': 180,
+                     'state': 'ok',
+                     'type': 'ASR1000X-AC-1100W'},
+              'P3': {'capacity': 1100,
+                     'load': 180,
+                     'state': 'ok',
+                     'type': 'ASR1000X-AC-1100W'},
+              'P6': {'allocation': 125.0, 'state': 'ok', 'type': 'ASR1000X-FAN'},
+              'P7': {'allocation': 125.0, 'state': 'ok', 'type': 'ASR1000X-FAN'},
+              'R0': {'allocation': 105.0,
+                     'state': 'ok, active',
+                     'type': 'ASR1000-RP2'},
+              'R1': {'allocation': 105.0,
+                     'state': 'ok, standby',
+                     'type': 'ASR1000-RP2'}},
+        'total_capacity': 4400,
+        'total_load': 696
+    }
+    
+    golden_output = {'execute.return_value': '''\
+        Chassis type: ASR1006-X           
+
+        Slot      Type                State                 Allocation(W) 
+        --------- ------------------- --------------------- ------------- 
+        0         ASR1000-SIP40       ok                    64
+         0/0      SPA-8X1GE-V2        inserted              14
+         0/1      SPA-8X1GE-V2        inserted              14
+         0/2      SPA-1X10GE-L-V2     inserted              17.40
+         0/3      SPA-1X10GE-L-V2     inserted              17.40
+        1         ASR1000-SIP40       ok                    64
+         1/0      SPA-8X1GE-V2        inserted              14
+        R0        ASR1000-RP2         ok, active            105
+        R1        ASR1000-RP2         ok, standby           105
+        F0        ASR1000-ESP40       ok, active            267
+        F1        ASR1000-ESP40       ok, standby           267
+        P6        ASR1000X-FAN        ok                    125        
+        P7        ASR1000X-FAN        ok                    125        
+
+        Slot      Type                State                 Capacity (W) Load (W)     
+        --------- ------------------- --------------------- ------------ ------------ 
+        P0        ASR1000X-AC-1100W   ok                    1100         132          
+        P1        ASR1000X-AC-1100W   ok                    1100         204          
+        P2        ASR1000X-AC-1100W   ok                    1100         180          
+        P3        ASR1000X-AC-1100W   ok                    1100         180          
+
+        Total load: 696 W, total capacity: 4400 W. Load / Capacity is 15%
+
+        Power capacity:       4400 W
+        Redundant allocation: 0 W
+        Fan allocation:       250 W
+        FRU allocation:       949 W
+        --------------------------------------------
+        Excess Power in Reserve:   3201 W
+        Excess / (Capacity - Redundant) is 72%
+
+        Power Redundancy Mode: nplus1
+
+        Power Allocation Status: Sufficient
+    '''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        platform_obj = ShowPlatformPower(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse()    
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        platform_obj = ShowPlatformPower(device=self.device)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+class show_platform_hardware_qfp_bqs_statistics_channel_all(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_active_ipm = {
+        'channel': {
+             1: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             2: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             3: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             4: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             5: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             6: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             7: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'goodbytes': '016a5004b0',
+                 'goodpkts': '0000c40f64'},
+             8: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'goodbytes': '00153685bd',
+                 'goodpkts': '00000afbe9'},
+             9: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'goodbytes': '0012139723',
+                 'goodpkts': '0000288e4f'},
+             10: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '00000b2184',
+                  'goodpkts': '000000223f'},
+             11: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0023f74c7a',
+                  'goodpkts': '000053ff08'},
+             12: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000305734',
+                  'goodpkts': '0000009533'},
+             13: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000010ce4',
+                  'goodpkts': '0000000749'},
+             14: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             15: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             16: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             17: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             18: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             19: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '000aba8f64',
+                  'goodpkts': '00000d968e'},
+             20: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             21: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             22: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             23: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             24: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'}}}
+    
+    golden_parsed_output_active_opm = {
+        'channel': {
+             0: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '01787bc9e1',
+                 'goodpkts': '0000d18caf'},
+             1: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             2: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             3: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             4: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             5: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             6: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             7: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             8: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             9: {'badbytes': '0000000000',
+                 'badpkts': '0000000000',
+                 'comment': 'OPM Channels',
+                 'goodbytes': '0000000000',
+                 'goodpkts': '0000000000'},
+             10: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             11: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             12: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             13: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             14: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             15: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             16: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             17: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             18: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             19: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             20: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '001ab1e8ad',
+                  'goodpkts': '0000416122'},
+             21: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '000eac93b2',
+                  'goodpkts': '000012481d'},
+             22: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0004353727',
+                  'goodpkts': '00000a3c55'},
+             23: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '00131e7f90',
+                  'goodpkts': '000015b68d'},
+             24: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '00000b6ce8',
+                  'goodpkts': '0000000749'},
+             25: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             26: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             27: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             28: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             29: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             30: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0016872998',
+                  'goodpkts': '00000e35a9'},
+             31: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             32: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             33: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             34: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             35: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             36: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             37: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             38: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '00018a62d0',
+                  'goodpkts': '0000007f33'},
+             39: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '00000f3110',
+                  'goodpkts': '0000000fd2'},
+             40: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             41: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             42: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000300',
+                  'goodpkts': '0000000010'},
+             43: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0830f8d074',
+                  'goodpkts': '002f8bbd4a'},
+             44: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '002f7036c0',
+                  'goodpkts': '0001b1b8d0'},
+             45: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             46: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             47: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             48: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             49: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             50: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             51: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             52: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             53: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             54: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             55: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'OPM Channels',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             56: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'Metapacket/Recycle Pools 0-3',
+                  'goodbytes': '0000000620',
+                  'goodpkts': '000000001c'},
+             57: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'Metapacket/Recycle Pools 0-3',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             58: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'Metapacket/Recycle Pools 0-3',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             59: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'Metapacket/Recycle Pools 0-3',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'},
+             60: {'badbytes': '0000000000',
+                  'badpkts': '0000000000',
+                  'comment': 'Reassembled Packets Sent to QED',
+                  'goodbytes': '0000000000',
+                  'goodpkts': '0000000000'}}}
+
+
+    golden_output_active_ipm = {'execute.return_value': '''\
+        Router#show platform hardware qfp active bqs 0 ipm statistics channel all
+        Load for five secs: 25%/2%; one minute: 9%; five minutes: 9%
+        Time source is NTP, 07:43:10.431 EST Thu Sep 8 2016
+
+        BQS IPM Channel Statistics
+
+        Chan   GoodPkts  GoodBytes    BadPkts   BadBytes
+
+         1 - 0000000000 0000000000 0000000000 0000000000
+         2 - 0000000000 0000000000 0000000000 0000000000
+         3 - 0000000000 0000000000 0000000000 0000000000
+         4 - 0000000000 0000000000 0000000000 0000000000
+         5 - 0000000000 0000000000 0000000000 0000000000
+         6 - 0000000000 0000000000 0000000000 0000000000
+         7 - 0000c40f64 016a5004b0 0000000000 0000000000
+         8 - 00000afbe9 00153685bd 0000000000 0000000000
+         9 - 0000288e4f 0012139723 0000000000 0000000000
+        10 - 000000223f 00000b2184 0000000000 0000000000
+        11 - 000053ff08 0023f74c7a 0000000000 0000000000
+        12 - 0000009533 0000305734 0000000000 0000000000
+        13 - 0000000749 0000010ce4 0000000000 0000000000
+        14 - 0000000000 0000000000 0000000000 0000000000
+        15 - 0000000000 0000000000 0000000000 0000000000
+        16 - 0000000000 0000000000 0000000000 0000000000
+        17 - 0000000000 0000000000 0000000000 0000000000
+        18 - 0000000000 0000000000 0000000000 0000000000
+        19 - 00000d968e 000aba8f64 0000000000 0000000000
+        20 - 0000000000 0000000000 0000000000 0000000000
+        21 - 0000000000 0000000000 0000000000 0000000000
+        22 - 0000000000 0000000000 0000000000 0000000000
+        23 - 0000000000 0000000000 0000000000 0000000000
+        24 - 0000000000 0000000000 0000000000 0000000000
+    '''}
+
+    golden_output_active_opm = {'execute.return_value': '''\
+        Router#show platform hardware qfp active bqs 0 opm statistics channel all
+        Load for five secs: 6%/0%; one minute: 9%; five minutes: 9%
+        Time source is NTP, 07:45:18.968 EST Thu Sep 8 2016
+
+        BQS OPM Channel Statistics
+
+        Chan   GoodPkts  GoodBytes    BadPkts   BadBytes
+
+         0 - 0000d18caf 01787bc9e1 0000000000 0000000000
+         1 - 0000000000 0000000000 0000000000 0000000000
+         2 - 0000000000 0000000000 0000000000 0000000000
+         3 - 0000000000 0000000000 0000000000 0000000000
+         4 - 0000000000 0000000000 0000000000 0000000000
+         5 - 0000000000 0000000000 0000000000 0000000000
+         6 - 0000000000 0000000000 0000000000 0000000000
+         7 - 0000000000 0000000000 0000000000 0000000000
+         8 - 0000000000 0000000000 0000000000 0000000000
+         9 - 0000000000 0000000000 0000000000 0000000000
+        10 - 0000000000 0000000000 0000000000 0000000000
+        11 - 0000000000 0000000000 0000000000 0000000000
+        12 - 0000000000 0000000000 0000000000 0000000000
+        13 - 0000000000 0000000000 0000000000 0000000000
+        14 - 0000000000 0000000000 0000000000 0000000000
+        15 - 0000000000 0000000000 0000000000 0000000000
+        16 - 0000000000 0000000000 0000000000 0000000000
+        17 - 0000000000 0000000000 0000000000 0000000000
+        18 - 0000000000 0000000000 0000000000 0000000000
+        19 - 0000000000 0000000000 0000000000 0000000000
+        20 - 0000416122 001ab1e8ad 0000000000 0000000000
+        21 - 000012481d 000eac93b2 0000000000 0000000000
+        22 - 00000a3c55 0004353727 0000000000 0000000000
+        23 - 000015b68d 00131e7f90 0000000000 0000000000
+        24 - 0000000749 00000b6ce8 0000000000 0000000000
+        25 - 0000000000 0000000000 0000000000 0000000000
+        26 - 0000000000 0000000000 0000000000 0000000000
+        27 - 0000000000 0000000000 0000000000 0000000000
+        28 - 0000000000 0000000000 0000000000 0000000000
+        29 - 0000000000 0000000000 0000000000 0000000000
+        30 - 00000e35a9 0016872998 0000000000 0000000000
+        31 - 0000000000 0000000000 0000000000 0000000000
+        32 - 0000000000 0000000000 0000000000 0000000000
+        33 - 0000000000 0000000000 0000000000 0000000000
+        34 - 0000000000 0000000000 0000000000 0000000000
+        35 - 0000000000 0000000000 0000000000 0000000000
+        36 - 0000000000 0000000000 0000000000 0000000000
+        37 - 0000000000 0000000000 0000000000 0000000000
+        38 - 0000007f33 00018a62d0 0000000000 0000000000
+        39 - 0000000fd2 00000f3110 0000000000 0000000000
+        40 - 0000000000 0000000000 0000000000 0000000000
+        41 - 0000000000 0000000000 0000000000 0000000000
+        42 - 0000000010 0000000300 0000000000 0000000000
+        43 - 002f8bbd4a 0830f8d074 0000000000 0000000000
+        44 - 0001b1b8d0 002f7036c0 0000000000 0000000000
+        45 - 0000000000 0000000000 0000000000 0000000000
+        46 - 0000000000 0000000000 0000000000 0000000000
+        47 - 0000000000 0000000000 0000000000 0000000000
+        48 - 0000000000 0000000000 0000000000 0000000000
+        49 - 0000000000 0000000000 0000000000 0000000000
+        50 - 0000000000 0000000000 0000000000 0000000000
+        51 - 0000000000 0000000000 0000000000 0000000000
+        52 - 0000000000 0000000000 0000000000 0000000000
+        53 - 0000000000 0000000000 0000000000 0000000000
+        54 - 0000000000 0000000000 0000000000 0000000000
+        55 - 0000000000 0000000000 0000000000 0000000000
+        56 - 000000001c 0000000620 0000000000 0000000000
+        57 - 0000000000 0000000000 0000000000 0000000000
+        58 - 0000000000 0000000000 0000000000 0000000000
+        59 - 0000000000 0000000000 0000000000 0000000000
+        60 - 0000000000 0000000000 0000000000 0000000000
+         0-55: OPM Channels
+        56-59: Metapacket/Recycle Pools 0-3
+           60: Reassembled Packets Sent to QED
+    '''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        platform_obj = ShowPlatformHardwareQfpBqsStatisticsChannelAll(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse(status='active', slot='0', iotype='ipm')    
+
+    def test_golden_active_ipm(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_active_ipm)
+        platform_obj = ShowPlatformHardwareQfpBqsStatisticsChannelAll(device=self.device)
+        parsed_output = platform_obj.parse(status='active', slot='0', iotype='ipm')
+        self.assertEqual(parsed_output,self.golden_parsed_output_active_ipm)
+
+    def test_golden_active_opm(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_active_opm)
+        platform_obj = ShowPlatformHardwareQfpBqsStatisticsChannelAll(device=self.device)
+        parsed_output = platform_obj.parse(status='active', slot='0', iotype='opm')
+        self.assertEqual(parsed_output,self.golden_parsed_output_active_opm)
+
+class show_platform_hardware_qfp_interface(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output = {
+        'qfp': {
+            'active': {
+                'interface': {
+                    'GigabitEthernet0/0/0': {
+                        'egress_drop_stats': {},
+                        'ingress_drop_stats': {},
+                        'platform_handle': 7,
+                        'receive_stats': {
+                            'FragIpv4': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'FragIpv6': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'Ipv4': {
+                                'octets': 306,
+                                'packets': 4,
+                            },
+                            'Ipv6': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'McastIpv4': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'McastIpv6': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'Other': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'ReassIpv4': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'ReassIpv6': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'Tag': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                        },
+                        'transmit_stats': {
+                            'FragmentedIpv4': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'FragmentedIpv6': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'FragmentsIpv4': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'FragmentsIpv6': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'Ipv4': {
+                                'octets': 246,
+                                'packets': 3,
+                            },
+                            'Ipv6': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'McastIpv4': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'McastIpv6': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'Other': {
+                                'octets': 0,
+                                'packets': 0,
+                            },
+                            'Tag': {
+                                'octets': 77,
+                                'packets': 1,
+                            },
+                        },
+                    },
+                }
+            }
+        },
+    }
+
+    golden_output = {'execute.return_value': '''\
+        Router#show platform hardware qfp active interface if-name gigabitEthernet 0/0/0 statistics
+        Load for five secs: 2%/0%; one minute: 8%; five minutes: 8%
+        Time source is NTP, 07:55:23.913 EST Thu Sep 8 2016
+        Platform Handle 7
+        ----------------------------------------------------------------
+        Receive Stats                             Packets        Octets
+        ----------------------------------------------------------------
+          Ipv4                                       4             306
+          Ipv6                                       0               0
+          Tag                                        0               0
+          McastIpv4                                  0               0
+          McastIpv6                                  0               0
+          FragIpv4                                   0               0
+          FragIpv6                                   0               0
+          ReassIpv4                                  0               0
+          ReassIpv6                                  0               0
+          Other                                      0               0
+
+        ----------------------------------------------------------------
+        Transmit Stats                            Packets        Octets
+        ----------------------------------------------------------------
+          Ipv4                                       3             246
+          Ipv6                                       0               0
+          Tag                                        1              77
+          McastIpv4                                  0               0
+          McastIpv6                                  0               0
+          FragmentsIpv4                              0               0
+          FragmentsIpv6                              0               0
+          FragmentedIpv4                             0               0
+          FragmentedIpv6                             0               0
+          Other                                      0               0
+
+        ----------------------------------------------------------------
+        Input Drop Stats                          Packets        Octets
+        ----------------------------------------------------------------
+          Ingress Drop stats are not enabled on this interface
+
+        ----------------------------------------------------------------
+        Output Drop Stats                         Packets        Octets
+        ----------------------------------------------------------------
+          The Egress Drop stats are not enabled on this interface
+    '''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        platform_obj = ShowPlatformHardwareQfpInterfaceIfnameStatistics(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse(status='active', interface='gigabitEthernet 0/0/0')  
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        platform_obj = ShowPlatformHardwareQfpInterfaceIfnameStatistics(device=self.device)
+        parsed_output = platform_obj.parse(status='active', interface='gigabitEthernet 0/0/0')
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+class test_show_platform_hardware_qfp_statistics_drop(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_active = {
+      "global_drop_stats": {
+        "Ipv4NoAdj": {
+          "octets": 296,
+          "packets": 7
+        },
+        "Ipv4NoRoute": {
+          "octets": 7964,
+          "packets": 181
+        },
+        "PuntPerCausePolicerDrops": {
+          "octets": 184230,
+          "packets": 2003
+        },
+        "UidbNotCfgd": {
+          "octets": 29312827,
+          "packets": 466391
+        },
+        "UnconfiguredIpv4Fia": {
+          "octets": 360,
+          "packets": 6
+        }
+      }
+    }
+
+    golden_output_active = {'execute.return_value': '''\
+        Router#show platform hardware qfp active statistics drop | exclude _0_
+        Load for five secs: 2%/1%; one minute: 9%; five minutes: 8%
+        Time source is NTP, 07:47:11.317 EST Thu Sep 8 2016
+        -------------------------------------------------------------------------
+        Global Drop Stats                         Packets                  Octets  
+        -------------------------------------------------------------------------
+        Ipv4NoAdj                                       7                     296  
+        Ipv4NoRoute                                   181                    7964  
+        PuntPerCausePolicerDrops                     2003                  184230  
+        UidbNotCfgd                                466391                29312827  
+        UnconfiguredIpv4Fia                             6                     360  
+    '''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        platform_obj = ShowPlatformHardwareQfpStatisticsDrop(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse(status='active')    
+
+    def test_golden_active(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_active)
+        platform_obj = ShowPlatformHardwareQfpStatisticsDrop(device=self.device)
+        parsed_output = platform_obj.parse(status='active')
+        self.assertEqual(parsed_output,self.golden_parsed_output_active)
+
+
+class test_show_processes_cpu_history(unittest.TestCase):
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+         '60m': {1: {'average': 10, 'maximum': 51},
+                 2: {'average': 20, 'maximum': 69},
+                 3: {'average': 10, 'maximum': 56},
+                 4: {'average': 10, 'maximum': 15},
+                 5: {'average': 20, 'maximum': 75},
+                 6: {'average': 10, 'maximum': 21},
+                 7: {'average': 30, 'maximum': 99},
+                 8: {'average': 50, 'maximum': 98},
+                 9: {'average': 80, 'maximum': 99},
+                 10: {'average': 20, 'maximum': 98},
+                 11: {'average': 80, 'maximum': 98},
+                 12: {'average': 20, 'maximum': 99},
+                 13: {'average': 30, 'maximum': 98},
+                 14: {'average': 0, 'maximum': 9},
+                 15: {'average': 0, 'maximum': 11},
+                 16: {'average': 0, 'maximum': 18},
+                 17: {'average': 40, 'maximum': 98},
+                 18: {'average': 0, 'maximum': 14},
+                 19: {'average': 10, 'maximum': 94},
+                 20: {'average': 10, 'maximum': 50},
+                 21: {'average': 0, 'maximum': 10},
+                 22: {'average': 0, 'maximum': 10},
+                 23: {'average': 0, 'maximum': 11},
+                 24: {'average': 0, 'maximum': 16},
+                 25: {'average': 0, 'maximum': 10},
+                 26: {'average': 0, 'maximum': 10},
+                 27: {'average': 10, 'maximum': 77},
+                 28: {'average': 0, 'maximum': 10},
+                 29: {'average': 0, 'maximum': 10},
+                 30: {'average': 0, 'maximum': 11},
+                 31: {'average': 0, 'maximum': 7},
+                 32: {'average': 0, 'maximum': 10},
+                 33: {'average': 0, 'maximum': 14},
+                 34: {'average': 0, 'maximum': 10},
+                 35: {'average': 0, 'maximum': 10},
+                 36: {'average': 0, 'maximum': 10},
+                 37: {'average': 0, 'maximum': 10},
+                 38: {'average': 10, 'maximum': 48},
+                 39: {'average': 10, 'maximum': 67},
+                 40: {'average': 0, 'maximum': 10},
+                 41: {'average': 0, 'maximum': 7},
+                 42: {'average': 0, 'maximum': 15},
+                 43: {'average': 0, 'maximum': 15},
+                 44: {'average': 0, 'maximum': 10},
+                 45: {'average': 0, 'maximum': 10},
+                 46: {'average': 0, 'maximum': 10},
+                 47: {'average': 0, 'maximum': 10},
+                 48: {'average': 0, 'maximum': 10},
+                 49: {'average': 0, 'maximum': 10},
+                 50: {'average': 0, 'maximum': 10},
+                 51: {'average': 0, 'maximum': 10},
+                 52: {'average': 0, 'maximum': 11},
+                 53: {'average': 0, 'maximum': 10},
+                 54: {'average': 0, 'maximum': 10},
+                 55: {'average': 0, 'maximum': 10},
+                 56: {'average': 0, 'maximum': 11},
+                 57: {'average': 0, 'maximum': 10},
+                 58: {'average': 0, 'maximum': 14},
+                 59: {'average': 0, 'maximum': 14},
+                 60: {'average': 0, 'maximum': 12}},
+         '60s': {1: {'average': 0, 'maximum': 7},
+                 2: {'average': 0, 'maximum': 7},
+                 3: {'average': 0, 'maximum': 7},
+                 4: {'average': 0, 'maximum': 7},
+                 5: {'average': 0, 'maximum': 7},
+                 6: {'average': 0, 'maximum': 5},
+                 7: {'average': 0, 'maximum': 5},
+                 8: {'average': 0, 'maximum': 5},
+                 9: {'average': 0, 'maximum': 5},
+                 10: {'average': 0, 'maximum': 5},
+                 11: {'average': 0, 'maximum': 89},
+                 12: {'average': 0, 'maximum': 89},
+                 13: {'average': 0, 'maximum': 89},
+                 14: {'average': 0, 'maximum': 89},
+                 15: {'average': 0, 'maximum': 89},
+                 16: {'average': 0, 'maximum': 66},
+                 17: {'average': 0, 'maximum': 66},
+                 18: {'average': 0, 'maximum': 66},
+                 19: {'average': 0, 'maximum': 66},
+                 20: {'average': 0, 'maximum': 66},
+                 21: {'average': 0, 'maximum': 14},
+                 22: {'average': 0, 'maximum': 14},
+                 23: {'average': 0, 'maximum': 14},
+                 24: {'average': 0, 'maximum': 14},
+                 25: {'average': 0, 'maximum': 14},
+                 26: {'average': 0, 'maximum': 6},
+                 27: {'average': 0, 'maximum': 6},
+                 28: {'average': 0, 'maximum': 6},
+                 29: {'average': 0, 'maximum': 6},
+                 30: {'average': 0, 'maximum': 6},
+                 31: {'average': 0, 'maximum': 3},
+                 32: {'average': 0, 'maximum': 3},
+                 33: {'average': 0, 'maximum': 3},
+                 34: {'average': 0, 'maximum': 3},
+                 35: {'average': 0, 'maximum': 3},
+                 36: {'average': 0, 'maximum': 5},
+                 37: {'average': 0, 'maximum': 5},
+                 38: {'average': 0, 'maximum': 5},
+                 39: {'average': 0, 'maximum': 5},
+                 40: {'average': 0, 'maximum': 5},
+                 41: {'average': 0, 'maximum': 4},
+                 42: {'average': 0, 'maximum': 4},
+                 43: {'average': 0, 'maximum': 4},
+                 44: {'average': 0, 'maximum': 4},
+                 45: {'average': 0, 'maximum': 4},
+                 46: {'average': 0, 'maximum': 16},
+                 47: {'average': 0, 'maximum': 16},
+                 48: {'average': 0, 'maximum': 16},
+                 49: {'average': 0, 'maximum': 16},
+                 50: {'average': 0, 'maximum': 16},
+                 51: {'average': 0, 'maximum': 7},
+                 52: {'average': 0, 'maximum': 7},
+                 53: {'average': 0, 'maximum': 7},
+                 54: {'average': 0, 'maximum': 7},
+                 55: {'average': 0, 'maximum': 7},
+                 56: {'average': 0, 'maximum': 7},
+                 57: {'average': 0, 'maximum': 7},
+                 58: {'average': 0, 'maximum': 7},
+                 59: {'average': 0, 'maximum': 7},
+                 60: {'average': 0, 'maximum': 7}},
+         '72h': {1: {'average': 0, 'maximum': 73},
+                 2: {'average': 0, 'maximum': 15},
+                 3: {'average': 0, 'maximum': 82},
+                 4: {'average': 0, 'maximum': 15},
+                 5: {'average': 0, 'maximum': 15},
+                 6: {'average': 0, 'maximum': 16},
+                 7: {'average': 0, 'maximum': 14},
+                 8: {'average': 0, 'maximum': 19},
+                 9: {'average': 0, 'maximum': 14},
+                 10: {'average': 0, 'maximum': 15},
+                 11: {'average': 0, 'maximum': 15},
+                 12: {'average': 0, 'maximum': 15},
+                 13: {'average': 0, 'maximum': 15},
+                 14: {'average': 0, 'maximum': 15},
+                 15: {'average': 0, 'maximum': 15},
+                 16: {'average': 0, 'maximum': 15},
+                 17: {'average': 0, 'maximum': 15},
+                 18: {'average': 0, 'maximum': 15},
+                 19: {'average': 0, 'maximum': 15},
+                 20: {'average': 0, 'maximum': 83},
+                 21: {'average': 0, 'maximum': 78},
+                 22: {'average': 0, 'maximum': 82},
+                 23: {'average': 0, 'maximum': 77},
+                 24: {'average': 0, 'maximum': 19},
+                 25: {'average': 0, 'maximum': 66},
+                 26: {'average': 0, 'maximum': 14},
+                 27: {'average': 0, 'maximum': 77},
+                 28: {'average': 10, 'maximum': 99},
+                 29: {'average': 10, 'maximum': 100},
+                 30: {'average': 0, 'maximum': 0},
+                 31: {'average': 0, 'maximum': 0},
+                 32: {'average': 0, 'maximum': 0},
+                 33: {'average': 0, 'maximum': 0},
+                 34: {'average': 0, 'maximum': 0},
+                 35: {'average': 0, 'maximum': 0},
+                 36: {'average': 0, 'maximum': 0},
+                 37: {'average': 0, 'maximum': 0},
+                 38: {'average': 0, 'maximum': 0},
+                 39: {'average': 0, 'maximum': 0},
+                 40: {'average': 0, 'maximum': 0},
+                 41: {'average': 0, 'maximum': 0},
+                 42: {'average': 0, 'maximum': 0},
+                 43: {'average': 0, 'maximum': 0},
+                 44: {'average': 0, 'maximum': 0},
+                 45: {'average': 0, 'maximum': 0},
+                 46: {'average': 0, 'maximum': 0},
+                 47: {'average': 0, 'maximum': 0},
+                 48: {'average': 0, 'maximum': 0},
+                 49: {'average': 0, 'maximum': 0},
+                 50: {'average': 0, 'maximum': 0},
+                 51: {'average': 0, 'maximum': 0},
+                 52: {'average': 0, 'maximum': 0},
+                 53: {'average': 0, 'maximum': 0},
+                 54: {'average': 0, 'maximum': 0},
+                 55: {'average': 0, 'maximum': 0},
+                 56: {'average': 0, 'maximum': 0},
+                 57: {'average': 0, 'maximum': 0},
+                 58: {'average': 0, 'maximum': 0},
+                 59: {'average': 0, 'maximum': 0},
+                 60: {'average': 0, 'maximum': 0},
+                 61: {'average': 0, 'maximum': 0},
+                 62: {'average': 0, 'maximum': 0},
+                 63: {'average': 0, 'maximum': 0},
+                 64: {'average': 0, 'maximum': 0},
+                 65: {'average': 0, 'maximum': 0},
+                 66: {'average': 0, 'maximum': 0},
+                 67: {'average': 0, 'maximum': 0},
+                 68: {'average': 0, 'maximum': 0},
+                 69: {'average': 0, 'maximum': 0},
+                 70: {'average': 0, 'maximum': 0},
+                 71: {'average': 0, 'maximum': 0},
+                 72: {'average': 0, 'maximum': 0}
+            }
+        }
+    
+    golden_output = {'execute.return_value': '''\
+Router#show processes cpu history 
+Load for five secs: 9%/1%; one minute: 18%; five minutes: 19%
+Time source is NTP, 15:54:30.599 EST Tue Oct 18 2016                                       
+                                                                  
+                888886666611111                    11111          
+      777775555599999666664444466666333335555544444666667777777777
+  100                                                           
+   90           *****                                           
+   80           *****                                           
+   70           **********                                      
+   60           **********                                      
+   50           **********                                      
+   40           **********                                      
+   30           **********                                      
+   20           **********                         *****        
+   10 ******************************     *****     *************
+     0....5....1....1....2....2....3....3....4....4....5....5....6
+               0    5    0    5    0    5    0    5    0    5    0
+               CPU% per second (last 60 seconds)
+                                         
+                                                                  
+      5651729999999 1191951111117111 111111461 1111111111111111111
+      196551989889891884400016007001704000087075500000000100010442
+  100       *******   *                                         
+   90       *******   * *                                       
+   80     * **#*#**   * *       *                               
+   70  *  * **#*#**   * *       *           *                   
+   60  ** * **#*#**   * *       *           *                   
+   50 *** * *##*#**   * **      *          **                   
+   40 *** * *##*#**   # **      *          **                   
+   30 *** * ###*#*#   # **      *          **                   
+   20 *#**#*#######  *# **   *  *          **  **               
+   10 #############***#*##******#**********##*******************
+     0....5....1....1....2....2....3....3....4....4....5....5....6
+               0    5    0    5    0    5    0    5    0    5    0
+               CPU% per minute (last 60 minutes)
+              * = maximum CPU%   # = average CPU%
+                                                     
+                                  1                                           
+      71811111111111111118787161790                                           
+      35255649455555555553827964790                                           
+  100                            **                                         
+   90                            **                                         
+   80   *                ****   ***                                         
+   70 * *                **** * ***                                         
+   60 * *                **** * ***                                         
+   50 * *                **** * ***                                         
+   40 * *                **** * ***                                         
+   30 * *                **** * ***                                         
+   20 ****** * **************** ***                                         
+   10 ***************************##                                         
+     0....5....1....1....2....2....3....3....4....4....5....5....6....6....7..
+               0    5    0    5    0    5    0    5    0    5    0    5    0  
+                   CPU% per hour (last 72 hours)
+                  * = maximum CPU%   # = average CPU%
+    '''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        platform_obj = ShowProcessesCpuHistory(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse()    
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        platform_obj = ShowProcessesCpuHistory(device=self.device)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
 if __name__ == '__main__':
     unittest.main()
-

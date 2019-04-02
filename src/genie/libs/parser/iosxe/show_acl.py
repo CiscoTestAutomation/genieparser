@@ -2,6 +2,7 @@
    supported commands:
      *  show access-lists
 """
+
 # Python
 import re
 import random
@@ -225,22 +226,28 @@ class ShowAccessLists(ShowAccessListsSchema):
        'xdmcp':          177
     }
 
-    cli_command = ['show access-lists','show {ip} {access_list}','show {ip} {access_list} {acl}']
+    cli_command = [ 'show access-lists', 'show access-lists {acl}',
+                    'show ip access-lists','show ip access-lists {acl}',
+                    'show ipv6 access-list', 'show ipv6 access-list {acl}']
 
     def cli(self,ip="",acl="",output=None):
+        assert ip in ['ip', 'ipv4', 'ipv6', '']
         if output is None:
-            assert ip in ['ip','ipv6','']
-            if ip == 'ip':
-                access_list = 'access-lists'
+            if ip == 'ip' or ip == 'ipv4':
+                if acl:
+                    cmd = self.cli_command[3].format(acl=acl)
+                else:
+                    cmd = self.cli_command[2]
             if ip == 'ipv6':
-                access_list = 'access-list'
-
-            if ip and acl:
-                cmd = self.cli_command[2].format(ip=ip, acl=acl, access_list=access_list)
-            if ip and not acl:
-                cmd = self.cli_command[1].format(ip=ip, access_list=access_list)
-            if not ip and not acl:
-                cmd = self.cli_command[0]
+                if acl:
+                    cmd = self.cli_command[5].format(acl=acl)
+                else:
+                    cmd = self.cli_command[4]
+            else:
+                if acl:
+                    cmd = self.cli_command[1].format(acl=acl)
+                else:
+                    cmd = self.cli_command[0]
             # get output from device
             out = self.device.execute(cmd)
         else:
@@ -250,7 +257,8 @@ class ShowAccessLists(ShowAccessListsSchema):
         ret_dict = {}
 
         # initial regexp pattern
-        p_ip = re.compile(r'^Extended +IP +access +list +(?P<name>[\w\-\.]+)( *\((?P<per_user>.*)\))?$')
+        p_ip = re.compile(r'^(Extended|Standard) +IP +access +list[s]? +(?P<name>[\w\-\.#]+)( *\((?P<per_user>.*)\))?$')
+        p_ip_1 = re.compile(r'^ip +access-list +extended +(?P<name>[\w\-\.#]+)( *\((?P<per_user>.*)\))?$')
         p_ipv6 = re.compile(r'^IPv6 +access +list +(?P<name>[\w\-\.]+)( *\((?P<per_user>.*)\))?$')
         p_mac = re.compile(r'^Extended +MAC +access +list +(?P<name>[\w\-\.]+)( *\((?P<per_user>.*)\))?$')
         p_ip_acl = re.compile(
@@ -261,6 +269,7 @@ class ShowAccessLists(ShowAccessListsSchema):
             '(?P<src_port>[\w\-\s]+))?'
             '(?P<dst>( *host)? +(any|((\d+.){3}\d+ +(\d+.){3}\d+)|'
             '(\d+.){3}\d+))( *(?P<left>.*))?$')
+        p_ip_acl_standard = re.compile(r'^(?P<actions_forwarding>(deny|permit)) +(?P<src>([\d.]+))$')
         p_ipv6_acl = re.compile(
             r'^(?P<actions_forwarding>(deny|permit)) +'
             '(?P<protocol>(ahp|esp|hbh|icmp|ipv6|pcp|sctp|tcp|udp))'
@@ -278,13 +287,19 @@ class ShowAccessLists(ShowAccessListsSchema):
             line = line.strip()
 
             # Extended IP access list acl_name
+            # Standard IP access list 1
             m_ip = p_ip.match(line)
+            # ip access-list extended mylist2
+            m_ip_1 = p_ip_1.match(line)
             # IPv6 access list preauth_v6 (per-user)
             m_ipv6 = p_ipv6.match(line)
             # Extended MAC access list mac_acl 
             m_mac = p_mac.match(line)
-            if m_ip:
-                m = m_ip
+            if m_ip or m_ip_1:
+                if m_ip:
+                    m = m_ip
+                else:
+                    m = m_ip_1
                 acl_type = 'ipv4-acl-type'
             elif m_ipv6:
                 m = m_ipv6
@@ -303,11 +318,34 @@ class ShowAccessLists(ShowAccessListsSchema):
                 acl_dict.setdefault('per_user', True) if group['per_user'] else None
                 continue
 
+            # permit 172.20.10.10
+            m = p_ip_acl_standard.match(line)
+            if m:
+                group = m.groupdict()
+                seq = int(sorted(acl_dict.get('aces', {'0': 'dummy'}).keys())[-1]) + 10
+                seq_dict = acl_dict.setdefault('aces', {}).setdefault(str(seq), {})
+                seq_dict['name'] = str(seq)
+
+                # store values
+                actions_forwarding = group['actions_forwarding']
+                src = group['src']
+                protocol = 'ipv4'
+
+                # actions
+                seq_dict.setdefault('actions', {}).setdefault('forwarding', actions_forwarding)
+
+                # l3 dict
+                l3_dict = seq_dict.setdefault('matches', {}).setdefault('l3', {}).setdefault(protocol, {})
+                l3_dict['protocol'] = protocol
+                l3_dict.setdefault('source_network', {}).setdefault(src, {}).setdefault('source_network', src)
+                l3_dict.setdefault('destination_network', {}).setdefault(src, {}).setdefault('destination_network', src)
+                continue
+
             # 10 permit ip any any (10031 matches)
             # 10 permit tcp any any eq 443
             # 30 deny ip any any
-            # 10 permit tcp 192.168.1.0 0.0.0.255 host 1.1.1.1 established log
-            # 20 permit tcp host 2.2.2.2 eq www telnet 443 any precedence network ttl eq 255
+            # 10 permit tcp 192.168.1.0 0.0.0.255 host 10.4.1.1 established log
+            # 20 permit tcp host 10.16.2.2 eq www telnet 443 any precedence network ttl eq 255
             m_v4 = p_ip_acl.match(line)
 
             # permit ipv6 host 2001::1 host 2001:1::2 sequence 20
