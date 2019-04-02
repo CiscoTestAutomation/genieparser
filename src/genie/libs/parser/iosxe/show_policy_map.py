@@ -26,7 +26,7 @@ from genie.libs.parser.utils.common import Common
 #   *'show policy-map interface {interface}'
 #   *'show policy-map interface {interface} output class {class_name}'
 # ======================================================================
-class ShowPolicyMapControlPlaneSchema(MetaParser):
+class ShowPolicyMapTypeSchema(MetaParser):
 
     ''' Schema for "show policy map control plane" '''
 
@@ -38,7 +38,7 @@ class ShowPolicyMapControlPlaneSchema(MetaParser):
                         {Any(): # Control_Plane_in 
                             {'class_map': 
                                 {Any(): # Ping_Class
-                                    {'match_all': bool,
+                                    {'match_evaluation': str,
                                      Optional('packets'): int,
                                      Optional('bytes'): int,
                                      Optional('queueing'):
@@ -52,6 +52,10 @@ class ShowPolicyMapControlPlaneSchema(MetaParser):
                                           Optional('shape_bc_bps'): int,
                                           Optional('shape_be_bps'): int,
                                           Optional('target_shape_rate'): int,
+                                          Optional('output_queue'): str,
+                                          Optional('bandwidth_percent'): int,
+                                          Optional('exponential_weight'): int,
+                                          Optional('mean_queue_depth'): int,
                                          },
                                      Optional('rate'):
                                          {Optional('interval'): int,
@@ -59,9 +63,23 @@ class ShowPolicyMapControlPlaneSchema(MetaParser):
                                           Optional('drop_rate_bps'): int,
                                          },
                                      'match': str,
+                                     Optional('class'):
+                                         {Any():
+                                             {'transmitted': str,
+                                              'random_drop': str,
+                                              'tail_drop': str,
+                                              'minimum_thresh': str,
+                                              'maximum_thresh': str,
+                                              'mark_prob': str,
+                                              Optional('ecn_mark'): str,
+                                              },
+                                         },
                                      Optional('qos_set'):
-                                         {'ip_precedence': int,
-                                          'marker_statistics': str,
+                                         {Optional('ip_precedence'): int,
+                                          Optional('marker_statistics'): str,
+                                          Optional('qos_group'): int,
+                                          Optional('packets_marked'): int,
+                                          Optional('dscp'): str,
                                          },
                                      Optional('police'):
                                          {Optional('cir_bps'): int,
@@ -104,7 +122,7 @@ class ShowPolicyMapControlPlaneSchema(MetaParser):
 #   * 'show policy-map interface {interface} output class {class_name}'
 #   * 'show policy-map interface {interface}'
 # =====================================================================
-class ShowPolicyMapType(ShowPolicyMapControlPlaneSchema):
+class ShowPolicyMapType(ShowPolicyMapTypeSchema):
     ''' Parser for
         * "show policy map control plane"
         * "show policy-map interface {interface} output class {class_name}"
@@ -142,6 +160,9 @@ class ShowPolicyMapType(ShowPolicyMapControlPlaneSchema):
         # Service-policy input:TEST
         p1 = re.compile(r'^Service-policy +(?P<service_policy>(input|output)):+ *(?P<policy_name>([\w\-]+))$')
 
+        # service policy : child
+        p1_1 = re.compile(r'^Service-policy *:+ *(?P<policy_name>([\w\-]+))$')
+
         # Class-map: Ping_Class (match-all)
         # Class-map:TEST (match-all)
         p2 = re.compile(r'^Class-map *:+(?P<class_map>([\s\w\-]+)) +(?P<match_all>(.*))$')
@@ -154,6 +175,9 @@ class ShowPolicyMapType(ShowPolicyMapControlPlaneSchema):
 
         # 5 minute offered rate 0000 bps
         p4_1 = re.compile(r'^(?P<interval>(\d+)) +minute +offered +rate +(?P<offered_rate>(\d+)) bps$')
+
+        # 30 second offered rate 15000 bps, drop rate 300 bps
+        p4_2 = re.compile(r'^(?P<interval>(\d+)) +second +offered +rate +(?P<offered_rate>(\d+)) bps, +drop +rate +(?P<drop_rate>(\d+)) bps$')
 
         # Match: access-group name Ping_Option
         p5 = re.compile(r'^Match *:+(?P<match>([\w\-\s]+))$')
@@ -205,22 +229,39 @@ class ShowPolicyMapType(ShowPolicyMapControlPlaneSchema):
         p13 = re.compile(r'^QoS +Set+$')
 
         # ip precedence 6
-        p14 = re.compile(r'^ip +precedence +(?P<ip_precedence>(\d+))$')
+        p13_1 = re.compile(r'^ip +precedence +(?P<ip_precedence>(\d+))$')
 
         # Marker statistics: Disabled
-        p15 = re.compile(r'^Marker +statistics: +(?P<marker_statistics>(\w+))$')
+        p13_2 = re.compile(r'^Marker +statistics: +(?P<marker_statistics>(\w+))$')
+
+        #qos-group 20
+        p13_3 = re.compile(r'^qos-group +(?P<qos_group>(\d+))$')
+
+        #Packets marked 500
+        p13_4 = re.compile(r'^Packets +marked +(?P<packets_marked>(\d+))$')
 
         # Queueing
         p16 = re.compile(r'^Queueing$')
 
         # queue limit 64 packets
-        p16_1 = re.compile(r'^queue +limit +(?P<queue_limit>([\s\w]+))$')
+        p16_1 = re.compile(r'^queue +limit +(?P<queue_limit>(\d+)) .*$')
 
         # (queue depth/total drops/no-buffer drops) 0/0/0
-        p16_2 = re.compile(r'\(+queue +depth/+total +drops/+no-buffer +drops+\) +(?P<queue_depth>(\d+))/'
+        p16_2 = re.compile(r'^\(+queue +depth/+total +drops/+no-buffer +drops+\) +(?P<queue_depth>(\d+))/'
                             '+(?P<total_drops>(\d+))/+(?P<no_buffer_drops>(\d+))$')
+
+        # depth/total drops/no-buffer drops) 147/38/0
+        p16_2_1 = re.compile(r'^depth/+total +drops/+no-buffer +drops+\) +(?P<queue_depth>(\d+))/+'
+                             '(?P<total_drops>(\d+))/+(?P<no_buffer_drops>(\d+))$')
+
         # (pkts output/bytes output) 0/0
-        p16_3 = re.compile(r'\(+pkts +output/+bytes +output+\) +(?P<pkts_output>(\d+))/+(?P<bytes_output>(\d+))')
+        p16_3 = re.compile(r'^\(+pkts +output/+bytes +output+\) +(?P<pkts_output>(\d+))/+(?P<bytes_output>(\d+))$')
+
+        # (pkts matched/bytes matched) 363/87120
+        p16_3_1 = re.compile(r'^\(+pkts +matched/+bytes +matched+\) +(?P<pkts_matched>(\d+))/+(?P<bytes_matched>(\d+))$')
+
+        # (pkts queued/bytes queued) 0/0
+        p16_3_2 = re.compile(r'^\(+pkts +queued/+bytes +queued+\) +(?P<pkts_queued>(\d+))/+(?P<bytes_queued>(\d+))$')
 
         # shape (average) cir 474656, bc 1899, be 1899
         p16_4 = re.compile(r'^shape +\(average\) +cir +(?P<shape_cir_bps>(\d+)), +bc +'
@@ -228,6 +269,39 @@ class ShowPolicyMapType(ShowPolicyMapControlPlaneSchema):
 
         # target shape rate 474656
         p16_5 = re.compile(r'^target +shape +rate +(?P<target_shape_rate>(\d+))$')
+
+        # Output Queue: Conversation 266
+        p16_6 = re.compile(r'^Output +Queue: +(?P<output_queue>([\w\s]+))$')
+
+        # Bandwidth 10 (%)
+        p16_7 = re.compile(r'^Bandwidth +(?P<bandwidth>(\d+)) .*$')
+
+        # bandwidth 1000 (kbps)
+        p16_7_1 = re.compile(r'^bandwidth +(?P<bandwidth>(\d+)) .*$')
+
+        # exponential weight: 9
+        p16_8 = re.compile(r'^exponential +weight: +(?P<exponential_weight>(\d+))$')
+
+        # Exp-weight-constant: 9 (1/512)
+        p16_8_1 = re.compile(r'^Exp-weight-constant: +(?P<exp_weight_constant>([\w\(\)\s\/]+))$')
+
+        # mean queue depth: 25920
+        # Mean queue depth: 0 bytes
+        p16_9 = re.compile(r'^(M|m)ean +queue +depth: +(?P<mean_queue_depth>(\d+))')
+
+        # class     Transmitted       Random drop      Tail drop     Minimum Maximum Mark
+        #           pkts/bytes        pkts/bytes       pkts/bytes    thresh  thresh  prob
+        #                                                            (bytes)  (bytes)
+        #   0             0/0               0/0               0/0      20000    40000  1/10
+        #   1           328/78720          38/9120            0/0      22000    40000  1/10
+        #   2             0/0               0/0               0/0      24000    40000  1/10
+        #   3             0/0               0/0               0/0      26000    40000  1/10
+        #   4             0/0               0/0               0/0      28000    40000  1/10
+        p17 = re.compile(r'^(?P<class>(\w+)) +(?P<transmitted>([\d\/]+)) +(?P<random_drop>([\d\/]+)) +'
+                          '(?P<tail_drop>([\d\/]+)) +(?P<minimum_thresh>([\d\/]+)) +'
+                          '(?P<maximum_thresh>([\d\/]+)) +(?P<mark_prob>([\d\/]+))$')
+
+
 
         for line in out.splitlines():
             line = line.strip()
@@ -244,34 +318,39 @@ class ShowPolicyMapType(ShowPolicyMapControlPlaneSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                service_policy = group['service_policy']
-                policy_name = group['policy_name']
+                service_policy = group['service_policy'].strip()
+                policy_name = group['policy_name'].strip()
                 # Set dict
-                service_dict = top_level_dict.setdefault('service_policy', {}).\
-                                              setdefault(service_policy, {}).\
-                                              setdefault('policy_name', {}).\
-                                              setdefault(policy_name, {})
+                service_policy_dict = top_level_dict.setdefault('service_policy', {}).\
+                                                     setdefault(service_policy, {})
+                policy_name_dict = service_policy_dict.setdefault('policy_name', {}).\
+                                                       setdefault(policy_name, {})
+                continue
+
+            # Service policy : child
+            m = p1_1.match(line)
+            if m:
+                policy_name = m.groupdict()['policy_name'].strip()
+                policy_name_dict = service_policy_dict.setdefault('policy_name', {}).\
+                                                       setdefault(policy_name, {})
                 continue
 
             # Class-map: Ping_Class (match-all)
             m = p2.match(line)
             if m:
-                class_map = m.groupdict()['class_map']
-                class_map_dict = service_dict.setdefault('class_map', {}).\
-                                              setdefault(class_map, {})
-                if "match-all" in m.groupdict()['match_all']:
-                    class_map_dict['match_all'] = True
-                else:
-                    class_map_dict['match_all'] = False
+                class_map = m.groupdict()['class_map'].strip()
+                class_match = m.groupdict()['match_all'].strip()
+                class_map_dict = policy_name_dict.setdefault('class_map', {}).\
+                                                  setdefault(class_map, {})
+                class_map_dict['match_evaluation'] = class_match.replace('(', '').replace(')', '')
                 continue
 
             # 8 packets, 800 bytes
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                packets = group['packets']
-                bytes = group['bytes']
-                #import pdb;pdb.set_trace()
+                packets = group['packets'].strip()
+                bytes = group['bytes'].strip()
                 class_map_dict['packets'] = int(packets)
                 class_map_dict['bytes'] = int(bytes)
                 continue
@@ -293,10 +372,19 @@ class ShowPolicyMapType(ShowPolicyMapControlPlaneSchema):
                 rate_dict['offered_rate_bps'] = int(m.groupdict()['offered_rate'])
                 continue
 
+            # 30 second offered rate 15000 bps, drop rate 300 bps
+            m = p4_2.match(line)
+            if m:
+                rate_dict = class_map_dict.setdefault('rate', {})
+                rate_dict['interval'] = int(m.groupdict()['interval'])
+                rate_dict['offered_rate_bps'] = int(m.groupdict()['offered_rate'])
+                rate_dict['drop_rate_bps'] = int(m.groupdict()['drop_rate'])
+                continue
+
             # Match: access-group name Ping_Option
             m = p5.match(line)
             if m:
-                class_map_dict['match'] = m.groupdict()['match']
+                class_map_dict['match'] = m.groupdict()['match'].strip()
                 continue
 
             # police:
@@ -407,13 +495,13 @@ class ShowPolicyMapType(ShowPolicyMapControlPlaneSchema):
                 continue
 
             # ip precedence 6
-            m = p14.match(line)
+            m = p13_1.match(line)
             if m:
                 qos_dict['ip_precedence'] = int(m.groupdict()['ip_precedence'])
                 continue
 
             # Marker statistics: Disabled
-            m = p15.match(line)
+            m = p13_2.match(line)
             if m:
                 qos_dict['marker_statistics'] = m.groupdict()['marker_statistics']
                 continue
@@ -457,6 +545,18 @@ class ShowPolicyMapType(ShowPolicyMapControlPlaneSchema):
             m = p16_5.match(line)
             if m:
                 queue_dict['target_shape_rate'] = int(m.groupdict()['target_shape_rate'])
+                continue
+
+            # Output Queue: Conversation 266
+            m = p16_6.match(line)
+            if m:
+                queue_dict['output_queue'] = m.groupdict()['output_queue']
+                continue
+
+            # Bandwidth 10 (%)
+            m = p16_7.match(line)
+            if m:
+                queue_dict['bandwidth_percent'] = int(m.groupdict()['bandwidth'])
                 continue
 
         return ret_dict
@@ -604,7 +704,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         # rsvp     -                -                1/10
 
         p8_3 = re.compile(r'^(?P<class>(\w+)) +(?P<min_threshold>([\w\-]+)) +(?P<max_threshold>([\w\-]+)) '
-                           '+(?P<mark_probability>([\d\/]+))')
+                           '+(?P<mark_probability>([\d\/]+))$')
 
         for line in out.splitlines():
 
