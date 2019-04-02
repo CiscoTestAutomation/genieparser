@@ -94,158 +94,20 @@
           show mpls interfaces <interface>
           show mpls interfaces <interface> detail
           show mpls interfaces detail
-    * Add ShowMplsL2TransportDetail for:
-          show mpls l2transport vc detail
 
-* IOSXR
-    * Add ShowMplsLdpNeighborBrief for:
-          show mpls ldp neighbor brief
-
----------------------------------------------------------------------------------
-                                   BFD 
----------------------------------------------------------------------------------
-* IOSXE
-    * Add ShowBfdNeighborsDetails for:
-        show bfd neighbors details
-        show bfd neighbors client <client> details
-
+--------------------------------------------------------------------------------
+                                   BFD
+--------------------------------------------------------------------------------
 * IOS
     * Add ShowBfdNeighborsDetails for:
         show bfd neighbors details
         show bfd neighbors client <client> details
+
 ----------------------------------------------------------------------------------
                                    ARP
 ----------------------------------------------------------------------------------
-* IOSXE
-    * Add ShowArpApplication for:
-        show arp application
-    * Add ShowArpSummary for:
-        show arp summary
 * IOS
     * Add ShowArpApplication for:
         show arp application
     * Add ShowArpSummary for:
         show arp summary
---------------------------------------------------------------------------------
-                                   QOS
---------------------------------------------------------------------------------
-* IOSXE
-    * Add ShowServiceGroupState for:
-        show service-group state
-    * Add ShowServiceGroupStats for:
-        show service-group stats
-    * Add ShowServiceGroupTrafficStats for:
-        show service-group traffic-stats
-        show service-group traffic-stats <group>
-        
-* IOS
-    * Add ShowServiceGroupState for:
-        show service-group state
-    * Add ShowServiceGroupStats for:
-        show service-group stats
---------------------------------------------------------------------------------
-                                   CONFIG
---------------------------------------------------------------------------------
-* IOSXE
-    * Add ShowArchiveConfigDifferences for:
-        show archive config differences
-        show archive config differences {fileA} {fileB}
-        show archive config differences {fielA}
-    * Add ShowArchiveConfigIncrementalDiffs for:
-        show archive config incremental-diffs {fileA}
-    * Add ShowConfigurationLock for:
-        show configuration lock
-* IOS
-    * Add ShowArchiveConfigDifferences for:
-        show archive config differences
-        show archive config differences {fileA} {fileB}
-        show archive config differences {fielA}
-    * Add ShowArchiveConfigIncrementalDiffs for:
-        show archive config incremental-diffs {fileA}
-    * Add ShowConfigurationLock for:
-        show configuration lock
-
---------------------------------------------------------------------------------
-                                   L2VPN
---------------------------------------------------------------------------------
-* IOSXE
-    * Add ShowBridgeDomain for:
-            show bridge-domain
-            show bridge-domain <WORD>
-            show bridge-domain | count <WORD>
-    * Add ShowEthernetServiceInstanceDetail for:
-            show ethernet service instance detail
-            show ethernet service instance interface <interface> detail
-    * Add ShowEthernetServiceInstanceStats for:
-            show ethernet service instance stats
-            show ethernet service instance interface <interface> stats
-    * Add ShowEthernetServiceInstanceSummary for:
-            show ethernet service instance summary
-    * Add ShowL2vpnVfi for:
-            show l2vpn vfi
-
-* IOS
-    * Add ShowL2vpnVfi for:
-            show l2vpn vfi
---------------------------------------------------------------------------------
-                                   LAG
---------------------------------------------------------------------------------
-* IOSXE
-    * Add ShowEtherChannelLoadBalancing for:
-        show etherchannel load-balancing
-    * Add ShowLacpNeighborDetail for:
-        show lacp neighbor detail
-
---------------------------------------------------------------------------------
-                                   INTERFACE
---------------------------------------------------------------------------------
-* IOSXE
-    * Add ShowInterfaceStats for:
-        show interface <interface> stats
-        show interface stats
-
-    * Update ShowIpInterface to support more output
-    * Update ShowIpInterfaceBrief for cli_command
-
-----------------------------------------------------------------------------------
-                                 NTP
-----------------------------------------------------------------------------------
-* IOSXE
-    * Add ShowNtpAssociationsDetail for:
-        show ntp associations detail
-
-* IOS
-    * Add ShowNtpAssociationsDetail for:
-        show ntp associations detail
-
---------------------------------------------------------------------------------
-                                   ISIS
---------------------------------------------------------------------------------
-* IOSXR
-    * Add ShowIsisAdjacency for:
-        show isis adjacency
-    * Add ShowIsisNeighborsSchema for:
-        show run isis neighbors
-
---------------------------------------------------------------------------------
-                                   MRIB
---------------------------------------------------------------------------------
-* IOSXR
-    * Add ShowMribVrfRouteSummary for:
-        show mrib vrf <vrf> <address-family> route summary
-
---------------------------------------------------------------------------------
-                                   RUNNING-CONFIG
---------------------------------------------------------------------------------
-* IOSXR
-    * Add ShowRunKeyChain for:
-        show run key chain
-    * Add ShowRunRouterIsis for:
-        show run router isis
-
---------------------------------------------------------------------------------
-                                   ROUTING
---------------------------------------------------------------------------------
-* IOSXE
-    * Update ShowIpRoute for different output
-
