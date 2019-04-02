@@ -6,6 +6,51 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
+                                   LAG
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowLacpSysId for:
+        show lacp sys-id
+    * Add ShowLacpCounters for:
+        show lacp counters
+        show lacp <channel-group> counters
+    * Add ShowLacpInternal for:
+        show lacp internal
+        show lacp <channel-group> internal
+    * Add ShowLacpNeighbor for:
+        show lacp neighbor
+        show lacp <channel-group> neighbor
+    * Add ShowPagpCounters for:
+        show pagp counters
+        show pagp <channel-group> counters
+    * Add ShowPagpNeighbor for:
+        show pagp neighbor
+        show pagp <channel-group> neighbor
+    * Add ShowPagpInternal for:
+        show pagp internal
+        show pagp <channel-group> internal
+    * Add ShowEtherchannelSummary for:
+        show etherchannel summary
+    * Add ShowEtherChannelLoadBalancing for:
+        show etherchannel load-balancing
+    * Add ShowLacpNeighborDetail for:
+        show lacp neighbor detail
+
+--------------------------------------------------------------------------------
+                                   INTERFACE
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowInterfacesCounters for:
+        show interfaces <interface> counters
+    * Add ShowInterfacesSwitchport for:
+        show interfaces switchport
+    * Add ShowInterfacesTrunk for:
+        show interfaces trunk
+    * Add ShowInterfacesStats for:
+        show interface <interface> stats
+        show interface stats
+
+--------------------------------------------------------------------------------
                                    MPLS LDP
 --------------------------------------------------------------------------------
 
@@ -82,3 +127,4 @@
     * Add ShowCryptoPkiCertificates for:
           show crypto pki certificates
           show crypto pki certificates <WORD>
+

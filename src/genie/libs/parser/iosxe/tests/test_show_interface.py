@@ -93,7 +93,7 @@ class test_show_interface_parsergen(unittest.TestCase):
             msg='The expected command was not sent to the router')
 
 #############################################################################
-# unitest For Show Interfaces switchport
+# unitest For show ip interfaces brief pipe ip
 #############################################################################
 class test_show_ip_interfaces_brief_pipe_ip(unittest.TestCase):
     device = Device(name='aDevice')
