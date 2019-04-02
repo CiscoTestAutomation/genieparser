@@ -60,7 +60,14 @@ def get_parser(command, device):
             if token in data:
                 data = data[token]
 
-        return _find_parser_cls(device, data), kwargs
+        try:
+            return _find_parser_cls(device, data), kwargs
+        except KeyError:
+            # Case when the show command is only found under one of
+            # the child level tokens
+            raise Exception("Could not find parser for "
+                            "'{c}' under {l}".format(
+                                c=command, l=lookup._tokens)) from None
     else:
         # Regex world!
         try:

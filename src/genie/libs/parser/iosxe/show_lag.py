@@ -598,7 +598,7 @@ class ShowPagpInternalSchema(MetaParser):
                         'group_ifindex': int,
                         'partner_count': int,
                         'hello_interval': int,
-                        'timers': str,
+                        Optional('timers'): str,
                         'pagp_port_priority': int,
                         'flags': str,
                         'state': str,
@@ -635,9 +635,15 @@ class ShowPagpInternal(ShowPagpInternalSchema):
         # Port      Flags State   Timers  Interval Count   Priority   Method  Ifindex
         # Gi0/1     SC    U6/S7   H       30s      1        128        Any      8
 
+        #                                   Hello    Partner  PAgP       Learning  Group
+        # Port        Flags State   Timers  Interval Count    Priority   Method    Ifindex
+        # Gi1/0/7     d     U1/S1           1s       0        128        Any       0
+        # Gi1/0/8     d     U1/S1           1s       0        128        Any       0
+        # Gi1/0/9     d     U1/S1           1s       0        128        Any       0
+
         p1 = re.compile(r'^\s*Channel +group +(?P<channel_group>[\d]+)$')
         p2 = re.compile(r'^\s*(?P<interface>[\w\/]+) +(?P<flags>[\w\s]+)'
-                        ' +(?P<state>[\w\/]+) +(?P<timers>[\w]+) +(?P<hello_interval>[\d]+)[\w]'
+                        ' +(?P<state>[\w\/]+)( +(?P<timers>[\w]+))? +(?P<hello_interval>[\d]+)[\w]'
                         ' +(?P<partner_count>[\d]+) +(?P<pagp_port_priority>[\d]+)'
                         ' +(?P<learn_method>[\w]+) +(?P<group_ifindex>[\d]+)$')
 
@@ -666,7 +672,8 @@ class ShowPagpInternal(ShowPagpInternalSchema):
                 member_dict.update({'flags': group.pop('flags').strip()})
                 member_dict.update({'state': group.pop('state')})
                 member_dict.update({'pagp_port_priority': int(group.pop('pagp_port_priority'))})
-                member_dict.update({'timers': group.pop('timers')})
+                if group['timers']:
+                    member_dict.update({'timers': group.pop('timers')})
                 member_dict.update({'hello_interval': int(group.pop('hello_interval'))})
                 member_dict.update({'partner_count': int(group.pop('partner_count'))})
                 member_dict.update({'group_ifindex': int(group.pop('group_ifindex'))})
