@@ -7,6 +7,8 @@ IOSXE parsers for the following show commands:
     * show bridge-domain | count <WORD>
     * show ethernet service instance detail
     * show ethernet service instance interface <interface> detail
+    * show l2vpn vfi
+    * show l2vpn service all
 '''
 
 # Python
@@ -104,7 +106,7 @@ class ShowBridgeDomain(ShowBridgeDomainSchema):
         # Load for five secs: 10%/1%; one minute: 11%; five minutes: 12%
         p4 = re.compile(r'^Load +for.*$')
 
-        # Time source is NTP, 19:54:46.940 JST Wed Nov 2 2016
+        # Time source is NTP, 19:54:46.940 EST Wed Nov 2 2016
         p4_1 = re.compile(r'^Time +source.*$')
 
         # AED MAC address    Policy  Tag       Age  Pseudoport
@@ -113,7 +115,7 @@ class ShowBridgeDomain(ShowBridgeDomainSchema):
         # 1 ports belonging to split-horizon group 0
         p5 = re.compile(r'^(?P<num_of_ports>\d+) +ports +belonging +to +(?P<port_belonging_group>[\w\-\d]+) +group +(?P<group_number>\d+)$')
 
-        #     vfi VPLS-2051 neighbor 27.93.202.64 2051
+        #     vfi VPLS-2051 neighbor 10.120.202.64 2051
         #     Port-channel1 service instance 2051 (split-horizon)
         #     GigabitEthernet0/0/3 service instance 3051 (split-horizon)
         p6 = re.compile(r'^(?P<member_port>[\w\d\-\/\s\.]+)( +\(.*\))?$')
@@ -581,6 +583,339 @@ class ShowEthernetServiceInstanceSummary(ShowEthernetServiceInstanceSummarySchem
                 service = group.pop('service').strip()
                 ret_dict[header].setdefault(service, {})
                 ret_dict[header][service].update({k: int(v) for k, v in group.items()})
+                continue
+
+        return ret_dict
+
+
+# ===========================
+# Parser for 'show l2vpn vfi'
+# ===========================
+class ShowL2vpnVfiSchema(MetaParser):
+    """Schema for show l2vpn vfi
+    """
+
+    schema = {
+        'vfi': {
+            Any(): {
+                'bd_vfi_name': str,
+                Optional('bridge_group'): str,
+                'state': str,
+                Optional('type'): str,
+                'signaling': str,
+                'vpn_id': int,
+                Optional('ve_id'): int,
+                Optional('vpls_id'): str,
+                Optional('ve_range'): int,
+                Optional('rd'): str,
+                Optional('rt'): list,
+                'bridge_domain': {
+                    Any(): {
+                        Optional('pseudo_port_interface'): str,
+                        Optional('attachment_circuits'): {
+                            Optional(Any()): {
+                                'name': str,
+                            }
+                        },
+                        'vfi': {
+                            Any(): {
+                                'pw_id': {
+                                    Any(): {
+                                        Optional('local_label'): int,
+                                        Optional('ve_id'): int,
+                                        Optional('vc_id'): int,
+                                        Optional('remote_label'): int,
+                                        Optional('split_horizon'): bool,
+                                        Optional('discovered_router_id'): str,
+                                        Optional('next_hop'): str,
+                                    },
+                                }
+                            },
+                        }
+                    },
+                }
+            },
+        }
+    }
+
+
+class ShowL2vpnVfi(ShowL2vpnVfiSchema):
+    """Parser for show l2vpn vfi
+    """
+
+    cli_command = 'show l2vpn vfi'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # initial regexp pattern
+        # Legend: RT=Route-target, S=Split-horizon, Y=Yes, N=No
+
+        # VFI name: VPLS-2051, state: up, type: multipoint, signaling: BGP
+        # VFI name: serviceCore1, State: UP, Signaling Protocol: LDP
+        p1 = re.compile(r'^VFI +name: +(?P<vfi>[\w\d\-]+), +[S|s]tate:'
+                         ' +(?P<state>\w+)(, type: +(?P<type>\w+))?,'
+                         ' +[S|s]ignaling( Protocol)?: +(?P<signaling>\w+)$')
+
+        #   VPN ID: 2051, VE-ID: 2, VE-SIZE: 10
+        #   VPN ID: 2000
+        p2 = re.compile(r'^VPN +ID: +(?P<vpn_id>\d+)(, +VE-ID: +(?P<ve_id>\d+),'
+                         ' VE-SIZE: +(?P<ve_range>\d+))?$')
+
+        #   VPN ID: 100, VPLS-ID: 9:10, Bridge-domain vlan: 100
+        p2_1 = re.compile(r'^VPN +ID: +(?P<vpn_id>\d+), +VPLS-ID: +(?P<vpls_id>\S+),'
+                         ' Bridge-domain +vlan: +(?P<bridge_domain_vlan>\d+)$')
+
+        #   RD: 65109:2051, RT: 65109:2051, 65109:2051,
+        #   RD: 9:10, RT: 10.10.10.10:150
+        p3 = re.compile(r'^RD: +(?P<rd>[\d\:]+), +RT: +(?P<rt>[\S\s]+)$')
+
+        #   Bridge-Domain 2051 attachment circuits:
+        p4 = re.compile(r'^Bridge-Domain +(?P<bd_id>\d+)'
+                         ' +attachment +circuits:( +(?P<attachment_circuits>[\S\s]+))?$')
+
+        #   Pseudo-port interface: pseudowire100001
+        p5 = re.compile(r'^Pseudo-port +[I|i]nterface: +(?P<pseudo_port_interface>\S+)$')
+
+        #   Interface          Peer Address    VE-ID  Local Label  Remote Label    S
+        #   pseudowire100202   10.120.202.64    1      16           327810          Y
+        p6 = re.compile(r'^(?P<pw_intf>\S+) +(?P<pw_peer_id>[\d\.]+)'
+                         ' +(?P<ve_id>\d+) +(?P<local_label>\d+) +(?P<remote_label>\d+) +(?P<split_horizon>\w+)$')
+
+        # Interface          Peer Address     VC ID        S
+        # pseudowire3        10.64.4.4        14           Y
+        # pseudowire2        10.36.3.3        13           Y
+        # pseudowire1        10.16.2.2        12           Y
+        p6_1 = re.compile(r'^(?P<pw_intf>\S+) +(?P<pw_peer_id>[\d\.]+)'
+                         ' +(?P<vc_id>\d+) +(?P<split_horizon>\w+)$')
+
+        # Interface    Peer Address    VC ID      Discovered Router ID   Next Hop
+        # Pw2000       10.0.0.1        10         10.0.0.1               10.0.0.1
+        # Pw2001       10.0.0.2        10         10.1.1.2               10.0.0.2
+        # Pw2002       10.0.0.3        10         10.1.1.3               10.0.0.3
+        # Pw5          10.0.0.4        10         -                      10.0.0.4
+        p6_2 = re.compile(r'^(?P<pw_intf>\S+) +(?P<pw_peer_id>[\d\.]+)'
+                         ' +(?P<vc_id>\d+) +(?P<discovered_router_id>[\d\.\-]+) +(?P<next_hop>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vfi = group['vfi']
+                final_dict = ret_dict.setdefault('vfi', {}).setdefault(vfi, {})
+                final_dict['bd_vfi_name'] = vfi
+                final_dict['state'] = group['state']
+                if group['type']:
+                    final_dict['type'] = group['type']
+                final_dict['signaling'] = group['signaling']
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict['vpn_id'] = int(group['vpn_id'])
+                if group['ve_id']:
+                    final_dict['ve_id'] = int(group['ve_id'])
+                if group['ve_range']:
+                    final_dict['ve_range'] = int(group['ve_range'])
+                continue
+
+            m = p2_1.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict['vpn_id'] = int(group['vpn_id'])
+                final_dict['vpls_id'] = group['vpls_id']
+                new_final_dict = final_dict.setdefault('bridge_domain', {}).\
+                    setdefault(int(group['bridge_domain_vlan']), {})
+                continue
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                final_dict['rd'] = group['rd']
+                final_dict['rt'] = [x.strip() for x in group['rt'].split(',') if x]
+                continue
+
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                bd_id = group['bd_id']
+                if 'bridge_domain' not in final_dict:
+                    final_dict.setdefault('bridge_domain', {})
+                if bd_id not in final_dict['bridge_domain']:
+                    new_final_dict = final_dict['bridge_domain'].setdefault(bd_id, {})
+                new_final_dict.setdefault('attachment_circuits', {})
+                if group['attachment_circuits']:
+                    new_final_dict['attachment_circuits'].setdefault(
+                        group['attachment_circuits'], {})
+                    new_final_dict['attachment_circuits']\
+                        [group['attachment_circuits']]['name'] = \
+                            group['attachment_circuits']
+                continue
+
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                new_final_dict['pseudo_port_interface'] = \
+                    group['pseudo_port_interface']
+                continue
+
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                pw_peer_id = group['pw_peer_id']
+                pw_intf = group['pw_intf']
+                pw_final_dict = new_final_dict.setdefault('vfi', {}).\
+                    setdefault(pw_peer_id, {}).setdefault('pw_id', {}).\
+                        setdefault(pw_intf, {})
+                pw_final_dict['local_label'] = \
+                    int(group['local_label'])
+                pw_final_dict['ve_id'] = \
+                    int(group['ve_id'])
+                pw_final_dict['remote_label'] = \
+                    int(group['remote_label'])
+                if 'Y' in group['split_horizon'] or \
+                    'y' in group['split_horizon']:
+                    pw_final_dict['split_horizon'] = \
+                        True
+                else:
+                    pw_final_dict['split_horizon'] = \
+                        False
+                continue
+
+            m = p6_1.match(line)
+            if m:
+                group = m.groupdict()
+                pw_peer_id = group['pw_peer_id']
+                pw_intf = group['pw_intf']
+                pw_final_dict = new_final_dict.setdefault('vfi', {}).\
+                    setdefault(pw_peer_id, {}).setdefault('pw_id', {}).\
+                        setdefault(pw_intf, {})
+                pw_final_dict['vc_id'] = \
+                    int(group['vc_id'])
+                if 'Y' in group['split_horizon'] or \
+                    'y' in group['split_horizon']:
+                    pw_final_dict['split_horizon'] = \
+                        True
+                else:
+                    pw_final_dict['split_horizon'] = \
+                        False
+                continue
+
+            # import pdb; pdb.set_trace()
+            m = p6_2.match(line)
+            if m:
+                group = m.groupdict()
+                pw_peer_id = group['pw_peer_id']
+                pw_intf = group['pw_intf']
+                pw_final_dict = new_final_dict.setdefault('vfi', {}).\
+                    setdefault(pw_peer_id, {}).setdefault('pw_id', {}).\
+                        setdefault(pw_intf, {})
+                pw_final_dict['vc_id'] = \
+                    int(group['vc_id'])
+                pw_final_dict['discovered_router_id'] = \
+                    group['discovered_router_id']
+                pw_final_dict['next_hop'] = \
+                    group['next_hop']
+                continue
+
+        return ret_dict
+
+# ===================================
+# Parser for 'show l2vpn service all'
+# ===================================
+class ShowL2vpnServiceAllSchema(MetaParser):
+    """Schema for show l2vpn service all
+    """
+
+    schema = {
+        'vpls_name': {
+            Any(): {
+                'state': str,
+                'interface': {
+                    Any(): {
+                        Optional('group'): str,
+                        'encapsulation': str,
+                        'priority': int,
+                        'state': str,
+                        'state_in_l2vpn_service': str,
+                    },
+                }
+            },
+        }
+    }
+
+
+class ShowL2vpnServiceAll(ShowL2vpnServiceAllSchema):
+    """Parser for show l2vpn service all
+    """
+
+    cli_command = 'show l2vpn service all'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # initial regexp pattern
+        # Legend: St=State    XC St=State in the L2VPN Service      Prio=Priority
+        #         UP=Up       DN=Down            AD=Admin Down      IA=Inactive
+        #         SB=Standby  HS=Hot Standby     RV=Recovering      NH=No Hardware
+        #         m=manually selected
+
+        #   Interface          Group       Encapsulation                   Prio  St  XC St
+        #   ---------          -----       -------------                   ----  --  -----
+        # VPLS name: VPLS-2051, State: UP
+        # XC name: serviceWire1, State: UP
+        # VPWS name: Gi1/1/1-1001, State: UP
+        p1 = re.compile(r'^[\w]+ +name: +(?P<name>[\w\d\-\/]+), +State: +(?P<state>\w+)$')
+
+        #   pw100214           core_pw     1:2051(MPLS)                    0     UP  UP  
+        #   pw100001                       VPLS-2051(VFI)                  0     UP  UP   
+        #   Eth2/1:20          access_conn EVC 55                  0     UP  UP
+        #   Pw2                core        MPLS 10.144.6.6:200        1     SB  IA
+        p2 = re.compile(r'^(?P<pw_intf>\S+)( +(?P<group>\S+))? +(?P<encapsulation>\S+(\s{1})?\S+(\s{1}\S+)?)'
+                         ' +(?P<priority>\d+) +(?P<intf_state>\w+) +(?P<state_in_l2vpn_service>\w+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vpls_name = group['name']
+                final_dict = ret_dict.setdefault('vpls_name', {}).setdefault(
+                    vpls_name, {})
+                final_dict['state'] = group['state']
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                pw_intf = group['pw_intf']
+                final_dict.setdefault('interface', {}).setdefault(pw_intf, {})
+                if group['group']:
+                    final_dict['interface'][pw_intf]['group'] = group['group']
+                final_dict['interface'][pw_intf]['encapsulation'] = \
+                    group['encapsulation'].strip()
+                final_dict['interface'][pw_intf]['priority'] = int(
+                    group['priority'])
+                final_dict['interface'][pw_intf]['state'] = \
+                    group['intf_state']
+                final_dict['interface'][pw_intf]['state_in_l2vpn_service'] = \
+                    group['state_in_l2vpn_service']
                 continue
 
         return ret_dict

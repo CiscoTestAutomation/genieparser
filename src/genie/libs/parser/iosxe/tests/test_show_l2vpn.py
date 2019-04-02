@@ -9,7 +9,9 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
 from genie.libs.parser.iosxe.show_l2vpn import ShowBridgeDomain, \
                                                ShowEthernetServiceInstanceDetail, \
                                                ShowEthernetServiceInstanceStats, \
-                                               ShowEthernetServiceInstanceSummary
+                                               ShowEthernetServiceInstanceSummary, \
+                                               ShowL2vpnVfi, \
+                                               ShowL2vpnServiceAll
 
 
 class test_show_bridge_domain(unittest.TestCase):
@@ -22,7 +24,7 @@ class test_show_bridge_domain(unittest.TestCase):
         'bridge_domain': {
             2051: {
                 'state': 'UP',
-                'member_ports': ['vfi VPLS-2051 neighbor 27.93.202.64 2051', 'Port-channel1 service instance 2051'],
+                'member_ports': ['vfi VPLS-2051 neighbor 10.120.202.64 2051', 'Port-channel1 service instance 2051'],
                 'bd_domain_id': 2051,
                 'aging_timer': 3600,
                 'mac_table': {
@@ -97,7 +99,7 @@ class test_show_bridge_domain(unittest.TestCase):
                 },
             2052: {
                 'state': 'UP',
-                'member_ports': ['vfi VPLS-2052 neighbor 27.93.202.64 2052', 'Port-channel1 service instance 2052'],
+                'member_ports': ['vfi VPLS-2052 neighbor 10.120.202.64 2052', 'Port-channel1 service instance 2052'],
                 'bd_domain_id': 2052,
                 'aging_timer': 3600,
                 'mac_table': {
@@ -136,12 +138,12 @@ class test_show_bridge_domain(unittest.TestCase):
     golden_output_full = {'execute.return_value': '''\
         Router#show bridge-domain
         Load for five secs: 55%/0%; one minute: 15%; five minutes: 10%
-        Time source is NTP, 20:29:29.871 JST Fri Nov 11 2016
+        Time source is NTP, 20:29:29.871 EST Fri Nov 11 2016
 
         Bridge-domain 2051 (2 ports in all)
         State: UP                    Mac learning: Enabled
         Aging-Timer: 3600 second(s)
-            vfi VPLS-2051 neighbor 27.93.202.64 2051
+            vfi VPLS-2051 neighbor 10.120.202.64 2051
         1 ports belonging to split-horizon group 0
             Port-channel1 service instance 2051 (split-horizon)
            AED MAC address    Policy  Tag       Age  Pseudoport
@@ -156,7 +158,7 @@ class test_show_bridge_domain(unittest.TestCase):
         Bridge-domain 2052 (2 ports in all)
         State: UP                    Mac learning: Enabled
         Aging-Timer: 3600 second(s)
-            vfi VPLS-2052 neighbor 27.93.202.64 2052
+            vfi VPLS-2052 neighbor 10.120.202.64 2052
         1 ports belonging to split-horizon group 0
             Port-channel1 service instance 2052 (split-horizon)
            AED MAC address    Policy  Tag       Age  Pseudoport
@@ -170,7 +172,7 @@ class test_show_bridge_domain(unittest.TestCase):
             3051: {
                 'number_of_ports_in_all': 2,
                 'state': 'UP',
-                'member_ports': ['vfi VPLS-3051 neighbor 202.239.165.220 3051', 'GigabitEthernet0/0/3 service instance 3051'],
+                'member_ports': ['vfi VPLS-3051 neighbor 192.168.36.220 3051', 'GigabitEthernet0/0/3 service instance 3051'],
                 'mac_table': {
                     'GigabitEthernet0/0/3.EFP3051': {
                         'pseudoport': 'GigabitEthernet0/0/3.EFP3051',
@@ -328,12 +330,12 @@ class test_show_bridge_domain(unittest.TestCase):
     golden_output_bridge_domain = {'execute.return_value': '''\
         Router#show bridge-domain 3051
         Load for five secs: 10%/1%; one minute: 11%; five minutes: 12%
-        Time source is NTP, 19:54:46.940 JST Wed Nov 2 2016
+        Time source is NTP, 19:54:46.940 EST Wed Nov 2 2016
 
         Bridge-domain 3051 (2 ports in all)
         State: UP                    Mac learning: Enabled
         Aging-Timer: 3600 second(s)
-            vfi VPLS-3051 neighbor 202.239.165.220 3051
+            vfi VPLS-3051 neighbor 192.168.36.220 3051
         1 ports belonging to split-horizon group 0
             GigabitEthernet0/0/3 service instance 3051 (split-horizon)
            AED MAC address    Policy  Tag       Age  Pseudoport
@@ -512,7 +514,7 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         Router#show ethernet service instance detail
         Load for five secs: 4%/0%; one minute: 5%; five minutes: 4%
-        Time source is NTP, 16:31:09.701 JST Tue Nov 8 2016
+        Time source is NTP, 16:31:09.701 EST Tue Nov 8 2016
 
         Service Instance ID: 2051
         Service Instance Type: Static
@@ -1025,7 +1027,7 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         Router#show ethernet service instance stats
         Load for five secs: 2%/0%; one minute: 5%; five minutes: 4%
-        Time source is NTP, 16:31:09.138 JST Tue Nov 8 2016
+        Time source is NTP, 16:31:09.138 EST Tue Nov 8 2016
 
         System maximum number of service instances: 32768
         Service Instance 2051, Interface GigabitEthernet0/0/3
@@ -1231,7 +1233,7 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
     golden_output_shrinked = {'execute.return_value': '''\
         1006#show ethernet service instance stats
         Load for five secs: 1%/0%; one minute: 0%; five minutes: 0%
-        Time source is NTP, 15:44:40.696 JST Fri Nov 11 2016
+        Time source is NTP, 15:44:40.696 EST Fri Nov 11 2016
 
         System maximum number of service instances: 32768
     '''
@@ -1432,7 +1434,7 @@ class test_show_ethernet_service_instance_summary(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         Router#show ethernet service instance summary
         Load for five secs: 2%/0%; one minute: 5%; five minutes: 4%
-        Time source is NTP, 16:31:09.005 JST Tue Nov 8 2016
+        Time source is NTP, 16:31:09.005 EST Tue Nov 8 2016
 
         System summary
                     Total       Up  AdminDo     Down  ErrorDi  Unknown  Deleted  BdAdmDo  
@@ -1469,6 +1471,856 @@ class test_show_ethernet_service_instance_summary(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         platform_obj = ShowEthernetServiceInstanceSummary(device=self.device)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+class test_show_l2vpn_vfi(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+    'vfi': {
+        'VPLS-2052': {
+            'vpn_id': 2052,
+            'rd': '65109:2052',
+            'type': 'multipoint',
+            'bd_vfi_name': 'VPLS-2052',
+            've_range': 10,
+            'signaling': 'BGP',
+            'bridge_domain': {
+                '2052': {
+                    'pseudo_port_interface': 'pseudowire100002',
+                    'attachment_circuits': {
+                        },
+                    'vfi': {
+                        '10.120.202.64': {
+                            'pw_id': {
+                                'pseudowire100203': {
+                                    'local_label': 26,
+                                    'remote_label': 327818,
+                                    've_id': 1,
+                                    'split_horizon': True,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            've_id': 2,
+            'rt': ['65109:2052', '65109:2052'],
+            'state': 'up',
+            },
+        'VPLS-2055': {
+            'vpn_id': 2055,
+            'rd': '65109:2055',
+            'type': 'multipoint',
+            'bd_vfi_name': 'VPLS-2055',
+            've_range': 10,
+            'signaling': 'BGP',
+            'bridge_domain': {
+                '2055': {
+                    'pseudo_port_interface': 'pseudowire100005',
+                    'attachment_circuits': {
+                        },
+                    'vfi': {
+                        '10.120.202.64': {
+                            'pw_id': {
+                                'pseudowire100206': {
+                                    'local_label': 56,
+                                    'remote_label': 327842,
+                                    've_id': 1,
+                                    'split_horizon': True,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            've_id': 2,
+            'rt': ['65109:2055', '65109:2055'],
+            'state': 'up',
+            },
+        'VPLS-2051': {
+            'vpn_id': 2051,
+            'rd': '65109:2051',
+            'type': 'multipoint',
+            'bd_vfi_name': 'VPLS-2051',
+            've_range': 10,
+            'signaling': 'BGP',
+            'bridge_domain': {
+                '2051': {
+                    'pseudo_port_interface': 'pseudowire100001',
+                    'attachment_circuits': {
+                        },
+                    'vfi': {
+                        '10.120.202.64': {
+                            'pw_id': {
+                                'pseudowire100202': {
+                                    'local_label': 16,
+                                    'remote_label': 327810,
+                                    've_id': 1,
+                                    'split_horizon': True,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            've_id': 2,
+            'rt': ['65109:2051', '65109:2051'],
+            'state': 'up',
+            },
+        'VPLS-2053': {
+            'vpn_id': 2053,
+            'rd': '65109:2053',
+            'type': 'multipoint',
+            'bd_vfi_name': 'VPLS-2053',
+            've_range': 10,
+            'signaling': 'BGP',
+            'bridge_domain': {
+                '2053': {
+                    'pseudo_port_interface': 'pseudowire100003',
+                    'attachment_circuits': {
+                        },
+                    'vfi': {
+                        '10.120.202.64': {
+                            'pw_id': {
+                                'pseudowire100204': {
+                                    'local_label': 36,
+                                    'remote_label': 327826,
+                                    've_id': 1,
+                                    'split_horizon': True,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            've_id': 2,
+            'rt': ['65109:2053', '65109:2053'],
+            'state': 'up',
+            },
+        'VPLS-2054': {
+            'vpn_id': 2054,
+            'rd': '65109:2054',
+            'type': 'multipoint',
+            'bd_vfi_name': 'VPLS-2054',
+            've_range': 10,
+            'signaling': 'BGP',
+            'bridge_domain': {
+                '2054': {
+                    'pseudo_port_interface': 'pseudowire100004',
+                    'attachment_circuits': {
+                        },
+                    'vfi': {
+                        '10.120.202.64': {
+                            'pw_id': {
+                                'pseudowire100205': {
+                                    'local_label': 46,
+                                    'remote_label': 327834,
+                                    've_id': 1,
+                                    'split_horizon': True,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            've_id': 2,
+            'rt': ['65109:2054', '65109:2054'],
+            'state': 'up',
+            },
+        },
+    }
+
+    golden_output = {'execute.return_value': '''\
+        Router#sh l2vpn vfi
+        Load for five secs: 20%/0%; one minute: 5%; five minutes: 5%
+        Time source is NTP, 11:33:13.680 EST Wed Nov 9 2016
+
+        Legend: RT=Route-target, S=Split-horizon, Y=Yes, N=No
+
+        VFI name: VPLS-2051, state: up, type: multipoint, signaling: BGP
+          VPN ID: 2051, VE-ID: 2, VE-SIZE: 10
+          RD: 65109:2051, RT: 65109:2051, 65109:2051,
+          Bridge-Domain 2051 attachment circuits:
+          Pseudo-port interface: pseudowire100001
+          Interface          Peer Address    VE-ID  Local Label  Remote Label    S
+          pseudowire100202   10.120.202.64   1      16           327810          Y
+
+        VFI name: VPLS-2052, state: up, type: multipoint, signaling: BGP
+          VPN ID: 2052, VE-ID: 2, VE-SIZE: 10
+          RD: 65109:2052, RT: 65109:2052, 65109:2052,
+          Bridge-Domain 2052 attachment circuits:
+          Pseudo-port interface: pseudowire100002
+          Interface          Peer Address    VE-ID  Local Label  Remote Label    S
+          pseudowire100203   10.120.202.64   1      26           327818          Y
+
+        VFI name: VPLS-2053, state: up, type: multipoint, signaling: BGP
+          VPN ID: 2053, VE-ID: 2, VE-SIZE: 10
+          RD: 65109:2053, RT: 65109:2053, 65109:2053,
+          Bridge-Domain 2053 attachment circuits:
+          Pseudo-port interface: pseudowire100003
+          Interface          Peer Address    VE-ID  Local Label  Remote Label    S
+          pseudowire100204   10.120.202.64   1      36           327826          Y
+
+        VFI name: VPLS-2054, state: up, type: multipoint, signaling: BGP
+          VPN ID: 2054, VE-ID: 2, VE-SIZE: 10
+          RD: 65109:2054, RT: 65109:2054, 65109:2054,
+          Bridge-Domain 2054 attachment circuits:
+          Pseudo-port interface: pseudowire100004
+          Interface          Peer Address    VE-ID  Local Label  Remote Label    S
+          pseudowire100205   10.120.202.64   1      46           327834          Y
+
+        VFI name: VPLS-2055, state: up, type: multipoint, signaling: BGP
+          VPN ID: 2055, VE-ID: 2, VE-SIZE: 10
+          RD: 65109:2055, RT: 65109:2055, 65109:2055,
+          Bridge-Domain 2055 attachment circuits:
+          Pseudo-port interface: pseudowire100005
+          Interface          Peer Address    VE-ID  Local Label  Remote Label    S
+          pseudowire100206   10.120.202.64   1      56           327842          Y
+    '''
+    }
+
+    golden_parsed_output_2 = {
+    'vfi': {
+        'vfi-sample': {
+            'bd_vfi_name': 'vfi-sample',
+            'signaling': 'LDP',
+            'bridge_domain': {
+                '30': {
+                    'vfi': {
+                        '10.16.2.2': {
+                            'pw_id': {
+                                'pseudowire1': {
+                                    'split_horizon': True,
+                                    'vc_id': 12,
+                                    },
+                                },
+                            },
+                        '10.64.4.4': {
+                            'pw_id': {
+                                'pseudowire3': {
+                                    'split_horizon': True,
+                                    'vc_id': 14,
+                                    },
+                                },
+                            },
+                        '10.36.3.3': {
+                            'pw_id': {
+                                'pseudowire2': {
+                                    'split_horizon': True,
+                                    'vc_id': 13,
+                                    },
+                                },
+                            },
+                        },
+                    'pseudo_port_interface': 'pseudowire100004',
+                    'attachment_circuits': {
+                        },
+                    },
+                },
+            'vpn_id': 2000,
+            'state': 'up',
+            'type': 'multipoint',
+            },
+        },
+    }
+
+    golden_output_2 = {'execute.return_value': '''\
+    R1_csr1kv#show l2vpn vfi
+    Legend: RT=Route-target, S=Split-horizon, Y=Yes, N=No
+
+    VFI name: vfi-sample, state: up, type: multipoint, signaling: LDP
+      VPN ID: 2000
+      Bridge-Domain 30 attachment circuits:
+      Pseudo-port interface: pseudowire100004
+      Interface          Peer Address     VC ID        S
+      pseudowire3        10.64.4.4        14           Y
+      pseudowire2        10.36.3.3        13           Y
+      pseudowire1        10.16.2.2        12           Y
+    '''
+    }
+
+    golden_parsed_output_3 = {
+    'vfi': {
+        'vfi-sample': {
+            've_range': 15,
+            've_id': 1,
+            'type': 'multipoint',
+            'bd_vfi_name': 'vfi-sample',
+            'state': 'up',
+            'bridge_domain': {
+                '30': {
+                    'vfi': {
+                        '10.36.3.3': {
+                            'pw_id': {
+                                'pseudowire100006': {
+                                    'local_label': 29,
+                                    'remote_label': 20,
+                                    've_id': 3,
+                                    'split_horizon': True,
+                                    },
+                                },
+                            },
+                        '10.64.4.4': {
+                            'pw_id': {
+                                'pseudowire100007': {
+                                    'local_label': 30,
+                                    'remote_label': 24015,
+                                    've_id': 4,
+                                    'split_horizon': True,
+                                    },
+                                },
+                            },
+                        '10.16.2.2': {
+                            'pw_id': {
+                                'pseudowire100005': {
+                                    'local_label': 28,
+                                    'remote_label': 24,
+                                    've_id': 2,
+                                    'split_horizon': True,
+                                    },
+                                },
+                            },
+                        },
+                    'attachment_circuits': {
+                        },
+                    },
+                },
+            'rt': ['100:2000', '100:100'],
+            'vpn_id': 2000,
+            'signaling': 'BGP',
+            'rd': '100:2000',
+            },
+        },
+    }
+
+    golden_output_3 = {'execute.return_value': '''\
+    R1_csr1kv#show l2vpn vfi
+    Legend: RT=Route-target, S=Split-horizon, Y=Yes, N=No
+
+    VFI name: vfi-sample, state: up, type: multipoint, signaling: BGP
+      VPN ID: 2000, VE-ID: 1, VE-SIZE: 15 
+      RD: 100:2000, RT: 100:2000, 100:100, 
+      Bridge-Domain 30 attachment circuits:
+      Neighbors connected via pseudowires:
+      Interface          Peer Address    VE-ID  Local Label  Remote Label    S
+      pseudowire100007   10.64.4.4       4      30           24015           Y
+      pseudowire100006   10.36.3.3       3      29           20              Y
+      pseudowire100005   10.16.2.2       2      28           24              Y
+    '''
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        platform_obj = ShowL2vpnVfi(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse()    
+
+    def test_golden_full(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        platform_obj = ShowL2vpnVfi(device=self.device)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_full_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        platform_obj = ShowL2vpnVfi(device=self.device)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
+    def test_golden_full_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_3)
+        platform_obj = ShowL2vpnVfi(device=self.device)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_3)
+
+
+class test_show_l2vpn_service_all(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+    'vpls_name': {
+        'VPLS-2053': {
+            'state': 'UP',
+            'interface': {
+                'pw100003': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2053(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100216': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2053(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2052': {
+            'state': 'UP',
+            'interface': {
+                'pw100002': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2052(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100215': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2052(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2071': {
+            'state': 'UP',
+            'interface': {
+                'pw100209': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2071(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100021': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2071(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2058': {
+            'state': 'UP',
+            'interface': {
+                'pw100008': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2058(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100221': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2058(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2067': {
+            'state': 'UP',
+            'interface': {
+                'pw100205': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2067(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100017': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2067(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2061': {
+            'state': 'UP',
+            'interface': {
+                'pw100224': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2061(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100011': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2061(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2069': {
+            'state': 'UP',
+            'interface': {
+                'pw100019': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2069(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100207': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2069(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2064': {
+            'state': 'UP',
+            'interface': {
+                'pw100202': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2064(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100014': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2064(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2070': {
+            'state': 'UP',
+            'interface': {
+                'pw100020': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2070(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100208': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2070(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2057': {
+            'state': 'UP',
+            'interface': {
+                'pw100220': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2057(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100007': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2057(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2055': {
+            'state': 'UP',
+            'interface': {
+                'pw100005': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2055(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100218': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2055(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2056': {
+            'state': 'UP',
+            'interface': {
+                'pw100006': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2056(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100219': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2056(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2051': {
+            'state': 'UP',
+            'interface': {
+                'pw100001': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2051(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100214': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2051(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2059': {
+            'state': 'UP',
+            'interface': {
+                'pw100009': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2059(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100222': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2059(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2063': {
+            'state': 'UP',
+            'interface': {
+                'pw100226': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2063(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100013': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2063(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2060': {
+            'state': 'UP',
+            'interface': {
+                'pw100010': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2060(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100223': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2060(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2068': {
+            'state': 'UP',
+            'interface': {
+                'pw100018': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2068(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100206': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2068(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2066': {
+            'state': 'UP',
+            'interface': {
+                'pw100016': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2066(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100204': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2066(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2062': {
+            'state': 'UP',
+            'interface': {
+                'pw100012': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2062(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100225': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2062(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2065': {
+            'state': 'UP',
+            'interface': {
+                'pw100015': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2065(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100203': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2065(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        'VPLS-2054': {
+            'state': 'UP',
+            'interface': {
+                'pw100217': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': '1:2054(MPLS)',
+                    'group': 'core_pw',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                'pw100004': {
+                    'priority': 0,
+                    'state': 'UP',
+                    'encapsulation': 'VPLS-2054(VFI)',
+                    'state_in_l2vpn_service': 'UP',
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output = {'execute.return_value': '''\
+        Router#show l2vpn service all
+        Load for five secs: 2%/0%; one minute: 7%; five minutes: 9%
+        Time source is NTP, 20:31:05.928 EST Fri Nov 11 2016
+
+        Legend: St=State    XC St=State in the L2VPN Service      Prio=Priority
+                UP=Up       DN=Down            AD=Admin Down      IA=Inactive
+                SB=Standby  HS=Hot Standby     RV=Recovering      NH=No Hardware
+                m=manually selected
+
+          Interface          Group       Encapsulation                   Prio  St  XC St
+          ---------          -----       -------------                   ----  --  -----
+        VPLS name: VPLS-2051, State: UP
+          pw100001                       VPLS-2051(VFI)                  0     UP  UP   
+          pw100214           core_pw     1:2051(MPLS)                    0     UP  UP   
+        VPLS name: VPLS-2052, State: UP
+          pw100002                       VPLS-2052(VFI)                  0     UP  UP   
+          pw100215           core_pw     1:2052(MPLS)                    0     UP  UP   
+        VPLS name: VPLS-2053, State: UP
+          pw100003                       VPLS-2053(VFI)                  0     UP  UP   
+          pw100216           core_pw     1:2053(MPLS)                    0     UP  UP   
+        VPLS name: VPLS-2054, State: UP
+          pw100004                       VPLS-2054(VFI)                  0     UP  UP   
+          pw100217           core_pw     1:2054(MPLS)                    0     UP  UP   
+        VPLS name: VPLS-2055, State: UP
+          pw100005                       VPLS-2055(VFI)                  0     UP  UP   
+          pw100218           core_pw     1:2055(MPLS)                    0     UP  UP   
+        VPLS name: VPLS-2056, State: UP
+          pw100006                       VPLS-2056(VFI)                  0     UP  UP   
+          pw100219           core_pw     1:2056(MPLS)                    0     UP  UP   
+        VPLS name: VPLS-2057, State: UP
+          pw100007                       VPLS-2057(VFI)                  0     UP  UP   
+          pw100220           core_pw     1:2057(MPLS)                    0     UP  UP   
+        VPLS name: VPLS-2058, State: UP
+          pw100008                       VPLS-2058(VFI)                  0     UP  UP   
+          pw100221           core_pw     1:2058(MPLS)                    0     UP  UP   
+        VPLS name: VPLS-2059, State: UP
+          pw100009                       VPLS-2059(VFI)                  0     UP  UP   
+          pw100222           core_pw     1:2059(MPLS)                    0     UP  UP   
+        VPLS name: VPLS-2060, State: UP
+          pw100010                       VPLS-2060(VFI)                  0     UP  UP   
+          pw100223           core_pw     1:2060(MPLS)                    0     UP  UP   
+        VPLS name: VPLS-2061, State: UP
+          pw100011                       VPLS-2061(VFI)                  0     UP  UP   
+          pw100224           core_pw     1:2061(MPLS)                    0     UP  UP   
+        VPLS name: VPLS-2062, State: UP
+          pw100012                       VPLS-2062(VFI)                  0     UP  UP   
+          pw100225           core_pw     1:2062(MPLS)                    0     UP  UP   
+        VPLS name: VPLS-2063, State: UP
+          pw100013                       VPLS-2063(VFI)                  0     UP  UP   
+          pw100226           core_pw     1:2063(MPLS)                    0     UP  UP   
+        VPLS name: VPLS-2064, State: UP
+          pw100014                       VPLS-2064(VFI)                  0     UP  UP   
+          pw100202           core_pw     1:2064(MPLS)                    0     UP  UP   
+        VPLS name: VPLS-2065, State: UP
+          pw100015                       VPLS-2065(VFI)                  0     UP  UP   
+          pw100203           core_pw     1:2065(MPLS)                    0     UP  UP   
+        VPLS name: VPLS-2066, State: UP
+          pw100016                       VPLS-2066(VFI)                  0     UP  UP   
+          pw100204           core_pw     1:2066(MPLS)                    0     UP  UP   
+        VPLS name: VPLS-2067, State: UP
+          pw100017                       VPLS-2067(VFI)                  0     UP  UP   
+          pw100205           core_pw     1:2067(MPLS)                    0     UP  UP   
+        VPLS name: VPLS-2068, State: UP
+          pw100018                       VPLS-2068(VFI)                  0     UP  UP   
+          pw100206           core_pw     1:2068(MPLS)                    0     UP  UP   
+        VPLS name: VPLS-2069, State: UP
+          pw100019                       VPLS-2069(VFI)                  0     UP  UP   
+          pw100207           core_pw     1:2069(MPLS)                    0     UP  UP   
+        VPLS name: VPLS-2070, State: UP
+          pw100020                       VPLS-2070(VFI)                  0     UP  UP   
+          pw100208           core_pw     1:2070(MPLS)                    0     UP  UP   
+        VPLS name: VPLS-2071, State: UP
+          pw100021                       VPLS-2071(VFI)                  0     UP  UP   
+          pw100209           core_pw     1:2071(MPLS)                    0     UP  UP   
+    '''
+    }
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        platform_obj = ShowL2vpnServiceAll(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse()    
+
+    def test_golden_full(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        platform_obj = ShowL2vpnServiceAll(device=self.device)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 

@@ -59,7 +59,7 @@ class test_show_ip_igmp_snooping(unittest.TestCase):
                 'link_local_groups_suppression': 'enabled',
                 'lookup_mode': 'ip',
                 'igmp_querier': {
-                    'address': '50.1.1.1',
+                    'address': '10.51.1.1',
                     'version': 2,
                     'interval': 125,
                     'last_member_query_interval': 1,
@@ -128,7 +128,7 @@ IGMP Snooping information for vlan 1
 IGMP Snooping information for vlan 100
   IGMP snooping enabled
   Lookup mode: IP
-  IGMP querier present, address: 50.1.1.1, version: 2, i/f Vlan100
+  IGMP querier present, address: 10.51.1.1, version: 2, i/f Vlan100
   Querier interval: 125 secs
   Querier last member query interval: 1 secs
   Querier robustness: 2
@@ -349,7 +349,7 @@ class test_show_ip_igmp_interface(unittest.TestCase):
                            "configured_query_max_response_time": 15,
                            "max_groups": 10,
                            "vrf_id": 3,
-                           "querier": "20.1.2.1",
+                           "querier": "10.186.2.1",
                            "membership_count": 4,
                            "last_member": {
                                "query_count": 5,
@@ -362,8 +362,8 @@ class test_show_ip_igmp_interface(unittest.TestCase):
                            },
                            "pim_dr": True,
                            "link_status": "up",
-                           "subnet": "20.1.2.0/24",
-                           "address": "20.1.2.1",
+                           "subnet": "10.186.2.0/24",
+                           "address": "10.186.2.1",
                            "link_local_groups_reporting": False,
                            "unsolicited_report_interval": 10,
                            "enable_refcount": 9,
@@ -407,7 +407,7 @@ class test_show_ip_igmp_interface(unittest.TestCase):
                            "configured_query_max_response_time": 10,
                            "pim_dr": True,
                            "vrf_id": 3,
-                           "querier": "20.1.3.1",
+                           "querier": "10.186.3.1",
                            "membership_count": 0,
                            "last_member": {
                                "query_count": 2,
@@ -419,8 +419,8 @@ class test_show_ip_igmp_interface(unittest.TestCase):
                                "count": 2,
                            },
                            "link_status": "up",
-                           "subnet": "20.1.3.0/24",
-                           "address": "20.1.3.1",
+                           "subnet": "10.186.3.0/24",
+                           "address": "10.186.3.1",
                            "link_local_groups_reporting": False,
                            "unsolicited_report_interval": 10,
                            "enable_refcount": 1,
@@ -518,8 +518,8 @@ class test_show_ip_igmp_interface(unittest.TestCase):
 
         IGMP Interfaces for VRF "VRF1", count: 2
         Ethernet2/3, Interface status: protocol-up/link-up/admin-up
-          IP address: 20.1.3.1, IP subnet: 20.1.3.0/24
-          Active querier: 20.1.3.1, version: 2, next query sent in: 00:00:47
+          IP address: 10.186.3.1, IP subnet: 10.186.3.0/24
+          Active querier: 10.186.3.1, version: 2, next query sent in: 00:00:47
           Membership count: 0
           Old Membership count 0
           IGMP version: 2, host version: 2
@@ -547,8 +547,8 @@ class test_show_ip_igmp_interface(unittest.TestCase):
           Interface vPC SVI: No
           Interface vPC CFS statistics:
         Ethernet2/4, Interface status: protocol-up/link-up/admin-up
-          IP address: 20.1.2.1, IP subnet: 20.1.2.0/24
-          Active querier: 20.1.2.1, version: 3, next query sent in: 00:00:06
+          IP address: 10.186.2.1, IP subnet: 10.186.2.0/24
+          Active querier: 10.186.2.1, version: 3, next query sent in: 00:00:06
           Membership count: 4
           Old Membership count 0
           IGMP version: 3, host version: 3
@@ -632,15 +632,15 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                 "239.6.6.6": {
                                      "expire": "never",
                                      "type": "S",
-                                     "last_reporter": "20.1.2.1",
+                                     "last_reporter": "10.186.2.1",
                                      "up_time": "00:15:27"
                                 },
                                 "239.8.8.8": {
                                      "source": {
-                                          "2.2.2.2": {
+                                          "10.16.2.2": {
                                                "expire": "never",
                                                "type": "S",
-                                               "last_reporter": "20.1.2.1",
+                                               "last_reporter": "10.186.2.1",
                                                "up_time": "00:15:27"
                                           }
                                      },
@@ -648,15 +648,15 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                 "239.5.5.5": {
                                      "expire": "never",
                                      "type": "S",
-                                     "last_reporter": "20.1.2.1",
+                                     "last_reporter": "10.186.2.1",
                                      "up_time": "00:15:27"
                                 },
                                 "239.7.7.7": {
                                      "source": {
-                                          "2.2.2.1": {
+                                          "10.16.2.1": {
                                                "expire": "never",
                                                "type": "S",
-                                               "last_reporter": "20.1.2.1",
+                                               "last_reporter": "10.186.2.1",
                                                "up_time": "00:15:27"
                                           }
                                      },
@@ -678,7 +678,7 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                 },
                                 "239.8.8.8": {
                                      "source": {
-                                          "2.2.2.2": {
+                                          "10.16.2.2": {
                                                "expire": "never",
                                                "type": "S",
                                                "last_reporter": "10.1.2.1",
@@ -694,7 +694,7 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                 },
                                 "239.7.7.7": {
                                      "source": {
-                                          "2.2.2.1": {
+                                          "10.16.2.1": {
                                                "expire": "never",
                                                "type": "S",
                                                "last_reporter": "10.1.2.1",
@@ -717,19 +717,19 @@ class test_show_ip_igmp_groups(unittest.TestCase):
         239.5.5.5          S    Ethernet2/1         00:21:00  never     10.1.2.1
         239.6.6.6          S    Ethernet2/1         00:20:53  never     10.1.2.1
         239.7.7.7
-          2.2.2.1          S    Ethernet2/1         00:20:42  never     10.1.2.1
+          10.16.2.1          S    Ethernet2/1         00:20:42  never     10.1.2.1
         239.8.8.8
-          2.2.2.2          S    Ethernet2/1         00:20:34  never     10.1.2.1
+          10.16.2.2          S    Ethernet2/1         00:20:34  never     10.1.2.1
 
         IGMP Connected Group Membership for VRF "VRF1" - 4 total entries
         Type: S - Static, D - Dynamic, L - Local, T - SSM Translated
         Group Address      Type Interface           Uptime    Expires   Last Reporter
-        239.5.5.5          S    Ethernet2/4         00:15:27  never     20.1.2.1
-        239.6.6.6          S    Ethernet2/4         00:15:27  never     20.1.2.1
+        239.5.5.5          S    Ethernet2/4         00:15:27  never     10.186.2.1
+        239.6.6.6          S    Ethernet2/4         00:15:27  never     10.186.2.1
         239.7.7.7
-          2.2.2.1          S    Ethernet2/4         00:15:27  never     20.1.2.1
+          10.16.2.1          S    Ethernet2/4         00:15:27  never     10.186.2.1
         239.8.8.8
-          2.2.2.2          S    Ethernet2/4         00:15:27  never     20.1.2.1
+          10.16.2.2          S    Ethernet2/4         00:15:27  never     10.186.2.1
     '''}
 
     golden_parsed_output_1 = {
@@ -746,7 +746,7 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                 },
                                 "239.8.8.8": {
                                      "source": {
-                                          "2.2.2.2": {
+                                          "10.16.2.2": {
                                                "expire": "never",
                                                "type": "S",
                                                "last_reporter": "10.1.2.1",
@@ -762,7 +762,7 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                 },
                                 "239.7.7.7": {
                                      "source": {
-                                          "2.2.2.1": {
+                                          "10.16.2.1": {
                                                "expire": "never",
                                                "type": "S",
                                                "last_reporter": "10.1.2.1",
@@ -785,9 +785,9 @@ class test_show_ip_igmp_groups(unittest.TestCase):
         239.5.5.5          S    Ethernet2/1         00:21:00  never     10.1.2.1
         239.6.6.6          S    Ethernet2/1         00:20:53  never     10.1.2.1
         239.7.7.7
-          2.2.2.1          S    Ethernet2/1         00:20:42  never     10.1.2.1
+          10.16.2.1          S    Ethernet2/1         00:20:42  never     10.1.2.1
         239.8.8.8
-          2.2.2.2          S    Ethernet2/1         00:20:34  never     10.1.2.1
+          10.16.2.2          S    Ethernet2/1         00:20:34  never     10.1.2.1
     '''}
 
     def test_empty(self):
@@ -829,16 +829,16 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                      "source": "*",
                                      "group": "239.1.1.1"
                                 },
-                                "239.3.3.3 1.1.1.1": {
-                                     "source": "1.1.1.1",
+                                "239.3.3.3 10.4.1.1": {
+                                     "source": "10.4.1.1",
                                      "group": "239.3.3.3"
                                 },
                                 "239.2.2.2 *": {
                                      "source": "*",
                                      "group": "239.2.2.2"
                                 },
-                                "239.4.4.4 1.1.1.2": {
-                                     "source": "1.1.1.2",
+                                "239.4.4.4 10.4.1.2": {
+                                     "source": "10.4.1.2",
                                      "group": "239.4.4.4"
                                 }
                            },
@@ -847,16 +847,16 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                      "source": "*",
                                      "group": "239.5.5.5"
                                 },
-                                "239.8.8.8 2.2.2.2": {
-                                     "source": "2.2.2.2",
+                                "239.8.8.8 10.16.2.2": {
+                                     "source": "10.16.2.2",
                                      "group": "239.8.8.8"
                                 },
                                 "239.6.6.6 *": {
                                      "source": "*",
                                      "group": "239.6.6.6"
                                 },
-                                "239.7.7.7 2.2.2.1": {
-                                     "source": "2.2.2.1",
+                                "239.7.7.7 10.16.2.1": {
+                                     "source": "10.16.2.1",
                                      "group": "239.7.7.7"
                                 }
                            },
@@ -867,7 +867,7 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                 },
                                 "239.8.8.8": {
                                      "source": {
-                                          "2.2.2.2": {
+                                          "10.16.2.2": {
                                                "last_reporter": "01:06:47",
                                                "type": "static"
                                           }
@@ -879,7 +879,7 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                 },
                                 "239.4.4.4": {
                                      "source": {
-                                          "1.1.1.2": {
+                                          "10.4.1.2": {
                                                "last_reporter": "00:00:06",
                                                "type": "local"
                                           }
@@ -895,7 +895,7 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                 },
                                 "239.3.3.3": {
                                      "source": {
-                                          "1.1.1.1": {
+                                          "10.4.1.1": {
                                                "last_reporter": "00:00:11",
                                                "type": "local"
                                           }
@@ -903,7 +903,7 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                 },
                                 "239.7.7.7": {
                                      "source": {
-                                          "2.2.2.1": {
+                                          "10.16.2.1": {
                                                "last_reporter": "01:06:47",
                                                "type": "static"
                                           }
@@ -921,16 +921,16 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                      "source": "*",
                                      "group": "239.1.1.1"
                                 },
-                                "239.3.3.3 1.1.1.1": {
-                                     "source": "1.1.1.1",
+                                "239.3.3.3 10.4.1.1": {
+                                     "source": "10.4.1.1",
                                      "group": "239.3.3.3"
                                 },
                                 "239.2.2.2 *": {
                                      "source": "*",
                                      "group": "239.2.2.2"
                                 },
-                                "239.4.4.4 1.1.1.2": {
-                                     "source": "1.1.1.2",
+                                "239.4.4.4 10.4.1.2": {
+                                     "source": "10.4.1.2",
                                      "group": "239.4.4.4"
                                 }
                            },
@@ -939,16 +939,16 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                      "source": "*",
                                      "group": "239.5.5.5"
                                 },
-                                "239.8.8.8 2.2.2.2": {
-                                     "source": "2.2.2.2",
+                                "239.8.8.8 10.16.2.2": {
+                                     "source": "10.16.2.2",
                                      "group": "239.8.8.8"
                                 },
                                 "239.6.6.6 *": {
                                      "source": "*",
                                      "group": "239.6.6.6"
                                 },
-                                "239.7.7.7 2.2.2.1": {
-                                     "source": "2.2.2.1",
+                                "239.7.7.7 10.16.2.1": {
+                                     "source": "10.16.2.1",
                                      "group": "239.7.7.7"
                                 }
                            },
@@ -959,7 +959,7 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                 },
                                 "239.8.8.8": {
                                      "source": {
-                                          "2.2.2.2": {
+                                          "10.16.2.2": {
                                                "last_reporter": "01:06:47",
                                                "type": "static"
                                           }
@@ -971,7 +971,7 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                 },
                                 "239.4.4.4": {
                                      "source": {
-                                          "1.1.1.2": {
+                                          "10.4.1.2": {
                                                "last_reporter": "00:00:55",
                                                "type": "local"
                                           }
@@ -987,7 +987,7 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                 },
                                 "239.3.3.3": {
                                      "source": {
-                                          "1.1.1.1": {
+                                          "10.4.1.1": {
                                                "last_reporter": "00:01:01",
                                                "type": "local"
                                           }
@@ -995,7 +995,7 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                 },
                                 "239.7.7.7": {
                                      "source": {
-                                          "2.2.2.1": {
+                                          "10.16.2.1": {
                                                "last_reporter": "01:06:47",
                                                "type": "static"
                                           }
@@ -1008,23 +1008,23 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
         Group Address    Source Address   Type     Interface   Last Reported 
         239.1.1.1        *                Local    Eth2/1      00:00:13  
         239.2.2.2        *                Local    Eth2/1      00:00:18  
-        239.3.3.3        1.1.1.1          Local    Eth2/1      00:00:11  
-        239.4.4.4        1.1.1.2          Local    Eth2/1      00:00:06  
+        239.3.3.3        10.4.1.1          Local    Eth2/1      00:00:11  
+        239.4.4.4        10.4.1.2          Local    Eth2/1      00:00:06  
         239.5.5.5        *                Static   Eth2/1      01:06:47  
         239.6.6.6        *                Static   Eth2/1      01:06:47  
-        239.7.7.7        2.2.2.1          Static   Eth2/1      01:06:47  
-        239.8.8.8        2.2.2.2          Static   Eth2/1      01:06:47  
+        239.7.7.7        10.16.2.1          Static   Eth2/1      01:06:47  
+        239.8.8.8        10.16.2.2          Static   Eth2/1      01:06:47  
 
         IGMP Locally Joined Group Membership for VRF "VRF1"
         Group Address    Source Address   Type     Interface   Last Reported 
         239.1.1.1        *                Local    Eth2/4      00:00:50  
         239.2.2.2        *                Local    Eth2/4      00:00:54  
-        239.3.3.3        1.1.1.1          Local    Eth2/4      00:01:01  
-        239.4.4.4        1.1.1.2          Local    Eth2/4      00:00:55  
+        239.3.3.3        10.4.1.1          Local    Eth2/4      00:01:01  
+        239.4.4.4        10.4.1.2          Local    Eth2/4      00:00:55  
         239.5.5.5        *                Static   Eth2/4      01:06:47  
         239.6.6.6        *                Static   Eth2/4      01:06:47  
-        239.7.7.7        2.2.2.1          Static   Eth2/4      01:06:47  
-        239.8.8.8        2.2.2.2          Static   Eth2/4      01:06:47  
+        239.7.7.7        10.16.2.1          Static   Eth2/4      01:06:47  
+        239.8.8.8        10.16.2.2          Static   Eth2/4      01:06:47  
     '''}
 
     golden_parsed_output_1 = {
@@ -1037,16 +1037,16 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                      "source": "*",
                                      "group": "239.1.1.1"
                                 },
-                                "239.3.3.3 1.1.1.1": {
-                                     "source": "1.1.1.1",
+                                "239.3.3.3 10.4.1.1": {
+                                     "source": "10.4.1.1",
                                      "group": "239.3.3.3"
                                 },
                                 "239.2.2.2 *": {
                                      "source": "*",
                                      "group": "239.2.2.2"
                                 },
-                                "239.4.4.4 1.1.1.2": {
-                                     "source": "1.1.1.2",
+                                "239.4.4.4 10.4.1.2": {
+                                     "source": "10.4.1.2",
                                      "group": "239.4.4.4"
                                 }
                            },
@@ -1055,16 +1055,16 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                      "source": "*",
                                      "group": "239.5.5.5"
                                 },
-                                "239.8.8.8 2.2.2.2": {
-                                     "source": "2.2.2.2",
+                                "239.8.8.8 10.16.2.2": {
+                                     "source": "10.16.2.2",
                                      "group": "239.8.8.8"
                                 },
                                 "239.6.6.6 *": {
                                      "source": "*",
                                      "group": "239.6.6.6"
                                 },
-                                "239.7.7.7 2.2.2.1": {
-                                     "source": "2.2.2.1",
+                                "239.7.7.7 10.16.2.1": {
+                                     "source": "10.16.2.1",
                                      "group": "239.7.7.7"
                                 }
                            },
@@ -1075,7 +1075,7 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                 },
                                 "239.8.8.8": {
                                      "source": {
-                                          "2.2.2.2": {
+                                          "10.16.2.2": {
                                                "last_reporter": "01:06:47",
                                                "type": "static"
                                           }
@@ -1087,7 +1087,7 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                 },
                                 "239.4.4.4": {
                                      "source": {
-                                          "1.1.1.2": {
+                                          "10.4.1.2": {
                                                "last_reporter": "00:00:55",
                                                "type": "local"
                                           }
@@ -1103,7 +1103,7 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                 },
                                 "239.3.3.3": {
                                      "source": {
-                                          "1.1.1.1": {
+                                          "10.4.1.1": {
                                                "last_reporter": "00:01:01",
                                                "type": "local"
                                           }
@@ -1111,7 +1111,7 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                 },
                                 "239.7.7.7": {
                                      "source": {
-                                          "2.2.2.1": {
+                                          "10.16.2.1": {
                                                "last_reporter": "01:06:47",
                                                "type": "static"
                                           }
@@ -1124,12 +1124,12 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
         Group Address    Source Address   Type     Interface   Last Reported 
         239.1.1.1        *                Local    Eth2/4      00:00:50  
         239.2.2.2        *                Local    Eth2/4      00:00:54  
-        239.3.3.3        1.1.1.1          Local    Eth2/4      00:01:01  
-        239.4.4.4        1.1.1.2          Local    Eth2/4      00:00:55  
+        239.3.3.3        10.4.1.1          Local    Eth2/4      00:01:01  
+        239.4.4.4        10.4.1.2          Local    Eth2/4      00:00:55  
         239.5.5.5        *                Static   Eth2/4      01:06:47  
         239.6.6.6        *                Static   Eth2/4      01:06:47  
-        239.7.7.7        2.2.2.1          Static   Eth2/4      01:06:47  
-        239.8.8.8        2.2.2.2          Static   Eth2/4      01:06:47
+        239.7.7.7        10.16.2.1          Static   Eth2/4      01:06:47  
+        239.8.8.8        10.16.2.2          Static   Eth2/4      01:06:47
     '''}
 
     def test_empty(self):
