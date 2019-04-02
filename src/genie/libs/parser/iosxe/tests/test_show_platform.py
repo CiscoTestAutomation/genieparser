@@ -30,9 +30,6 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   ShowPlatformHardwareQfpBqsStatisticsChannelAll, \
                                                   ShowPlatformHardwareQfpInterfaceIfnameStatistics, \
                                                   ShowPlatformHardwareQfpStatisticsDrop, \
-                                                  ShowPlatformHardwareSerdes, \
-                                                  ShowPlatformHardwareSerdesInternal, \
-                                                  ShowPlatformPower, \
                                                   ShowProcessesCpuHistory
 
 
@@ -43,6 +40,7 @@ class test_show_version(unittest.TestCase):
     dev_asr1k = Device(name='asr1k')
     dev_c3850 = Device(name='c3850')
     dev_isr4k = Device(name='isr4k')
+    dev_asr901 = Device(name='asr901')
     empty_output = {'execute.return_value': ''}
     semi_empty_output = {'execute.return_value': '''\
         Cisco IOS-XE software, Copyright (c) 2005-2017 by cisco Systems, Inc.
@@ -589,6 +587,86 @@ class test_show_version(unittest.TestCase):
         Configuration register is 0x2102
 ''' }
 
+    golden_parsed_output_asr901 = {
+        'version': 
+            {'chassis': 'A901-6CZ-FT-D',
+            'chassis_sn': 'CAT1733U070',
+            'curr_config_register': '0x2102',
+            'hostname': 'LAB-ASR901T',
+            'image_id': 'ASR901-UNIVERSALK9-M',
+            'image_type': 'production image',
+            'last_reload_reason': 'Reload Command',
+            'license_level': 'AdvancedMetroIPAccess',
+            'license_type': 'Smart License',
+            'main_mem': '393216',
+            'mem_size': {'non-volatile configuration': '256'},
+            'next_reload_license_level': 'AdvancedMetroIPAccess',
+            'number_of_intfs': {'Gigabit Ethernet': '12',
+                             'Ten Gigabit Ethernet': '2'},
+            'os': 'IOS',
+            'platform': '901',
+            'processor_type': 'P2020',
+            'rom': 'System Bootstrap, Version 15.6(2r)SP4, RELEASE SOFTWARE '
+                '(fc1)',
+            'rtr_type': 'A901-6CZ-FT-D',
+            'system_image': 'flash:asr901-universalk9-mz.156-2.SP4.bin',
+            'system_restarted_at': '15:59:27 CDT Mon Sep 24 2018',
+            'uptime': '26 weeks, 21 hours, 26 minutes',
+            'version': '15.6(2)SP4',
+            'version_short': '15.6'}}
+    
+    golden_output_asr901 = {'execute.return_value': '''
+        show version
+        Cisco IOS Software, 901 Software (ASR901-UNIVERSALK9-M), Version 15.6(2)SP4, RELEASE SOFTWARE (fc3)
+        Technical Support: http://www.cisco.com/techsupport
+        Copyright (c) 1986-2018 by Cisco Systems, Inc.
+        Compiled Mon 19-Mar-18 16:39 by prod_rel_team
+
+        ROM: System Bootstrap, Version 15.6(2r)SP4, RELEASE SOFTWARE (fc1)
+
+        LAB-ASR901T uptime is 26 weeks, 21 hours, 26 minutes
+        System returned to ROM by reload at 15:57:52 CDT Mon Sep 24 2018
+        System restarted at 15:59:27 CDT Mon Sep 24 2018
+        System image file is "flash:asr901-universalk9-mz.156-2.SP4.bin"
+        Last reload type: Normal Reload
+        Last reload reason: Reload Command
+
+
+
+        This product contains cryptographic features and is subject to United
+        States and local country laws governing import, export, transfer and
+        use. Delivery of Cisco cryptographic products does not imply
+        third-party authority to import, export, distribute or use encryption.
+        Importers, exporters, distributors and users are responsible for
+        compliance with U.S. and local country laws. By using this product you
+        agree to comply with applicable laws and regulations. If you are unable
+        to comply with U.S. and local laws, return this product immediately.
+
+        A summary of U.S. laws governing Cisco cryptographic products may be found at:
+        http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+
+        If you require further assistance please contact us by sending email to
+        export@cisco.com.
+
+        License Level: AdvancedMetroIPAccess
+        License Type: Smart License
+        Next reload license Level: AdvancedMetroIPAccess
+
+        Cisco A901-6CZ-FT-D (P2020) processor (revision 1.0) with 393216K/131072K bytes of memory.
+        Processor board ID CAT1733U070
+        P2020 CPU at 800MHz, E500v2 core, 512KB L2 Cache
+        1 External Alarm interface
+        1 FastEthernet interface
+        12 Gigabit Ethernet interfaces
+        2 Ten Gigabit Ethernet interfaces
+        1 terminal line
+        8 Channelized T1 ports
+        256K bytes of non-volatile configuration memory.
+        98304K bytes of processor board System flash (Read/Write)
+
+        Configuration register is 0x2102
+        '''}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         version_obj = ShowVersion(device=self.dev1)
@@ -621,6 +699,13 @@ class test_show_version(unittest.TestCase):
         version_obj = ShowVersion(device=self.dev_isr4k)
         parsed_output = version_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_isr4k)
+
+    def test_golden_asr901(self):
+        self.maxDiff = None
+        self.dev_asr901 = Mock(**self.golden_output_asr901)
+        version_obj = ShowVersion(device=self.dev_asr901)
+        parsed_output = version_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_asr901)
 
 class test_dir(unittest.TestCase):
     dev1 = Device(name='empty')
@@ -1145,6 +1230,7 @@ class test_show_inventory(unittest.TestCase):
     dev2 = Device(name='semi_empty')
     dev_asr1k = Device(name='asr1k')
     dev_c3850 = Device(name='c3850')
+    dev_asr901 = Device(name='asr901')
     empty_output = {'execute.return_value': ''}
     semi_empty_output = {'execute.return_value': '''/
         NAME: "c38xx Stack", DESCR: "c38xx Stack"
@@ -1717,6 +1803,50 @@ class test_show_inventory(unittest.TestCase):
         PID: ISR4331/K9        , VID:      , SN:            
 '''}
 
+    golden_parsed_output2 = {
+        'main': 
+            {'chassis': 
+                {'ASR-920-24SZ-IM': 
+                    {'descr': 'Cisco ASR920 Series - 24GE and 4-10GE- Modular PSU and IM',
+                    'name': 'Chassis',
+                    'pid': 'ASR-920-24SZ-IM',
+                    'sn': 'CAT1902V19M',
+                    'vid': 'V01'}}},
+        'slot': 
+            {'0': 
+                {'P0': 
+                    {'other': 
+                        {'ASR-920-PWR-D': 
+                            {'descr': 'ASR 920 250W DC Power Supply',
+                            'name': 'Power Supply Module 0',
+                            'pid': 'ASR-920-PWR-D',
+                            'sn': 'ART1832F11X',
+                            'vid': 'V01'}}}}}}
+
+    golden_output2 = {'execute.return_value': '''
+        Router#show inventory
+        NAME: "Chassis", DESCR: "Cisco ASR920 Series - 24GE and 4-10GE- Modular PSU and IM"
+        PID: ASR-920-24SZ-IM   , VID: V01  , SN: CAT1902V19M
+
+        NAME: "subslot 0/0 transceiver 26", DESCR: "SFP+ 10GBASE-LR"
+        PID: SFP-10G-LR          , VID: CSCO , SN: CD180456291     
+
+        NAME: "subslot 0/0 transceiver 27", DESCR: "SFP+ 10GBASE-LR"
+        PID: SFP-10G-LR          , VID: CSCO , SN: CD180456292     
+
+        NAME: "IM subslot 0/1", DESCR: "ASR 900 Combo 4 port DS3 12 DS1 and 4 OCx"
+        PID: A900-IMA3G-IMSG   , VID: V01  , SN: FOC2204PAP1
+
+        NAME: "subslot 0/1 transceiver 16", DESCR: "Dual-Rate OC3/12 IR-1"
+        PID: ONS-SI-622-I1       , VID: A    , SN: ECL133706C3     
+
+        NAME: "Power Supply Module 0", DESCR: "ASR 920 250W DC Power Supply"
+        PID: ASR-920-PWR-D     , VID: V01  , SN: ART1832F11X
+
+        NAME: "Fan Tray", DESCR: "ASR 920 Fan tray"
+        PID: ASR-920-FAN-M     , VID: V01  , SN: CAT1903V028
+        '''}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         inventory_obj = ShowInventory(device=self.dev1)
@@ -1750,6 +1880,13 @@ class test_show_inventory(unittest.TestCase):
         inventory_obj = ShowInventory(device=self.dev_asr1k)
         parsed_output = inventory_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_asr1k)
+
+    # def test_golden_asr901(self):
+    #     self.maxDiff = None
+    #     self.dev_asr901 = Mock(**self.golden_output2)
+    #     inventory_obj = ShowInventory(device=self.dev_asr901)
+    #     parsed_output = inventory_obj.parse()
+    #     self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 class test_show_platform(unittest.TestCase):
     dev1 = Device(name='empty')
@@ -4294,7 +4431,7 @@ class test_show_processes_cpu_platform(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         Router#show processes cpu platform 
         Load for five secs: 1%/0%; one minute: 9%; five minutes: 19%
-        Time source is NTP, 17:48:03.994 JST Wed Oct 19 2016
+        Time source is NTP, 17:48:03.994 EST Wed Oct 19 2016
         CPU utilization for five seconds:  2%, one minute:  5%, five minutes: 22%
         Core 0: CPU utilization for five seconds:  2%, one minute:  8%, five minutes: 18%
         Core 1: CPU utilization for five seconds:  0%, one minute:  3%, five minutes: 23%
@@ -4893,7 +5030,7 @@ class test_show_env(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         Router#show environment
         Load for five secs: 4%/0%; one minute: 8%; five minutes: 6%
-        Time source is NTP, 17:41:24.716 JST Wed Oct 19 2016
+        Time source is NTP, 17:41:24.716 EST Wed Oct 19 2016
 
 
         Number of Critical alarms:  0
@@ -8755,7 +8892,7 @@ class test_show_processes_cpu(unittest.TestCase):
                 'invoked': 65763,
                 'one_min_cpu': 0.0,
                 'pid': 407,
-                'process': 'OSPF-9996 Router',
+                'process': 'OSPF-65109 Router',
                 'runtime': 914,
                 'tty': 0,
                 'usecs': 13},
@@ -10123,7 +10260,7 @@ class test_show_processes_cpu(unittest.TestCase):
                 'invoked': 10680,
                 'one_min_cpu': 0.0,
                 'pid': 559,
-                'process': 'OSPF-9996 Hello',
+                'process': 'OSPF-65109 Hello',
                 'runtime': 311,
                 'tty': 0,
                 'usecs': 29},
@@ -10692,7 +10829,7 @@ class test_show_processes_cpu(unittest.TestCase):
                         'QOS PERUSER',
                         'RPMS_PROC_MAIN',
                         'http client proc',
-                        'OSPF-9996 Router',
+                        'OSPF-65109 Router',
                         'SEGMENT ROUTING',
                         'AAA SEND STOP EV',
                         'Test AAA Client',
@@ -10842,7 +10979,7 @@ class test_show_processes_cpu(unittest.TestCase):
                         'NTP',
                         'EM Action CNS',
                         'DiagCard5/-1',
-                        'OSPF-9996 Hello',
+                        'OSPF-65109 Hello',
                         'BGP VA',
                         'IFCOM Msg Hdlr',
                         'IFCOM Msg Hdlr',
@@ -10865,7 +11002,7 @@ class test_show_processes_cpu(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         Router#show process cpu
         Load for five secs: 1%/0%; one minute: 2%; five minutes: 3%
-        Time source is NTP, 19:10:39.512 JST Mon Oct 17 2016
+        Time source is NTP, 19:10:39.512 EST Mon Oct 17 2016
 
         CPU utilization for five seconds: 1%/0%; one minute: 2%; five minutes: 3%
          PID Runtime(ms)     Invoked      uSecs   5Sec   1Min   5Min TTY Process 
@@ -11275,7 +11412,7 @@ class test_show_processes_cpu(unittest.TestCase):
          404           0           1          0  0.00%  0.00%  0.00%   0 QOS PERUSER      
          405           0           1          0  0.00%  0.00%  0.00%   0 RPMS_PROC_MAIN   
          406           0           1          0  0.00%  0.00%  0.00%   0 http client proc 
-         407         914       65763         13  0.00%  0.00%  0.00%   0 OSPF-9996 Router 
+         407         914       65763         13  0.00%  0.00%  0.00%   0 OSPF-65109 Router 
          408           0           2          0  0.00%  0.00%  0.00%   0 SEGMENT ROUTING  
          409           1          44         22  0.00%  0.00%  0.00%   0 AAA SEND STOP EV 
          410           0           1          0  0.00%  0.00%  0.00%   0 Test AAA Client  
@@ -11427,7 +11564,7 @@ class test_show_processes_cpu(unittest.TestCase):
          556           0           1          0  0.00%  0.00%  0.00%   0 EM Action CNS    
          557           0           2          0  0.00%  0.00%  0.00%   0 DiagCard5/-1     
          558      307942       78644       3915  0.55%  0.72%  0.73%   0 BGP Router       
-         559         311       10680         29  0.00%  0.00%  0.00%   0 OSPF-9996 Hello  
+         559         311       10680         29  0.00%  0.00%  0.00%   0 OSPF-65109 Hello  
          560           0           1          0  0.00%  0.00%  0.00%   0 BGP VA           
          561           0           1          0  0.00%  0.00%  0.00%   0 IFCOM Msg Hdlr   
          562           0           1          0  0.00%  0.00%  0.00%   0 IFCOM Msg Hdlr   
@@ -11691,7 +11828,7 @@ class test_show_version_rp(unittest.TestCase):
     golden_output_active = {'execute.return_value': '''\
         Router#show version RP active running
         Load for five secs: 1%/0%; one minute: 28%; five minutes: 44%
-        Time source is NTP, 18:31:35.860 JST Mon Oct 24 2016
+        Time source is NTP, 18:31:35.860 EST Mon Oct 24 2016
         Package: Provisioning File, version: n/a, status: active
           File: consolidated:packages.conf, on: RP0
           Built: n/a, by: n/a
@@ -11968,7 +12105,7 @@ class test_show_version_rp(unittest.TestCase):
     golden_output_standby = {'execute.return_value': '''\
         Router#show version RP standby running
         Load for five secs: 22%/0%; one minute: 18%; five minutes: 45%
-        Time source is NTP, 18:37:42.222 JST Mon Oct 24 2016
+        Time source is NTP, 18:37:42.222 EST Mon Oct 24 2016
         Package: Provisioning File, version: n/a, status: active
           File: consolidated:packages.conf, on: RP0
           Built: n/a, by: n/a
@@ -12119,7 +12256,7 @@ class test_show_version_rp(unittest.TestCase):
     golden_output_standby_offline = {'execute.return_value': '''\
         Router#show version RP standby running
         Load for five secs: 1%/0%; one minute: 24%; five minutes: 43%
-        Time source is NTP, 18:31:45.991 JST Mon Oct 24 2016
+        Time source is NTP, 18:31:45.991 EST Mon Oct 24 2016
         The standby Route-Processor is currently offline
     '''
     }
@@ -13267,7 +13404,7 @@ class test_show_platform_hardware(unittest.TestCase):
     golden_output_active = {'execute.return_value': '''\
         Router#    show platform hardware qfp active infrastructure bqs queue output default all
         Load for five secs: 2%/1%; one minute: 9%; five minutes: 8%
-        Time source is NTP, 07:47:13.438 JST Thu Sep 8 2016
+        Time source is NTP, 07:47:13.438 EST Thu Sep 8 2016
 
         Interface: internal0/0/recycle:0 QFP: 0.0 if_h: 1 Num Queues/Schedules: 0
           No Queue/Schedule Info
@@ -15083,7 +15220,7 @@ class test_show_platform_hardware_qfp_bqs_opm_mapping(unittest.TestCase):
     golden_output_active_opm = {'execute.return_value': '''\ 
         Router#show platform hardware qfp active bqs 0 opm mapping 
         Load for five secs: 5%/3%; one minute: 7%; five minutes: 8%
-        Time source is NTP, 07:43:32.664 JST Thu Sep 8 2016
+        Time source is NTP, 07:43:32.664 EST Thu Sep 8 2016
 
         BQS OPM Channel Mapping
 
@@ -15319,7 +15456,7 @@ class test_show_platform_hardware_qfp_bqs_ipm_mapping(unittest.TestCase):
     golden_output_active_ipm = {'execute.return_value': '''\
         Router#show platform hardware qfp active bqs 0 ipm mapping 
         Load for five secs: 29%/1%; one minute: 8%; five minutes: 9%
-        Time source is NTP, 07:42:52.908 JST Thu Sep 8 2016
+        Time source is NTP, 07:42:52.908 EST Thu Sep 8 2016
 
         BQS IPM Channel Mapping
 
@@ -15567,7 +15704,7 @@ class test_show_platform_hardware_serdes_statistics(unittest.TestCase):
     golden_output_serdes = {'execute.return_value': '''\
         Router#show platform hardware slot F0 serdes statistics 
         Load for five secs: 22%/1%; one minute: 8%; five minutes: 9%
-        Time source is NTP, 07:42:08.304 JST Thu Sep 8 2016
+        Time source is NTP, 07:42:08.304 EST Thu Sep 8 2016
         From Slot R1-Link A
           Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0         
           Bytes High: 0          Low: 0          Bad: 0          Dropped: 0         
@@ -15750,7 +15887,7 @@ class test_show_platform_hardware_serdes_statistics_internal(unittest.TestCase):
     golden_output_serdes_internal = {'execute.return_value': '''\
         Router#show platform hardware slot F0 serdes statistics internal 
         Load for five secs: 5%/1%; one minute: 8%; five minutes: 9%
-        Time source is NTP, 07:42:13.752 JST Thu Sep 8 2016
+        Time source is NTP, 07:42:13.752 EST Thu Sep 8 2016
         Warning: Clear option may not clear all the counters
 
         Network-Processor-0 Link:
@@ -16352,7 +16489,7 @@ class show_platform_hardware_qfp_bqs_statistics_channel_all(unittest.TestCase):
     golden_output_active_ipm = {'execute.return_value': '''\
         Router#show platform hardware qfp active bqs 0 ipm statistics channel all
         Load for five secs: 25%/2%; one minute: 9%; five minutes: 9%
-        Time source is NTP, 07:43:10.431 JST Thu Sep 8 2016
+        Time source is NTP, 07:43:10.431 EST Thu Sep 8 2016
 
         BQS IPM Channel Statistics
 
@@ -16387,7 +16524,7 @@ class show_platform_hardware_qfp_bqs_statistics_channel_all(unittest.TestCase):
     golden_output_active_opm = {'execute.return_value': '''\
         Router#show platform hardware qfp active bqs 0 opm statistics channel all
         Load for five secs: 6%/0%; one minute: 9%; five minutes: 9%
-        Time source is NTP, 07:45:18.968 JST Thu Sep 8 2016
+        Time source is NTP, 07:45:18.968 EST Thu Sep 8 2016
 
         BQS OPM Channel Statistics
 
@@ -16587,7 +16724,7 @@ class show_platform_hardware_qfp_interface(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         Router#show platform hardware qfp active interface if-name gigabitEthernet 0/0/0 statistics
         Load for five secs: 2%/0%; one minute: 8%; five minutes: 8%
-        Time source is NTP, 07:55:23.913 JST Thu Sep 8 2016
+        Time source is NTP, 07:55:23.913 EST Thu Sep 8 2016
         Platform Handle 7
         ----------------------------------------------------------------
         Receive Stats                             Packets        Octets
@@ -16677,7 +16814,7 @@ class test_show_platform_hardware_qfp_statistics_drop(unittest.TestCase):
     golden_output_active = {'execute.return_value': '''\
         Router#show platform hardware qfp active statistics drop | exclude _0_
         Load for five secs: 2%/1%; one minute: 9%; five minutes: 8%
-        Time source is NTP, 07:47:11.317 JST Thu Sep 8 2016
+        Time source is NTP, 07:47:11.317 EST Thu Sep 8 2016
         -------------------------------------------------------------------------
         Global Drop Stats                         Packets                  Octets  
         -------------------------------------------------------------------------
@@ -16907,7 +17044,7 @@ class test_show_processes_cpu_history(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
 Router#show processes cpu history 
 Load for five secs: 9%/1%; one minute: 18%; five minutes: 19%
-Time source is NTP, 15:54:30.599 JST Tue Oct 18 2016                                       
+Time source is NTP, 15:54:30.599 EST Tue Oct 18 2016                                       
                                                                   
                 888886666611111                    11111          
       777775555599999666664444466666333335555544444666667777777777

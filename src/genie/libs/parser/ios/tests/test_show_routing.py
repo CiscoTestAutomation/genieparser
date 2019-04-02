@@ -36,14 +36,14 @@ class test_show_ip_route_ios(unittest.TestCase):
                                     "next_hop_list": {
                                         1: {
                                             "age": "3d04h",
-                                            "from": "201.4.2.2",
+                                            "from": "192.168.9.2",
                                             "hops": "1",
                                             "index": 1,
                                             "loading": "1/255",
                                             "metric": "3072",
                                             "minimum_bandwidth": "1000000",
                                             "minimum_mtu": "1500",
-                                            "next_hop": "201.4.2.2",
+                                            "next_hop": "192.168.9.2",
                                             "outgoing_interface": "GigabitEthernet0/2.4",
                                             "reliability": "255/255",
                                             "share_count": "1",
@@ -53,11 +53,11 @@ class test_show_ip_route_ios(unittest.TestCase):
                                 },
                                 "redist_via": "eigrp",
                                 "redist_via_tag": "1",
-                                "route": "201.4.8.0",
+                                "route": "192.168.234.0",
                                 "type": "internal",
                                 "update": {
                                     "age": "3d04h",
-                                    "from": "201.4.2.2",
+                                    "from": "192.168.9.2",
                                     "interface": "GigabitEthernet0/2.4"
                                 }
                             }
@@ -69,13 +69,13 @@ class test_show_ip_route_ios(unittest.TestCase):
     }
 
     golden_output_with_route = {'execute.return_value':'''
-    show ip route 201.4.8.0
-    Routing entry for 201.4.8.0/24
+    show ip route 192.168.234.0
+    Routing entry for 192.168.234.0/24
       Known via "eigrp 1", distance 90, metric 3072, type internal
       Redistributing via eigrp 1
-      Last update from 201.4.2.2 on GigabitEthernet0/2.4, 3d04h ago
+      Last update from 192.168.9.2 on GigabitEthernet0/2.4, 3d04h ago
       Routing Descriptor Blocks:
-      * 201.4.2.2, from 201.4.2.2, 3d04h ago, via GigabitEthernet0/2.4
+      * 192.168.9.2, from 192.168.9.2, 3d04h ago, via GigabitEthernet0/2.4
           Route metric is 3072, traffic share count is 1
           Total delay is 20 microseconds, minimum bandwidth is 1000000 Kbit
           Reliability 255/255, minimum MTU 1500 bytes
@@ -86,13 +86,13 @@ class test_show_ip_route_ios(unittest.TestCase):
         self.device = Mock(**self.empty_output)
         obj = ShowIpRoute(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(route='201.4.8.0')
+            parsed_output = obj.parse(route='192.168.234.0')
 
     def test_show_ip_route_with_route(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_with_route)
         obj = ShowIpRoute(device=self.device)
-        parsed_output = obj.parse(route='201.4.8.0')
+        parsed_output = obj.parse(route='192.168.234.0')
         self.assertEqual(parsed_output, self.golden_parsed_output_with_route)
 
 class test_show_ip_route(test_show_ip_route_iosxe):

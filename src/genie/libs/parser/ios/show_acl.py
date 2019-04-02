@@ -7,5 +7,9 @@ from genie.libs.parser.iosxe.show_acl import ShowAccessLists as ShowAccessLists_
 
 
 class ShowAccessLists(ShowAccessLists_iosxe):
-    """Parser for show access-lists"""
+    """Parser for show access-lists
+                  show ip access-lists
+                  show ip access-lists <acl>
+                  show ipv6 access-lists
+                  show ipv6 access-lists <acl>"""
     pass

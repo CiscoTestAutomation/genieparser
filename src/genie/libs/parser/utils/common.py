@@ -8,13 +8,11 @@ import sys
 import warnings
 import logging
 import importlib
-from difflib import SequenceMatcher as SM
 
 
 from genie.libs import parser
 from genie.abstract import Lookup
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 log = logging.getLogger(__name__)
 # Parser within Genie
 try:
@@ -61,7 +59,14 @@ def get_parser(command, device):
             if token in data:
                 data = data[token]
 
-        return _find_parser_cls(device, data), kwargs
+        try:
+            return _find_parser_cls(device, data), kwargs
+        except KeyError:
+            # Case when the show command is only found under one of
+            # the child level tokens
+            raise Exception("Could not find parser for "
+                            "'{c}' under {l}".format(
+                                c=command, l=lookup._tokens)) from None
     else:
         # Regex world!
         try:
@@ -75,6 +80,7 @@ def get_parser(command, device):
 
 def _find_command(command, data, device):
     ratio = 0
+    max_lenght = 0
     matches = None
     for key in data:
         if not '{' in key:
@@ -83,6 +89,7 @@ def _find_command(command, data, device):
 
         # Okay... this is not optimal
         patterns = re.findall('{.*?}', key)
+        len_normal_words = len(set(key.split()) - set(patterns))
         reg = key
 
         for pattern in patterns:
@@ -100,13 +107,15 @@ def _find_command(command, data, device):
             for token in lookup._tokens:
                 if token in ret_data:
                     ret_data = ret_data[token]
-            new_ratio = SM(None, key, command).ratio()
-            if new_ratio > ratio:
+
+            if len_normal_words > max_lenght:
+                max_lenght = len_normal_words
                 matches = (ret_data, match.groupdict())
-                ratio = new_ratio
-    return matches
-        
+
+    if matches:
+        return matches
     raise SyntaxError('Could not find a parser match')
+
 
 def _find_parser_cls(device, data):
     lookup = Lookup.from_device(device, packages={'parser':parser})
