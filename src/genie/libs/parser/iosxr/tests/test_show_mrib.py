@@ -124,7 +124,7 @@ class test_show_mrib_vrf_route(unittest.TestCase):
                                             'Loopback0': 
                                                 {'flags': 'F NS',
                                                 'uptime': '00:00:13'}},
-                                        'rpf_nbr': '11.0.1.22',
+                                        'rpf_nbr': '10.121.1.22',
                                         'uptime': '00:00:13'}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
@@ -200,7 +200,7 @@ class test_show_mrib_vrf_route(unittest.TestCase):
             Outgoing Interface List
                 Loopback0 Flags: F A, Up: 00:00:54
 
-        (192.168.0.22,236.5.5.5) RPF nbr: 11.0.1.22 Flags: C RPF MD MH CD
+        (192.168.0.22,236.5.5.5) RPF nbr: 10.121.1.22 Flags: C RPF MD MH CD
             MVPN TID: 0xe0000018
             MVPN Remote TID: 0xe0800018
             MVPN Payload: IPv4 IPv6
@@ -271,12 +271,12 @@ class test_show_mrib_vrf_route(unittest.TestCase):
                                             {'mdtvpn1': 
                                                 {'flags': 'A MI',
                                                 'uptime': '00:03:35',
-                                                'rpf_nbr': '::ffff:200.200.200.200'}},
+                                                'rpf_nbr': '::ffff:192.168.195.200'}},
                                         'outgoing_interface_list': 
                                             {'GigabitEthernet150/0/0/6': 
                                                 {'flags': 'F NS',
                                                 'uptime': '00:03:59'}},
-                                        'rpf_nbr': '::ffff:200.200.200.200',
+                                        'rpf_nbr': '::ffff:192.168.195.200',
                                         'uptime': '00:03:59'}}},
                             'ff20::/15': 
                                 {'source_address': 
@@ -548,7 +548,7 @@ class test_show_mrib_vrf_route(unittest.TestCase):
             mdtvpn1 Flags: F NS MI MT MA, Up: 00:02:53
 
         (4::4:4:4:5,ff15::2:1)
-          RPF nbr: ::ffff:200.200.200.200 Flags: L RPF
+          RPF nbr: ::ffff:192.168.195.200 Flags: L RPF
           Up: 00:03:59
           Incoming Interface List
             mdtvpn1 Flags: A MI, Up: 00:03:35

@@ -40,9 +40,9 @@ class test_show_ip_arp_detail_vrf_all(unittest.TestCase):
 			'Ethernet1/1.1': {
 				'ipv4': {
 					'neighbors': {
-						'201.0.1.2': {
+						'192.168.4.2': {
 							'age': '00:01:53',
-							'ip': '201.0.1.2',
+							'ip': '192.168.4.2',
 							'link_layer_address': '000c.292a.1eaf',
 							'origin': 'dynamic',
 							'physical_interface': 'Ethernet1/1.1'}
@@ -52,9 +52,9 @@ class test_show_ip_arp_detail_vrf_all(unittest.TestCase):
 			'Ethernet1/1.2': {
 				'ipv4': {
 					'neighbors': {
-						'201.1.1.2': {
+						'192.168.154.2': {
 							'age': '00:00:47',
-							'ip': '201.1.1.2',
+							'ip': '192.168.154.2',
 							'link_layer_address': '000c.292a.1eaf',
 							'origin': 'dynamic',
 							'physical_interface': 'Ethernet1/1.2'}
@@ -64,9 +64,9 @@ class test_show_ip_arp_detail_vrf_all(unittest.TestCase):
 			'Ethernet1/1.4': {
 				'ipv4': {
 					'neighbors': {
-						'201.4.1.2': {
+						'192.168.106.2': {
 							'age': '00:08:42',
-							'ip': '201.4.1.2',
+							'ip': '192.168.106.2',
 							'link_layer_address': '000c.292a.1eaf',
 							'origin': 'dynamic',
 							'physical_interface': 'Ethernet1/1.4'}
@@ -76,9 +76,9 @@ class test_show_ip_arp_detail_vrf_all(unittest.TestCase):
 			'Ethernet1/2.1': {
 				'ipv4': {
 					'neighbors': {
-						'201.0.2.2': {
+						'192.168.154.2': {
 							'age': '00:18:24',
-							'ip': '201.0.2.2',
+							'ip': '192.168.154.2',
 							'link_layer_address': '000c.2904.5840',
 							'origin': 'dynamic',
 							'physical_interface': 'Ethernet1/2.1'}
@@ -88,9 +88,9 @@ class test_show_ip_arp_detail_vrf_all(unittest.TestCase):
 			'Ethernet1/2.2': {
 				'ipv4': {
 					'neighbors': {
-						'201.1.2.2': {
+						'192.168.51.2': {
 							'age': '00:05:21',
-							'ip': '201.1.2.2',
+							'ip': '192.168.51.2',
 							'link_layer_address': '000c.2904.5840',
 							'origin': 'dynamic',
 							'physical_interface': 'Ethernet1/2.2'}
@@ -100,9 +100,9 @@ class test_show_ip_arp_detail_vrf_all(unittest.TestCase):
 			'Ethernet1/2.4': {
 				'ipv4': {
 					'neighbors': {
-						'201.4.2.2': {
+						'192.168.9.2': {
 							'age': '00:10:51',
-							'ip': '201.4.2.2',
+							'ip': '192.168.9.2',
 							'link_layer_address': '000c.2904.5840',
 							'origin': 'dynamic',
 							'physical_interface': 'Ethernet1/2.4'}
@@ -112,9 +112,9 @@ class test_show_ip_arp_detail_vrf_all(unittest.TestCase):
 			'Ethernet1/4.100': {
 				'ipv4': {
 					'neighbors': {
-						'50.1.1.101': {
+						'10.51.1.101': {
 							'age': '00:01:28',
-							'ip': '50.1.1.101',
+							'ip': '10.51.1.101',
 							'link_layer_address': '0000.71c7.6e61',
 							'origin': 'dynamic',
 							'physical_interface': 'Ethernet1/4.100'}
@@ -124,9 +124,9 @@ class test_show_ip_arp_detail_vrf_all(unittest.TestCase):
 			'Ethernet1/4.101': {
 				'ipv4': {
 					'neighbors': {
-						'50.2.1.101': {
+						'10.154.1.101': {
 							'age': '00:01:28',
-							'ip': '50.2.1.101',
+							'ip': '10.154.1.101',
 							'link_layer_address': '0000.71c7.75c1',
 							'origin': 'dynamic',
 							'physical_interface': 'Ethernet1/4.101'}
@@ -136,9 +136,9 @@ class test_show_ip_arp_detail_vrf_all(unittest.TestCase):
 			'Ethernet1/4.200': {
 				'ipv4': {
 					'neighbors': {
-						'55.1.1.101': {
+						'10.76.1.101': {
 							'age': '00:01:28',
-							'ip': '55.1.1.101',
+							'ip': '10.76.1.101',
 							'link_layer_address': '0000.0068.ce6f',
 							'origin': 'dynamic',
 							'physical_interface': 'Ethernet1/4.200'}
@@ -189,15 +189,15 @@ class test_show_ip_arp_detail_vrf_all(unittest.TestCase):
 		10.1.7.250      00:14:24  0050.5682.7915  mgmt0            mgmt0               
 		10.1.7.253      00:10:22  0050.56a4.a9fc  mgmt0            mgmt0               
 		10.1.3.5           -      aaaa.bbbb.cccc  Ethernet1/1      Ethernet1/1              
-		201.0.1.2       00:01:53  000c.292a.1eaf  Ethernet1/1.1    Ethernet1/1.1       
-		201.1.1.2       00:00:47  000c.292a.1eaf  Ethernet1/1.2    Ethernet1/1.2       
-		201.4.1.2       00:08:42  000c.292a.1eaf  Ethernet1/1.4    Ethernet1/1.4       
-		201.0.2.2       00:18:24  000c.2904.5840  Ethernet1/2.1    Ethernet1/2.1       
-		201.1.2.2       00:05:21  000c.2904.5840  Ethernet1/2.2    Ethernet1/2.2       
-		201.4.2.2       00:10:51  000c.2904.5840  Ethernet1/2.4    Ethernet1/2.4       
-		50.1.1.101      00:01:28  0000.71c7.6e61  Ethernet1/4.100  Ethernet1/4.100     
-		50.2.1.101      00:01:28  0000.71c7.75c1  Ethernet1/4.101  Ethernet1/4.101     
-		55.1.1.101      00:01:28  0000.0068.ce6f  Ethernet1/4.200  Ethernet1/4.200  
+		192.168.4.2       00:01:53  000c.292a.1eaf  Ethernet1/1.1    Ethernet1/1.1       
+		192.168.154.2       00:00:47  000c.292a.1eaf  Ethernet1/1.2    Ethernet1/1.2       
+		192.168.106.2       00:08:42  000c.292a.1eaf  Ethernet1/1.4    Ethernet1/1.4       
+		192.168.154.2       00:18:24  000c.2904.5840  Ethernet1/2.1    Ethernet1/2.1       
+		192.168.51.2       00:05:21  000c.2904.5840  Ethernet1/2.2    Ethernet1/2.2       
+		192.168.9.2       00:10:51  000c.2904.5840  Ethernet1/2.4    Ethernet1/2.4       
+		10.51.1.101      00:01:28  0000.71c7.6e61  Ethernet1/4.100  Ethernet1/4.100     
+		10.154.1.101      00:01:28  0000.71c7.75c1  Ethernet1/4.101  Ethernet1/4.101     
+		10.76.1.101      00:01:28  0000.0068.ce6f  Ethernet1/4.200  Ethernet1/4.200  
 	'''
 	}
 

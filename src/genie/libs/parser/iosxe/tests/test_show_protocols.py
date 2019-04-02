@@ -48,10 +48,10 @@ class test_show_ip_protocols(unittest.TestCase):
                                         'incoming_filter_list': 'not set',
                                         'maximum_path': 1,
                                         'neighbor': 
-                                            {'4.4.4.4': 
+                                            {'10.64.4.4': 
                                                 {'distance': 200,
                                                 'last_update': '03:34:58',
-                                                'neighbor_id': '4.4.4.4'}},
+                                                'neighbor_id': '10.64.4.4'}},
                                         'outgoing_filter_list': 'not set',
                                         'preference': 
                                             {'multi_values': 
@@ -79,16 +79,16 @@ class test_show_ip_protocols(unittest.TestCase):
                                                         'intra_area': 112}}},
                                             'single_value': 
                                                 {'all': 110}},
-                                        'router_id': '1.1.1.1',
+                                        'router_id': '10.4.1.1',
                                         'routing_information_sources': 
                                             {'gateway': 
-                                                {'2.2.2.2': 
+                                                {'10.16.2.2': 
                                                     {'distance': 110,
                                                     'last_update': '07:33:00'},
-                                                '3.3.3.3': 
+                                                '10.36.3.3': 
                                                     {'distance': 110,
                                                     'last_update': '07:33:00'},
-                                                '4.4.4.4': 
+                                                '10.64.4.4': 
                                                     {'distance': 110,
                                                     'last_update': '00:19:15'}}},
                                         'spf_control': 
@@ -187,10 +187,10 @@ class test_show_ip_protocols(unittest.TestCase):
             Loopback0
           Routing Information Sources:
             Gateway         Distance      Last Update
-            11.139.6.3           115      05:56:34
-            11.139.6.2           115      05:56:34
-            11.139.6.4           115      05:56:34
-            11.139.6.9           115      05:56:34
+            10.60.6.3            115      05:56:34
+            10.60.6.2            115      05:56:34
+            10.60.6.4            115      05:56:34
+            10.60.6.9            115      05:56:34
           Distance: (default is 115)
 
         Routing Protocol is "bgp 9999"
@@ -201,8 +201,8 @@ class test_show_ip_protocols(unittest.TestCase):
           Maximum path: 1
           Routing Information Sources:
             Gateway         Distance      Last Update
-            11.139.6.3           200      12w5d
-            11.139.6.2           200      14w4d
+            10.60.6.3            200      12w5d
+            10.60.6.2            200      14w4d
           Distance: external 20 internal 200 local 200
         '''}
 
@@ -232,14 +232,14 @@ class test_show_ip_protocols(unittest.TestCase):
                                         'incoming_filter_list': 'not set',
                                         'maximum_path': 1,
                                         'neighbor': 
-                                            {'11.139.6.2': 
+                                            {'10.60.6.2': 
                                                 {'distance': 200,
                                                 'last_update': '14w4d',
-                                                'neighbor_id': '11.139.6.2'},
-                                            '11.139.6.3': 
+                                                'neighbor_id': '10.60.6.2'},
+                                            '10.60.6.3': 
                                                 {'distance': 200,
                                                 'last_update': '12w5d',
-                                                'neighbor_id': '11.139.6.3'}},
+                                                'neighbor_id': '10.60.6.3'}},
                                         'outgoing_filter_list': 'not set',
                                         'preference': 
                                             {'multi_values': 
@@ -264,16 +264,16 @@ class test_show_ip_protocols(unittest.TestCase):
                                         'redistributing': 'isis banana',
                                         'routing_information_sources': 
                                             {'gateway': 
-                                                {'11.139.6.2': 
+                                                {'10.60.6.2': 
                                                     {'distance': 115,
                                                     'last_update': '05:56:34'},
-                                                '11.139.6.3': 
+                                                '10.60.6.3': 
                                                     {'distance': 115,
                                                     'last_update': '05:56:34'},
-                                                '11.139.6.4': 
+                                                '10.60.6.4': 
                                                     {'distance': 115,
                                                     'last_update': '05:56:34'},
-                                                '11.139.6.9': 
+                                                '10.60.6.9': 
                                                     {'distance': 115,
                                                     'last_update': '05:56:34'}}}}}}}}}}}}
 
@@ -334,7 +334,7 @@ class test_show_ip_protocols(unittest.TestCase):
             Routing Protocol is "ospf 1"
               Outgoing update filter list for all interfaces is not set
               Incoming update filter list for all interfaces is not set
-              Router ID 1.1.1.1
+              Router ID 10.4.1.1
               Number of areas in this router is 1. 1 normal 0 stub 0 nssa
               Maximum path: 4
               Routing for Networks:
@@ -344,9 +344,9 @@ class test_show_ip_protocols(unittest.TestCase):
                 GigabitEthernet1
               Routing Information Sources:
                 Gateway         Distance      Last Update
-                3.3.3.3              110      07:33:00
-                2.2.2.2              110      07:33:00
-                4.4.4.4              110      00:19:15
+                10.36.3.3            110      07:33:00
+                10.16.2.2            110      07:33:00
+                10.64.4.4            110      00:19:15
               Distance: (default is 110)
               Distance: intra-area 112 inter-area 113 external 114
 
@@ -358,7 +358,7 @@ class test_show_ip_protocols(unittest.TestCase):
               Maximum path: 1
               Routing Information Sources:
                 Gateway         Distance      Last Update
-                4.4.4.4              200      03:34:58
+                10.64.4.4            200      03:34:58
               Distance: external 20 internal 200 local 200
             '''
 
@@ -372,8 +372,8 @@ class test_show_ip_protocols(unittest.TestCase):
         raw3 = '''\
             R1_ospf_xe#show running-config | section router ospf 2
               router ospf 2 vrf VRF1
-                area 1 virtual-link 5.5.5.5
-                area 1 sham-link 11.11.11.11 22.22.22.22 cost 111 ttl-security hops 3
+                area 1 virtual-link 10.100.5.5
+                area 1 sham-link 10.229.11.11 10.151.22.22 cost 111 ttl-security hops 3
                 redistribute bgp
             '''
 
@@ -452,8 +452,8 @@ class test_show_ip_protocols(unittest.TestCase):
         raw3 = '''\
             R1_ospf_xe#show running-config | section router ospf 2
               router ospf 2 vrf VRF1
-                area 1 virtual-link 5.5.5.5
-                area 1 sham-link 11.11.11.11 22.22.22.22 cost 111 ttl-security hops 3
+                area 1 virtual-link 10.100.5.5
+                area 1 sham-link 10.229.11.11 10.151.22.22 cost 111 ttl-security hops 3
                 redistribute bgp
             '''
 
@@ -491,79 +491,69 @@ class test_show_ip_protocols(unittest.TestCase):
             parsed_output = obj.parse()
 
     golden_parsed_output = {
-    'protocols':{
-        'application':{
-            'flushed': 0,
-            'holddown': 0,
-            'incoming_filter_list': 'not set',
-            'invalid': 0,
-            'maximum_path': 32,
-            'outgoing_filter_list': 'not set',
-            'preference':{
-                'single_value':{
-                    'all': 4
-                }
-            },
-            'update_frequency': 0
-        },
-        'rip':{
+    'protocols': {
+        'rip': {
             'vrf': {
                 'default': {
                     'address_family': {
                         'ipv4': {
                             'instance': {
                                 'rip': {
-                                    'distance': 120,
-                                    'maximum_paths': 4,
+                                    'outgoing_update_filterlist': {
+                                        'outgoing_update_filterlist': 'not set',
+                                        },
+                                    'automatic_network_summarization_in_effect': False,
                                     'output_delay': 50,
+                                    'maximum_paths': 4,
+                                    'neighbors': {
+                                        '10.1.2.2': {
+                                            'distance': 120,
+                                            'last_update': '00:00:04',
+                                            },
+                                        '10.1.3.3': {
+                                            'distance': 120,
+                                            'last_update': '00:00:00',
+                                            },
+                                        },
+                                    'redistribute': {
+                                        'rip': {
+                                            },
+                                        'static': {
+                                            },
+                                        'connected': {
+                                            },
+                                        },
+                                    'distance': 120,
+                                    'incoming_update_filterlist': {
+                                        'incoming_update_filterlist': 'not set',
+                                        },
                                     'default_redistribution_metric': 3,
                                     'network': ['10.0.0.0'],
+                                    'interfaces': {
+                                        'GigabitEthernet3.100': {
+                                            'triggered_rip': 'no',
+                                            'summary_address': {
+                                                '172.16.0.0/17': {
+                                                    },
+                                                },
+                                            'key_chain': '1',
+                                            'send_version': '2',
+                                            'receive_version': '2',
+                                            'passive': True,
+                                            },
+                                        },
                                     'send_version': 2,
                                     'receive_version': 2,
-                                    'automatic_network_summarization_in_effect': False,
-                                    'outgoing_update_filterlist': {
-                                        'outgoing_update_filterlist': "not set"
-                                    },
-                                    'incoming_update_filterlist': {
-                                        'incoming_update_filterlist': "not set"
-
-                                    },
-                                    'incoming_route_metric': {
-                                        "list": "21",
-                                        "added": "10"
-                                    },
-                                    'redistribute': {
-                                        'connected': {},
-                                        'static': {},
-                                        'rip': {},
-                                    },
                                     'timers': {
                                         'update_interval': 10,
                                         'next_update': 8,
-                                        'invalid_interval': 21,
                                         'holddown_interval': 22,
                                         'flush_interval': 23,
-                                    },
-                                    'interfaces': {
-                                        'GigabitEthernet3.100': {
-                                            'summary_address': {
-                                                '172.16.0.0/17': {},
-                                            },
-                                            'passive': True,
-                                            'send_version': '2',
-                                            'receive_version': '2',
-                                            'triggered_rip': 'no',
-                                            'key_chain': '1',
+                                        'invalid_interval': 21,
                                         },
-                                    },
-                                    'neighbors': {
-                                        '10.1.3.3': {
-                                            'last_update': '00:00:00',
-                                            'distance': 120,
-                                        },
-                                        '10.1.2.2': {
-                                            'last_update': '00:00:04',
-                                            'distance': 120,
+                                    'incoming_route_metric': {
+                                        'list': '21',
+                                        'added': '10',
                                         },
                                     },
                                 },
@@ -571,9 +561,22 @@ class test_show_ip_protocols(unittest.TestCase):
                         },
                     },
                 },
-            }
-        }
-    }
+            },
+        'application': {
+            'holddown': 0,
+            'flushed': 0,
+            'preference': {
+                'single_value': {
+                    'all': 4,
+                    },
+                },
+            'incoming_filter_list': 'not set',
+            'outgoing_filter_list': 'not set',
+            'update_frequency': 0,
+            'maximum_path': 32,
+            'invalid': 0,
+            },
+        },
     }
     golden_output = {'execute.return_value': '''\
     R1#show ip protocols
@@ -621,89 +624,92 @@ class test_show_ip_protocols(unittest.TestCase):
         '''}
 
     golden_parsed_output_5 = {
-        'protocols':{
-            'rip':{
-                'vrf': {
-                    'VRF1': {
-                        'address_family': {
-                            'ipv4': {
-                                'instance': {
-                                    'rip': {
-                                        'distance': 120,
-                                        'maximum_paths': 4,
-                                        'output_delay': 50,
-                                        'network': ['10.0.0.0'],
-                                        'send_version': 2,
-                                        'receive_version': 2,
-                                        'outgoing_update_filterlist': {
-                                            'outgoing_update_filterlist': "150",
-                                            'interfaces': {
-                                                'GigabitEthernet2.100': {
-                                                    'filter': "150",
-                                                    'per_user': True,
-                                                    'default': "not set",
-                                                },
-                                                'GigabitEthernet3.100': {
-                                                    'filter': "130",
-                                                    'per_user': True,
-                                                    'default': "not set",
-                                                },
-                                            },
-                                        },
-                                        'incoming_update_filterlist': {
-                                            'incoming_update_filterlist': "100",
-                                            'interfaces': {
-                                                "GigabitEthernet2.100": {
-                                                    'filter': "13",
-                                                    'per_user': True,
-                                                    'default': "not set",
-                                                },
-                                            },
-                                        },
-                                        'redistribute': {
-                                            'connected': {},
-                                            'static': {},
-                                            'rip': {},
-                                        },
-                                        'timers': {
-                                            'update_interval': 30,
-                                            'next_update': 2,
-                                            'invalid_interval': 180,
-                                            'holddown_interval': 180,
-                                            'flush_interval': 240,
-                                        },
+    'protocols': {
+        'rip': {
+            'vrf': {
+                'VRF1': {
+                    'address_family': {
+                        'ipv4': {
+                            'instance': {
+                                'rip': {
+                                    'maximum_paths': 4,
+                                    'incoming_update_filterlist': {
                                         'interfaces': {
-                                            'GigabitEthernet2.200': {
-                                                'send_version': '2',
-                                                'receive_version': '2',
-                                                'triggered_rip': 'no',
-                                                'key_chain': 'none',
+                                            'GigabitEthernet2.100': {
+                                                'per_user': True,
+                                                'default': 'not set',
+                                                'filter': '13',
+                                                },
                                             },
-                                            'GigabitEthernet3.200': {
-                                                'send_version': "1 2",
-                                                'receive_version': "2",
-                                                'triggered_rip': 'no',
-                                                'key_chain': 'none',
+                                        'incoming_update_filterlist': '100',
+                                        },
+                                    'network': ['10.0.0.0'],
+                                    'distance': 120,
+                                    'receive_version': 2,
+                                    'interfaces': {
+                                        'GigabitEthernet2.200': {
+                                            'triggered_rip': 'no',
+                                            'key_chain': 'none',
+                                            'receive_version': '2',
+                                            'send_version': '2',
+                                            },
+                                        'GigabitEthernet3.200': {
+                                            'triggered_rip': 'no',
+                                            'key_chain': 'none',
+                                            'receive_version': '2',
+                                            'send_version': '1 2',
                                             },
                                         },
-                                        'neighbors': {
-                                            '10.1.3.3': {
-                                                'last_update': '20:33:00',
-                                                'distance': 120,
+                                    'outgoing_update_filterlist': {
+                                        'interfaces': {
+                                            'GigabitEthernet3.100': {
+                                                'per_user': True,
+                                                'default': 'not set',
+                                                'filter': '130',
+                                                },
+                                            'GigabitEthernet2.100': {
+                                                'per_user': True,
+                                                'default': 'not set',
+                                                'filter': '150',
+                                                },
                                             },
-                                            '10.1.2.2': {
-                                                'last_update': '00:00:21',
-                                                'distance': 120,
+                                        'outgoing_update_filterlist': '150',
+                                        },
+                                    'output_delay': 50,
+                                    'timers': {
+                                        'flush_interval': 240,
+                                        'next_update': 2,
+                                        'update_interval': 30,
+                                        'invalid_interval': 180,
+                                        'holddown_interval': 180,
+                                        },
+                                    'neighbors': {
+                                        '10.1.2.2': {
+                                            'last_update': '00:00:21',
+                                            'distance': 120,
+                                            },
+                                        '10.1.3.3': {
+                                            'last_update': '20:33:00',
+                                            'distance': 120,
                                             },
                                         },
+                                    'redistribute': {
+                                        'rip': {
+                                            },
+                                        'static': {
+                                            },
+                                        'connected': {
+                                            },
+                                        },
+                                    'send_version': 2,
                                     },
                                 },
                             },
                         },
                     },
-                }
-            }
-        }
+                },
+            },
+        },
     }
     golden_output_5 = {'execute.return_value': '''
     R1#show ip protocols vrf VRF1
@@ -762,65 +768,70 @@ class test_show_ip_protocols_section_rip(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-        'protocols':{
-            'rip':{
-                'vrf': {
-            'default': {
-                'address_family': {
-                    'ipv4': {
-                        'instance': {
-                            'rip': {
-                                'distance': 120,
-                                'maximum_paths': 4,
-                                'output_delay': 50,
-                                'default_redistribution_metric': 3,
-                                'network': ['10.0.0.0'],
-                                'send_version': 2,
-                                'receive_version': 2,
-                                'automatic_network_summarization_in_effect': False,
-                                'outgoing_update_filterlist':{
-                                    'outgoing_update_filterlist': "not set"
-                                },
-                                'incoming_update_filterlist':{
-                                    'incoming_update_filterlist': "not set"
-
-                                },
-                                'incoming_route_metric':{
-                                    "list": "21",
-                                    "added": "10"
-                                },
-                                'redistribute': {
-                                    'connected': {},
-                                    'static': {},
-                                    'rip': {},
-                                },
-                                'timers': {
-                                    'update_interval': 10,
-                                    'next_update': 8,
-                                    'invalid_interval': 21,
-                                    'holddown_interval': 22,
-                                    'flush_interval': 23,
-                                },
-                                'interfaces': {
-                                    'GigabitEthernet3.100': {
-                                        'summary_address': {
-                                            '172.16.0.0/17': {},
+    'protocols': {
+        'rip': {
+            'vrf': {
+                'default': {
+                    'address_family': {
+                        'ipv4': {
+                            'instance': {
+                                'rip': {
+                                    'maximum_paths': 4,
+                                    'distance': 120,
+                                    'incoming_route_metric': {
+                                        'list': '21',
+                                        'added': '10',
                                         },
-                                        'passive': True,
-                                        'send_version': '2',
-                                        'receive_version': '2',
-                                        'triggered_rip': 'no',
-                                        'key_chain': '1',
-                                    },
-                                },
-                                'neighbors': {
-                                    '10.1.3.3': {
-                                        'last_update': '00:00:00',
-                                        'distance': 120,
-                                    },
-                                    '10.1.2.2': {
-                                        'last_update': '00:00:04',
-                                        'distance': 120,
+                                    'neighbors': {
+                                        '10.1.3.3': {
+                                            'distance': 120,
+                                            'last_update': '00:00:00',
+                                            },
+                                        '10.1.2.2': {
+                                            'distance': 120,
+                                            'last_update': '00:00:04',
+                                            },
+                                        },
+                                    'interfaces': {
+                                        'GigabitEthernet3.100': {
+                                            'summary_address': {
+                                                '172.16.0.0/17': {
+                                                    },
+                                                },
+                                            'triggered_rip': 'no',
+                                            'passive': True,
+                                            'send_version': '2',
+                                            'receive_version': '2',
+                                            'key_chain': '1',
+                                            },
+                                        },
+                                    'receive_version': 2,
+                                    'outgoing_update_filterlist': {
+                                        'outgoing_update_filterlist': 'not set',
+                                        },
+                                    'default_redistribution_metric': 3,
+                                    'incoming_update_filterlist': {
+                                        'incoming_update_filterlist': 'not set',
+                                        },
+                                    'automatic_network_summarization_in_effect': False,
+                                    'output_delay': 50,
+                                    'send_version': 2,
+                                    'timers': {
+                                        'update_interval': 10,
+                                        'flush_interval': 23,
+                                        'invalid_interval': 21,
+                                        'next_update': 8,
+                                        'holddown_interval': 22,
+                                        },
+                                    'network': ['10.0.0.0'],
+                                    'redistribute': {
+                                        'connected': {
+                                            },
+                                        'rip': {
+                                            },
+                                        'static': {
+                                            },
+                                        },
                                     },
                                 },
                             },
@@ -828,9 +839,7 @@ class test_show_ip_protocols_section_rip(unittest.TestCase):
                     },
                 },
             },
-        }
-            }
-        }
+        },
     }
     golden_output = {'execute.return_value': '''\
 R1#show ip protocols | sec rip
@@ -865,79 +874,84 @@ Routing Protocol is "rip"
     '''}
 
     golden_parsed_output_2 = {
-        'protocols': {
-            'rip': {
+    'protocols': {
+        'rip': {
             'vrf': {
-            'VRF1': {
-                'address_family': {
-                    'ipv4': {
-                        'instance': {
-                            'rip': {
-                                'distance': 120,
-                                'maximum_paths': 4,
-                                'output_delay': 50,
-                                'network': ['10.0.0.0'],
-                                'send_version': 2,
-                                'receive_version': 2,
-                                'outgoing_update_filterlist': {
-                                    'outgoing_update_filterlist': "150",
+                'VRF1': {
+                    'address_family': {
+                        'ipv4': {
+                            'instance': {
+                                'rip': {
+                                    'distance': 120,
+                                    'network': ['10.0.0.0'],
+                                    'maximum_paths': 4,
+                                    'timers': {
+                                        'holddown_interval': 180,
+                                        'update_interval': 30,
+                                        'next_update': 2,
+                                        'invalid_interval': 180,
+                                        'flush_interval': 240,
+                                        },
+                                    'redistribute': {
+                                        'static': {
+                                            },
+                                        'rip': {
+                                            },
+                                        'connected': {
+                                            },
+                                        },
+                                    'output_delay': 50,
+                                    'neighbors': {
+                                        '10.1.3.3': {
+                                            'last_update': '20:33:00',
+                                            'distance': 120,
+                                            },
+                                        '10.1.2.2': {
+                                            'last_update': '00:00:21',
+                                            'distance': 120,
+                                            },
+                                        },
+                                    'receive_version': 2,
                                     'interfaces': {
-                                        'GigabitEthernet2.100': {
-                                            'filter': "150",
-                                            'per_user': True,
-                                            'default': "not set",
+                                        'GigabitEthernet2.200': {
+                                            'key_chain': 'none',
+                                            'triggered_rip': 'no',
+                                            'send_version': '2',
+                                            'receive_version': '2',
+                                            },
+                                        'GigabitEthernet3.200': {
+                                            'key_chain': 'none',
+                                            'triggered_rip': 'no',
+                                            'send_version': '1 2',
+                                            'receive_version': '2',
+                                            },
                                         },
-                                        'GigabitEthernet3.100': {
-                                            'filter': "130",
-                                            'per_user': True,
-                                            'default': "not set",
+                                    'outgoing_update_filterlist': {
+                                        'outgoing_update_filterlist': '150',
+                                        'interfaces': {
+                                            'GigabitEthernet2.100': {
+                                                'per_user': True,
+                                                'filter': '150',
+                                                'default': 'not set',
+                                                },
+                                            'GigabitEthernet3.100': {
+                                                'per_user': True,
+                                                'filter': '130',
+                                                'default': 'not set',
+                                                },
+                                            },
                                         },
-                                    },
-                                },
-                                'incoming_update_filterlist': {
-                                    'incoming_update_filterlist': "100",
-                                    'interfaces': {
-                                        "GigabitEthernet2.100": {
-                                            'filter': "13",
-                                            'per_user': True,
-                                            'default': "not set",
+                                    'incoming_update_filterlist': {
+                                        'incoming_update_filterlist': '100',
+                                        'interfaces': {
+                                            'GigabitEthernet2.100': {
+                                                'per_user': True,
+                                                'filter': '13',
+                                                'default': 'not set',
+                                                },
+                                            },
                                         },
-                                    },
-                                },
-                                'redistribute': {
-                                    'connected': {},
-                                    'static': {},
-                                    'rip': {},
-                                },
-                                'timers': {
-                                    'update_interval': 30,
-                                    'next_update': 2,
-                                    'invalid_interval': 180,
-                                    'holddown_interval': 180,
-                                    'flush_interval': 240,
-                                },
-                                'interfaces': {
-                                    'GigabitEthernet2.200': {
-                                        'send_version': '2',
-                                        'receive_version': '2',
-                                        'triggered_rip': 'no',
-                                        'key_chain': 'none',
-                                    },
-                                    'GigabitEthernet3.200': {
-                                        'send_version': "1 2",
-                                        'receive_version': "2",
-                                        'triggered_rip': 'no',
-                                        'key_chain': 'none',
-                                    },
-                                },
-                                'neighbors': {
-                                    '10.1.3.3': {
-                                        'last_update': '20:33:00',
-                                        'distance': 120,
-                                    },
-                                    '10.1.2.2': {
-                                        'last_update': '00:00:21',
-                                        'distance': 120,
+                                    'send_version': 2,
                                     },
                                 },
                             },
@@ -945,9 +959,7 @@ Routing Protocol is "rip"
                     },
                 },
             },
-        }
-            }
-        }
+        },
     }
     golden_output_2 = {'execute.return_value': '''
 R1#show ip protocols vrf VRF1 | sec rip

@@ -91,7 +91,7 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
 
         # remote         refid           st t when poll reach   delay   offset  jitter
         # ===============================================================================
-        # x10.2.2.2         171.68.38.65     2 -   84  128  271    1.470  -46.760  52.506
+        # x10.2.2.2         172.16.229.65     2 -   84  128  271    1.470  -46.760  52.506
         p1 = re.compile(r'^(?P<mode_code>[xo\*\-\+\=]+)? *(?P<remote>[\w\.\:]+) +'
                          '(?P<refid>[\S]+) +(?P<stratum>\d+) +(?P<type>[blmu\-]+) +'
                          '(?P<receive_time>\d+) +(?P<poll>\d+) +'
@@ -104,8 +104,8 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
             if not line:
                 continue
 
-            # *171.68.38.65     .GNSS.           1 -   59   64  377    1.436   73.819  10.905
-            # *1.1.1.1         LOCAL(1)         8 -    7   64   37   15.887  -368.01 772.797
+            # *172.16.229.65     .GNSS.           1 -   59   64  377    1.436   73.819  10.905
+            # *10.4.1.1         LOCAL(1)         8 -    7   64   37   15.887  -368.01 772.797
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
@@ -228,7 +228,7 @@ class ShowNtpStatus(ShowNtpStatusSchema):
         # version="ntpd 4.2.0-a Tue Dec 19 21:12:44  2017 (1)", processor="amd64",
         # system="FreeBSDJNPR-11.0-20171206.f4cad52_buil", leap=00, stratum=2,
         # precision=-23, rootdelay=1.434, rootdispersion=82.589, peer=22765,
-        # refid=171.68.38.65,
+        # refid=172.16.229.65,
         # offset=67.812, frequency=4.968, jitter=12.270, stability=0.890
         p4 = re.compile(r'(?P<key>\w+)\=\"?(?P<value>[\w\.\:\s\(\)\-\@\/\_]+)\"?')
 
@@ -332,9 +332,9 @@ class ShowConfigurationSystemNtpSet(ShowConfigurationSystemNtpSetSchema):
 
         # show configuration system ntp | display set 
         # set system ntp peer 10.2.2.2
-        # set system ntp server 171.68.38.65 routing-instance mgmt_junos
-        # set system ntp server 171.68.38.66 routing-instance mgmt_junos
-        # set system ntp server 72.163.32.44 routing-instance mgmt_junos
+        # set system ntp server 172.16.229.65 routing-instance mgmt_junos
+        # set system ntp server 172.16.229.66 routing-instance mgmt_junos
+        # set system ntp server 10.145.32.44 routing-instance mgmt_junos
 
         p1 = re.compile(r'^set +system +ntp +(?P<type>\w+) +(?P<address>[\w\.\:]+)'
                          '( *routing-instance +(?P<vrf>\S+))?$')
