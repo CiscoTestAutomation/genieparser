@@ -2,9 +2,6 @@
 import unittest
 from unittest.mock import Mock
 
-# ATS
-from ats.topology import Device
-
 # Metaparset
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
