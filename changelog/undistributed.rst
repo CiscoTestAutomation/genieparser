@@ -97,10 +97,6 @@
     * Add ShowMplsL2TransportDetail for:
           show mpls l2transport vc detail
 
-* IOS
-    * Add ShowMplsL2TransportDetail for:
-          show mpls l2transport vc detail
-
 * IOSXR
     * Add ShowMplsLdpNeighborBrief for:
           show mpls ldp neighbor brief
@@ -110,9 +106,13 @@
 ---------------------------------------------------------------------------------
 * IOSXE
     * Add ShowBfdNeighborsDetails for:
-        show bfd neighbors client <client> details
         show bfd neighbors details
+        show bfd neighbors client <client> details
 
+* IOS
+    * Add ShowBfdNeighborsDetails for:
+        show bfd neighbors details
+        show bfd neighbors client <client> details
 ----------------------------------------------------------------------------------
                                    ARP
 ----------------------------------------------------------------------------------
