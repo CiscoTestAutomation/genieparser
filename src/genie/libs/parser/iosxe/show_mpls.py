@@ -45,7 +45,7 @@ class ShowMplsLdpParametersSchema(MetaParser):
     """Schema for show mpls ldp Parameters"""
 
     schema = {
-        'ldp_featureset_manager': {
+        Optional('ldp_featureset_manager'): {
             Any(): {
                 'ldp_features': list,
             }
@@ -54,12 +54,12 @@ class ShowMplsLdpParametersSchema(MetaParser):
             'initial': int,
             'maximum': int,
         },
-        'ldp_loop_detection': str,
-        'ldp_nsr': str,
+        Optional('ldp_loop_detection'): str,
+        Optional('ldp_nsr'): str,
         'version': int,
         'session_hold_time': int,
         'keep_alive_interval': int,
-        'ldp_for_targeted_sessions': bool,
+        Optional('ldp_for_targeted_sessions'): bool,
         'discovery_targeted_hello': {
             'holdtime': int,
             'interval': int,
@@ -68,7 +68,7 @@ class ShowMplsLdpParametersSchema(MetaParser):
             'holdtime': int,
             'interval': int,
         },
-        'downstream_on_demand_max_hop_count': int,
+        Optional('downstream_on_demand_max_hop_count'): int,
     }
 
 class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
@@ -123,8 +123,7 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             # LDP Feature Set Manager: State Initialized
             m = p1.match(line)
             if m:
-                ldp_dict = result_dict
-                ldp_feature_dict = ldp_dict.setdefault('ldp_featureset_manager', {}).setdefault('State Initialized', {})
+                ldp_feature_dict = result_dict.setdefault('ldp_featureset_manager', {}).setdefault('State Initialized', {})
                 continue
 
             #  LDP features:
@@ -146,7 +145,7 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             if m:
                 group = m.groupdict()
                 ldp_feature_flag = False
-                ldp_dict.update({'version': int(group['version'])})
+                result_dict.update({'version': int(group['version'])})
                 continue
 
             # Session hold time: 180 sec; keep alive interval: 60 sec
@@ -154,8 +153,8 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             if m:
                 group = m.groupdict()
                 ldp_feature_flag = False
-                ldp_dict.update({'session_hold_time': int(group['session_holdtime'])})
-                ldp_dict.update({'keep_alive_interval': int(group['keepalive_interval'])})
+                result_dict.update({'session_hold_time': int(group['session_holdtime'])})
+                result_dict.update({'keep_alive_interval': int(group['keepalive_interval'])})
                 continue
 
             # Discovery hello: holdtime: 15 sec; interval: 5 sec
@@ -163,7 +162,7 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             if m:
                 group = m.groupdict()
                 ldp_feature_flag = False
-                discovery_hello = ldp_dict.setdefault('discovery_hello', {})
+                discovery_hello = result_dict.setdefault('discovery_hello', {})
                 discovery_hello.update({'holdtime': int(group['holdtime'])})
                 discovery_hello.update({'interval': int(group['interval'])})
                 continue
@@ -173,7 +172,7 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             if m:
                 group = m.groupdict()
                 ldp_feature_flag = False
-                discovery_targeted_hello = ldp_dict.setdefault('discovery_targeted_hello', {})
+                discovery_targeted_hello = result_dict.setdefault('discovery_targeted_hello', {})
                 discovery_targeted_hello.update({'holdtime': int(group['targeted_holdtime'])})
                 discovery_targeted_hello.update({'interval': int(group['targeted_interval'])})
                 continue
@@ -183,14 +182,14 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             if m:
                 group = m.groupdict()
                 ldp_feature_flag = False
-                ldp_dict.update({'downstream_on_demand_max_hop_count': int(group['maxhop_count'])})
+                result_dict.update({'downstream_on_demand_max_hop_count': int(group['maxhop_count'])})
                 continue
 
             # LDP for targeted sessions
             m = p8.match(line)
             if m:
                 ldp_feature_flag = False
-                ldp_dict.update({'ldp_for_targeted_sessions': True})
+                result_dict.update({'ldp_for_targeted_sessions': True})
                 continue
 
             # LDP initial/maximum backoff: 15/120 sec
@@ -198,7 +197,7 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             if m:
                 group = m.groupdict()
                 ldp_feature_flag = False
-                backoff_dict = ldp_dict.setdefault('ldp_backoff', {})
+                backoff_dict = result_dict.setdefault('ldp_backoff', {})
                 backoff_dict.update({'initial': int(group['initial'])})
                 backoff_dict.update({'maximum': int(group['maximum'])})
                 continue
@@ -208,7 +207,7 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             if m:
                 group = m.groupdict()
                 ldp_feature_flag = False
-                ldp_dict.update({'ldp_loop_detection': group['loop_detection']})
+                result_dict.update({'ldp_loop_detection': group['loop_detection']})
                 continue
 
             # LDP NSR: Disabled
@@ -216,7 +215,7 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             if m:
                 group = m.groupdict()
                 ldp_feature_flag = False
-                ldp_dict.update({'ldp_nsr': group['nsr'].lower()})
+                result_dict.update({'ldp_nsr': group['nsr'].lower()})
                 continue
 
         return result_dict
@@ -513,186 +512,6 @@ class ShowMplsLdpNsrStatistics(ShowMplsLdpNsrStatisticsSchema):
         return result_dict
 
 
-class ShowMplsLdpParametersSchema(MetaParser):
-    """Schema for show mpls ldp Parameters"""
-
-    schema = {
-        'ldp_featureset_manager': {
-            Any(): {
-                'ldp_features': list,
-            }
-        },
-        'ldp_backoff': {
-            'initial': int,
-            'maximum': int,
-        },
-        'ldp_loop_detection': str,
-        'ldp_nsr': str,
-        'version': int,
-        'session_hold_time': int,
-        'keep_alive_interval': int,
-        'ldp_for_targeted_sessions': bool,
-        'discovery_targeted_hello': {
-            'holdtime': int,
-            'interval': int,
-        },
-        'discovery_hello': {
-            'holdtime': int,
-            'interval': int,
-        },
-        'downstream_on_demand_max_hop_count': int,
-    }
-
-class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
-    """Parser for show mpls ldp parameters"""
-
-    cli_command = 'show mpls ldp parameters'
-
-    def cli(self, output=None):
-        if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
-
-        # initial return dictionary
-        result_dict = {}
-        ldp_feature_flag = False
-        ldp_feature_list = []
-
-        # LDP Feature Set Manager: State Initialized
-        p1 = re.compile(r'^LDP +Feature +Set +Manager: +(S|s)tate +(?P<state_initialized>\w+)$')
-        #   LDP features:
-        p2 = re.compile(r'^LDP +features:$')
-        #  Auto-Configuration
-        p2_1 = re.compile(r'^(?P<ldp_features>[\w\-]+)?$')
-        # Protocol version: 1
-        p3 = re.compile(r'^Protocol version: +(?P<version>\d+)$')
-        # Session hold time: 180 sec; keep alive interval: 60 sec
-        p4 = re.compile(r'^Session +hold +time: +(?P<session_holdtime>\d+) +sec;'
-                        ' +keep +alive +interval: +(?P<keepalive_interval>\d+) +sec$')
-
-        # Discovery hello: holdtime: 15 sec; interval: 5 sec
-        p5 = re.compile(r'^Discovery +hello: +holdtime: +(?P<holdtime>\d+) +sec; +interval: +(?P<interval>\d+) +sec$')
-
-        # Discovery targeted hello: holdtime: 90 sec; interval: 10 sec
-        p6 = re.compile(r'^Discovery +targeted +hello: +holdtime: +(?P<targeted_holdtime>\d+) +sec; +interval:'
-                        ' +(?P<targeted_interval>\d+) +sec$')
-
-        # Downstream on Demand max hop count: 255
-        p7 = re.compile(r'^Downstream +on +Demand +max +hop +count: +(?P<maxhop_count>\d+)$')
-        # LDP for targeted sessions
-        p8 = re.compile(r'^LDP +for +targeted +sessions$')
-        # LDP initial/maximum backoff: 15/120 sec
-        p9 = re.compile(r'^LDP +initial\/maximum +backoff: +(?P<initial>\w+)/+(?P<maximum>\w+) sec$')
-        # LDP loop detection: off
-        p10 = re.compile(r'^LDP +loop +detection: +(?P<loop_detection>\w+)$')
-        # LDP NSR: Disabled
-        p11 = re.compile(r'^LDP +NSR: +(?P<nsr>\w+)$')
-
-        for line in out.splitlines():
-            line = line.strip()
-
-            # LDP Feature Set Manager: State Initialized
-            m = p1.match(line)
-            if m:
-                ldp_dict = result_dict
-                ldp_feature_dict = ldp_dict.setdefault('ldp_featureset_manager', {}).setdefault('State Initialized', {})
-                continue
-
-            #  LDP features:
-            m = p2.match(line)
-            if m:
-                ldp_feature_flag = True
-                continue
-
-            m = p2_1.match(line)
-            if m:
-                group = m.groupdict()
-                if ldp_feature_flag:
-                    ldp_feature_list.append(group['ldp_features'])
-                    ldp_feature_dict.update({'ldp_features': ldp_feature_list})
-                continue
-
-            # Protocol version: 1
-            m = p3.match(line)
-            if m:
-                group = m.groupdict()
-                ldp_feature_flag = False
-                ldp_dict.update({'version': int(group['version'])})
-                continue
-
-            # Session hold time: 180 sec; keep alive interval: 60 sec
-            m = p4.match(line)
-            if m:
-                group = m.groupdict()
-                ldp_feature_flag = False
-                ldp_dict.update({'session_hold_time': int(group['session_holdtime'])})
-                ldp_dict.update({'keep_alive_interval': int(group['keepalive_interval'])})
-                continue
-
-            # Discovery hello: holdtime: 15 sec; interval: 5 sec
-            m = p5.match(line)
-            if m:
-                group = m.groupdict()
-                ldp_feature_flag = False
-                discovery_hello = ldp_dict.setdefault('discovery_hello', {})
-                discovery_hello.update({'holdtime': int(group['holdtime'])})
-                discovery_hello.update({'interval': int(group['interval'])})
-                continue
-
-            # Discovery targeted hello: holdtime: 90 sec; interval: 10 sec
-            m = p6.match(line)
-            if m:
-                group = m.groupdict()
-                ldp_feature_flag = False
-                discovery_targeted_hello = ldp_dict.setdefault('discovery_targeted_hello', {})
-                discovery_targeted_hello.update({'holdtime': int(group['targeted_holdtime'])})
-                discovery_targeted_hello.update({'interval': int(group['targeted_interval'])})
-                continue
-
-            # Downstream on Demand max hop count: 255
-            m = p7.match(line)
-            if m:
-                group = m.groupdict()
-                ldp_feature_flag = False
-                ldp_dict.update({'downstream_on_demand_max_hop_count': int(group['maxhop_count'])})
-                continue
-
-            # LDP for targeted sessions
-            m = p8.match(line)
-            if m:
-                ldp_feature_flag = False
-                ldp_dict.update({'ldp_for_targeted_sessions': True})
-                continue
-
-            # LDP initial/maximum backoff: 15/120 sec
-            m = p9.match(line)
-            if m:
-                group = m.groupdict()
-                ldp_feature_flag = False
-                backoff_dict = ldp_dict.setdefault('ldp_backoff', {})
-                backoff_dict.update({'initial': int(group['initial'])})
-                backoff_dict.update({'maximum': int(group['maximum'])})
-                continue
-
-            # LDP loop detection: off
-            m = p10.match(line)
-            if m:
-                group = m.groupdict()
-                ldp_feature_flag = False
-                ldp_dict.update({'ldp_loop_detection': group['loop_detection']})
-                continue
-
-            # LDP NSR: Disabled
-            m = p11.match(line)
-            if m:
-                group = m.groupdict()
-                ldp_feature_flag = False
-                ldp_dict.update({'ldp_nsr': group['nsr'].lower()})
-                continue
-
-        return result_dict
-
 class ShowMplsLdpNeighborSchema(MetaParser):
     """Schema for show mpls ldp neighbor"""
     schema = {
@@ -710,14 +529,14 @@ class ShowMplsLdpNeighborSchema(MetaParser):
                                 'downstream': bool,
                                 Optional('last_tib_rev_sent'): int,
                                 Optional('password'): str,
-                                'uptime': str,
-                                Optional('peer_holdtime_ms'): str,
-                                Optional('ka_interval_ms'): str,
+                                Optional('uptime'): str,
+                                Optional('peer_holdtime_ms'): int,
+                                Optional('ka_interval_ms'): int,
                                 Optional('peer_state'): str,
-                                'ldp_discovery_sources': {
+                                Optional('ldp_discovery_sources'): {
                                     'interface':{
                                           Any():{
-                                          'ip_address': {
+                                          Optional('ip_address'): {
                                               Any(): {
                                                   Optional('holdtime_ms'): int,
                                                   Optional('hello_interval_ms'): int,
@@ -726,19 +545,19 @@ class ShowMplsLdpNeighborSchema(MetaParser):
                                         }
                                     }
                                 },
-                                'address_bound': list,
+                                Optional('address_bound'): list,
                                 Optional('nsr'): str,
                                 Optional('capabilities'):{
                                      'sent': {
-                                         'ICCP':{
+                                         Optional('ICCP'):{
                                             'type': str,
                                             'maj_ver': int,
                                             'min_ver': int,
                                          },
-                                        'dynamic_anouncement': str,
-                                        'mldp_point_to_multipoint': str,
-                                        'mldp_multipoint_to_multipoint': str,
-                                        'typed_wildcard': str,
+                                        Optional('dynamic_anouncement'): str,
+                                        Optional('mldp_point_to_multipoint'): str,
+                                        Optional('mldp_multipoint_to_multipoint'): str,
+                                        Optional('typed_wildcard'): str,
                                      },
                                     Optional('received'): {
                                         Optional('ICCP'):{
@@ -789,26 +608,28 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
         sent_flag = False
 
         # Peer LDP Ident: 10.169.197.252:0; Local LDP Ident 10.169.197.254:0
-        p1 = re.compile(r'^Peer +LDP +Ident: +(?P<peer_ldp>[\d\.]+):(?P<label_space_id>\d+); +Local +LDP +Ident +(?P<local_ldp>\S+)$')
+        p1 = re.compile(r'^Peer +LDP +Ident: *(?P<peer_ldp>[\d\.]+):(?P<label_space_id>\d+); +Local +LDP +Ident +(?P<local_ldp>\S+)$')
 
         #     TCP connection: 10.169.197.252.646 - 10.169.197.254.20170
-        p2 = re.compile(r'^TCP +connection: +(?P<tcp_connection>[\S\s]+)$')
+        p2 = re.compile(r'^TCP +connection: *(?P<tcp_connection>[\S\s]+)$')
 
         #     State: Oper; Msgs sent/rcvd: 824/825; Downstream
         #     State: Oper; Msgs sent/rcvd: 824/825; Downstream; Last TIB rev sent 4103
-        p3 = re.compile(r'^State: +(?P<state>\w+); +Msgs +sent\/rcvd: +(?P<msg_sent>\d+)\/(?P<msg_rcvd>\d+);'
-                                ' +(?P<downstream>\w+)(; +Last +TIB +rev +sent +(?P<last_tib_rev_sent>\d+))?$')
+        #     State: Oper; Msgs sent/rcvd: 5855/6371; Downstream on demand
+        p3 = re.compile(r'^State: *(?P<state>\w+); +Msgs +sent\/rcvd: *(?P<msg_sent>\d+)\/(?P<msg_rcvd>\d+);'
+                                ' +(?P<downstream>[\w\s]+)(; +Last +TIB +rev +sent +(?P<last_tib_rev_sent>\d+))?$')
 
         #  Up time: 04:26:14
         #  Up time: 3d21h; UID: 4; Peer Id 0
-        p4 = re.compile(r'^Up +time: +(?P<up_time>[\w\:]+)(; +UID: (?P<uid>\d+); +Peer +Id +(?P<peer_id>\d+))?$')
+        p4 = re.compile(r'^Up +time: *(?P<up_time>[\w\:]+)(; +UID: *(?P<uid>\d+); +Peer +Id +(?P<peer_id>\d+))?$')
 
         #     LDP discovery sources:
         #       GigabitEthernet0/0/0, Src IP addr: 10.169.197.93
-        p5 = re.compile(r'^(?P<interface>[\S]+)(,|;) +Src +IP +addr: +(?P<src_ip_address>[\d\.]+)$')
+        #       ATM3/0.1
+        p5 = re.compile(r'^(?P<interface>[A-Za-z]+[\d/.]+)((,|;) +Src +IP +addr: *(?P<src_ip_address>[\d\.]+))?$')
 
         #       holdtime: 15000 ms, hello interval: 5000 ms
-        p5_1 = re.compile(r'^holdtime: +(?P<holdtime>\d+) +ms, +hello +interval: +(?P<hello_interval>\d+) +ms$')
+        p5_1 = re.compile(r'^holdtime: *(?P<holdtime>\d+) +ms, +hello +interval: *(?P<hello_interval>\d+) +ms$')
 
         #     Addresses bound to peer LDP Ident:
         p6 = re.compile(r'^Addresses +bound +to +peer +LDP +Ident:$')
@@ -817,8 +638,8 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
         p7 = re.compile(r'^(?P<address_bound_peer_ldp>[\d\.\s]+)$')
 
         # Peer holdtime: 180000 ms; KA interval: 60000 ms; Peer state: estab
-        p8 = re.compile(r'^Peer +holdtime: +(?P<peer_holdtime>\d+) +ms, +KA +interval: +(?P<ka_interval>\d+) +ms;'
-                         ' +Peer +state +(?P<peer_state>\S+)$')
+        p8 = re.compile(r'^Peer +holdtime: *(?P<peer_holdtime>\d+) +ms; +KA +interval: *(?P<ka_interval>\d+) +ms;'
+                         ' +Peer +state: +(?P<peer_state>\S+)$')
 
         # Password: not required, none, in use
         p9 = re.compile(r'^Password: +(?P<password>[\S\s]+)$')
@@ -898,8 +719,9 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
                 ldp_source_dict = peer_dict.setdefault('ldp_discovery_sources',{}).\
                                             setdefault('interface',{}).\
                                             setdefault(group['interface'],{})
-                ldp_source_ip_address_dict = ldp_source_dict.setdefault('ip_address',{}).\
-                                                             setdefault(group['src_ip_address'],{})
+                if group['src_ip_address']:
+                    ldp_source_ip_address_dict = ldp_source_dict.setdefault('ip_address',{}).\
+                                                    setdefault(group['src_ip_address'],{})
                 continue
 
             # holdtime: 15000 ms, hello interval: 5000 ms
@@ -1106,12 +928,15 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
         # VRF vrf1:
         p0 = re.compile(r'^VRF +(?P<vrf>\S+):$')
         # lib entry: 10.186.1.0/24, rev 1028
+        # lib entry: 10.186.1.0/24, rev 1028,
         # lib entry: 10.120.202.64/32, rev 12, chkpt: none
-        p1 = re.compile(r'^lib +entry: +(?P<lib_entry>[\d\.\/]+), +rev +(?P<rev>\d+)(, +chkpt: +(?P<checkpoint>\S+))?$')
+        # tib entry: 10.0.0.0/8, rev 4
+        # 10.16.16.16/32, rev 775
+        p1 = re.compile(r'^([\w]+ +entry: +)?(?P<lib_entry>[\d\.\/]+), +rev +(?P<rev>\d+),?( +chkpt: +(?P<checkpoint>\S+))?(, +elc)?$')
 
         #  local binding:  label: 2536
         #  local binding:  label: 2027 (owner LDP)
-        p2 = re.compile(r'^local +binding:  +label: +(?P<local_label>\S+)( +\(owner +(?P<owner>\w+)\))?$')
+        p2 = re.compile(r'^local +binding: +label: +(?P<local_label>\S+)( +\(owner +(?P<owner>\w+)\))?$')
 
         #  Advertised to:
         # 10.169.197.252:0      10.169.197.253:0
@@ -1120,7 +945,7 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
         #  remote binding: lsr: 10.169.197.252:0, label: 508
         #  remote binding: lsr: 10.169.197.253:0, label: 308016 checkpointed
         p4 = re.compile(r'^remote +binding: +lsr: +(?P<lsr>[\d\.]+):(?P<label_space_id>[\d]+),'
-                        ' +label: +(?P<remote_label>\S+)( +(?P<checkpointed>\w+))?$')
+                        ' +label: +(?P<remote_label>\S+)( +(?P<checkpointed>\w+))?(, +elc)?$')
 
 
         for line in out.splitlines():
@@ -1306,9 +1131,9 @@ class ShowMplsLdpDiscoverySchema(MetaParser):
     schema = {
         'vrf': {
             Any(): {
-                'local_ldp_identifier': {
+                Optional('local_ldp_identifier'): {
                     Any(): {
-                        'discovery_sources': {
+                        Optional('discovery_sources'): {
                             'interfaces': {
                                 Any(): {
                                     Optional('enabled'): str,
@@ -1398,7 +1223,8 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
 
         # Local LDP Identifier:
         # VRF vpn1:Local LDP Identifier:
-        p1 = re.compile(r'^(VRF +(?P<vrf>\S+):)?Local +LDP +Identifier:$')
+        # VRF vpn1: Local LDP Identifier:
+        p1 = re.compile(r'^(VRF +(?P<vrf>\S+):)? *Local +LDP +Identifier:$')
 
         # 10.169.197.254:0
         p2 = re.compile(r'^(?P<local_ldp_identifier>[\d\.\:]+)$')
@@ -1407,7 +1233,9 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
 
         #     GigabitEthernet0/0/0 (ldp): xmit/recv
         #     ATM1/1/0.1 (tdp):xmit/recv
-        p3 = re.compile(r'^(?P<interface>\S+) +\((?P<session>[\w]+)\):(?P<space>\s{1})?xmit\/recv$')
+        #     Ethernet3/0 (ldp): xmit
+        #                (ldp): xmit/recv
+        p3 = re.compile(r'^((?P<interface>\S+) +)?\((?P<session>[\w]+)\): *(?P<xmit>xmit)?\/?(?P<recv>recv)?$')
 
         #         Enabled: Interface config
         p4 = re.compile(r'^Enabled: +(?P<enabled>[\S\s]+)$')
@@ -1438,8 +1266,11 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
 
         #  10.81.1.1 -> 172.16.94.33 (ldp): active, xmit/recv
         #  10.81.1.1 -> 172.16.25.16 (tdp): passive, xmit/recv
+        #  10.131.191.252 -> 10.131.159.251 (ldp): active, xmit
+        #  10.131.191.252 -> 10.131.159.252 (ldp): active/passive, xmit/recv
         p12 = re.compile(r'^(?P<source>[\d\.]+) +\-> +(?P<destination>[\d\.]+)'
-                         ' +\((?P<session>(ldp|tdp)+)\): +(?P<status>(active|passive)+), +xmit\/recv$')
+                          ' +\((?P<session>(ldp|tdp)+)\): +(?P<status>(active|passive|active\/passive)+),'
+                          ' +(?P<xmit>xmit)?\/?(?P<recv>recv)?$')
 
         # Targeted Hellos:
         p13 = re.compile(r'^Targeted +Hellos:$')
@@ -1474,12 +1305,13 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
+                interface = group['interface'] if group['interface'] else "default"
                 interface_dict = local_ldp_identifier_dict.setdefault('discovery_sources', {}) \
                     .setdefault('interfaces', {}) \
-                    .setdefault(group['interface'], {})
+                    .setdefault(interface, {})
                 interface_dict.update({'session': group['session']})
-                interface_dict.update({'xmit': True})
-                interface_dict.update({'recv': True})
+                interface_dict.update({'xmit': True if group['xmit'] else False})
+                interface_dict.update({'recv': True if group['recv'] else False})
                 continue
 
             # Enabled: Interface config
@@ -1555,6 +1387,8 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
 
             #  10.81.1.1 -> 172.16.94.33 (ldp): active, xmit/recv
             #  10.81.1.1 -> 172.16.25.16 (tdp): passive, xmit/recv
+            #  10.131.191.252 -> 10.131.159.251 (ldp): active, xmit
+            #  10.131.191.252 -> 10.131.159.252 (ldp): active/passive, xmit/recv
             m = p12.match(line)
             if m:
                 group = m.groupdict()
@@ -1562,8 +1396,8 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
                     setdefault(group['source'], {}). \
                     setdefault(group['destination'], {})
                 targeted_dict.update({'session': group['session'].lower()})
-                targeted_dict.update({'xmit': True})
-                targeted_dict.update({'recv': True})
+                targeted_dict.update({'xmit': True if group['xmit'] else False})
+                targeted_dict.update({'recv': True if group['recv'] else False})
                 targeted_dict.update({'active': True if group['status'] == 'active' else False})
                 continue
         return result_dict
@@ -2246,7 +2080,7 @@ class ShowMplsL2TransportSchema(MetaParser):
                 Optional('status'): str,
                 Optional('local_circuit'): str,
                 Optional('state'): str,
-                'destination_address': {
+                Optional('destination_address'): {
                     Any():{
                         'vc_id': int,
                         'vc_status': str,

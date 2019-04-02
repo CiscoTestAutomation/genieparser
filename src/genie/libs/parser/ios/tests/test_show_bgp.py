@@ -103,14 +103,14 @@ class test_show_bgp_all_neighbors_advertised_routes(test_show_bgp_all_neighbors_
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowBgpAllNeighborsAdvertisedRoutes(device=self.device)
-        parsed_output = obj.parse(neighbor='21.0.0.2')
+        parsed_output = obj.parse(neighbor='10.186.0.2')
         self.assertEqual(parsed_output,self.golden_parsed_output1)
 
     def test_show_bgp_vrf_all_neighbors_advertised_routes_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowBgpAllNeighborsAdvertisedRoutes(device=self.device)
-        parsed_output = obj.parse(neighbor='19.0.102.3')
+        parsed_output = obj.parse(neighbor='10.106.102.3')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
     def test_show_bgp_vrf_all_neighbors_advertised_routes_golden3(self):
@@ -208,21 +208,21 @@ class test_show_bgp_neighbors_received_routes(test_show_bgp_neighbors_received_r
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowBgpAllNeighborsReceivedRoutes(device=self.device)
-        parsed_output = obj.parse(neighbor='21.0.0.2')
+        parsed_output = obj.parse(neighbor='10.186.0.2')
         self.assertEqual(parsed_output,self.golden_parsed_output1)
 
     def test_show_bgp_vrf_all_neighbors_received_routes_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowBgpAllNeighborsReceivedRoutes(device=self.device)
-        parsed_output = obj.parse(neighbor='19.0.101.1')
+        parsed_output = obj.parse(neighbor='10.106.101.1')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
     def test_show_bgp_vrf_all_neighbors_received_routes_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpAllNeighborsReceivedRoutes(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(neighbor='21.0.0.2')
+            parsed_output = obj.parse(neighbor='10.186.0.2')
 
 # ================================================================
 #  unit test for show ip bgp template peer-session <WORD>"""
@@ -262,14 +262,14 @@ class test_show_bgp_all_neighbors_routes(test_show_bgp_all_neighbors_routes_iosx
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowBgpAllNeighborsRoutes(device=self.device)
-        parsed_output = obj.parse(neighbor='21.0.0.2')
+        parsed_output = obj.parse(neighbor='10.186.0.2')
         self.assertEqual(parsed_output,self.golden_parsed_output1)
 
     def test_show_bgp_vrf_all_neighbors_routes_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowBgpAllNeighborsRoutes(device=self.device)
-        parsed_output = obj.parse(neighbor='19.0.101.1')
+        parsed_output = obj.parse(neighbor='10.106.101.1')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
     def test_show_bgp_vrf_all_neighbors_routes_golden3(self):
@@ -283,7 +283,7 @@ class test_show_bgp_all_neighbors_routes(test_show_bgp_all_neighbors_routes_iosx
         self.device = Mock(**self.empty_output)
         obj = ShowBgpAllNeighborsRoutes(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(neighbor='21.0.0.2')
+            parsed_output = obj.parse(neighbor='10.186.0.2')
 
 # ================================================================
 #  unit test for show ip bgp template peer-policy <WORD>"""
