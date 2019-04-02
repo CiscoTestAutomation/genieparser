@@ -11,7 +11,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
 
 # Parser
 from genie.libs.parser.ios.show_arp import ShowIpArp, ShowIpArpSummary,\
-                                           ShowIpTraffic, ShowArpApplication, \
+                                           ShowIpTraffic, \
+                                           ShowArpApplication, \
                                            ShowArpSummary
 
 from genie.libs.parser.iosxe.tests.test_show_arp import test_show_arp_application as \
