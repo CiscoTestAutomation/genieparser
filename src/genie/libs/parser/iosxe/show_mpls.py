@@ -1131,7 +1131,7 @@ class ShowMplsLdpDiscoverySchema(MetaParser):
     schema = {
         'vrf': {
             Any(): {
-                'local_ldp_identifier': {
+                Optional('local_ldp_identifier'): {
                     Any(): {
                         Optional('discovery_sources'): {
                             'interfaces': {
@@ -1234,7 +1234,7 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
         #     GigabitEthernet0/0/0 (ldp): xmit/recv
         #     ATM1/1/0.1 (tdp):xmit/recv
         #     Ethernet3/0 (ldp): xmit
-        p3 = re.compile(r'^(?P<interface>\S+) +\((?P<session>[\w]+)\):(?P<space>\s{1})?(xmit|xmit\/recv)$')
+        p3 = re.compile(r'^((?P<interface>\S+) +)?\((?P<session>[\w]+)\): *(?P<xmit>xmit)?\/?(?P<recv>recv)?$')
 
         #         Enabled: Interface config
         p4 = re.compile(r'^Enabled: +(?P<enabled>[\S\s]+)$')
@@ -1265,8 +1265,11 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
 
         #  10.81.1.1 -> 172.16.94.33 (ldp): active, xmit/recv
         #  10.81.1.1 -> 172.16.25.16 (tdp): passive, xmit/recv
+        #  10.131.191.252 -> 10.131.159.251 (ldp): active, xmit
+        #  10.131.191.252 -> 10.131.159.252 (ldp): active/passive, xmit/recv
         p12 = re.compile(r'^(?P<source>[\d\.]+) +\-> +(?P<destination>[\d\.]+)'
-                         ' +\((?P<session>(ldp|tdp)+)\): +(?P<status>(active|passive)+), +xmit\/recv$')
+                          ' +\((?P<session>(ldp|tdp)+)\): +(?P<status>(active|passive|active\/passive)+),'
+                          ' +(?P<xmit>xmit)?\/?(?P<recv>recv)?$')
 
         # Targeted Hellos:
         p13 = re.compile(r'^Targeted +Hellos:$')
@@ -1301,12 +1304,13 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
+                interface = group['interface'] if group['interface'] else "default"
                 interface_dict = local_ldp_identifier_dict.setdefault('discovery_sources', {}) \
                     .setdefault('interfaces', {}) \
-                    .setdefault(group['interface'], {})
+                    .setdefault(interface, {})
                 interface_dict.update({'session': group['session']})
-                interface_dict.update({'xmit': True})
-                interface_dict.update({'recv': True})
+                interface_dict.update({'xmit': True if group['xmit'] else False})
+                interface_dict.update({'recv': True if group['recv'] else False})
                 continue
 
             # Enabled: Interface config
@@ -1382,6 +1386,8 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
 
             #  10.81.1.1 -> 172.16.94.33 (ldp): active, xmit/recv
             #  10.81.1.1 -> 172.16.25.16 (tdp): passive, xmit/recv
+            #  10.131.191.252 -> 10.131.159.251 (ldp): active, xmit
+            #  10.131.191.252 -> 10.131.159.252 (ldp): active/passive, xmit/recv
             m = p12.match(line)
             if m:
                 group = m.groupdict()
@@ -1389,8 +1395,8 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
                     setdefault(group['source'], {}). \
                     setdefault(group['destination'], {})
                 targeted_dict.update({'session': group['session'].lower()})
-                targeted_dict.update({'xmit': True})
-                targeted_dict.update({'recv': True})
+                targeted_dict.update({'xmit': True if group['xmit'] else False})
+                targeted_dict.update({'recv': True if group['recv'] else False})
                 targeted_dict.update({'active': True if group['status'] == 'active' else False})
                 continue
         return result_dict
@@ -2073,7 +2079,7 @@ class ShowMplsL2TransportSchema(MetaParser):
                 Optional('status'): str,
                 Optional('local_circuit'): str,
                 Optional('state'): str,
-                'destination_address': {
+                Optional('destination_address'): {
                     Any():{
                         'vc_id': int,
                         'vc_status': str,
