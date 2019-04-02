@@ -1234,6 +1234,7 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
         #     GigabitEthernet0/0/0 (ldp): xmit/recv
         #     ATM1/1/0.1 (tdp):xmit/recv
         #     Ethernet3/0 (ldp): xmit
+        #                (ldp): xmit/recv
         p3 = re.compile(r'^((?P<interface>\S+) +)?\((?P<session>[\w]+)\): *(?P<xmit>xmit)?\/?(?P<recv>recv)?$')
 
         #         Enabled: Interface config

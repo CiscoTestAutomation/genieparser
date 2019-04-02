@@ -133,6 +133,7 @@ class ShowMplsInterface(ShowMplsInterface_iosxe):
         show mpls interfaces <interface>
         show mpls interfaces <interface> detail
         show mpls interfaces detail"""
+    pass
 
 
 # ================================================
