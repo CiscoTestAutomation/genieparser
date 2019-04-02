@@ -11,6 +11,7 @@ from genie.metaparser.util.schemaengine import Schema, \
                                                And, \
                                                Default, \
                                                Use
+from genie.libs.parser.utils.common import Common
 
 """show isis neighbors"""
 
@@ -63,11 +64,9 @@ class ShowIsisNeighbor(ShowIsisNeighborSchema):
             m = p2.match(line)
             if m:
                 system_id = m.groupdict()['system_id']
-                ret_dict.setdefault('isis', {}).setdefault(isis_name, {}).setdefault('neighbors',
-                                                                                                {}).setdefault(
-                    system_id, {})
+                ret_dict.setdefault('isis', {}).setdefault(isis_name, {}).setdefault('neighbors', {}).setdefault(system_id, {})
                 ret_dict['isis'][isis_name]['neighbors'][system_id]['type'] = m.groupdict()['type']
-                ret_dict['isis'][isis_name]['neighbors'][system_id]['interface'] = m.groupdict()['interface']
+                ret_dict['isis'][isis_name]['neighbors'][system_id]['interface'] = Common.convert_intf_name(m.groupdict()['interface'])
                 ret_dict['isis'][isis_name]['neighbors'][system_id]['ip_address'] = m.groupdict()[
                     'ip_address']
                 ret_dict['isis'][isis_name]['neighbors'][system_id]['state'] = m.groupdict()['state']
