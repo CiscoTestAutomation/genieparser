@@ -10,7 +10,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                              SchemaMissingKeyError
 
 # Parser
-from genie.libs.parser.ios.show_arp import ShowIpArp, ShowIpArpSummary,\
+from genie.libs.parser.ios.show_arp import ShowIpArp, \
+                                           ShowIpArpSummary,\
                                            ShowIpTraffic, \
                                            ShowArpApplication, \
                                            ShowArpSummary

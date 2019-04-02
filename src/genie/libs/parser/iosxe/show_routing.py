@@ -198,7 +198,7 @@ class ShowIpRoute(ShowIpRouteSchema):
                 if m.groupdict()['code']:
                     source_protocol_codes = m.groupdict()['code'].strip()
                     for key,val in source_protocol_dict.items():
-                        source_protocol_replaced = source_protocol_codes.replace('*','')
+                        source_protocol_replaced = source_protocol_codes.split('*')[0]
                         if source_protocol_replaced in val:
                             source_protocol = key
 
@@ -1005,9 +1005,9 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
 
         # ipv6 specific
         p7 = re.compile(r'^Route +count +is +(?P<route_count>[\d\/]+), +'
-        	             'share +count +(?P<share_count>[\d\/]+)$')
+                         'share +count +(?P<share_count>[\d\/]+)$')
         p8 = re.compile(r'^(?P<fwd_ip>[\w\:]+)(, +(?P<fwd_intf>[\w\.\/\-]+)'
-        	             '( indirectly connected)?)?$')
+                         '( indirectly connected)?)?$')
         p8_1 = re.compile(r'^receive +via +(?P<fwd_intf>[\w\.\/\-]+)$')
         p9 = re.compile(r'^Last +updated +(?P<age>[\w\:\.]+) +ago$')
         p10 = re.compile(r'^From +(?P<from>[\w\:]+)$')

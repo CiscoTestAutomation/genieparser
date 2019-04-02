@@ -61,8 +61,9 @@ class ShowLacpSysId(ShowLacpSysIdSchema):
 
         result_dict = {}
         # 32768, 001e.49af.8c00
-
-        p1 = re.compile(r'^\s*(?P<system_priority>[\d]+), +(?P<system_id_mac>[\w\.]+)$')
+        # 32768,0014.a93d.4a00
+        # 8000,AC-12-34-56-78-90
+        p1 = re.compile(r'^\s*(?P<system_priority>[\d]+), *(?P<system_id_mac>[\w\.\-]+)$')
 
         for line in out.splitlines():
             if line:
@@ -97,11 +98,12 @@ class ShowLacpCountersSchema(MetaParser):
                         'counters': {
                             'lacp_in_pkts': int,
                             'lacp_out_pkts': int,
-                            'lacp_errors': int,
+                            'lacp_pkts': int,
+                            Optional('lacp_errors'): int,
                             'marker_in_pkts': int,
                             'marker_out_pkts': int,
-                            'marker_response_in_pkts': int,
-                            'marker_response_out_pkts': int,
+                            Optional('marker_response_in_pkts'): int,
+                            Optional('marker_response_out_pkts'): int,
                         },
                     },
                 }
@@ -129,17 +131,25 @@ class ShowLacpCounters(ShowLacpCountersSchema):
             out = output
 
         result_dict = {}
+
         #              LACPDUs         Marker      Marker Response    LACPDUs
         # Port       Sent   Recv     Sent   Recv     Sent   Recv      Pkts Err
         # ---------------------------------------------------------------------
         # Channel group: 1
         # Gi2         27     22       0      0        0      0         0
+        # Gi5/0/0     21     18       0      0        0      0         0    0
+        #              LACPDUs         Marker       LACPDUs
+        # Port       Sent   Recv     Sent   Recv     Pkts Err
+        # ---------------------------------------------------
+        # Channel group: 1
+        #   Fa4/1    8      15       0      0         3    0
+        #   Fa4/3    14     18       0      0         0
 
         p1 = re.compile(r'^\s*Channel +group: +(?P<channel_group>[\d]+)$')
-        p2 = re.compile(r'^\s*(?P<interface>[\w\/]+) +(?P<lacp_out_pkts>[\d]+)'
-                        ' +(?P<lacp_in_pkts>[\d]+) +(?P<marker_out_pkts>[\d]+) +(?P<marker_in_pkts>[\d]+)'
-                        ' +(?P<marker_response_out_pkts>[\d]+) +(?P<marker_response_in_pkts>[\d]+)'
-                        ' +(?P<lacp_errors>[\d]+)$')
+        p2 = re.compile(r'^\s*(?P<interface>[\w\/]+) +(?P<lacp_out_pkts>[\d]+) +(?P<lacp_in_pkts>[\d]+)'
+                         ' +(?P<marker_out_pkts>[\d]+) +(?P<marker_in_pkts>[\d]+)'
+                         '( +(?P<marker_response_out_pkts>[\d]+) +(?P<marker_response_in_pkts>[\d]+))?'
+                         ' +(?P<lacp_pkts>[\d]+)( +(?P<lacp_errors>[\d]+))?$')
 
         for line in out.splitlines():
             if line:
@@ -167,10 +177,16 @@ class ShowLacpCounters(ShowLacpCountersSchema):
                 counter_dict.update({'lacp_out_pkts': int(group.pop('lacp_out_pkts'))})
                 counter_dict.update({'marker_in_pkts': int(group.pop('marker_in_pkts'))})
                 counter_dict.update({'marker_out_pkts': int(group.pop('marker_out_pkts'))})
-                counter_dict.update({'marker_response_in_pkts': int(group.pop('marker_response_in_pkts'))})
-                counter_dict.update({'marker_response_out_pkts': int(group.pop('marker_response_out_pkts'))})
-                counter_dict.update({'lacp_errors': int(group.pop('lacp_errors'))})
+                counter_dict.update({'lacp_pkts': int(group.pop('lacp_pkts'))})
+
+                if group['marker_response_in_pkts']:
+                    counter_dict.update({'marker_response_in_pkts': int(group.pop('marker_response_in_pkts'))})
+                if group['marker_response_out_pkts']:
+                    counter_dict.update({'marker_response_out_pkts': int(group.pop('marker_response_out_pkts'))})
+                if group['lacp_errors']:
+                    counter_dict.update({'lacp_errors': int(group.pop('lacp_errors'))})
                 continue
+
         return result_dict
 
 # ====================================================
@@ -197,6 +213,7 @@ class ShowLacpInternalSchema(MetaParser):
                         'state': str,
                         'bundled': bool,
                         'port_state': int,
+                        Optional('lacp_interval'): str,
                     },
                 }
             },
@@ -227,10 +244,14 @@ class ShowLacpInternal(ShowLacpInternalSchema):
         #                             LACP port     Admin     Oper    Port        Port
         # Port      Flags   State     Priority      Key       Key     Number      State
         # Gi2       SA      bndl      32768         0x1       0x1     0x1         0x3D
-
+        # Gi3/2     FA      bndl-sby  32768         0x1       0x1     0xF303      0x7
+        #                             LACPDUs     LACP Port    Admin   Oper    Port     Port
+        # Port      Flags    State    Interval    Priority     Key     Key     Number   State
+        # Fa4/1     saC      bndl     30s         32768        100     100     0xc1     0x75
         p1 = re.compile(r'^\s*Channel +group +(?P<channel_group>[\d]+)$')
         p2 = re.compile(r'^\s*(?P<interface>[\w\/]+) +(?P<flags>[\w]+)'
-                        ' +(?P<state>[\w]+) +(?P<lacp_port_priority>[\d]+) +(?P<admin_key>[\w]+)'
+                        ' +(?P<state>[\S]+)( +(?P<lacp_interval>[\w]+))?'
+                        ' +(?P<lacp_port_priority>[\d]+) +(?P<admin_key>[\w]+)'
                         ' +(?P<oper_key>[\w]+) +(?P<port_num>[\w]+)'
                         ' +(?P<port_state>[\w]+)$')
 
@@ -272,6 +293,8 @@ class ShowLacpInternal(ShowLacpInternalSchema):
                 member_dict.update({'oper_key': int(group.pop('oper_key'),0)})
                 member_dict.update({'port_num': int(group.pop('port_num'),0)})
                 member_dict.update({'port_state': int(group.pop('port_state'),0)})
+                if group['lacp_interval']:
+                    member_dict.update({'lacp_interval': group['lacp_interval']})
                 continue
 
         return result_dict
@@ -299,7 +322,7 @@ class ShowLacpNeighborSchema(MetaParser):
                         'age': int,
                         'flags': str,
                         'lacp_port_priority': int,
-                        'port_state': int,
+                        Optional('port_state'): int,
                     },
                 }
             },
@@ -330,11 +353,12 @@ class ShowLacpNeighbor(ShowLacpNeighborSchema):
         #                   LACP port                        Admin  Oper   Port    Port
         # Port      Flags   Priority  Dev ID          Age    key    Key    Number  State
         # Gi2       SA      32768     001e.49e6.bc00  25s    0x0    0x1    0x1     0x3D
+        # Gi5/0/0   SP      32768     0011.2026.7300  11s    0x1    0x14   0x3C
         p1 = re.compile(r'^\s*Channel +group +(?P<channel_group>[\d]+) +neighbors$')
         p2 = re.compile(r'^\s*(?P<interface>[\w\/]+) +(?P<flags>[\w]+)'
                         ' +(?P<lacp_port_priority>[\d]+) +(?P<partner_id>[\w\.]+) +(?P<age>[\d]+)s +(?P<admin_key>[\w]+)'
                         ' +(?P<oper_key>[\w]+) +(?P<port_num>[\w]+)'
-                        ' +(?P<port_state>[\w]+)$')
+                        '( +(?P<port_state>[\w]+))?$')
 
         for line in out.splitlines():
             if line:
@@ -371,8 +395,9 @@ class ShowLacpNeighbor(ShowLacpNeighborSchema):
                 member_dict.update({'oper_key': int(group.pop('oper_key'), 0)})
                 member_dict.update({'port_num': int(group.pop('port_num'), 0)})
                 member_dict.update({'partner_id': group.pop('partner_id')})
-                member_dict.update({'port_state': int(group.pop('port_state'),0)})
                 member_dict.update({'age': int(group.pop('age'))})
+                if group['port_state']:
+                    member_dict.update({'port_state': int(group.pop('port_state'),0)})
                 continue
 
         return result_dict
@@ -573,7 +598,7 @@ class ShowPagpInternalSchema(MetaParser):
                         'group_ifindex': int,
                         'partner_count': int,
                         'hello_interval': int,
-                        'timers': str,
+                        Optional('timers'): str,
                         'pagp_port_priority': int,
                         'flags': str,
                         'state': str,
@@ -610,9 +635,15 @@ class ShowPagpInternal(ShowPagpInternalSchema):
         # Port      Flags State   Timers  Interval Count   Priority   Method  Ifindex
         # Gi0/1     SC    U6/S7   H       30s      1        128        Any      8
 
+        #                                   Hello    Partner  PAgP       Learning  Group
+        # Port        Flags State   Timers  Interval Count    Priority   Method    Ifindex
+        # Gi1/0/7     d     U1/S1           1s       0        128        Any       0
+        # Gi1/0/8     d     U1/S1           1s       0        128        Any       0
+        # Gi1/0/9     d     U1/S1           1s       0        128        Any       0
+
         p1 = re.compile(r'^\s*Channel +group +(?P<channel_group>[\d]+)$')
         p2 = re.compile(r'^\s*(?P<interface>[\w\/]+) +(?P<flags>[\w\s]+)'
-                        ' +(?P<state>[\w\/]+) +(?P<timers>[\w]+) +(?P<hello_interval>[\d]+)[\w]'
+                        ' +(?P<state>[\w\/]+)( +(?P<timers>[\w]+))? +(?P<hello_interval>[\d]+)[\w]'
                         ' +(?P<partner_count>[\d]+) +(?P<pagp_port_priority>[\d]+)'
                         ' +(?P<learn_method>[\w]+) +(?P<group_ifindex>[\d]+)$')
 
@@ -641,7 +672,8 @@ class ShowPagpInternal(ShowPagpInternalSchema):
                 member_dict.update({'flags': group.pop('flags').strip()})
                 member_dict.update({'state': group.pop('state')})
                 member_dict.update({'pagp_port_priority': int(group.pop('pagp_port_priority'))})
-                member_dict.update({'timers': group.pop('timers')})
+                if group['timers']:
+                    member_dict.update({'timers': group.pop('timers')})
                 member_dict.update({'hello_interval': int(group.pop('hello_interval'))})
                 member_dict.update({'partner_count': int(group.pop('partner_count'))})
                 member_dict.update({'group_ifindex': int(group.pop('group_ifindex'))})

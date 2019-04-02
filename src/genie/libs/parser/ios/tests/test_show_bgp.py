@@ -42,12 +42,12 @@ from genie.libs.parser.iosxe.tests.test_show_bgp import \
 # ===================================
 class test_show_bgp_all_detail(test_show_bgp_all_detail_iosxe):
 
-    def test_show_bgp_all_detail_golden(self):
+    def test_show_bgp_all_detail_golden1(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output)
+        self.device = Mock(**self.golden_output1)
         obj = ShowBgpAllDetail(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_show_bgp_all_detail_golden2(self):
         self.maxDiff = None
@@ -99,26 +99,26 @@ class test_show_bgp_all_neighbors_policy(test_show_bgp_all_neighbors_policy_iosx
 # ===============================================================
 class test_show_bgp_all_neighbors_advertised_routes(test_show_bgp_all_neighbors_advertised_routes_iosxe):
 
-    def test_show_bgp_all_neighbors_advertised_routes_golden(self):
+    def test_show_bgp_all_neighbors_advertised_routes_golden1(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output)
+        self.device = Mock(**self.golden_output1)
         obj = ShowBgpAllNeighborsAdvertisedRoutes(device=self.device)
         parsed_output = obj.parse(neighbor='10.186.0.2')
-        self.assertEqual(parsed_output, self.golden_parsed_output)
+        self.assertEqual(parsed_output,self.golden_parsed_output1)
 
     def test_show_bgp_vrf_all_neighbors_advertised_routes_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowBgpAllNeighborsAdvertisedRoutes(device=self.device)
         parsed_output = obj.parse(neighbor='10.106.102.3')
-        self.assertEqual(parsed_output, self.golden_parsed_output2)
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
     def test_show_bgp_vrf_all_neighbors_advertised_routes_golden3(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output3)
         obj = ShowBgpAllNeighborsAdvertisedRoutes(device=self.device)
         parsed_output = obj.parse(neighbor='10.4.6.6')
-        self.assertEqual(parsed_output, self.golden_parsed_output3)
+        self.assertEqual(parsed_output,self.golden_parsed_output3)
 
     def test_show_bgp_all_neighbors_advertised_routes_empty(self):
         self.device = Mock(**self.empty_output)
@@ -140,17 +140,17 @@ class test_show_bgp_all_summary(test_show_bgp_all_summary_iosxe):
 
     def test_golden(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output)
+        self.device = Mock(**self.golden_output1)
         obj = ShowBgpAllSummary(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_golden_2(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output_2)
+        self.device = Mock(**self.golden_output2)
         obj = ShowBgpAllSummary(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 # ===============================================================
 # Unit test for 'show bgp all cluster-ids'
@@ -204,19 +204,19 @@ class test_show_bgp_all_neighbors(test_show_bgp_all_neighbors_iosxe):
 # =============================================================
 class test_show_bgp_neighbors_received_routes(test_show_bgp_neighbors_received_routes_iosxe):
 
-    def test_show_bgp_vrf_all_neighbors_received_routes_golden(self):
+    def test_show_bgp_vrf_all_neighbors_received_routes_golden1(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output)
+        self.device = Mock(**self.golden_output1)
         obj = ShowBgpAllNeighborsReceivedRoutes(device=self.device)
         parsed_output = obj.parse(neighbor='10.186.0.2')
-        self.assertEqual(parsed_output, self.golden_parsed_output)
+        self.assertEqual(parsed_output,self.golden_parsed_output1)
 
     def test_show_bgp_vrf_all_neighbors_received_routes_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowBgpAllNeighborsReceivedRoutes(device=self.device)
         parsed_output = obj.parse(neighbor='10.106.101.1')
-        self.assertEqual(parsed_output, self.golden_parsed_output2)
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
     def test_show_bgp_vrf_all_neighbors_received_routes_empty(self):
         self.device = Mock(**self.empty_output)
@@ -258,26 +258,26 @@ class test_show_ip_bgp_template_peer_session(test_show_ip_bgp_template_peer_sess
 # ====================================================
 class test_show_bgp_all_neighbors_routes(test_show_bgp_all_neighbors_routes_iosxe):
 
-    def test_show_bgp_vrf_all_neighbors_routes_golden(self):
+    def test_show_bgp_vrf_all_neighbors_routes_golden1(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output)
+        self.device = Mock(**self.golden_output1)
         obj = ShowBgpAllNeighborsRoutes(device=self.device)
         parsed_output = obj.parse(neighbor='10.186.0.2')
-        self.assertEqual(parsed_output, self.golden_parsed_output)
+        self.assertEqual(parsed_output,self.golden_parsed_output1)
 
     def test_show_bgp_vrf_all_neighbors_routes_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowBgpAllNeighborsRoutes(device=self.device)
         parsed_output = obj.parse(neighbor='10.106.101.1')
-        self.assertEqual(parsed_output, self.golden_parsed_output2)
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
     def test_show_bgp_vrf_all_neighbors_routes_golden3(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output3)
         obj = ShowBgpAllNeighborsRoutes(device=self.device)
         parsed_output = obj.parse(neighbor='10.4.6.6')
-        self.assertEqual(parsed_output, self.golden_parsed_output3)
+        self.assertEqual(parsed_output,self.golden_parsed_output3)
 
     def test_show_bgp_vrf_all_neighbors_routes_empty(self):
         self.device = Mock(**self.empty_output)
@@ -377,24 +377,24 @@ class test_show_bgp_all(test_show_bgp_all_iosxe):
 
     def test_golden_1(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output_1)
+        self.device = Mock(**self.golden_output1)
         obj = ShowBgpAll(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_golden_2(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output_2)
+        self.device = Mock(**self.golden_output2)
         obj = ShowBgpAll(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
     def test_golden_3(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output_3)
+        self.device = Mock(**self.golden_output3)
         obj = ShowBgpAll(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_3)
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 
 if __name__ == '__main__':
