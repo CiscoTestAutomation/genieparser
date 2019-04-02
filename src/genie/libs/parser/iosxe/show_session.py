@@ -122,6 +122,12 @@ class ShowUsers(ShowUsersSchema):
         ret_dict = {}
 
         # initial regexp pattern
+        #     Line       User       Host(s)              Idle       Location
+        #    2 vty 0     nos        idle                 00:35:32 10.0.0.1
+        #    3 vty 1     testuser   idle                 00:41:43 10.0.0.2
+        # *  4 vty 2     testuser   idle                 00:00:07 10.0.0.3
+        # *  0 con 0                idle                 00:00:00
+        #   10 vty 0             Virtual-Access2          0      1212321
         p1 = re.compile(r'^((?P<busy>\*) +)?(?P<line>[\d]+ +[\w]+ +[\d]+)'
                          '( +(?P<user>\w+))? +(?P<host>\S+)'
                          ' +(?P<idle>[0-9\:]+)( +(?P<location>[\S]+))?$')
@@ -129,12 +135,6 @@ class ShowUsers(ShowUsersSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            #     Line       User       Host(s)              Idle       Location
-            #    2 vty 0     nos        idle                 00:35:32 10.0.0.1
-            #    3 vty 1     testuser   idle                 00:41:43 10.0.0.2
-            # *  4 vty 2     testuser   idle                 00:00:07 10.0.0.3
-            # *  0 con 0                idle                 00:00:00
-            #   10 vty 0             Virtual-Access2          0      1212321
             m = p1.match(line)
             if m:
                 group = m.groupdict()
