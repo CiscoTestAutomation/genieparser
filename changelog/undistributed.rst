@@ -94,3 +94,11 @@
           show mpls interfaces <interface>
           show mpls interfaces <interface> detail
           show mpls interfaces detail
+
+--------------------------------------------------------------------------------
+                                   BFD
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowBfdNeighborsDetails for:
+        show bfd neighbors details
+        show bfd neighbors client <client> details
