@@ -15,11 +15,10 @@ from genie.libs.parser.iosxe.tests.test_show_bfd import test_show_bfd as \
 # Parser
 from genie.libs.parser.ios.show_bfd import ShowBfdNeighborsDetails
 
-# ============================================
-# IOS unit test for the following show command
-#	* show bfd neighbors details
-#	* show bfd neighbors client {client} details
-# ============================================
+# ==========================================================
+# unit test for 'show bfd neighbors details'
+# unit test for 'show bfd neighbors client <client> details'
+# ==========================================================
 class test_show_bfd(test_show_bfd_iosxe):
 
 	def test_empty(self):

@@ -1,7 +1,7 @@
 '''show_bfd.py
 IOS parser for the following show command
 	* show bfd neighbors details
-	* show bfd neighbors client {client} details
+	* show bfd neighbors client <client> details
 '''
 
 # import iosxe parser
@@ -13,6 +13,6 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetails_iosxe):
     """
     IOS parser for the following show command
 	  'show bfd neighbors details'
-	  'show bfd neighbors client {client} details'
+	  'show bfd neighbors client <client> details'
 	"""
     pass
