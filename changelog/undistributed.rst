@@ -131,3 +131,12 @@
 * IOS
     * Added ShowSnmpMib for:
         'show snmp mib'
+
+--------------------------------------------------------------------------------
+                                   BFD
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowBfdNeighborsDetails for:
+        show bfd neighbors details
+        show bfd neighbors client <client> details
+
