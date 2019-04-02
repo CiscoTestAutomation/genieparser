@@ -50,3 +50,35 @@
           show mpls interfaces <interface> detail
           show mpls interfaces detail
 
+--------------------------------------------------------------------------------
+                                   ISSU
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowIssuStateDetail for:
+          show issu state detail
+    * Add ShowIssuRollbackTimer for:
+          show issu rollback-timer
+
+--------------------------------------------------------------------------------
+                                   POWER
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowStackPower for:
+          show stack-power
+    * Add ShowPowerInlineInterface for:
+          show power inline <interface>
+
+--------------------------------------------------------------------------------
+                                   DOT1X
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowDot1xAllStatistics for:
+          show dot1x all statistics
+
+--------------------------------------------------------------------------------
+                                   CRYPTO
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowCryptoPkiCertificates for:
+          show crypto pki certificates
+          show crypto pki certificates <WORD>

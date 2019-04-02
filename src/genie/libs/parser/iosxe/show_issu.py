@@ -121,6 +121,8 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
             # p1 = re.compile(r'^No ISSU operation is in progress$')
             m = p1.match(line)
             if m:
+                if not ret_dict:
+                    slot_dict = ret_dict.setdefault('slot', {}).setdefault('default', {})
                 slot_dict['issu_in_progress'] = False
                 continue
 

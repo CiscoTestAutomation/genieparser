@@ -31,13 +31,14 @@ class ShowCryptoPkiCertificatesSchema(MetaParser):
                         'usage': str,
                         Optional('storage'): str,
                         'issuer':
-                            {'cn': str,
+                            {
+                            Optional('cn'): str,
                             Optional('o'): str},
                         'subject':
                             {Optional('name'): str,
                             Optional('serial_number'): str,
                             Optional('pid'): str,
-                            'cn': str,
+                            Optional('cn'): str,
                             Optional('o'): str,
                             },
                         Optional('crl_distribution_points'): str,
@@ -75,11 +76,11 @@ class ShowCryptoPkiCertificates(ShowCryptoPkiCertificatesSchema):
         # initial regexp pattern
         p1 = re.compile(r'^((?P<cer>Certificate)|(?P<cer_name>(CA|Router Self-Signed) +Certificate))$')
         p2 = re.compile(r'^Status: +(?P<status>\w+)$')
-        p3 = re.compile(r'^Certificate +Serial +Number +\(hex\): +(?P<serial_number_in_hex>\w+)$')
+        p3 = re.compile(r'^Certificate +Serial +Number( +\(hex\))?: +(?P<serial_number_in_hex>\w+)$')
         p4 = re.compile(r'^Certificate Usage: +(?P<usage>[\w\s]+)$')
         p5 = re.compile(r'^((?P<issuer>Issuer)|(?P<subject>Subject)|(?P<validity_date>Validity +Date)):$')
-        p6 = re.compile(r'^cn\=(?P<cn>[\S\s]+)$')
-        p7 = re.compile(r'^o\=(?P<o>[\w\s]+)$')
+        p6 = re.compile(r'(?i)^cn *= *(?P<cn>[\S\s]+)$')
+        p7 = re.compile(r'(?i)^o *= *(?P<o>[\w\s]+)$')
         p8 = re.compile(r'^Name: +(?P<name>.*)$')
         p9 = re.compile(r'^Serial +Number: *'
                           'PID: *(?P<pid>[\w\-]+) +'
@@ -110,6 +111,7 @@ class ShowCryptoPkiCertificates(ShowCryptoPkiCertificatesSchema):
                 continue
             
             # Certificate Serial Number (hex): 793B572700000003750B
+            # Certificate Serial Number: 0x15
             m = p3.match(line)
             if m:
                 cer_dict['serial_number_in_hex'] = m.groupdict()['serial_number_in_hex']
@@ -136,12 +138,14 @@ class ShowCryptoPkiCertificates(ShowCryptoPkiCertificatesSchema):
                 continue
             
             # cn=Cisco Manufacturing CA SHA2
+            # CN = tpca-root
             m = p6.match(line)
             if m:
                 sub_dict['cn'] = m.groupdict()['cn']
                 continue
             
             # o=Cisco
+            # O = Company
             m = p7.match(line)
             if m:
                 sub_dict['o'] = m.groupdict()['o']
