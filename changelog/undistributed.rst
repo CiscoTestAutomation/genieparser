@@ -128,3 +128,11 @@
           show crypto pki certificates
           show crypto pki certificates <WORD>
 
+--------------------------------------------------------------------------------
+                                   BFD
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowBfdNeighborsDetails for:
+        show bfd neighbors details
+        show bfd neighbors client <client> details
+
