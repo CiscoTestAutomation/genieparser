@@ -51,7 +51,7 @@ class ShowBridgeDomainSchema(MetaParser):
                         'interfaces': list,
                     },
                 },
-                'mac_table': {
+                Optional('mac_table'): {
                     Any(): {
                         'pseudoport': str,
                         'mac_address': {
@@ -101,7 +101,8 @@ class ShowBridgeDomain(ShowBridgeDomainSchema):
         p2 = re.compile(r'^State: +(?P<state>\w+) +Mac +learning: +(?P<mac_learning_state>\w+)$')
 
         # Aging-Timer: 3600 second(s)
-        p3 = re.compile(r'^Aging-Timer: +(?P<aging_timer>\d+) +second\(s\)$')
+        # Aging-Timer: 30 second(s)  ––--> MAC aging timer for bridge-domain
+        p3 = re.compile(r'^Aging-Timer: +(?P<aging_timer>\d+) +second\(s\).*$')
 
         # Load for five secs: 10%/1%; one minute: 11%; five minutes: 12%
         p4 = re.compile(r'^Load +for.*$')
@@ -118,12 +119,17 @@ class ShowBridgeDomain(ShowBridgeDomainSchema):
         #     vfi VPLS-2051 neighbor 10.120.202.64 2051
         #     Port-channel1 service instance 2051 (split-horizon)
         #     GigabitEthernet0/0/3 service instance 3051 (split-horizon)
-        p6 = re.compile(r'^(?P<member_port>[\w\d\-\/\s\.]+)( +\(.*\))?$')
+        #    -   000C.29F8.5078 forward static_r  0    OCE_PTR:0xe8e5dda0
+        #    -   000C.29AF.F904 forward dynamic_c 29   GigabitEthernet6.EFP10 ––→ MAC locally learnt
+        p6 = re.compile(r'^(?P<member_port>[\w\d\-\/\s\.:–→]+)( +\(.*\))?$')
 
         #    AED MAC address    Policy  Tag       Age  Pseudoport
         #    0   0000.A000.0027 forward dynamic   3142 Port-channel1.EFP2051
         #    0   0000.A000.00F2 forward dynamic   3438 GigabitEthernet0/0/3.EFP3051
-        p7 = re.compile(r'^(?P<aed>\d+) +(?P<mac_address>[\w\d\.]+) +(?P<policy>\w+) +(?P<tag>\w+) +(?P<age>\d+) +(?P<pseudoport>[\w\d\-\.\/]+)$')
+        #    -   000C.29F8.5078 forward static_r  0    OCE_PTR:0xe8e5dda0
+        #    -   000C.29AF.F904 forward dynamic_c 29   GigabitEthernet6.EFP10 ––→ MAC locally learnt
+        p7 = re.compile(r'^(?P<aed>[\d-]+) +(?P<mac_address>[\w\d\.]+) +(?P<policy>\w+) +(?P<tag>\w+)'
+                         ' +(?P<age>\d+) +(?P<pseudoport>[\w\d\-\.\/:]+)( *–*→.*)?$')
 
         # Number of lines which match regexp = 32000
         p8 = re.compile(r'^Number +of +lines +which +match +regexp += +(?P<lines_match_regexp>\d+)$')
@@ -193,7 +199,7 @@ class ShowBridgeDomain(ShowBridgeDomainSchema):
                     final_dict['mac_table'][pseudoport]['mac_address']\
                         [mac_address]['mac_address'] = mac_address
                     final_dict['mac_table'][pseudoport]['mac_address']\
-                        [mac_address]['aed'] = int(group['aed'])
+                        [mac_address]['aed'] = 0 if group['aed'] == '-' else int(group['aed'])
                     final_dict['mac_table'][pseudoport]['mac_address']\
                         [mac_address]['policy'] = group['policy']
                     final_dict['mac_table'][pseudoport]['mac_address']\
@@ -201,6 +207,7 @@ class ShowBridgeDomain(ShowBridgeDomainSchema):
                     final_dict['mac_table'][pseudoport]['mac_address']\
                         [mac_address]['age'] = int(group['age'])
                     continue
+
                 group = m.groupdict()
                 if 'interfaces' in ret_dict and port_belonging_group in final_dict:
                     ret_dict['interfaces'].append(group['member_port'])
