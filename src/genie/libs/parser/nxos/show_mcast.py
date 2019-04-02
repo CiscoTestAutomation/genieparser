@@ -830,7 +830,7 @@ class ShowForwardingDistributionMulticastRoute(ShowForwardingDistributionMultica
 
         # IPv4 Multicast Routing Table for table-id: 1
         # IPv4 Multicast Routing Table for table-id: 0x3
-        p1 = re.compile(r'^\s*IPv4 +Multicast +Routing +Table +for +table\-id: +(?P<vrf_id>[\S]+)$')
+        p1 = re.compile(r'^\s*IPv4 +Multicast +Routing +Table +for +table\-id: +(?P<vrf_id>(?!wildcard)[\S]+)$')
 
         # Total number of groups: 5
         p2 = re.compile(r'^\s*Total +number +of +groups: +(?P<total_number_group>[\d]+)$')

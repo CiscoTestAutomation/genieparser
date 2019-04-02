@@ -688,6 +688,64 @@ class test_show_pagp_internal(unittest.TestCase):
         }
     }
 
+    golden_output_2 = {'execute.return_value': '''
+    +++ R1: executing command 'show pagp internal' +++
+    show pagp internal
+    Flags:  S - Device is sending Slow hello.  C - Device is in Consistent state.
+            A - Device is in Auto mode.        d - PAgP is down
+    Timers: H - Hello timer is running.        Q - Quit timer is running.
+            S - Switching timer is running.    I - Interface timer is running.
+
+    Channel group 14
+                                      Hello    Partner  PAgP       Learning  Group
+    Port        Flags State   Timers  Interval Count    Priority   Method    Ifindex
+    Gi1/0/7     d     U1/S1           1s       0        128        Any       0
+    Gi1/0/8     d     U1/S1           1s       0        128        Any       0
+    Gi1/0/9     d     U1/S1           1s       0        128        Any       0
+    R1#
+    '''}
+
+    golden_parsed_output_2 = {
+    'interfaces': {
+        'Port-channel14': {
+            'members': {
+                'GigabitEthernet1/0/7': {
+                    'interface': 'GigabitEthernet1/0/7',
+                    'partner_count': 0,
+                    'hello_interval': 1,
+                    'learn_method': 'any',
+                    'state': 'U1/S1',
+                    'pagp_port_priority': 128,
+                    'flags': 'd',
+                    'group_ifindex': 0,
+                    },
+                'GigabitEthernet1/0/9': {
+                    'interface': 'GigabitEthernet1/0/9',
+                    'partner_count': 0,
+                    'hello_interval': 1,
+                    'learn_method': 'any',
+                    'state': 'U1/S1',
+                    'pagp_port_priority': 128,
+                    'flags': 'd',
+                    'group_ifindex': 0,
+                    },
+                'GigabitEthernet1/0/8': {
+                    'interface': 'GigabitEthernet1/0/8',
+                    'partner_count': 0,
+                    'hello_interval': 1,
+                    'learn_method': 'any',
+                    'state': 'U1/S1',
+                    'pagp_port_priority': 128,
+                    'flags': 'd',
+                    'group_ifindex': 0,
+                    },
+                },
+            'name': 'Port-channel14',
+            'protocol': 'pagp',
+            },
+        },
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowPagpInternal(device=self.device)
@@ -700,6 +758,13 @@ class test_show_pagp_internal(unittest.TestCase):
         obj = ShowPagpInternal(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowPagpInternal(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
 ###################################################
