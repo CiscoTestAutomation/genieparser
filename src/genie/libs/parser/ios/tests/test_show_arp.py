@@ -421,87 +421,70 @@ class test_show_arp_application(test_show_arp_application_iosxe):
 # unit test for 'show arp summary'
 # ============================================
 class test_show_arp_summary(test_show_arp_summary_iosxe):
-    def test_empty(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowArpSummary(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
 
-    def test_golden(self):
-        self.device = Mock(**self.golden_output)
-        obj = ShowArpSummary(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output)
+  device = Device('aDevice')
+  empty_output_ios = {'execute.return_value':''}
+  
+  golden_parsed_output_ios = {
+      'total_num_of_entries': {
+          'arp_table_entries': 4,
+          'dynamic_arp_entries': 0,
+          'incomplete_arp_entries': 0,
+          'interface_arp_entries': 3,
+          'static_arp_entries': 1,
+          'alias_arp_entries': 0,
+          'simple_application_arp_entries': 0,
+          'application_alias_arp_entries': 0,
+          'application_timer_arp_entries': 0,
+          'learn_arp_entries': 0,
+      },
+      'maximum_entries': {
+          'maximum_configured_learn_arp_entry_limit': 512000,
+          'maximum_limit_of_learn_arp_entry': 512000,
+      },
+      'arp_entry_threshold': 409600,
+      'permit_threshold': 486400,
+      'interface_entries': {
+          'GigabitEthernet4/7': 1,
+          'GigabitEthernet4/1.1': 1,
+          'GigabitEthernet4/1': 1
+      },
+  }
 
+  golden_output_ios = {'execute.return_value': '''\
+      Total number of entries in the ARP table: 4.
+      Total number of Dynamic ARP entries: 0.
+      Total number of Incomplete ARP entries: 0.
+      Total number of Interface ARP entries: 3.
+      Total number of Static ARP entries: 1.
+      Total number of Alias ARP entries: 0.
+      Total number of Simple Application ARP entries: 0.
+      Total number of Application Alias ARP entries: 0.
+      Total number of Application Timer ARP entries: 0.
+      Maximum limit of Learn ARP entry : 512000.
+      Maximum configured Learn ARP entry limit : 512000.
+      Learn ARP Entry Threshold is 409600 and Permit Threshold is 486400.
+      Total number of Learn ARP entries: 0.
+      Interface           Entry Count
+      GigabitEthernet4/7            1
+      GigabitEthernet4/1.1          1
+      GigabitEthernet4/1            1
+      E0BC0/0                       
+      '''
+  }
 
-# ==========================================
-# IOS Parser for 'show arp summary'
-# ==========================================
+  def test_empty_ios(self):
+      self.device = Mock(**self.empty_output_ios)
+      obj = ShowArpSummary(device=self.device)
+      with self.assertRaises(SchemaEmptyParserError):
+          parsed_output = obj.parse()
 
-class test_show_arp_summary_ios(unittest.TestCase):
+  def test_golden_ios(self):
+      self.device = Mock(**self.golden_output_ios)
+      obj = ShowArpSummary(device=self.device)
+      parsed_output = obj.parse()
+      self.assertEqual(parsed_output, self.golden_parsed_output_ios)
 
-    device = Device('aDevice')
-    empty_output = {'execute.return_value':''}
-    
-    golden_parsed_output = {
-        'total_num_of_entries': {
-            'arp_table_entries': 4,
-            'dynamic_arp_entries': 0,
-            'incomplete_arp_entries': 0,
-            'interface_arp_entries': 3,
-            'static_arp_entries': 1,
-            'alias_arp_entries': 0,
-            'simple_application_arp_entries': 0,
-            'application_alias_arp_entries': 0,
-            'application_timer_arp_entries': 0,
-            'learn_arp_entries': 0,
-        },
-        'maximum_entries': {
-            'maximum_configured_learn_arp_entry_limit': 512000,
-            'maximum_limit_of_learn_arp_entry': 512000,
-        },
-        'arp_entry_threshold': 409600,
-        'permit_threshold': 486400,
-        'interface_entries': {
-            'GigabitEthernet4/7': 1,
-            'GigabitEthernet4/1.1': 1,
-            'GigabitEthernet4/1': 1
-        },
-    }
-
-    golden_output = {'execute.return_value': '''\
-        Total number of entries in the ARP table: 4.
-        Total number of Dynamic ARP entries: 0.
-        Total number of Incomplete ARP entries: 0.
-        Total number of Interface ARP entries: 3.
-        Total number of Static ARP entries: 1.
-        Total number of Alias ARP entries: 0.
-        Total number of Simple Application ARP entries: 0.
-        Total number of Application Alias ARP entries: 0.
-        Total number of Application Timer ARP entries: 0.
-        Maximum limit of Learn ARP entry : 512000.
-        Maximum configured Learn ARP entry limit : 512000.
-        Learn ARP Entry Threshold is 409600 and Permit Threshold is 486400.
-        Total number of Learn ARP entries: 0.
-        Interface           Entry Count
-        GigabitEthernet4/7            1
-        GigabitEthernet4/1.1          1
-        GigabitEthernet4/1            1
-        E0BC0/0                       
-        '''
-    }
-    
-    def test_empty(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowArpSummary(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
-
-    def test_golden(self):
-        self.device = Mock(**self.golden_output)
-        obj = ShowArpSummary(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
 		unittest.main()
