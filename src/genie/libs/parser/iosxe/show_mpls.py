@@ -2544,16 +2544,20 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
             m = p24.match(line)
             if m:
                 group = m.groupdict()
+                key = group['last_status_name'].replace(' ', '_'). \
+                        replace('/', '').lower()
                 last_status_name = final_dict.setdefault('last_status_name', {}). \
-                    setdefault(group['last_status_name'], {})
+                    setdefault(key, {})
                 last_status_name.update({'received': group['received']})
                 continue
 
             m = p25.match(line)
             if m:
                 group = m.groupdict()
+                key = group['last_status_name'].replace(' ', '_'). \
+                        replace('/', '').lower()
                 last_status_name = final_dict.setdefault('last_status_name', {}) .\
-                    setdefault(group['last_status_name'], {})
+                    setdefault(key, {})
                 last_status_name.update({'sent': group['sent']})
                 continue
 

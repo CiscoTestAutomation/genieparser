@@ -2864,29 +2864,29 @@ class test_show_mpls_l2transport_vc(unittest.TestCase):
               'ldp_route_enabled': 'enabled',
               'label_state_machine': 'established, LruRru',
               'last_status_name': {
-                  'local dataplane': {
+                  'local_dataplane': {
                       'received': 'No fault',
                       },
-                  'BFD dataplane': {
+                  'bfd_dataplane': {
                       'received': 'Not sent',
                       },
-                  'BFD peer monitor': {
+                  'bfd_peer_monitor': {
                       'received': 'No fault',
                       },
-                  'local AC circuit': {
+                  'local_ac_circuit': {
                       'received': 'No fault',
                       'sent': 'No fault',
                       },
-                  'local PW i/f circ': {
+                  'local_pw_if_circ': {
                       'received': 'No fault',
                       },
-                  'local LDP TLV': {
+                  'local_ldp_tlv': {
                       'sent': 'No fault',
                       },
-                  'remote LDP TLV': {
+                  'remote_ldp_tlv': {
                       'received': 'No fault',
                       },
-                  'remote LDP ADJ': {
+                  'remote_ldp_adj': {
                       'received': 'No fault',
                       },
                   },
