@@ -948,6 +948,173 @@ class test_show_env(test_show_env_iosxe):
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
+class test_show_env_all(unittest.TestCase):
+
+    dev = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "sensor_list": {
+            "Environmental Monitoring": {
+                "sensor": {
+                    "V1: VMA": {
+                        "location": "F0",
+                        "state": "Normal",
+                        "reading": "1801 mV"
+                    },
+                    "V1: VMB": {
+                        "location": "F0",
+                        "state": "Normal",
+                        "reading": "1206 mV"
+                    },
+                    "V1: VMC": {
+                        "location": "F0",
+                        "state": "Normal",
+                        "reading": "1206 mV"
+                    },
+                    "V1: VMD": {
+                        "location": "F0",
+                        "state": "Normal",
+                        "reading": "1103 mV"
+                    },
+                    "V1: VME": {
+                        "location": "F0",
+                        "state": "Normal",
+                        "reading": "1005 mV"
+                    },
+                    "V1: 12v": {
+                        "location": "F0",
+                        "state": "Normal",
+                        "reading": "11967 mV"
+                    },
+                    "V1: VDD": {
+                        "location": "F0",
+                        "state": "Normal",
+                        "reading": "3295 mV"
+                    },
+                    "V1: GP1": {
+                        "location": "F0",
+                        "state": "Normal",
+                        "reading": "905 mV"
+                    },
+                    "V2: VMA": {
+                        "location": "F0",
+                        "state": "Normal",
+                        "reading": "3295 mV"
+                    },
+                    "V2: VMB": {
+                        "location": "F0",
+                        "state": "Normal",
+                        "reading": "2495 mV"
+                    },
+                    "V2: VMC": {
+                        "location": "F0",
+                        "state": "Normal",
+                        "reading": "1499 mV"
+                    },
+                    "V2: VMD": {
+                        "location": "F0",
+                        "state": "Normal",
+                        "reading": "1098 mV"
+                    },
+                    "V2: VME": {
+                        "location": "F0",
+                        "state": "Normal",
+                        "reading": "1000 mV"
+                    },
+                    "V2: VMF": {
+                        "location": "F0",
+                        "state": "Normal",
+                        "reading": "1000 mV"
+                    },
+                    "V2: 12v": {
+                        "location": "F0",
+                        "state": "Normal",
+                        "reading": "11923 mV"
+                    },
+                    "V2: VDD": {
+                        "location": "F0",
+                        "state": "Normal",
+                        "reading": "3295 mV"
+                    },
+                    "V2: GP1": {
+                        "location": "F0",
+                        "state": "Normal",
+                        "reading": "751 mV"
+                    },
+                    "Temp: Inlet": {
+                        "location": "F0",
+                        "state": "Normal",
+                        "reading": "27 Celsius"
+                    },
+                    "Temp: Asic1": {
+                        "location": "F0",
+                        "state": "Normal",
+                        "reading": "44 Celsius"
+                    },
+                    "Temp: Exhaust1": {
+                        "location": "F0",
+                        "state": "Normal",
+                        "reading": "36 Celsius"
+                    },
+                    "Temp: Exhaust2": {
+                        "location": "F0",
+                        "state": "Normal",
+                        "reading": "34 Celsius"
+                    },
+                    "Temp: Asic2": {
+                        "location": "F0",
+                        "state": "Normal",
+                        "reading": "40 Celsius"
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''\
+        Router# show environment all
+        Sensor List:  Environmental Monitoring
+         Sensor           Location          State             Reading
+         V1: VMA          F0                Normal            1801 mV
+         V1: VMB          F0                Normal            1206 mV
+         V1: VMC          F0                Normal            1206 mV
+         V1: VMD          F0                Normal            1103 mV
+         V1: VME          F0                Normal            1005 mV
+         V1: 12v          F0                Normal            11967 mV
+         V1: VDD          F0                Normal            3295 mV
+         V1: GP1          F0                Normal            905 mV
+         V2: VMA          F0                Normal            3295 mV
+         V2: VMB          F0                Normal            2495 mV
+         V2: VMC          F0                Normal            1499 mV
+         V2: VMD          F0                Normal            1098 mV
+         V2: VME          F0                Normal            1000 mV
+         V2: VMF          F0                Normal            1000 mV
+         V2: 12v          F0                Normal            11923 mV
+         V2: VDD          F0                Normal            3295 mV
+         V2: GP1          F0                Normal            751 mV
+         Temp: Inlet      F0                Normal            27 Celsius
+         Temp: Asic1      F0                Normal            44 Celsius
+         Temp: Exhaust1   F0                Normal            36 Celsius
+         Temp: Exhaust2   F0                Normal            34 Celsius
+         Temp: Asic2      F0                Normal            40 Celsius
+    '''
+    }
+
+    def test_empty(self):
+        self.dev = Mock(**self.empty_output)
+        obj = ShowEnvironmentAll(device=self.dev)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsered_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output)
+        obj = ShowEnvironmentAll(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
 class test_show_module(test_show_module_iosxe):
 
     def test_empty(self):

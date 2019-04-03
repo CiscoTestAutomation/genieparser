@@ -58,15 +58,15 @@ class ShowIpRpf(ShowIpRpfSchema):
         show ip rpf <mroute address>
         show ip rpf vrf <vrf> <mroute address>"""
 
-    cli_command = ['show {af} rpf vrf {vrf} {mroute}', 'show {af} rpf {mroute}']
+    cli_command = ['show {iptype} rpf vrf {vrf} {mroute}', 'show {iptype} rpf {mroute}']
 
-    def cli(self, mroute, af='ip', vrf='',output=None):
+    def cli(self, mroute, iptype='ip', vrf='',output=None):
         if output is None:
             # set vrf infomation
             if vrf:
-                cmd = self.cli_command[0].format(af=af, vrf=vrf, mroute=mroute)
+                cmd = self.cli_command[0].format(iptype=iptype, vrf=vrf, mroute=mroute)
             else:
-                cmd = self.cli_command[1].format(af=af, mroute=mroute)
+                cmd = self.cli_command[1].format(iptype=iptype, mroute=mroute)
                 vrf = 'default'
             # excute command to get output
             out = self.device.execute(cmd)
@@ -83,7 +83,8 @@ class ShowIpRpf(ShowIpRpfSchema):
             line = line.strip()
 
             # RPF information for 2001:99:99::99
-            p1 = re.compile(r'^RPF +information +for +(?P<mroute>[\w\:\.]+)$')
+            # RPF information for sj-eng-mbone.cisco.com
+            p1 = re.compile(r'^RPF +information +for +(?P<mroute>[\w\:\.\-]+)$')
             m = p1.match(line)
             if m:
                 mroute = m.groupdict()['mroute']
@@ -98,7 +99,8 @@ class ShowIpRpf(ShowIpRpfSchema):
 
             # RPF information for host1 (172.16.10.13)
             # RPF information for ? (10.1.1.100)
-            p1_1 = re.compile(r'^RPF +information +for +(?P<host>[\w\?]+) +'
+            # RPF information for sj-eng-mbone.cisco.com (171.69.10.13)
+            p1_1 = re.compile(r'^RPF +information +for +(?P<host>[\w\?\.\-]+) +'
                                '\((?P<mroute>[\w\:\.]+)\)$')
             m = p1_1.match(line)
             if m:
@@ -121,7 +123,8 @@ class ShowIpRpf(ShowIpRpfSchema):
                 continue
 
             # RPF neighbor: 2001:99:99::99
-            p3 = re.compile(r'^RPF +neighbor: +(?P<neighbor>[\w\.\:]+)$')
+            # RPF neighbor: eng-isdn-pri3.cisco.com
+            p3 = re.compile(r'^RPF +neighbor: +(?P<neighbor>[\w\.\:\-]+)$')
             m = p3.match(line)
             if m:
                 rpf_nbr = m.groupdict()['neighbor']
@@ -138,7 +141,8 @@ class ShowIpRpf(ShowIpRpfSchema):
                 continue
 
             # RPF neighbor: sj1.cisco.com (172.16.121.10)
-            p3_1 = re.compile(r'^RPF +neighbor: +(?P<host>[\w\.\?]+) +'
+            # RPF neighbor: eng-isdn-pri3.cisco.com (171.69.121.10)
+            p3_1 = re.compile(r'^RPF +neighbor: +(?P<host>[\w\.\?\-]+) +'
                                '\((?P<neighbor>[\w\.\:]+)\)$')
             m = p3_1.match(line)
             if m:
@@ -274,5 +278,5 @@ class ShowIpv6Rpf(ShowIpRpf):
         show ipv6 rpf vrf <vrf> <mroute address>"""
 
     def cli(self, mroute, vrf='',output=None):
-        return super().cli(mroute=mroute, af='ipv6', vrf=vrf,output=output)
+        return super().cli(mroute=mroute, iptype='ipv6', vrf=vrf,output=output)
 
