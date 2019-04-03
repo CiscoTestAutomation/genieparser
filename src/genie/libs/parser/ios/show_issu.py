@@ -23,9 +23,7 @@ from genie.libs.parser.iosxe.show_issu import ShowIssuStateDetail as ShowIssuSta
 #  Parser for 'show issu state detail'
 # ====================================
 class ShowIssuStateDetail(ShowIssuStateDetail_iosxe):
-
     """Parser for show issu state detail"""
-
     pass
 
 
@@ -33,7 +31,5 @@ class ShowIssuStateDetail(ShowIssuStateDetail_iosxe):
 #  Parser for 'show issu rollback-timer'
 # ======================================
 class ShowIssuRollbackTimer(ShowIssuRollbackTimer_iosxe):
-
     """Parser for show issu rollback-timer"""
-
     pass
