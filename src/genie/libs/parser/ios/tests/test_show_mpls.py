@@ -16,7 +16,8 @@ from genie.libs.parser.ios.show_mpls import ShowMplsLdpParameters,\
                                             ShowMplsLdpIgpSync,\
                                             ShowMplsForwardingTable,\
                                             ShowMplsInterface,\
-                                            ShowMplsL2TransportDetail
+                                            ShowMplsL2TransportDetail, \
+                                            ShowMplsL2TransportVC
 
 # iosxe tests/test_show_mpls
 from genie.libs.parser.iosxe.tests.test_show_mpls import \
@@ -29,7 +30,8 @@ from genie.libs.parser.iosxe.tests.test_show_mpls import \
                             test_show_mpls_ldp_discovery as test_show_mpls_ldp_discovery_iosxe,\
                             test_show_mpls_ldp_igp_sync as test_show_mpls_ldp_igp_sync_iosxe,\
                             test_show_mpls_forwarding_table as test_show_mpls_forwarding_table_iosxe,\
-                            test_show_mpls_interface as test_show_mpls_interface_iosxe
+                            test_show_mpls_interface as test_show_mpls_interface_iosxe, \
+                            test_show_mpls_l2transport_vc as test_show_mpls_l2transport_vc_iosxe
 
 
 class test_show_mpls_ldp_parameters(test_show_mpls_ldp_parameters_iosxe):
@@ -376,6 +378,35 @@ class test_show_mpls_l2transport_vc_detail(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+
+# ============================================
+# unit test for 'show mpls l2transport vc'
+# ============================================
+class test_show_mpls_l2transport_vc(test_show_mpls_l2transport_vc_iosxe):
+
+    def test_empty(self):
+            self.device = Mock(**self.empty_output)
+            obj = ShowMplsL2TransportVC(device=self.device)
+            with self.assertRaises(SchemaEmptyParserError):
+                parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowMplsL2TransportVC(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowMplsL2TransportVC(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
+    def test_golden_3(self):
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowMplsL2TransportVC(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_3)
 
 if __name__ == '__main__':
     unittest.main()

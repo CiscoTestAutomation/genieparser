@@ -1211,7 +1211,12 @@ class ShowArpSummarySchema(MetaParser):
         },
         'interface_entries': {
             Any(): int
-        }
+        },
+        Optional('maximum_entries'): {
+            Any(): int
+        },
+        Optional('arp_entry_threshold'): int,
+        Optional('permit_threshold'): int
     }
 
 class ShowArpSummary(ShowArpSummarySchema):
@@ -1227,7 +1232,6 @@ class ShowArpSummary(ShowArpSummarySchema):
         
         # initial variables
         ret_dict = {}
-        interface_found = False
 
         # Total number of entries in the ARP table: 1233
         p1 = re.compile(r'^Total +number +of +entries +in +the +ARP +table: +' \
@@ -1237,46 +1241,63 @@ class ShowArpSummary(ShowArpSummarySchema):
         p2 = re.compile(r'^Total +number +of +(?P<entry_name>[\S\s]+): +' \
                 '(?P<num_of_entries>\d+)\.$')
 
-        # Interface         Entry Count
-        p3 = re.compile(r'^Interface +Entry +Count$')
-
         # GigabitEthernet0/0/4  4
-        p4 = re.compile(r'^(?P<interface_name>[\w\/\.]+) +(?P<entry_count>\d+)')
+        p3 = re.compile(r'^(?P<interface_name>[\w\/\.]+) +(?P<entry_count>\d+)')
+
+        # Learn ARP Entry Threshold is 409600 and Permit Threshold is 486400.
+        p4 = re.compile(r'^Learn +ARP +Entry +Threshold +is +' \
+            '(?P<arp_entry_threshold>\d+) +and +Permit +Threshold +is +' \
+            '(?P<permit_threshold>\d+).?$')
+
+        # Maximum limit of Learn ARP entry : 512000.
+        p5 = re.compile(r'^(?P<maximum_entries_name>[\w\W]+) +: +' \
+            '(?P<maximum_entries>\d+).$')
 
         for line in out.splitlines():
             line = line.strip()
-            if not interface_found:
-                # Total number of entries in the ARP table: 1233
-                m = p1.match(line)
-                if m:
-                    group = m.groupdict()
-                    total_num_of_entries = ret_dict.setdefault( \
-                        'total_num_of_entries', {})
-                    total_num_of_entries.update({'arp_table_entries': 
-                        int(group['arp_table_entries'])})
-                    continue
-                
-                # Total number of Dynamic ARP entries: 1123
-                m = p2.match(line)
-                if m:
-                    group = m.groupdict()
-                    key = group['entry_name'].replace(' ', '_').lower()
-                    total_num_of_entries.update({key: int(group['num_of_entries'])})
-                    continue
-                
-                # Interface     Entry Count
-                m = p3.match(line)
-                if m:
-                    interfaces = ret_dict.setdefault('interface_entries', {})
-                    interface_found = True
-                    continue
-            else:
-                # GigabitEthernet0/0/4  4
-                m = p4.match(line)
-                if m:
-                    group = m.groupdict()
-                    interfaces.update({Common.convert_intf_name(group['interface_name']) : 
-                        int(group['entry_count'])})
-                    continue
+            # Total number of entries in the ARP table: 1233
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                total_num_of_entries = ret_dict.setdefault( \
+                    'total_num_of_entries', {})
+                total_num_of_entries.update({'arp_table_entries': 
+                    int(group['arp_table_entries'])})
+                continue
+            
+            # Total number of Dynamic ARP entries: 1123
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                total_num_of_entries = ret_dict.setdefault( \
+                    'total_num_of_entries', {})
+                key = group['entry_name'].replace(' ', '_').lower()
+                total_num_of_entries.update({key: int(group['num_of_entries'])})
+                continue
+
+            # GigabitEthernet0/0/4  4
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                interfaces = ret_dict.setdefault('interface_entries', {})
+                interfaces.update({Common.convert_intf_name(group['interface_name']) : 
+                    int(group['entry_count'])})
+                continue
+
+            # Learn ARP Entry Threshold is 409600 and Permit Threshold is 486400.
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'arp_entry_threshold' : int(group['arp_entry_threshold'])})
+                ret_dict.update({'permit_threshold' : int(group['permit_threshold'])})
+                continue
+
+            # Maximum limit of Learn ARP entry : 512000.
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                key = group['maximum_entries_name'].replace(' ', '_').lower()
+                maximum_entries = ret_dict.setdefault('maximum_entries', {})
+                maximum_entries.update({key : int(group['maximum_entries'])})
 
         return ret_dict
