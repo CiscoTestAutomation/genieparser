@@ -51,6 +51,38 @@
         show interface stats
 
 --------------------------------------------------------------------------------
+                                  LISP
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowLispSession for:
+        show lisp session
+    * Add ShowLispPlatform for:
+        show lisp platform
+    * Add ShowLispExtranet for:
+        show lisp all extranet <extranet> instance-id <instance_id>
+    * Add ShowLispDynamicEidDetail for:
+        show lisp all extranet <extranet> instance-id <instance_id>
+    * Add ShowLispService for:
+        show lisp all instance-id <instance_id> <service>
+        show lisp all service <service>
+    * Add ShowLispServiceMapCache for:
+        show lisp all instance-id <instance_id> <service> map-cache
+    * Add ShowLispServiceRlocMembers for:
+        show lisp all instance-id <instance_id> <service> rloc members
+    * Add ShowLispServiceSmr for:
+        show lisp all instance-id <instance_id> <service> smr
+    * Add ShowLispServiceSummary for:
+        show lisp all <service> summary
+    * Add ShowLispServiceDatabase for:
+        show lisp all instance-id <instance_id> <service> dabatase
+    * Add ShowLispServiceServerSummary for:
+        show lisp all instance-id <instance_id> <service> server summary
+    * Add ShowLispServiceServerDetailInternal for:
+        show lisp all instance-id <instance_id> <service> server detail internal
+    * Add ShowLispServiceStatistics for:
+        show lisp all instance-id <instance_id> <service> statistics
+
+--------------------------------------------------------------------------------
                                    MPLS LDP
 --------------------------------------------------------------------------------
 
@@ -94,3 +126,21 @@
           show mpls interfaces <interface>
           show mpls interfaces <interface> detail
           show mpls interfaces detail
+
+--------------------------------------------------------------------------------
+                                   BFD
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowBfdNeighborsDetails for:
+        show bfd neighbors details
+        show bfd neighbors client <client> details
+
+----------------------------------------------------------------------------------
+                                   ARP
+----------------------------------------------------------------------------------
+* IOS
+    * Add ShowArpApplication for:
+        show arp application
+    * Add ShowArpSummary for:
+        show arp summary
+
