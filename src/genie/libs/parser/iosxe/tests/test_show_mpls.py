@@ -19,7 +19,6 @@ from genie.libs.parser.iosxe.show_mpls import ShowMplsLdpParameters,\
                                               ShowMplsL2TransportDetail, \
                                               ShowMplsL2TransportVC
 
-
 class test_show_mpls_ldp_parameters(unittest.TestCase):
     dev1 = Device(name='empty')
     dev = Device(name='dev1')
@@ -2689,6 +2688,147 @@ class test_show_mpls_l2transport_vc_detail(unittest.TestCase):
             packet drops:  receive 0, send 0
     '''}
 
+    golden_parsed_output_3 = {
+      'interface': {
+          'GigabitEthernet3': {
+              'state': 'up',
+              'line_protocol_status': 'up',
+              'protocol_status': {
+                  'Ethernet': 'up',
+                  },
+              'destination_address': {
+                  '1.1.1.1': {
+                      'vc_id': {
+                          '888': {
+                              'vc_status': 'up',
+                              },
+                          },
+                      'output_interface': 'GigabitEthernet2',
+                      'imposed_label_stack': '{32}',
+                      'preferred_path': 'not configured',
+                      'default_path': 'active',
+                      'next_hop': '10.1.2.1',
+                      },
+                  },
+              'create_time': '00:00:22',
+              'last_status_change_time': '00:00:10',
+              'last_label_fsm_state_change_time': '00:00:10',
+              'signaling_protocol': {
+                  'LDP': {
+                      'peer_id': '1.1.1.1:0',
+                      'peer_state': 'up',
+                      'targeted_hello_ip': '2.2.2.2',
+                      'id': '1.1.1.1',
+                      'status': 'UP',
+                      'mpls_vc_labels': {
+                          'local': '17',
+                          'remote': '32',
+                          },
+                      'group_id': {
+                          'local': 'n/a',
+                          'remote': '0',
+                          },
+                      'mtu': {
+                          'local': '1500',
+                          'remote': '1500',
+                          },
+                      },
+                  },
+              'graceful_restart': 'not configured and not enabled',
+              'non_stop_routing': 'not configured and not enabled',
+              'status_tlv_support': 'enabled/supported',
+              'ldp_route_enabled': 'enabled',
+              'label_state_machine': 'established, LruRru',
+              'last_status_name': {
+                  'local_dataplane': {
+                      'received': 'No fault',
+                      },
+                  'bfd_dataplane': {
+                      'received': 'Not sent',
+                      },
+                  'bfd_peer_monitor': {
+                      'received': 'No fault',
+                      },
+                  'local_ac__circuit': {
+                      'received': 'No fault',
+                      'sent': 'No fault',
+                      },
+                  'local_pw_if_circ': {
+                      'received': 'No fault',
+                      },
+                  'local_ldp_tlv': {
+                      'sent': 'No fault',
+                      },
+                  'remote_ldp_tlv': {
+                      'received': 'No fault',
+                      },
+                  'remote_ldp_adj': {
+                      'received': 'No fault',
+                      },
+                  },
+              'sequencing': {
+                  'received': 'disabled',
+                  'sent': 'disabled',
+                  },
+              'statistics': {
+                  'packets': {
+                      'received': 0,
+                      'sent': 0,
+                      },
+                  'bytes': {
+                      'received': 0,
+                      'sent': 0,
+                      },
+                  'packets_drop': {
+                      'received': 0,
+                      'seq_error': 0,
+                      'sent': 0,
+                      },
+                  },
+              },
+          },
+      }
+
+    golden_output_3 = {'execute.return_value': '''\
+      Local interface: Gi3 up, line protocol up, Ethernet up
+        Destination address: 1.1.1.1, VC ID: 888, VC status: up
+          Output interface: Gi2, imposed label stack {32}
+          Preferred path: not configured  
+          Default path: active
+          Next hop: 10.1.2.1
+        Create time: 00:00:22, last status change time: 00:00:10
+          Last label FSM state change time: 00:00:10
+        Signaling protocol: LDP, peer 1.1.1.1:0 up
+          Targeted Hello: 2.2.2.2(LDP Id) -> 1.1.1.1, LDP is UP
+          Graceful restart: not configured and not enabled
+          Non stop routing: not configured and not enabled
+          Status TLV support (local/remote)   : enabled/supported
+            LDP route watch                   : enabled
+            Label/status state machine        : established, LruRru
+            Last local dataplane   status rcvd: No fault
+            Last BFD dataplane     status rcvd: Not sent
+            Last BFD peer monitor  status rcvd: No fault
+            Last local AC  circuit status rcvd: No fault
+            Last local AC  circuit status sent: No fault
+            Last local PW i/f circ status rcvd: No fault
+            Last local LDP TLV     status sent: No fault
+            Last remote LDP TLV    status rcvd: No fault
+            Last remote LDP ADJ    status rcvd: No fault
+          MPLS VC labels: local 17, remote 32 
+          Group ID: local n/a, remote 0
+          MTU: local 1500, remote 1500
+          Remote interface description: 
+        Sequencing: receive disabled, send disabled
+        Control Word: On (configured: autosense)
+        SSO Descriptor: 1.1.1.1/888, local label: 17
+        Dataplane:
+          SSM segment/switch IDs: 8195/4097 (used), PWID: 1
+        VC statistics:
+          transit packet totals: receive 0, send 0
+          transit byte totals:   receive 0, send 0
+          transit packet drops:  receive 0, seq error 0, send 0
+    '''}
+
     def test_empty(self):
         self.dev = Mock(**self.empty_output)
         obj = ShowMplsL2TransportDetail(device=self.dev)
@@ -2708,6 +2848,13 @@ class test_show_mpls_l2transport_vc_detail(unittest.TestCase):
         obj = ShowMplsL2TransportDetail(device=self.dev)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+    
+    def test_golden_3(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output_3)
+        obj = ShowMplsL2TransportDetail(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 
 # ============================================

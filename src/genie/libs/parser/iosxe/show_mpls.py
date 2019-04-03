@@ -2544,7 +2544,7 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
             m = p24.match(line)
             if m:
                 group = m.groupdict()
-                key = group['last_status_name'].replace(' ', '_'). \
+                key = group['last_status_name'].strip().replace(' ', '_'). \
                         replace('/', '').lower()
                 last_status_name = final_dict.setdefault('last_status_name', {}). \
                     setdefault(key, {})
@@ -2554,7 +2554,7 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
             m = p25.match(line)
             if m:
                 group = m.groupdict()
-                key = group['last_status_name'].replace(' ', '_'). \
+                key = group['last_status_name'].strip().replace(' ', '_'). \
                         replace('/', '').lower()
                 last_status_name = final_dict.setdefault('last_status_name', {}) .\
                     setdefault(key, {})
