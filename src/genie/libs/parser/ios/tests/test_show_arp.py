@@ -473,6 +473,18 @@ class test_show_arp_summary(test_show_arp_summary_iosxe):
       '''
   }
 
+  def test_empty(self):
+      self.device = Mock(**self.empty_output)
+      obj = ShowArpSummary(device=self.device)
+      with self.assertRaises(SchemaEmptyParserError):
+          parsed_output = obj.parse()
+
+  def test_golden(self):
+      self.device = Mock(**self.golden_output)
+      obj = ShowArpSummary(device=self.device)
+      parsed_output = obj.parse()
+      self.assertEqual(parsed_output, self.golden_parsed_output)
+
   def test_empty_ios(self):
       self.device = Mock(**self.empty_output_ios)
       obj = ShowArpSummary(device=self.device)
