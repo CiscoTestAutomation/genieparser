@@ -19,35 +19,35 @@ class test_show_cdp_neighbors(unittest.TestCase):
                     'capability': 'S I',
                     'device_id': 'C2950-1',
                     'hold_time': 148,
-                    'local_interface': 'Fas 0/0',
+                    'local_interface': 'FastEthernet0/0',
                     'platform': 'WS-C2950T-Fas',
                     'port_id': '0/15'},
                2: {
                     'capability': 'T S',
                     'device_id': 'RX-SWV.cisco.com',
                     'hold_time': 167,
-                    'local_interface': 'Fas 0/1',
+                    'local_interface': 'FastEthernet0/1',
                     'platform': 'WS-C3524-XFas',
                     'port_id': '0/13'},
                 3: {
                     'capability': 'R',
                     'device_id': 'device2',
                     'hold_time': 152,
-                    'local_interface': 'Eth 0',
+                    'local_interface': 'Ethernet0',
                     'platform': 'AS5200',
                     'port_id': 'Eth 0'},
                 4: {
                     'capability': 'R',
                     'device_id': 'device3',
                     'hold_time': 144,
-                    'local_interface': 'Eth 0',
+                    'local_interface': 'Ethernet0',
                     'platform': '3640',
                     'port_id': 'Eth0/0'},
                 5: {
                     'capability': '',
                     'device_id': 'device4',
                     'hold_time': 141,
-                    'local_interface': 'Eth 0',
+                    'local_interface': 'Ethernet0',
                     'platform': 'RP1',
                     'port_id': 'Eth 0/0'}
                 }
@@ -61,28 +61,28 @@ class test_show_cdp_neighbors(unittest.TestCase):
                     'capability': 'R B',
                     'device_id': 'R5.cisco.com',
                     'hold_time': 125,
-                    'local_interface': 'Gig 0/0',
+                    'local_interface': 'GigabitEthernet0/0',
                     'platform': '',
                     'port_id': 'Gig 0/0'},
                 2: {
                     'capability': 'R B',
                     'device_id': 'R8.cisco.com',
                     'hold_time': 148,
-                    'local_interface': 'Gig 0/0',
+                    'local_interface': 'GigabitEthernet0/0',
                     'platform': '',
                     'port_id': 'Gig 0/0'},
                 3: {
                     'capability': 'R B',
                     'device_id': 'R9.cisco.com',
                     'hold_time': 156,
-                    'local_interface': 'Gig 0/0',
+                    'local_interface': 'GigabitEthernet0/0',
                     'platform': '',
                     'port_id': 'Gig 0/0'},
                 4: {
                     'capability': 'R S I',
                     'device_id': 'device6',
                     'hold_time': 157,
-                    'local_interface': 'Gig 0',
+                    'local_interface': 'GigabitEthernet0',
                     'platform': 'C887VA-W-',
                     'port_id': 'WGi 0'}
                 }
@@ -288,6 +288,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
           
 
     device_output_1 = {'execute.return_value': '''
+        Device# show cdp neighbors detail
         Device ID: R6(9P57K4EJ8CA)
         Entry address(es): 
           IP address: 172.16.1.203
@@ -342,6 +343,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
     '''}
 
     device_output_2 = {'execute.return_value': '''
+        Device# show cdp neighbors detail
         Device ID: R8.cisco.com
         Entry address(es): 
           IP address: 172.16.1.205
@@ -385,6 +387,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
     device_output_3_empty = {'execute.return_value': ''}
 
     device_output_4_ipv6 = {'execute.return_value': '''
+        Device# show cdp neighbors detail
         Device ID: device.cisco.com
         Entry address(es):
             IPv6 address: FE80::203:E3FF:FE6A:BF81  (link-local)

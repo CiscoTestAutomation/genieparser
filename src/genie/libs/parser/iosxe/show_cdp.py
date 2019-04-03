@@ -11,6 +11,7 @@ IOSXE parsers for the following show commands:
 import re
 
 # Metaparser
+from genie.libs.parser.utils.common import Common
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
 
@@ -49,7 +50,7 @@ class ShowCdpNeighborsDetailSchema(MetaParser):
                  'local_interface': str,
                  'port_id': str,
                  'hold_time': int,
-                 'software_version': str, 
+                 'software_version': str,
                  'entry_addresses':
                     {Any():
                         {Optional('type'): str, }, },
@@ -80,17 +81,21 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
 
         parsed_dict = {'cdp': {}}
 
-        # R5.cisco.com Gig 0/0 125 R B Gig 0/0 
+        # Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge
+        #                   S - Switch, H - Host, I - IGMP, r - Repeater
+
+        # No platform
+        # R5.cisco.com Gig 0/0 125 R B Gig 0/0
         p1 = re.compile(r'^(?P<device_id>\S+) +'
                          '(?P<local_interface>[a-zA-Z]+[\s]+[\d\/\.]+) +'
-                         '(?P<hold_time>\d+) +(?P<capability>[A-Z\s]+)'
+                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIr\s]+)'
                          '(?: +(?P<platform>[\w\-]+) )? +'
                          '(?P<port_id>[a-zA-Z0-9\/\s]+)$')                     
 
         # device6 Gig 0 157 R S I C887VA-W- WGi 0 
         p2 = re.compile(r'^(?P<device_id>\S+) +'
                          '(?P<local_interface>[a-zA-Z]+[\s]+[\d\/\.]+) +'
-                         '(?P<hold_time>\d+) +(?P<capability>[A-Z\s]+) +'
+                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIr\s]+) +'
                          '(?P<platform>\S+) (?P<port_id>[a-zA-Z0-9\/\s]+)$') 
 
         device_id_index = 0        
@@ -114,7 +119,8 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
                 group = result.groupdict()
 
                 device_dict['device_id'] = group['device_id'].strip()
-                device_dict['local_interface'] = group['local_interface'].strip()
+                device_dict['local_interface'] = Common.convert_intf_name\
+                    (intf=group['local_interface'].strip())
                 device_dict['hold_time'] = int(group['hold_time'])
                 device_dict['capability'] = group['capability'].strip()
                 if group['platform']:
@@ -124,9 +130,8 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
 
                 device_dict['port_id'] = group['port_id'].strip()
         if device_id_index:
-             parsed_dict.setdefault('cdp', {}).\
-                            setdefault('index', devices_dict_info)
-
+            parsed_dict.setdefault('cdp', {}).\
+                setdefault('index', devices_dict_info)
 
         return parsed_dict
 
@@ -316,7 +321,8 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
             result = software_version_re.match(line)
 
             if result and software_version_flag:
-                devices_dict[index_device]['software_version'] = result.group('software_version')
+                devices_dict[index_device]['software_version'] = \
+                    result.group('software_version')
                 software_version_flag = 0
 
                 continue
