@@ -128,6 +128,43 @@
           show mpls interfaces detail
 
 --------------------------------------------------------------------------------
+                                   PLATFORM
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowEnvironment for:
+        show environment
+    * Add ShowEnvironmentAll for:
+        show environment all
+    * Add ShowModule for:
+        show module
+    * Add ShowSwitch for:
+        show switch
+    * Add ShowSwitchDetail for:
+        show switch detail
+
+--------------------------------------------------------------------------------
+                                   RPF
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowIpRpf for:
+        show ip rpf <mroute address>
+        show ip rpf vrf <vrf> <mroute address>
+    * Add ShowIpv6Rpf for:
+        show ipv6 rpf <mroute address>
+        show ipv6 rpf vrf <vrf> <mroute address>
+
+--------------------------------------------------------------------------------
+                                   ROUNTING
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowIpRouteWord for:
+        show ip route <Hostname or A.B.C.D>
+        show ip route vrf <vrf> <Hostname or A.B.C.D>
+    * Add ShowIpv6RouteWord for:
+        show ipv6 route <Hostname or A.B.C.D>
+        show ipv6 route vrf <vrf> <Hostname or A.B.C.D>
+
+--------------------------------------------------------------------------------
                                    BFD
 --------------------------------------------------------------------------------
 * IOS
