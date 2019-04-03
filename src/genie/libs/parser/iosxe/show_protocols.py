@@ -184,11 +184,23 @@ class ShowIpProtocolsSchema(MetaParser):
                             {'default':
                                 {'address_family':
                                     {'ipv4':
-                                        {'outgoing_filter_list': str,
-                                        'incoming_filter_list': str,
+                                        {
+                                        Optional('redistribute'): {
+                                            Any(): {
+                                                Optional(Any()): {
+                                                    Optional('metric'): int,
+                                                    Optional('route_policy'): int,
+                                                    Optional('route_type'): str,
+                                                },
+                                                Optional('metric'): int,
+                                                Optional('route_policy'): int,
+                                            },
+                                        },
+                                        Optional('outgoing_filter_list'): str,
+                                        Optional('incoming_filter_list'): str,
                                         'igp_sync': bool,
                                         'automatic_route_summarization': bool,
-                                        'maximum_path': int,
+                                        Optional('maximum_path'): int,
                                         Optional('preference'):
                                             {'multi_values':
                                                 {'external': int,
@@ -203,6 +215,21 @@ class ShowIpProtocolsSchema(MetaParser):
                                                 'last_update': str,
                                                 },
                                             },
+                                        Optional('timers'): {
+                                            'update_interval': int,
+                                            'next_update': int,
+                                        },
+                                        Optional('redistribute'): {
+                                            Any(): {
+                                                Optional(Any()): {
+                                                    Optional('metric'): int,
+                                                    Optional('route_policy'): int,
+                                                    Optional('route_type'): str,
+                                                },
+                                                Optional('metric'): int,
+                                                Optional('route_policy'): int,
+                                            },
+                                        },
                                         },
                                     },
                                 },
@@ -219,7 +246,7 @@ class ShowIpProtocolsSchema(MetaParser):
                                     {Any():
                                         {'outgoing_filter_list': str,
                                         'incoming_filter_list': str,
-                                        'redistributing': str,
+                                        Optional('redistributing'): str,
                                         Optional('address_summarization'): list,
                                         Optional('maximum_path'): int,
                                         'preference':
@@ -407,7 +434,7 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
 
         # Sending updates every 10 seconds, next due in 8 seconds
         p106 = re.compile(
-            r'^\s*Sending +updates every +(?P<update_interval>\d+) +seconds, +next +due +in (?P<next_update>\d+) +seconds$')
+            r'^\s*Sending +updates every +(?P<update_interval>\d+) +seconds, +next +due +in (?P<next_update>\d+) +(seconds|sec)$')
 
         # Invalid after 21 seconds, hold down 22, flushed after 23
         p107 = re.compile(
@@ -418,7 +445,8 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
         p108 = re.compile(r'^\s*Default +redistribution +metric +is +(?P<default_redistribution_metric>\d+)$')
 
         # Redistributing: connected, static, rip
-        p109 = re.compile(r'^\s*Redistributing: +(?P<Redistributing>[\w\,\s]+)$')
+        # Redistributing:connected, static
+        p109 = re.compile(r'^\s*Redistributing: *(?P<Redistributing>[\w\,\s]+)$')
 
         # Neighbor(s):
         p110 = re.compile(r'^\s*Neighbor\(s\):$')
@@ -1061,13 +1089,35 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                     multi_values_dict['local'] = int(group['local'])
                     continue
 
+                # Sending updates every 10 seconds, next due in 8 seconds
+                m = p106.match(line)
+                if m:
+                    group = m.groupdict()
+                    timers_dict = bgp_dict.setdefault('timers', {})
+                    timers_dict.update({'update_interval': int(group['update_interval'])})
+                    timers_dict.update({'next_update': int(group['next_update'])})
+                    continue
+
                 # Redistributing: isis banana
                 m = p16.match(line)
                 if m:
                     if protocol == 'isis':
                         isis_dict['redistributing'] = m.groupdict()['redistributing']
+                    continue
+
+                # Redistributing: connected, static, rip
+                m = p109.match(line)
+                if m:
+                    if protocol == 'bgp':
+                        group = m.groupdict()
+                        redistributes = group['Redistributing'].split(',')
+                        redistribute_dict = bgp_dict.setdefault('redistribute', {})
+                        for key in redistributes:
+                            redistribute_dict.setdefault(key.strip(), {})
+                    continue
 
         return ret_dict
+
 
 
 
