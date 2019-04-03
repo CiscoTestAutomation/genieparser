@@ -16,79 +16,44 @@ class test_show_cdp_neighbors(unittest.TestCase):
         'cdp': {
             'index': {
                 1: {
-                    'capability': 'S I',
-                    'device_id': 'C2950-1',
-                    'hold_time': 148,
-                    'local_interface': 'Fas 0/0',
-                    'platform': 'WS-C2950T-Fas',
-                    'port_id': '0/15'},
-               2: {
-                    'capability': 'T S',
-                    'device_id': 'RX-SWV.cisco.com',
-                    'hold_time': 167,
-                    'local_interface': 'Fas 0/1',
-                    'platform': 'WS-C3524-XFas',
-                    'port_id': '0/13'},
-                3: {
-                    'capability': 'R',
-                    'device_id': 'device2',
-                    'hold_time': 152,
-                    'local_interface': 'Eth 0',
-                    'platform': 'AS5200',
-                    'port_id': 'Eth 0'},
-                4: {
-                    'capability': 'R',
-                    'device_id': 'device3',
-                    'hold_time': 144,
-                    'local_interface': 'Eth 0',
-                    'platform': '3640',
-                    'port_id': 'Eth0/0'},
-                5: {
-                    'capability': '',
-                    'device_id': 'device4',
-                    'hold_time': 141,
-                    'local_interface': 'Eth 0',
-                    'platform': 'RP1',
-                    'port_id': 'Eth 0/0'}
+                    'capability': 'R S I',
+                    'device_id': 'switchB',
+                    'hold_time': 177,
+                    'local_interface': 'Ethernet2/3',
+                    'platform': 'WS-C2960-24TC',
+                    'port_id': 'Ethernet1/4'},
+                2: {
+                    'capability': 'R S I',
+                    'device_id': 'switchA',
+                    'hold_time': 120,
+                    'local_interface': 'Ethernet1/4',
+                    'platform': 'WS-C2960-24TC',
+                    'port_id': 'Ethernet2/3'}
+                    }
                 }
             }
-        }
+
 
     expected_parsed_output_2 = {
         'cdp': {
             'index': {
                 1: {
-                    'capability': 'R B',
-                    'device_id': 'R5.cisco.com',
-                    'hold_time': 125,
-                    'local_interface': 'Gig 0/0',
-                    'platform': '',
-                    'port_id': 'Gig 0/0'},
+                    'capability': 'S I',
+                    'device_id': 'Switch',
+                    'hold_time': 163,
+                    'local_interface': 'mgmt0',
+                    'platform': 'WS-C2960-24TC',
+                    'port_id': 'Fas0/21'},
                 2: {
-                    'capability': 'R B',
-                    'device_id': 'R8.cisco.com',
-                    'hold_time': 148,
-                    'local_interface': 'Gig 0/0',
-                    'platform': '',
-                    'port_id': 'Gig 0/0'},
-                3: {
-                    'capability': 'R B',
-                    'device_id': 'R9.cisco.com',
-                    'hold_time': 156,
-                    'local_interface': 'Gig 0/0',
-                    'platform': '',
-                    'port_id': 'Gig 0/0'},
-                4: {
                     'capability': 'R S I',
-                    'device_id': 'device6',
-                    'hold_time': 157,
-                    'local_interface': 'Gig 0',
-                    'platform': 'C887VA-W-',
-                    'port_id': 'WGi 0'}
+                    'device_id': 'swordfish-6k-2',
+                    'hold_time': 149,
+                    'local_interface': 'Ethernet3/2',
+                    'platform': 'WS-C6506-E',
+                    'port_id': 'Gig1/38'}
                 }
             }
         }
-
 
     expected_parsed_empty_output = {
         'cdp': {}
@@ -96,74 +61,49 @@ class test_show_cdp_neighbors(unittest.TestCase):
 
     empty_device_output = {'execute.return_value': '''
         Device# show cdp neighbors
-
-        Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge
-                        S - Switch, H - Host, I - IGMP, r - Repeater
-
-        Device ID        Local Interfce     Holdtme    Capability  Platform  ''
-        Port ID
+        Capability Codes: 
+                        R - Router, T - Trans-Bridge, B - Source-Route-Bridge
+                        S - Switch, H - Host, I - IGMP, r - Repeater,
+                        V - VoIP-Phone, D - Remotely-Managed-Device,
+                        s - Supports-STP-Dispute
+        Device ID              Local Intrfce   Hldtme  Capability  Platform      Port ID
       '''}
 
     device_output_1 = {'execute.return_value': '''
-        Device# show cdp neighbors
-
-        Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge
-                        S - Switch, H - Host, I - IGMP, r - Repeater
-
-        Device ID        Local Interfce     Holdtme    Capability  ''
-        Platform  Port ID
-
-        C2950-1          Fas 0/0            148         S I       WS-C2950T-Fas 0/15
-        RX-SWV.cisco.com Fas 0/1            167         T S       WS-C3524-XFas 0/13    
-        device2      Eth 0          152      R           AS5200    Eth 0
-        device3      Eth 0          144      R           3640      Eth0/0
-        device4      Eth 0          141                  RP1      Eth 0/0        
+        switchA# show cdp neighbors
+        Capability Codes: R - Router, T - Trans-Bridge, B - Source-Route-Bridge
+            S - Switch, H - Host, I - IGMP, r - Repeater,
+            V - VoIP-Phone, D - Remotely-Managed-Device,
+            s - Supports-STP-Dispute
+            Device ID              Local Intrfce   Hldtme  Capability  Platform      Port ID
+            switchB                Ethernet2/3     177     R S I    WS-C2960-24TC Ethernet1/4
+            switchA                Ethernet1/4     120     R S I    WS-C2960-24TC Ethernet2/3      
     '''}
 
     device_output_2 = {'execute.return_value': '''
-        Device# show cdp neighbors
-
-        Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge
-                        S - Switch, H - Host, I - IGMP, r - Repeater
-
-        Device ID        Local Interfce     Holdtme    Capability  ''
-        Platform  Port ID
- 
-        R5.cisco.com     Gig 0/0           125              R B             Gig 0/0
-        R8.cisco.com     Gig 0/0           148              R B             Gig 0/0
-        R9.cisco.com     Gig 0/0           156              R B             Gig 0/0
-        device6    Gig 0          157      R S I       C887VA-W- WGi 0
-    
-    '''}
-
-
-    device_output_3 = {'execute.return_value': '''
-        Device# show cdp neighbors
-
-        Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge
-                        S - Switch, H - Host, I - IGMP, r - Repeater
-
-        Device ID        Local Interfce     Holdtme    Capability  ''
-        Platform  Port ID
-        
-        device4      Eth 0          141                  RP1      Eth 0/0
-        device5      Eth 0            164                  7206      Eth 1/0
-        R6(9P57K4EJ8CA)  Gig 0/0           137             R S C  N9K-9000v mgmt0
-        R7(9QBDKB58F76)  Gig 0/0           130             R S C  N9K-9000v mgmt0
+        switchA# show cdp neighbors
+        Capability Codes: 
+                R - Router, T - Trans-Bridge, B - Source-Route-Bridge
+                S - Switch, H - Host, I - IGMP, r - Repeater,
+                V - VoIP-Phone, D - Remotely-Managed-Device,
+                s - Supports-STP-Dispute
+        Device ID              Local Intrfce   Hldtme  Capability  Platform      Port ID
+        Switch mgmt0 163 S I WS-C2960-24TC Fas0/21
+        swordfish-6k-2 Eth3/2 149 R S I WS-C6506-E Gig1/38
     '''}
 
     def test_show_cdp_neighbors_1(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_1)
         obj = ShowCdpNeighbors(device=self.device)
-        parsed_output = obj.parse()        
+        parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_1)
     
     def test_show_cdp_neighbors_2(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_2)
         obj = ShowCdpNeighbors(device=self.device)
-        parsed_output = obj.parse()
+        parsed_output = obj.parse()    
         self.assertEqual(parsed_output, self.expected_parsed_output_2)
 
     def test_show_cdp_neighbors_empty_output(self):
@@ -304,6 +244,8 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
 
 
     device_output_1 = {'execute.return_value': """
+        Device# show cdp neighbors detail
+
         Device ID:savbu-qa-dist-120
         System Name:
         Interface address(es):
@@ -327,6 +269,8 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
     """}
 
     device_output_2 = {'execute.return_value': """
+        Device# show cdp neighbors detail
+
         Device ID:swor96(SSI13110AAQ)
         System Name:swor96
         Interface address(es):
@@ -348,6 +292,8 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
     """}
  
     device_output_3 = {'execute.return_value': """
+        Device# show cdp neighbors detail
+
         Device ID:swor96(SSI13110AAQ)
         System Name:swor96
         Interface address(es):
@@ -369,6 +315,8 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
     """}
  
     device_output_4 = {'execute.return_value': """
+        Device# show cdp neighbors detail
+
         Device ID:swor95(SSI13110AAS)
         System Name:swor95
         Interface address(es):
@@ -389,6 +337,8 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
     """}
 
     device_output_5 = {'execute.return_value': """
+        Device# show cdp neighbors detail
+        
         Device ID:swor95(SSI13110AAS)
         System Name:swor95
         Interface address(es):

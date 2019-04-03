@@ -11,9 +11,9 @@ NXOS parsers for the following show commands:
 import re
 
 # Metaparser
+from genie.libs.parser.utils.common import Common
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
-
 
 class ShowCdpNeighborsSchema(MetaParser):
 
@@ -82,18 +82,34 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
 
         parsed_dict = {'cdp': {}}
 
+        #Capability Codes: 
+        # R - Router, T - Trans-Bridge, B - Source-Route-Bridge
+        # S - Switch, H - Host, I - IGMP, r - Repeater,
+        # V - VoIP-Phone, D - Remotely-Managed-Device,
+        # s - Supports-STP-Dispute
+
+        # No platform
         # R5.cisco.com Gig 0/0 125 R B Gig 0/0 
         p1 = re.compile(r'^(?P<device_id>\S+) +'
-                         '(?P<local_interface>[a-zA-Z]+[\s]+[\d\/\.]+) +'
-                         '(?P<hold_time>\d+) +(?P<capability>[A-Z\s]+)'
+                         '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
+                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+)'
                          '(?: +(?P<platform>[\w\-]+) )? +'
                          '(?P<port_id>[a-zA-Z0-9\/\s]+)$')                     
 
         # device6 Gig 0 157 R S I C887VA-W- WGi 0 
         p2 = re.compile(r'^(?P<device_id>\S+) +'
-                         '(?P<local_interface>[a-zA-Z]+[\s]+[\d\/\.]+) +'
-                         '(?P<hold_time>\d+) +(?P<capability>[A-Z\s]+) +'
-                         '(?P<platform>\S+) (?P<port_id>[a-zA-Z0-9\/\s]+)$') 
+                         '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
+                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
+                         '(?P<platform>\S+) (?P<port_id>[a-zA-Z0-9\/\s]+)$')
+
+        # p3 and p4: If Device Id is not on same line as everything else
+        # vsm-p(2094532764140613037)
+        #   mgmt0 141 R B T S Nexus1000V control0
+        p3 = re.compile(r'^(?P<device_id>\S+)$')
+
+        p4 = re.compile(r'^(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
+                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
+                         '(?P<platform>\S+) (?P<port_id>[a-zA-Z0-9\/\s]+)$')
 
         device_id_index = 0        
 
@@ -111,12 +127,12 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
 
                 device_id_index += 1
 
-                device_dict = devices_dict_info.setdefault(device_id_index, {})                    
+                device_dict = devices_dict_info.setdefault(device_id_index, {})
 
                 group = result.groupdict()
 
                 device_dict['device_id'] = group['device_id'].strip()
-                device_dict['local_interface'] = group['local_interface'].strip()
+                device_dict['local_interface'] = Common.convert_intf_name(intf=group['local_interface'].strip())
                 device_dict['hold_time'] = int(group['hold_time'])
                 device_dict['capability'] = group['capability'].strip()
                 if group['platform']:
@@ -125,6 +141,36 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
                     device_dict['platform'] = ''
 
                 device_dict['port_id'] = group['port_id'].strip()
+                continue
+
+            result = p3.match(line)
+            if result:
+                device_id_index += 1
+
+                device_dict = devices_dict_info.setdefault(device_id_index, {})
+
+                group = result.groupdict()
+
+                device_dict['device_id'] = group['device_id'].strip()
+
+                continue
+            result = p4.match(line)
+            if result:
+                
+                group = result.groupdict()
+                device_dict['local_interface'] = Common.convert_intf_name(intf=group['local_interface'].strip())
+                device_dict['hold_time'] = int(group['hold_time'])
+                device_dict['capability'] = group['capability'].strip()
+                if group['platform']:
+                    device_dict['platform'] = group['platform'].strip()
+                elif not group['platform']:
+                    device_dict['platform'] = ''
+
+                device_dict['port_id'] = group['port_id'].strip()
+                continue
+
+
+
         if device_id_index:
              parsed_dict.setdefault('cdp', {}).\
                             setdefault('index', devices_dict_info)
