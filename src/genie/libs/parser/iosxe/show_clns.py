@@ -504,17 +504,16 @@ class ShowClnsNeighborsDetailSchema(MetaParser):
                                 'snpa': str,
                                 'holdtime': int,
                                 'protocol': str,
+                                'area_address': list,
+                                'ip_address': list,
+                                'ipv6_address': list,
+                                'uptime': str,
+                                'nsf': str,
+                                'topology': list,
                             }
                         }
                     }
                 },
-                'area_address': list,
-                'ip_address': list,
-                'ipv6_address': list,
-                'uptime': str,
-                'nsf': str,
-                'topology': list,
-                'interface': str,
             }
         }
     }
@@ -583,49 +582,49 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                clns_dict.update({'area_address': group['area_address'].split()})
+                type_dict.update({'area_address': group['area_address'].split()})
                 continue
 
             #   IP Address(es):  20.2.7.7*
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                clns_dict.update({'ip_address': group['ip_address'].split()})
+                type_dict.update({'ip_address': group['ip_address'].split()})
                 continue
 
             #   IPv6 Address(es): FE80::5C00:C0FF:FE06:7
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                clns_dict.update({'ipv6_address': group['ipv6_address'].split()})
+                type_dict.update({'ipv6_address': group['ipv6_address'].split()})
                 continue
 
             #   Uptime: 00:23:58
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                clns_dict.update({'uptime': group['uptime']})
+                type_dict.update({'uptime': group['uptime']})
                 continue
 
             #   NSF capable
             m = p7.match(line)
             if m:
                 group = m.groupdict()
-                clns_dict.update({'nsf': group['nsf']})
+                type_dict.update({'nsf': group['nsf']})
                 continue
 
             #   Topology: IPv4, IPv6
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                clns_dict.update({'topology': group['topology'].lower().replace(" ","").split(',')})
+                type_dict.update({'topology': group['topology'].lower().replace(" ","").split(',')})
                 continue
 
             #   Interface name: GigabitEthernet4
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                clns_dict.update({'interface': Common.convert_intf_name(group['interface'])})
+                type_dict.update({'interface': Common.convert_intf_name(group['interface'])})
                 continue
         return result_dict
 
@@ -636,19 +635,25 @@ class ShowClnsIsNeighborsDetailSchema(MetaParser):
     schema = {
         'tag': {
             Any(): {
-                'system_id': str,
-                'interface': str,
-                'state': str,
-                'type': str,
-                'format': str,
-                'priority': int,
-                'circuit_id': str,
-                'area_address': list,
-                'ip_address': list,
-                'ipv6_address': list,
-                'uptime': str,
-                'nsf': str,
-                'topology': list,
+                'system_id': {
+                    Any(): {
+                       'type': {
+                           Any(): {
+                               'interface': str,
+                               'state': str,
+                               'format': str,
+                               'priority': int,
+                               'circuit_id': str,
+                               'area_address': list,
+                               'ip_address': list,
+                               'ipv6_address': list,
+                               'uptime': str,
+                               'nsf': str,
+                               'topology': list,
+                           }
+                       }
+                    }
+                }
             }
         }
     }
@@ -702,59 +707,66 @@ class ShowClnsIsNeighborsDetail(ShowClnsIsNeighborsDetailSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                clns_dict.update({key.lower(): value for key, value in group.items()})
-                clns_dict.update({'priority': int(group['priority'])})
-                clns_dict.update({'state': group['state'].lower()})
-                clns_dict.update({'interface': Common.convert_intf_name(group['interface'])})
+                type_dict = clns_dict.setdefault('system_id', {}). \
+                    setdefault(group['system_id'], {}). \
+                    setdefault('type', {}). \
+                    setdefault(group['type'], {})
+
+                type_dict.update({'state': group['state'].lower()})
+                type_dict.update({'circuit_id': group['circuit_id']})
+                type_dict.update({'format': group['format']})
+                type_dict.update({'priority': int(group['priority'])})
+                type_dict.update({'interface': Common.convert_intf_name(group['interface'])})
+
                 continue
 
             # Area Address(es): 49.0002
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                clns_dict.update({'area_address': group['area_address'].split()})
+                type_dict.update({'area_address': group['area_address'].split()})
                 continue
 
             # IP Address(es):  20.2.7.7*
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                clns_dict.update({'ip_address': group['ip_address'].split()})
+                type_dict.update({'ip_address': group['ip_address'].split()})
                 continue
 
             # IPv6 Address(es): FE80::5C00:C0FF:FE06:7
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                clns_dict.update({'ipv6_address': group['ipv6_address'].split()})
+                type_dict.update({'ipv6_address': group['ipv6_address'].split()})
                 continue
 
             # Uptime: 00:23:58
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                clns_dict.update({'uptime': group['uptime']})
+                type_dict.update({'uptime': group['uptime']})
                 continue
 
             # NSF capable
             m = p7.match(line)
             if m:
                 group = m.groupdict()
-                clns_dict.update({'nsf': group['nsf']})
+                type_dict.update({'nsf': group['nsf']})
                 continue
 
             # Topology: IPv4, IPv6
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                clns_dict.update({'topology': group['topology'].lower().replace(" ", "").split(',')})
+                type_dict.update({'topology': group['topology'].lower().replace(" ", "").split(',')})
                 continue
 
             # Interface name: GigabitEthernet4
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                clns_dict.update({'interface': Common.convert_intf_name(group['interface'])})
+                type_dict.update({'interface': Common.convert_intf_name(group['interface'])})
                 continue
         return result_dict
 

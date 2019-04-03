@@ -226,17 +226,16 @@ class test_show_clns_neighbors_detail(unittest.TestCase):
                                 'snpa': '5e00.c006.0007',
                                 'holdtime': 26,
                                 'protocol': 'M-ISIS',
+                                'area_address': ['49.0002'],
+                                'ip_address': ['20.2.7.7*'],
+                                'ipv6_address': ['FE80::5C00:C0FF:FE06:7'],
+                                'uptime': '00:23:58',
+                                'nsf': 'capable',
+                                'topology': ['ipv4', 'ipv6'],
                             },
                         }
                     },
                 },
-                'area_address': ['49.0002'],
-                'ip_address': ['20.2.7.7*'],
-                'ipv6_address': ['FE80::5C00:C0FF:FE06:7'],
-                'uptime': '00:23:58',
-                'nsf': 'capable',
-                'topology': ['ipv4', 'ipv6'],
-                'interface': 'GigabitEthernet4',
             }
         }
     }
@@ -280,19 +279,25 @@ class test_show_clns_is_neighbor_detail(unittest.TestCase):
     golden_parsed_output = {
         'tag':{
             'VRF1':{
-                'system_id': 'R7',
-                'interface': 'GigabitEthernet4',
-                'state': 'up',
-                'type': 'L2',
-                'priority': 64,
-                'circuit_id': 'R2.01',
-                'format': 'Phase V',
-                'area_address': ['49.0002'],
-                'ip_address': ['20.2.7.7*'],
-                'ipv6_address': ['FE80::5C00:C0FF:FE06:7'],
-                'uptime': '00:24:24',
-                'nsf': 'capable',
-                'topology':['ipv4','ipv6'],
+                'system_id': {
+                    'R7':{
+                        'type':{
+                            'L2':{
+                                'interface': 'GigabitEthernet4',
+                                'state': 'up',
+                                'priority': 64,
+                                'circuit_id': 'R2.01',
+                                'format': 'Phase V',
+                                'area_address': ['49.0002'],
+                                'ip_address': ['20.2.7.7*'],
+                                'ipv6_address': ['FE80::5C00:C0FF:FE06:7'],
+                                'uptime': '00:24:24',
+                                'nsf': 'capable',
+                                'topology': ['ipv4', 'ipv6'],
+                            }
+                        }
+                    },
+                }
             }
         }
     }
