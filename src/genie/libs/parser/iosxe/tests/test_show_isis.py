@@ -28,48 +28,48 @@ class test_show_isis_hostname(unittest.TestCase):
                         },
                         '2222.2222.2222':{
                             'hostname': 'R2',
-                            'level': '*',
+                            'local_router': True,
                         }
                     }
                 }
             },
-        'test':{
-            'hostname_db': {
-                'hostname': {
-                    '9999.9999.9999': {
-                        'hostname': 'R9',
-                        'level': 2,
-                    },
+            'test':{
+                'hostname_db': {
+                    'hostname': {
+                        '9999.9999.9999': {
+                            'hostname': 'R9',
+                            'level': 2,
+                        },
 
-                    '8888.8888.8888': {
-                        'hostname': 'R8',
-                        'level': 2,
-                    },
-                    '7777.7777.7777': {
-                        'hostname': 'R7',
-                        'level': 2,
-                    },
-                    '5555.5555.5555': {
-                        'hostname': 'R5',
-                        'level': 2,
-                    },
-                    '3333.3333.3333': {
-                        'hostname': 'R3',
-                        'level': 2,
-                    },
-                    '1111.1111.1111': {
-                        'hostname': 'R1',
-                        'level': 1,
-                    },
-                    '2222.2222.2222': {
-                        'hostname': 'R2',
-                        'level': '*',
+                        '8888.8888.8888': {
+                            'hostname': 'R8',
+                            'level': 2,
+                        },
+                        '7777.7777.7777': {
+                            'hostname': 'R7',
+                            'level': 2,
+                        },
+                        '5555.5555.5555': {
+                            'hostname': 'R5',
+                            'level': 2,
+                        },
+                        '3333.3333.3333': {
+                            'hostname': 'R3',
+                            'level': 2,
+                        },
+                        '1111.1111.1111': {
+                            'hostname': 'R1',
+                            'level': 1,
+                        },
+                        '2222.2222.2222': {
+                            'hostname': 'R2',
+                            'local_router': True,
+                        },
                     },
                 },
-            },
+            }
         }
     }
-}
 
     golden_output = {'execute.return_value': '''\
     R2#show isis hostname
@@ -90,16 +90,16 @@ class test_show_isis_hostname(unittest.TestCase):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        platform_obj = ShowIsisHostname(device=self.device)
+        obj = ShowIsisHostname(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = platform_obj.parse()
+            parsed_output = obj.parse()
 
     def test_golden(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output_full)
-        platform_obj = ShowIsisHostname(device=self.device)
-        parsed_output = platform_obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output_full)
+        self.device = Mock(**self.golden_output)
+        obj = ShowIsisHostname(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
 class test_show_isis_lsp_log(unittest.TestCase):
@@ -108,45 +108,54 @@ class test_show_isis_lsp_log(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-         'tag':{
-             'VRF1': {
-                 'lsp_log': {
-                     'level': {
-                         1: {
-                             'CONFIG OTVINFOCHG':{
-                                 'received_timestamp': '01:13:52',
-                                 'count': 5
-                             },
-                             'ATTACHFLAG':{
-                                 'received_timestamp': '00:25:46',
-                                 'count': 1
-                             },
-                             'ATTACHFLAG IPV6IA':{
-                                 'received_timestamp': '00:25:44',
-                                 'count': 2
-                             }
-
-                         },
-                         2: {
-                             'CONFIG OTVINFOCHG':{
-                                 'received_timestamp': '01:13:52',
-                                 'count': 5
-                             },
-                             'NEWADJ DIS': {
-                                 'received_timestamp': '00:25:46',
-                                 'count': 2,
-                                 'interface': 'GigabitEthernet4'
-                             },
-                             'ADJMTIDCHG': {
-                                 'received_timestamp': '00:25:45 ',
-                                 'count': 1 ,
-                                 'interface': 'GigabitEthernet4',
-                             }
-                         },
-                     },
-                 }
-             }
-         }
+        "tag": {
+            "VRF1": {
+                "lsp_log": {
+                    "level": {
+                        1: {
+                            "index": {
+                                1: {
+                                    "when": "01:13:52",
+                                    "count": 5,
+                                    "triggers": "CONFIG OTVINFOCHG"
+                                },
+                                2: {
+                                    "when": "00:25:46",
+                                    "count": 1,
+                                    "triggers": "ATTACHFLAG"
+                                },
+                                3: {
+                                    "when": "00:25:44",
+                                    "count": 2,
+                                    "triggers": "ATTACHFLAG IPV6IA"
+                                }
+                            }
+                        },
+                        2: {
+                            "index": {
+                                1: {
+                                    "when": "01:13:52",
+                                    "count": 5,
+                                    "triggers": "CONFIG OTVINFOCHG"
+                                },
+                                2: {
+                                    "when": "00:25:46",
+                                    "count": 2,
+                                    "triggers": "NEWADJ DIS",
+                                    "interface": "GigabitEthernet4"
+                                },
+                                3: {
+                                    "when": "00:25:45",
+                                    "count": 1,
+                                    "triggers": "ADJMTIDCHG",
+                                    "interface": "GigabitEthernet4"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     golden_output = {'execute.return_value': '''\
@@ -170,15 +179,15 @@ class test_show_isis_lsp_log(unittest.TestCase):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        platform_obj = ShowIsisLspLog(device=self.device)
+        obj = ShowIsisLspLog(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = platform_obj.parse()
+            parsed_output = obj.parse()
 
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
-        platform_obj = ShowIsisLspLog(device=self.device)
-        parsed_output = platform_obj.parse()
+        obj = ShowIsisLspLog(device=self.device)
+        parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
@@ -195,6 +204,7 @@ class test_show_isis_database_detail(unittest.TestCase):
                         'R2.00-00':{
                             'lsp_sequence_num': '0x00000007',
                             'lsp_checksum': '0x8A6D',
+                            'local_router': True,
                             'lsp_holdtime': '403',
                             'lsp_rcvd': '*',
                             'attach_bit': 1,
@@ -202,8 +212,8 @@ class test_show_isis_database_detail(unittest.TestCase):
                             'overload_bit': 0,
                             'area_address': '49.0001',
                             'nlpid': '0xCC 0x8E',
-                            'topology':{
-                                'ipv4':{
+                            'topology': {
+                                'ipv4': {
                                     'code':'0x0',
                                 },
                                 'ipv6': {
@@ -212,23 +222,27 @@ class test_show_isis_database_detail(unittest.TestCase):
                             },
                             'hostname': 'R2',
                             'ip_address': '66.66.66.66',
-                            'ip': {
-                                '20.2.7.0/24': {
+                            '20.2.7.0/24': {
+                                'ip': {
                                     'metric': 10,
                                 },
-                                '66.66.66.66/32': {
+                            },
+                            '66.66.66.66/32':{
+                                'ip': {
                                     'metric': 10,
                                 },
                             },
                             'ipv6_address': '2001:DB8:66:66:66::66',
-                            'ipv6': {
-                                '2001:DB8:20:2::/64': {
+                            '2001:DB8:20:2::/64': {
+                                'ipv6': {
                                     'metric': 10,
-                                    'MT_IPv6': True
+                                    'mt_ipv6': True
                                 },
-                                '2001:DB8:66:66:66::66/128': {
+                            },
+                            '2001:DB8:66:66:66::66/128': {
+                                'ipv6':{
                                     'metric': 10,
-                                    'MT_IPv6': True
+                                    'mt_ipv6': True
                                 },
                             },
                         },
@@ -237,6 +251,7 @@ class test_show_isis_database_detail(unittest.TestCase):
                         'R2.00-00': {
                             'lsp_sequence_num': '0x00000008',
                             'lsp_checksum': '0x621E',
+                            'local_router': True,
                             'lsp_holdtime': '1158',
                             'lsp_rcvd': '*',
                             'attach_bit': 0,
@@ -259,7 +274,7 @@ class test_show_isis_database_detail(unittest.TestCase):
                                 },
                                 'is': {
                                     'metric': 10,
-                                    'MT-IPv6': True,
+                                    'mt_ipv6': True,
                                 },
                             },
                             'ip_address': '66.66.66.66',
@@ -275,33 +290,35 @@ class test_show_isis_database_detail(unittest.TestCase):
                             },
                             'ipv6_address': '2001:DB8:66:66:66::66',
                             '2001:DB8:20:2::/64': {
-                                    'ipv6':{
-                                    'metric': 10,
-                                    'MT_IPv6': True
+                                    'ipv6': {
+                                        'metric': 10,
+                                        'mt_ipv6': True
                                     },
                                 },
                                 '2001:DB8:66:66:66::66/128': {
-                                    'metric': 10,
-                                    'MT_IPv6': True
+                                    'ipv6': {
+                                        'metric': 10,
+                                        'mt_ipv6': True
+                                    }
                                 },
                             },
                         'R2.01-00': {
                             'lsp_sequence_num': '0x00000002',
                             'lsp_checksum': '0x3334',
+                            'local_router': True,
                             'lsp_holdtime': '414',
                             'lsp_rcvd': '*',
                             'attach_bit': 0,
                             'p_bit': 0,
                             'overload_bit': 0,
-                            'hostname': 'R2',
                             'R2.00': {
                                 'is-extended': {
-                                    'metric': 10,
+                                    'metric': 0,
                                 },
                             },
                             'R7.00': {
                                 'is-extended': {
-                                    'metric': 10,
+                                    'metric': 0,
                                 },
                             },
                         },
@@ -313,8 +330,8 @@ class test_show_isis_database_detail(unittest.TestCase):
                             'attach_bit': 0,
                             'p_bit': 0,
                             'overload_bit': 0,
-                            'area_address': '49.002',
-                            'nlpid': ' 0xCC 0x8E',
+                            'area_address': '49.0002',
+                            'nlpid': '0xCC 0x8E',
                             'router_id': '77.77.77.77',
                             'ip_address': '77.77.77.77',
                             'topology': {
@@ -331,8 +348,8 @@ class test_show_isis_database_detail(unittest.TestCase):
                                     'metric': 40,
                                 },
                                 'is': {
-                                    'metric': 10,
-                                    'MT_IPv6': True,
+                                    'metric': 40,
+                                    'mt_ipv6': True,
                                 },
                             },
                             '77.77.77.77/32':{
@@ -349,13 +366,13 @@ class test_show_isis_database_detail(unittest.TestCase):
                             '2001:DB8:77:77:77::77/128': {
                                 'ipv6': {
                                     'metric': 1,
-                                    'MT_IPv6': True
+                                    'mt_ipv6': True
                                 }
                             },
                             '2001:DB8:20:2::/64': {
                                 'ipv6': {
                                     'metric': 40,
-                                    'MT_IPv6': True
+                                    'mt_ipv6': True
                                 }
                             },
                         },
