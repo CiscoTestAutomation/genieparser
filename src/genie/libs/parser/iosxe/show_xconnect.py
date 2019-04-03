@@ -16,18 +16,20 @@ from genie.metaparser.util.schemaengine import Schema, \
 class ShowXconnectAllSchema(MetaParser):
     """Schema for show xconnect all"""
     schema = {
-        'interface': {
+        'segment_1': {
             Any(): {
-                'state': {
+                's1': str,
+                'segment_2': {
                     Any(): {
-                        'Segment 1 State': str,
-                        'Segment 2': str,
-                        Optional('Segment 2 State'): str,
-                        },
-                     }
+                        's2': str,
+                        'xc': str,
+                        'st': str,
+                    }
                 }
             }
         }
+    }
+
 
 class ShowXconnectAll(ShowXconnectAllSchema):
     """Parser for show xconnect all"""
@@ -47,34 +49,21 @@ class ShowXconnectAll(ShowXconnectAllSchema):
             line = line.rstrip()
 
             # IA pri   ac Gi0/0/1:10(Ethernet)         DN mpls 10.239.6.2:684955608         DN
+            # UP pri mpls 2.2.2.2:888                  UP   ac Gi3:9(Ethernet)              UP
+            # -- pri  vfi sample-vfi                   UP unkn Invalid Segment              --
+            # UP pri   bd 300                          UP  vfi sample-vfi                   UP
             p1 = re.compile(
-                r'^\s*(?P<xc>\S+)\s+(?P<st>\S+)\s+(?P<segment_1>(.*\)))\s+(?P<s1>\S+)\s+(?P<segment_2>\S+[^\S]\S+)\s+(?P<s2>\S+)\s*$')
+                r'^\s*(?P<xc>(UP|DN|AD|IA|SB|HS|RV|NH|\-\-))\s+(?P<st>(pri|sec))\s+(?P<segment1>.*)\s+(?P<s1>(UP|DN|AD|IA|SB|HS|RV|NH|\-\-))\s+(?P<segment2>.*)\s+(?P<s2>(UP|DN|AD|IA|SB|HS|RV|NH|\-\-))')
             m = p1.match(line)
 
             if m:
-                segment_1 = m.groupdict()['segment_1']
-                xc_state = m.groupdict()['st']
-
-                ret_dict.setdefault('interface', {}).setdefault(segment_1, {}).setdefault('state',
-                                                                                                        {}).setdefault(
-                    xc_state, {})
-
-                for key in ret_dict['interface'][segment_1]['state']:
-                    if key == 'pri':
-                        ret_dict['interface'][segment_1]['state'][xc_state]['Segment 1 State'] = \
-                        m.groupdict()['s1']
-                        ret_dict['interface'][segment_1]['state'][xc_state]['Segment 2'] = m.groupdict()[
-                            'segment_2']
-                        ret_dict['interface'][segment_1]['state'][xc_state]['Segment 2 State'] = \
-                        m.groupdict()['s2']
-
-                    elif key == 'sec':
-                        ret_dict['interface'][segment_1]['state'][xc_state]['Segment 1 State'] = \
-                        m.groupdict()['s1']
-                        ret_dict['interface'][segment_1]['state'][xc_state]['Segment 2'] = m.groupdict()[
-                            'segment_2']
-                        ret_dict['interface'][segment_1]['state'][xc_state]['Segment 2 State'] = \
-                        m.groupdict()['s2']
-                continue
+                xc, st, segment_1, s1, segment_2, s2 = m.groupdict().values()
+                segment_1 = segment_1.rstrip()
+                segment_2 = segment_2.rstrip()
+                ret_dict.setdefault('segment_1', {}).setdefault(segment_1, {}).setdefault('segment_2', {}).setdefault(segment_2, {})
+                ret_dict['segment_1'][segment_1]['s1'] = s1
+                ret_dict['segment_1'][segment_1]['segment_2'][segment_2]['s2'] = s2
+                ret_dict['segment_1'][segment_1]['segment_2'][segment_2]['xc'] = xc
+                ret_dict['segment_1'][segment_1]['segment_2'][segment_2]['st'] = st
 
         return ret_dict
