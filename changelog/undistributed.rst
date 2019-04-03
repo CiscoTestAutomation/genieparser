@@ -144,3 +144,18 @@
     * Add ShowArpSummary for:
         show arp summary
 
+----------------------------------------------------------------------------------
+                                   ISIS
+----------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowClnsInterface for:
+        show clns interface
+        show clns interface <interface>
+    * Add ShowClnsProtocol for:
+        show clns protocol
+    * Add ShowClnsNeighborDetail for:
+        show clns neighbor detail
+    * Add ShowClnsIsNeighborDetail for:
+        show clns is-neighbor detail
+    * Add ShowClnsTraffic for:
+        *  show clns traffic
