@@ -495,19 +495,26 @@ class ShowClnsNeighborsDetailSchema(MetaParser):
     schema = {
         'tag': {
             Any(): {
-                'system_id': str,
-                'interface': str,
-                'state': str,
-                'type': str,
-                'snpa': str,
-                'holdtime': int,
-                'protocol': str,
+                'system_id':{
+                    Any() : {
+                        'type': {
+                            Any(): {
+                                'interface': str,
+                                'state': str,
+                                'snpa': str,
+                                'holdtime': int,
+                                'protocol': str,
+                            }
+                        }
+                    }
+                },
                 'area_address': list,
                 'ip_address': list,
                 'ipv6_address': list,
                 'uptime': str,
                 'nsf': str,
                 'topology': list,
+                'interface': str,
             }
         }
     }
@@ -560,10 +567,16 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                clns_dict.update({key.lower():value for key,value in group.items()})
-                clns_dict.update({'holdtime': int(group['holdtime'])})
-                clns_dict.update({'state': group['state'].lower()})
-                clns_dict.update({'interface': Common.convert_intf_name(group['interface'])})
+                type_dict = clns_dict.setdefault('system_id', {}).\
+                                      setdefault(group['system_id'],{}).\
+                                      setdefault('type', {}).\
+                                      setdefault(group['type'], {})
+
+                type_dict.update({'holdtime': int(group['holdtime'])})
+                type_dict.update({'state': group['state'].lower()})
+                type_dict.update({'snpa': group['snpa']})
+                type_dict.update({'protocol': group['protocol']})
+                type_dict.update({'interface': Common.convert_intf_name(group['interface'])})
                 continue
 
             #   Area Address(es): 49.0002
