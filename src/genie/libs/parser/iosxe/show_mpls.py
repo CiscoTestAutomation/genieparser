@@ -2218,20 +2218,22 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
                          ' +last +status +change +time: +(?P<last_status_change_time>\S+)$')
 
         #   Signaling protocol: LDP, peer 10.2.2.2:0 down
-        p8 = re.compile(r'^Signaling +protocol: +(?P<signaling_protocol>\S+),'
-                         ' +peer +(?P<peer_id>\S+) +(?P<peer_state>\w+)$')
+        p8 = re.compile(r'^Signaling +protocol: +(?P<signaling_protocol>\S+)(,'
+                         ' +peer +(?P<peer_id>\S+) +(?P<peer_state>\w+))?$')
 
         #   MPLS VC labels: local 21, remote 16
-        p9 = re.compile(r'^MPLS +VC +labels: +local +(?P<mpls_local>\d+),'
-                         ' +remote +(?P<mpls_remote>\d+)$')
+        #   MPLS VC labels: local 21, remote unassigned
+        p9 = re.compile(r'^MPLS +VC +labels: +local +(?P<mpls_local>\w+),'
+                         ' +remote +(?P<mpls_remote>\w+)$')
 
         #   Group ID: local 0, remote 0
+        #   Group ID: local 0, remote unknown
         p10 = re.compile(r'^Group +ID: +local +(?P<group_id_local>[\w\W]+),'
-                          ' +remote +(?P<group_id_remote>\d+)$')
+                          ' +remote +(?P<group_id_remote>[\w\W]+)$')
 
         #   MTU: local 1500, remote 1500
-        p11 = re.compile(r'^MTU: +local +(?P<mtu_local>\d+),'
-                          ' +remote +(?P<mtu_remote>\d+)$')
+        p11 = re.compile(r'^MTU: +local +(?P<mtu_local>\w+),'
+                          ' +remote +(?P<mtu_remote>\w+)$')
 
         #   Remote interface description: "xconnect to PE2"
         p12 = re.compile(r'^Remote +interface +description:'
@@ -2387,8 +2389,10 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
                 signaling_protocol = group['signaling_protocol']
                 signaling_final_dict = final_dict.setdefault('signaling_protocol', {}).\
                     setdefault(signaling_protocol, {})
-                signaling_final_dict['peer_id'] = group['peer_id']
-                signaling_final_dict['peer_state'] = group['peer_state']
+                if group['peer_id']:
+                    signaling_final_dict['peer_id'] = group['peer_id']
+                if group['peer_state']:
+                    signaling_final_dict['peer_state'] = group['peer_state']
                 continue
 
             m = p9.match(line)
