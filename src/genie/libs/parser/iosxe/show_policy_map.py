@@ -31,89 +31,110 @@ class ShowPolicyMapTypeSchema(MetaParser):
     ''' Schema for "show policy map control plane" '''
 
     schema = {
-        Any(): # Control Plane
-            {'service_policy': 
-                {Any(): # input/output
-                    {'policy_name': 
-                        {Any(): # Control_Plane_in 
-                            {'class_map': 
-                                {Any(): # Ping_Class
-                                    {'match_evaluation': str,
-                                     Optional('packets'): int,
-                                     Optional('bytes'): int,
-                                     Optional('queueing'):
-                                         {Optional('queue_limit'): str,
-                                          Optional('queue_depth'): int,
-                                          Optional('total_drops'): int,
-                                          Optional('no_buffer_drops'): int,
-                                          Optional('pkts_output'): int,
-                                          Optional('bytes_output'): int,
-                                          Optional('shape_cir_bps'): int,
-                                          Optional('shape_bc_bps'): int,
-                                          Optional('shape_be_bps'): int,
-                                          Optional('target_shape_rate'): int,
-                                          Optional('output_queue'): str,
-                                          Optional('bandwidth_percent'): int,
-                                          Optional('exponential_weight'): int,
-                                          Optional('mean_queue_depth'): int,
-                                         },
-                                     Optional('rate'):
-                                         {Optional('interval'): int,
-                                          Optional('offered_rate_bps'): int,
-                                          Optional('drop_rate_bps'): int,
-                                         },
-                                     'match': str,
-                                     Optional('class'):
-                                         {Any():
-                                             {'transmitted': str,
-                                              'random_drop': str,
-                                              'tail_drop': str,
-                                              'minimum_thresh': str,
-                                              'maximum_thresh': str,
-                                              'mark_prob': str,
-                                              Optional('ecn_mark'): str,
-                                              },
-                                         },
-                                     Optional('qos_set'):
-                                         {Optional('ip_precedence'): int,
-                                          Optional('marker_statistics'): str,
-                                          Optional('qos_group'): int,
-                                          Optional('packets_marked'): int,
-                                          Optional('dscp'): str,
-                                         },
-                                     Optional('police'):
-                                         {Optional('cir_bps'): int,
-                                          Optional('bc_bytes'): int,
-                                          Optional('police_bps'): int,
-                                          Optional('police_limit'): int,
-                                          Optional('extended_limit'): int,
-                                          Optional('conformed'):
-                                              {'packets': int,
-                                               'bytes': int,
-                                               'bps': int,
-                                               'actions': str,
-                                              },
-                                          Optional('exceeded'):
-                                              {'packets': int,
-                                               'bytes': int,
-                                               'bps': int,
-                                               'actions': str,
-                                              },
-                                          Optional('violated'):
-                                              {'packets': int,
-                                               'bytes': int,
-                                               'bps': int,
-                                               'actions': str,
-                                              },
-                                          },
-                                     },
+        Any(): {
+            'service_policy': {
+                Any(): {
+                    'policy_name': {
+                        Any(): {
+                            'class_map': {
+                                Any(): {
+                                    'match_evaluation': str,
+                                    'match': list,
+                                    Optional('packets'): int,
+                                    Optional('bytes'): int,
+                                    Optional('queueing'): bool,
+                                    Optional('queue_limit'): str,
+                                    Optional('queue_depth'): int,
+                                    Optional('total_drops'): int,
+                                    Optional('no_buffer_drops'): int,
+                                    Optional('pkts_output'): int,
+                                    Optional('bytes_output'): int,
+                                    Optional('pkts_matched'): int,
+                                    Optional('bytes_matched'): int,
+                                    Optional('pkts_queued'): int,
+                                    Optional('bytes_queued'): int,
+                                    Optional('shape_type'): str,
+                                    Optional('shape_cir_bps'): int,
+                                    Optional('shape_bc_bps'): int,
+                                    Optional('shape_be_bps'): int,
+                                    Optional('target_shape_rate'): int,
+                                    Optional('output_queue'): str,
+                                    Optional('bandwidth_percent'): int,
+                                    Optional('bandwidth_kbps'): int,
+                                    Optional('exponential_weight'): int,
+                                    Optional('exp_weight_constant'): str,
+                                    Optional('mean_queue_depth'): int,
+                                    Optional('rate'): {
+                                        Optional('interval'): int,
+                                        Optional('offered_rate_bps'): int,
+                                        Optional('drop_rate_bps'): int
+                                    },
+                                    Optional('policy'): {
+                                        Any(): {
+                                            'class': {
+                                                Any(): {
+                                                    Optional('bandwidth'): int,
+                                                    Optional('random_detect'): {
+                                                        'precedence': list,
+                                                        'bytes1': list,
+                                                        'bytes2': list,
+                                                        'bytes3': list,
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    Optional('class'): {
+                                        Any(): {
+                                            'transmitted': str,
+                                            'random_drop': str,
+                                            'tail_drop': str,
+                                            'minimum_thresh': str,
+                                            'maximum_thresh': str,
+                                            'mark_prob': str,
+                                            Optional('ecn_mark'): str
+                                        },
+                                    },
+                                    Optional('qos_set'): {
+                                        Optional('ip_precedence'): int,
+                                        Optional('marker_statistics'): str,
+                                        Optional('qos_group'): int,
+                                        Optional('packets_marked'): int,
+                                        Optional('dscp'): str,
+                                    },
+                                    Optional('police'): {
+                                        Optional('cir_bps'): int,
+                                        Optional('bc_bytes'): int,
+                                        Optional('police_bps'): int,
+                                        Optional('police_limit'): int,
+                                        Optional('extended_limit'): int,
+                                        Optional('conformed'): {
+                                            'packets': int,
+                                            'bytes': int,
+                                            'bps': int,
+                                            'actions': str,
+                                        },
+                                        Optional('exceeded'): {
+                                            'packets': int,
+                                            'bytes': int,
+                                            'bps': int,
+                                            'actions': str,
+                                        },
+                                        Optional('violated'): {
+                                            'packets': int,
+                                            'bytes': int,
+                                            'bps': int,
+                                            'actions': str,
+                                        },
+                                    },
                                 },
                             },
                         },
                     },
                 },
             },
-        }
+        },
+    }
 
 
 # =====================================================================
@@ -121,16 +142,19 @@ class ShowPolicyMapTypeSchema(MetaParser):
 #   * 'show policy map control plane'
 #   * 'show policy-map interface {interface} output class {class_name}'
 #   * 'show policy-map interface {interface}'
+#   * 'show policy-map interface '
 # =====================================================================
 class ShowPolicyMapType(ShowPolicyMapTypeSchema):
     ''' Parser for
         * "show policy map control plane"
         * "show policy-map interface {interface} output class {class_name}"
         * "show policy-map interface {interface}"
+        * "show policy-map interface"
     '''
 
     cli_command = ['show policy-map interface {interface} output class {class_name}',
                    'show policy-map interface {interface}',
+                   'show policy-map interface',
                    'show policy-map control-plane']
 
     def cli(self, class_name='', interface='', output=None):
@@ -153,13 +177,13 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
         # Control Plane
         # GigabitEthernet0/1/5
         # Something else
-        p0 = re.compile(r'^(?P<top_level>(Control Plane|GigabitEthernet.*))$')
+        p0 = re.compile(r'^(?P<top_level>(Control Plane|Giga.*|[Pp]seudo.*|Fast.*|[Ss]erial.*|'
+                         'Ten.*|[Ee]thernet.*|[Tt]unnel.*|[Pp]ort.*))$')
 
         # Service-policy input: Control_Plane_In
         # Service-policy output: shape-out
         # Service-policy input:TEST
-        p1 = re.compile(r'^Service-policy +(?P<service_policy>(input|output)):+ *(?P<policy_name>([\w\-]+))$')
-
+        p1 = re.compile(r'^Service-policy +(?P<service_policy>(input|output)):+ *(?P<policy_name>([\w\-]+).*)')
         # service policy : child
         p1_1 = re.compile(r'^Service-policy *:+ *(?P<policy_name>([\w\-]+))$')
 
@@ -180,7 +204,7 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
         p4_2 = re.compile(r'^(?P<interval>(\d+)) +second +offered +rate +(?P<offered_rate>(\d+)) bps, +drop +rate +(?P<drop_rate>(\d+)) bps$')
 
         # Match: access-group name Ping_Option
-        p5 = re.compile(r'^Match *:+(?P<match>([\w\-\s]+))$')
+        p5 = re.compile(r'^Match *:+(?P<match>([\(\w\-\s\)]+))$')
 
         # police:
         p6 = re.compile(r'^police:+$')
@@ -264,8 +288,8 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
         p16_3_2 = re.compile(r'^\(+pkts +queued/+bytes +queued+\) +(?P<pkts_queued>(\d+))/+(?P<bytes_queued>(\d+))$')
 
         # shape (average) cir 474656, bc 1899, be 1899
-        p16_4 = re.compile(r'^shape +\(average\) +cir +(?P<shape_cir_bps>(\d+)), +bc +'
-                            '(?P<shape_bc_bps>(\d+)), +be +(?P<shape_be_bps>(\d+))$')
+        p16_4 = re.compile(r'^shape +\(+(?P<shape_type>(\w+))+\) +cir +(?P<shape_cir_bps>(\d+)), +'
+                            'bc +(?P<shape_bc_bps>(\d+)), +be +(?P<shape_be_bps>(\d+))$')
 
         # target shape rate 474656
         p16_5 = re.compile(r'^target +shape +rate +(?P<target_shape_rate>(\d+))$')
@@ -277,7 +301,7 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
         p16_7 = re.compile(r'^Bandwidth +(?P<bandwidth>(\d+)) .*$')
 
         # bandwidth 1000 (kbps)
-        p16_7_1 = re.compile(r'^bandwidth +(?P<bandwidth>(\d+)) .*$')
+        p16_7_1 = re.compile(r'^bandwidth (?P<bandwidth_kbps>(\d+)) \(kbps\)$')
 
         # exponential weight: 9
         p16_8 = re.compile(r'^exponential +weight: +(?P<exponential_weight>(\d+))$')
@@ -301,7 +325,21 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
                           '(?P<tail_drop>([\d\/]+)) +(?P<minimum_thresh>([\d\/]+)) +'
                           '(?P<maximum_thresh>([\d\/]+)) +(?P<mark_prob>([\d\/]+))$')
 
+        # policy wred-policy
+        p18 = re.compile(r'^policy +(?P<policy>([\w\-]+))$')
 
+        # class prec2
+        p19 = re.compile(r'^class +(?P<class>([\w\-]+))$')
+
+        # bandwidth 1000
+        p20 = re.compile(r'^bandwidth +(?P<bandwidth>(\d+))$')
+
+        # random-detect
+        p21 = re.compile(r'^random-detect$')
+
+        # random-detect precedence 2 100 bytes 200 bytes 10
+        p21_1 = re.compile(r'^random-detect +precedence +(?P<precedence>(\d+)) +'
+                            '(?P<bytes1>(\d+)) bytes +(?P<bytes2>(\d+)) bytes +(?P<bytes3>(\d+))$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -338,6 +376,7 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
             # Class-map: Ping_Class (match-all)
             m = p2.match(line)
             if m:
+                match_list = []
                 class_map = m.groupdict()['class_map'].strip()
                 class_match = m.groupdict()['match_all'].strip()
                 class_map_dict = policy_name_dict.setdefault('class_map', {}).\
@@ -384,7 +423,8 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
             # Match: access-group name Ping_Option
             m = p5.match(line)
             if m:
-                class_map_dict['match'] = m.groupdict()['match'].strip()
+                match_list.append(m.groupdict()['match'].lstrip())
+                class_map_dict['match'] = match_list
                 continue
 
             # police:
@@ -509,54 +549,166 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
             # Queueing
             m = p16.match(line)
             if m:
-                queue_dict = class_map_dict.setdefault('queueing', {})
+                class_map_dict['queueing'] = True
                 continue
 
             # queue limit 64 packets
             m = p16_1.match(line)
             if m:
-                queue_dict['queue_limit'] = m.groupdict()['queue_limit']
+                class_map_dict['queue_limit'] = m.groupdict()['queue_limit']
                 continue
 
             # (queue depth/total drops/no-buffer drops) 0/0/0
             m = p16_2.match(line)
             if m:
-                queue_dict['queue_depth'] = int(m.groupdict()['queue_depth'])
-                queue_dict['total_drops'] = int(m.groupdict()['total_drops'])
-                queue_dict['no_buffer_drops'] = int(m.groupdict()['no_buffer_drops'])
+                class_map_dict['queue_depth'] = int(m.groupdict()['queue_depth'])
+                class_map_dict['total_drops'] = int(m.groupdict()['total_drops'])
+                class_map_dict['no_buffer_drops'] = int(m.groupdict()['no_buffer_drops'])
+                continue
+
+            # depth/total drops/no-buffer drops) 147/38/0
+            m = p16_2_1.match(line)
+            if m:
+                class_map_dict['queue_depth'] = int(m.groupdict()['queue_depth'])
+                class_map_dict['total_drops'] = int(m.groupdict()['total_drops'])
+                class_map_dict['no_buffer_drops'] = int(m.groupdict()['no_buffer_drops'])
                 continue
 
             # (pkts output/bytes output) 0/0
             m = p16_3.match(line)
             if m:
-                queue_dict['pkts_output'] = int(m.groupdict()['pkts_output'])
-                queue_dict['bytes_output'] = int(m.groupdict()['bytes_output'])
+                class_map_dict['pkts_output'] = int(m.groupdict()['pkts_output'])
+                class_map_dict['bytes_output'] = int(m.groupdict()['bytes_output'])
+                continue
+
+            # (pkts matched/bytes matched) 363/87120
+            m = p16_3_1.match(line)
+            if m:
+                class_map_dict['pkts_matched'] = int(m.groupdict()['pkts_matched'])
+                class_map_dict['bytes_matched'] = int(m.groupdict()['bytes_matched'])
+                continue
+
+            # (pkts queued/bytes queued) 0/0
+            m = p16_3_2.match(line)
+            if m:
+                class_map_dict['pkts_queued'] = int(m.groupdict()['pkts_queued'])
+                class_map_dict['bytes_queued'] = int(m.groupdict()['bytes_queued'])
                 continue
 
             # shape (average) cir 474656, bc 1899, be 1899
             m = p16_4.match(line)
             if m:
-                queue_dict['shape_cir_bps'] = int(m.groupdict()['shape_cir_bps'])
-                queue_dict['shape_bc_bps'] = int(m.groupdict()['shape_bc_bps'])
-                queue_dict['shape_be_bps'] = int(m.groupdict()['shape_be_bps'])
+                class_map_dict['shape_type'] = m.groupdict()['shape_type']
+                class_map_dict['shape_cir_bps'] = int(m.groupdict()['shape_cir_bps'])
+                class_map_dict['shape_bc_bps'] = int(m.groupdict()['shape_bc_bps'])
+                class_map_dict['shape_be_bps'] = int(m.groupdict()['shape_be_bps'])
                 continue
 
             # target shape rate 474656
             m = p16_5.match(line)
             if m:
-                queue_dict['target_shape_rate'] = int(m.groupdict()['target_shape_rate'])
+                class_map_dict['target_shape_rate'] = int(m.groupdict()['target_shape_rate'])
                 continue
 
             # Output Queue: Conversation 266
             m = p16_6.match(line)
             if m:
-                queue_dict['output_queue'] = m.groupdict()['output_queue']
+                class_map_dict['output_queue'] = m.groupdict()['output_queue']
                 continue
 
             # Bandwidth 10 (%)
             m = p16_7.match(line)
             if m:
-                queue_dict['bandwidth_percent'] = int(m.groupdict()['bandwidth'])
+                class_map_dict['bandwidth_percent'] = int(m.groupdict()['bandwidth'])
+                continue
+
+            # bandwidth 1000 (kbps)
+            m = p16_7_1.match(line)
+            if m:
+                class_map_dict['bandwidth_kbps'] = int(m.groupdict()['bandwidth_kbps'])
+                continue
+
+            # exponential weight: 9
+            m = p16_8.match(line)
+            if m:
+                class_map_dict['exponential_weight'] = int(m.groupdict()['exponential_weight'])
+                continue
+
+            # Exp-weight-constant: 9 (1/512)
+            m = p16_8_1.match(line)
+            if m:
+                class_map_dict['exp_weight_constant'] = m.groupdict()['exp_weight_constant'].strip()
+                continue
+
+            # mean queue depth: 25920
+            # Mean queue depth: 0 bytes
+            m = p16_9.match(line)
+            if m:
+                class_map_dict['mean_queue_depth'] = int(m.groupdict()['mean_queue_depth'])
+                continue
+
+            # class     Transmitted       Random drop      Tail drop     Minimum Maximum Mark
+            #           pkts/bytes        pkts/bytes       pkts/bytes    thresh  thresh  prob
+            #                                                            (bytes)  (bytes)
+            #   0             0/0               0/0               0/0      20000    40000  1/10
+            #   1           328/78720          38/9120            0/0      22000    40000  1/10
+            #   2             0/0               0/0               0/0      24000    40000  1/10
+            #   3             0/0               0/0               0/0      26000    40000  1/10
+            #   4             0/0               0/0               0/0      28000    40000  1/10
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                class_val = group['class']
+                class_dict = class_map_dict.setdefault('class', {}).\
+                                            setdefault(class_val, {})
+                class_dict['transmitted'] = group['transmitted']
+                class_dict['random_drop'] = group['random_drop']
+                class_dict['tail_drop'] = group['tail_drop']
+                class_dict['minimum_thresh'] = group['minimum_thresh']
+                class_dict['maximum_thresh'] = group['maximum_thresh']
+                class_dict['mark_prob'] = group['mark_prob']
+                continue
+
+            # policy wred-policy
+            m = p18.match(line)
+            if m:
+                policy = m.groupdict()['policy']
+                policy_dict = class_map_dict.setdefault('policy', {}).\
+                                             setdefault(policy, {})
+                continue
+
+            # class prec2
+            m = p19.match(line)
+            if m:
+                precedence_list,bytes1_list,bytes2_list,bytes3_list = ([] for _ in range(4))
+                class_value = m.groupdict()['class']
+                class_dictionary = policy_dict.setdefault('class', {}).\
+                                               setdefault(class_value, {})
+                continue
+
+            # bandwidth 1000
+            m = p20.match(line)
+            if m:
+                class_dictionary['bandwidth'] = int(m.groupdict()['bandwidth'])
+                continue
+
+            # random-detect
+            m = p21.match(line)
+            if m:
+                random_dict = class_dictionary.setdefault('random_detect', {})
+                continue
+
+            # random-detect precedence 2 100 bytes 200 bytes 10
+            m = p21_1.match(line)
+            if m:
+                precedence_list.append(int(m.groupdict()['precedence']))
+                bytes1_list.append(int(m.groupdict()['bytes1']))
+                bytes2_list.append(int(m.groupdict()['bytes2']))
+                bytes3_list.append(int(m.groupdict()['bytes3']))
+                random_dict['precedence'] = precedence_list
+                random_dict['bytes1'] = bytes1_list
+                random_dict['bytes2'] = bytes2_list
+                random_dict['bytes3'] = bytes3_list
                 continue
 
         return ret_dict
