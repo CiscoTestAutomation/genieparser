@@ -19,7 +19,6 @@ from genie.libs.parser.iosxe.show_mpls import ShowMplsLdpParameters,\
                                               ShowMplsL2TransportDetail, \
                                               ShowMplsL2TransportVC
 
-from genie.libs.parser.utils.common import format_output
 
 class test_show_mpls_ldp_parameters(unittest.TestCase):
     dev1 = Device(name='empty')

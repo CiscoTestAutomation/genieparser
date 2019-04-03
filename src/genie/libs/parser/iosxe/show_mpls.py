@@ -30,6 +30,7 @@
         *  show mpls interfaces <interface> detail
         *  show mpls interfaces detail
         *  show mpls l2transport vc detail
+        *  show mpls l2transport vc
 """
 
 import re
@@ -40,7 +41,6 @@ from genie.metaparser.util.schemaengine import Schema, \
                                                Optional
 
 from genie.libs.parser.utils.common import Common
-
 class ShowMplsLdpParametersSchema(MetaParser):
     """Schema for show mpls ldp Parameters"""
 
@@ -2226,7 +2226,7 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
                          ' +remote +(?P<mpls_remote>\d+)$')
 
         #   Group ID: local 0, remote 0
-        p10 = re.compile(r'^Group +ID: +local +(?P<group_id_local>\d+),'
+        p10 = re.compile(r'^Group +ID: +local +(?P<group_id_local>[\w\W]+),'
                           ' +remote +(?P<group_id_remote>\d+)$')
 
         #   MTU: local 1500, remote 1500
@@ -2562,7 +2562,6 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
                 group = m.groupdict()
                 final_dict.update({k:v for k, v in group.items()})
                 continue
-
         return ret_dict
 
 

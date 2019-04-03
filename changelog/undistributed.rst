@@ -102,3 +102,11 @@
     * Add ShowBfdNeighborsDetails for:
         show bfd neighbors details
         show bfd neighbors client <client> details
+
+
+--------------------------------------------------------------------------------
+                                   L2VPN
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowMplsL2TransportVC for:
+        show mpls l2transport vc
