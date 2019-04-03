@@ -55,3 +55,7 @@ class ShowIpArpSummary(ShowIpArpSummary_iosxe):
 class ShowIpTraffic(ShowIpTraffic_iosxe):
     """Parser for: show ip traffic"""
     pass
+
+class ShowArp(ShowArp_iosxe):
+    """ Parser for show arp"""
+    pass
