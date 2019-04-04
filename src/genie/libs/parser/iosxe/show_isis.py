@@ -250,7 +250,7 @@ class ShowIsisDatabaseDetailSchema(MetaParser):
                             'lsp_checksum': str,
                             Optional('local_router'): bool,
                             'lsp_holdtime': str,
-                            'lsp_rcvd': str,
+                            Optional('lsp_rcvd'): str,
                             'attach_bit': int,
                             'p_bit': int,
                             'overload_bit': int,
@@ -303,9 +303,9 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
         # R2.00-00            * 0x00000007   0x8A6D                 403/*         1/0/0
         p3 = re.compile(
             r'^(?P<lspid>\S+)( +(?P<star>\*))? +(?P<lsp_seq_num>\w+) +(?P<lsp_checksum>\w+)'
-            ' +(?P<lsp_holdtime>[\d\*]+)/(?P<lsp_rcvd>[\d\*]+) +(?P<att>\d+)/(?P<p>\d+)/(?P<ol>\d+)$')
+            ' +(?P<lsp_holdtime>[\d\*]+)(/(?P<lsp_rcvd>[\d\*]+))? +(?P<att>\d+)/(?P<p>\d+)/(?P<ol>\d+)$')
         #   Area Address: 49.0001
-        p4 = re.compile(r'^Area +Address: +(?P<area_address>[\d\.]+)$')
+        p4 = re.compile(r'^Area +Address: +(?P<area_address>[\w\.]+)$')
 
         #   NLPID:        0xCC 0x8E
         p5 = re.compile(r'^NLPID: +(?P<nlp_id>[\w\s]+)$')
@@ -360,7 +360,8 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                 lsp_dict.update({'lsp_sequence_num': group['lsp_seq_num']})
                 lsp_dict.update({'lsp_checksum': group['lsp_checksum']})
                 lsp_dict.update({'lsp_holdtime': group['lsp_holdtime']})
-                lsp_dict.update({'lsp_rcvd': group['lsp_rcvd']})
+                if group['lsp_rcvd']:
+                    lsp_dict.update({'lsp_rcvd': group['lsp_rcvd']})
                 lsp_dict.update({'attach_bit': int(group['att'])})
                 lsp_dict.update({'p_bit': int(group['p'])})
                 lsp_dict.update({'overload_bit': int(group['ol'])})
