@@ -1,10 +1,13 @@
 ''' show_policy_map.py
 
 IOSXE parsers for the following show commands:
-    * show policy-map control-plane
-
+    * 'show policy-map control-plane'
+    * 'show policy-map interface '
+    * 'show policy map'
+    * 'show policy map {name}'
+    * 'show policy-map interface {interface}'
+    * 'show policy-map interface {interface} output class {class_name}'
 '''
-
 
 # Python
 import re
@@ -20,15 +23,21 @@ from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, And, D
 from genie.libs.parser.utils.common import Common
 
 
-# =====================================================================
+# ==========================================================================
 # Schema for :
 #   *'show policy-map control-plane'
+#   *'show policy-map interface '
 #   *'show policy-map interface {interface}'
 #   *'show policy-map interface {interface} output class {class_name}'
-# ======================================================================
+# ===========================================================================
 class ShowPolicyMapTypeSchema(MetaParser):
 
-    ''' Schema for "show policy-map control-plane" '''
+    ''' Schema for :
+            *'show policy-map control-plane'
+            *'show policy-map interface '
+            *'show policy-map interface {interface}'
+            *'show policy-map interface {interface} output class {class_name}'
+    '''
 
     schema = {
         Any(): {
@@ -151,9 +160,9 @@ class ShowPolicyMapTypeSchema(MetaParser):
 # =====================================================================
 # Parser for:
 #   * 'show policy-map control-plane'
+#   * 'show policy-map interface '
 #   * 'show policy-map interface {interface} output class {class_name}'
 #   * 'show policy-map interface {interface}'
-#   * 'show policy-map interface '
 # =====================================================================
 class ShowPolicyMapType(ShowPolicyMapTypeSchema):
     ''' Parser for
@@ -817,8 +826,12 @@ class ShowPolicyMapSchema(MetaParser):
                             Optional('service_policy'): str,
                             },
                         Optional('bandwidth_kbps'): int,
+                        Optional('bandwidth'): int,
+                        Optional('bandwidth_remaining_percent'): int,
+                        Optional('shape_average_min'): int,
+                        Optional('set'): str,
                         Optional('conform_burst'): int,
-                        Optional('pir'): int,
+                        Optional('priority'): bool,
                         Optional('peak_burst'): int,
                         Optional('average_rate_traffic_shaping'): bool,
                         Optional('cir_percent'): int,
@@ -829,7 +842,7 @@ class ShowPolicyMapSchema(MetaParser):
                             'bandwidth_percent': int,
                             'exponential_weight': int,
                             'explicit_congestion_notification': bool,
-                            'class': {
+                            'class_val': {
                                 Any(): {
                                     'min_threshold': str,
                                     'max_threshold': str,
@@ -904,7 +917,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         p4 = re.compile(r'^Average +Rate +Traffic +Shaping$')
 
         # cir 1000000 (bps)
-        p5 = re.compile(r'^cir +(?P<cir_bps>(\d+))')
+        p5 = re.compile(r'^cir +(?P<cir_bps>(\d+)) \(bps\)$')
 
         # priority level 1 20000 (kb/s)
         p6 = re.compile(r'^priority +level +(?P<priority_level>(\d+)) +(?P<kb_per_sec>(\d+))')
@@ -935,12 +948,27 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         # 7        -                -                1/10
         # rsvp     -                -                1/10
 
-        p8_3 = re.compile(r'^(?P<class>(\w+)) +(?P<min_threshold>([\w\-]+)) +(?P<max_threshold>([\w\-]+)) '
+        p8_3 = re.compile(r'^(?P<class_val>(\w+)) +(?P<min_threshold>([\w\-]+)) +(?P<max_threshold>([\w\-]+)) '
                            '+(?P<mark_probability>([\d\/]+))$')
 
         # cir 30% bc 10 (msec) be 10 (msec)
         p9 = re.compile(r'^cir +(?P<cir_percent>(\d+))% +bc (?P<bc_msec>(\d+)) \(msec\) +'
                          'be (?P<be_msec>(\d+)) \(msec\)$')
+
+        # priority
+        p10 = re.compile(r'^priority$')
+
+        #  Set cos 5
+        p11 = re.compile(r'^Set +(?P<set>([\w\s]+))$')
+
+        # Shape average 30m
+        p12 = re.compile(r'^Shape +average +(?P<shape_average_min>(\d+))m$')
+
+        # bandwidth 100
+        p13 = re.compile(r'^bandwidth +(?P<bandwidth>(\d+))$')
+
+        #  bandwidth remaining percent 50
+        p14 = re.compile(r'^bandwidth remaining percent +(?P<bandwidth_remaining_percent>(\d+))$')
 
         for line in out.splitlines():
 
@@ -1072,8 +1100,8 @@ class ShowPolicyMap(ShowPolicyMapSchema):
             m = p8_3.match(line)
             if m:
                 group = m.groupdict()
-                class_val = group['class']
-                class_dict = weight_dict.setdefault('class', {}).setdefault(class_val, {})
+                class_val = group['class_val']
+                class_dict = weight_dict.setdefault('class_val', {}).setdefault(class_val, {})
                 class_dict['min_threshold'] = group['min_threshold']
                 class_dict['max_threshold'] = group['max_threshold']
                 class_dict['mark_probability'] = group['mark_probability']
@@ -1085,6 +1113,36 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 class_map_dict['cir_percent'] = int(m.groupdict()['cir_percent'])
                 class_map_dict['bc_msec'] = int(m.groupdict()['bc_msec'])
                 class_map_dict['be_msec'] = int(m.groupdict()['be_msec'])
+                continue
+
+            # priority
+            m = p10.match(line)
+            if m:
+                class_map_dict['priority'] = True
+                continue
+
+            #  Set cos 5
+            m = p11.match(line)
+            if m:
+                class_map_dict['set'] = m.groupdict()['set']
+                continue
+
+            # Shape average 30m
+            m = p12.match(line)
+            if m:
+                class_map_dict['shape_average_min'] = int(m.groupdict()['shape_average_min'])
+                continue
+
+            # bandwidth 100
+            m = p13.match(line)
+            if m:
+                class_map_dict['bandwidth'] = int(m.groupdict()['bandwidth'])
+                continue
+
+            #  bandwidth remaining percent 50
+            m = p14.match(line)
+            if m:
+                class_map_dict['bandwidth_remaining_percent'] = int(m.groupdict()['bandwidth_remaining_percent'])
                 continue
 
         return ret_dict

@@ -16,15 +16,18 @@ from genie.libs.parser.iosxe.show_policy_map import ShowPolicyMapType,\
 
 # ====================================================================
 # Unit test for :
-#   *'show policy-map control-plane'
-#   *'show policy-map interface {interface}'
-#   *'show policy-map interface {interface} output class {class_name}'
+#   * 'show policy-map control-plane'
+#   * 'show policy-map interface '
+#   * 'show policy-map interface {interface}'
+#   * 'show policy-map interface {interface} output class {class_name}'
 # =====================================================================
+
 class test_show_policy_map_type(unittest.TestCase):
-    '''Unit test for
-       "show policy-map control-plane"
-       "show policy-map interface {interface}"
-       "show policy-map interface {interface} output class {class_name}"
+    ''' Unit test for
+           "show policy-map control-plane"
+           "show policy-map interface"
+           "show policy-map interface {interface}"
+           "show policy-map interface {interface} output class {class_name}"
     '''
 
     device = Device(name='aDevice')
@@ -1273,7 +1276,6 @@ class test_show_policy_map_type(unittest.TestCase):
         self.device = Mock(**self.golden_output8)
         obj = ShowPolicyMapType(device=self.device)
         parsed_output = obj.parse()
-        import pdb; pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output8)
 
 
@@ -1421,7 +1423,7 @@ class test_show_policy_map(unittest.TestCase):
                             'bandwidth_percent': 70,
                             'exponential_weight': 9,
                             'explicit_congestion_notification': True,
-                            'class': {
+                            'class_val': {
                                 '0': {
                                     'min_threshold': '-',
                                     'max_threshold': '-',

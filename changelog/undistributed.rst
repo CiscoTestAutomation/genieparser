@@ -9,8 +9,9 @@
                                     POLICY MAP
 --------------------------------------------------------------------------------
 * IOSXE
-    * Added ShowPolicyMapControlPlane Parser for:
-       'show policy map control plane'
+    * Added ShowPolicyMapType Parser for:
+       'show policy-map control-plane'
+       'show policy-map interface'
        'show policy map'
        'show policy map {name}'
        'show policy-map interface {interface}'
