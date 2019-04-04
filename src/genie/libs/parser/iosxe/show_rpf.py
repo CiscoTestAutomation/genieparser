@@ -58,15 +58,15 @@ class ShowIpRpf(ShowIpRpfSchema):
         show ip rpf <mroute address>
         show ip rpf vrf <vrf> <mroute address>"""
 
-    cli_command = ['show {iptype} rpf vrf {vrf} {mroute}', 'show {iptype} rpf {mroute}']
+    cli_command = ['show {af} rpf vrf {vrf} {mroute}', 'show {af} rpf {mroute}']
 
-    def cli(self, mroute, iptype='ip', vrf='',output=None):
+    def cli(self, mroute, af='ip', vrf='',output=None):
         if output is None:
             # set vrf infomation
             if vrf:
-                cmd = self.cli_command[0].format(iptype=iptype, vrf=vrf, mroute=mroute)
+                cmd = self.cli_command[0].format(af=af, vrf=vrf, mroute=mroute)
             else:
-                cmd = self.cli_command[1].format(iptype=iptype, mroute=mroute)
+                cmd = self.cli_command[1].format(af=af, mroute=mroute)
                 vrf = 'default'
             # excute command to get output
             out = self.device.execute(cmd)
@@ -278,5 +278,5 @@ class ShowIpv6Rpf(ShowIpRpf):
         show ipv6 rpf vrf <vrf> <mroute address>"""
 
     def cli(self, mroute, vrf='',output=None):
-        return super().cli(mroute=mroute, iptype='ipv6', vrf=vrf,output=output)
+        return super().cli(mroute=mroute, af='ipv6', vrf=vrf,output=output)
 
