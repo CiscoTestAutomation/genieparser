@@ -143,6 +143,7 @@ class ShowIpRpf(ShowIpRpfSchema):
         for line in out.splitlines():
             line = line.strip()
 
+            # RPF information for 2001:99:99::99
             m = p1.match(line)
             if m:
                 mroute = m.groupdict()['mroute']
@@ -155,6 +156,8 @@ class ShowIpRpf(ShowIpRpfSchema):
                 ret_dict['vrf'][vrf]['source_address'] = mroute
                 continue
 
+            # RPF information for host1 (172.16.10.13)
+            # RPF information for ? (10.1.1.100)
             m = p1_1.match(line)
             if m:
                 mroute = m.groupdict()['mroute']
@@ -168,11 +171,13 @@ class ShowIpRpf(ShowIpRpfSchema):
                 ret_dict['vrf'][vrf]['source_host'] = host
                 continue
            
+            # RPF interface: BRI0
             m = p2.match(line)
             if m:
                 intf = m.groupdict()['intf']
                 continue
             
+            # RPF neighbor: 2001:99:99::99
             m = p3.match(line)
             if m:
                 rpf_nbr = m.groupdict()['neighbor']
@@ -188,6 +193,7 @@ class ShowIpRpf(ShowIpRpfSchema):
                 ret_dict['vrf'][vrf]['path'][path]['neighbor_address'] = rpf_nbr
                 continue
             
+            # RPF neighbor: sj1.cisco.com (172.16.121.10)
             m = p3_1.match(line)
             if m:
                 nei_host = m.groupdict()['host']
@@ -208,6 +214,8 @@ class ShowIpRpf(ShowIpRpfSchema):
                 ret_dict['vrf'][vrf]['path'][path]['neighbor_address'] = rpf_nbr
                 continue
             
+            # RPF route/mask: 10.1.1.0/24
+            # RPF route/mask: 172.16.0.0/255.255.0.0
             m = p4.match(line)
             if m:
                 route = m.groupdict()['route']
@@ -220,6 +228,9 @@ class ShowIpRpf(ShowIpRpfSchema):
                 ret_dict['vrf'][vrf]['path'][path]['route_mask'] = '{r}/{m}'.format(r=route, m=mask)
                 continue
             
+            # RPF type: Mroute
+            # RPF type: unicast (rip)
+            # RPF type: unicast (ospf 2)
             m = p5.match(line)
             if m:
                 table_feature = m.groupdict()['table_feature']
@@ -234,12 +245,14 @@ class ShowIpRpf(ShowIpRpfSchema):
                         ['table_feature_instance'] = table_feature_instance
                 continue
             
+            # RPF recursion count: 0
             m = p6.match(line)
             if m:
                 count = int(m.groupdict()['count'])
                 ret_dict['vrf'][vrf]['path'][path]['recursion_count'] = count
                 continue
         
+            # Metric preference: 128
             m = p7.match(line)
             if m:
                 distance = m.groupdict()['preference']
@@ -260,23 +273,27 @@ class ShowIpRpf(ShowIpRpfSchema):
                 ret_dict['vrf'][vrf]['path'][path]['admin_distance'] = distance
                 continue
             
+            # Metric: 0
             m = p8.match(line)
             if m:
                 metric = int(m.groupdict()['metric'])
                 ret_dict['vrf'][vrf]['path'][path]['metric'] = metric
                 continue
             
+            # Doing distance-preferred lookups across tables
             m = p9.match(line)
             if m:
                 ret_dict['vrf'][vrf]['path'][path]['distance_preferred_lookup'] = True
                 continue
             
+            # Using Group Based VRF Select, RPF VRF: blue
             m = p10.match(line)
             if m:
                 lookup_vrf = m.groupdict()['vrf']
                 ret_dict['vrf'][vrf]['path'][path]['lookup_vrf'] = lookup_vrf
                 continue
             
+            # RPF topology: ipv4 multicast base, originated from ipv4 unicast base
             m = p11.match(line)
             if m:
                 lookup_topology = m.groupdict()['lookup_topology']

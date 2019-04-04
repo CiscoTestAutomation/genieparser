@@ -1670,7 +1670,7 @@ class ShowSwitchSchema(MetaParser):
         'switch': {
             'mac_address': str,
             'mac_persistency_wait_time': str,
-            Optional('stack'): {
+            'stack': {
                 Any(): {
                     'role': str,
                     'mac_address': str,
@@ -2275,9 +2275,9 @@ class ShowEnvironmentSchema(MetaParser):
     """Schema for show environment"""
 
     schema = {
-        Optional('critical_larams'): int,
-        Optional('major_alarms'): int,
-        Optional('minor_alarms'): int,
+        'critical_larams': int,
+        'major_alarms': int,
+        'minor_alarms': int,
         'slot': {
             Any(): {
                 'sensor': {
