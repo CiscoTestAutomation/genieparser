@@ -9,12 +9,15 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
 from genie.libs.parser.ios.show_rip import ShowIpRipDatabase, \
-										   ShowIpv6Rip
+										   ShowIpv6Rip, \
+										   ShowIpv6RipDatabase
 
 from genie.libs.parser.iosxe.tests.test_show_rip import test_show_ip_rip_database as \
                                                         test_show_ip_rip_database_iosxe, \
                                                         test_show_ipv6_rip as \
-                                                        test_show_ipv6_rip_iosxe
+                                                        test_show_ipv6_rip_iosxe, \
+                                                        test_show_ipv6_rip_database as \
+                                                        test_show_ipv6_rip_database_iosxe 
 
 # ============================================
 # Parser for 'show ip rip database'
@@ -138,6 +141,30 @@ class test_show_ipv6_rip(test_show_ipv6_rip_iosxe):
 	    parsed_output = obj.parse()
 	    self.assertEqual(parsed_output, self.golden_parsed_output_ios)
 
+# ============================================
+# unit test for 'show ipv6 rip database'
+# unit test for 'show ipv6 rip vrf {vrf} database'
+# ============================================
+class test_show_ipv6_rip_database(test_show_ipv6_rip_database_iosxe):
+	def test_empty(self):
+	    self.device1 = Mock(**self.empty_output)
+	    obj = ShowIpv6RipDatabase(device=self.device1)
+	    with self.assertRaises(SchemaEmptyParserError):
+	        parsed_output = obj.parse()
+
+	def test_golden_vrf_default(self):
+	    self.maxDiff = None
+	    self.device = Mock(**self.golden_output)
+	    obj = ShowIpv6RipDatabase(device=self.device)
+	    parsed_output = obj.parse()
+	    self.assertEqual(parsed_output, self.golden_parsed_output)
+
+	def test_golden_vrf_vrf1(self):
+	    self.maxDiff = None
+	    self.device = Mock(**self.golden_output_2)
+	    obj = ShowIpv6RipDatabase(device=self.device)
+	    parsed_output = obj.parse(vrf="VRF1")
+	    self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 if __name__ == '__main__':
     unittest.main()
