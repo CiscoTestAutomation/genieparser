@@ -302,7 +302,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
         # LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd      ATT/P/OL
         # R2.00-00            * 0x00000007   0x8A6D                 403/*         1/0/0
         p3 = re.compile(
-            r'^(?P<lspid>\S+)( +(?P<star>\*))? +(?P<lsp_seq_num>\w+) +(?P<lsp_checksum>\w+)'
+            r'^(?P<lspid>[\w\-\.]+)(\s*(?P<star>\*))? +(?P<lsp_seq_num>\w+) +(?P<lsp_checksum>\w+)'
             ' +(?P<lsp_holdtime>[\d\*]+)(/(?P<lsp_rcvd>[\d\*]+))? +(?P<att>\d+)/(?P<p>\d+)/(?P<ol>\d+)$')
         #   Area Address: 49.0001
         p4 = re.compile(r'^Area +Address: +(?P<area_address>[\w\.]+)$')
