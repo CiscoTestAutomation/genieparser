@@ -72,8 +72,9 @@ class test_show_ipv6_rip(test_show_ipv6_rip_iosxe):
 			      "port": 521,
 			      "redistribute": {
 			        "bgp": {
-			          "protocol_number": 65001,
-			          "route_policy": "bgp-to-rip"
+			          65001: {
+			          	"route_policy": "bgp-to-rip"
+			          }
 			        }
 			      },
 			      "split_horizon": True,

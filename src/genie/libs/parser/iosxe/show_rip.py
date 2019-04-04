@@ -244,6 +244,9 @@ class ShowIpv6RipDatabase(ShowIpv6RipDatabaseSchema):
         #     GigabitEthernet3.100/FE80::F816:3EFF:FEFF:1E3D, expires in 179 secs
         p3 = re.compile(r'^\s*(?P<interface>\S+), +expires +in +(?P<expire_time>[\d]+) +secs$')
 
+        # FE80::A8BB:CCFF:FE00:7C00/Ethernet0/0 [1 paths]
+        p4 = re.compile(r'^(?P<next_hop>[\w:]+)\/(?P<interface>[\w\/]+)$')
+
         result_dict = {}
 
         for line in out.splitlines():
@@ -306,6 +309,17 @@ class ShowIpv6RipDatabase(ShowIpv6RipDatabaseSchema):
                 index +=1
                 continue
 
+            # FE80::A8BB:CCFF:FE00:7C00/Ethernet0/0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                index_dict = route_dict.setdefault('index', {}).setdefault(index, {})
+                interface_nexthop = group['interface']
+                index_dict.update({'interface': interface})
+                index_dict.update({'next_hop': next_hop})
+                index +=1
+                continue
+
         return result_dict
 
 # ====================================================
@@ -331,10 +345,15 @@ class ShowIpv6RipSchema(MetaParser):
                             'enabled': bool,
                         },
                         Optional('redistribute'):{
-                            Any():{
+                            Any(): {
                               Optional('metric'): int,
                               Optional('route_policy'): str,
-                              Optional('protocol_number'): int,
+                            },
+                            Optional('bgp'): {
+                                Any() : {
+                                    Optional('metric'): int,
+                                    Optional('route_policy'): str,
+                                }
                             },
                         },
                         'timers':{
@@ -386,7 +405,8 @@ class ShowIpv6Rip(ShowIpv6RipSchema):
         # RIP VRF "Default VRF", port 521, multicast-group FF02::9, pid 635
         # RIP VRF "VRF1", port 521, multicast-group FF02::9, pid 635
         # RIP VRF "red", port 521, multicast-group 2001:DB8::/32, pid 295
-        p1 = re.compile(r'^\s*RIP +\w+ +(?P<vrf>[\S\s]+), +port +(?P<port>\d+),'
+        # RIP process "one", port 521, multicast-group FF02::9, pid 55
+        p1 = re.compile(r'^\s*RIP +(VRF|process)+ +(?P<vrf>[\S\s]+), +port +(?P<port>\d+),'
                         ' +multicast\-group +(?P<multicast_group>[\w\:\/]+), +pid +(?P<pid>\d+)$')
         #    Administrative distance is 120. Maximum paths is 16
         p2 = re.compile(r'^\s*Administrative +distance +is +(?P<distance>\d+). +Maximum +paths +is +(?P<maximum_path>\d+)$')
@@ -558,9 +578,9 @@ class ShowIpv6Rip(ShowIpv6RipSchema):
             if m:
                 group = m.groupdict()
                 redistribute = group['redistribute']
-                redistribute_dict = address_family_dict.setdefault('redistribute', {}).setdefault(redistribute, {})
+                redistribute_dict = address_family_dict.setdefault('redistribute', {}).setdefault(redistribute, {}). \
+                    setdefault(int(group['protocol_number']), {})
                 redistribute_dict.update({'route_policy': group['route_policy']})
-                redistribute_dict.update({'protocol_number': int(group['protocol_number'])})
                 continue
 
         return result_dict
