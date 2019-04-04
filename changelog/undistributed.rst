@@ -153,3 +153,14 @@
 * IOS
     * Add ShowMplsL2TransportVC for:
         show mpls l2transport vc
+
+----------------------------------------------------------------------------------
+                                   ISIS
+----------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowIsisHostname for:
+        show isis hostname
+    * Add ShowIsisLspLog for:
+        show isis lsp-log
+    * Add ShowIsisDatabaseDetail for:
+        show isis database detail
