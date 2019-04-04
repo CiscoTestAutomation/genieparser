@@ -48,7 +48,7 @@ class test_show_monitor(unittest.TestCase):
     golden_output1 ={'execute.return_value':'''
         Router#show monitor 
         Load for five secs: 16%/0%; one minute: 4%; five minutes: 4%
-        Time source is NTP, 17:34:06.635 JST Fri Oct 21 2016
+        Time source is NTP, 17:34:06.635 EST Fri Oct 21 2016
 
         Session 1
         ---------
@@ -78,9 +78,9 @@ class test_show_monitor(unittest.TestCase):
         'session':
             {'1':
                  {'destination_erspan_id': '1',
-                  'destination_ip_address': '55.1.1.2',
+                  'destination_ip_address': '10.76.1.2',
                   'mtu': 1464,
-                  'origin_ip_address': '55.1.1.1',
+                  'origin_ip_address': '10.76.1.1',
                   'source_ports':
                       {'both': 'Gi0/1/4'},
                   'status': 'Admin Enabled',
@@ -96,7 +96,7 @@ class test_show_monitor(unittest.TestCase):
     golden_output2={'execute.return_value': '''
         Router#show monitor session all
         Load for five secs: 15%/0%; one minute: 13%; five minutes: 7%
-        Time source is NTP, 19:54:41.566 JST Fri Oct 21 2016
+        Time source is NTP, 19:54:41.566 EST Fri Oct 21 2016
         
         Session 1
         ---------
@@ -104,10 +104,10 @@ class test_show_monitor(unittest.TestCase):
         Status                 : Admin Enabled
         Source Ports           :
             Both               : Gi0/1/4
-        Destination IP Address : 55.1.1.2
+        Destination IP Address : 10.76.1.2
         MTU                    : 1464
         Destination ERSPAN ID  : 1
-        Origin IP Address      : 55.1.1.1
+        Origin IP Address      : 10.76.1.1
         
         
         Session 2
@@ -247,7 +247,7 @@ class test_show_monitor_capture(unittest.TestCase):
     golden_output1 = {'execute.return_value':'''
         Router#show monitor capture 
         Load for five secs: 2%/0%; one minute: 7%; five minutes: 8%
-        Time source is NTP, 18:31:17.685 JST Thu Sep 8     
+        Time source is NTP, 18:31:17.685 EST Thu Sep 8     
         Status Information for Capture CAPTURE
           Target Type: 
            Interface: Control Plane, Direction : both
@@ -291,7 +291,7 @@ class test_show_monitor_capture(unittest.TestCase):
     golden_output2 = {'execute.return_value':'''
         Router#show monitor capture
         Load for five secs: 1%/0%; one minute: 17%; five minutes: 8%
-        Time source is NTP, 16:22:09.994 JST Fri Oct 14 2016
+        Time source is NTP, 16:22:09.994 EST Fri Oct 14 2016
         
         
         Status Information for Capture NTP

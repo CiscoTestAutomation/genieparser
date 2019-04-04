@@ -25,9 +25,9 @@ class test_show_l2route_evpn_mac(unittest.TestCase):
 
         Topology    Mac Address    Prod   Flags         Seq No     Next-Hops      
         ----------- -------------- ------ ------------- ---------- ----------------
-        100         fa16.3e59.d0b2 BGP    SplRcv        0          93.1.1.1       
+        100         fa16.3e59.d0b2 BGP    SplRcv        0          10.166.1.1       
         100         fa16.3ec1.a96f Local  L,            0          Eth1/4         
-        1000        5e01.8002.0007 VXLAN  Rmac          0          93.1.1.1     
+        1000        5e01.8002.0007 VXLAN  Rmac          0          10.166.1.1     
     '''}
 
     golden_parsed_output = {
@@ -36,7 +36,7 @@ class test_show_l2route_evpn_mac(unittest.TestCase):
                 {'mac_address':
                     {'fa16.3e59.d0b2':
                         {'flags': 'SplRcv',
-                         'next_hops': '93.1.1.1',
+                         'next_hops': '10.166.1.1',
                          'prod': 'BGP',
                          'seq_no': '0'},
                      'fa16.3ec1.a96f':
@@ -48,7 +48,7 @@ class test_show_l2route_evpn_mac(unittest.TestCase):
                 {'mac_address':
                     {'5e01.8002.0007':
                         {'flags': 'Rmac',
-                         'next_hops': '93.1.1.1',
+                         'next_hops': '10.166.1.1',
                          'prod': 'VXLAN',
                          'seq_no': '0'}
                     }
@@ -85,7 +85,7 @@ class test_show_l2route_evpn_mac_evi(unittest.TestCase):
 
         Topology    Mac Address    Prod   Flags         Seq No     Next-Hops      
         ----------- -------------- ------ ------------- ---------- ----------------
-        1001        0000.04b1.0000 BGP    SplRcv        19         3.0.0.101        
+        1001        0000.04b1.0000 BGP    SplRcv        19         10.9.0.101        
     '''}
 
     golden_parsed_output = {'topology':
@@ -93,7 +93,7 @@ class test_show_l2route_evpn_mac_evi(unittest.TestCase):
                                 {'mac_address':
                                     {'0000.04b1.0000':
                                         {'flags': 'SplRcv',
-                                         'next_hops': '3.0.0.101',
+                                         'next_hops': '10.9.0.101',
                                          'prod': 'BGP',
                                          'seq_no': '19'}
                                         }

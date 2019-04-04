@@ -46,8 +46,8 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                     {'0.0.0.1': 
                                         {'interfaces': 
                                             {'GigabitEthernet0/0/0/1': 
-                                                {'bdr_ip_addr': '20.3.7.3',
-                                                'bdr_router_id': '3.3.3.3',
+                                                {'bdr_ip_addr': '10.19.7.3',
+                                                'bdr_router_id': '10.36.3.3',
                                                 'bfd': 
                                                     {'enable': True,
                                                     'interval': 12345,
@@ -56,15 +56,15 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'cost': 1,
                                                 'dead_interval': 40,
                                                 'demand_circuit': False,
-                                                'dr_ip_addr': '20.3.7.7',
-                                                'dr_router_id': '77.77.77.77',
+                                                'dr_ip_addr': '10.19.7.7',
+                                                'dr_router_id': '10.1.77.77',
                                                 'enable': True,
                                                 'flood_queue_length': 0,
                                                 'hello_timer': '00:00:03:040',
                                                 'hello_interval': 10,
                                                 'index': '1/1',
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '20.3.7.3/24',
+                                                'ip_address': '10.19.7.3/24',
                                                 'last_flood_scan_length': 1,
                                                 'last_flood_scan_time_msec': 0,
                                                 'line_protocol': True,
@@ -81,7 +81,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'priority': 1,
                                                 'process_id': '1',
                                                 'retransmit_interval': 5,
-                                                'router_id': '3.3.3.3',
+                                                'router_id': '10.36.3.3',
                                                 'state': 'bdr',
                                                 'transmit_delay': 1,
                                                 'wait_interval': 40,
@@ -92,12 +92,12 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                     'multi_area_intf_count': 0,
                                                     },
                                                 'neighbors': 
-                                                    {'77.77.77.77': 
-                                                        {'dr_router_id': '77.77.77.77'},
+                                                    {'10.1.77.77': 
+                                                        {'dr_router_id': '10.1.77.77'},
                                                     },
                                                 }},
                                         'sham_links': 
-                                            {'33.33.33.33 22.22.22.22': 
+                                            {'10.21.33.33 10.151.22.22': 
                                                 {'bfd': 
                                                     {'enable': False},
                                                 'cost': 111,
@@ -126,7 +126,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'passive': False,
                                                 'process_id': '1',
                                                 'retransmit_interval': 5,
-                                                'router_id': '3.3.3.3',
+                                                'router_id': '10.36.3.3',
                                                 'state': 'point-to-point',
                                                 'transmit_delay': 7,
                                                 'wait_interval': 13,
@@ -148,14 +148,14 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                         {'interfaces': 
                                             {'GigabitEthernet0/0/0/0': 
                                                 {'bdr_ip_addr': '10.3.4.3',
-                                                'bdr_router_id': '3.3.3.3',
+                                                'bdr_router_id': '10.36.3.3',
                                                 'bfd': 
                                                     {'enable': False},
                                                 'cost': 1,
                                                 'dead_interval': 40,
                                                 'demand_circuit': False,
                                                 'dr_ip_addr': '10.3.4.4',
-                                                'dr_router_id': '4.4.4.4',
+                                                'dr_router_id': '10.64.4.4',
                                                 'enable': True,
                                                 'flood_queue_length': 0,
                                                 'hello_timer': '00:00:07:171',
@@ -179,7 +179,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'priority': 1,
                                                 'process_id': '1',
                                                 'retransmit_interval': 5,
-                                                'router_id': '3.3.3.3',
+                                                'router_id': '10.36.3.3',
                                                 'state': 'bdr',
                                                 'transmit_delay': 1,
                                                 'wait_interval': 40,
@@ -190,12 +190,12 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                     'multi_area_intf_count': 0,
                                                     },
                                                 'neighbors': 
-                                                    {'4.4.4.4': 
-                                                        {'dr_router_id': '4.4.4.4'},
+                                                    {'10.64.4.4': 
+                                                        {'dr_router_id': '10.64.4.4'},
                                                     },
                                                 },
                                             'GigabitEthernet0/0/0/2': 
-                                                {'bdr_router_id': '2.2.2.2',
+                                                {'bdr_router_id': '10.16.2.2',
                                                 'bdr_ip_addr': '10.2.3.2',
                                                 'bfd': 
                                                     {'enable': False},
@@ -203,7 +203,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'dead_interval': 40,
                                                 'demand_circuit': False,
                                                 'dr_ip_addr': '10.2.3.3',
-                                                'dr_router_id': '3.3.3.3',
+                                                'dr_router_id': '10.36.3.3',
                                                 'enable': True,
                                                 'flood_queue_length': 0,
                                                 'hello_timer': '00:00:07:587',
@@ -227,7 +227,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'priority': 1,
                                                 'process_id': '1',
                                                 'retransmit_interval': 5,
-                                                'router_id': '3.3.3.3',
+                                                'router_id': '10.36.3.3',
                                                 'state': 'dr',
                                                 'transmit_delay': 1,
                                                 'wait_interval': 40,
@@ -238,8 +238,8 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                     'num_nbrs_suppress_hello': 0,
                                                     },
                                                 'neighbors': 
-                                                    {'2.2.2.2': 
-                                                        {'bdr_router_id': '2.2.2.2'},
+                                                    {'10.16.2.2': 
+                                                        {'bdr_router_id': '10.16.2.2'},
                                                     },
                                                 },
                                             'Loopback0': 
@@ -249,11 +249,11 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'demand_circuit': False,
                                                 'enable': True,
                                                 'interface_type': 'loopback',
-                                                'ip_address': '3.3.3.3/32',
+                                                'ip_address': '10.36.3.3/32',
                                                 'line_protocol': True,
                                                 'name': 'Loopback0',
                                                 'process_id': '1',
-                                                'router_id': '3.3.3.3'},
+                                                'router_id': '10.36.3.3'},
                                             'tunnel-te31': 
                                                 {'bfd': 
                                                     {'enable': False},
@@ -280,7 +280,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'passive': True,
                                                 'process_id': '1',
                                                 'retransmit_interval': 5,
-                                                'router_id': '3.3.3.3',
+                                                'router_id': '10.36.3.3',
                                                 'state': 'point-to-point',
                                                 'transmit_delay': 1,
                                                 'wait_interval': 0,
@@ -307,7 +307,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'dead_interval': 40,
                                                 'demand_circuit': False,
                                                 'dr_ip_addr': '10.2.3.2',
-                                                'dr_router_id': '2.2.2.2',
+                                                'dr_router_id': '10.16.2.2',
                                                 'enable': True,
                                                 'flood_queue_length': 0,
                                                 'hello_timer': '00:00:09:266',
@@ -331,7 +331,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'priority': 1,
                                                 'process_id': '1',
                                                 'retransmit_interval': 5,
-                                                'router_id': '2.2.2.2',
+                                                'router_id': '10.16.2.2',
                                                 'state': 'dr',
                                                 'transmit_delay': 1,
                                                 'wait_interval': 40,
@@ -349,7 +349,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'dead_interval': 40,
                                                 'demand_circuit': False,
                                                 'dr_ip_addr': '10.1.2.2',
-                                                'dr_router_id': '2.2.2.2',
+                                                'dr_router_id': '10.16.2.2',
                                                 'enable': True,
                                                 'flood_queue_length': 0,
                                                 'hello_timer': '00:00:08:733',
@@ -373,7 +373,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'priority': 1,
                                                 'process_id': '1',
                                                 'retransmit_interval': 5,
-                                                'router_id': '2.2.2.2',
+                                                'router_id': '10.16.2.2',
                                                 'state': 'dr',
                                                 'transmit_delay': 1,
                                                 'wait_interval': 40,
@@ -391,23 +391,23 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'demand_circuit': False,
                                                 'enable': True,
                                                 'interface_type': 'loopback',
-                                                'ip_address': '2.2.2.2/32',
+                                                'ip_address': '10.16.2.2/32',
                                                 'line_protocol': True,
                                                 'name': 'Loopback0',
                                                 'process_id': '1',
-                                                'router_id': '2.2.2.2'}}},
+                                                'router_id': '10.16.2.2'}}},
                                     '0.0.0.1': 
                                         {'interfaces': 
                                             {'GigabitEthernet0/0/0/1': 
-                                                {'bdr_ip_addr': '20.2.3.2',
-                                                'bdr_router_id': '2.2.2.2',
+                                                {'bdr_ip_addr': '10.229.3.2',
+                                                'bdr_router_id': '10.16.2.2',
                                                 'bfd': 
                                                     {'enable': False},
                                                 'cost': 1,
                                                 'dead_interval': 40,
                                                 'demand_circuit': False,
-                                                'dr_ip_addr': '20.2.3.3',
-                                                'dr_router_id': '3.3.3.3',
+                                                'dr_ip_addr': '10.229.3.3',
+                                                'dr_router_id': '10.36.3.3',
                                                 'enable': True,
                                                 'flood_queue_length': 0,
                                                 'hello_timer': '00:00:00:698',
@@ -415,7 +415,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'high_water_mark': 3,
                                                 'index': '2/5',
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '20.2.3.2/24',
+                                                'ip_address': '10.229.3.2/24',
                                                 'last_flood_scan_length': 9,
                                                 'last_flood_scan_time_msec': 0,
                                                 'line_protocol': True,
@@ -431,13 +431,13 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'priority': 1,
                                                 'process_id': '1',
                                                 'retransmit_interval': 5,
-                                                'router_id': '2.2.2.2',
+                                                'router_id': '10.16.2.2',
                                                 'state': 'bdr',
                                                 'transmit_delay': 1,
                                                 'wait_interval': 40,
                                                 'neighbors': 
-                                                    {'3.3.3.3': 
-                                                        {'dr_router_id': '3.3.3.3'},
+                                                    {'10.36.3.3': 
+                                                        {'dr_router_id': '10.36.3.3'},
                                                     },
                                                 'statistics': 
                                                     {'adj_nbr_count': 1,
@@ -447,15 +447,15 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                     },
                                                 },
                                             'GigabitEthernet0/0/0/3': 
-                                                {'bdr_ip_addr': '20.2.4.2',
-                                                'bdr_router_id': '2.2.2.2',
+                                                {'bdr_ip_addr': '10.229.4.2',
+                                                'bdr_router_id': '10.16.2.2',
                                                 'bfd': 
                                                     {'enable': False},
                                                 'cost': 1,
                                                 'dead_interval': 40,
                                                 'demand_circuit': False,
-                                                'dr_ip_addr': '20.2.4.4',
-                                                'dr_router_id': '4.4.4.4',
+                                                'dr_ip_addr': '10.229.4.4',
+                                                'dr_router_id': '10.64.4.4',
                                                 'enable': True,
                                                 'flood_queue_length': 0,
                                                 'hello_timer': '00:00:00:840',
@@ -463,7 +463,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'high_water_mark': 21,
                                                 'index': '3/6',
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '20.2.4.2/24',
+                                                'ip_address': '10.229.4.2/24',
                                                 'last_flood_scan_length': 9,
                                                 'last_flood_scan_time_msec': 0,
                                                 'line_protocol': True,
@@ -479,13 +479,13 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'priority': 1,
                                                 'process_id': '1',
                                                 'retransmit_interval': 5,
-                                                'router_id': '2.2.2.2',
+                                                'router_id': '10.16.2.2',
                                                 'state': 'bdr',
                                                 'transmit_delay': 1,
                                                 'wait_interval': 40,
                                                 'neighbors': 
-                                                    {'4.4.4.4': 
-                                                        {'dr_router_id': '4.4.4.4'},
+                                                    {'10.64.4.4': 
+                                                        {'dr_router_id': '10.64.4.4'},
                                                     },
                                                 'statistics': 
                                                     {'adj_nbr_count': 1,
@@ -501,13 +501,13 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                     'demand_circuit': False,
                                                     'enable': True,
                                                     'interface_type': 'loopback',
-                                                    'ip_address': '22.22.22.22/32',
+                                                    'ip_address': '10.151.22.22/32',
                                                     'line_protocol': True,
                                                     'name': 'Loopback1',
                                                     'process_id': '1',
-                                                    'router_id': '2.2.2.2'}},
+                                                    'router_id': '10.16.2.2'}},
                                         'virtual_links': 
-                                            {'0.0.0.1 2.2.2.2': 
+                                            {'0.0.0.1 10.16.2.2': 
                                                 {'bfd': 
                                                     {'enable': False},
                                                 'cost': 1,
@@ -536,13 +536,13 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'passive': False,
                                                 'process_id': '1',
                                                 'retransmit_interval': 5,
-                                                'router_id': '2.2.2.2',
+                                                'router_id': '10.16.2.2',
                                                 'state': 'point-to-point',
                                                 'transmit_delay': 1,
                                                 'wait_interval': 40,
                                                 'total_dcbitless_lsa': 7,
                                                 'neighbors': 
-                                                    {'4.4.4.4': {},
+                                                    {'10.64.4.4': {},
                                                     },
                                                 'statistics': 
                                                     {'adj_nbr_count': 1,
@@ -563,15 +563,15 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
             Interfaces for OSPF 1
 
             Loopback0 is up, line protocol is up 
-              Internet Address 3.3.3.3/32, Area 0
-              Process ID 1, Router ID 3.3.3.3, Network Type LOOPBACK, Cost: 1
+              Internet Address 10.36.3.3/32, Area 0
+              Process ID 1, Router ID 10.36.3.3, Network Type LOOPBACK, Cost: 1
               Loopback interface is treated as a stub Host
             GigabitEthernet0/0/0/0 is up, line protocol is up 
               Internet Address 10.3.4.3/24, Area 0
-              Process ID 1, Router ID 3.3.3.3, Network Type BROADCAST, Cost: 1
+              Process ID 1, Router ID 10.36.3.3, Network Type BROADCAST, Cost: 1
               Transmit Delay is 1 sec, State BDR, Priority 1, MTU 1500, MaxPktSz 1500
-              Designated Router (ID) 4.4.4.4, Interface address 10.3.4.4
-              Backup Designated router (ID) 3.3.3.3, Interface address 10.3.4.3
+              Designated Router (ID) 10.64.4.4, Interface address 10.3.4.4
+              Backup Designated router (ID) 10.36.3.3, Interface address 10.3.4.3
               Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
                 Hello due in 00:00:07:171
               Index 1/1, flood queue length 0
@@ -580,15 +580,15 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
               Last flood scan time is 0 msec, maximum is 0 msec
               LS Ack List: current length 0, high water mark 5
               Neighbor Count is 1, Adjacent neighbor count is 1
-                Adjacent with neighbor 4.4.4.4  (Designated Router)
+                Adjacent with neighbor 10.64.4.4  (Designated Router)
               Suppress hello for 0 neighbor(s)
               Multi-area interface Count is 0
             GigabitEthernet0/0/0/2 is up, line protocol is up 
               Internet Address 10.2.3.3/24, Area 0
-              Process ID 1, Router ID 3.3.3.3, Network Type BROADCAST, Cost: 1
+              Process ID 1, Router ID 10.36.3.3, Network Type BROADCAST, Cost: 1
               Transmit Delay is 1 sec, State DR, Priority 1, MTU 1500, MaxPktSz 1500
-              Designated Router (ID) 3.3.3.3, Interface address 10.2.3.3
-              Backup Designated router (ID) 2.2.2.2, Interface address 10.2.3.2
+              Designated Router (ID) 10.36.3.3, Interface address 10.2.3.3
+              Backup Designated router (ID) 10.16.2.2, Interface address 10.2.3.2
               Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
                 Hello due in 00:00:07:587
               Index 2/2, flood queue length 0
@@ -597,12 +597,12 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
               Last flood scan time is 0 msec, maximum is 0 msec
               LS Ack List: current length 0, high water mark 7
               Neighbor Count is 1, Adjacent neighbor count is 1
-                Adjacent with neighbor 2.2.2.2  (Backup Designated Router)
+                Adjacent with neighbor 10.16.2.2  (Backup Designated Router)
               Suppress hello for 0 neighbor(s)
               Multi-area interface Count is 0
             tunnel-te31 is up, line protocol is up 
               Internet Address 0.0.0.0/0, Area 0
-              Process ID 1, Router ID 3.3.3.3, Network Type POINT_TO_POINT
+              Process ID 1, Router ID 10.36.3.3, Network Type POINT_TO_POINT
               Interface is a tunnel igp-shortcut
               Transmit Delay is 1 sec, State POINT_TO_POINT, MTU 0, MaxPktSz 576
               Timer intervals configured, Hello 10, Dead 40, Wait 0, Retransmit 5
@@ -621,7 +621,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
 
             OSPF_SL0 is unknown, line protocol is up 
               Internet Address 0.0.0.0/0, Area 1
-              Process ID 1, VRF VRF1, Router ID 3.3.3.3, Network Type SHAM_LINK, Cost: 111
+              Process ID 1, VRF VRF1, Router ID 10.36.3.3, Network Type SHAM_LINK, Cost: 111
               Configured as demand circuit.
               Run as demand circuit.
               DoNotAge LSA not allowed (Number of DCbitless LSA is 1).
@@ -637,12 +637,12 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
               Suppress hello for 0 neighbor(s)
               Multi-area interface Count is 0
             GigabitEthernet0/0/0/1 is up, line protocol is up 
-              Internet Address 20.3.7.3/24, Area 1
-              Process ID 1, VRF VRF1, Router ID 3.3.3.3, Network Type BROADCAST, Cost: 1
+              Internet Address 10.19.7.3/24, Area 1
+              Process ID 1, VRF VRF1, Router ID 10.36.3.3, Network Type BROADCAST, Cost: 1
               BFD enabled, BFD interval 12345 msec, BFD multiplier 50, Mode: Default
               Transmit Delay is 1 sec, State BDR, Priority 1, MTU 1500, MaxPktSz 1500
-              Designated Router (ID) 77.77.77.77, Interface address 20.3.7.7
-              Backup Designated router (ID) 3.3.3.3, Interface address 20.3.7.3
+              Designated Router (ID) 10.1.77.77, Interface address 10.19.7.7
+              Backup Designated router (ID) 10.36.3.3, Interface address 10.19.7.3
               Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
                 Hello due in 00:00:03:040
               Index 1/1, flood queue length 0
@@ -651,25 +651,25 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
               Last flood scan time is 0 msec, maximum is 0 msec
               LS Ack List: current length 0, high water mark 11
               Neighbor Count is 1, Adjacent neighbor count is 1
-                Adjacent with neighbor 77.77.77.77  (Designated Router)
+                Adjacent with neighbor 10.1.77.77  (Designated Router)
               Suppress hello for 0 neighbor(s)
               Multi-area interface Count is 0
             '''
 
         raw2 = '''\
             RP/0/0/CPU0:R3_ospf_xr#show ospf vrf all-inclusive sham-links | i OSPF_SL0
-            Sham Link OSPF_SL0 to address 22.22.22.22 is up
+            Sham Link OSPF_SL0 to address 10.151.22.22 is up
             '''
 
         raw3 = '''\
-            RP/0/0/CPU0:R3_ospf_xr#show run formal router ospf | i sham | i 22.22.22.22
-            router ospf 1 vrf VRF1 area 1 sham-link 33.33.33.33 22.22.22.22
+            RP/0/0/CPU0:R3_ospf_xr#show run formal router ospf | i sham | i 10.151.22.22
+            router ospf 1 vrf VRF1 area 1 sham-link 10.21.33.33 10.151.22.22
             '''
 
         self.outputs = {}
         self.outputs['show ospf vrf all-inclusive interface'] = raw1
         self.outputs['show ospf vrf all-inclusive sham-links | i OSPF_SL0'] = raw2
-        self.outputs['show run formal router ospf | i sham | i 22.22.22.22'] = raw3
+        self.outputs['show run formal router ospf | i sham | i 10.151.22.22'] = raw3
 
         self.device.execute = Mock()
         self.device.execute.side_effect = mapper
@@ -692,12 +692,12 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
             Interfaces for OSPF 1
 
             Loopback0 is up, line protocol is up 
-              Internet Address 2.2.2.2/32, Area 0
-              Process ID 1, Router ID 2.2.2.2, Network Type LOOPBACK, Cost: 1
+              Internet Address 10.16.2.2/32, Area 0
+              Process ID 1, Router ID 10.16.2.2, Network Type LOOPBACK, Cost: 1
               Loopback interface is treated as a stub Host
             OSPF_VL0 is unknown, line protocol is up 
               Internet Address 0.0.0.0/0, Area 0
-              Process ID 1, Router ID 2.2.2.2, Network Type VIRTUAL_LINK, Cost: 1
+              Process ID 1, Router ID 10.16.2.2, Network Type VIRTUAL_LINK, Cost: 1
               Configured as demand circuit.
               Run as demand circuit.
               DoNotAge LSA not allowed (Number of DCbitless LSA is 7).
@@ -710,14 +710,14 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
               Last flood scan time is 0 msec, maximum is 0 msec
               LS Ack List: current length 0, high water mark 20
               Neighbor Count is 1, Adjacent neighbor count is 1
-                Adjacent with neighbor 4.4.4.4  (Hello suppressed)
+                Adjacent with neighbor 10.64.4.4  (Hello suppressed)
               Suppress hello for 1 neighbor(s)
               Multi-area interface Count is 0
             GigabitEthernet0/0/0/0 is up, line protocol is up 
               Internet Address 10.2.3.2/24, Area 0
-              Process ID 1, Router ID 2.2.2.2, Network Type BROADCAST, Cost: 1
+              Process ID 1, Router ID 10.16.2.2, Network Type BROADCAST, Cost: 1
               Transmit Delay is 1 sec, State DR, Priority 1, MTU 1500, MaxPktSz 1500
-              Designated Router (ID) 2.2.2.2, Interface address 10.2.3.2
+              Designated Router (ID) 10.16.2.2, Interface address 10.2.3.2
               No backup designated router on this network
               Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
                 Hello due in 00:00:09:266
@@ -731,9 +731,9 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
               Multi-area interface Count is 0
             GigabitEthernet0/0/0/2 is up, line protocol is up 
               Internet Address 10.1.2.2/24, Area 0
-              Process ID 1, Router ID 2.2.2.2, Network Type BROADCAST, Cost: 1
+              Process ID 1, Router ID 10.16.2.2, Network Type BROADCAST, Cost: 1
               Transmit Delay is 1 sec, State DR, Priority 1, MTU 1500, MaxPktSz 1500
-              Designated Router (ID) 2.2.2.2, Interface address 10.1.2.2
+              Designated Router (ID) 10.16.2.2, Interface address 10.1.2.2
               No backup designated router on this network
               Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
                 Hello due in 00:00:08:733
@@ -746,15 +746,15 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
               Suppress hello for 0 neighbor(s)
               Multi-area interface Count is 0
             Loopback1 is up, line protocol is up 
-              Internet Address 22.22.22.22/32, Area 1
-              Process ID 1, Router ID 2.2.2.2, Network Type LOOPBACK, Cost: 1
+              Internet Address 10.151.22.22/32, Area 1
+              Process ID 1, Router ID 10.16.2.2, Network Type LOOPBACK, Cost: 1
               Loopback interface is treated as a stub Host
             GigabitEthernet0/0/0/1 is up, line protocol is up 
-              Internet Address 20.2.3.2/24, Area 1
-              Process ID 1, Router ID 2.2.2.2, Network Type BROADCAST, Cost: 1
+              Internet Address 10.229.3.2/24, Area 1
+              Process ID 1, Router ID 10.16.2.2, Network Type BROADCAST, Cost: 1
               Transmit Delay is 1 sec, State BDR, Priority 1, MTU 1500, MaxPktSz 1500
-              Designated Router (ID) 3.3.3.3, Interface address 20.2.3.3
-              Backup Designated router (ID) 2.2.2.2, Interface address 20.2.3.2
+              Designated Router (ID) 10.36.3.3, Interface address 10.229.3.3
+              Backup Designated router (ID) 10.16.2.2, Interface address 10.229.3.2
               Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
                 Hello due in 00:00:00:698
               Index 2/5, flood queue length 0
@@ -763,15 +763,15 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
               Last flood scan time is 0 msec, maximum is 0 msec
               LS Ack List: current length 0, high water mark 3
               Neighbor Count is 1, Adjacent neighbor count is 1
-                Adjacent with neighbor 3.3.3.3  (Designated Router)
+                Adjacent with neighbor 10.36.3.3  (Designated Router)
               Suppress hello for 0 neighbor(s)
               Multi-area interface Count is 0
             GigabitEthernet0/0/0/3 is up, line protocol is up 
-              Internet Address 20.2.4.2/24, Area 1
-              Process ID 1, Router ID 2.2.2.2, Network Type BROADCAST, Cost: 1
+              Internet Address 10.229.4.2/24, Area 1
+              Process ID 1, Router ID 10.16.2.2, Network Type BROADCAST, Cost: 1
               Transmit Delay is 1 sec, State BDR, Priority 1, MTU 1500, MaxPktSz 1500
-              Designated Router (ID) 4.4.4.4, Interface address 20.2.4.4
-              Backup Designated router (ID) 2.2.2.2, Interface address 20.2.4.2
+              Designated Router (ID) 10.64.4.4, Interface address 10.229.4.4
+              Backup Designated router (ID) 10.16.2.2, Interface address 10.229.4.2
               Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
                 Hello due in 00:00:00:840
               Index 3/6, flood queue length 0
@@ -780,7 +780,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
               Last flood scan time is 0 msec, maximum is 0 msec
               LS Ack List: current length 0, high water mark 21
               Neighbor Count is 1, Adjacent neighbor count is 1
-                Adjacent with neighbor 4.4.4.4  (Designated Router)
+                Adjacent with neighbor 10.64.4.4  (Designated Router)
               Suppress hello for 0 neighbor(s)
               Multi-area interface Count is 0
             '''
@@ -791,7 +791,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
 
             Virtual Links for OSPF 1
 
-            Virtual Link OSPF_VL0 to router 4.4.4.4 is up
+            Virtual Link OSPF_VL0 to router 10.64.4.4 is up
               
               DoNotAge LSA not allowed Run as demand circuit (Number of DCbitless LSA is 1).
               Transit area 1, via interface GigabitEthernet0/0/0/3, Cost of using 65535
@@ -843,18 +843,18 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                                         {'interfaces': 
                                             {'GigabitEthernet0/0/0/1': 
                                                 {'neighbors': 
-                                                    {'77.77.77.77': 
-                                                        {'address': '20.3.7.7',
-                                                        'bdr_ip_addr': '20.3.7.3',
+                                                    {'10.1.77.77': 
+                                                        {'address': '10.19.7.7',
+                                                        'bdr_ip_addr': '10.19.7.3',
                                                         'dead_timer': '00:00:32',
-                                                        'dr_ip_addr': '20.3.7.7',
+                                                        'dr_ip_addr': '10.19.7.7',
                                                         'first': '0(0)/0(0)',
                                                         'high_water_mark': 0,
                                                         'index': '1/1,',
                                                         'lls_options': '0x1 (LR)',
                                                         'ls_ack_list': 'NSR-sync',
                                                         'ls_ack_list_pending': 0,
-                                                        'neighbor_router_id': '77.77.77.77',
+                                                        'neighbor_router_id': '10.1.77.77',
                                                         'neighbor_uptime': '23:24:56',
                                                         'next': '0(0)/0(0)',
                                                         'options': '0x52',
@@ -880,7 +880,7 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                                         {'interfaces': 
                                             {'GigabitEthernet0/0/0/0': 
                                                 {'neighbors': 
-                                                    {'4.4.4.4': 
+                                                    {'10.64.4.4': 
                                                         {'address': '10.3.4.4',
                                                         'bdr_ip_addr': '10.3.4.3',
                                                         'dead_timer': '00:00:30',
@@ -891,7 +891,7 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                                                         'lls_options': '0x1 (LR)',
                                                         'ls_ack_list': 'NSR-sync',
                                                         'ls_ack_list_pending': 0,
-                                                        'neighbor_router_id': '4.4.4.4',
+                                                        'neighbor_router_id': '10.64.4.4',
                                                         'neighbor_uptime': '1d01h',
                                                         'next': '0(0)/0(0)',
                                                         'options': '0x52',
@@ -908,7 +908,7 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                                                             'last_retrans_scan_time_msec': 0}}}},
                                             'GigabitEthernet0/0/0/2': 
                                                 {'neighbors': 
-                                                    {'2.2.2.2': 
+                                                    {'10.16.2.2': 
                                                         {'address': '10.2.3.2',
                                                         'bdr_ip_addr': '10.2.3.2',
                                                         'dead_timer': '00:00:38',
@@ -918,7 +918,7 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                                                         'index': '1/1,',
                                                         'ls_ack_list': 'NSR-sync',
                                                         'ls_ack_list_pending': 0,
-                                                        'neighbor_router_id': '2.2.2.2',
+                                                        'neighbor_router_id': '10.16.2.2',
                                                         'neighbor_uptime': '08:22:07',
                                                         'next': '0(0)/0(0)',
                                                         'options': '0x42',
@@ -944,7 +944,7 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
 
         Neighbors for OSPF 1
 
-         Neighbor 4.4.4.4, interface address 10.3.4.4
+         Neighbor 10.64.4.4, interface address 10.3.4.4
             In the area 0 via interface GigabitEthernet0/0/0/0 
             Neighbor priority is 1, State is FULL, 6 state changes
             DR is 10.3.4.4 BDR is 10.3.4.3
@@ -959,7 +959,7 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
             Last retransmission scan time is 0 msec, maximum is 0 msec
             LS Ack list: NSR-sync pending 0, high water mark 0
 
-         Neighbor 2.2.2.2, interface address 10.2.3.2
+         Neighbor 10.16.2.2, interface address 10.2.3.2
             In the area 0 via interface GigabitEthernet0/0/0/2 
             Neighbor priority is 1, State is FULL, 6 state changes
             DR is 10.2.3.3 BDR is 10.2.3.2
@@ -980,10 +980,10 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
 
         Neighbors for OSPF 1, VRF VRF1
 
-         Neighbor 77.77.77.77, interface address 20.3.7.7
+         Neighbor 10.1.77.77, interface address 10.19.7.7
             In the area 1 via interface GigabitEthernet0/0/0/1 
             Neighbor priority is 1, State is FULL, 6 state changes
-            DR is 20.3.7.7 BDR is 20.3.7.3
+            DR is 10.19.7.7 BDR is 10.19.7.3
             Options is 0x52  
             LLS Options is 0x1 (LR)
             Dead timer due in 00:00:32
@@ -1008,10 +1008,10 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                                 {'areas': 
                                     {'0.0.0.1': 
                                         {'virtual_links': 
-                                            {'0.0.0.1 4.4.4.4': 
+                                            {'0.0.0.1 10.64.4.4': 
                                                 {'neighbors': 
-                                                    {'4.4.4.4': 
-                                                        {'address': '20.2.4.4',
+                                                    {'10.64.4.4': 
+                                                        {'address': '10.229.4.4',
                                                         'bdr_ip_addr': '0.0.0.0',
                                                         'dr_ip_addr': '0.0.0.0',
                                                         'first': '0(0)/0(0)',
@@ -1020,7 +1020,7 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                                                         'lls_options': '0x1 (LR)',
                                                         'ls_ack_list': 'NSR-sync',
                                                         'ls_ack_list_pending': 0,
-                                                        'neighbor_router_id': '4.4.4.4',
+                                                        'neighbor_router_id': '10.64.4.4',
                                                         'neighbor_uptime': '04:58:24',
                                                         'next': '0(0)/0(0)',
                                                         'options': '0x72',
@@ -1038,17 +1038,17 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                                         'interfaces': 
                                             {'GigabitEthernet0/0/0/1': 
                                                 {'neighbors': 
-                                                    {'3.3.3.3': 
-                                                        {'address': '20.2.3.3',
-                                                        'bdr_ip_addr': '20.2.3.2',
+                                                    {'10.36.3.3': 
+                                                        {'address': '10.229.3.3',
+                                                        'bdr_ip_addr': '10.229.3.2',
                                                         'dead_timer': '00:00:31',
-                                                        'dr_ip_addr': '20.2.3.3',
+                                                        'dr_ip_addr': '10.229.3.3',
                                                         'first': '0(0)/0(0)',
                                                         'high_water_mark': 0,
                                                         'index': '2/2,',
                                                         'ls_ack_list': 'NSR-sync',
                                                         'ls_ack_list_pending': 0,
-                                                        'neighbor_router_id': '3.3.3.3',
+                                                        'neighbor_router_id': '10.36.3.3',
                                                         'neighbor_uptime': '05:00:13',
                                                         'next': '0(0)/0(0)',
                                                         'options': '0x42',
@@ -1065,18 +1065,18 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                                                             'last_retrans_scan_time_msec': 0}}}},
                                             'GigabitEthernet0/0/0/3': 
                                                 {'neighbors': 
-                                                    {'4.4.4.4': 
-                                                        {'address': '20.2.4.4',
-                                                        'bdr_ip_addr': '20.2.4.2',
+                                                    {'10.64.4.4': 
+                                                        {'address': '10.229.4.4',
+                                                        'bdr_ip_addr': '10.229.4.2',
                                                         'dead_timer': '00:00:32',
-                                                        'dr_ip_addr': '20.2.4.4',
+                                                        'dr_ip_addr': '10.229.4.4',
                                                         'first': '0(0)/0(0)',
                                                         'high_water_mark': 0,
                                                         'index': '1/1,',
                                                         'lls_options': '0x1 (LR)',
                                                         'ls_ack_list': 'NSR-sync',
                                                         'ls_ack_list_pending': 0,
-                                                        'neighbor_router_id': '4.4.4.4',
+                                                        'neighbor_router_id': '10.64.4.4',
                                                         'neighbor_uptime': '05:00:21',
                                                         'next': '0(0)/0(0)',
                                                         'options': '0x52',
@@ -1115,7 +1115,7 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
 
             Neighbors for OSPF 1
 
-             Neighbor 4.4.4.4, interface address 20.2.4.4
+             Neighbor 10.64.4.4, interface address 10.229.4.4
                 In the area 0 via interface OSPF_VL0 
                 Neighbor priority is 1, State is FULL, 7 state changes
                 DR is 0.0.0.0 BDR is 0.0.0.0
@@ -1129,10 +1129,10 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                 Last retransmission scan time is 0 msec, maximum is 0 msec
                 LS Ack list: NSR-sync pending 0, high water mark 0
 
-             Neighbor 3.3.3.3, interface address 20.2.3.3
+             Neighbor 10.36.3.3, interface address 10.229.3.3
                 In the area 1 via interface GigabitEthernet0/0/0/1 
                 Neighbor priority is 1, State is FULL, 6 state changes
-                DR is 20.2.3.3 BDR is 20.2.3.2
+                DR is 10.229.3.3 BDR is 10.229.3.2
                 Options is 0x42  
                 Dead timer due in 00:00:31
                 Neighbor is up for 05:00:13
@@ -1143,10 +1143,10 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                 Last retransmission scan time is 0 msec, maximum is 0 msec
                 LS Ack list: NSR-sync pending 0, high water mark 0
 
-             Neighbor 4.4.4.4, interface address 20.2.4.4
+             Neighbor 10.64.4.4, interface address 10.229.4.4
                 In the area 1 via interface GigabitEthernet0/0/0/3 
                 Neighbor priority is 1, State is FULL, 6 state changes
-                DR is 20.2.4.4 BDR is 20.2.4.2
+                DR is 10.229.4.4 BDR is 10.229.4.2
                 Options is 0x52  
                 LLS Options is 0x1 (LR)
                 Dead timer due in 00:00:32
@@ -1167,7 +1167,7 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
 
             Virtual Links for OSPF 1
 
-            Virtual Link OSPF_VL0 to router 4.4.4.4 is up
+            Virtual Link OSPF_VL0 to router 10.64.4.4 is up
               
               DoNotAge LSA not allowed Run as demand circuit (Number of DCbitless LSA is 1).
               Transit area 1, via interface GigabitEthernet0/0/0/3, Cost of using 65535
@@ -1268,7 +1268,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                         'warn_only': False}},
                                 'retransmission_pacing_interval': 66,
                                 'role': 'primary active',
-                                'router_id': '3.3.3.3',
+                                'router_id': '10.36.3.3',
                                 'segment_routing_global_block_default': '16000-23999',
                                 'segment_routing_global_block_status': 'not allocated',
                                 'snmp_trap': False,
@@ -1349,7 +1349,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                     'opaque_as_lsa_checksum': '00000000'},
                                 'retransmission_pacing_interval': 66,
                                 'role': 'primary active',
-                                'router_id': '3.3.3.3',
+                                'router_id': '10.36.3.3',
                                 'segment_routing_global_block_default': '16000-23999',
                                 'segment_routing_global_block_status': 'not allocated',
                                 'snmp_trap': True,
@@ -1401,7 +1401,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
         RP/0/0/CPU0:R3_ospf_xr#show ospf vrf all-inclusive 
         Thu Nov  2 21:14:35.895 UTC
 
-         Routing Process "ospf 1" with ID 3.3.3.3
+         Routing Process "ospf 1" with ID 10.36.3.3
          Role: Primary Active
          NSR (Non-stop routing) is Enabled
          Supports only single TOS(TOS0) routes
@@ -1457,7 +1457,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                 Number of neighbors forming in staggered mode 0, 2 full
 
 
-         VRF VRF1 in Routing Process "ospf 1" with ID 3.3.3.3
+         VRF VRF1 in Routing Process "ospf 1" with ID 10.36.3.3
          Role: Primary Active
          NSR (Non-stop routing) is Enabled
          Supports only single TOS(TOS0) routes
@@ -1577,7 +1577,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                         {'enabled': True}},
                                 'retransmission_pacing_interval': 66,
                                 'role': 'primary active',
-                                'router_id': '3.3.3.3',
+                                'router_id': '10.36.3.3',
                                 'segment_routing_global_block_default': '16000-23999',
                                 'segment_routing_global_block_status': 'not allocated',
                                 'snmp_trap': False,
@@ -1644,9 +1644,9 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                         'summary': True,
                                         'default_cost': 111,
                                         'ranges': 
-                                            {'1.1.0.0/16': 
+                                            {'10.4.0.0/16': 
                                                 {'advertise': True,
-                                                'prefix': '1.1.0.0/16'}},
+                                                'prefix': '10.4.0.0/16'}},
                                         'statistics': 
                                             {'area_scope_lsa_cksum_sum': '0x05adf0',
                                             'area_scope_lsa_count': 13,
@@ -1669,9 +1669,9 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                         'summary': False,
                                         'default_cost': 222,
                                         'ranges': 
-                                            {'1.1.1.0/24': 
+                                            {'10.4.1.0/24': 
                                                 {'advertise': True,
-                                                'prefix': '1.1.1.0/24'}},
+                                                'prefix': '10.4.1.0/24'}},
                                         'statistics': 
                                             {'area_scope_lsa_cksum_sum': '0x0076bf',
                                             'area_scope_lsa_count': 2,
@@ -1693,9 +1693,9 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                         'area_type': 'nssa',
                                         'lsa_translation': 'type-7/type-5',
                                         'ranges': 
-                                            {'2.2.2.0/24': 
+                                            {'10.16.2.0/24': 
                                                 {'advertise': True,
-                                                'prefix': '2.2.2.0/24'}},
+                                                'prefix': '10.16.2.0/24'}},
                                         'statistics': 
                                             {'area_scope_lsa_cksum_sum': '0x09166c',
                                             'area_scope_lsa_count': 14,
@@ -1771,7 +1771,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                         'metric': 10}},
                                 'retransmission_pacing_interval': 66,
                                 'role': 'primary active',
-                                'router_id': '3.3.3.3',
+                                'router_id': '10.36.3.3',
                                 'segment_routing_global_block_default': '16000-23999',
                                 'segment_routing_global_block_status': 'not allocated',
                                 'snmp_trap': True,
@@ -1809,7 +1809,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
         RP/0/0/CPU0:R3_ospf_xr#show ospf vrf all-inclusive 
         Mon Jan  8 22:09:54.605 UTC
 
-         Routing Process "ospf 1" with ID 3.3.3.3
+         Routing Process "ospf 1" with ID 10.36.3.3
          Role: Primary Active
          NSR (Non-stop routing) is Enabled
          Supports only single TOS(TOS0) routes
@@ -1865,7 +1865,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                   generates stub default route with cost 111
                 SPF algorithm executed 8 times
                 Area ranges are
-                   1.1.0.0/16 Passive DoNotAdvertise 
+                   10.4.0.0/16 Passive DoNotAdvertise 
                 Number of LSA 13.  Checksum Sum 0x05adf0
                 Number of opaque link LSA 0.  Checksum Sum 00000000
                 Number of DCbitless LSA 0
@@ -1881,7 +1881,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                   generates stub default route with cost 222
                 SPF algorithm executed 4 times
                 Area ranges are
-                   1.1.1.0/24 Passive Advertise 
+                   10.4.1.0/24 Passive Advertise 
                 Number of LSA 2.  Checksum Sum 0x0076bf
                 Number of opaque link LSA 0.  Checksum Sum 00000000
                 Number of DCbitless LSA 0
@@ -1897,7 +1897,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                 Perform type-7/type-5 LSA translation
                 SPF algorithm executed 4 times
                 Area ranges are
-                   2.2.2.0/24 Passive Advertise 
+                   10.16.2.0/24 Passive Advertise 
                 Number of LSA 14.  Checksum Sum 0x09166c
                 Number of opaque link LSA 0.  Checksum Sum 00000000
                 Number of DCbitless LSA 0
@@ -1923,7 +1923,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                 Number of neighbors forming in staggered mode 0, 0 full
 
 
-         VRF VRF1 in Routing Process "ospf 1" with ID 3.3.3.3
+         VRF VRF1 in Routing Process "ospf 1" with ID 10.36.3.3
          Role: Primary Active
          NSR (Non-stop routing) is Enabled
          Supports only single TOS(TOS0) routes
@@ -2016,7 +2016,7 @@ class test_show_ospf_vrf_all_inclusive_sham_links(unittest.TestCase):
                                 {'areas': 
                                     {'0.0.0.1': 
                                         {'sham_links': 
-                                            {'33.33.33.33 22.22.22.22': 
+                                            {'10.21.33.33 10.151.22.22': 
                                                 {'cost': 111,
                                                 'dcbitless_lsa_count': 1,
                                                 'donotage_lsa': 'not allowed',
@@ -2025,10 +2025,10 @@ class test_show_ospf_vrf_all_inclusive_sham_links(unittest.TestCase):
                                                 'hello_interval': 3,
                                                 'hello_timer': '00:00:00:772',
                                                 'if_index': 2,
-                                                'local_id': '33.33.33.33',
+                                                'local_id': '10.21.33.33',
                                                 'name': 'SL0',
                                                 'link_state': 'up',
-                                                'remote_id': '22.22.22.22',
+                                                'remote_id': '10.151.22.22',
                                                 'retransmit_interval': 5,
                                                 'state': 'point-to-point,',
                                                 'transit_area_id': '0.0.0.1',
@@ -2040,8 +2040,8 @@ class test_show_ospf_vrf_all_inclusive_sham_links(unittest.TestCase):
 
         Sham Links for OSPF 1, VRF VRF1
 
-        Sham Link OSPF_SL0 to address 22.22.22.22 is up
-        Area 1, source address 33.33.33.33
+        Sham Link OSPF_SL0 to address 10.151.22.22 is up
+        Area 1, source address 10.21.33.33
         IfIndex = 2
           Run as demand circuit
           DoNotAge LSA not allowed (Number of DCbitless LSA is 1)., Cost of using 111
@@ -2085,7 +2085,7 @@ class test_show_ospf_vrf_all_inclusive_virtual_links(unittest.TestCase):
                                 {'areas': 
                                     {'0.0.0.1': 
                                         {'virtual_links': 
-                                            {'0.0.0.1 2.2.2.2': 
+                                            {'0.0.0.1 10.16.2.2': 
                                                 {'authentication': 
                                                     {'auth_trailer_key': 
                                                         {'crypto_algorithm': 'simple'}},
@@ -2103,12 +2103,12 @@ class test_show_ospf_vrf_all_inclusive_virtual_links(unittest.TestCase):
                                                     {'enable': True,
                                                     'last_restart': '00:18:16'},
                                                 'retransmit_interval': 44,
-                                                'router_id': '2.2.2.2',
+                                                'router_id': '10.16.2.2',
                                                 'state': 'point-to-point,',
                                                 'transit_area_id': '0.0.0.1',
                                                 'transmit_delay': 5,
                                                 'wait_interval': 16},
-                                            '0.0.0.1 5.5.5.5': 
+                                            '0.0.0.1 10.100.5.5': 
                                                 {'authentication': 
                                                     {'auth_trailer_key': 
                                                         {'crypto_algorithm': 'md5',
@@ -2126,7 +2126,7 @@ class test_show_ospf_vrf_all_inclusive_virtual_links(unittest.TestCase):
                                                 'nsf': {'enable': True,
                                                         'last_restart': '00:18:16'},
                                                 'retransmit_interval': 44,
-                                                'router_id': '5.5.5.5',
+                                                'router_id': '10.100.5.5',
                                                 'state': 'point-to-point,',
                                                 'transit_area_id': '0.0.0.1',
                                                 'transmit_delay': 5,
@@ -2138,7 +2138,7 @@ class test_show_ospf_vrf_all_inclusive_virtual_links(unittest.TestCase):
 
         Virtual Links for OSPF 1
 
-        Virtual Link OSPF_VL0 to router 2.2.2.2 is up
+        Virtual Link OSPF_VL0 to router 10.16.2.2 is up
           
           DoNotAge LSA not allowed Run as demand circuit (Number of DCbitless LSA is 1).
           Transit area 1, via interface GigabitEthernet0/0/0/3, Cost of using 65535
@@ -2148,7 +2148,7 @@ class test_show_ospf_vrf_all_inclusive_virtual_links(unittest.TestCase):
             Hello due in 00:00:03:179
           Clear text authentication enabled
 
-        Virtual Link OSPF_VL1 to router 5.5.5.5 is up
+        Virtual Link OSPF_VL1 to router 10.100.5.5 is up
           
           DoNotAge LSA not allowed Run as demand circuit (Number of DCbitless LSA is 1).
           Transit area 1, via interface GigabitEthernet0/0/0/4, Cost of using 65535
@@ -2298,13 +2298,13 @@ class test_show_ospf_mpls_traffic_eng_link(unittest.TestCase):
                                                 {'enable': False}}}},
                                 'mpls': 
                                     {'te': 
-                                        {'router_id': '3.3.3.3'}}}}}}}}}
+                                        {'router_id': '10.36.3.3'}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         RP/0/0/CPU0:R3_ospf_xr#show ospf mpls traffic-eng link 
         Thu Nov  2 21:15:42.880 UTC
 
-                OSPF Router with ID (3.3.3.3) (Process ID 1)
+                OSPF Router with ID (10.36.3.3) (Process ID 1)
 
       Area 0 has 2 MPLS TE links. Area instance is 2.
         Link is associated with fragment 1. Link instance is 2
@@ -2401,16 +2401,16 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                 {1: 
                                                     {'lsa_type': 1,
                                                     'lsas': 
-                                                        {'11.11.11.11 11.11.11.11': 
-                                                            {'adv_router': '11.11.11.11',
-                                                            'lsa_id': '11.11.11.11',
+                                                        {'10.229.11.11 10.229.11.11': 
+                                                            {'adv_router': '10.229.11.11',
+                                                            'lsa_id': '10.229.11.11',
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'router': 
                                                                         {'links': 
-                                                                            {'20.1.5.1': 
-                                                                                {'link_data': '20.1.5.1',
-                                                                                'link_id': '20.1.5.1',
+                                                                            {'10.186.5.1': 
+                                                                                {'link_data': '10.186.5.1',
+                                                                                'link_id': '10.186.5.1',
                                                                                 'num_tos_metrics': 0,
                                                                                 'topologies': 
                                                                                     {0: 
@@ -2418,9 +2418,9 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                                         'mt_id': 0,
                                                                                         'tos': 0}},
                                                                                 'type': 'transit network'},
-                                                                            '22.22.22.22': 
+                                                                            '10.151.22.22': 
                                                                                 {'link_data': '0.0.0.14',
-                                                                                'link_id': '22.22.22.22',
+                                                                                'link_id': '10.151.22.22',
                                                                                 'num_tos_metrics': 0,
                                                                                 'topologies': 
                                                                                     {0: 
@@ -2430,13 +2430,13 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                                 'type': 'another router (point-to-point)'}},
                                                                         'num_of_links': 2}},
                                                                 'header': 
-                                                                    {'adv_router': '11.11.11.11',
+                                                                    {'adv_router': '10.229.11.11',
                                                                     'age': 1713,
                                                                     'area_border_router': True,
                                                                     'as_boundary_router': True,
                                                                     'checksum': '0x9ce3',
                                                                     'length': 48,
-                                                                    'lsa_id': '11.11.11.11',
+                                                                    'lsa_id': '10.229.11.11',
                                                                     'option': 'None',
                                                                     'option_desc': 'No '
                                                                     'TOS-capability, '
@@ -2444,16 +2444,16 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                     'routing_bit_enable': True,
                                                                     'seq_num': '8000003e',
                                                                     'type': 1}}},
-                                                        '22.22.22.22 22.22.22.22': 
-                                                            {'adv_router': '22.22.22.22',
-                                                            'lsa_id': '22.22.22.22',
+                                                        '10.151.22.22 10.151.22.22': 
+                                                            {'adv_router': '10.151.22.22',
+                                                            'lsa_id': '10.151.22.22',
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'router': 
                                                                         {'links': 
-                                                                            {'11.11.11.11': 
+                                                                            {'10.229.11.11': 
                                                                                 {'link_data': '0.0.0.6',
-                                                                                'link_id': '11.11.11.11',
+                                                                                'link_id': '10.229.11.11',
                                                                                 'num_tos_metrics': 0,
                                                                                 'topologies': 
                                                                                     {0: 
@@ -2461,9 +2461,9 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                                         'mt_id': 0,
                                                                                         'tos': 0}},
                                                                                 'type': 'another router (point-to-point)'},
-                                                                            '20.2.6.6': 
-                                                                                {'link_data': '20.2.6.2',
-                                                                                'link_id': '20.2.6.6',
+                                                                            '10.229.6.6': 
+                                                                                {'link_data': '10.229.6.2',
+                                                                                'link_id': '10.229.6.6',
                                                                                 'num_tos_metrics': 0,
                                                                                 'topologies': 
                                                                                     {0: 
@@ -2473,13 +2473,13 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                                 'type': 'transit network'}},
                                                                         'num_of_links': 2}},
                                                             'header': 
-                                                                {'adv_router': '22.22.22.22',
+                                                                {'adv_router': '10.151.22.22',
                                                                 'age': 1539,
                                                                 'area_border_router': True,
                                                                 'as_boundary_router': True,
                                                                 'checksum': '0xc41a',
                                                                 'length': 48,
-                                                                'lsa_id': '22.22.22.22',
+                                                                'lsa_id': '10.151.22.22',
                                                                 'option': 'None',
                                                                 'option_desc': 'No '
                                                                 'TOS-capability, '
@@ -2488,16 +2488,16 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                 'routing_bit_enable': True,
                                                                 'seq_num': '80000019',
                                                                 'type': 1}}},
-                                                        '3.3.3.3 3.3.3.3': 
-                                                            {'adv_router': '3.3.3.3',
-                                                            'lsa_id': '3.3.3.3',
+                                                        '10.36.3.3 10.36.3.3': 
+                                                            {'adv_router': '10.36.3.3',
+                                                            'lsa_id': '10.36.3.3',
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'router': 
                                                                         {'links': 
-                                                                            {'20.3.7.7': 
-                                                                                {'link_data': '20.3.7.3',
-                                                                                'link_id': '20.3.7.7',
+                                                                            {'10.19.7.7': 
+                                                                                {'link_data': '10.19.7.3',
+                                                                                'link_id': '10.19.7.7',
                                                                                 'num_tos_metrics': 0,
                                                                                 'topologies': 
                                                                                     {0: 
@@ -2507,27 +2507,27 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                                 'type': 'transit network'}},
                                                                         'num_of_links': 1}},
                                                                 'header': 
-                                                                    {'adv_router': '3.3.3.3',
+                                                                    {'adv_router': '10.36.3.3',
                                                                     'age': 217,
                                                                     'area_border_router': True,
                                                                     'as_boundary_router': True,
                                                                     'checksum': '0x5646',
                                                                     'length': 36,
-                                                                    'lsa_id': '3.3.3.3',
+                                                                    'lsa_id': '10.36.3.3',
                                                                     'option': 'None',
                                                                     'option_desc': 'No TOS-capability, DC',
                                                                     'seq_num': '80000036',
                                                                     'type': 1}}},
-                                                        '55.55.55.55 55.55.55.55': 
-                                                            {'adv_router': '55.55.55.55',
-                                                            'lsa_id': '55.55.55.55',
+                                                        '10.115.55.55 10.115.55.55': 
+                                                            {'adv_router': '10.115.55.55',
+                                                            'lsa_id': '10.115.55.55',
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'router': 
                                                                         {'links': 
-                                                                            {'20.1.5.1': 
-                                                                                {'link_data': '20.1.5.5',
-                                                                                'link_id': '20.1.5.1',
+                                                                            {'10.186.5.1': 
+                                                                                {'link_data': '10.186.5.5',
+                                                                                'link_id': '10.186.5.1',
                                                                                 'num_tos_metrics': 0,
                                                                                 'topologies': 
                                                                                     {0: 
@@ -2535,9 +2535,9 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                                         'mt_id': 0,
                                                                                         'tos': 0}},
                                                                                 'type': 'transit network'},
-                                                                            '20.5.6.6': 
-                                                                                {'link_data': '20.5.6.5',
-                                                                                'link_id': '20.5.6.6',
+                                                                            '10.115.6.6': 
+                                                                                {'link_data': '10.115.6.5',
+                                                                                'link_id': '10.115.6.6',
                                                                                 'num_tos_metrics': 0,
                                                                                 'topologies': 
                                                                                     {0: 
@@ -2545,9 +2545,9 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                                         'mt_id': 0,
                                                                                         'tos': 0}},
                                                                                 'type': 'transit network'},
-                                                                            '55.55.55.55': 
+                                                                            '10.115.55.55': 
                                                                                 {'link_data': '255.255.255.255',
-                                                                                'link_id': '55.55.55.55',
+                                                                                'link_id': '10.115.55.55',
                                                                                 'num_tos_metrics': 0,
                                                                                 'topologies': 
                                                                                     {0: 
@@ -2557,11 +2557,11 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                                 'type': 'stub network'}},
                                                                                 'num_of_links': 3}},
                                                                 'header': 
-                                                                    {'adv_router': '55.55.55.55',
+                                                                    {'adv_router': '10.115.55.55',
                                                                     'age': 1378,
                                                                     'checksum': '0xe7bc',
                                                                     'length': 60,
-                                                                    'lsa_id': '55.55.55.55',
+                                                                    'lsa_id': '10.115.55.55',
                                                                     'option': 'None',
                                                                     'option_desc': 'No '
                                                                     'TOS-capability, '
@@ -2569,16 +2569,16 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                     'routing_bit_enable': True,
                                                                     'seq_num': '80000037',
                                                                     'type': 1}}},
-                                                        '66.66.66.66 66.66.66.66': 
-                                                            {'adv_router': '66.66.66.66',
-                                                            'lsa_id': '66.66.66.66',
+                                                        '10.84.66.66 10.84.66.66': 
+                                                            {'adv_router': '10.84.66.66',
+                                                            'lsa_id': '10.84.66.66',
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'router': 
                                                                         {'links': 
-                                                                            {'20.2.6.6': 
-                                                                                {'link_data': '20.2.6.6',
-                                                                                'link_id': '20.2.6.6',
+                                                                            {'10.229.6.6': 
+                                                                                {'link_data': '10.229.6.6',
+                                                                                'link_id': '10.229.6.6',
                                                                                 'num_tos_metrics': 0,
                                                                                 'topologies': 
                                                                                     {0: 
@@ -2586,9 +2586,9 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                                         'mt_id': 0,
                                                                                         'tos': 0}},
                                                                                 'type': 'transit network'},
-                                                                            '20.5.6.6': 
-                                                                                {'link_data': '20.5.6.6',
-                                                                                'link_id': '20.5.6.6',
+                                                                            '10.115.6.6': 
+                                                                                {'link_data': '10.115.6.6',
+                                                                                'link_id': '10.115.6.6',
                                                                                 'num_tos_metrics': 0,
                                                                                 'topologies': 
                                                                                     {0: 
@@ -2596,9 +2596,9 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                                         'mt_id': 0,
                                                                                         'tos': 0}},
                                                                                 'type': 'transit network'},
-                                                                            '20.6.7.6': 
-                                                                                {'link_data': '20.6.7.6',
-                                                                                'link_id': '20.6.7.6',
+                                                                            '10.166.7.6': 
+                                                                                {'link_data': '10.166.7.6',
+                                                                                'link_id': '10.166.7.6',
                                                                                 'num_tos_metrics': 0,
                                                                                 'topologies': 
                                                                                     {0: 
@@ -2606,9 +2606,9 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                                         'mt_id': 0,
                                                                                         'tos': 0}},
                                                                                 'type': 'transit network'},
-                                                                            '66.66.66.66': 
+                                                                            '10.84.66.66': 
                                                                                 {'link_data': '255.255.255.255',
-                                                                                'link_id': '66.66.66.66',
+                                                                                'link_id': '10.84.66.66',
                                                                                 'num_tos_metrics': 0,
                                                                                 'topologies': 
                                                                                     {0: 
@@ -2619,26 +2619,26 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                                 'network'}},
                                                                                 'num_of_links': 4}},
                                                                 'header': 
-                                                                    {'adv_router': '66.66.66.66',
+                                                                    {'adv_router': '10.84.66.66',
                                                                     'age': 1578,
                                                                     'checksum': '0x1282',
                                                                     'length': 72,
-                                                                    'lsa_id': '66.66.66.66',
+                                                                    'lsa_id': '10.84.66.66',
                                                                     'option': 'None',
                                                                     'option_desc': 'No TOS-capability, DC',
                                                                     'routing_bit_enable': True,
                                                                     'seq_num': '8000003c',
                                                                     'type': 1}}},
-                                                        '77.77.77.77 77.77.77.77': 
-                                                            {'adv_router': '77.77.77.77',
-                                                            'lsa_id': '77.77.77.77',
+                                                        '10.1.77.77 10.1.77.77': 
+                                                            {'adv_router': '10.1.77.77',
+                                                            'lsa_id': '10.1.77.77',
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'router': 
                                                                         {'links': 
-                                                                            {'20.3.7.7': 
-                                                                                {'link_data': '20.3.7.7',
-                                                                                'link_id': '20.3.7.7',
+                                                                            {'10.19.7.7': 
+                                                                                {'link_data': '10.19.7.7',
+                                                                                'link_id': '10.19.7.7',
                                                                                 'num_tos_metrics': 0,
                                                                                 'topologies': 
                                                                                     {0: 
@@ -2646,9 +2646,9 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                                         'mt_id': 0,
                                                                                         'tos': 0}},
                                                                                 'type': 'transit network'},
-                                                                            '20.6.7.6': 
-                                                                                {'link_data': '20.6.7.7',
-                                                                                'link_id': '20.6.7.6',
+                                                                            '10.166.7.6': 
+                                                                                {'link_data': '10.166.7.7',
+                                                                                'link_id': '10.166.7.6',
                                                                                 'num_tos_metrics': 0,
                                                                                 'topologies': 
                                                                                     {0: 
@@ -2657,9 +2657,9 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                                         'tos': 0}},
                                                                                 'type': 'transit '
                                                                                 'network'},
-                                                                            '77.77.77.77': 
+                                                                            '10.1.77.77': 
                                                                                 {'link_data': '255.255.255.255',
-                                                                                'link_id': '77.77.77.77',
+                                                                                'link_id': '10.1.77.77',
                                                                                 'num_tos_metrics': 0,
                                                                                 'topologies': 
                                                                                     {0: 
@@ -2669,11 +2669,11 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                                 'type': 'stub network'}},
                                                                     'num_of_links': 3}},
                                                                 'header': 
-                                                                    {'adv_router': '77.77.77.77',
+                                                                    {'adv_router': '10.1.77.77',
                                                                     'age': 1344,
                                                                     'checksum': '0x1379',
                                                                     'length': 60,
-                                                                    'lsa_id': '77.77.77.77',
+                                                                    'lsa_id': '10.1.77.77',
                                                                     'option': 'None',
                                                                     'option_desc': 'No '
                                                                     'TOS-capability, '
@@ -2693,16 +2693,16 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                 {1: 
                                                     {'lsa_type': 1,
                                                     'lsas': 
-                                                        {'1.1.1.1 1.1.1.1': 
-                                                            {'adv_router': '1.1.1.1',
-                                                            'lsa_id': '1.1.1.1',
+                                                        {'10.4.1.1 10.4.1.1': 
+                                                            {'adv_router': '10.4.1.1',
+                                                            'lsa_id': '10.4.1.1',
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'router': 
                                                                         {'links': 
-                                                                            {'1.1.1.1': 
+                                                                            {'10.4.1.1': 
                                                                                 {'link_data': '255.255.255.255',
-                                                                                'link_id': '1.1.1.1',
+                                                                                'link_id': '10.4.1.1',
                                                                                 'num_tos_metrics': 0,
                                                                                 'topologies': 
                                                                                     {0: 
@@ -2732,11 +2732,11 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                                 'type': 'transit network'}},
                                                                         'num_of_links': 3}},
                                                                 'header': 
-                                                                    {'adv_router': '1.1.1.1',
+                                                                    {'adv_router': '10.4.1.1',
                                                                     'age': 1802,
                                                                     'checksum': '0x6228',
                                                                     'length': 60,
-                                                                    'lsa_id': '1.1.1.1',
+                                                                    'lsa_id': '10.4.1.1',
                                                                     'option': 'None',
                                                                     'option_desc': 'No '
                                                                     'TOS-capability, '
@@ -2744,9 +2744,9 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                     'routing_bit_enable': True,
                                                                     'seq_num': '8000003d',
                                                                     'type': 1}}},
-                                                        '2.2.2.2 2.2.2.2': 
-                                                            {'adv_router': '2.2.2.2',
-                                                            'lsa_id': '2.2.2.2',
+                                                        '10.16.2.2 10.16.2.2': 
+                                                            {'adv_router': '10.16.2.2',
+                                                            'lsa_id': '10.16.2.2',
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'router': 
@@ -2781,9 +2781,9 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                                         'mt_id': 0,
                                                                                         'tos': 0}},
                                                                                 'type': 'transit network'},
-                                                                            '2.2.2.2': 
+                                                                            '10.16.2.2': 
                                                                                 {'link_data': '255.255.255.255',
-                                                                                'link_id': '2.2.2.2',
+                                                                                'link_id': '10.16.2.2',
                                                                                 'num_tos_metrics': 0,
                                                                                 'topologies': 
                                                                                     {0: 
@@ -2793,11 +2793,11 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                                 'type': 'stub network'}},
                                                                         'num_of_links': 4}},
                                                                 'header': 
-                                                                    {'adv_router': '2.2.2.2',
+                                                                    {'adv_router': '10.16.2.2',
                                                                     'age': 756,
                                                                     'checksum': '0x652b',
                                                                     'length': 72,
-                                                                    'lsa_id': '2.2.2.2',
+                                                                    'lsa_id': '10.16.2.2',
                                                                     'option': 'None',
                                                                     'option_desc': 'No '
                                                                     'TOS-capability, '
@@ -2806,9 +2806,9 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                     'routing_bit_enable': True,
                                                                     'seq_num': '80000014',
                                                                     'type': 1}}},
-                                                        '3.3.3.3 3.3.3.3': 
-                                                            {'adv_router': '3.3.3.3',
-                                                            'lsa_id': '3.3.3.3',
+                                                        '10.36.3.3 10.36.3.3': 
+                                                            {'adv_router': '10.36.3.3',
+                                                            'lsa_id': '10.36.3.3',
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'router': 
@@ -2833,9 +2833,9 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                                         'mt_id': 0,
                                                                                         'tos': 0}},
                                                                                 'type': 'transit network'},
-                                                                            '3.3.3.3': 
+                                                                            '10.36.3.3': 
                                                                                 {'link_data': '255.255.255.255',
-                                                                                'link_id': '3.3.3.3',
+                                                                                'link_id': '10.36.3.3',
                                                                                 'num_tos_metrics': 0,
                                                                                 'topologies': 
                                                                                     {0: 
@@ -2845,20 +2845,20 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                                 'type': 'stub network'}},
                                                                         'num_of_links': 3}},
                                                                 'header': 
-                                                                    {'adv_router': '3.3.3.3',
+                                                                    {'adv_router': '10.36.3.3',
                                                                     'age': 1291,
                                                                     'checksum': '0x75f8',
                                                                     'length': 60,
-                                                                    'lsa_id': '3.3.3.3',
+                                                                    'lsa_id': '10.36.3.3',
                                                                     'option': 'None',
                                                                     'option_desc': 'No '
                                                                     'TOS-capability, '
                                                                     'DC',
                                                                     'seq_num': '80000033',
                                                                     'type': 1}}},
-                                                        '4.4.4.4 4.4.4.4': 
-                                                            {'adv_router': '4.4.4.4',
-                                                            'lsa_id': '4.4.4.4',
+                                                        '10.64.4.4 10.64.4.4': 
+                                                            {'adv_router': '10.64.4.4',
+                                                            'lsa_id': '10.64.4.4',
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'router': 
@@ -2893,9 +2893,9 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                                         'mt_id': 0,
                                                                                         'tos': 0}},
                                                                                 'type': 'transit network'},
-                                                                            '4.4.4.4': 
+                                                                            '10.64.4.4': 
                                                                                 {'link_data': '255.255.255.255',
-                                                                                'link_id': '4.4.4.4',
+                                                                                'link_id': '10.64.4.4',
                                                                                 'num_tos_metrics': 0,
                                                                                 'topologies': 
                                                                                     {0: 
@@ -2905,12 +2905,12 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                                 'type': 'stub network'}},
                                                                         'num_of_links': 4}},
                                                                 'header': 
-                                                                    {'adv_router': '4.4.4.4',
+                                                                    {'adv_router': '10.64.4.4',
                                                                     'age': 505,
                                                                     'as_boundary_router': True,
                                                                     'checksum': '0xa37d',
                                                                     'length': 72,
-                                                                    'lsa_id': '4.4.4.4',
+                                                                    'lsa_id': '10.64.4.4',
                                                                     'option': 'None',
                                                                     'option_desc': 'No '
                                                                     'TOS-capability, '
@@ -2923,7 +2923,7 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
         RP/0/0/CPU0:R3_ospf_xr#show ospf vrf all-inclusive database router 
         Thu Nov  2 21:25:10.231 UTC
 
-                    OSPF Router with ID (3.3.3.3) (Process ID mpls1)
+                    OSPF Router with ID (10.36.3.3) (Process ID mpls1)
 
                         Router Link States (Area 0)
 
@@ -2931,15 +2931,15 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
           LS age: 1802
           Options: (No TOS-capability, DC)
           LS Type: Router Links
-          Link State ID: 1.1.1.1
-          Advertising Router: 1.1.1.1
+          Link State ID: 10.4.1.1
+          Advertising Router: 10.4.1.1
           LS Seq Number: 8000003d
           Checksum: 0x6228
           Length: 60
            Number of Links: 3
 
             Link connected to: a Stub Network
-             (Link ID) Network/subnet number: 1.1.1.1
+             (Link ID) Network/subnet number: 10.4.1.1
              (Link Data) Network Mask: 255.255.255.255
               Number of TOS metrics: 0
                TOS 0 Metrics: 1
@@ -2961,15 +2961,15 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
           LS age: 756
           Options: (No TOS-capability, No DC)
           LS Type: Router Links
-          Link State ID: 2.2.2.2
-          Advertising Router: 2.2.2.2
+          Link State ID: 10.16.2.2
+          Advertising Router: 10.16.2.2
           LS Seq Number: 80000014
           Checksum: 0x652b
           Length: 72
            Number of Links: 4
 
             Link connected to: a Stub Network
-             (Link ID) Network/subnet number: 2.2.2.2
+             (Link ID) Network/subnet number: 10.16.2.2
              (Link Data) Network Mask: 255.255.255.255
               Number of TOS metrics: 0
                TOS 0 Metrics: 1
@@ -2996,15 +2996,15 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
           LS age: 1291
           Options: (No TOS-capability, DC)
           LS Type: Router Links
-          Link State ID: 3.3.3.3
-          Advertising Router: 3.3.3.3
+          Link State ID: 10.36.3.3
+          Advertising Router: 10.36.3.3
           LS Seq Number: 80000033
           Checksum: 0x75f8
           Length: 60
            Number of Links: 3
 
             Link connected to: a Stub Network
-             (Link ID) Network/subnet number: 3.3.3.3
+             (Link ID) Network/subnet number: 10.36.3.3
              (Link Data) Network Mask: 255.255.255.255
               Number of TOS metrics: 0
                TOS 0 Metrics: 1
@@ -3026,8 +3026,8 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
           LS age: 505
           Options: (No TOS-capability, DC)
           LS Type: Router Links
-          Link State ID: 4.4.4.4
-          Advertising Router: 4.4.4.4
+          Link State ID: 10.64.4.4
+          Advertising Router: 10.64.4.4
           LS Seq Number: 80000037
           Checksum: 0xa37d
           Length: 72
@@ -3035,7 +3035,7 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
            Number of Links: 4
 
             Link connected to: a Stub Network
-             (Link ID) Network/subnet number: 4.4.4.4
+             (Link ID) Network/subnet number: 10.64.4.4
              (Link Data) Network Mask: 255.255.255.255
               Number of TOS metrics: 0
                TOS 0 Metrics: 1
@@ -3059,15 +3059,15 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                TOS 0 Metrics: 1
 
 
-                    OSPF Router with ID (3.3.3.3) (Process ID mpls1, VRF VRF1)
+                    OSPF Router with ID (10.36.3.3) (Process ID mpls1, VRF VRF1)
 
                         Router Link States (Area 1)
 
           LS age: 217
           Options: (No TOS-capability, DC)
           LS Type: Router Links
-          Link State ID: 3.3.3.3
-          Advertising Router: 3.3.3.3
+          Link State ID: 10.36.3.3
+          Advertising Router: 10.36.3.3
           LS Seq Number: 80000036
           Checksum: 0x5646
           Length: 36
@@ -3076,8 +3076,8 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
            Number of Links: 1
 
             Link connected to: a Transit Network
-             (Link ID) Designated Router address: 20.3.7.7
-             (Link Data) Router Interface address: 20.3.7.3
+             (Link ID) Designated Router address: 10.19.7.7
+             (Link Data) Router Interface address: 10.19.7.3
               Number of TOS metrics: 0
                TOS 0 Metrics: 1
 
@@ -3086,8 +3086,8 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
           LS age: 1713
           Options: (No TOS-capability, DC)
           LS Type: Router Links
-          Link State ID: 11.11.11.11
-          Advertising Router: 11.11.11.11
+          Link State ID: 10.229.11.11
+          Advertising Router: 10.229.11.11
           LS Seq Number: 8000003e
           Checksum: 0x9ce3
           Length: 48
@@ -3096,14 +3096,14 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
            Number of Links: 2
 
             Link connected to: another Router (point-to-point)
-             (Link ID) Neighboring Router ID: 22.22.22.22
+             (Link ID) Neighboring Router ID: 10.151.22.22
              (Link Data) Router Interface address: 0.0.0.14
               Number of TOS metrics: 0
                TOS 0 Metrics: 111
 
             Link connected to: a Transit Network
-             (Link ID) Designated Router address: 20.1.5.1
-             (Link Data) Router Interface address: 20.1.5.1
+             (Link ID) Designated Router address: 10.186.5.1
+             (Link Data) Router Interface address: 10.186.5.1
               Number of TOS metrics: 0
                TOS 0 Metrics: 1
 
@@ -3112,8 +3112,8 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
           LS age: 1539
           Options: (No TOS-capability, No DC)
           LS Type: Router Links
-          Link State ID: 22.22.22.22
-          Advertising Router: 22.22.22.22
+          Link State ID: 10.151.22.22
+          Advertising Router: 10.151.22.22
           LS Seq Number: 80000019
           Checksum: 0xc41a
           Length: 48
@@ -3122,13 +3122,13 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
            Number of Links: 2
 
             Link connected to: a Transit Network
-             (Link ID) Designated Router address: 20.2.6.6
-             (Link Data) Router Interface address: 20.2.6.2
+             (Link ID) Designated Router address: 10.229.6.6
+             (Link Data) Router Interface address: 10.229.6.2
               Number of TOS metrics: 0
                TOS 0 Metrics: 40
 
             Link connected to: another Router (point-to-point)
-             (Link ID) Neighboring Router ID: 11.11.11.11
+             (Link ID) Neighboring Router ID: 10.229.11.11
              (Link Data) Router Interface address: 0.0.0.6
               Number of TOS metrics: 0
                TOS 0 Metrics: 1
@@ -3138,28 +3138,28 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
           LS age: 1378
           Options: (No TOS-capability, DC)
           LS Type: Router Links
-          Link State ID: 55.55.55.55
-          Advertising Router: 55.55.55.55
+          Link State ID: 10.115.55.55
+          Advertising Router: 10.115.55.55
           LS Seq Number: 80000037
           Checksum: 0xe7bc
           Length: 60
            Number of Links: 3
 
             Link connected to: a Stub Network
-             (Link ID) Network/subnet number: 55.55.55.55
+             (Link ID) Network/subnet number: 10.115.55.55
              (Link Data) Network Mask: 255.255.255.255
               Number of TOS metrics: 0
                TOS 0 Metrics: 1
 
             Link connected to: a Transit Network
-             (Link ID) Designated Router address: 20.5.6.6
-             (Link Data) Router Interface address: 20.5.6.5
+             (Link ID) Designated Router address: 10.115.6.6
+             (Link Data) Router Interface address: 10.115.6.5
               Number of TOS metrics: 0
                TOS 0 Metrics: 30
 
             Link connected to: a Transit Network
-             (Link ID) Designated Router address: 20.1.5.1
-             (Link Data) Router Interface address: 20.1.5.5
+             (Link ID) Designated Router address: 10.186.5.1
+             (Link Data) Router Interface address: 10.186.5.5
               Number of TOS metrics: 0
                TOS 0 Metrics: 1
 
@@ -3168,34 +3168,34 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
           LS age: 1578
           Options: (No TOS-capability, DC)
           LS Type: Router Links
-          Link State ID: 66.66.66.66
-          Advertising Router: 66.66.66.66
+          Link State ID: 10.84.66.66
+          Advertising Router: 10.84.66.66
           LS Seq Number: 8000003c
           Checksum: 0x1282
           Length: 72
            Number of Links: 4
 
             Link connected to: a Stub Network
-             (Link ID) Network/subnet number: 66.66.66.66
+             (Link ID) Network/subnet number: 10.84.66.66
              (Link Data) Network Mask: 255.255.255.255
               Number of TOS metrics: 0
                TOS 0 Metrics: 1
 
             Link connected to: a Transit Network
-             (Link ID) Designated Router address: 20.6.7.6
-             (Link Data) Router Interface address: 20.6.7.6
+             (Link ID) Designated Router address: 10.166.7.6
+             (Link Data) Router Interface address: 10.166.7.6
               Number of TOS metrics: 0
                TOS 0 Metrics: 30
 
             Link connected to: a Transit Network
-             (Link ID) Designated Router address: 20.2.6.6
-             (Link Data) Router Interface address: 20.2.6.6
+             (Link ID) Designated Router address: 10.229.6.6
+             (Link Data) Router Interface address: 10.229.6.6
               Number of TOS metrics: 0
                TOS 0 Metrics: 1
 
             Link connected to: a Transit Network
-             (Link ID) Designated Router address: 20.5.6.6
-             (Link Data) Router Interface address: 20.5.6.6
+             (Link ID) Designated Router address: 10.115.6.6
+             (Link Data) Router Interface address: 10.115.6.6
               Number of TOS metrics: 0
                TOS 0 Metrics: 30
 
@@ -3204,28 +3204,28 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
           LS age: 1344
           Options: (No TOS-capability, DC)
           LS Type: Router Links
-          Link State ID: 77.77.77.77
-          Advertising Router: 77.77.77.77
+          Link State ID: 10.1.77.77
+          Advertising Router: 10.1.77.77
           LS Seq Number: 80000030
           Checksum: 0x1379
           Length: 60
            Number of Links: 3
 
             Link connected to: a Stub Network
-             (Link ID) Network/subnet number: 77.77.77.77
+             (Link ID) Network/subnet number: 10.1.77.77
              (Link Data) Network Mask: 255.255.255.255
               Number of TOS metrics: 0
                TOS 0 Metrics: 1
 
             Link connected to: a Transit Network
-             (Link ID) Designated Router address: 20.6.7.6
-             (Link Data) Router Interface address: 20.6.7.7
+             (Link ID) Designated Router address: 10.166.7.6
+             (Link Data) Router Interface address: 10.166.7.7
               Number of TOS metrics: 0
                TOS 0 Metrics: 30
 
             Link connected to: a Transit Network
-             (Link ID) Designated Router address: 20.3.7.7
-             (Link Data) Router Interface address: 20.3.7.7
+             (Link ID) Designated Router address: 10.19.7.7
+             (Link Data) Router Interface address: 10.19.7.7
               Number of TOS metrics: 0
                TOS 0 Metrics: 1
         '''}
@@ -3269,9 +3269,9 @@ class test_show_ospf_vrf_all_inclusive_database_external(unittest.TestCase):
                                                 {5: 
                                                     {'lsa_type': 5,
                                                     'lsas': 
-                                                        {'44.44.44.44 4.4.4.4': 
-                                                            {'adv_router': '4.4.4.4',
-                                                            'lsa_id': '44.44.44.44',
+                                                        {'10.94.44.44 10.64.4.4': 
+                                                            {'adv_router': '10.64.4.4',
+                                                            'lsa_id': '10.94.44.44',
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'external': 
@@ -3285,11 +3285,11 @@ class test_show_ospf_vrf_all_inclusive_database_external(unittest.TestCase):
                                                                                 'mt_id': 0,
                                                                                 'tos': 0}}}},
                                                                 'header': 
-                                                                    {'adv_router': '4.4.4.4',
+                                                                    {'adv_router': '10.64.4.4',
                                                                     'age': 608,
                                                                     'checksum': '0x7d61',
                                                                     'length': 36,
-                                                                    'lsa_id': '44.44.44.44',
+                                                                    'lsa_id': '10.94.44.44',
                                                                     'option': 'None',
                                                                     'option_desc': 'No TOS-capability, DC',
                                                                     'routing_bit_enable': True,
@@ -3301,7 +3301,7 @@ class test_show_ospf_vrf_all_inclusive_database_external(unittest.TestCase):
         Thu Nov  2 21:26:53.724 UTC
 
 
-                    OSPF Router with ID (3.3.3.3) (Process ID 1)
+                    OSPF Router with ID (10.36.3.3) (Process ID 1)
 
                         Type-5 AS External Link States
 
@@ -3309,8 +3309,8 @@ class test_show_ospf_vrf_all_inclusive_database_external(unittest.TestCase):
           LS age: 608
           Options: (No TOS-capability, DC)
           LS Type: AS External Link
-          Link State ID: 44.44.44.44 (External Network Number)
-          Advertising Router: 4.4.4.4
+          Link State ID: 10.94.44.44 (External Network Number)
+          Advertising Router: 10.64.4.4
           LS Seq Number: 80000002
           Checksum: 0x7d61
           Length: 36
@@ -3361,22 +3361,22 @@ class test_show_ospf_vrf_all_inclusive_database_network(unittest.TestCase):
                                                 {2: 
                                                     {'lsa_type': 2,
                                                     'lsas': 
-                                                        {'20.1.5.1 11.11.11.11':
-                                                            {'adv_router': '11.11.11.11',
-                                                            'lsa_id': '20.1.5.1',
+                                                        {'10.186.5.1 10.229.11.11':
+                                                            {'adv_router': '10.229.11.11',
+                                                            'lsa_id': '10.186.5.1',
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'network': 
                                                                         {'attached_routers': 
-                                                                            {'11.11.11.11': {},
-                                                                            '55.55.55.55': {}},
+                                                                            {'10.229.11.11': {},
+                                                                            '10.115.55.55': {}},
                                                                         'network_mask': '255.255.255.0'}},
                                                                 'header': 
-                                                                    {'adv_router': '11.11.11.11',
+                                                                    {'adv_router': '10.229.11.11',
                                                                     'age': 522,
                                                                     'checksum': '0xddd9',
                                                                     'length': 32,
-                                                                    'lsa_id': '20.1.5.1',
+                                                                    'lsa_id': '10.186.5.1',
                                                                     'option': 'None',
                                                                     'option_desc': 'No '
                                                                     'TOS-capability, '
@@ -3384,21 +3384,21 @@ class test_show_ospf_vrf_all_inclusive_database_network(unittest.TestCase):
                                                                     'routing_bit_enable': True,
                                                                     'seq_num': '80000033',
                                                                     'type': 2}}},
-                                                        '20.2.6.6 66.66.66.66': 
-                                                            {'adv_router': '66.66.66.66',
-                                                            'lsa_id': '20.2.6.6',
+                                                        '10.229.6.6 10.84.66.66': 
+                                                            {'adv_router': '10.84.66.66',
+                                                            'lsa_id': '10.229.6.6',
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'network': 
-                                                                        {'attached_routers': {'22.22.22.22': {},
-                                                                        '66.66.66.66': {}},
+                                                                        {'attached_routers': {'10.151.22.22': {},
+                                                                        '10.84.66.66': {}},
                                                                     'network_mask': '255.255.255.0'}},
                                                                 'header': 
-                                                                    {'adv_router': '66.66.66.66',
+                                                                    {'adv_router': '10.84.66.66',
                                                                     'age': 146,
                                                                     'checksum': '0x3f5f',
                                                                     'length': 32,
-                                                                    'lsa_id': '20.2.6.6',
+                                                                    'lsa_id': '10.229.6.6',
                                                                     'option': 'None',
                                                                     'option_desc': 'No '
                                                                     'TOS-capability, '
@@ -3406,22 +3406,22 @@ class test_show_ospf_vrf_all_inclusive_database_network(unittest.TestCase):
                                                                     'routing_bit_enable': True,
                                                                     'seq_num': '80000010',
                                                                     'type': 2}}},
-                                                        '20.3.7.7 77.77.77.77': 
-                                                            {'adv_router': '77.77.77.77',
-                                                            'lsa_id': '20.3.7.7',
+                                                        '10.19.7.7 10.1.77.77': 
+                                                            {'adv_router': '10.1.77.77',
+                                                            'lsa_id': '10.19.7.7',
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'network': 
                                                                         {'attached_routers': 
-                                                                            {'3.3.3.3': {},
-                                                                            '77.77.77.77': {}},
+                                                                            {'10.36.3.3': {},
+                                                                            '10.1.77.77': {}},
                                                                     'network_mask': '255.255.255.0'}},
                                                                 'header': 
-                                                                    {'adv_router': '77.77.77.77',
+                                                                    {'adv_router': '10.1.77.77',
                                                                     'age': 1903,
                                                                     'checksum': '0x5c19',
                                                                     'length': 32,
-                                                                    'lsa_id': '20.3.7.7',
+                                                                    'lsa_id': '10.19.7.7',
                                                                     'option': 'None',
                                                                     'option_desc': 'No '
                                                                     'TOS-capability, '
@@ -3429,22 +3429,22 @@ class test_show_ospf_vrf_all_inclusive_database_network(unittest.TestCase):
                                                                     'routing_bit_enable': True,
                                                                     'seq_num': '8000002a',
                                                                     'type': 2}}},
-                                                        '20.5.6.6 66.66.66.66': 
-                                                            {'adv_router': '66.66.66.66',
-                                                            'lsa_id': '20.5.6.6',
+                                                        '10.115.6.6 10.84.66.66': 
+                                                            {'adv_router': '10.84.66.66',
+                                                            'lsa_id': '10.115.6.6',
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'network': 
                                                                         {'attached_routers': 
-                                                                            {'55.55.55.55': {},
-                                                                            '66.66.66.66': {}},
+                                                                            {'10.115.55.55': {},
+                                                                            '10.84.66.66': {}},
                                                                         'network_mask': '255.255.255.0'}},
                                                                 'header': 
-                                                                    {'adv_router': '66.66.66.66',
+                                                                    {'adv_router': '10.84.66.66',
                                                                     'age': 1620,
                                                                     'checksum': '0x619c',
                                                                     'length': 32,
-                                                                    'lsa_id': '20.5.6.6',
+                                                                    'lsa_id': '10.115.6.6',
                                                                     'option': 'None',
                                                                     'option_desc': 'No '
                                                                     'TOS-capability, '
@@ -3452,22 +3452,22 @@ class test_show_ospf_vrf_all_inclusive_database_network(unittest.TestCase):
                                                                     'routing_bit_enable': True,
                                                                     'seq_num': '80000029',
                                                                     'type': 2}}},
-                                                        '20.6.7.6 66.66.66.66': 
-                                                            {'adv_router': '66.66.66.66',
-                                                            'lsa_id': '20.6.7.6',
+                                                        '10.166.7.6 10.84.66.66': 
+                                                            {'adv_router': '10.84.66.66',
+                                                            'lsa_id': '10.166.7.6',
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'network': 
                                                                         {'attached_routers': 
-                                                                            {'66.66.66.66': {},
-                                                                            '77.77.77.77': {}},
+                                                                            {'10.84.66.66': {},
+                                                                            '10.1.77.77': {}},
                                                                         'network_mask': '255.255.255.0'}},
                                                                 'header': 
-                                                                    {'adv_router': '66.66.66.66',
+                                                                    {'adv_router': '10.84.66.66',
                                                                     'age': 884,
                                                                     'checksum': '0x960b',
                                                                     'length': 32,
-                                                                    'lsa_id': '20.6.7.6',
+                                                                    'lsa_id': '10.166.7.6',
                                                                     'option': 'None',
                                                                     'option_desc': 'No '
                                                                     'TOS-capability, '
@@ -3487,18 +3487,18 @@ class test_show_ospf_vrf_all_inclusive_database_network(unittest.TestCase):
                                                 {2: 
                                                     {'lsa_type': 2,
                                                     'lsas': 
-                                                        {'10.1.2.1 1.1.1.1': 
-                                                            {'adv_router': '1.1.1.1',
+                                                        {'10.1.2.1 10.4.1.1': 
+                                                            {'adv_router': '10.4.1.1',
                                                             'lsa_id': '10.1.2.1',
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'network': 
                                                                         {'attached_routers': 
-                                                                            {'1.1.1.1': {},
-                                                                            '2.2.2.2': {}},
+                                                                            {'10.4.1.1': {},
+                                                                            '10.16.2.2': {}},
                                                                         'network_mask': '255.255.255.0'}},
                                                                 'header': 
-                                                                    {'adv_router': '1.1.1.1',
+                                                                    {'adv_router': '10.4.1.1',
                                                                     'age': 1844,
                                                                     'checksum': '0x3dd0',
                                                                     'length': 32,
@@ -3510,18 +3510,18 @@ class test_show_ospf_vrf_all_inclusive_database_network(unittest.TestCase):
                                                                     'routing_bit_enable': True,
                                                                     'seq_num': '8000000f',
                                                                     'type': 2}}},
-                                                        '10.1.4.4 4.4.4.4': 
-                                                            {'adv_router': '4.4.4.4',
+                                                        '10.1.4.4 10.64.4.4': 
+                                                            {'adv_router': '10.64.4.4',
                                                             'lsa_id': '10.1.4.4',
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'network': 
                                                                         {'attached_routers': 
-                                                                            {'1.1.1.1': {},
-                                                                            '4.4.4.4': {}},
+                                                                            {'10.4.1.1': {},
+                                                                            '10.64.4.4': {}},
                                                                     'network_mask': '255.255.255.0'}},
                                                                 'header': 
-                                                                    {'adv_router': '4.4.4.4',
+                                                                    {'adv_router': '10.64.4.4',
                                                                     'age': 546,
                                                                     'checksum': '0xa232',
                                                                     'length': 32,
@@ -3533,18 +3533,18 @@ class test_show_ospf_vrf_all_inclusive_database_network(unittest.TestCase):
                                                                     'routing_bit_enable': True,
                                                                     'seq_num': '8000002f',
                                                                     'type': 2}}},
-                                                        '10.2.3.3 3.3.3.3': 
-                                                            {'adv_router': '3.3.3.3',
+                                                        '10.2.3.3 10.36.3.3': 
+                                                            {'adv_router': '10.36.3.3',
                                                             'lsa_id': '10.2.3.3',
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'network': 
                                                                         {'attached_routers': 
-                                                                            {'2.2.2.2': {},
-                                                                            '3.3.3.3': {}},
+                                                                            {'10.16.2.2': {},
+                                                                            '10.36.3.3': {}},
                                                                         'network_mask': '255.255.255.0'}},
                                                                 'header': 
-                                                                    {'adv_router': '3.3.3.3',
+                                                                    {'adv_router': '10.36.3.3',
                                                                     'age': 1828,
                                                                     'checksum': '0x2acf',
                                                                     'length': 32,
@@ -3556,18 +3556,18 @@ class test_show_ospf_vrf_all_inclusive_database_network(unittest.TestCase):
                                                                     'routing_bit_enable': True,
                                                                     'seq_num': '8000000f',
                                                                     'type': 2}}},
-                                                        '10.2.4.4 4.4.4.4': 
-                                                            {'adv_router': '4.4.4.4',
+                                                        '10.2.4.4 10.64.4.4': 
+                                                            {'adv_router': '10.64.4.4',
                                                             'lsa_id': '10.2.4.4',
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'network': 
                                                                         {'attached_routers': 
-                                                                            {'2.2.2.2': {},
-                                                                            '4.4.4.4': {}},
+                                                                            {'10.16.2.2': {},
+                                                                            '10.64.4.4': {}},
                                                                     'network_mask': '255.255.255.0'}},
                                                                 'header': 
-                                                                    {'adv_router': '4.4.4.4',
+                                                                    {'adv_router': '10.64.4.4',
                                                                     'age': 1803,
                                                                     'checksum': '0x9e6',
                                                                     'length': 32,
@@ -3579,18 +3579,18 @@ class test_show_ospf_vrf_all_inclusive_database_network(unittest.TestCase):
                                                                     'routing_bit_enable': True,
                                                                     'seq_num': '8000000f',
                                                                     'type': 2}}},
-                                                        '10.3.4.4 4.4.4.4': 
-                                                            {'adv_router': '4.4.4.4',
+                                                        '10.3.4.4 10.64.4.4': 
+                                                            {'adv_router': '10.64.4.4',
                                                             'lsa_id': '10.3.4.4',
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'network': 
                                                                         {'attached_routers': 
-                                                                            {'3.3.3.3': {},
-                                                                            '4.4.4.4': {}},
+                                                                            {'10.36.3.3': {},
+                                                                            '10.64.4.4': {}},
                                                                         'network_mask': '255.255.255.0'}},
                                                                 'header': 
-                                                                    {'adv_router': '4.4.4.4',
+                                                                    {'adv_router': '10.64.4.4',
                                                                     'age': 52,
                                                                     'checksum': '0xeedb',
                                                                     'length': 32,
@@ -3607,7 +3607,7 @@ class test_show_ospf_vrf_all_inclusive_database_network(unittest.TestCase):
         P/0/0/CPU0:R3_ospf_xr#show ospf vrf all-inclusive database network 
         Thu Nov  2 21:25:51.748 UTC
 
-                    OSPF Router with ID (3.3.3.3) (Process ID 1)
+                    OSPF Router with ID (10.36.3.3) (Process ID 1)
 
                         Net Link States (Area 0)
 
@@ -3616,68 +3616,68 @@ class test_show_ospf_vrf_all_inclusive_database_network(unittest.TestCase):
           Options: (No TOS-capability, DC)
           LS Type: Network Links
           Link State ID: 10.1.2.1 (address of Designated Router)
-          Advertising Router: 1.1.1.1
+          Advertising Router: 10.4.1.1
           LS Seq Number: 8000000f
           Checksum: 0x3dd0
           Length: 32
           Network Mask: /24
-                Attached Router: 1.1.1.1
-                Attached Router: 2.2.2.2
+                Attached Router: 10.4.1.1
+                Attached Router: 10.16.2.2
 
           Routing Bit Set on this LSA
           LS age: 546
           Options: (No TOS-capability, DC)
           LS Type: Network Links
           Link State ID: 10.1.4.4 (address of Designated Router)
-          Advertising Router: 4.4.4.4
+          Advertising Router: 10.64.4.4
           LS Seq Number: 8000002f
           Checksum: 0xa232
           Length: 32
           Network Mask: /24
-                Attached Router: 4.4.4.4
-                Attached Router: 1.1.1.1
+                Attached Router: 10.64.4.4
+                Attached Router: 10.4.1.1
 
           Routing Bit Set on this LSA
           LS age: 1828
           Options: (No TOS-capability, DC)
           LS Type: Network Links
           Link State ID: 10.2.3.3 (address of Designated Router)
-          Advertising Router: 3.3.3.3
+          Advertising Router: 10.36.3.3
           LS Seq Number: 8000000f
           Checksum: 0x2acf
           Length: 32
           Network Mask: /24
-                Attached Router: 2.2.2.2
-                Attached Router: 3.3.3.3
+                Attached Router: 10.16.2.2
+                Attached Router: 10.36.3.3
 
           Routing Bit Set on this LSA
           LS age: 1803
           Options: (No TOS-capability, DC)
           LS Type: Network Links
           Link State ID: 10.2.4.4 (address of Designated Router)
-          Advertising Router: 4.4.4.4
+          Advertising Router: 10.64.4.4
           LS Seq Number: 8000000f
           Checksum: 0x9e6
           Length: 32
           Network Mask: /24
-                Attached Router: 4.4.4.4
-                Attached Router: 2.2.2.2
+                Attached Router: 10.64.4.4
+                Attached Router: 10.16.2.2
 
           Routing Bit Set on this LSA
           LS age: 52
           Options: (No TOS-capability, DC)
           LS Type: Network Links
           Link State ID: 10.3.4.4 (address of Designated Router)
-          Advertising Router: 4.4.4.4
+          Advertising Router: 10.64.4.4
           LS Seq Number: 8000002f
           Checksum: 0xeedb
           Length: 32
           Network Mask: /24
-                Attached Router: 4.4.4.4
-                Attached Router: 3.3.3.3
+                Attached Router: 10.64.4.4
+                Attached Router: 10.36.3.3
 
 
-                    OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
+                    OSPF Router with ID (10.36.3.3) (Process ID 1, VRF VRF1)
 
                         Net Link States (Area 1)
 
@@ -3685,66 +3685,66 @@ class test_show_ospf_vrf_all_inclusive_database_network(unittest.TestCase):
           LS age: 522
           Options: (No TOS-capability, DC)
           LS Type: Network Links
-          Link State ID: 20.1.5.1 (address of Designated Router)
-          Advertising Router: 11.11.11.11
+          Link State ID: 10.186.5.1 (address of Designated Router)
+          Advertising Router: 10.229.11.11
           LS Seq Number: 80000033
           Checksum: 0xddd9
           Length: 32
           Network Mask: /24
-                Attached Router: 11.11.11.11
-                Attached Router: 55.55.55.55
+                Attached Router: 10.229.11.11
+                Attached Router: 10.115.55.55
 
           Routing Bit Set on this LSA
           LS age: 146
           Options: (No TOS-capability, DC)
           LS Type: Network Links
-          Link State ID: 20.2.6.6 (address of Designated Router)
-          Advertising Router: 66.66.66.66
+          Link State ID: 10.229.6.6 (address of Designated Router)
+          Advertising Router: 10.84.66.66
           LS Seq Number: 80000010
           Checksum: 0x3f5f
           Length: 32
           Network Mask: /24
-                Attached Router: 66.66.66.66
-                Attached Router: 22.22.22.22
+                Attached Router: 10.84.66.66
+                Attached Router: 10.151.22.22
 
           Routing Bit Set on this LSA
           LS age: 1903
           Options: (No TOS-capability, DC)
           LS Type: Network Links
-          Link State ID: 20.3.7.7 (address of Designated Router)
-          Advertising Router: 77.77.77.77
+          Link State ID: 10.19.7.7 (address of Designated Router)
+          Advertising Router: 10.1.77.77
           LS Seq Number: 8000002a
           Checksum: 0x5c19
           Length: 32
           Network Mask: /24
-                Attached Router: 77.77.77.77
-                Attached Router: 3.3.3.3
+                Attached Router: 10.1.77.77
+                Attached Router: 10.36.3.3
 
           Routing Bit Set on this LSA
           LS age: 1620
           Options: (No TOS-capability, DC)
           LS Type: Network Links
-          Link State ID: 20.5.6.6 (address of Designated Router)
-          Advertising Router: 66.66.66.66
+          Link State ID: 10.115.6.6 (address of Designated Router)
+          Advertising Router: 10.84.66.66
           LS Seq Number: 80000029
           Checksum: 0x619c
           Length: 32
           Network Mask: /24
-                Attached Router: 66.66.66.66
-                Attached Router: 55.55.55.55
+                Attached Router: 10.84.66.66
+                Attached Router: 10.115.55.55
 
           Routing Bit Set on this LSA
           LS age: 884
           Options: (No TOS-capability, DC)
           LS Type: Network Links
-          Link State ID: 20.6.7.6 (address of Designated Router)
-          Advertising Router: 66.66.66.66
+          Link State ID: 10.166.7.6 (address of Designated Router)
+          Advertising Router: 10.84.66.66
           LS Seq Number: 8000002b
           Checksum: 0x960b
           Length: 32
           Network Mask: /24
-                Attached Router: 66.66.66.66
-                Attached Router: 77.77.77.77
+                Attached Router: 10.84.66.66
+                Attached Router: 10.1.77.77
         '''}
 
     def test_show_ospf_vrf_all_inclusive_database_network_full(self):
@@ -3786,9 +3786,9 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
                                                 {3: 
                                                     {'lsa_type': 3,
                                                     'lsas': 
-                                                        {'20.1.3.0 2.2.2.2': 
-                                                            {'adv_router': '2.2.2.2',
-                                                            'lsa_id': '20.1.3.0',
+                                                        {'10.186.3.0 10.16.2.2': 
+                                                            {'adv_router': '10.16.2.2',
+                                                            'lsa_id': '10.186.3.0',
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'summary': 
@@ -3799,20 +3799,20 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
                                                                                 'mt_id': 0,
                                                                                 'tos': 0}}}},
                                                                 'header': 
-                                                                    {'adv_router': '2.2.2.2',
+                                                                    {'adv_router': '10.16.2.2',
                                                                     'age': 520,
                                                                     'checksum': '0xaa4a',
                                                                     'length': 28,
-                                                                    'lsa_id': '20.1.3.0',
+                                                                    'lsa_id': '10.186.3.0',
                                                                     'option': 'None',
                                                                     'option_desc': 'No '
                                                                     'TOS-capability, '
                                                                     'DC',
                                                                     'seq_num': '80000001',
                                                                     'type': 3}}},
-                                                        '20.2.3.0 2.2.2.2': 
-                                                            {'adv_router': '2.2.2.2',
-                                                            'lsa_id': '20.2.3.0',
+                                                        '10.229.3.0 10.16.2.2': 
+                                                            {'adv_router': '10.16.2.2',
+                                                            'lsa_id': '10.229.3.0',
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'summary': 
@@ -3823,20 +3823,20 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
                                                                                 'mt_id': 0,
                                                                                 'tos': 0}}}},
                                                                 'header': 
-                                                                    {'adv_router': '2.2.2.2',
+                                                                    {'adv_router': '10.16.2.2',
                                                                     'age': 519,
                                                                     'checksum': '0xd0e',
                                                                     'length': 28,
-                                                                    'lsa_id': '20.2.3.0',
+                                                                    'lsa_id': '10.229.3.0',
                                                                     'option': 'None',
                                                                     'option_desc': 'No '
                                                                     'TOS-capability, '
                                                                     'DC',
                                                                     'seq_num': '80000002',
                                                                     'type': 3}}},
-                                                        '20.2.4.0 2.2.2.2': 
-                                                            {'adv_router': '2.2.2.2',
-                                                            'lsa_id': '20.2.4.0',
+                                                        '10.229.4.0 10.16.2.2': 
+                                                            {'adv_router': '10.16.2.2',
+                                                            'lsa_id': '10.229.4.0',
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'summary': 
@@ -3847,20 +3847,20 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
                                                                                 'mt_id': 0,
                                                                                 'tos': 0}}}},
                                                                 'header': 
-                                                                    {'adv_router': '2.2.2.2',
+                                                                    {'adv_router': '10.16.2.2',
                                                                     'age': 297,
                                                                     'checksum': '0x218',
                                                                     'length': 28,
-                                                                    'lsa_id': '20.2.4.0',
+                                                                    'lsa_id': '10.229.4.0',
                                                                     'option': 'None',
                                                                     'option_desc': 'No '
                                                                     'TOS-capability, '
                                                                     'DC',
                                                                     'seq_num': '80000002',
                                                                     'type': 3}}},
-                                                        '20.3.4.0 2.2.2.2': 
-                                                            {'adv_router': '2.2.2.2',
-                                                            'lsa_id': '20.3.4.0',
+                                                        '10.19.4.0 10.16.2.2': 
+                                                            {'adv_router': '10.16.2.2',
+                                                            'lsa_id': '10.19.4.0',
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'summary': 
@@ -3871,20 +3871,20 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
                                                                                 'mt_id': 0,
                                                                                 'tos': 0}}}},
                                                                 'header': 
-                                                                    {'adv_router': '2.2.2.2',
+                                                                    {'adv_router': '10.16.2.2',
                                                                     'age': 294,
                                                                     'checksum': '0xfd1a',
                                                                     'length': 28,
-                                                                    'lsa_id': '20.3.4.0',
+                                                                    'lsa_id': '10.19.4.0',
                                                                     'option': 'None',
                                                                     'option_desc': 'No '
                                                                     'TOS-capability, '
                                                                     'DC',
                                                                     'seq_num': '80000002',
                                                                     'type': 3}}},
-                                                        '4.4.4.4 2.2.2.2': 
-                                                            {'adv_router': '2.2.2.2',
-                                                            'lsa_id': '4.4.4.4',
+                                                        '10.64.4.4 10.16.2.2': 
+                                                            {'adv_router': '10.16.2.2',
+                                                            'lsa_id': '10.64.4.4',
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'summary': 
@@ -3895,11 +3895,11 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
                                                                                 'mt_id': 0,
                                                                                 'tos': 0}}}},
                                                                 'header': 
-                                                                    {'adv_router': '2.2.2.2',
+                                                                    {'adv_router': '10.16.2.2',
                                                                     'age': 295,
                                                                     'checksum': '0x9c87',
                                                                     'length': 28,
-                                                                    'lsa_id': '4.4.4.4',
+                                                                    'lsa_id': '10.64.4.4',
                                                                     'option': 'None',
                                                                     'option_desc': 'No '
                                                                     'TOS-capability, '
@@ -3912,8 +3912,8 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
                                                 {3: 
                                                     {'lsa_type': 3,
                                                     'lsas': 
-                                                        {'10.1.2.0 2.2.2.2': 
-                                                            {'adv_router': '2.2.2.2',
+                                                        {'10.1.2.0 10.16.2.2': 
+                                                            {'adv_router': '10.16.2.2',
                                                             'lsa_id': '10.1.2.0',
                                                             'ospfv2': 
                                                                 {'body': 
@@ -3925,7 +3925,7 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
                                                                                 'mt_id': 0,
                                                                                 'tos': 0}}}},
                                                                 'header': 
-                                                                    {'adv_router': '2.2.2.2',
+                                                                    {'adv_router': '10.16.2.2',
                                                                      'age': 675,
                                                                      'checksum': '0xfc54',
                                                                      'length': 28,
@@ -3936,8 +3936,8 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
                                                                                     'DC',
                                                                      'seq_num': '80000001',
                                                                      'type': 3}}},
-                                                        '10.1.2.0 3.3.3.3': 
-                                                            {'adv_router': '3.3.3.3',
+                                                        '10.1.2.0 10.36.3.3': 
+                                                            {'adv_router': '10.36.3.3',
                                                             'lsa_id': '10.1.2.0',
                                                             'ospfv2': 
                                                                 {'body': 
@@ -3949,7 +3949,7 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
                                                                                 'mt_id': 0,
                                                                                 'tos': 0}}}},
                                                                 'header': 
-                                                                    {'adv_router': '3.3.3.3',
+                                                                    {'adv_router': '10.36.3.3',
                                                                     'age': 521,
                                                                     'checksum': '0x5655',
                                                                     'length': 28,
@@ -3961,8 +3961,8 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
                                                                     'DC',
                                                                     'seq_num': '80000002',
                                                                     'type': 3}}},
-                                                        '10.1.3.0 3.3.3.3': 
-                                                            {'adv_router': '3.3.3.3',
+                                                        '10.1.3.0 10.36.3.3': 
+                                                            {'adv_router': '10.36.3.3',
                                                             'lsa_id': '10.1.3.0',
                                                             'ospfv2': 
                                                                 {'body': 
@@ -3974,7 +3974,7 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
                                                                                 'mt_id': 0,
                                                                                 'tos': 0}}}},
                                                                 'header': 
-                                                                    {'adv_router': '3.3.3.3',
+                                                                    {'adv_router': '10.36.3.3',
                                                                     'age': 531,
                                                                     'checksum': '0xf029',
                                                                     'length': 28,
@@ -3987,8 +3987,8 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
                                                                     'routing_bit_enable': True,
                                                                     'seq_num': '80000002',
                                                                     'type': 3}}},
-                                                        '10.2.3.0 2.2.2.2': 
-                                                            {'adv_router': '2.2.2.2',
+                                                        '10.2.3.0 10.16.2.2': 
+                                                            {'adv_router': '10.16.2.2',
                                                             'lsa_id': '10.2.3.0',
                                                             'ospfv2': 
                                                                 {'body': 
@@ -4000,7 +4000,7 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
                                                                                 'mt_id': 0,
                                                                                 'tos': 0}}}},
                                                                 'header': 
-                                                                    {'adv_router': '2.2.2.2',
+                                                                    {'adv_router': '10.16.2.2',
                                                                     'age': 675,
                                                                     'checksum': '0x4601',
                                                                     'length': 28,
@@ -4011,8 +4011,8 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
                                                                     'DC',
                                                                     'seq_num': '80000001',
                                                                     'type': 3}}},
-                                                        '10.2.3.0 3.3.3.3': 
-                                                            {'adv_router': '3.3.3.3',
+                                                        '10.2.3.0 10.36.3.3': 
+                                                            {'adv_router': '10.36.3.3',
                                                             'lsa_id': '10.2.3.0',
                                                             'ospfv2': 
                                                                 {'body': 
@@ -4024,7 +4024,7 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
                                                                                 'mt_id': 0,
                                                                                 'tos': 0}}}},
                                                                 'header': 
-                                                                    {'adv_router': '3.3.3.3',
+                                                                    {'adv_router': '10.36.3.3',
                                                                     'age': 287,
                                                                     'checksum': '0x96a2',
                                                                     'length': 28,
@@ -4036,9 +4036,9 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
                                                                     'DC',
                                                                     'seq_num': '80000003',
                                                                     'type': 3}}},
-                                                        '2.2.2.2 2.2.2.2': 
-                                                            {'adv_router': '2.2.2.2',
-                                                            'lsa_id': '2.2.2.2',
+                                                        '10.16.2.2 10.16.2.2': 
+                                                            {'adv_router': '10.16.2.2',
+                                                            'lsa_id': '10.16.2.2',
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'summary': 
@@ -4049,20 +4049,20 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
                                                                                 'mt_id': 0,
                                                                                 'tos': 0}}}},
                                                                 'header': 
-                                                                    {'adv_router': '2.2.2.2',
+                                                                    {'adv_router': '10.16.2.2',
                                                                     'age': 676,
                                                                     'checksum': '0xfa31',
                                                                     'length': 28,
-                                                                    'lsa_id': '2.2.2.2',
+                                                                    'lsa_id': '10.16.2.2',
                                                                     'option': 'None',
                                                                     'option_desc': 'No '
                                                                     'TOS-capability, '
                                                                     'DC',
                                                                     'seq_num': '80000001',
                                                                     'type': 3}}},
-                                                        '3.3.3.3 3.3.3.3': 
-                                                            {'adv_router': '3.3.3.3',
-                                                            'lsa_id': '3.3.3.3',
+                                                        '10.36.3.3 10.36.3.3': 
+                                                            {'adv_router': '10.36.3.3',
+                                                            'lsa_id': '10.36.3.3',
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'summary': 
@@ -4073,11 +4073,11 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
                                                                                 'mt_id': 0,
                                                                                 'tos': 0}}}},
                                                                 'header': 
-                                                                    {'adv_router': '3.3.3.3',
+                                                                    {'adv_router': '10.36.3.3',
                                                                     'age': 531,
                                                                     'checksum': '0x8eb4',
                                                                     'length': 28,
-                                                                    'lsa_id': '3.3.3.3',
+                                                                    'lsa_id': '10.36.3.3',
                                                                     'option': 'None',
                                                                     'option_desc': 'No '
                                                                     'TOS-capability, '
@@ -4086,9 +4086,9 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
                                                                     'routing_bit_enable': True,
                                                                     'seq_num': '80000002',
                                                                     'type': 3}}},
-                                                        '44.44.44.44 4.4.4.4': 
-                                                            {'adv_router': '4.4.4.4',
-                                                            'lsa_id': '44.44.44.44',
+                                                        '10.94.44.44 10.64.4.4': 
+                                                            {'adv_router': '10.64.4.4',
+                                                            'lsa_id': '10.94.44.44',
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'summary': 
@@ -4099,11 +4099,11 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
                                                                                 'mt_id': 0,
                                                                                 'tos': 0}}}},
                                                                 'header': 
-                                                                    {'adv_router': '4.4.4.4',
+                                                                    {'adv_router': '10.64.4.4',
                                                                     'age': 291,
                                                                     'checksum': '0x2b50',
                                                                     'length': 28,
-                                                                    'lsa_id': '44.44.44.44',
+                                                                    'lsa_id': '10.94.44.44',
                                                                     'option': 'None',
                                                                     'option_desc': 'No '
                                                                     'TOS-capability, '
@@ -4117,15 +4117,15 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
         Fri Nov  3 01:24:47.719 UTC
 
 
-                    OSPF Router with ID (2.2.2.2) (Process ID 1)
+                    OSPF Router with ID (10.16.2.2) (Process ID 1)
 
                         Summary Net Link States (Area 0.0.0.0)
 
           LS age: 295
           Options: (No TOS-capability, DC)
           LS Type: Summary Links (Network)
-          Link State ID: 4.4.4.4 (Summary Network Number)
-          Advertising Router: 2.2.2.2
+          Link State ID: 10.64.4.4 (Summary Network Number)
+          Advertising Router: 10.16.2.2
           LS Seq Number: 80000001
           Checksum: 0x9c87
           Length: 28
@@ -4135,8 +4135,8 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
           LS age: 520
           Options: (No TOS-capability, DC)
           LS Type: Summary Links (Network)
-          Link State ID: 20.1.3.0 (Summary Network Number)
-          Advertising Router: 2.2.2.2
+          Link State ID: 10.186.3.0 (Summary Network Number)
+          Advertising Router: 10.16.2.2
           LS Seq Number: 80000001
           Checksum: 0xaa4a
           Length: 28
@@ -4146,8 +4146,8 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
           LS age: 519
           Options: (No TOS-capability, DC)
           LS Type: Summary Links (Network)
-          Link State ID: 20.2.3.0 (Summary Network Number)
-          Advertising Router: 2.2.2.2
+          Link State ID: 10.229.3.0 (Summary Network Number)
+          Advertising Router: 10.16.2.2
           LS Seq Number: 80000002
           Checksum: 0xd0e
           Length: 28
@@ -4157,8 +4157,8 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
           LS age: 297
           Options: (No TOS-capability, DC)
           LS Type: Summary Links (Network)
-          Link State ID: 20.2.4.0 (Summary Network Number)
-          Advertising Router: 2.2.2.2
+          Link State ID: 10.229.4.0 (Summary Network Number)
+          Advertising Router: 10.16.2.2
           LS Seq Number: 80000002
           Checksum: 0x218
           Length: 28
@@ -4168,8 +4168,8 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
           LS age: 294
           Options: (No TOS-capability, DC)
           LS Type: Summary Links (Network)
-          Link State ID: 20.3.4.0 (Summary Network Number)
-          Advertising Router: 2.2.2.2
+          Link State ID: 10.19.4.0 (Summary Network Number)
+          Advertising Router: 10.16.2.2
           LS Seq Number: 80000002
           Checksum: 0xfd1a
           Length: 28
@@ -4182,8 +4182,8 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
           LS age: 676
           Options: (No TOS-capability, DC)
           LS Type: Summary Links (Network)
-          Link State ID: 2.2.2.2 (Summary Network Number)
-          Advertising Router: 2.2.2.2
+          Link State ID: 10.16.2.2 (Summary Network Number)
+          Advertising Router: 10.16.2.2
           LS Seq Number: 80000001
           Checksum: 0xfa31
           Length: 28
@@ -4194,8 +4194,8 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
           LS age: 531
           Options: (No TOS-capability, No DC)
           LS Type: Summary Links (Network)
-          Link State ID: 3.3.3.3 (Summary Network Number)
-          Advertising Router: 3.3.3.3
+          Link State ID: 10.36.3.3 (Summary Network Number)
+          Advertising Router: 10.36.3.3
           LS Seq Number: 80000002
           Checksum: 0x8eb4
           Length: 28
@@ -4206,7 +4206,7 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
           Options: (No TOS-capability, DC)
           LS Type: Summary Links (Network)
           Link State ID: 10.1.2.0 (Summary Network Number)
-          Advertising Router: 2.2.2.2
+          Advertising Router: 10.16.2.2
           LS Seq Number: 80000001
           Checksum: 0xfc54
           Length: 28
@@ -4217,7 +4217,7 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
           Options: (No TOS-capability, No DC)
           LS Type: Summary Links (Network)
           Link State ID: 10.1.2.0 (Summary Network Number)
-          Advertising Router: 3.3.3.3
+          Advertising Router: 10.36.3.3
           LS Seq Number: 80000002
           Checksum: 0x5655
           Length: 28
@@ -4229,7 +4229,7 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
           Options: (No TOS-capability, No DC)
           LS Type: Summary Links (Network)
           Link State ID: 10.1.3.0 (Summary Network Number)
-          Advertising Router: 3.3.3.3
+          Advertising Router: 10.36.3.3
           LS Seq Number: 80000002
           Checksum: 0xf029
           Length: 28
@@ -4240,7 +4240,7 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
           Options: (No TOS-capability, DC)
           LS Type: Summary Links (Network)
           Link State ID: 10.2.3.0 (Summary Network Number)
-          Advertising Router: 2.2.2.2
+          Advertising Router: 10.16.2.2
           LS Seq Number: 80000001
           Checksum: 0x4601
           Length: 28
@@ -4251,7 +4251,7 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
           Options: (No TOS-capability, No DC)
           LS Type: Summary Links (Network)
           Link State ID: 10.2.3.0 (Summary Network Number)
-          Advertising Router: 3.3.3.3
+          Advertising Router: 10.36.3.3
           LS Seq Number: 80000003
           Checksum: 0x96a2
           Length: 28
@@ -4262,8 +4262,8 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
           LS age: 291
           Options: (No TOS-capability, DC)
           LS Type: Summary Links (Network)
-          Link State ID: 44.44.44.44 (Summary Network Number)
-          Advertising Router: 4.4.4.4
+          Link State ID: 10.94.44.44 (Summary Network Number)
+          Advertising Router: 10.64.4.4
           LS Seq Number: 80000001
           Checksum: 0x2b50
           Length: 28
@@ -4311,19 +4311,19 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
                                             {10: 
                                                 {'lsa_type': 10,
                                                 'lsas': 
-                                                    {'1.0.0.0 1.1.1.1': 
-                                                        {'adv_router': '1.1.1.1',
-                                                        'lsa_id': '1.0.0.0',
+                                                    {'10.1.0.0 10.4.1.1': 
+                                                        {'adv_router': '10.4.1.1',
+                                                        'lsa_id': '10.1.0.0',
                                                         'ospfv2': 
                                                             {'body': 
                                                                 {'opaque': {}},
                                                             'header': 
-                                                                {'adv_router': '1.1.1.1',
+                                                                {'adv_router': '10.4.1.1',
                                                                 'age': 1427,
                                                                 'checksum': '0x56d2',
                                                                 'length': 28,
-                                                                'lsa_id': '1.0.0.0',
-                                                                'mpls_te_router_id': '1.1.1.1',
+                                                                'lsa_id': '10.1.0.0',
+                                                                'mpls_te_router_id': '10.4.1.1',
                                                                 'opaque_id': 0,
                                                                 'opaque_type': 1,
                                                                 'option': 'None',
@@ -4332,19 +4332,19 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
                                                                 'DC',
                                                                 'seq_num': '80000002',
                                                                 'type': 10}}},
-                                                    '1.0.0.0 2.2.2.2': 
-                                                        {'adv_router': '2.2.2.2',
-                                                        'lsa_id': '1.0.0.0',
+                                                    '10.1.0.0 10.16.2.2': 
+                                                        {'adv_router': '10.16.2.2',
+                                                        'lsa_id': '10.1.0.0',
                                                         'ospfv2': 
                                                             {'body': 
                                                                 {'opaque': {}},
                                                             'header': 
-                                                                {'adv_router': '2.2.2.2',
+                                                                {'adv_router': '10.16.2.2',
                                                                 'age': 653,
                                                                 'checksum': '0x1c22',
                                                                 'length': 28,
-                                                                'lsa_id': '1.0.0.0',
-                                                                'mpls_te_router_id': '2.2.2.2',
+                                                                'lsa_id': '10.1.0.0',
+                                                                'mpls_te_router_id': '10.16.2.2',
                                                                 'opaque_id': 0,
                                                                 'opaque_type': 1,
                                                                 'option': 'None',
@@ -4354,19 +4354,19 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
                                                                 'DC',
                                                                 'seq_num': '80000003',
                                                                 'type': 10}}},
-                                                    '1.0.0.0 3.3.3.3': 
-                                                        {'adv_router': '3.3.3.3',
-                                                        'lsa_id': '1.0.0.0',
+                                                    '10.1.0.0 10.36.3.3': 
+                                                        {'adv_router': '10.36.3.3',
+                                                        'lsa_id': '10.1.0.0',
                                                         'ospfv2': 
                                                             {'body': 
                                                                 {'opaque': {}},
                                                             'header': 
-                                                                {'adv_router': '3.3.3.3',
+                                                                {'adv_router': '10.36.3.3',
                                                                 'age': 1175,
                                                                 'checksum': '0x5eba',
                                                                 'length': 28,
-                                                                'lsa_id': '1.0.0.0',
-                                                                'mpls_te_router_id': '3.3.3.3',
+                                                                'lsa_id': '10.1.0.0',
+                                                                'mpls_te_router_id': '10.36.3.3',
                                                                 'opaque_id': 0,
                                                                 'opaque_type': 1,
                                                                 'option': 'None',
@@ -4375,9 +4375,9 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
                                                                 'DC',
                                                                 'seq_num': '80000002',
                                                                 'type': 10}}},
-                                                    '1.0.0.1 1.1.1.1': 
-                                                        {'adv_router': '1.1.1.1',
-                                                        'lsa_id': '1.0.0.1',
+                                                    '10.1.0.1 10.4.1.1': 
+                                                        {'adv_router': '10.4.1.1',
+                                                        'lsa_id': '10.1.0.1',
                                                         'ospfv2': 
                                                             {'body': 
                                                                 {'opaque': 
@@ -4422,11 +4422,11 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
                                                                                     {'priority': 7,
                                                                                     'unreserved_bandwidth': 93750000}}}}}},
                                                             'header': 
-                                                                {'adv_router': '1.1.1.1',
+                                                                {'adv_router': '10.4.1.1',
                                                                 'age': 1427,
                                                                 'checksum': '0x6586',
                                                                 'length': 124,
-                                                                'lsa_id': '1.0.0.1',
+                                                                'lsa_id': '10.1.0.1',
                                                                 'opaque_id': 1,
                                                                 'opaque_type': 1,
                                                                 'option': 'None',
@@ -4435,9 +4435,9 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
                                                                 'DC',
                                                                 'seq_num': '80000002',
                                                                 'type': 10}}},
-                                                    '1.0.0.2 1.1.1.1': 
-                                                        {'adv_router': '1.1.1.1',
-                                                        'lsa_id': '1.0.0.2',
+                                                    '10.1.0.2 10.4.1.1': 
+                                                        {'adv_router': '10.4.1.1',
+                                                        'lsa_id': '10.1.0.2',
                                                         'ospfv2': 
                                                             {'body': 
                                                                 {'opaque': 
@@ -4482,11 +4482,11 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
                                                                                     {'priority': 7,
                                                                                     'unreserved_bandwidth': 93750000}}}}}},
                                                             'header': 
-                                                                {'adv_router': '1.1.1.1',
+                                                                {'adv_router': '10.4.1.1',
                                                                 'age': 1427,
                                                                 'checksum': '0xb43d',
                                                                 'length': 124,
-                                                                'lsa_id': '1.0.0.2',
+                                                                'lsa_id': '10.1.0.2',
                                                                 'opaque_id': 2,
                                                                 'opaque_type': 1,
                                                                 'option': 'None',
@@ -4495,9 +4495,9 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
                                                                 'DC',
                                                                 'seq_num': '80000002',
                                                                 'type': 10}}},
-                                                    '1.0.0.37 2.2.2.2': 
-                                                        {'adv_router': '2.2.2.2',
-                                                        'lsa_id': '1.0.0.37',
+                                                    '10.1.0.37 10.16.2.2': 
+                                                        {'adv_router': '10.16.2.2',
+                                                        'lsa_id': '10.1.0.37',
                                                         'ospfv2': 
                                                             {'body': 
                                                                 {'opaque': 
@@ -4541,11 +4541,11 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
                                                                                     {'priority': 7,
                                                                                     'unreserved_bandwidth': 93750000}}}}}},
                                                             'header': 
-                                                                {'adv_router': '2.2.2.2',
+                                                                {'adv_router': '10.16.2.2',
                                                                 'age': 242,
                                                                 'checksum': '0xe492',
                                                                 'length': 116,
-                                                                'lsa_id': '1.0.0.37',
+                                                                'lsa_id': '10.1.0.37',
                                                                 'opaque_id': 37,
                                                                 'opaque_type': 1,
                                                                 'option': 'None',
@@ -4555,9 +4555,9 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
                                                                 'DC',
                                                                 'seq_num': '80000004',
                                                                 'type': 10}}},
-                                                    '1.0.0.38 2.2.2.2': 
-                                                        {'adv_router': '2.2.2.2',
-                                                        'lsa_id': '1.0.0.38',
+                                                    '10.1.0.38 10.16.2.2': 
+                                                        {'adv_router': '10.16.2.2',
+                                                        'lsa_id': '10.1.0.38',
                                                         'ospfv2': 
                                                             {'body': 
                                                                 {'opaque': 
@@ -4601,11 +4601,11 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
                                                                                     {'priority': 7,
                                                                                     'unreserved_bandwidth': 93750000}}}}}},
                                                             'header': 
-                                                                {'adv_router': '2.2.2.2',
+                                                                {'adv_router': '10.16.2.2',
                                                                 'age': 233,
                                                                 'checksum': '0x2350',
                                                                 'length': 116,
-                                                                'lsa_id': '1.0.0.38',
+                                                                'lsa_id': '10.1.0.38',
                                                                 'opaque_id': 38,
                                                                 'opaque_type': 1,
                                                                 'option': 'None',
@@ -4615,9 +4615,9 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
                                                                 'DC',
                                                                 'seq_num': '80000004',
                                                                 'type': 10}}},
-                                                    '1.0.0.39 2.2.2.2': 
-                                                        {'adv_router': '2.2.2.2',
-                                                        'lsa_id': '1.0.0.39',
+                                                    '10.1.0.39 10.16.2.2': 
+                                                        {'adv_router': '10.16.2.2',
+                                                        'lsa_id': '10.1.0.39',
                                                         'ospfv2': 
                                                             {'body': 
                                                                 {'opaque': 
@@ -4661,11 +4661,11 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
                                                                                     {'priority': 7,
                                                                                     'unreserved_bandwidth': 93750000}}}}}},
                                                             'header': 
-                                                                {'adv_router': '2.2.2.2',
+                                                                {'adv_router': '10.16.2.2',
                                                                 'age': 232,
                                                                 'checksum': '0x4239',
                                                                 'length': 116,
-                                                                'lsa_id': '1.0.0.39',
+                                                                'lsa_id': '10.1.0.39',
                                                                 'opaque_id': 39,
                                                                 'opaque_type': 1,
                                                                 'option': 'None',
@@ -4675,9 +4675,9 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
                                                                 'DC',
                                                                 'seq_num': '80000004',
                                                                 'type': 10}}},
-                                                    '1.0.0.4 3.3.3.3': 
-                                                        {'adv_router': '3.3.3.3',
-                                                        'lsa_id': '1.0.0.4',
+                                                    '10.1.0.4 10.36.3.3': 
+                                                        {'adv_router': '10.36.3.3',
+                                                        'lsa_id': '10.1.0.4',
                                                         'ospfv2': 
                                                             {'body': 
                                                                 {'opaque': 
@@ -4733,11 +4733,11 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
                                                                                     {'priority': 7,
                                                                                     'unreserved_bandwidth': 93750000}}}}}},
                                                             'header': 
-                                                                {'adv_router': '3.3.3.3',
+                                                                {'adv_router': '10.36.3.3',
                                                                 'age': 1175,
                                                                 'checksum': '0x915d',
                                                                 'length': 160,
-                                                                'lsa_id': '1.0.0.4',
+                                                                'lsa_id': '10.1.0.4',
                                                                 'opaque_id': 4,
                                                                 'opaque_type': 1,
                                                                 'option': 'None',
@@ -4746,9 +4746,9 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
                                                                 'DC',
                                                                 'seq_num': '80000002',
                                                                 'type': 10}}},
-                                                    '1.0.0.6 3.3.3.3': 
-                                                        {'adv_router': '3.3.3.3',
-                                                        'lsa_id': '1.0.0.6',
+                                                    '10.1.0.6 10.36.3.3': 
+                                                        {'adv_router': '10.36.3.3',
+                                                        'lsa_id': '10.1.0.6',
                                                         'ospfv2': 
                                                             {'body': 
                                                                 {'opaque': 
@@ -4804,11 +4804,11 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
                                                                                     {'priority': 7,
                                                                                     'unreserved_bandwidth': 93750000}}}}}},
                                                             'header': 
-                                                                {'adv_router': '3.3.3.3',
+                                                                {'adv_router': '10.36.3.3',
                                                                 'age': 1175,
                                                                 'checksum': '0x5ec',
                                                                 'length': 160,
-                                                                'lsa_id': '1.0.0.6',
+                                                                'lsa_id': '10.1.0.6',
                                                                 'opaque_id': 6,
                                                                 'opaque_type': 1,
                                                                 'option': 'None',
@@ -4822,62 +4822,62 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
         RP/0/0/CPU0:R3_ospf_xr#show ospf vrf all-inclusive database opaque-area 
         Thu Nov  2 21:27:17.362 UTC
 
-                    OSPF Router with ID (3.3.3.3) (Process ID 1)
+                    OSPF Router with ID (10.36.3.3) (Process ID 1)
 
                         Type-10 Opaque Link Area Link States (Area 0)
 
           LS age: 1427
           Options: (No TOS-capability, DC)
           LS Type: Opaque Area Link
-          Link State ID: 1.0.0.0
+          Link State ID: 10.1.0.0
           Opaque Type: 1
           Opaque ID: 0
-          Advertising Router: 1.1.1.1
+          Advertising Router: 10.4.1.1
           LS Seq Number: 80000002
           Checksum: 0x56d2
           Length: 28
 
-            MPLS TE router ID : 1.1.1.1
+            MPLS TE router ID : 10.4.1.1
 
             Number of Links : 0
 
           LS age: 653
           Options: (No TOS-capability, No DC)
           LS Type: Opaque Area Link
-          Link State ID: 1.0.0.0
+          Link State ID: 10.1.0.0
           Opaque Type: 1
           Opaque ID: 0
-          Advertising Router: 2.2.2.2
+          Advertising Router: 10.16.2.2
           LS Seq Number: 80000003
           Checksum: 0x1c22
           Length: 28
 
-            MPLS TE router ID : 2.2.2.2
+            MPLS TE router ID : 10.16.2.2
 
             Number of Links : 0
 
           LS age: 1175
           Options: (No TOS-capability, DC)
           LS Type: Opaque Area Link
-          Link State ID: 1.0.0.0
+          Link State ID: 10.1.0.0
           Opaque Type: 1
           Opaque ID: 0
-          Advertising Router: 3.3.3.3
+          Advertising Router: 10.36.3.3
           LS Seq Number: 80000002
           Checksum: 0x5eba
           Length: 28
 
-            MPLS TE router ID : 3.3.3.3
+            MPLS TE router ID : 10.36.3.3
 
             Number of Links : 0
 
           LS age: 1427
           Options: (No TOS-capability, DC)
           LS Type: Opaque Area Link
-          Link State ID: 1.0.0.1
+          Link State ID: 10.1.0.1
           Opaque Type: 1
           Opaque ID: 1
-          Advertising Router: 1.1.1.1
+          Advertising Router: 10.4.1.1
           LS Seq Number: 80000002
           Checksum: 0x6586
           Length: 124
@@ -4902,10 +4902,10 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
           LS age: 1427
           Options: (No TOS-capability, DC)
           LS Type: Opaque Area Link
-          Link State ID: 1.0.0.2
+          Link State ID: 10.1.0.2
           Opaque Type: 1
           Opaque ID: 2
-          Advertising Router: 1.1.1.1
+          Advertising Router: 10.4.1.1
           LS Seq Number: 80000002
           Checksum: 0xb43d
           Length: 124
@@ -4930,10 +4930,10 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
           LS age: 1175
           Options: (No TOS-capability, DC)
           LS Type: Opaque Area Link
-          Link State ID: 1.0.0.4
+          Link State ID: 10.1.0.4
           Opaque Type: 1
           Opaque ID: 4
-          Advertising Router: 3.3.3.3
+          Advertising Router: 10.36.3.3
           LS Seq Number: 80000002
           Checksum: 0x915d
           Length: 160
@@ -4967,10 +4967,10 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
           LS age: 1175
           Options: (No TOS-capability, DC)
           LS Type: Opaque Area Link
-          Link State ID: 1.0.0.6
+          Link State ID: 10.1.0.6
           Opaque Type: 1
           Opaque ID: 6
-          Advertising Router: 3.3.3.3
+          Advertising Router: 10.36.3.3
           LS Seq Number: 80000002
           Checksum: 0x5ec
           Length: 160
@@ -5004,10 +5004,10 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
           LS age: 242
           Options: (No TOS-capability, No DC)
           LS Type: Opaque Area Link
-          Link State ID: 1.0.0.37
+          Link State ID: 10.1.0.37
           Opaque Type: 1
           Opaque ID: 37
-          Advertising Router: 2.2.2.2
+          Advertising Router: 10.16.2.2
           LS Seq Number: 80000004
           Checksum: 0xe492
           Length: 116
@@ -5031,10 +5031,10 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
           LS age: 233
           Options: (No TOS-capability, No DC)
           LS Type: Opaque Area Link
-          Link State ID: 1.0.0.38
+          Link State ID: 10.1.0.38
           Opaque Type: 1
           Opaque ID: 38
-          Advertising Router: 2.2.2.2
+          Advertising Router: 10.16.2.2
           LS Seq Number: 80000004
           Checksum: 0x2350
           Length: 116
@@ -5058,10 +5058,10 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
           LS age: 232
           Options: (No TOS-capability, No DC)
           LS Type: Opaque Area Link
-          Link State ID: 1.0.0.39
+          Link State ID: 10.1.0.39
           Opaque Type: 1
           Opaque ID: 39
-          Advertising Router: 2.2.2.2
+          Advertising Router: 10.16.2.2
           LS Seq Number: 80000004
           Checksum: 0x4239
           Length: 116
@@ -5082,7 +5082,7 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
 
             Number of Links : 1
 
-                    OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
+                    OSPF Router with ID (10.36.3.3) (Process ID 1, VRF VRF1)
         '''}
 
     def test_show_ospf_vrf_all_inclusive_database_opaque_area_full(self):

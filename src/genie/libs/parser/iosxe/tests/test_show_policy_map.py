@@ -288,7 +288,7 @@ class test_show_policy_map_type(unittest.TestCase):
     golden_output1 = {'execute.return_value': '''
         Router#show policy-map control-plane
         Load for five secs: 29%/0%; one minute: 7%; five minutes: 6%
-        Time source is NTP, .17:46:23.484 JST Mon Oct 31 2016
+        Time source is NTP, .17:46:23.484 EST Mon Oct 31 2016
 
         Control Plane 
 

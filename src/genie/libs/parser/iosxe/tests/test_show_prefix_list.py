@@ -27,41 +27,41 @@ class test_show_ip_prefix_list_detail(unittest.TestCase):
           "test": {
                "sequences": "5 - 25",
                "prefixes": {
-                    "35.0.0.0/8 8..16 permit": {
+                    "10.205.0.0/8 8..16 permit": {
                          "refcount": 0,
-                         "prefix": "35.0.0.0/8",
+                         "prefix": "10.205.0.0/8",
                          "sequence": 10,
                          "hit_count": 0,
                          "masklength_range": "8..16",
                          "action": "permit",
                     },
-                    "36.0.0.0/8 8..16 permit": {
+                    "10.21.0.0/8 8..16 permit": {
                          "refcount": 1,
-                         "prefix": "36.0.0.0/8",
+                         "prefix": "10.21.0.0/8",
                          "sequence": 15,
                          "hit_count": 0,
                          "masklength_range": "8..16",
                          "action": "permit",
                     },
-                    "38.0.0.0/8 16..24 permit": {
+                    "10.169.0.0/8 16..24 permit": {
                          "refcount": 3,
-                         "prefix": "38.0.0.0/8",
+                         "prefix": "10.169.0.0/8",
                          "sequence": 25,
                          "hit_count": 0,
                          "masklength_range": "16..24",
                          "action": "permit",
                     },
-                    "37.0.0.0/8 24..32 permit": {
+                    "10.94.0.0/8 24..32 permit": {
                          "refcount": 2,
-                         "prefix": "37.0.0.0/8",
+                         "prefix": "10.94.0.0/8",
                          "sequence": 20,
                          "hit_count": 0,
                          "masklength_range": "24..32",
                          "action": "permit",
                     },
-                    "35.0.0.0/8 8..8 permit": {
+                    "10.205.0.0/8 8..8 permit": {
                          "refcount": 1,
-                         "prefix": "35.0.0.0/8",
+                         "prefix": "10.205.0.0/8",
                          "sequence": 5,
                          "hit_count": 0,
                          "masklength_range": "8..8",
@@ -81,11 +81,11 @@ class test_show_ip_prefix_list_detail(unittest.TestCase):
         Prefix-list with the last deletion/insertion: test
         ip prefix-list test:
            count: 5, range entries: 4, sequences: 5 - 25, refcount: 2
-           seq 5 permit 35.0.0.0/8 (hit count: 0, refcount: 1)
-           seq 10 permit 35.0.0.0/8 le 16 (hit count: 0, refcount: 0)
-           seq 15 permit 36.0.0.0/8 le 16 (hit count: 0, refcount: 1)
-           seq 20 permit 37.0.0.0/8 ge 24 (hit count: 0, refcount: 2)
-           seq 25 permit 38.0.0.0/8 ge 16 le 24 (hit count: 0, refcount: 3)
+           seq 5 permit 10.205.0.0/8 (hit count: 0, refcount: 1)
+           seq 10 permit 10.205.0.0/8 le 16 (hit count: 0, refcount: 0)
+           seq 15 permit 10.21.0.0/8 le 16 (hit count: 0, refcount: 1)
+           seq 20 permit 10.94.0.0/8 ge 24 (hit count: 0, refcount: 2)
+           seq 25 permit 10.169.0.0/8 ge 16 le 24 (hit count: 0, refcount: 3)
     '''}
 
     def test_empty(self):

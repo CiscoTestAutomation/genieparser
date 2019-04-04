@@ -29,7 +29,11 @@ from genie.libs.parser.iosxe.show_interface import \
     ShowIpInterfaceBriefPipeIp as ShowIpInterfaceBriefPipeIp_iosxe, \
     ShowIpInterface as ShowIpInterface_iosxe, \
     ShowIpv6Interface as ShowIpv6Interface_iosxe, \
-    ShowInterfacesAccounting as ShowInterfacesAccounting_iosxe
+    ShowInterfacesAccounting as ShowInterfacesAccounting_iosxe, \
+    ShowInterfacesCounters as ShowInterfacesCounters_iosxe, \
+    ShowInterfacesSwitchport as ShowInterfacesSwitchport_iosxe, \
+    ShowInterfacesTrunk as ShowInterfacesTrunk_iosxe, \
+    ShowInterfacesStats as ShowInterfacesStats_iosxe
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
@@ -70,4 +74,26 @@ class ShowInterfacesAccounting(ShowInterfacesAccounting_iosxe):
         show interfaces accounting
         show interfaces <interface> accounting
     """
+    pass
+
+
+class ShowInterfacesCounters(ShowInterfacesCounters_iosxe):
+    """Parser for show interfaces <interface> counters"""
+    pass
+
+
+class ShowInterfacesSwitchport(ShowInterfacesSwitchport_iosxe):
+    """Parser for show interfaces switchport"""
+    pass
+
+
+class ShowInterfacesTrunk(ShowInterfacesTrunk_iosxe):
+    """Parser for show interfaces trunk"""
+    pass
+
+    
+class ShowInterfacesStats(ShowInterfacesStats_iosxe):
+    """Parser for:
+        show interfaces <interface> stats
+        show interfaces stats"""
     pass
