@@ -4,8 +4,7 @@
 import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, \
-                                               And, Default, Use
+from genie.metaparser.util.schemaengine import Schema, Any, Optional
 
 class ShowLineSchema(MetaParser):
     """Schema for show line"""
