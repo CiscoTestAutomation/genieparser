@@ -566,6 +566,8 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
+                if 'tag' not in result_dict:
+                     clns_dict = result_dict.setdefault('tag', {}).setdefault(" ", {})
                 type_dict = clns_dict.setdefault('system_id', {}).\
                                       setdefault(group['system_id'],{}).\
                                       setdefault('type', {}).\
@@ -677,7 +679,7 @@ class ShowClnsIsNeighborsDetail(ShowClnsIsNeighborsDetailSchema):
         # System Id       Interface     State  Type Priority  Circuit Id         Format
         # R7              Gi4           Up     L2   64        R2.01              Phase V
         p2 = re.compile(r'^(?P<system_id>[\w\.]+) +(?P<interface>\S+) +(?P<state>\w+)'
-                        ' +(?P<type>\w+) +(?P<priority>\d+) +(?P<circuit_id>[\w\.]+) +(?P<format>[\S\ ]+)$')
+                        ' +(?P<type>\w+) +(?P<priority>\d+) +(?P<circuit_id>[\w\.]+) +(?P<format>[\S\s]+)$')
         #   Area Address(es): 49.0002
         p3 = re.compile(r'^Area +Address\(es\): +(?P<area_address>\S+)$')
         #   IP Address(es):  20.2.7.7*
@@ -707,6 +709,8 @@ class ShowClnsIsNeighborsDetail(ShowClnsIsNeighborsDetailSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
+                if 'tag' not in result_dict:
+                     clns_dict = result_dict.setdefault('tag', {}).setdefault(" ", {})
                 type_dict = clns_dict.setdefault('system_id', {}). \
                                       setdefault(group['system_id'], {}). \
                                       setdefault('type', {}). \
