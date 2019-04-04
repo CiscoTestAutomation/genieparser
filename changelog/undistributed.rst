@@ -172,3 +172,21 @@
         show bfd neighbors details
         show bfd neighbors client <client> details
 
+----------------------------------------------------------------------------------
+                                   ARP
+----------------------------------------------------------------------------------
+* IOS
+    * Add ShowArpApplication for:
+        show arp application
+    * Add ShowArpSummary for:
+        show arp summary
+
+--------------------------------------------------------------------------------
+                                   L2VPN
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowMplsL2TransportVC for:
+        show mpls l2transport vc
+* IOS
+    * Add ShowMplsL2TransportVC for:
+        show mpls l2transport vc
