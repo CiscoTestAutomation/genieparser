@@ -51,7 +51,7 @@ class ShowClnsInterfaceSchema(MetaParser):
                                 },
                                 Any(): {  # level-1 , level-2
                                     'metric': int,
-                                    'dr_id': str,
+                                    Optional('dr_id'): str,
                                     'circuit_id': str,
                                     'ipv6_metric': int,
                                 },
