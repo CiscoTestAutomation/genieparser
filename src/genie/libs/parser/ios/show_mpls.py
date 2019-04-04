@@ -49,7 +49,8 @@ from genie.libs.parser.iosxe.show_mpls import ShowMplsLdpParameters as ShowMplsL
                                               ShowMplsLdpIgpSync as ShowMplsLdpIgpSync_iosxe,\
                                               ShowMplsForwardingTable as ShowMplsForwardingTable_iosxe,\
                                               ShowMplsInterface as ShowMplsInterface_iosxe,\
-                                              ShowMplsL2TransportDetail as ShowMplsL2TransportDetail_iosxe
+                                              ShowMplsL2TransportDetail as ShowMplsL2TransportDetail_iosxe, \
+                                              ShowMplsL2TransportVC as ShowMplsL2TransportVC_iosxe
 
 
 class ShowMplsLdpParameters(ShowMplsLdpParameters_iosxe):
@@ -142,5 +143,14 @@ class ShowMplsInterface(ShowMplsInterface_iosxe):
 class ShowMplsL2TransportDetail(ShowMplsL2TransportDetail_iosxe):
     """
     Parser for show mpls l2transport vc detail
+    """
+    pass
+
+# ================================================
+#   Show mpls l2transport vc
+# ================================================
+class ShowMplsL2TransportVC(ShowMplsL2TransportVC_iosxe):
+    """
+    Parser for show mpls l2transport vc
     """
     pass
