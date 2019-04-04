@@ -292,7 +292,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
 
         # initial return dictionary
         result_dict = {}
-
+        tag = ""
         #  Tag VRF1:
         p1 = re.compile(r'^Tag +(?P<tag>\w+):$')
 
