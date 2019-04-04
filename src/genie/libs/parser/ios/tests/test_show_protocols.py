@@ -161,5 +161,6 @@ class test_show_ipv6_protocols(test_show_ipv6_protocols_iosxe):
         parsed_output = obj.parse(vrf="VRF1")
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
+
 if __name__ == '__main__':
     unittest.main()
