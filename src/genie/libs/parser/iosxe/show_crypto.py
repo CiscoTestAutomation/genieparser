@@ -128,6 +128,8 @@ class ShowCryptoPkiCertificates(ShowCryptoPkiCertificatesSchema):
         for line in out.splitlines():
             line = line.strip()
             
+            # Certificate
+            # CA Certificate
             m = p1.match(line)
             if m:
                 if m.groupdict()['cer']:
@@ -137,21 +139,28 @@ class ShowCryptoPkiCertificates(ShowCryptoPkiCertificatesSchema):
                 cer_dict = ret_dict.setdefault(cer_type, {})
                 continue
 
+            # Status: Available
             m = p2.match(line)
             if m:
                 cer_dict['status'] = m.groupdict()['status']
                 continue
 
+            # Certificate Serial Number (hex): 793B572700000003750B
+            # Certificate Serial Number: 0x15
             m = p3.match(line)
             if m:
                 cer_dict['serial_number_in_hex'] = m.groupdict()['serial_number_in_hex']
                 continue
 
+            # Certificate Usage: General Purpose
             m = p4.match(line)
             if m:
                 cer_dict['usage'] = m.groupdict()['usage']
                 continue
 
+            # Issuer:
+            # Subject:
+            # Validity Date:
             m = p5.match(line)
             if m:
                 group = m.groupdict()
@@ -163,31 +172,41 @@ class ShowCryptoPkiCertificates(ShowCryptoPkiCertificatesSchema):
                     sub_dict = cer_dict.setdefault('validity_date', {})
                 continue
 
+            # cn=Cisco Manufacturing CA SHA2
+            # CN = tpca-root
             m = p6.match(line)
             if m:
                 sub_dict['cn'] = m.groupdict()['cn']
                 continue
             
+            # o=Cisco
+            # O = Company
             m = p7.match(line)
             if m:
                 sub_dict['o'] = m.groupdict()['o']
                 continue
 
+            # Name: WS-C3850-24P-0057D21BC800
             m = p8.match(line)
             if m:
                 sub_dict['name'] = m.groupdict()['name']
                 continue
 
+            # Serial Number: PID:WS-C3850-24P SN:FCW1947C0GF
             m = p9.match(line)
             if m:
                 sub_dict.update({k:v for k,v in m.groupdict().items()})
                 continue
             
+            # CRL Distribution Points: 
+            #     http://www.cisco.com/security/pki/crl/cmca2.crl
             m = p10.match(line)
             if m:
                 cer_dict['crl_distribution_points'] = m.groupdict()['crl_distribution_points']
                 continue
 
+            # start date: 00:34:52 UTC Nov 20 2015
+            # end   date: 00:44:52 UTC Nov 20 2025
             m = p11.match(line)
             if m:
                 group = m.groupdict()
@@ -197,11 +216,14 @@ class ShowCryptoPkiCertificates(ShowCryptoPkiCertificatesSchema):
                     group.get('end_date', {}) else None
                 continue
 
+            # Storage: nvram:IOS-Self-Sig#1.cer
             m = p13.match(line)
             if m:
                 cer_dict['storage'] = m.groupdict()['storage']
                 continue
 
+            # Associated Trustpoints: CISCO_IDEVID_SUDI
+            # Associated Trustpoints: CISCO_IDEVID_SUDI Trustpool
             m = p12.match(line)
             if m:
                 trustpoints = m.groupdict()['trustpoints'] 

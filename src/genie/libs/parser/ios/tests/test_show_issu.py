@@ -20,47 +20,35 @@ from genie.libs.parser.iosxe.tests.test_show_issu import test_show_issu_state_de
 # =======================================
 class test_show_issu_state_detail(test_show_issu_state_detail_iosxe):
 
+    golden_output_ios = {'execute.return_value': '''
+        Router# show issu state detail
+ 
+        --- Starting installation state synchronization ---
+        Finished installation state synchronization
+        No ISSU operation is in progress
+    '''}
+
+    golden_parsed_output_ios = {
+        "slot": {
+            "default": {
+                "issu_in_progress": False
+            }
+        }
+     }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIssuStateDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()    
 
-    def test_golden_1(self):
+    def test_golden_ios(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output_1)
+        self.device = Mock(**self.golden_output_ios)
         obj = ShowIssuStateDetail(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_1)
-
-    def test_golden_2(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output_2)
-        obj = ShowIssuStateDetail(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_2)
-
-    def test_golden_3(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output_3)
-        obj = ShowIssuStateDetail(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_3)
-
-    def test_golden_4(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output_4)
-        obj = ShowIssuStateDetail(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_4)
-
-    def test_golden_5(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output_5)
-        obj = ShowIssuStateDetail(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_5)
-
+        self.assertEqual(parsed_output, self.golden_parsed_output_ios)
+        
 
 # =========================================
 #  Unit test for 'show issu rollback-timer'
