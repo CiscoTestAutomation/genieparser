@@ -196,7 +196,7 @@ class ShowClnsInterface(ShowClnsInterfaceSchema):
             if m:
                 group = m.groupdict()
                 if not group['process_id']:
-                    process_id = "None"
+                    process_id = ""
                 else:
                     process_id = group['process_id']
                 isis_dict = clns_dict.setdefault('routing_protocol',{}).\
@@ -572,7 +572,7 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
             if m:
                 group = m.groupdict()
                 if 'tag' not in result_dict:
-                     clns_dict = result_dict.setdefault('tag', {}).setdefault("None", {})
+                     clns_dict = result_dict.setdefault('tag', {}).setdefault("", {})
                 type_dict = clns_dict.setdefault('system_id', {}).\
                                       setdefault(group['system_id'],{}).\
                                       setdefault('type', {}).\
@@ -715,7 +715,7 @@ class ShowClnsIsNeighborsDetail(ShowClnsIsNeighborsDetailSchema):
             if m:
                 group = m.groupdict()
                 if 'tag' not in result_dict:
-                     clns_dict = result_dict.setdefault('tag', {}).setdefault("None", {})
+                     clns_dict = result_dict.setdefault('tag', {}).setdefault("", {})
                 type_dict = clns_dict.setdefault('system_id', {}). \
                                       setdefault(group['system_id'], {}). \
                                       setdefault('type', {}). \
