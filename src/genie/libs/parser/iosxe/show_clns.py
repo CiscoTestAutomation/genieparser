@@ -112,7 +112,7 @@ class ShowClnsInterface(ShowClnsInterfaceSchema):
         #   Next ESH/ISH in 20 seconds
         p7 = re.compile(r'^Next +ESH/ISH +in +(?P<next_esh_ish>\d+) +seconds$')
         #   Routing Protocol: IS-IS (test)
-        p8 = re.compile(r'^Routing +Protocol: +(?P<routing_protocol>[\S]+) +\((?P<process_id>\w+)\)$')
+        p8 = re.compile(r'^Routing +Protocol: +(?P<routing_protocol>[\S]+)( +\((?P<process_id>\w+)\))?$')
         #     Circuit Type: level-1-2
         p9 = re.compile(r'^Circuit +Type: +(?P<circuit_type>\S+)$')
         #     Interface number 0x1, local circuit ID 0x1
@@ -191,12 +191,17 @@ class ShowClnsInterface(ShowClnsInterfaceSchema):
                 continue
 
             # Routing Protocol: IS-IS (test)
+            # Routing Protocol: IS-IS
             m = p8.match(line)
             if m:
                 group = m.groupdict()
+                if not group['process_id']:
+                    process_id = " "
+                else:
+                    process_id = group['process_id']
                 isis_dict = clns_dict.setdefault('routing_protocol',{}).\
                                       setdefault(group['routing_protocol'],{}).\
-                                      setdefault('process_id' ,{}).setdefault(group['process_id'],{})
+                                      setdefault('process_id' ,{}).setdefault(process_id, {})
                 continue
 
             #     Circuit Type: level-1-2
