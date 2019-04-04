@@ -100,8 +100,9 @@ class ShowIpRpf(ShowIpRpfSchema):
             # RPF information for host1 (172.16.10.13)
             # RPF information for ? (10.1.1.100)
             # RPF information for sj-eng-mbone.cisco.com (171.69.10.13)
+            # RPF information for ? (209.165.200.226) MoFRR Enabled
             p1_1 = re.compile(r'^RPF +information +for +(?P<host>[\w\?\.\-]+) +'
-                               '\((?P<mroute>[\w\:\.]+)\)$')
+                               '\((?P<mroute>[\w\:\.]+)\).*$')
             m = p1_1.match(line)
             if m:
                 mroute = m.groupdict()['mroute']
