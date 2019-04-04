@@ -6,89 +6,87 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
-                                    POLICY MAP
+                                   LAG
 --------------------------------------------------------------------------------
-* IOSXE
-    * Added ShowPolicyMapType Parser for:
-       'show policy-map control-plane'
-       'show policy-map interface'
-       'show policy map'
-       'show policy map {name}'
-       'show policy-map interface {interface}'
-       'show policy-map interface {interface} output class {class_name}'
---------------------------------------------------------------------------------
-                                    MONITOR
---------------------------------------------------------------------------------
-* IOSXE
-    * Added ShowMonitor Parser for:
-       'show monitor'
-       'show monitor session all'
-       'show monitor session {session}'
-       'show monitor capture'
-
-
---------------------------------------------------------------------------------
-                                    OSPF
---------------------------------------------------------------------------------
-* IOSXE
-    * Added parsers:
-        * ShowIpOspfDatabase
-        * ShowIpOspfMaxMetric
-        * ShowIpOspfTraffic
-    * Updated parsers:
-        * ShowIpOspfMplsLdpInterface
-        * ShowIpOspfDatabaseRouter
-        * ShowIpOspfDatabaseExternal
-        * ShowIpOspfDatabaseNetwork
-        * ShowIpOspfDatabaseSummary
-        * ShowIpOspfDatabaseOpaqueArea
+* IOS
+    * Add ShowLacpSysId for:
+        show lacp sys-id
+    * Add ShowLacpCounters for:
+        show lacp counters
+        show lacp <channel-group> counters
+    * Add ShowLacpInternal for:
+        show lacp internal
+        show lacp <channel-group> internal
+    * Add ShowLacpNeighbor for:
+        show lacp neighbor
+        show lacp <channel-group> neighbor
+    * Add ShowPagpCounters for:
+        show pagp counters
+        show pagp <channel-group> counters
+    * Add ShowPagpNeighbor for:
+        show pagp neighbor
+        show pagp <channel-group> neighbor
+    * Add ShowPagpInternal for:
+        show pagp internal
+        show pagp <channel-group> internal
+    * Add ShowEtherchannelSummary for:
+        show etherchannel summary
+    * Add ShowEtherChannelLoadBalancing for:
+        show etherchannel load-balancing
+    * Add ShowLacpNeighborDetail for:
+        show lacp neighbor detail
 
 --------------------------------------------------------------------------------
-                                    SNMP
+                                   INTERFACE
 --------------------------------------------------------------------------------
-* IOSXE
-    * Added ShowSnmpMib for:
-        'show snmp mib'
+* IOS
+    * Add ShowInterfacesCounters for:
+        show interfaces <interface> counters
+    * Add ShowInterfacesSwitchport for:
+        show interfaces switchport
+    * Add ShowInterfacesTrunk for:
+        show interfaces trunk
+    * Add ShowInterfacesStats for:
+        show interface <interface> stats
+        show interface stats
 
 --------------------------------------------------------------------------------
-                                    PLATFORM
+                                  LISP
 --------------------------------------------------------------------------------
-* IOSXE
-    * Add ShowPlatformHardwarePlim for;
-    	'show platform hardware port <x/x/x> plim statistics'
-    	'show platform hardware slot <x> plim statistics'
-    	'show platform hardware slot <x> plim statistics internal'
-    	'show platform hardware subslot <x/x> plim statistics'
-    * Add ShowPlatformHardware for 'show platform hardware qfp active infrastructure bqs queue output default all'
-    * Add ShowVersionRp for;
-    	show version RP active running
-    	show version RP active installed
-    	show version RP active provisioned
-    	show version RP standby running
-    	show version RP standby installed
-    	show version RP standby provisioned
-    * Add ShowPlatformPower for 'show platform power'
-    * Add ShowPlatformHardwareQfpBqsOpmMapping for;
-        show platform hardware qfp active bqs <x> opm mapping
-        show platform hardware qfp standby bqs <x> opm mapping
-    * Add ShowPlatformHardwareQfpBqsIpmMapping for;
-        show platform hardware qfp active bqs <x> ipm mapping
-        show platform hardware qfp standby bqs <x> ipm mapping
-    * Add ShowPlatformHardwareQfpInterfaceIfnameStatistics for;
-        show platform hardware qfp active interface if-name <interface> statistics
-        show platform hardware qfp standby interface if-name <interface> statistics
-    * Add ShowPlatformHardwareQfpStatisticsDrop for;
-            show platform hardware qfp active statistics drop
-            show platform hardware qfp standby statistics drop
-    * Add ShowPlatformHardwareSerdes for 'show platform hardware slot <x> serdes statistics'
-    * Add ShowPlatformHardwareSerdesInternal for 'show platform hardware slot <x> serdes statistics internal'
-    * Add ShowProcessesCpuHistory for 'show processes cpu history'
+* IOS
+    * Add ShowLispSession for:
+        show lisp session
+    * Add ShowLispPlatform for:
+        show lisp platform
+    * Add ShowLispExtranet for:
+        show lisp all extranet <extranet> instance-id <instance_id>
+    * Add ShowLispDynamicEidDetail for:
+        show lisp all extranet <extranet> instance-id <instance_id>
+    * Add ShowLispService for:
+        show lisp all instance-id <instance_id> <service>
+        show lisp all service <service>
+    * Add ShowLispServiceMapCache for:
+        show lisp all instance-id <instance_id> <service> map-cache
+    * Add ShowLispServiceRlocMembers for:
+        show lisp all instance-id <instance_id> <service> rloc members
+    * Add ShowLispServiceSmr for:
+        show lisp all instance-id <instance_id> <service> smr
+    * Add ShowLispServiceSummary for:
+        show lisp all <service> summary
+    * Add ShowLispServiceDatabase for:
+        show lisp all instance-id <instance_id> <service> dabatase
+    * Add ShowLispServiceServerSummary for:
+        show lisp all instance-id <instance_id> <service> server summary
+    * Add ShowLispServiceServerDetailInternal for:
+        show lisp all instance-id <instance_id> <service> server detail internal
+    * Add ShowLispServiceStatistics for:
+        show lisp all instance-id <instance_id> <service> statistics
 
-    * Update ShowVersion to support more output
 --------------------------------------------------------------------------------
-                                    MPLS LDP
+                                   MPLS LDP
 --------------------------------------------------------------------------------
-* IOSXE
+
+* IOS
     * Add ShowMplsLdpParameters for:
           show mpls ldp parameters
     * Add ShowMplsLdpNsrStatistic for:
@@ -128,93 +126,30 @@
           show mpls interfaces <interface>
           show mpls interfaces <interface> detail
           show mpls interfaces detail
-    * Add ShowMplsL2TransportDetail for:
-          show mpls l2transport vc detail
 
+--------------------------------------------------------------------------------
+                                   BFD
+--------------------------------------------------------------------------------
 * IOS
-    * Add ShowMplsL2TransportDetail for:
-          show mpls l2transport vc detail
-
----------------------------------------------------------------------------------
-                                   BFD 
----------------------------------------------------------------------------------
-* IOSXE
-    * Add ShowBfdNeighborsDetails
-        show bfd neighbors client <client> details
+    * Add ShowBfdNeighborsDetails for:
         show bfd neighbors details
+        show bfd neighbors client <client> details
 
 ----------------------------------------------------------------------------------
-                                 ARP
+                                   ARP
 ----------------------------------------------------------------------------------
-* IOSXE
+* IOS
     * Add ShowArpApplication for:
         show arp application
     * Add ShowArpSummary for:
         show arp summary
 
 --------------------------------------------------------------------------------
-                                    QOS
+                                   L2VPN
 --------------------------------------------------------------------------------
 * IOSXE
-    * Add ShowServiceGroupState for:
-        show service-group state
-    * Add ShowServiceGroupStats for:
-        show service-group stats
-    * Add ShowServiceGroupTrafficStats for:
-        show service-group traffic-stats
-        show service-group traffic-stats <group>
-
---------------------------------------------------------------------------------
-                                 CONFIG
---------------------------------------------------------------------------------
-* IOSXE
-    * Add ShowArchiveConfigDifferences for:
-        show archive config differences
-        show archive config differences {fileA} {fileB}
-        show archive config differences {fielA}
-    * Add ShowArchiveConfigIncrementalDiffs for:
-        show archive config incremental-diffs {fileA}
-    * Add ShowConfigurationLock for:
-        show configuration lock
-
---------------------------------------------------------------------------------
-                                    L2VPN
---------------------------------------------------------------------------------
-* IOSXE
-    * Add ShowBridgeDomain for:
-            show bridge-domain
-            show bridge-domain <WORD>
-            show bridge-domain | count <WORD>
-    * Add ShowEthernetServiceInstanceDetail for:
-            show ethernet service instance detail
-            show ethernet service instance interface <interface> detail
-    * Add ShowEthernetServiceInstanceStats for:
-            show ethernet service instance stats
-            show ethernet service instance interface <interface> stats
-    * Add ShowEthernetServiceInstanceSummary for:
-            show ethernet service instance summary
-    * Add ShowL2vpnVfi for:
-            show l2vpn vfi
-
+    * Add ShowMplsL2TransportVC for:
+        show mpls l2transport vc
 * IOS
-    * Add ShowL2vpnVfi for:
-            show l2vpn vfi
---------------------------------------------------------------------------------
-                                  LAG
---------------------------------------------------------------------------------
-* IOSXE
-    * Add ShowEtherChannelLoadBalancing for:
-        show etherchannel load-balancing
-    * Add ShowLacpNeighborDetail for:
-        show lacp neighbor detail
-
---------------------------------------------------------------------------------
-                                   INTERFACE
---------------------------------------------------------------------------------
-* IOSXE
-    * Add ShowInterfaceStats for:
-        show interface <interface> stats
-        show interface stats
-
-    * Update ShowIpInterface to support more output
-    * Update ShowIpInterfaceBrief for cli_command
+    * Add ShowMplsL2TransportVC for:
+        show mpls l2transport vc
