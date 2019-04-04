@@ -297,7 +297,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
         p1 = re.compile(r'^Tag +(?P<tag>\w+):$')
 
         # IS-IS Level-1 Link State Database:
-        p2 = re.compile(r'^IS\-IS +Level\-(?P<level>\d+) +Link +State +Database:$')
+        p2 = re.compile(r'^IS\-IS +Level\-(?P<level>\d+) +Link +State +Database(:)?$')
 
         # LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd      ATT/P/OL
         # R2.00-00            * 0x00000007   0x8A6D                 403/*         1/0/0
