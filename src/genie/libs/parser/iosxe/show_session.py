@@ -58,6 +58,9 @@ class ShowLine(ShowLineSchema):
         for line in out.splitlines():
             line = line.strip()
 
+            #     Tty Typ     Tx/Rx    A Modem  Roty AccO AccI   Uses   Noise  Overruns   Int
+            #       1 AUX   9600/9600  -    -      -    -    -      0       0     0/0       -
+            # *     2 VTY              -    -      -    -    -      3       0     0/0       -
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -68,8 +71,9 @@ class ShowLine(ShowLineSchema):
                 else:
                     tty_dict['active'] = False
                 tty_dict['type'] = group['type']
-                if 'tx' in group:
+                if group['tx']:
                     tty_dict['tx'] = int(group['tx'])
+                if group['rx']:
                     tty_dict['rx'] = int(group['rx'])
                 tty_dict['a'] = group['a']
                 tty_dict['modem'] = group['modem']
