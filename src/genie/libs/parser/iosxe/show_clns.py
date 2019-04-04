@@ -505,11 +505,11 @@ class ShowClnsNeighborsDetailSchema(MetaParser):
                                 'holdtime': int,
                                 'protocol': str,
                                 'area_address': list,
-                                'ip_address': list,
-                                'ipv6_address': list,
+                                Optional('ip_address'): list,
+                                Optional('ipv6_address'): list,
                                 'uptime': str,
-                                'nsf': str,
-                                'topology': list,
+                                Optional('nsf'): str,
+                                Optional('topology'): list,
                             }
                         }
                     }
@@ -645,11 +645,11 @@ class ShowClnsIsNeighborsDetailSchema(MetaParser):
                                'priority': int,
                                'circuit_id': str,
                                'area_address': list,
-                               'ip_address': list,
-                               'ipv6_address': list,
+                               Optional('ip_address'): list,
+                               Optional('ipv6_address'): list,
                                'uptime': str,
-                               'nsf': str,
-                               'topology': list,
+                               Optional('nsf'): str,
+                               Optional('topology'): list,
                            }
                        }
                     }
