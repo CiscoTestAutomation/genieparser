@@ -1,7 +1,7 @@
 ''' show_policy_map.py
 
 IOSXE parsers for the following show commands:
-    * show policy map control plane
+    * show policy-map control-plane
 
 '''
 
@@ -22,13 +22,13 @@ from genie.libs.parser.utils.common import Common
 
 # =====================================================================
 # Schema for :
-#   *'show policy map control plane'
+#   *'show policy-map control-plane'
 #   *'show policy-map interface {interface}'
 #   *'show policy-map interface {interface} output class {class_name}'
 # ======================================================================
 class ShowPolicyMapTypeSchema(MetaParser):
 
-    ''' Schema for "show policy map control plane" '''
+    ''' Schema for "show policy-map control-plane" '''
 
     schema = {
         Any(): {
@@ -41,9 +41,15 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                     'match_evaluation': str,
                                     'match': list,
                                     Optional('packets'): int,
+                                    Optional('packet_output'): int,
+                                    Optional('packet_drop'): int,
+                                    Optional('tail_random_drops'): int,
+                                    Optional('other_drops'): int,
                                     Optional('bytes'): int,
                                     Optional('queueing'): bool,
-                                    Optional('queue_limit'): str,
+                                    Optional('queue_limit_packets'): str,
+                                    Optional('queue_size'): int,
+                                    Optional('queue_limit'): int,
                                     Optional('queue_depth'): int,
                                     Optional('total_drops'): int,
                                     Optional('no_buffer_drops'): int,
@@ -61,6 +67,10 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                     Optional('output_queue'): str,
                                     Optional('bandwidth_percent'): int,
                                     Optional('bandwidth_kbps'): int,
+                                    Optional('bandwidth'): str,
+                                    Optional('bandwidth_remaining_ratio'): int,
+                                    Optional('bandwidth_remaining_percent'):int,
+                                    Optional('bandwidth_max_threshold_packets'): int,
                                     Optional('exponential_weight'): int,
                                     Optional('exp_weight_constant'): str,
                                     Optional('mean_queue_depth'): int,
@@ -108,6 +118,7 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                         Optional('police_bps'): int,
                                         Optional('police_limit'): int,
                                         Optional('extended_limit'): int,
+                                        Optional('bandwidth_remaining_ratio'): int,
                                         Optional('conformed'): {
                                             'packets': int,
                                             'bytes': int,
@@ -139,14 +150,14 @@ class ShowPolicyMapTypeSchema(MetaParser):
 
 # =====================================================================
 # Parser for:
-#   * 'show policy map control plane'
+#   * 'show policy-map control-plane'
 #   * 'show policy-map interface {interface} output class {class_name}'
 #   * 'show policy-map interface {interface}'
 #   * 'show policy-map interface '
 # =====================================================================
 class ShowPolicyMapType(ShowPolicyMapTypeSchema):
     ''' Parser for
-        * "show policy map control plane"
+        * "show policy-map control-plane"
         * "show policy-map interface {interface} output class {class_name}"
         * "show policy-map interface {interface}"
         * "show policy-map interface"
@@ -183,13 +194,14 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
         # Service-policy input: Control_Plane_In
         # Service-policy output: shape-out
         # Service-policy input:TEST
-        p1 = re.compile(r'^Service-policy +(?P<service_policy>(input|output)):+ *(?P<policy_name>([\w\-]+).*)')
+        p1 = re.compile(r'^[Ss]ervice-policy +(?P<service_policy>(input|output)):+ *(?P<policy_name>([\w\-]+).*)')
+
         # service policy : child
         p1_1 = re.compile(r'^Service-policy *:+ *(?P<policy_name>([\w\-]+))$')
 
         # Class-map: Ping_Class (match-all)
         # Class-map:TEST (match-all)
-        p2 = re.compile(r'^Class-map *:+(?P<class_map>([\s\w\-]+)) +(?P<match_all>(.*))$')
+        p2 = re.compile(r'^[Cc]lass-map *:+(?P<class_map>([\s\w\-]+)) +(?P<match_all>(.*))$')
 
         # 8 packets, 800 bytes
         p3 = re.compile(r'^(?P<packets>(\d+)) packets, (?P<bytes>(\d+)) +bytes')
@@ -198,13 +210,14 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
         p4 = re.compile(r'^(?P<interval>(\d+)) +minute +offered +rate +(?P<offered_rate>(\d+)) bps, +drop +rate +(?P<drop_rate>(\d+)) bps$')
 
         # 5 minute offered rate 0000 bps
-        p4_1 = re.compile(r'^(?P<interval>(\d+)) +minute +offered +rate +(?P<offered_rate>(\d+)) bps$')
+        # 5 minute rate 0 bps
+        p4_1 = re.compile(r'^(?P<interval>(\d+)) +minute(offered| )+rate +(?P<offered_rate>(\d+)) bps$')
 
         # 30 second offered rate 15000 bps, drop rate 300 bps
         p4_2 = re.compile(r'^(?P<interval>(\d+)) +second +offered +rate +(?P<offered_rate>(\d+)) bps, +drop +rate +(?P<drop_rate>(\d+)) bps$')
 
         # Match: access-group name Ping_Option
-        p5 = re.compile(r'^Match *:+(?P<match>([\(\w\-\s\)]+))$')
+        p5 = re.compile(r'^[Mm]atch *:+(?P<match>([\(\w\-\s\)]+))$')
 
         # police:
         p6 = re.compile(r'^police:+$')
@@ -258,60 +271,65 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
         # Marker statistics: Disabled
         p13_2 = re.compile(r'^Marker +statistics: +(?P<marker_statistics>(\w+))$')
 
-        #qos-group 20
+        # qos-group 20
         p13_3 = re.compile(r'^qos-group +(?P<qos_group>(\d+))$')
 
-        #Packets marked 500
+        # Packets marked 500
         p13_4 = re.compile(r'^Packets +marked +(?P<packets_marked>(\d+))$')
 
         # Queueing
-        p16 = re.compile(r'^Queueing$')
+        p14 = re.compile(r'^Queueing$')
+
+        # queue size 0, queue limit 4068
+        p15 = re.compile(r'^queue +size +(?P<queue_size>(\d+)), +queue +limit +(?P<queue_limit>(\d+))$')
 
         # queue limit 64 packets
-        p16_1 = re.compile(r'^queue +limit +(?P<queue_limit>(\d+)) .*$')
+        p16 = re.compile(r'^queue +limit +(?P<queue_limit>(\d+)) .*$')
 
         # (queue depth/total drops/no-buffer drops) 0/0/0
-        p16_2 = re.compile(r'^\(+queue +depth/+total +drops/+no-buffer +drops+\) +(?P<queue_depth>(\d+))/'
+        p17 = re.compile(r'^\(+queue +depth/+total +drops/+no-buffer +drops+\) +(?P<queue_depth>(\d+))/'
                             '+(?P<total_drops>(\d+))/+(?P<no_buffer_drops>(\d+))$')
 
         # depth/total drops/no-buffer drops) 147/38/0
-        p16_2_1 = re.compile(r'^depth/+total +drops/+no-buffer +drops+\) +(?P<queue_depth>(\d+))/+'
+        p17_1 = re.compile(r'^depth/+total +drops/+no-buffer +drops+\) +(?P<queue_depth>(\d+))/+'
                              '(?P<total_drops>(\d+))/+(?P<no_buffer_drops>(\d+))$')
 
         # (pkts output/bytes output) 0/0
-        p16_3 = re.compile(r'^\(+pkts +output/+bytes +output+\) +(?P<pkts_output>(\d+))/+(?P<bytes_output>(\d+))$')
+        p18_1 = re.compile(r'^\(+pkts +output/+bytes +output+\) +(?P<pkts_output>(\d+))/+(?P<bytes_output>(\d+))$')
 
         # (pkts matched/bytes matched) 363/87120
-        p16_3_1 = re.compile(r'^\(+pkts +matched/+bytes +matched+\) +(?P<pkts_matched>(\d+))/+(?P<bytes_matched>(\d+))$')
+        p18_2 = re.compile(r'^\(+pkts +matched/+bytes +matched+\) +(?P<pkts_matched>(\d+))/+(?P<bytes_matched>(\d+))$')
 
         # (pkts queued/bytes queued) 0/0
-        p16_3_2 = re.compile(r'^\(+pkts +queued/+bytes +queued+\) +(?P<pkts_queued>(\d+))/+(?P<bytes_queued>(\d+))$')
+        p18_3 = re.compile(r'^\(+pkts +queued/+bytes +queued+\) +(?P<pkts_queued>(\d+))/+(?P<bytes_queued>(\d+))$')
 
         # shape (average) cir 474656, bc 1899, be 1899
-        p16_4 = re.compile(r'^shape +\(+(?P<shape_type>(\w+))+\) +cir +(?P<shape_cir_bps>(\d+)), +'
+        p19 = re.compile(r'^shape +\(+(?P<shape_type>(\w+))+\) +cir +(?P<shape_cir_bps>(\d+)), +'
                             'bc +(?P<shape_bc_bps>(\d+)), +be +(?P<shape_be_bps>(\d+))$')
 
         # target shape rate 474656
-        p16_5 = re.compile(r'^target +shape +rate +(?P<target_shape_rate>(\d+))$')
+        p20 = re.compile(r'^target +shape +rate +(?P<target_shape_rate>(\d+))$')
 
         # Output Queue: Conversation 266
-        p16_6 = re.compile(r'^Output +Queue: +(?P<output_queue>([\w\s]+))$')
+        p21 = re.compile(r'^Output +Queue: +(?P<output_queue>([\w\s]+))$')
 
         # Bandwidth 10 (%)
-        p16_7 = re.compile(r'^Bandwidth +(?P<bandwidth>(\d+)) .*$')
+        p22 = re.compile(r'^Bandwidth +(?P<bandwidth>(\d+)) .*$')
 
         # bandwidth 1000 (kbps)
-        p16_7_1 = re.compile(r'^bandwidth (?P<bandwidth_kbps>(\d+)) \(kbps\)$')
+        p23 = re.compile(r'^bandwidth (?P<bandwidth_kbps>(\d+)) \(kbps\)$')
 
         # exponential weight: 9
-        p16_8 = re.compile(r'^exponential +weight: +(?P<exponential_weight>(\d+))$')
+        p24 = re.compile(r'^exponential +weight:+ *(?P<exponential_weight>(\d+))$')
 
         # Exp-weight-constant: 9 (1/512)
-        p16_8_1 = re.compile(r'^Exp-weight-constant: +(?P<exp_weight_constant>([\w\(\)\s\/]+))$')
+        # Exp-weight-constant:9 (1/512)
+        p25 = re.compile(r'^Exp-weight-constant:+ *(?P<exp_weight_constant>([\w\(\)\s\/]+))')
 
         # mean queue depth: 25920
         # Mean queue depth: 0 bytes
-        p16_9 = re.compile(r'^(M|m)ean +queue +depth: +(?P<mean_queue_depth>(\d+))')
+        # Mean queue depth:0
+        p26 = re.compile(r'^(M|m)ean +queue +depth:+ *(?P<mean_queue_depth>(\d+))')
 
         # class     Transmitted       Random drop      Tail drop     Minimum Maximum Mark
         #           pkts/bytes        pkts/bytes       pkts/bytes    thresh  thresh  prob
@@ -321,25 +339,38 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
         #   2             0/0               0/0               0/0      24000    40000  1/10
         #   3             0/0               0/0               0/0      26000    40000  1/10
         #   4             0/0               0/0               0/0      28000    40000  1/10
-        p17 = re.compile(r'^(?P<class>(\w+)) +(?P<transmitted>([\d\/]+)) +(?P<random_drop>([\d\/]+)) +'
+        p27 = re.compile(r'^(?P<class>(\w+)) +(?P<transmitted>([\d\/]+)) +(?P<random_drop>([\d\/]+)) +'
                           '(?P<tail_drop>([\d\/]+)) +(?P<minimum_thresh>([\d\/]+)) +'
                           '(?P<maximum_thresh>([\d\/]+)) +(?P<mark_prob>([\d\/]+))$')
 
         # policy wred-policy
-        p18 = re.compile(r'^policy +(?P<policy>([\w\-]+))$')
+        p28 = re.compile(r'^policy +(?P<policy>([\w\-]+))$')
 
         # class prec2
-        p19 = re.compile(r'^class +(?P<class>([\w\-]+))$')
+        p29 = re.compile(r'^class +(?P<class>([\w\-]+))$')
 
         # bandwidth 1000
-        p20 = re.compile(r'^bandwidth +(?P<bandwidth>(\d+))$')
+        p30 = re.compile(r'^bandwidth +(?P<bandwidth>(\d+))$')
+
+        # bandwidth:class-based wfq, weight 25
+        p31 = re.compile(r'^bandwidth(:| )?(?P<bandwidth>([\s\w\-\,]+))$')
+
+        # bandwidth remaining ratio 1
+        p32 = re.compile(r'^bandwidth +remaining +ratio +(?P<bandwidth_remaining_ratio>(\d+))$')
 
         # random-detect
-        p21 = re.compile(r'^random-detect$')
+        p33 = re.compile(r'^random-detect$')
 
         # random-detect precedence 2 100 bytes 200 bytes 10
-        p21_1 = re.compile(r'^random-detect +precedence +(?P<precedence>(\d+)) +'
+        p33_1 = re.compile(r'^random-detect +precedence +(?P<precedence>(\d+)) +'
                             '(?P<bytes1>(\d+)) bytes +(?P<bytes2>(\d+)) bytes +(?P<bytes3>(\d+))$')
+
+        # packet output 90, packet drop 0
+        p34 = re.compile(r'^packet +output +(?P<packet_output>(\d+)), +packet +drop +(?P<packet_drop>(\d+))$')
+
+        # tail/random drop 0, no buffer drop 0, other drop 0
+        p35 = re.compile(r'^tail/random drop +(?P<tail_random_drops>(\d+)), +no buffer drop +(?P<no_buffer_drops>(\d+)), '
+                          '+other drop +(?P<other_drops>(\d+))$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -433,17 +464,17 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
                 police_dict = class_map_dict.setdefault('police', {})
                 continue
 
-            # cir 8000 bps, bc 1500 bytes
-            m = p7.match(line)
-            if m:
-                police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
-                police_dict['bc_bytes'] = int(m.groupdict()['bc_bytes'])
-                continue
-
             # police:  cir 64000 bps, bc 8000 bytes
             m = p6_1.match(line)
             if m:
                 police_dict = class_map_dict.setdefault('police', {})
+                police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
+                police_dict['bc_bytes'] = int(m.groupdict()['bc_bytes'])
+                continue
+
+            # cir 8000 bps, bc 1500 bytes
+            m = p7.match(line)
+            if m:
                 police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
                 police_dict['bc_bytes'] = int(m.groupdict()['bc_bytes'])
                 continue
@@ -546,20 +577,39 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
                 qos_dict['marker_statistics'] = m.groupdict()['marker_statistics']
                 continue
 
+            # qos-group 20
+            m = p13_3.match(line)
+            if m:
+                qos_dict['qos_group'] = int(m.groupdict()['qos_group'])
+                continue
+
+            # Packets marked 500
+            m = p13_4.match(line)
+            if m:
+                qos_dict['packets_marked'] = int(m.groupdict()['packets_marked'])
+                continue
+
             # Queueing
-            m = p16.match(line)
+            m = p14.match(line)
             if m:
                 class_map_dict['queueing'] = True
                 continue
 
-            # queue limit 64 packets
-            m = p16_1.match(line)
+            # queue size 0, queue limit 4068
+            m = p15.match(line)
             if m:
-                class_map_dict['queue_limit'] = m.groupdict()['queue_limit']
+                class_map_dict['queue_size'] = int(m.groupdict()['queue_size'])
+                class_map_dict['queue_limit'] = int(m.groupdict()['queue_limit'])
+                continue
+
+            # queue limit 64 packets
+            m = p16.match(line)
+            if m:
+                class_map_dict['queue_limit_packets'] = m.groupdict()['queue_limit']
                 continue
 
             # (queue depth/total drops/no-buffer drops) 0/0/0
-            m = p16_2.match(line)
+            m = p17.match(line)
             if m:
                 class_map_dict['queue_depth'] = int(m.groupdict()['queue_depth'])
                 class_map_dict['total_drops'] = int(m.groupdict()['total_drops'])
@@ -567,7 +617,7 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
                 continue
 
             # depth/total drops/no-buffer drops) 147/38/0
-            m = p16_2_1.match(line)
+            m = p17_1.match(line)
             if m:
                 class_map_dict['queue_depth'] = int(m.groupdict()['queue_depth'])
                 class_map_dict['total_drops'] = int(m.groupdict()['total_drops'])
@@ -575,28 +625,28 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
                 continue
 
             # (pkts output/bytes output) 0/0
-            m = p16_3.match(line)
+            m = p18_1.match(line)
             if m:
                 class_map_dict['pkts_output'] = int(m.groupdict()['pkts_output'])
                 class_map_dict['bytes_output'] = int(m.groupdict()['bytes_output'])
                 continue
 
             # (pkts matched/bytes matched) 363/87120
-            m = p16_3_1.match(line)
+            m = p18_2.match(line)
             if m:
                 class_map_dict['pkts_matched'] = int(m.groupdict()['pkts_matched'])
                 class_map_dict['bytes_matched'] = int(m.groupdict()['bytes_matched'])
                 continue
 
             # (pkts queued/bytes queued) 0/0
-            m = p16_3_2.match(line)
+            m = p18_3.match(line)
             if m:
                 class_map_dict['pkts_queued'] = int(m.groupdict()['pkts_queued'])
                 class_map_dict['bytes_queued'] = int(m.groupdict()['bytes_queued'])
                 continue
 
             # shape (average) cir 474656, bc 1899, be 1899
-            m = p16_4.match(line)
+            m = p19.match(line)
             if m:
                 class_map_dict['shape_type'] = m.groupdict()['shape_type']
                 class_map_dict['shape_cir_bps'] = int(m.groupdict()['shape_cir_bps'])
@@ -605,44 +655,44 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
                 continue
 
             # target shape rate 474656
-            m = p16_5.match(line)
+            m = p20.match(line)
             if m:
                 class_map_dict['target_shape_rate'] = int(m.groupdict()['target_shape_rate'])
                 continue
 
             # Output Queue: Conversation 266
-            m = p16_6.match(line)
+            m = p21.match(line)
             if m:
                 class_map_dict['output_queue'] = m.groupdict()['output_queue']
                 continue
 
             # Bandwidth 10 (%)
-            m = p16_7.match(line)
+            m = p22.match(line)
             if m:
                 class_map_dict['bandwidth_percent'] = int(m.groupdict()['bandwidth'])
                 continue
 
             # bandwidth 1000 (kbps)
-            m = p16_7_1.match(line)
+            m = p23.match(line)
             if m:
                 class_map_dict['bandwidth_kbps'] = int(m.groupdict()['bandwidth_kbps'])
                 continue
 
             # exponential weight: 9
-            m = p16_8.match(line)
+            m = p24.match(line)
             if m:
                 class_map_dict['exponential_weight'] = int(m.groupdict()['exponential_weight'])
                 continue
 
             # Exp-weight-constant: 9 (1/512)
-            m = p16_8_1.match(line)
+            m = p25.match(line)
             if m:
                 class_map_dict['exp_weight_constant'] = m.groupdict()['exp_weight_constant'].strip()
                 continue
 
             # mean queue depth: 25920
             # Mean queue depth: 0 bytes
-            m = p16_9.match(line)
+            m = p26.match(line)
             if m:
                 class_map_dict['mean_queue_depth'] = int(m.groupdict()['mean_queue_depth'])
                 continue
@@ -655,7 +705,7 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
             #   2             0/0               0/0               0/0      24000    40000  1/10
             #   3             0/0               0/0               0/0      26000    40000  1/10
             #   4             0/0               0/0               0/0      28000    40000  1/10
-            m = p17.match(line)
+            m = p27.match(line)
             if m:
                 group = m.groupdict()
                 class_val = group['class']
@@ -670,7 +720,7 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
                 continue
 
             # policy wred-policy
-            m = p18.match(line)
+            m = p28.match(line)
             if m:
                 policy = m.groupdict()['policy']
                 policy_dict = class_map_dict.setdefault('policy', {}).\
@@ -678,7 +728,7 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
                 continue
 
             # class prec2
-            m = p19.match(line)
+            m = p29.match(line)
             if m:
                 precedence_list,bytes1_list,bytes2_list,bytes3_list = ([] for _ in range(4))
                 class_value = m.groupdict()['class']
@@ -687,19 +737,31 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
                 continue
 
             # bandwidth 1000
-            m = p20.match(line)
+            m = p30.match(line)
             if m:
                 class_dictionary['bandwidth'] = int(m.groupdict()['bandwidth'])
                 continue
 
+            # bandwidth:class-based wfq, weight 25
+            m = p31.match(line)
+            if m:
+                class_map_dict['bandwidth'] = m.groupdict()['bandwidth']
+                continue
+
+            # bandwidth remaining ratio 1
+            m = p32.match(line)
+            if m:
+                class_map_dict['bandwidth_remaining_ratio'] = m.groupdict()['bandwidth_remaining_ratio']
+                continue
+
             # random-detect
-            m = p21.match(line)
+            m = p33.match(line)
             if m:
                 random_dict = class_dictionary.setdefault('random_detect', {})
                 continue
 
             # random-detect precedence 2 100 bytes 200 bytes 10
-            m = p21_1.match(line)
+            m = p33_1.match(line)
             if m:
                 precedence_list.append(int(m.groupdict()['precedence']))
                 bytes1_list.append(int(m.groupdict()['bytes1']))
@@ -709,6 +771,21 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
                 random_dict['bytes1'] = bytes1_list
                 random_dict['bytes2'] = bytes2_list
                 random_dict['bytes3'] = bytes3_list
+                continue
+
+            # packet output 90, packet drop 0
+            m = p34.match(line)
+            if m:
+                class_map_dict['packet_output'] = int(m.groupdict()['packet_output'])
+                class_map_dict['packet_drop'] = int(m.groupdict()['packet_drop'])
+                continue
+
+            # tail/random drop 0, no buffer drop 0, other drop 0
+            m = p35.match(line)
+            if m:
+                class_map_dict['tail_random_drops'] = int(m.groupdict()['tail_random_drops'])
+                class_map_dict['no_buffer_drops'] = int(m.groupdict()['no_buffer_drops'])
+                class_map_dict['other_drops'] = int(m.groupdict()['other_drops'])
                 continue
 
         return ret_dict
@@ -722,41 +799,44 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
 class ShowPolicyMapSchema(MetaParser):
 
     schema = {
-        'policy_map': 
-            {Any():
-                {'class':
-                    {Any():
-                        {Optional('priority_level'):
-                            {Any():
-                                {'kbps': int}},
-                        Optional('police'):
-                            {Optional('cir_bps'): int,
-                             Optional('bc_bytes'): int,
-                             Optional('be_bytes'): int,
-                             Optional('conform_color'): str,
-                             Optional('conform_action'): str,
-                             Optional('exceed_action'): str,
-                             Optional('violate_action'): str,
-                             Optional('service_policy'): str,
+        'policy_map': {
+            Any(): {
+                'class': {
+                    Any(): {
+                        Optional('priority_level'): {
+                            Any(): {
+                                'kbps': int}},
+                        Optional('police'): {
+                            Optional('cir_bps'): int,
+                            Optional('bc_bytes'): int,
+                            Optional('be_bytes'): int,
+                            Optional('conform_color'): str,
+                            Optional('conform_action'): str,
+                            Optional('exceed_action'): str,
+                            Optional('violate_action'): str,
+                            Optional('service_policy'): str,
                             },
                         Optional('bandwidth_kbps'): int,
                         Optional('conform_burst'): int,
                         Optional('pir'): int,
                         Optional('peak_burst'): int,
                         Optional('average_rate_traffic_shaping'): bool,
+                        Optional('cir_percent'): int,
+                        Optional('bc_msec'): int,
+                        Optional('be_msec'): int,
                         Optional('cir_bps'): int,
-                        Optional('weighted_fair_queueing'):
-                            {'bandwidth_percent': int,
-                             'exponential_weight': int,
-                             'explicit_congestion_notification': bool,
-                             'class':
-                                 {Any():
-                                     {'min_threshold': str,
-                                      'max_threshold': str,
-                                      'mark_probability': str,
-                                     },
-                                 },
-                             },
+                        Optional('weighted_fair_queueing'): {
+                            'bandwidth_percent': int,
+                            'exponential_weight': int,
+                            'explicit_congestion_notification': bool,
+                            'class': {
+                                Any(): {
+                                    'min_threshold': str,
+                                    'max_threshold': str,
+                                    'mark_probability': str,
+                                    },
+                                },
+                            },
                         },
                     },
                 },
@@ -857,6 +937,10 @@ class ShowPolicyMap(ShowPolicyMapSchema):
 
         p8_3 = re.compile(r'^(?P<class>(\w+)) +(?P<min_threshold>([\w\-]+)) +(?P<max_threshold>([\w\-]+)) '
                            '+(?P<mark_probability>([\d\/]+))$')
+
+        # cir 30% bc 10 (msec) be 10 (msec)
+        p9 = re.compile(r'^cir +(?P<cir_percent>(\d+))% +bc (?P<bc_msec>(\d+)) \(msec\) +'
+                         'be (?P<be_msec>(\d+)) \(msec\)$')
 
         for line in out.splitlines():
 
@@ -993,6 +1077,14 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 class_dict['min_threshold'] = group['min_threshold']
                 class_dict['max_threshold'] = group['max_threshold']
                 class_dict['mark_probability'] = group['mark_probability']
+                continue
+
+            # cir 30% bc 10 (msec) be 10 (msec)
+            m = p9.match(line)
+            if m:
+                class_map_dict['cir_percent'] = int(m.groupdict()['cir_percent'])
+                class_map_dict['bc_msec'] = int(m.groupdict()['bc_msec'])
+                class_map_dict['be_msec'] = int(m.groupdict()['be_msec'])
                 continue
 
         return ret_dict

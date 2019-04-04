@@ -686,7 +686,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'drop_rate_bps': 0},
                                     'match': ['any'],
                                     'queueing': True,
-                                    'queue_limit': '64',
+                                    'queue_limit_packets': '64',
                                     'queue_depth': 0,
                                     'total_drops': 0,
                                     'no_buffer_drops': 0,
@@ -950,7 +950,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'drop_rate_bps': 0},
                                     'match': ['ip precedence 2  (1179)'],
                                     'queueing': True,
-                                    'queue_limit': '62500',
+                                    'queue_limit_packets': '62500',
                                     'queue_depth': 0,
                                     'total_drops': 0,
                                     'no_buffer_drops': 0,
@@ -1025,7 +1025,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'offered_rate_bps': 0,
                                         'drop_rate_bps': 0},
                                     'match': ['any  (1183)'],
-                                    'queue_limit': '562500',
+                                    'queue_limit_packets': '562500',
                                     'queue_depth': 0,
                                     'total_drops': 0,
                                     'no_buffer_drops': 0,
@@ -1174,6 +1174,44 @@ class test_show_policy_map_type(unittest.TestCase):
             
     '''}
 
+    golden_parsed_output8 = {
+        'FastEthernet4/1/1': {
+            'service_policy': {
+                'input': {
+                    'policy_name': {
+                        'mypolicy': {
+                            'class_map': {
+                                'class1': {
+                                    'match_evaluation': 'match-all',
+                                    'packets': 500,
+                                    'bytes': 125000,
+                                    'rate': {
+                                        'interval': 300,
+                                        'offered_rate_bps': 4000,
+                                        'drop_rate_bps': 0},
+                                    'match': ['packet length min 100 max 300'],
+                                    'qos_set': {
+                                        'qos_group': 20,
+                                        'packets_marked': 500}}}}}}}}}
+
+    golden_output8 = {'execute.return_value': '''
+        Router# show policy-map interface
+        FastEthernet4/1/1
+        FastEthernet4/1/1
+            Service-policy input: mypolicy
+                Class-map: class1 (match-all)
+                    500 packets, 125000 bytes
+                    5 minute offered rate 4000 bps, drop rate 0 bps
+                    Match: packet length min 100 max 300
+                    QoS Set
+                        qos-group 20
+                        Packets marked 500
+        '''}
+
+    golden_parsed_output10 = {}
+
+    golden_output10 = {'execute.return_value': ''''''}
+
     def test_show_policy_map_control_plane_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -1229,6 +1267,14 @@ class test_show_policy_map_type(unittest.TestCase):
         obj = ShowPolicyMapType(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output7)
+
+    def test_show_policy_map_interface_full4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output8)
+        obj = ShowPolicyMapType(device=self.device)
+        parsed_output = obj.parse()
+        import pdb; pdb.set_trace()
+        self.assertEqual(parsed_output, self.golden_parsed_output8)
 
 
 # =============================================
