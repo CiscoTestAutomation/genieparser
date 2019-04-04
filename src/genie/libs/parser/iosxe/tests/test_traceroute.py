@@ -15,11 +15,11 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
 from genie.libs.parser.iosxe.traceroute import Traceroute
 
 
-# =====================================================================================================
+# ================
 # Unit test for:
-#   * 'traceroute {traceroute} numeric timeout {timeout} probe {probe} ttl {min} {max} source {source}'
-# =====================================================================================================
-class test_traceroute_numeric_timeout_probe_ttl_source(unittest.TestCase):
+#   * 'traceroute'
+# ================
+class test_traceroute(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -103,18 +103,66 @@ class test_traceroute_numeric_timeout_probe_ttl_source(unittest.TestCase):
           9 10.2.1.2 (red/1001, blue/2001)
         '''
 
-    def test_traceroute_numeric_timeout_probe_ttl_source_empty(self):
+    golden_parsed_output2 = {
+        'traceroute': 
+            {'172.31.165.220/32': 
+                {'hops': 
+                    {'0': 
+                        {'address': '192.168.197.94',
+                        'label_name': 
+                            {'1015': 
+                                {'exp': 0}},
+                        'mru': 1552},
+                    '1': 
+                        {'address': '192.168.197.93',
+                        'code': 'L',
+                        'label_name': 
+                            {'implicit-null': 
+                                {'exp': 0}},
+                        'mru': 1552,
+                        'probe_msec': ['1']},
+                    '2': 
+                        {'address': '192.168.197.102',
+                        'code': '!',
+                        'probe_msec': ['1']}},
+                'timeout_seconds': 2}}}
+
+    golden_output2 = '''\
+        router#traceroute mpls ipv4 172.31.165.220 255.255.255.255
+        Tracing MPLS Label Switched Path to 172.31.165.220/32, timeout is 2 seconds
+
+        Codes: '!' - success, 'Q' - request not sent, '.' - timeout,
+          'L' - labeled output interface, 'B' - unlabeled output interface,
+          'D' - DS Map mismatch, 'F' - no FEC mapping, 'f' - FEC mismatch,
+          'M' - malformed request, 'm' - unsupported tlvs, 'N' - no label entry,
+          'P' - no rx intf label prot, 'p' - premature termination of LSP,
+          'R' - transit router, 'I' - unknown upstream index,
+          'l' - Label switched with FEC change, 'd' - see DDMAP for return code,
+          'X' - unknown return code, 'x' - return code 0
+
+        Type escape sequence to abort.
+          0 192.168.197.94 MRU 1552 [Labels: 1015 Exp: 0]
+        L 1 192.168.197.93 MRU 1552 [Labels: implicit-null Exp: 0] 1 ms
+        ! 2 192.168.197.102 1 ms
+        '''
+
+    def test_traceroute_empty(self):
         self.device = Mock(**self.empty_output)
         obj = Traceroute(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
-    def test_traceroute_numeric_timeout_probe_ttl_source_golden1(self):
+    def test_traceroute_golden1(self):
         self.maxDiff = None
         obj = Traceroute(device=self.device)
-        parsed_output = obj.parse(address='172.16.166.253', timeout=1, probe=3, min=1, max=15, source='61.200.255.248', output=self.golden_output1)
+        parsed_output = obj.parse(output=self.golden_output1)
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
+    def test_traceroute_golden2(self):
+        self.maxDiff = None
+        obj = Traceroute(device=self.device)
+        parsed_output = obj.parse(output=self.golden_output2)
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 if __name__ == '__main__':
     unittest.main()

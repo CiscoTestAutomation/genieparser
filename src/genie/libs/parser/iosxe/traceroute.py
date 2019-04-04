@@ -14,14 +14,14 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
 
 
-# =====================================================================================================
+# ================
 # Schema for:
-#   * 'traceroute {traceroute} numeric timeout {timeout} probe {probe} ttl {min} {max} source {source}'
-# =====================================================================================================
+#   * 'traceroute'
+# ================
 class TracerouteSchema(MetaParser):
 
     ''' Schema for:
-        * 'traceroute {traceroute} numeric timeout {timeout} probe {probe} ttl {min} {max} source {source}'
+        * 'traceroute'
     '''
 
     schema = {
@@ -37,30 +37,33 @@ class TracerouteSchema(MetaParser):
                         Optional('vrf_out_id'): str,
                         Optional('label_name'): 
                             {Any(): 
-                                {'label': int,
+                                {Optional('label'): int,
                                 'exp': int,
                                 },
                             },
+                        Optional('code'): str,
+                        Optional('mru'): int,
                         },
                     },
+                Optional('timeout_seconds'): int,
                 },
             },
         }
 
 
-# =====================================================================================================
+# ================
 # Schema for:
-#   * 'traceroute {traceroute} numeric timeout {timeout} probe {probe} ttl {min} {max} source {source}'
-# =====================================================================================================
+#   * 'traceroute'
+# ================
 class Traceroute(TracerouteSchema):
 
     ''' Parser for:
-        * 'traceroute {traceroute} numeric timeout {timeout} probe {probe} ttl {min} {max} source {source}'
+        * 'traceroute'
     '''
 
-    cli_command = 'traceroute {address} numeric timeout {timeout} probe {probe} ttl {min} {max} source {source}'
+    cli_command = 'traceroute'
 
-    def cli(self, address='', timeout=None, probe=None, min=None, max=None, source=None, output=None):
+    def cli(self, output=None):
 
         # Init vars
         ret_dict = {}
@@ -73,7 +76,12 @@ class Traceroute(TracerouteSchema):
         # Type escape sequence to abort.
 
         # Tracing the route to 172.16.166.253
-        p1 = re.compile(r'^Tracing +the +route +to +(?P<traceroute>(\S+))$')
+        p1_1 = re.compile(r'^Tracing +the +route +to +(?P<traceroute>(\S+))$')
+
+        # Tracing MPLS Label Switched Path to 172.31.165.220/32, timeout is 2 seconds
+        p1_2 = re.compile(r'^Tracing +MPLS +Label +Switched +Path +to'
+                           ' +(?P<traceroute>(\S+)), +timeout +is'
+                           ' +(?P<timeout>(\d+)) +seconds$')
 
         # VRF info: (vrf in name/id, vrf out name/id)
 
@@ -83,6 +91,19 @@ class Traceroute(TracerouteSchema):
                          ' +\((?P<vrf_in_name>(\S+))\/(?P<vrf_in_id>(\d+)),'
                          ' +(?P<vrf_out_name>(\S+))\/(?P<vrf_out_id>(\d+))\)$')
 
+        # L 1 106.162.197.93 MRU 1552 [Labels: implicit-null Exp: 0] 1 ms
+        # ! 2 106.162.197.102 1 ms
+        p3_1 = re.compile(r'^(?P<code>(!|Q|.|L|D|M|P|R|I|X)) +(?P<hop>(\d+))'
+                           ' +(?P<address>([a-zA-Z0-9\.\:]+))'
+                           '(?: +MRU +(?P<mru>(\d+)))?'
+                           '(?: +\[Labels: +(?P<label_name>(\S+)) +Exp: +(?P<exp>(\d+))\])?'
+                           ' +(?P<probe_msec>(.*))$')
+
+        # 0 192.168.197.94 MRU 1552 [Labels: 1015 Exp: 0]
+        p3_2 = re.compile(r'^(?P<hop>(\d+)) +(?P<address>([a-zA-Z0-9\.\:]+))'
+                           ' +MRU +(?P<mru>(\d+)) +\[Labels: +(?P<label_name>(\S+))'
+                           ' +Exp: +(?P<exp>(\d+))\]$')
+
         # 1 172.31.255.125 [MPLS: Label 624 Exp 0] 70 msec 200 msec 19 msec
         # 2 10.0.9.1 [MPLS: Label 300678 Exp 0] 177 msec 150 msec 9 msec
         # 3 192.168.14.61 [MPLS: Label 302537 Exp 0] 134 msec 1 msec 55 msec
@@ -90,22 +111,29 @@ class Traceroute(TracerouteSchema):
         # 5 10.80.241.86 [MPLS: Label 24147 Exp 0] 69 msec 65 msec 111 msec 
         # 6 10.90.135.110 [MPLS: Label 24140 Exp 0] 21 msec 4 msec 104 msec
         # 7 172.31.166.10 92 msec 51 msec 148 msec
-        p3 = re.compile(r'^(?P<hop>(\d+)) +(?P<address>([a-zA-Z0-9\.\:]+))'
-                         '(?: +\((?P<in_name>(\S+))\/(?P<in_id>(\d+)),'
-                         ' +(?P<out_name>(\S+))\/(?P<out_id>(\d+))\))?'
+        p4 = re.compile(r'^(?P<hop>(\d+)) +(?P<address>([a-zA-Z0-9\.\:]+))'
                          '(?: +\[(?P<label_name>(MPLS)): +Label (?P<label>(\d+))'
                          ' +Exp +(?P<exp>(\d+))\])? +(?P<probe_msec>(.*))$')
 
         for line in out.splitlines():
-
             line = line.strip()
 
             # Tracing the route to 172.16.166.253
-            m = p1.match(line)
+            m = p1_1.match(line)
             if m:
                 traceroute = m.groupdict()['traceroute']
                 tr_dict = ret_dict.setdefault('traceroute', {}).\
                                    setdefault(traceroute, {})
+                continue
+
+            # Tracing MPLS Label Switched Path to 172.31.165.220/32, timeout is 2 seconds
+            m = p1_2.match(line)
+            if m:
+                group = m.groupdict()
+                traceroute = group['traceroute']
+                tr_dict = ret_dict.setdefault('traceroute', {}).\
+                                   setdefault(traceroute, {})
+                tr_dict['timeout_seconds'] = int(group['timeout'])
                 continue
 
             # 1 10.1.1.2 (red/1001, red/1001)
@@ -122,6 +150,44 @@ class Traceroute(TracerouteSchema):
                 hops_dict['vrf_out_id'] = group['vrf_out_id']
                 continue
 
+            # L 1 106.162.197.93 MRU 1552 [Labels: implicit-null Exp: 0] 1 ms
+            # ! 2 106.162.197.102 1 ms
+            m = p3_1.match(line)
+            if m:
+                group = m.groupdict()
+                hops_dict = tr_dict.setdefault('hops', {}).\
+                                    setdefault(group['hop'], {})
+                hops_dict['address'] = group['address']
+                if group['code']:
+                    hops_dict['code'] = group['code']
+                if group['mru']:
+                    hops_dict['mru'] = int(group['mru'])
+                if group['label_name']:
+                    label_dict = hops_dict.setdefault('label_name', {}).\
+                                           setdefault(group['label_name'], {})
+                    label_dict['exp'] = int(group['exp'])
+                if group['probe_msec']:
+                    hops_dict['probe_msec'] = group['probe_msec'].strip().\
+                                                replace(" msec", "").\
+                                                replace(" ms", "").\
+                                                split()
+                continue
+
+            #   0 192.168.197.94 MRU 1552 [Labels: 1015 Exp: 0]
+            m = p3_2.match(line)
+            if m:
+                group = m.groupdict()
+                hops_dict = tr_dict.setdefault('hops', {}).\
+                                    setdefault(group['hop'], {})
+                hops_dict['address'] = group['address']
+                if group['mru']:
+                    hops_dict['mru'] = int(group['mru'])
+                if group['label_name']:
+                    label_dict = hops_dict.setdefault('label_name', {}).\
+                                           setdefault(group['label_name'], {})
+                    label_dict['exp'] = int(group['exp'])
+                continue
+
             # 1 172.31.255.125 [MPLS: Label 624 Exp 0] 70 msec 200 msec 19 msec
             # 2 10.0.9.1 [MPLS: Label 300678 Exp 0] 177 msec 150 msec 9 msec
             # 3 192.168.14.61 [MPLS: Label 302537 Exp 0] 134 msec 1 msec 55 msec
@@ -129,14 +195,16 @@ class Traceroute(TracerouteSchema):
             # 5 10.80.241.86 [MPLS: Label 24147 Exp 0] 69 msec 65 msec 111 msec 
             # 6 10.90.135.110 [MPLS: Label 24140 Exp 0] 21 msec 4 msec 104 msec
             # 7 172.31.166.10 92 msec 51 msec 148 msec
-            m = p3.match(line)
+            m = p4.match(line)
             if m:
                 group = m.groupdict()
                 hops_dict = tr_dict.setdefault('hops', {}).\
                                     setdefault(group['hop'], {})
                 hops_dict['address'] = group['address']
-                hops_dict['probe_msec'] = group['probe_msec'].\
-                                            strip().replace(" msec", "").split()
+                hops_dict['probe_msec'] = group['probe_msec'].strip().\
+                                            replace(" msec", "").\
+                                            replace(" ms", "").\
+                                            split()
                 if group['label_name']:
                     label_dict = hops_dict.setdefault('label_name', {}).\
                                            setdefault(group['label_name'], {})
