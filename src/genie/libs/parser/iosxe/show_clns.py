@@ -43,7 +43,7 @@ class ShowClnsInterfaceSchema(MetaParser):
                                 'level_type': str,
                                 'interface_number': str,
                                 'local_circuit_id': str,
-                                'neighbor_extended_local_circuit_id': str,
+                                Optional('neighbor_extended_local_circuit_id'): str,
                                 'hello_interval': {
                                     Any(): {
                                         'next_is_is_lan_hello_in': int,
