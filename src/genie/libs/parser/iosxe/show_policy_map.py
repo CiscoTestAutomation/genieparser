@@ -193,6 +193,7 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
         # Init vars
         ret_dict = {}
         ret_dict = collections.OrderedDict(ret_dict)
+        class_line_type = None
 
         # Control Plane
         # GigabitEthernet0/1/5
@@ -341,16 +342,23 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
         p26 = re.compile(r'^(M|m)ean +queue +depth:+ *(?P<mean_queue_depth>(\d+))')
 
         # class     Transmitted       Random drop      Tail drop     Minimum Maximum Mark
-        #           pkts/bytes        pkts/bytes       pkts/bytes    thresh  thresh  prob
-        #                                                            (bytes)  (bytes)
+        # class     Transmitted       Random drop      Tail drop     Minimum Maximum Mark
+        p27_1 = re.compile(r'^class +Transmitted +Random +drop +Tail +drop +Minimum +Maximum +Mark$')
+
+        # Class Random       Tail    Minimum    Maximum     Mark      Output
+        p27_2 = re.compile(r'^Class +Random +Tail +Minimum +Maximum +Mark +Output$')
+
+        # class     Transmitted       Random drop      Tail drop     Minimum Maximum Mark
         #   0             0/0               0/0               0/0      20000    40000  1/10
         #   1           328/78720          38/9120            0/0      22000    40000  1/10
         #   2             0/0               0/0               0/0      24000    40000  1/10
         #   3             0/0               0/0               0/0      26000    40000  1/10
-        #   4             0/0               0/0               0/0      28000    40000  1/10
-        p27 = re.compile(r'^(?P<class>(\w+)) +(?P<transmitted>([\d\/]+)) +(?P<random_drop>([\d\/]+)) +'
-                          '(?P<tail_drop>([\d\/]+)) +(?P<minimum_thresh>([\d\/]+)) +'
-                          '(?P<maximum_thresh>([\d\/]+)) +(?P<mark_prob>([\d\/]+))$')
+        #   4             0/0               0/0               0/0      28000    40000  1/10     
+        # Class         Random             Tail            Minimum    Maximum   Mark   Output
+        #   0             0                 0                 0        0        1/10   0
+        p27 = re.compile(r'^(?P<class>(\w+)) +(?P<value1>([\d\/]+)) +(?P<value2>([\d\/]+)) +'
+                          '(?P<value3>([\d\/]+)) +(?P<value4>([\d\/]+)) +'
+                          '(?P<value5>([\d\/]+)) +(?P<value6>([\d\/]+))$')
 
         # policy wred-policy
         p28 = re.compile(r'^policy +(?P<policy>([\w\-]+))$')
@@ -417,6 +425,7 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
             m = p2.match(line)
             if m:
                 match_list = []
+                class_line_type = None
                 class_map = m.groupdict()['class_map'].strip()
                 class_match = m.groupdict()['match_all'].strip()
                 class_map_dict = policy_name_dict.setdefault('class_map', {}).\
@@ -707,6 +716,18 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
                 continue
 
             # class     Transmitted       Random drop      Tail drop     Minimum Maximum Mark
+            m = p27_1.match(line)
+            if m:
+                class_line_type = 1
+                continue
+
+            # Class Random       Tail    Minimum    Maximum     Mark      Output
+            m = p27_2.match(line)
+            if m:
+                class_line_type = 2
+                continue
+
+            # class     Transmitted       Random drop      Tail drop     Minimum Maximum Mark
             #           pkts/bytes        pkts/bytes       pkts/bytes    thresh  thresh  prob
             #                                                            (bytes)  (bytes)
             #   0             0/0               0/0               0/0      20000    40000  1/10
@@ -716,16 +737,32 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
             #   4             0/0               0/0               0/0      28000    40000  1/10
             m = p27.match(line)
             if m:
+                if class_line_type == 1:
+                    value1 = 'transmitted'
+                    value2 = 'random_drop'
+                    value3 = 'tail_drop'
+                    value4 = 'minimum_thresh'
+                    value5 = 'maximum_thresh'
+                    value6 = 'mark_prob'
+                elif class_line_type == 2:
+                    value1 = 'random_drop'
+                    value2 = 'tail_drop'
+                    value3 = 'minimum_thresh'
+                    value4 = 'maximum_thresh'
+                    value5 = 'mark_prob'
+                    value6 = 'output'
+                else:
+                    continue
                 group = m.groupdict()
                 class_val = group['class']
                 class_dict = class_map_dict.setdefault('class', {}).\
                                             setdefault(class_val, {})
-                class_dict['transmitted'] = group['transmitted']
-                class_dict['random_drop'] = group['random_drop']
-                class_dict['tail_drop'] = group['tail_drop']
-                class_dict['minimum_thresh'] = group['minimum_thresh']
-                class_dict['maximum_thresh'] = group['maximum_thresh']
-                class_dict['mark_prob'] = group['mark_prob']
+                class_dict[value1] = group['value1']
+                class_dict[value2] = group['value2']
+                class_dict[value3] = group['value3']
+                class_dict[value4] = group['value4']
+                class_dict[value5] = group['value5']
+                class_dict[value6] = group['value6']
                 continue
 
             # policy wred-policy
@@ -947,9 +984,9 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         # 6        -                -                1/10
         # 7        -                -                1/10
         # rsvp     -                -                1/10
-
+        # bandwidth remaining percent 50
         p8_3 = re.compile(r'^(?P<class_val>(\w+)) +(?P<min_threshold>([\w\-]+)) +(?P<max_threshold>([\w\-]+)) '
-                           '+(?P<mark_probability>([\d\/]+))$')
+                           '+(?P<mark_probability>([0-9]+)/([0-9]+))$')
 
         # cir 30% bc 10 (msec) be 10 (msec)
         p9 = re.compile(r'^cir +(?P<cir_percent>(\d+))% +bc (?P<bc_msec>(\d+)) \(msec\) +'

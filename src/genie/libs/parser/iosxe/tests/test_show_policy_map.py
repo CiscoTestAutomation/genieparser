@@ -1506,6 +1506,60 @@ class test_show_policy_map(unittest.TestCase):
 
     '''}
 
+    golden_parsed_output5 = {
+        'policy_map': 
+            {'PHB': 
+                {'class': 
+                    {'cos1': 
+                        {'police': 
+                            {'bc_bytes': 8000,
+                            'cir_bps': 200000,
+                            'conform_action': 'transmit',
+                            'exceed_action': 'drop'},
+                        'priority': True},
+                    'cos2': 
+                        {'bandwidth_kbps': 100,
+                        'bandwidth_remaining_percent': 40},
+                    'cos3': 
+                        {'bandwidth_kbps': 200,
+                        'bandwidth_remaining_percent': 50,
+                        'set': 'cos 5'},
+                    'cos5': 
+                        {'shape_average_min': 30}}}}}
+
+    golden_output5 = {'execute.return_value': '''
+            Router# show policy-map
+                Policy Map PHB
+                    Class cos1
+                        police cir 200000 bc 8000
+                            conform-action transmit
+                            exceed-action drop
+                        priority
+                    Class cos2
+                        bandwidth 100
+                        bandwidth remaining percent 40
+                    Class cos3
+                        bandwidth 200
+                        bandwidth remaining percent 50
+
+                Policy Map PHB
+                    Class cos1
+                        police cir 200000 bc 8000
+                            conform-action transmit
+                            exceed-action drop
+                        priority
+                    Class cos2
+                        bandwidth 100
+                    Class cos3
+                        bandwidth 200
+
+                Policy-map ingress_policy
+                    Class cos3
+                        Set cos 5
+                Policy-map egress policy
+                    Class cos5
+                        Shape average 30m '''}
+
     def test_show_policy_map_golden1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
@@ -1533,6 +1587,13 @@ class test_show_policy_map(unittest.TestCase):
         obj = ShowPolicyMap(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output4)
+
+    def test_show_policy_map_golden5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output5)
+        obj = ShowPolicyMap(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output5)
 
     def test_show_policy_map_empty(self):
         self.maxDiff = None
