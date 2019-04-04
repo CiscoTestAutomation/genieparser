@@ -144,6 +144,16 @@
     * Add ShowArpSummary for:
         show arp summary
 
+--------------------------------------------------------------------------------
+                                   L2VPN
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowMplsL2TransportVC for:
+        show mpls l2transport vc
+* IOS
+    * Add ShowMplsL2TransportVC for:
+        show mpls l2transport vc
+
 ----------------------------------------------------------------------------------
                                    ISIS
 ----------------------------------------------------------------------------------
@@ -159,3 +169,4 @@
         show clns is-neighbor detail
     * Add ShowClnsTraffic for:
         *  show clns traffic
+
