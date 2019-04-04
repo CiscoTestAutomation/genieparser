@@ -277,6 +277,6 @@ class ShowIpv6Rpf(ShowIpRpf):
         show ipv6 rpf <mroute address>
         show ipv6 rpf vrf <vrf> <mroute address>"""
 
-    def cli(self, mroute, vrf='',output=None):
-        return super().cli(mroute=mroute, af='ipv6', vrf=vrf,output=output)
+    def cli(self, mroute, af='ipv6', vrf='',output=None):
+        return super().cli(mroute=mroute, af=af, vrf=vrf,output=output)
 
