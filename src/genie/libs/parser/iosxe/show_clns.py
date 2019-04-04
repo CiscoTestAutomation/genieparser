@@ -46,7 +46,8 @@ class ShowClnsInterfaceSchema(MetaParser):
                                 Optional('neighbor_extended_local_circuit_id'): str,
                                 'hello_interval': {
                                     Any(): {
-                                        'next_is_is_lan_hello_in': int,
+                                        Optional('next_is_is_lan_hello_in'): int,
+                                        Optional('next_is_is_lan_hello_in_ms'): int,
                                     }
                                 },
                                 Any(): {  # level-1 , level-2
@@ -129,7 +130,7 @@ class ShowClnsInterface(ShowClnsInterfaceSchema):
         #     Number of active level-1 adjacencies: 1
         p15 = re.compile(r'^Number +of +active +(?P<level>\S+) +adjacencies: +(?P<adjacencies>\d+)$')
         #     Next IS-IS LAN Level-1 Hello in 1 seconds
-        p16 = re.compile(r'^Next +IS\-IS +LAN (?P<level>\S+) +Hello +in +(?P<level_hello>\d+) +(milli)?seconds$')
+        p16 = re.compile(r'^Next +IS\-IS +LAN (?P<level>\S+) +Hello +in +(?P<level_hello>\d+) +(?P<milli>[\w\(\)]+)?seconds$')
         #     Next IS-IS LAN Level-2 Hello in 645 milliseconds
 
         for line in out.splitlines():
@@ -279,7 +280,11 @@ class ShowClnsInterface(ShowClnsInterfaceSchema):
             if m:
                 group = m.groupdict()
                 next_dict = isis_dict.setdefault('hello_interval', {}).setdefault(group['level'].lower(), {})
-                next_dict.update({'next_is_is_lan_hello_in': int(group['level_hello'])})
+                if group['milli']:
+                    if 'milli' in group['milli']:
+                        next_dict.update({'next_is_is_lan_hello_in_ms': int(group['level_hello'])})
+                else:
+                    next_dict.update({'next_is_is_lan_hello_in': int(group['level_hello'])})
                 continue
 
 

@@ -56,7 +56,7 @@ class test_show_ip_interface(unittest.TestCase):
                                         'next_is_is_lan_hello_in': 1,
                                     } ,
                                     'level-2': {
-                                        'next_is_is_lan_hello_in': 645,
+                                        'next_is_is_lan_hello_in_ms': 645,
                                     },
                                 },
                                 'level-1': {
