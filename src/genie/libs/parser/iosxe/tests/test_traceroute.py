@@ -12,7 +12,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                              SchemaMissingKeyError
 
 # iosxe traceroute
-from genie.libs.parser.iosxe.traceroute import TracerouteNumericTimeoutProbeTTLSource
+from genie.libs.parser.iosxe.traceroute import Traceroute
 
 
 # =====================================================================================================
@@ -34,61 +34,58 @@ class test_traceroute_numeric_timeout_probe_ttl_source(unittest.TestCase):
                             {'MPLS': 
                                 {'exp': 0,
                                 'label': 624}},
-                        'first': 70,
-                        'second': 200,
-                        'third': 19},
+                        'probe_msec': ['70', '200', '19']},
                     '2': 
                         {'address': '10.0.9.1',
+                        
                         'label_name': 
                             {'MPLS': 
                                 {'exp': 0,
                                 'label': 300678}},
-                        'first': 177,
-                        'second': 150,
-                        'third': 9},
+                        'probe_msec': ['177', '150', '9']},
                     '3': 
                         {'address': '192.168.14.61',
                         'label_name': 
                             {'MPLS': 
                                 {'exp': 0,
                             'label': 302537}},
-                        'first': 134,
-                        'second': 1,
-                        'third': 55},
+                        'probe_msec': ['134', '1', '55']},
                     '4': 
                         {'address': '192.168.15.1',
                         'label_name': 
                             {'MPLS': 
                                 {'exp': 0,
                                 'label': 24133}},
-                        'first': 6,
-                        'second': 7,
-                        'third': 64},
+                        'probe_msec': ['6', '7', '64']},
                     '5': 
                         {'address': '10.80.241.86',
                         'label_name': 
                             {'MPLS': 
                                 {'exp': 0,
                                 'label': 24147}},
-                        'first': 69,
-                        'second': 65,
-                        'third': 111},
+                        'probe_msec': ['69', '65', '111']},
                     '6': 
                         {'address': '10.90.135.110',
                         'label_name': 
                             {'MPLS': 
                                 {'exp': 0,
                                 'label': 24140}},
-                        'first': 21,
-                        'second': 4,
-                        'third': 104},
+                        'probe_msec': ['21', '4', '104']},
                     '7': 
                         {'address': '172.31.166.10',
-                        'first': 92,
-                        'second': 51,
-                        'third': 148}},
-                'vrf_in': 'name/id',
-                'vrf_out': 'name/id'}}}
+                        'probe_msec': ['92', '51', '148']},
+                    '8': 
+                        {'address': '10.1.1.2',
+                        'vrf_in_id': '1001',
+                        'vrf_in_name': 'red',
+                        'vrf_out_id': '2001',
+                        'vrf_out_name': 'blue'},
+                    '9': 
+                        {'address': '10.2.1.2',
+                        'vrf_in_id': '1001',
+                        'vrf_in_name': 'red',
+                        'vrf_out_id': '2001',
+                        'vrf_out_name': 'blue'}}}}}
 
     golden_output1 = '''\
         router#traceroute 172.16.166.253 numeric timeout 1 probe 3 ttl 1 15 source 61.200.255.248 
@@ -102,17 +99,20 @@ class test_traceroute_numeric_timeout_probe_ttl_source(unittest.TestCase):
           5 10.80.241.86 [MPLS: Label 24147 Exp 0] 69 msec 65 msec 111 msec 
           6 10.90.135.110 [MPLS: Label 24140 Exp 0] 21 msec 4 msec 104 msec 
           7 172.31.166.10 92 msec 51 msec 148 msec
+          8 10.1.1.2 (red/1001, blue/2001)
+          9 10.2.1.2 (red/1001, blue/2001)
         '''
 
     def test_traceroute_numeric_timeout_probe_ttl_source_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = TracerouteNumericTimeoutProbeTTLSource(device=self.device)
+        obj = Traceroute(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
     def test_traceroute_numeric_timeout_probe_ttl_source_golden1(self):
-        obj = TracerouteNumericTimeoutProbeTTLSource(device=self.device)
-        parsed_output = obj.parse(traceroute='172.16.166.253', timeout=1, probe=3, min=1, max=15, source='61.200.255.248', output=self.golden_output1)
+        self.maxDiff = None
+        obj = Traceroute(device=self.device)
+        parsed_output = obj.parse(address='172.16.166.253', timeout=1, probe=3, min=1, max=15, source='61.200.255.248', output=self.golden_output1)
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 
