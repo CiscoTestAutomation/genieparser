@@ -22,15 +22,16 @@ class ShowIpRipDatabase(ShowIpRipDatabase_iosxe):
     """
     pass
 
-class ShowIpv6Rip(ShowIpv6Rip_iosxe):
-	"""Parser for :
-       show ipv6 rip
-       show ipv6 rip vrf {vrf}"""
-	pass
-
 class ShowIpv6RipDatabase(ShowIpv6RipDatabase_iosxe):
 	"""Parser for :
        show ipv6 rip database
        show ipv6 rip database vrf {vrf}
        """
 	pass
+	
+class ShowIpv6Rip(ShowIpv6Rip_iosxe):
+	"""Parser for :
+       show ipv6 rip
+       show ipv6 rip vrf {vrf}"""
+	pass
+
