@@ -36,6 +36,14 @@
     * Add ShowLacpNeighborDetail for:
         show lacp neighbor detail
 
+* IOSXR
+    * Add ShowLacpSystemId for:
+        show lacp system-id
+    * Add ShowBundle for:
+        show lacp bundle
+    * Add ShowLacp for:
+        show lacp
+
 --------------------------------------------------------------------------------
                                    INTERFACE
 --------------------------------------------------------------------------------
