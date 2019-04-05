@@ -205,5 +205,11 @@
     * Add ShowClnsIsNeighborDetail for:
         show clns is-neighbor detail
     * Add ShowClnsTraffic for:
-        *  show clns traffic
+        show clns traffic
+    * Add ShowIsisHostname for:
+        show isis hostname
+    * Add ShowIsisLspLog for:
+        show isis lsp-log
+    * Add ShowIsisDatabaseDetail for:
+        show isis database detail
 
