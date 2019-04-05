@@ -1,4 +1,4 @@
-''' show_ip_eirgp.py
+''' show_eigrp.py
 IOSXE parsers for the following commands
 
     * 'show ip eigrp neighbors'
