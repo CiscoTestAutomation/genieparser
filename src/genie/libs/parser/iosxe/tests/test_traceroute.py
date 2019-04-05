@@ -22,7 +22,7 @@ from genie.libs.parser.iosxe.traceroute import Traceroute
 class test_traceroute(unittest.TestCase):
 
     device = Device(name='aDevice')
-    empty_output = {'execute.return_value': ''}
+    empty_output = ''
 
     golden_parsed_output1 = {
         'traceroute': 
@@ -147,10 +147,9 @@ class test_traceroute(unittest.TestCase):
         '''
 
     def test_traceroute_empty(self):
-        self.device = Mock(**self.empty_output)
         obj = Traceroute(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
+            parsed_output = obj.parse(output=self.empty_output)
 
     def test_traceroute_golden1(self):
         self.maxDiff = None

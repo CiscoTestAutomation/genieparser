@@ -61,17 +61,13 @@ class Traceroute(TracerouteSchema):
         * 'traceroute'
     '''
 
-    cli_command = 'traceroute'
-
-    def cli(self, output=None):
+    def cli(self, output):
 
         # Init vars
         ret_dict = {}
 
-        if output is None:
-            return ret_dict
-        else:
-            out = output
+        # Set output
+        out = output
 
         # Type escape sequence to abort.
 
