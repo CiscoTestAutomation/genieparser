@@ -3,7 +3,7 @@
 IOSXE parsers for the following show commands:
 
     * show bridge-domain
-    * show bridge-domain <WORD>
+    * show bridge-domain <BD_ID>
     * show bridge-domain | count <WORD>
     * show ethernet service instance detail
     * show ethernet service instance interface <interface> detail
@@ -32,7 +32,7 @@ from genie.libs.parser.utils.common import Common
 # ====================================
 class ShowBridgeDomainSchema(MetaParser):
     """Schema for show bridge-domain
-                  show bridge-domain <WORD>
+                  show bridge-domain <BD_ID>
                   show bridge-domain | count <WORD>"""
 
     schema = {
@@ -72,7 +72,7 @@ class ShowBridgeDomainSchema(MetaParser):
 
 class ShowBridgeDomain(ShowBridgeDomainSchema):
     """Parser for show bridge-domain
-                  show bridge-domain <WORD>
+                  show bridge-domain <BD_ID>
                   show bridge-domain | count <WORD>"""
 
     cli_command = ['show bridge-domain', 'show bridge-domain {bd_id}', 'show bridge-domain | count {word}']
