@@ -25,73 +25,40 @@ class ShowAclAfiAllSchema(MetaParser):
         Any():{
             'name': str,
             'type': str,
-            Optional('per_user'): bool,
             Optional('aces'): {
                 Any(): {
                     'name': str,
                     'matches': {
-                        Optional('l2'): {
-                            'eth': {
-                                'destination_mac_address': str,
-                                'source_mac_address': str,
-                                Optional('ether_type'): str,
-                                Optional('cos'): int,
-                                Optional('vlan'): int,
-                                Optional('protocol_family'): str,
-                                Optional('lsap'): str,
-                            }
-                        },
                         Optional('l3'): {
                             Any(): {   # protocols
-                                Optional('dscp'): str,
                                 Optional('ttl'): int,
                                 Optional('ttl_operator'): str,
-                                'protocol': str,
                                 Optional('precedence'): str,
-                                Optional('precedence_code'): int,
-                                'destination_network': {
+                                'destination_ipv4_network': {
                                     Any(): {
-                                        'destination_network': str,
+                                        'destination_ipv4_network': str,
                                     }
                                 },
-                                'source_network': {
+                                'source_ipv4_network': {
                                     Any(): {
-                                        'source_network': str,
+                                        'source_ipv4_network': str,
                                     }
                                 }
                             },
                         },
                         Optional('l4'): {
                             Any(): {   # protocols
-                                Optional('type'): int,
-                                Optional('code'): int,
-                                Optional('acknowledgement_number'): int,
-                                Optional('data_offset'): int,
-                                Optional('reserved'): int,
-                                Optional('flags'): str,
-                                Optional('window_size'): int,
-                                Optional('urgent_pointer'): int,
-                                Optional('options'): int,
-                                Optional('options_name'): str,
                                 Optional('established'): bool,
-                                Optional('source_port'): {
-                                    Optional('range'): {
-                                        'lower_port': int,
-                                        'upper_port': int,
-                                    },
+                                Optional('source-port'): {
                                     Optional('operator'): {
                                         'operator': str,
                                         'port': str,
                                     }
                                 },
                                 Optional('destination_port'): {
-                                   Optional('range'): {
-                                        'lower_port': int,
-                                        'upper_port': int,
-                                    },
                                     Optional('operator'): {
                                         'operator': str,                                        
-                                        'port': int,
+                                        'port': str,
                                     }
                                 }
                             }
@@ -99,11 +66,7 @@ class ShowAclAfiAllSchema(MetaParser):
                     },
                     'actions': {
                         'forwarding': str,
-                        Optional('logging'): str,
                     },
-                    Optional('statistics'): {
-                        'matched_packets': int,
-                    }
                 }
             }
         }
@@ -116,73 +79,6 @@ class ShowAclAfiAll(ShowAclAfiAllSchema):
     """Parser for:
         'show access-lists afi-all'
     """
-    OPER_MAP = {
-        'bgp':          179,
-        'chargen':      19,
-        'cmd':          514,
-        'daytime':      13,
-        'discard':      9,
-        'domain':       53,
-        'echo':         7,
-        'exec':         512,
-        'finger':       79,
-        'ftp':          21,
-        'ftp-data':     20,
-        'gopher':       70,
-        'hostname':     101,
-        'ident':        113,
-        'irc':          194,
-        'klogin':       543,
-        'kshell':       544,
-        'login':        513,
-        'lpd':          515,
-        'msrpc':        135,
-        'nntp':         119,
-        'onep-plain':   15001,
-        'onep-tls':     15002,
-        'pim-auto-rp':  496,
-        'pop2':         109,
-        'pop3':         110,
-        'smtp':         25,
-        'sunrpc':       111,
-        'syslog':       514,
-        'tacacs':       49,
-        'talk':         517,
-        'telnet':       23,
-        'time':         37,
-        'uucp':         540,
-        'whois':        43,
-        'www':          80,
-        'biff':           512,
-        'bootpc':         68,
-        'bootps':         67,
-        'discard':        9,
-        'dnsix':          195,
-        'domain':         53,
-        'echo':           7,
-        'isakmp':         500,
-        'mobile-ip':      434,
-        'nameserver':     42,
-        'netbios-dgm':    138,
-        'netbios-ns':     137,
-        'netbios-ss':     139,
-        'non500-isakmp':  4500,
-        'ntp':            123,
-        'pim-auto-rp':    496,
-        'rip':            520,
-        'ripv6':          21,
-        'ssh': 22,
-        'snmp':           161,
-        'snmptrap':       162,
-        'sunrpc':         111,
-        'syslog':         514,
-        'tacacs':         49,
-        'talk':           517,
-        'tftp':           69,
-        'time':           37,
-        'who':            513,
-        'xdmcp':          177
-    }
 
     cli_command = 'show access-lists afi-all'
     def cli(self,output=None):
@@ -200,28 +96,16 @@ class ShowAclAfiAll(ShowAclAfiAllSchema):
         # 10 permit tcp 192.168.1.0 0.0.0.255 host 1.1.1.1 established log
         # 20 permit tcp host 2.2.2.2 eq www any precedence network ttl eq 255
         # 30 deny ipv4 any any
-        p2 = re.compile(
-            r'^(?P<seq>\d+)? +(?P<actions_forwarding>(deny|permit)) +'
-            '(?P<protocol>\w+) +(((?P<src1>host +(\d+.){3}\d+|any))|'
-            '(?P<src>(((\d+.){3}\d+ +(\d+.){3}\d+)|any)))'
-            '( *(?P<src_operator>(eq|gt|lt|neq|range)) +'
-            '(?P<src_port>[\w\-\s]+))?'
-            '(?P<dst>( *host)? +(any|((\d+.){3}\d+ +(\d+.){3}\d+)|'
-            '(\d+.){3}\d+))( *(?P<left>.*))?$')
+        p2 = re.compile(r'^(?P<seq>\d+) +(?P<actions_forwarding>permit|deny) +'
+            '(?P<protocol>tcp|ipv4|ipv6) +(?P<src>(any|(host +[\d\.:]+))'
+            '|([\d\.]+ +[\d\.]+))( ?(?P<src_operator>eq) +(?P<src_port>\w+))?'
+            ' +(?P<dst>(host +[\d\.:]+)|any)( +(?P<des_operator>eq) +'
+            '(?P<des_port>\w+))?(?P<established_log> +established +log)'
+            '?( +precedence +(?P<precedence>network) +ttl +(?P<ttl_operator>eq)'
+            ' +(?P<ttl>\d+))?')
 
-        # 10 permit ipv6 any any log
-        # 20 permit ipv6 host 2001::1 host 2001:1::2
-        # 30 permit tcp any eq 8443 host 2001:2::2
-        p3 = re.compile(
-            r'(?P<seq>\d+) +(?P<actions_forwarding>(deny|permit)) +'
-            '(?P<protocol>(ahp|esp|hbh|icmp|ipv6|pcp|sctp|tcp|udp))'
-            ' +(((?P<src1>host +[\w\:]+|any))|(?P<src>(any|([\w\:]+ +[\w\:]+))))'
-            '( *(?P<src_operator>(eq|gt|lt|neq|range)) +(?P<src_port>[\w\-\s]+))?'
-            '( +(((?P<dst1>host +[\w\:]+|any))|(?P<dst>any|([\w\:]+ +[\w\:]+))))'
-            '( *(?P<left>.*))?$')
         # initial variables
         ret_dict = {}
-
 
         for line in out.splitlines():
             line = line.strip()
@@ -236,150 +120,65 @@ class ShowAclAfiAll(ShowAclAfiAllSchema):
                 acl_dict['type'] = acl_type
                 continue
 
-            # 10 permit tcp any any eq www
-            # 30 permit tcp any any eq 443
-            # 10 permit tcp 192.168.1.0 0.0.0.255 host 1.1.1.1 established log
-            # 20 permit tcp host 2.2.2.2 eq www any precedence network ttl eq 255
-            # 30 deny ipv4 any any
-            m_v4 = p2.match(line)
-
-            # 10 permit ipv6 any any log
-            # 20 permit ipv6 host 2001::1 host 2001:1::2
-            # 30 permit tcp any eq 8443 host 2001:2::2
-            m_v6 = p3.match(line)
-            m = m_v4 if m_v4 else m_v6
+            m = p2.match(line)
             if m:
                 group = m.groupdict()
-                seq_dict = acl_dict.setdefault('aces', {}).setdefault(group['seq'], {})
-                seq_dict['name'] = group['seq']
-                # store values
-                protocol = group['protocol']
-                protocol = 'ipv4' if protocol == 'ip' else protocol
+                seq = int(group['seq'])
                 actions_forwarding = group['actions_forwarding']
-                src = group['src'] if group['src'] else group['src1']
-                dst = group['dst']
-                src = src.strip()
-                if 'dst1' in group:
-                    dst = dst if dst else group['dst1']
-                dst = dst.strip()
-                # optional keys
+                protocol = group['protocol']
+                src = group['src']
                 src_operator = group['src_operator']
                 src_port = group['src_port']
-                left = str(group['left'])
-                # actions
-                seq_dict.setdefault('actions', {})\
-                    .setdefault('forwarding', actions_forwarding)
-                seq_dict['actions']['logging'] = 'log-syslog' if 'log' in left else 'log-none'
+                dst = group['dst']
+                des_operator = group['des_operator']
+                des_port = group['des_port']
+                established_log = group['established_log']
+               
 
-                # l3 dict
+                seq_dict = acl_dict.setdefault('aces', {}).setdefault(seq, {})
+                seq_dict['name'] = group['seq']
                 l3_dict = seq_dict.setdefault('matches', {}).setdefault('l3', {})\
                     .setdefault(protocol, {})
-                l3_dict['protocol'] = protocol
-                l3_dict.setdefault('source_network', {})\
-                    .setdefault(src, {}).setdefault('source_network', src)
-                l3_dict.setdefault('destination_network', {})\
-                    .setdefault(dst, {}).setdefault('destination_network', dst)
 
-                l3_dict.setdefault('dscp', re.search('dscp +(\w+)', left).groups()[0])\
-                    if 'dscp' in left else None
+                l3_dict.setdefault('source_ipv4_network', {}).\
+                    setdefault(src, {}).setdefault('source_ipv4_network', src)
 
-                if 'ttl' in left:
-                    ttl_group = re.search('ttl +(\w+) +(\d+)', left)
-                    l3_dict['ttl_operator'] = ttl_group.groups()[0]
-                    l3_dict['ttl'] = int(ttl_group.groups()[1])
+                l3_dict.setdefault('destination_ipv4_network', {}).\
+                    setdefault(src, {}).setdefault('destination_ipv4_network', dst)
 
-                if 'precedence' in left:
-                    prec = re.search('precedence +(\w+)', left).groups()[0]
-                    if prec.isdigit():
-                        l3_dict['precedence_code'] = int(prec)
-                        try:
-                            l3_dict['precedence'] = self.PRECED_MAP[prec]
-                        except Exception:
-                            pass
-                    else:
-                        l3_dict['precedence'] = prec
-
-                # l4_dict
-                l4_dict = seq_dict.setdefault('matches', {}).setdefault('l4', {})\
+                if src_operator and src_port:
+                    l4_dict = seq_dict.setdefault('matches', {}).setdefault('l4', {})\
                     .setdefault(protocol, {})
-                if 'options' in left:
-                    options_name = re.sealrch('options +(\w+)', left).groups()[0]
-                    if not options_name.isdigit():
-                        try:
-                            l4_dict['options'] = self.OPT_MAP[options_name]
-                        except Exception:
-                            pass
-                        l4_dict['options_name'] = options_name
-                    else:
-                        l4_dict['options'] = options_name
+                    source_port_operator_dict = l4_dict.setdefault('source-port', {}). \
+                        setdefault('operator', {})
+                    source_port_operator_dict.update({'operator' : src_operator})
+                    source_port_operator_dict.update({'port' : src_port})
 
-                l4_dict['established'] = True \
-                    if 'established' in left else False
-                # source_port operator
-                if src_port and src_operator:
-                    if 'range' not in src_operator:
-                        l4_dict.setdefault('source_port', {}).setdefault('operator', {})\
-                            .setdefault('operator', src_operator)
-                        l4_dict.setdefault('source_port', {}).setdefault('operator', {})\
-                            .setdefault('port', src_port)
-                    else:
-                        lower_port = src_port.split()[0]
-                        upper_port = src_port.split()[1]
-                        if not lower_port.isdigit():
-                            try:
-                                lower_port = self.OPER_MAP[lower_port]
-                            except Exception:
-                                pass
-                        else:
-                            lower_port = int(lower_port)
-                        if not upper_port.isdigit():
-                            try:
-                                upper_port = self.OPER_MAP[upper_port]
-                            except Exception:
-                                pass
-                        else:
-                            upper_port = int(upper_port)
-                        l4_dict.setdefault('source_port', {}).setdefault('range', {})\
-                            .setdefault('lower_port', lower_port)
-                        l4_dict.setdefault('source_port', {}).setdefault('range', {})\
-                            .setdefault('upper_port', upper_port)
+                if des_operator and des_port:
+                    l4_dict = seq_dict.setdefault('matches', {}).setdefault('l4', {})\
+                    .setdefault(protocol, {})
+                    dest_port_operator_dict = l4_dict.setdefault('destination_port', {}). \
+                        setdefault('operator', {})
+                    dest_port_operator_dict.update({'operator' : des_operator})
+                    dest_port_operator_dict.update({'port' : des_port})
 
-                # destination_port operator
-                dst_oper = re.search('^(eq|gt|lt|neq|range) +([\w\-]+)( +([\w\-]+))?', left)
-                if dst_oper:
-                    operator = dst_oper.groups()[0]
-                    val1 = dst_oper.groups()[1]
-                    if val1.isdigit():
-                        val1 = int(val1)
-                    else:
-                        try:
-                            val1 = self.OPER_MAP[val1]
-                        except Exception:
-                            pass
-                    val2 = dst_oper.groups()[-1]
-                    if val2 and val2.isdigit():
-                        val2 = int(val2)
-                    elif val2:
-                        try:
-                            val2 = self.OPER_MAP[val2]
-                        except Exception:
-                            pass
-                    if 'range' not in operator:
-                        l4_dict.setdefault('destination_port', {}).setdefault('operator', {})\
-                            .setdefault('operator', operator)
-                        l4_dict.setdefault('destination_port', {}).setdefault('operator', {})\
-                            .setdefault('port', val1)
-                    else:
-                        l4_dict.setdefault('destination_port', {}).setdefault('range', {})\
-                            .setdefault('lower_port', val1)
-                        l4_dict.setdefault('destination_port', {}).setdefault('range', {})\
-                            .setdefault('upper_port', val2)
+                if established_log:
+                    l4_dict = seq_dict.setdefault('matches', {}).setdefault('l4', {})\
+                    .setdefault(protocol, {})
+                    l4_dict.update({'established': True })
 
-                # icmp type and code
-                if protocol == 'icmp':
-                    code_group = re.search('^(\d+) +(\d+)', left)
-                    if code_group:
-                        l4_dict['type'] = int(code_group.groups()[0])
-                        l4_dict['code'] = int(code_group.groups()[1])
+                if group['precedence']:
+                    precedence = group['precedence']
+                    l3_dict.update({'precedence' : precedence})
+
+                if group['ttl_operator'] and  group['ttl']: 
+                    ttl_operator = group['ttl_operator']
+                    ttl = int(group['ttl'])
+                    l3_dict.update({'ttl': ttl})
+                    l3_dict.update({'ttl_operator': ttl_operator})
+
+                if group['actions_forwarding']:
+                    actions_forwarding = group['actions_forwarding']
+                    seq_dict.setdefault('actions', {}).setdefault('forwarding', actions_forwarding)
                 continue
         return ret_dict
