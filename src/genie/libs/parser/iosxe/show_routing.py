@@ -1167,7 +1167,7 @@ class ShowIpCefSchema(MetaParser):
                     Any():{
                         'prefix': {
                             Any(): {
-                                'nexthop': {
+                                Optional('nexthop'): {
                                     Any(): {
                                         Optional('outgoing_interface'): {
                                              Any(): {
@@ -1229,8 +1229,10 @@ class ShowIpCef(ShowIpCefSchema):
         p1 = re.compile(r'^(?P<prefix>[\w\:\.]+[\/]+[\d]+)$')
         #     nexthop 106.162.197.93 TenGigabitEthernet0/2/0 label 22-(local:2043)
         #     nexthop 10.1.2.2 GigabitEthernet2.100
+        #     nexthop FE80::A8BB:CCFF:FE03:2101 FastEthernet0/0/0 label 18
+        #     nexthop 10.2.3.3 FastEthernet1/0/0 label 17 24
         p2 = re.compile(r'^nexthop +(?P<nexthop>[\w\.\:]+) +(?P<interface>\S+)'
-                        '( +label +(?P<outgoing_label>\d+)-\(local:(?P<local_label>\w+)\))?$')
+                        '( +label +(?P<outgoing_label>[\d\ ]+))?(-\(local:(?P<local_label>\w+)\))?$')
         #     attached to GigabitEthernet3.100
         p3 = re.compile(r'^(?P<nexthop>\w+) +(to|for) +(?P<interface>\S+)$')
 
