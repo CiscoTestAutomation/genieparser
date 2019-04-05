@@ -1,10 +1,17 @@
-#!/bin/env python
+
+# Python
 import unittest
 from unittest.mock import Mock
-from ats.topology import Device
 
-from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
-                                       SchemaMissingKeyError
+# ATS
+from ats.topology import Device
+from ats.topology import loader
+
+# Metaparser
+from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
+                                             SchemaMissingKeyError
+
+# iosxe show_platform
 from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   Dir,\
                                                   ShowRedundancy,\
@@ -350,7 +357,7 @@ class test_show_version(unittest.TestCase):
         System Serial Number               : FOC1932X0F9
 
         Configuration register is 0x102
-'''}
+    '''}
 
     golden_parsed_output_asr1k = {
                                     'version': {
@@ -459,7 +466,7 @@ class test_show_version(unittest.TestCase):
         0K bytes of  at webui:.
 
         Configuration register is 0x2000 (will be 0x2002 at next reload)
-'''}
+    '''}
 
     golden_parsed_output_isr4k = {
         'version': {
@@ -585,7 +592,7 @@ class test_show_version(unittest.TestCase):
         0K bytes of WebUI ODM Files at webui:.
 
         Configuration register is 0x2102
-''' }
+    ''' }
 
     golden_parsed_output_asr901 = {
         'version': 
@@ -714,8 +721,8 @@ class test_dir(unittest.TestCase):
     dev_c3850 = Device(name='c3850')
     empty_output = {'execute.return_value': ''}
     semi_empty_output = {'execute.return_value': '''\
-Directory of flash:/
-'''}
+        Directory of flash:/
+    '''}
 
     golden_parsed_output_c3850 = {
                                     'dir': {
@@ -1224,231 +1231,224 @@ Compiled Tue 25-Apr-17 06:17 by mcpre
         parsed_output = redundancy_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_asr1k)
 
-
+# ====================
+# Unit test for:
+#   * 'show inventory'
+# ====================
 class test_show_inventory(unittest.TestCase):
-    dev1 = Device(name='empty')
-    dev2 = Device(name='semi_empty')
-    dev_asr1k = Device(name='asr1k')
-    dev_c3850 = Device(name='c3850')
-    dev_asr901 = Device(name='asr901')
+    
+    device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
-    semi_empty_output = {'execute.return_value': '''/
-        NAME: "c38xx Stack", DESCR: "c38xx Stack"
-        PID: WS-C3850-24P-E    , VID: V01  , SN: FCW1932D0LB
-
-        NAME: "Switch 1", DESCR: "WS-C3850-24P-E"
-        PID: WS-C3850-24P-E    , VID: V01  ,
-    '''}
 
     golden_parsed_output_c3850 = {
-                                    'main': {
-                                        'swstack': True,
+        'main': 
+            {'swstack': True,
+            },
+        'slot': 
+            {'1': 
+                {'rp': 
+                    {'WS-C3850-24P-E': 
+                        {'name': 'Switch 1',
+                        'descr': 'WS-C3850-24P-E',
+                        'pid': 'WS-C3850-24P-E',
+                        'vid': 'V01',
+                        'sn': 'FCW1932D0LB',
+                        'subslot': 
+                            {'1': 
+                                {'STACK-T1-50CM': 
+                                    {'name': 'StackPort1/1',
+                                    'descr': 'StackPort1/1',
+                                    'pid': 'STACK-T1-50CM',
+                                    'vid': 'V01',
+                                    'sn': 'LCC1921G11G',
                                     },
-                                    'slot': {
-                                        '1': {
-                                            'rp': {
-                                                'WS-C3850-24P-E': {
-                                                    'name': 'Switch 1',
-                                                    'descr': 'WS-C3850-24P-E',
-                                                    'pid': 'WS-C3850-24P-E',
-                                                    'vid': 'V01',
-                                                    'sn': 'FCW1932D0LB',
-                                                    'subslot': {
-                                                        '1': {
-                                                            'STACK-T1-50CM': {
-                                                                'name': 'StackPort1/1',
-                                                                'descr': 'StackPort1/1',
-                                                                'pid': 'STACK-T1-50CM',
-                                                                'vid': 'V01',
-                                                                'sn': 'LCC1921G11G',
-                                                            }
-                                                        },
-                                                        '2': {
-                                                            'STACK-T1-50CM': {
-                                                                'name': 'StackPort1/2',
-                                                                'descr': 'StackPort1/2',
-                                                                'pid': 'STACK-T1-50CM',
-                                                                'vid': 'V01',
-                                                                'sn': 'LCC1921G250',
-                                                            }
-                                                        },
-                                                    }
-                                                }
-                                            },
-                                            'other': {
-                                                'C3KX-PWR-715WAC': {
-                                                    'name': 'Switch 1 - Power Supply A',
-                                                    'descr': 'Switch 1 - Power Supply A',
-                                                    'pid': 'C3KX-PWR-715WAC',
-                                                    'vid': 'V01',
-                                                    'sn': 'LIT14291MTJ',
-                                                }
-                                            },
-                                        },
-                                        '2': {
-                                            'rp': {
-                                                'WS-C3850-24P-E': {
-                                                    'name': 'Switch 2',
-                                                    'descr': 'WS-C3850-24P-E',
-                                                    'pid': 'WS-C3850-24P-E',
-                                                    'vid': 'V04',
-                                                    'sn': 'FOC1932X0K1',
-                                                    'subslot': {
-                                                        '1': {
-                                                            'STACK-T1-50CM': {
-                                                                'name': 'StackPort2/1',
-                                                                'descr': 'StackPort2/1',
-                                                                'pid': 'STACK-T1-50CM',
-                                                                'vid': 'V01',
-                                                                'sn': 'MOC1932A0BU',
-                                                            }
-                                                        },
-                                                        '2': {
-                                                            'STACK-T1-50CM': {
-                                                                'name': 'StackPort2/2',
-                                                                'descr': 'StackPort2/2',
-                                                                'pid': 'STACK-T1-50CM',
-                                                                'vid': 'V01',
-                                                                'sn': 'LCC1921G10J',
-                                                            }
-                                                        },
-                                                    }
-                                                }
-                                            },
-                                            'other': {
-                                                'C3KX-PWR-715WAC': {
-                                                    'name': 'Switch 2 - Power Supply A',
-                                                    'descr': 'Switch 2 - Power Supply A',
-                                                    'pid': 'C3KX-PWR-715WAC',
-                                                    'vid': 'V01',
-                                                    'sn': 'LIT15090DUL',
-                                                }
-                                            },
-                                        },
-                                        '3': {
-                                            'rp': {
-                                                'WS-C3850-24P-E': {
-                                                    'name': 'Switch 3',
-                                                    'descr': 'WS-C3850-24P-E',
-                                                    'pid': 'WS-C3850-24P-E',
-                                                    'vid': 'V04',
-                                                    'sn': 'FCW1932C0MA',
-                                                    'subslot': {
-                                                        '1': {
-                                                            'STACK-T1-50CM': {
-                                                                'name': 'StackPort3/1',
-                                                                'descr': 'StackPort3/1',
-                                                                'pid': 'STACK-T1-50CM',
-                                                                'vid': 'V01',
-                                                                'sn': 'LCC1921G10J',
-                                                            }
-                                                        },
-                                                        '2': {
-                                                            'STACK-T1-50CM': {
-                                                                'name': 'StackPort3/2',
-                                                                'descr': 'StackPort3/2',
-                                                                'pid': 'STACK-T1-50CM',
-                                                                'vid': 'V01',
-                                                                'sn': 'LCC1921G106',
-                                                            }
-                                                        },
-                                                    }
-                                                }
-                                            },
-                                            'other': {
-                                                'PWR-C1-715WAC': {
-                                                    'name': 'Switch 3 - Power Supply A',
-                                                    'descr': 'Switch 3 - Power Supply A',
-                                                    'pid': 'PWR-C1-715WAC',
-                                                    'vid': 'V01',
-                                                    'sn': 'LIT19220MG1',
-                                                }
-                                            },
-                                        },
-                                        '4': {
-                                            'rp': {
-                                                'WS-C3850-24P-E': {
-                                                    'name': 'Switch 4',
-                                                    'descr': 'WS-C3850-24P-E',
-                                                    'pid': 'WS-C3850-24P-E',
-                                                    'vid': 'V04',
-                                                    'sn': 'FCW1932D0L0',
-                                                    'subslot': {
-                                                        '1': {
-                                                            'STACK-T1-50CM': {
-                                                                'name': 'StackPort4/1',
-                                                                'descr': 'StackPort4/1',
-                                                                'pid': 'STACK-T1-50CM',
-                                                                'vid': 'V01',
-                                                                'sn': 'LCC1921G250',
-                                                            }
-                                                        },
-                                                        '2': {
-                                                            'STACK-T1-50CM': {
-                                                                'name': 'StackPort4/2',
-                                                                'descr': 'StackPort4/2',
-                                                                'pid': 'STACK-T1-50CM',
-                                                                'vid': 'V01',
-                                                                'sn': 'MOC1932A0BU',
-                                                            }
-                                                        },
-                                                    }
-                                                }
-                                            },
-                                            'other': {
-                                                'C3KX-PWR-715WAC': {
-                                                    'name': 'Switch 4 - Power Supply A',
-                                                    'descr': '',
-                                                    'pid': 'C3KX-PWR-715WAC',
-                                                    'vid': 'V01',
-                                                    'sn': 'LIT15140DEP',
-                                                }
-                                            },
-                                        },
-                                        '5': {
-                                            'rp': {
-                                                'WS-C3850-24P-E': {
-                                                    'name': 'Switch 5',
-                                                    'descr': 'WS-C3850-24P-E',
-                                                    'pid': 'WS-C3850-24P-E',
-                                                    'vid': 'V04',
-                                                    'sn': 'FOC1932X0F9',
-                                                    'subslot': {
-                                                        '1': {
-                                                            'STACK-T1-50CM': {
-                                                                'name': 'StackPort5/1',
-                                                                'descr': 'StackPort5/1',
-                                                                'pid': 'STACK-T1-50CM',
-                                                                'vid': 'V01',
-                                                                'sn': 'LCC1921G106',
-                                                            }
-                                                        },
-                                                        '2': {
-                                                            'STACK-T1-50CM': {
-                                                                'name': 'StackPort5/2',
-                                                                'descr': 'StackPort5/2',
-                                                                'pid': 'STACK-T1-50CM',
-                                                                'vid': 'V01',
-                                                                'sn': 'LCC1921G11G',
-                                                            }
-                                                        },
-                                                    }
-                                                }
-                                            },
-                                            'other': {
-                                                'PWR-C1-715WAC': {
-                                                    'name': 'Switch 5 - Power Supply A',
-                                                    'descr': 'Switch 5 - Power Supply A',
-                                                    'pid': 'PWR-C1-715WAC',
-                                                    'vid': 'V01',
-                                                    'sn': 'LIT17130ZDU',
-                                                }
-                                            },
-                                        },
-                                    }
-                                }
+                                },
+                            '2': 
+                                {'STACK-T1-50CM': 
+                                    {'name': 'StackPort1/2',
+                                    'descr': 'StackPort1/2',
+                                    'pid': 'STACK-T1-50CM',
+                                    'vid': 'V01',
+                                    'sn': 'LCC1921G250',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                'other': 
+                    {'C3KX-PWR-715WAC': 
+                        {'name': 'Switch 1 - Power Supply A',
+                        'descr': 'Switch 1 - Power Supply A',
+                        'pid': 'C3KX-PWR-715WAC',
+                        'vid': 'V01',
+                        'sn': 'LIT14291MTJ',
+                        },
+                    },
+                },
+            '2': 
+                {'rp': 
+                    {'WS-C3850-24P-E': 
+                        {'name': 'Switch 2',
+                        'descr': 'WS-C3850-24P-E',
+                        'pid': 'WS-C3850-24P-E',
+                        'vid': 'V04',
+                        'sn': 'FOC1932X0K1',
+                        'subslot': 
+                            {'1': 
+                                {'STACK-T1-50CM': 
+                                    {'name': 'StackPort2/1',
+                                    'descr': 'StackPort2/1',
+                                    'pid': 'STACK-T1-50CM',
+                                    'vid': 'V01',
+                                    'sn': 'MOC1932A0BU',
+                                    },
+                                },
+                            '2': 
+                                {'STACK-T1-50CM': 
+                                    {'name': 'StackPort2/2',
+                                    'descr': 'StackPort2/2',
+                                    'pid': 'STACK-T1-50CM',
+                                    'vid': 'V01',
+                                    'sn': 'LCC1921G10J',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                'other': 
+                    {'C3KX-PWR-715WAC': 
+                        {'name': 'Switch 2 - Power Supply A',
+                        'descr': 'Switch 2 - Power Supply A',
+                        'pid': 'C3KX-PWR-715WAC',
+                        'vid': 'V01',
+                        'sn': 'LIT15090DUL',
+                        },
+                    },
+                },
+            '3': 
+                {'rp': 
+                    {'WS-C3850-24P-E': 
+                        {'name': 'Switch 3',
+                        'descr': 'WS-C3850-24P-E',
+                        'pid': 'WS-C3850-24P-E',
+                        'vid': 'V04',
+                        'sn': 'FCW1932C0MA',
+                        'subslot': 
+                            {'1': 
+                                {'STACK-T1-50CM': 
+                                    {'name': 'StackPort3/1',
+                                    'descr': 'StackPort3/1',
+                                    'pid': 'STACK-T1-50CM',
+                                    'vid': 'V01',
+                                    'sn': 'LCC1921G10J',
+                                    },
+                                },
+                            '2': 
+                                {'STACK-T1-50CM': 
+                                    {'name': 'StackPort3/2',
+                                    'descr': 'StackPort3/2',
+                                    'pid': 'STACK-T1-50CM',
+                                    'vid': 'V01',
+                                    'sn': 'LCC1921G106',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                'other': 
+                    {'PWR-C1-715WAC': 
+                        {'name': 'Switch 3 - Power Supply A',
+                        'descr': 'Switch 3 - Power Supply A',
+                        'pid': 'PWR-C1-715WAC',
+                        'vid': 'V01',
+                        'sn': 'LIT19220MG1',
+                        },
+                    },
+                },
+            '4': 
+                {'rp': 
+                    {'WS-C3850-24P-E': 
+                        {'name': 'Switch 4',
+                        'descr': 'WS-C3850-24P-E',
+                        'pid': 'WS-C3850-24P-E',
+                        'vid': 'V04',
+                        'sn': 'FCW1932D0L0',
+                        'subslot': 
+                            {'1': 
+                                {'STACK-T1-50CM': 
+                                    {'name': 'StackPort4/1',
+                                    'descr': 'StackPort4/1',
+                                    'pid': 'STACK-T1-50CM',
+                                    'vid': 'V01',
+                                    'sn': 'LCC1921G250',
+                                    },
+                                },
+                            '2': 
+                                {'STACK-T1-50CM': 
+                                    {'name': 'StackPort4/2',
+                                    'descr': 'StackPort4/2',
+                                    'pid': 'STACK-T1-50CM',
+                                    'vid': 'V01',
+                                    'sn': 'MOC1932A0BU',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                'other': 
+                    {'C3KX-PWR-715WAC': 
+                        {'name': 'Switch 4 - Power Supply A',
+                        'descr': '',
+                        'pid': 'C3KX-PWR-715WAC',
+                        'vid': 'V01',
+                        'sn': 'LIT15140DEP',
+                        },
+                    },
+                },
+            '5': 
+                {'rp': 
+                    {'WS-C3850-24P-E': 
+                        {'name': 'Switch 5',
+                        'descr': 'WS-C3850-24P-E',
+                        'pid': 'WS-C3850-24P-E',
+                        'vid': 'V04',
+                        'sn': 'FOC1932X0F9',
+                        'subslot': 
+                            {'1': 
+                                {'STACK-T1-50CM': 
+                                    {'name': 'StackPort5/1',
+                                    'descr': 'StackPort5/1',
+                                    'pid': 'STACK-T1-50CM',
+                                    'vid': 'V01',
+                                    'sn': 'LCC1921G106',
+                                    },
+                                },
+                            '2': 
+                                {'STACK-T1-50CM': 
+                                    {'name': 'StackPort5/2',
+                                    'descr': 'StackPort5/2',
+                                    'pid': 'STACK-T1-50CM',
+                                    'vid': 'V01',
+                                    'sn': 'LCC1921G11G',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                'other': 
+                    {'PWR-C1-715WAC': 
+                        {'name': 'Switch 5 - Power Supply A',
+                        'descr': 'Switch 5 - Power Supply A',
+                        'pid': 'PWR-C1-715WAC',
+                        'vid': 'V01',
+                        'sn': 'LIT17130ZDU',
+                        },
+                    },
+                },
+            },
+        }
 
-    golden_output_c3850 = {'execute.return_value': '''\
+    golden_output_c3850 = {'execute.return_value': '''
         NAME: "c38xx Stack", DESCR: "c38xx Stack"
         PID: WS-C3850-24P-E    , VID: V01  , SN: FCW1932D0LB
 
@@ -1511,138 +1511,138 @@ class test_show_inventory(unittest.TestCase):
 
         NAME: "Switch 5 - Power Supply A", DESCR: "Switch 5 - Power Supply A"
         PID: PWR-C1-715WAC     , VID: V01  , SN: LIT17130ZDU
-'''}
+        '''}
 
     golden_parsed_output_asr1k = {
-                                    'main': {
-                                        'chassis': {
-                                            'ASR1006': {
-                                                'name': 'Chassis',
-                                                'descr': 'Cisco ASR1006 Chassis',
-                                                'pid': 'ASR1006',
-                                                'vid': 'V01',
-                                                'sn': 'FOX1204G6WN',
-                                            }
-                                        }
+        'main': 
+            {'chassis': 
+                {'ASR1006': 
+                    {'name': 'Chassis',
+                    'descr': 'Cisco ASR1006 Chassis',
+                    'pid': 'ASR1006',
+                    'vid': 'V01',
+                    'sn': 'FOX1204G6WN',
+                    },
+                },
+            },
+        'slot': 
+            {'0': 
+                {'lc': 
+                    {'ASR1000-SIP40': 
+                        {'name': 'module 0',
+                        'descr': 'Cisco ASR1000 SPA Interface Processor 40',
+                        'pid': 'ASR1000-SIP40',
+                        'vid': 'V02',
+                        'sn': 'JAE200609WP',
+                        'subslot': 
+                            {'0': 
+                                {'SPA-5X1GE-V2': 
+                                    {'name': 'SPA subslot 0/0',
+                                    'descr': '5-port Gigabit Ethernet Shared Port Adapter',
+                                    'pid': 'SPA-5X1GE-V2',
+                                    'vid': 'V02',
+                                    'sn': 'JAE151203T2',
                                     },
-                                    'slot': {
-                                        '0': {
-                                            'lc': {
-                                                'ASR1000-SIP40': {
-                                                    'name': 'module 0',
-                                                    'descr': 'Cisco ASR1000 SPA Interface Processor 40',
-                                                    'pid': 'ASR1000-SIP40',
-                                                    'vid': 'V02',
-                                                    'sn': 'JAE200609WP',
-                                                    'subslot': {
-                                                        '0': {
-                                                            'SPA-5X1GE-V2': {
-                                                                'name': 'SPA subslot 0/0',
-                                                                'descr': '5-port Gigabit Ethernet Shared Port Adapter',
-                                                                'pid': 'SPA-5X1GE-V2',
-                                                                'vid': 'V02',
-                                                                'sn': 'JAE151203T2',
-                                                            }
-                                                        },
-                                                        '0 transceiver 0': {
-                                                            'SP7041-E': {
-                                                                'name': 'subslot 0/0 transceiver 0',
-                                                                'descr': 'GE T',
-                                                                'pid': 'SP7041-E',
-                                                                'vid': 'E',
-                                                                'sn': 'MTC164204VE',
-                                                            }    
-                                                        },
-                                                        '0 transceiver 1': {
-                                                            'SP7041-E': {
-                                                                'name': 'subslot 0/0 transceiver 1',
-                                                                'descr': 'GE T',
-                                                                'pid': 'SP7041-E',
-                                                                'vid': 'E',
-                                                                'sn': 'MTC164204F0',
-                                                            }    
-                                                        },
-                                                        '0 transceiver 2': {
-                                                            'SP7041-E': {
-                                                                'name': 'subslot 0/0 transceiver 2',
-                                                                'descr': 'GE T',
-                                                                'pid': 'SP7041-E',
-                                                                'vid': 'E',
-                                                                'sn': 'MTC164206U2',
-                                                            }    
-                                                        },
-                                                        '0 transceiver 3': {
-                                                            'SP7041-E': {
-                                                                'name': 'subslot 0/0 transceiver 3',
-                                                                'descr': 'GE T',
-                                                                'pid': 'SP7041-E',
-                                                                'vid': 'E',
-                                                                'sn': 'MTC1644033S',
-                                                            }    
-                                                        },
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        'R0': {
-                                            'rp': {
-                                                'ASR1000-RP2': {
-                                                    'name': 'module R0',
-                                                    'descr': 'Cisco ASR1000 Route Processor 2',
-                                                    'pid': 'ASR1000-RP2',
-                                                    'vid': 'V02',
-                                                    'sn': 'JAE153408NJ',
-                                                }
-                                            }
-                                        },
-                                        'R1': {
-                                            'rp': {
-                                                'ASR1000-RP2': {
-                                                    'name': 'module R1',
-                                                    'descr': 'Cisco ASR1000 Route Processor 2',
-                                                    'pid': 'ASR1000-RP2',
-                                                    'vid': 'V03',
-                                                    'sn': 'JAE1703094H',
-                                                }
-                                            }
-                                        },
-                                        'F0': {
-                                            'other': {
-                                                'ASR1000-ESP20': {
-                                                    'name': 'module F0',
-                                                    'descr': 'Cisco ASR1000 Embedded Services Processor, 20Gbps',
-                                                    'pid': 'ASR1000-ESP20',
-                                                    'vid': 'V01',
-                                                    'sn': 'JAE1239W7G6',
-                                                }
-                                            }
-                                        },
-                                        'P0': {
-                                            'other': {
-                                                'ASR1006-PWR-AC': {
-                                                    'name': 'Power Supply Module 0',
-                                                    'descr': 'Cisco ASR1006 AC Power Supply',
-                                                    'pid': 'ASR1006-PWR-AC',
-                                                    'vid': 'V01',
-                                                    'sn': 'ART1210Q049',
-                                                }
-                                            }
-                                        },
-                                        'P1': {
-                                            'other': {
-                                                'ASR1006-PWR-AC': {
-                                                    'name': 'Power Supply Module 1',
-                                                    'descr': 'Cisco ASR1006 AC Power Supply',
-                                                    'pid': 'ASR1006-PWR-AC',
-                                                    'vid': 'V01',
-                                                    'sn': 'ART1210Q04C',
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                                },
+                            '0 transceiver 0': 
+                                {'SP7041-E': 
+                                    {'name': 'subslot 0/0 transceiver 0',
+                                    'descr': 'GE T',
+                                    'pid': 'SP7041-E',
+                                    'vid': 'E',
+                                    'sn': 'MTC164204VE',
+                                    },
+                                },
+                            '0 transceiver 1': 
+                                {'SP7041-E': 
+                                    {'name': 'subslot 0/0 transceiver 1',
+                                    'descr': 'GE T',
+                                    'pid': 'SP7041-E',
+                                    'vid': 'E',
+                                    'sn': 'MTC164204F0',
+                                    },
+                                },
+                            '0 transceiver 2': 
+                                {'SP7041-E': 
+                                    {'name': 'subslot 0/0 transceiver 2',
+                                    'descr': 'GE T',
+                                    'pid': 'SP7041-E',
+                                    'vid': 'E',
+                                    'sn': 'MTC164206U2',
+                                    },
+                                },
+                            '0 transceiver 3': 
+                                {'SP7041-E': 
+                                    {'name': 'subslot 0/0 transceiver 3',
+                                    'descr': 'GE T',
+                                    'pid': 'SP7041-E',
+                                    'vid': 'E',
+                                    'sn': 'MTC1644033S',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            'R0': 
+                {'rp': 
+                    {'ASR1000-RP2': 
+                        {'name': 'module R0',
+                        'descr': 'Cisco ASR1000 Route Processor 2',
+                        'pid': 'ASR1000-RP2',
+                        'vid': 'V02',
+                        'sn': 'JAE153408NJ',
+                        },
+                    },
+                },
+            'R1': 
+                {'rp': 
+                    {'ASR1000-RP2': 
+                        {'name': 'module R1',
+                        'descr': 'Cisco ASR1000 Route Processor 2',
+                        'pid': 'ASR1000-RP2',
+                        'vid': 'V03',
+                        'sn': 'JAE1703094H',
+                        },
+                    },
+                },
+            'F0': 
+                {'other': 
+                    {'ASR1000-ESP20': 
+                        {'name': 'module F0',
+                        'descr': 'Cisco ASR1000 Embedded Services Processor, 20Gbps',
+                        'pid': 'ASR1000-ESP20',
+                        'vid': 'V01',
+                        'sn': 'JAE1239W7G6',
+                        },
+                    },
+                },
+            'P0': 
+                {'other': 
+                    {'ASR1006-PWR-AC': 
+                        {'name': 'Power Supply Module 0',
+                        'descr': 'Cisco ASR1006 AC Power Supply',
+                        'pid': 'ASR1006-PWR-AC',
+                        'vid': 'V01',
+                        'sn': 'ART1210Q049',
+                        },
+                    },
+                },
+            'P1': 
+                {'other': 
+                    {'ASR1006-PWR-AC': 
+                        {'name': 'Power Supply Module 1',
+                        'descr': 'Cisco ASR1006 AC Power Supply',
+                        'pid': 'ASR1006-PWR-AC',
+                        'vid': 'V01',
+                        'sn': 'ART1210Q04C',
+                        },
+                    },
+                },
+            },
+        }
 
-    golden_output_asr1k = {'execute.return_value': '''\
+    golden_output_asr1k = {'execute.return_value': '''
         NAME: "Chassis", DESCR: "Cisco ASR1006 Chassis"
         PID: ASR1006           , VID: V01  , SN: FOX1204G6WN
 
@@ -1678,25 +1678,62 @@ class test_show_inventory(unittest.TestCase):
 
         NAME: "Power Supply Module 1", DESCR: "Cisco ASR1006 AC Power Supply"
         PID: ASR1006-PWR-AC    , VID: V01  , SN: ART1210Q04C
-'''}
+        '''}
 
-    golden_parsed_output = {
-        'slot': {
-            'F0': {
-                'lc': {
-                    'ISR4331/K9': {
-                        'sn': '',
-                        'pid': 'ISR4331/K9',
-                        'descr': 'Cisco ISR4331 Forwarding Processor',
-                        'name': 'module F0',
-                        'vid': '',
-                        },
+    golden_parsed_output_isr4k = {
+        'main': 
+            {'chassis': 
+                {'ISR4331/K9': 
+                    {'sn': 'FDO2201A0SR',
+                    'pid': 'ISR4331/K9',
+                    'descr': 'Cisco ISR4331 Chassis',
+                    'name': 'Chassis',
+                    'vid': 'V04',
                     },
                 },
-            '1': {
-                'lc': {
-                    'ISR4331/K9': {
+            },
+        'slot': 
+            {'0': 
+                {'lc': 
+                    {'ISR4331-3x1GE': 
+                        {'descr': 'Front Panel 3 ports Gigabitethernet Module',
+                        'name': 'NIM subslot 0/0',
+                        'pid': 'ISR4331-3x1GE',
                         'sn': '',
+                        'subslot': 
+                            {'0 transceiver 2': 
+                                {'SFP-GE-T': 
+                                    {'descr': 'GE T',
+                                    'name': 'subslot 0/0 transceiver 2',
+                                    'pid': 'SFP-GE-T',
+                                    'sn': 'MTC2139029X',
+                                    'vid': 'V02'}}},
+                        'vid': 'V01'},
+                    'ISR4331/K9': 
+                        {'descr': 'Cisco ISR4331 Built-In NIM controller',
+                        'name': 'module 0',
+                        'pid': 'ISR4331/K9',
+                        'sn': '',
+                        'subslot': 
+                            {'1': 
+                                {'NIM-ES2-4': 
+                                    {'descr': 'NIM-ES2-4',
+                                    'name': 'NIM subslot 0/1',
+                                    'pid': 'NIM-ES2-4',
+                                    'sn': 'FOC21486SRL',
+                                    'vid': 'V01'}},
+                            '2': 
+                                {'NIM-ES2-8': 
+                                    {'descr': 'NIM-ES2-8',
+                                    'name': 'NIM subslot 0/2',
+                                    'pid': 'NIM-ES2-8',
+                                    'sn': 'FOC22384AXC',
+                                    'vid': 'V01'}}},
+                        'vid': ''}}},
+            '1': 
+                {'lc': 
+                    {'ISR4331/K9': 
+                        {'sn': '',
                         'pid': 'ISR4331/K9',
                         'descr': 'Cisco ISR4331 Built-In SM controller',
                         'name': 'module 1',
@@ -1704,32 +1741,21 @@ class test_show_inventory(unittest.TestCase):
                         },
                     },
                 },
-            '0': {
-                'lc': {
-                    'ISR4331/K9': {
-                        'descr': 'Cisco ISR4331 Built-In NIM controller',
-                        'name': 'module 0',
-                        'subslot': {
-                            '0 transceiver 2': {
-                                'SFP-GE-T': {
-                                    'sn': 'MTC2139029X',
-                                    'pid': 'SFP-GE-T',
-                                    'descr': 'GE T',
-                                    'name': 'subslot 0/0 transceiver 2',
-                                    'vid': 'V02',
-                                    },
-                                },
-                            },
-                        'sn': '',
+            'F0': 
+                {'lc': 
+                    {'ISR4331/K9': 
+                        {'sn': '',
                         'pid': 'ISR4331/K9',
+                        'descr': 'Cisco ISR4331 Forwarding Processor',
+                        'name': 'module F0',
                         'vid': '',
                         },
                     },
                 },
-            'P0': {
-                'other': {
-                    'PWR-4330-AC': {
-                        'sn': 'PST2150N1E2',
+            'P0': 
+                {'other': 
+                    {'PWR-4330-AC': 
+                        {'sn': 'PST2150N1E2',
                         'pid': 'PWR-4330-AC',
                         'descr': '250W AC Power Supply for Cisco ISR 4330',
                         'name': 'Power Supply Module 0',
@@ -1737,10 +1763,10 @@ class test_show_inventory(unittest.TestCase):
                         },
                     },
                 },
-            'R0': {
-                'lc': {
-                    'ISR4331/K9': {
-                        'sn': 'FDO21520TGH',
+            'R0': 
+                {'lc': 
+                    {'ISR4331/K9': 
+                        {'sn': 'FDO21520TGH',
                         'pid': 'ISR4331/K9',
                         'descr': 'Cisco ISR4331 Route Processor',
                         'name': 'module R0',
@@ -1749,20 +1775,9 @@ class test_show_inventory(unittest.TestCase):
                     },
                 },
             },
-        'main': {
-            'chassis': {
-                'ISR4331/K9': {
-                    'sn': 'FDO2201A0SR',
-                    'pid': 'ISR4331/K9',
-                    'descr': 'Cisco ISR4331 Chassis',
-                    'name': 'Chassis',
-                    'vid': 'V04',
-                    },
-                },
-            },
         }
 
-    golden_output = {'execute.return_value': '''\
+    golden_output_isr4k = {'execute.return_value': '''
         show inventory
 
         +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1801,9 +1816,9 @@ class test_show_inventory(unittest.TestCase):
 
         NAME: "module F0", DESCR: "Cisco ISR4331 Forwarding Processor"
         PID: ISR4331/K9        , VID:      , SN:            
-'''}
+        '''}
 
-    golden_parsed_output2 = {
+    golden_parsed_output_asr901 = {
         'main': 
             {'chassis': 
                 {'ASR-920-24SZ-IM': 
@@ -1814,16 +1829,52 @@ class test_show_inventory(unittest.TestCase):
                     'vid': 'V01'}}},
         'slot': 
             {'0': 
-                {'P0': 
-                    {'other': 
-                        {'ASR-920-PWR-D': 
-                            {'descr': 'ASR 920 250W DC Power Supply',
-                            'name': 'Power Supply Module 0',
-                            'pid': 'ASR-920-PWR-D',
-                            'sn': 'ART1832F11X',
-                            'vid': 'V01'}}}}}}
+                {'rp': 
+                    {'ASR-920-24SZ-IM': 
+                        {'descr': 'Cisco ASR920 Series - 24GE and 4-10GE- Modular PSU and IM',
+                        'name': 'Chassis',
+                        'pid': 'ASR-920-24SZ-IM',
+                        'sn': 'CAT1902V19M',
+                        'subslot': 
+                            {'0 transceiver 26': 
+                                {'SFP-10G-LR': 
+                                    {'descr': 'SFP+ 10GBASE-LR',
+                                    'name': 'subslot 0/0 transceiver 26',
+                                    'pid': 'SFP-10G-LR',
+                                    'sn': 'CD180456291',
+                                    'vid': 'CSCO'}},
+                            '0 transceiver 27': 
+                                {'SFP-10G-LR': 
+                                    {'descr': 'SFP+ 10GBASE-LR',
+                                    'name': 'subslot 0/0 transceiver 27',
+                                    'pid': 'SFP-10G-LR',
+                                    'sn': 'CD180456292',
+                                    'vid': 'CSCO'}},
+                            '1': 
+                                {'A900-IMA3G-IMSG': 
+                                    {'descr': 'ASR 900 Combo 4 port DS3 12 DS1 and 4 OCx',
+                                    'name': 'IM subslot 0/1',
+                                    'pid': 'A900-IMA3G-IMSG',
+                                    'sn': 'FOC2204PAP1',
+                                    'vid': 'V01'}},
+                            '1 transceiver 16': 
+                                {'ONS-SI-622-I1': 
+                                    {'descr': 'Dual-Rate OC3/12 IR-1',
+                                    'name': 'subslot 0/1 transceiver 16',
+                                    'pid': 'ONS-SI-622-I1',
+                                    'sn': 'ECL133706C3',
+                                    'vid': 'A'}}},
+                        'vid': 'V01'}}},
+            'P0': 
+                {'other': 
+                    {'ASR-920-PWR-D': 
+                        {'descr': 'ASR 920 250W DC Power Supply',
+                        'name': 'Power Supply Module 0',
+                        'pid': 'ASR-920-PWR-D',
+                        'sn': 'ART1832F11X',
+                        'vid': 'V01'}}}}}
 
-    golden_output2 = {'execute.return_value': '''
+    golden_output_asr901 = {'execute.return_value': '''
         Router#show inventory
         NAME: "Chassis", DESCR: "Cisco ASR920 Series - 24GE and 4-10GE- Modular PSU and IM"
         PID: ASR-920-24SZ-IM   , VID: V01  , SN: CAT1902V19M
@@ -1847,47 +1898,47 @@ class test_show_inventory(unittest.TestCase):
         PID: ASR-920-FAN-M     , VID: V01  , SN: CAT1903V028
         '''}
 
-    def test_empty(self):
-        self.dev1 = Mock(**self.empty_output)
-        inventory_obj = ShowInventory(device=self.dev1)
+    def test_show_inventory_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        inventory_obj = ShowInventory(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = inventory_obj.parse()
-
-    # All parameters are Optional. So, no need to test semi empty output.
-    # def test_semi_empty(self):
-    #     self.dev2 = Mock(**self.semi_empty_output)
-    #     inventory_obj = ShowInventory(device=self.dev2)
-    #     with self.assertRaises(SchemaMissingKeyError):
-    #         parsed_output = inventory_obj.parse()   
-
-    def test_golden(self):
+    
+    def test_show_inventory_golden_asr1k(self):
         self.maxDiff = None
-        self.dev_asr1k = Mock(**self.golden_output)
-        inventory_obj = ShowInventory(device=self.dev_asr1k)
+        self.device = Mock(**self.golden_output_asr1k)
+        inventory_obj = ShowInventory(device=self.device)
         parsed_output = inventory_obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output_asr1k)
 
-    def test_golden_c3850(self):
+    def test_show_inventory_golden_isr4k(self):
         self.maxDiff = None
-        self.dev_c3850 = Mock(**self.golden_output_c3850)
-        inventory_obj = ShowInventory(device=self.dev_c3850)
+        self.device = Mock(**self.golden_output_isr4k)
+        inventory_obj = ShowInventory(device=self.device)
         parsed_output = inventory_obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
+        self.assertEqual(parsed_output, self.golden_parsed_output_isr4k)
 
-    def test_golden_asr1k(self):
+    '''
+    def test_show_inventory_golden_c3850(self):
         self.maxDiff = None
-        self.dev_asr1k = Mock(**self.golden_output_asr1k)
-        inventory_obj = ShowInventory(device=self.dev_asr1k)
+        self.device = Mock(**self.golden_output_c3850)
+        inventory_obj = ShowInventory(device=self.device)
         parsed_output = inventory_obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output_asr1k)
+        self.assertEqual(parsed_output, self.golden_parsed_output_c3850)
+    '''
+    def test_show_inventory_golden_asr901(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_asr901)
+        inventory_obj = ShowInventory(device=self.device)
+        parsed_output = inventory_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_asr901)
+    
 
-    # def test_golden_asr901(self):
-    #     self.maxDiff = None
-    #     self.dev_asr901 = Mock(**self.golden_output2)
-    #     inventory_obj = ShowInventory(device=self.dev_asr901)
-    #     parsed_output = inventory_obj.parse()
-    #     self.assertEqual(parsed_output,self.golden_parsed_output2)
-
+# ====================
+# Unit test for:
+#   * 'show platform'
+# ====================
 class test_show_platform(unittest.TestCase):
     dev1 = Device(name='empty')
     dev2 = Device(name='semi_empty')
