@@ -1167,7 +1167,7 @@ class ShowIpCefSchema(MetaParser):
                     Any():{
                         'prefix': {
                             Any(): {
-                                Optional('nexthop'): {
+                                'nexthop': {
                                     Any(): {
                                         Optional('outgoing_interface'): {
                                              Any(): {
