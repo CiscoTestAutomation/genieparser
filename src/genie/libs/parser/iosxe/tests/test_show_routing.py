@@ -1489,7 +1489,7 @@ class test_show_ipv6_cef(unittest.TestCase):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowIpCef(device=self.device)
+        obj = ShowIpv6Cef(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
