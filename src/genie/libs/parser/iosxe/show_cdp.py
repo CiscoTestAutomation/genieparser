@@ -87,14 +87,14 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
         # No platform
         # R5.cisco.com Gig 0/0 125 R B Gig 0/0
         p1 = re.compile(r'^(?P<device_id>\S+) +'
-                         '(?P<local_interface>[a-zA-Z]+[\s]+[\d\/\.]+) +'
+                         '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
                          '(?P<hold_time>\d+) +(?P<capability>[RTBSHIr\s]+)'
                          '(?: +(?P<platform>[\w\-]+) )? +'
                          '(?P<port_id>[a-zA-Z0-9\/\s]+)$')                     
 
         # device6 Gig 0 157 R S I C887VA-W- WGi 0 
         p2 = re.compile(r'^(?P<device_id>\S+) +'
-                         '(?P<local_interface>[a-zA-Z]+[\s]+[\d\/\.]+) +'
+                         '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
                          '(?P<hold_time>\d+) +(?P<capability>[RTBSHIr\s]+) +'
                          '(?P<platform>\S+) (?P<port_id>[a-zA-Z0-9\/\s]+)$') 
 
