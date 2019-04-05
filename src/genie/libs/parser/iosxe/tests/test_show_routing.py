@@ -1173,7 +1173,7 @@ class test_show_ip_cef(unittest.TestCase):
                                         "outgoing_interface": {
                                             "TenGigabitEthernet0/2/0": {
                                                 "local_label": 2043,
-                                                "outgoing_label": 22
+                                                "outgoing_label": ['22']
                                             }
                                         }
                                     }
@@ -1399,6 +1399,8 @@ class test_show_ipv6_cef(unittest.TestCase):
       nexthop FE80::F816:3EFF:FEF3:7B32 GigabitEthernet3.100
     2001:DB8:2:3::/64
       attached to GigabitEthernet3.100
+    A::4:5:0/112
+      nexthop 10.2.3.3 FastEthernet1/0/0 label 17 21
     '''}
 
     golden_parsed_output_1 = {
@@ -1463,6 +1465,17 @@ class test_show_ipv6_cef(unittest.TestCase):
                                     "attached": {
                                         "outgoing_interface": {
                                             "GigabitEthernet3.100": {}
+                                        }
+                                    }
+                                }
+                            },
+                            'A::4:5:0/112': {
+                                'nexthop': {
+                                    '10.2.3.3': {
+                                        'outgoing_interface': {
+                                            'FastEthernet1/0/0': {
+                                                'outgoing_label': ['17','21']
+                                                }
                                         }
                                     }
                                 }

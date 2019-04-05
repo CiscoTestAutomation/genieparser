@@ -1172,7 +1172,7 @@ class ShowIpCefSchema(MetaParser):
                                         Optional('outgoing_interface'): {
                                              Any(): {
                                                  Optional('local_label'): int,
-                                                 Optional('outgoing_label'): int,
+                                                 Optional('outgoing_label'): list,
                                              }
                                         }
                                     }
@@ -1232,7 +1232,7 @@ class ShowIpCef(ShowIpCefSchema):
         #     nexthop FE80::A8BB:CCFF:FE03:2101 FastEthernet0/0/0 label 18
         #     nexthop 10.2.3.3 FastEthernet1/0/0 label 17 24
         p2 = re.compile(r'^nexthop +(?P<nexthop>[\w\.\:]+) +(?P<interface>\S+)'
-                        '( +label +(?P<outgoing_label>[\d\ ]+))?(-\(local:(?P<local_label>\w+)\))?$')
+                        '( +label +(?P<outgoing_label>[\d\ ]+)(-\(local:(?P<local_label>\w+)\))?)?$')
         #     attached to GigabitEthernet3.100
         p3 = re.compile(r'^(?P<nexthop>\w+) +(to|for) +(?P<interface>\S+)$')
 
@@ -1277,7 +1277,7 @@ class ShowIpCef(ShowIpCefSchema):
                 if group['local_label']:
                     nexthop_dict.update({'local_label': int(group['local_label'])})
                 if group['outgoing_label']:
-                    nexthop_dict.update({'outgoing_label': int(group['outgoing_label'])})
+                    nexthop_dict.update({'outgoing_label': group['outgoing_label'].split()})
 
                 continue
 
