@@ -5,12 +5,12 @@ from ats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
-from genie.libs.parser.iosxr.show_acl import ShowAclAfiAll
+from genie.libs.parser.iosxr.show_acl import ShowAclAfiAll, \
+										ShowAclEthernetServices
 
 
 class test_show_acl_afi_all(unittest.TestCase):
-    dev1 = Device(name='empty')
-    dev_c3850 = Device(name='c3850')
+    dev = Device(name='d')
     empty_output = {'execute.return_value': '      '}
 
     golden_parsed_output = {
@@ -339,17 +339,103 @@ class test_show_acl_afi_all(unittest.TestCase):
     }
 
     def test_empty(self):
-        self.dev1 = Mock(**self.empty_output)
-        obj = ShowAclAfiAll(device=self.dev1)
+        self.dev = Mock(**self.empty_output)
+        obj = ShowAclAfiAll(device=self.dev)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
     def test_golden(self):
         self.maxDiff = None
-        self.dev_c3850 = Mock(**self.golden_output)
-        obj = ShowAclAfiAll(device=self.dev_c3850)
+        self.dev = Mock(**self.golden_output)
+        obj = ShowAclAfiAll(device=self.dev)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
+
+class test_show_acl_ethernet_services(unittest.TestCase):
+    dev = Device(name='d')
+    empty_output = {'execute.return_value': '      '}
+
+    golden_parsed_output = {
+		'eth_acl': {
+		    'name': 'eth_acl',
+		    'type': 'eth-acl-type',
+		    },
+		'mac_acl': {
+		    'name': 'mac_acl',
+		    'type': 'eth-acl-type',
+		    'aces': {
+		        20: {
+		            'name': '20',
+		            'matches': {
+		                'l2': {
+		                    'eth': {
+		                        'destination_mac_address': 'host 0000.0000.0000',
+		                        'source_mac_address': 'host 0000.0000.0000',
+		                        'ether_type': '8041',
+		                        },
+		                    },
+		                },
+		            'actions': {
+		                'forwarding': 'deny',
+		                },
+		            },
+		        30: {
+		            'name': '30',
+		            'matches': {
+		                'l2': {
+		                    'eth': {
+		                        'destination_mac_address': 'host 0000.0000.0000',
+		                        'source_mac_address': 'host 0000.0000.0000',
+		                        'ether_type': 'vlan 10',
+		                        },
+		                    },
+		                },
+		            'actions': {
+		                'forwarding': 'deny',
+		                },
+		            },
+		        40: {
+		            'name': '40',
+		            'matches': {
+		                'l2': {
+		                    'eth': {
+		                        'destination_mac_address': 'host bbbb.bbbb.bbbb',
+		                        'source_mac_address': 'host aaaa.aaaa.aaaa',
+		                        'ether_type': '80f3',
+		                        },
+		                    },
+		                },
+		            'actions': {
+		                'forwarding': 'permit',
+		                },
+		            },
+		        },
+		    },
+		}
+    golden_output = {'execute.return_value': '''\
+   RP/0/0/CPU0:ios#show access-lists ethernet-services 
+Wed Mar 28 04:04:37.482 UTC
+ethernet-services access-list eth_acl
+ 10 permit any any
+ethernet-services access-list mac_acl
+ 10 permit host 0000.0000.0000 host 0000.0000.0000
+ 20 deny host 0000.0000.0000 host 0000.0000.0000 8041
+ 30 deny host 0000.0000.0000 host 0000.0000.0000 vlan 10
+ 40 permit host aaaa.aaaa.aaaa host bbbb.bbbb.bbbb 80f3
+    '''
+    }
+    def test_empty(self):
+        self.dev = Mock(**self.empty_output)
+        obj = ShowAclEthernetServices(device=self.dev)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output)
+        obj = ShowAclEthernetServices(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 if __name__ == '__main__':
     unittest.main()

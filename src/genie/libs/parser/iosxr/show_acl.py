@@ -17,7 +17,7 @@ from genie.libs.parser.utils.common import Common
 # Schema for 'show access-lists afi-all'
 # =======================================
 
-class ShowAclAfiAllSchema(MetaParser):
+class ShowAclSchema(MetaParser):
 	"""
 	Schema for 'show access-lists afi-all'
 	"""
@@ -29,6 +29,13 @@ class ShowAclAfiAllSchema(MetaParser):
                 Any(): {
                     'name': str,
                     'matches': {
+                        Optional('l2'): {
+                            'eth': {
+                                'destination_mac_address': str,
+                                'source_mac_address': str,
+                                Optional('ether_type'): str,
+                            }
+                        },
                         Optional('l3'): {
                             Any(): {   # protocols
                                 Optional('ttl'): int,
@@ -75,7 +82,7 @@ class ShowAclAfiAllSchema(MetaParser):
 # =======================================
 # Parser for 'show access-lists afi-all'
 # =======================================
-class ShowAclAfiAll(ShowAclAfiAllSchema):
+class ShowAclAfiAll(ShowAclSchema):
     """Parser for:
         'show access-lists afi-all'
     """
@@ -89,7 +96,7 @@ class ShowAclAfiAll(ShowAclAfiAllSchema):
 
         # ipv4 access-list acl_name
         # ipv6 access-list ipv6_acl
-        p1 = re.compile(r'^(?P<ip>(ipv4|ipv6)) +access( +|\-)lists? +(?P<name>[\w\-\.#]+)$')
+        p1 = re.compile(r'^(?P<ip>(ipv4|ipv6)) +access\-list +(?P<name>[\w\-\.#]+)$')
 
         # 10 permit tcp any any eq www
         # 30 permit tcp any any eq 443
@@ -181,4 +188,67 @@ class ShowAclAfiAll(ShowAclAfiAllSchema):
                     actions_forwarding = group['actions_forwarding']
                     seq_dict.setdefault('actions', {}).setdefault('forwarding', actions_forwarding)
                 continue
+        return ret_dict
+
+# =======================================
+# Parser for 'show access-lists ethernet-services'
+# =======================================
+class ShowAclEthernetServices(ShowAclSchema):
+    """Parser for:
+        'show access-lists ethernet-services'
+    """
+
+    cli_command = 'show access-lists ethernet-services'
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # ethernet-services access-list eth_acl
+        p1 = re.compile(r'^(?P<ip>(ethernet-services)) +access\-list +(?P<name>[\w\-\.#]+)$')
+
+        # 10 permit host 0000.0000.0000 host 0000.0000.0000
+        # 20 deny host 0000.0000.0000 host 0000.0000.0000 8041
+        # 30 deny host 0000.0000.0000 host 0000.0000.0000 vlan 10
+        # 40 permit host aaaa.aaaa.aaaa host bbbb.bbbb.bbbb 80f3
+        p2 = re.compile(r'^(?P<seq>\d+) +(?P<actions_forwarding>permit|deny)? +(?P<source_mac_address>'
+            '(any|(host +[\d\.\w]+))|([\d\.]+ +[\d\.]+))'
+            ' +(?P<destination_mac_address>(host +[\d\.\w]+)|any) +(?P<ether_type>[\w\s]+)$')
+
+        # initial variables
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+            # ipv4 access-list acl_name
+            # ipv6 access-list ipv6_acl
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                acl_type = 'eth-acl-type'
+                acl_dict = ret_dict.setdefault(group['name'], {})
+                acl_dict['name'] = group['name']
+                acl_dict['type'] = acl_type
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                seq = int(group['seq'])
+                actions_forwarding = group['actions_forwarding']
+               
+                seq_dict = acl_dict.setdefault('aces', {}).setdefault(seq, {})
+                seq_dict['name'] = group['seq']
+                l2_dict = seq_dict.setdefault('matches', {}).setdefault('l2', {})\
+                    .setdefault('eth', {})
+                l2_dict.update({'destination_mac_address' : group['destination_mac_address']})
+                l2_dict.update({'source_mac_address' : group['source_mac_address']})
+                l2_dict.update({'ether_type' : group['ether_type']})
+
+                if group['actions_forwarding']:
+                    actions_forwarding = group['actions_forwarding']
+                    seq_dict.setdefault('actions', {}).setdefault('forwarding', actions_forwarding)
+                continue
+
         return ret_dict
