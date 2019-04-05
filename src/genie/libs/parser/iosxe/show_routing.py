@@ -1156,10 +1156,13 @@ class ShowIpv6RouteWord(ShowIpv6RouteWordSchema, ShowIpRouteWord):
     IP_VER = 'ipv6'
 
 # ====================================================
-#  schema for show ip cef <ip>
+#  schema for show ip cef
 # ====================================================
 class ShowIpCefSchema(MetaParser):
-    """Schema for show ip cef <ip>"""
+    """Schema for show ip cef show ip cef
+                  show ip cef vrf <vrf>
+                  show ip cef <prefix>
+                  show ip cef vrf <vrf> <prefix>"""
     schema ={
         'vrf':{
             Any():{
