@@ -184,33 +184,27 @@ class ShowPolicyMapTypeSchema(MetaParser):
 
 
 # =====================================================================
-# Parser for:
+# Super Parser for:
 #   * 'show policy-map control-plane'
 #   * 'show policy-map interface '
 #   * 'show policy-map interface {interface} output class {class_name}'
 #   * 'show policy-map interface {interface}'
 # =====================================================================
-class ShowPolicyMapType(ShowPolicyMapTypeSchema):
-    ''' Parser for
-        * "show policy-map control-plane"
-        * "show policy-map interface {interface} output class {class_name}"
-        * "show policy-map interface {interface}"
-        * "show policy-map interface"
+class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
+    ''' Super Parser for
+        * 'show policy-map interface {interface} input class {class_name}',
+        * 'show policy-map interface {interface} output class {class_name}',
+        * 'show policy-map interface {interface} class {class_name}',
+        * 'show policy-map interface {interface} input',
+        * 'show policy-map interface {interface} output',
+        * 'show policy-map interface {interface}',
+        * 'show policy-map control-plane'
+        * 'show policy-map interface',
     '''
 
-    cli_command = ['show policy-map interface {interface} output class {class_name}',
-                   'show policy-map interface {interface}',
-                   'show policy-map interface',
-                   'show policy-map control-plane']
-
-    def cli(self, class_name='', interface='', output=None):
+    def cli(self, interface='', class_name='', cmd='', output=None):
+        
         if output is None:
-            if interface and class_name:
-                cmd = self.cli_command[0].format(class_name=class_name,interface=interface)
-            elif interface:
-                cmd = self.cli_command[1].format(interface=interface)
-            else:
-                cmd = self.cli_command[2]
             # Execute command on device
             out = self.device.execute(cmd)
         else:
@@ -949,6 +943,159 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
 
 
 # ===================================
+# Parser for:
+#   * 'show policy-map control-plane'
+# ===================================
+class ShowPolicyMapControlPlane(ShowPolicyMapTypeSuperParser, ShowPolicyMapTypeSchema):
+    
+    ''' Parser for:
+        * 'show policy-map control-plane'
+    '''
+
+    cli_command = ['show policy-map control-plane']
+
+    def cli(self, output=None):
+
+        if output is None:
+            # Build command
+            cmd = self.cli_command[0]
+            # Execute command
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+
+        # Call super
+        return super().cli(cmd=cmd, output=show_output)
+
+
+# ===========================================
+# Parser for:
+#   * 'show policy-map interface {interface}'
+#   * 'show policy-map interface'
+# ===========================================
+class ShowPolicyMapInterface(ShowPolicyMapTypeSuperParser, ShowPolicyMapTypeSchema):
+    
+    ''' Parser for:
+        * 'show policy-map interface {interface}'
+        * 'show policy-map interface'
+    '''
+
+    cli_command = ['show policy-map interface {interface}',
+                   'show policy-map interface',
+                   ]
+
+    def cli(self, interface='', output=None):
+
+        if output is None:
+            # Build command
+            if interface:
+                cmd = self.cli_command[0].format(interface=interface)
+            else:
+                cmd = self.cli_command[1]
+            # Execute command
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+
+        # Call super
+        return super().cli(cmd=cmd, output=show_output, interface=interface)
+
+
+# =====================================================================
+# Parser for:
+#   * 'show policy-map interface {interface} input class {class_name}'
+#   * 'show policy-map interface {interface} input'
+# =====================================================================
+class ShowPolicyMapInterfaceInput(ShowPolicyMapTypeSuperParser, ShowPolicyMapTypeSchema):
+    
+    ''' Parser for:
+        * 'show policy-map interface {interface} input class {class_name}'
+        * 'show policy-map interface {interface} input'
+    '''
+
+    cli_command = ['show policy-map interface {interface} input class {class_name}',
+                   'show policy-map interface {interface} input'
+                   ]
+
+    def cli(self, interface, class_name='', output=None):
+
+        if output is None:
+            # Build command
+            if interface and class_name:
+                cmd = self.cli_command[0].format(interface=interface, class_name=class_name)
+            else:
+                cmd = self.cli_command[1].format(interface=interface)
+            # Execute command
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+
+        # Call super
+        return super().cli(cmd=cmd, output=show_output, interface=interface, class_name=class_name)
+
+
+# =====================================================================
+# Parser for:
+#   * 'show policy-map interface {interface} output class {class_name}'
+#   * 'show policy-map interface {interface} output'
+# =====================================================================
+class ShowPolicyMapInterfaceOutput(ShowPolicyMapTypeSuperParser, ShowPolicyMapTypeSchema):
+    
+    ''' Parser for:
+        * 'show policy-map interface {interface} output class {class_name}'
+        * 'show policy-map interface {interface} output'
+    '''
+
+    cli_command = ['show policy-map interface {interface} output class {class_name}',
+                   'show policy-map interface {interface} output'
+                   ]
+
+    def cli(self, interface, class_name='', output=None):
+
+        if output is None:
+            # Build command
+            if interface and class_name:
+                cmd = self.cli_command[0].format(interface=interface, class_name=class_name)
+            else:
+                cmd = self.cli_command[1].format(interface=interface)
+            # Execute command
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+
+        # Call super
+        return super().cli(cmd=cmd, output=show_output, interface=interface, class_name=class_name)
+
+
+# ==============================================================
+# Parser for:
+#   * 'show policy-map interface {interface} class {class_name}'
+# ==============================================================
+class ShowPolicyMapInterfaceClass(ShowPolicyMapTypeSuperParser, ShowPolicyMapTypeSchema):
+    
+    ''' Parser for:
+        * 'show policy-map interface {interface} class {class_name}'
+    '''
+
+    cli_command = ['show policy-map interface {interface} class',
+                   ]
+
+    def cli(self, interface, class_name, output=None):
+
+        if output is None:
+            # Build command
+            if interface and class_name:
+                cmd = self.cli_command[0].format(interface=interface, class_name=class_name)
+            # Execute command
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+
+        # Call super
+        return super().cli(cmd=cmd, output=show_output, interface=interface, class_name=class_name)
+
+
+# ===================================
 # Schema for:
 #   * 'show policy-map'
 #   * 'show policy-map {name}'
@@ -1294,44 +1441,3 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 continue
 
         return ret_dict
-
-
-# ======================================
-# Schema for 'show policy-map interface'
-# ======================================
-class ShowPolicyMapInterfaceSchema(MetaParser):
-
-    schema = {}
-
-
-# ===================================
-# Parser for 'show policy map {name}'
-# ===================================
-class ShowPolicyMapInterface(ShowPolicyMapInterfaceSchema):
-
-    ''' Parser for
-        * 'show policy-map interface {interface} class {class_name}'
-        * 'show policy-map interface {interface}'
-        * 'show policy-map interface'
-    '''
-
-    cli_command = ['show policy-map interface {interface} class {class_name}',
-                   'show policy-map interface {interface}',
-                   'show policy-map interface',
-                   ]
-
-    def cli(self, interface='', class_name='', output=None):
-
-        if output is None:
-            if interface and class_name:
-                cmd = self.cli_command[0].format(interface=interface, class_name=class_name)
-            elif interface:
-                cmd = self.cli_command[1].format(interface=interface)
-            else:
-                cmd = self.cli_command[2]
-            # Execute command on device
-            out = self.device.execute(cmd)
-        else:
-            out = output
-
-        # continue parsing
