@@ -1,17 +1,10 @@
-
-# Python
+#!/bin/env python
 import unittest
 from unittest.mock import Mock
-
-# ATS
 from ats.topology import Device
-from ats.topology import loader
 
-# Metaparser
-from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
-                                             SchemaMissingKeyError
-
-# iosxe show_platform
+from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
+                                       SchemaMissingKeyError
 from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   Dir,\
                                                   ShowRedundancy,\
@@ -357,7 +350,7 @@ class test_show_version(unittest.TestCase):
         System Serial Number               : FOC1932X0F9
 
         Configuration register is 0x102
-    '''}
+'''}
 
     golden_parsed_output_asr1k = {
                                     'version': {
@@ -466,7 +459,7 @@ class test_show_version(unittest.TestCase):
         0K bytes of  at webui:.
 
         Configuration register is 0x2000 (will be 0x2002 at next reload)
-    '''}
+'''}
 
     golden_parsed_output_isr4k = {
         'version': {
@@ -592,7 +585,7 @@ class test_show_version(unittest.TestCase):
         0K bytes of WebUI ODM Files at webui:.
 
         Configuration register is 0x2102
-    ''' }
+''' }
 
     golden_parsed_output_asr901 = {
         'version': 
@@ -721,8 +714,8 @@ class test_dir(unittest.TestCase):
     dev_c3850 = Device(name='c3850')
     empty_output = {'execute.return_value': ''}
     semi_empty_output = {'execute.return_value': '''\
-        Directory of flash:/
-    '''}
+Directory of flash:/
+'''}
 
     golden_parsed_output_c3850 = {
                                     'dir': {
@@ -1230,6 +1223,7 @@ Compiled Tue 25-Apr-17 06:17 by mcpre
         redundancy_obj = ShowRedundancy(device=self.dev_asr1k)
         parsed_output = redundancy_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_asr1k)
+
 
 # ====================
 # Unit test for:
@@ -1933,12 +1927,8 @@ class test_show_inventory(unittest.TestCase):
         inventory_obj = ShowInventory(device=self.device)
         parsed_output = inventory_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_asr901)
-    
 
-# ====================
-# Unit test for:
-#   * 'show platform'
-# ====================
+
 class test_show_platform(unittest.TestCase):
     dev1 = Device(name='empty')
     dev2 = Device(name='semi_empty')
