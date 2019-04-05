@@ -161,8 +161,9 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'drop_rate_bps': 0},
                                     'match': ['access-group name BGP_Permit'],
                                     'qos_set': {
-                                        'ip_precedence': 6,
-                                        'marker_statistics': 'Disabled'}},
+                                        'ip precedence': {
+                                            '6': {
+                                                'marker_statistics': 'Disabled'}}}},
                                 'OSPF_Class': {
                                     'match_evaluation': 'match-all',
                                     'packets': 58,
@@ -173,8 +174,9 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'drop_rate_bps': 0},
                                     'match': ['access-group name OSPF_Permit'],
                                     'qos_set': {
-                                        'ip_precedence': 6,
-                                        'marker_statistics': 'Disabled'}},
+                                        'ip precedence': {
+                                            '6': {
+                                                'marker_statistics': 'Disabled'}}}},
                                 'LDP_Class': {
                                     'match_evaluation': 'match-all',
                                     'packets': 128,
@@ -185,8 +187,9 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'drop_rate_bps': 0},
                                     'match': ['access-group name LDP_Permit'],
                                     'qos_set': {
-                                        'ip_precedence': 6,
-                                        'marker_statistics': 'Disabled'}},
+                                        'ip precedence': {
+                                            '6': {
+                                                'marker_statistics': 'Disabled'}}}},
                                 'ICMP_Class1': {
                                     'match_evaluation': 'match-all',
                                     'packets': 0,
@@ -261,20 +264,20 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'interval': 300,
                                         'offered_rate_bps': 0,
                                         'drop_rate_bps': 0},
-                                        'match': ['access-group name ALL_Permit'],
-                                        'police': {
-                                            'cir_bps': 200000,
-                                            'bc_bytes': 15000,
-                                            'conformed': {
-                                                'packets': 23,
-                                                'bytes': 1548,
-                                                'actions': 'transmit',
-                                                'bps': 0},
-                                            'exceeded': {
-                                                'packets': 0,
-                                                'bytes': 0,
-                                                'actions': 'drop',
-                                                'bps': 0}}},
+                                    'match': ['access-group name ALL_Permit'],
+                                    'police': {
+                                        'cir_bps': 200000,
+                                        'bc_bytes': 15000,
+                                        'conformed': {
+                                            'packets': 23,
+                                            'bytes': 1548,
+                                            'actions': 'transmit',
+                                            'bps': 0},
+                                        'exceeded': {
+                                            'packets': 0,
+                                            'bytes': 0,
+                                            'actions': 'drop',
+                                            'bps': 0}}},
                                 'class-default': {
                                     'match_evaluation': 'match-any',
                                     'packets': 276,
@@ -953,7 +956,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'drop_rate_bps': 0},
                                     'match': ['ip precedence 2  (1179)'],
                                     'queueing': True,
-                                    'queue_limit_packets': '62500',
+                                    'queue_limit_bytes': 62500,
                                     'queue_depth': 0,
                                     'total_drops': 0,
                                     'no_buffer_drops': 0,
@@ -1028,7 +1031,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'offered_rate_bps': 0,
                                         'drop_rate_bps': 0},
                                     'match': ['any  (1183)'],
-                                    'queue_limit_packets': '562500',
+                                    'queue_limit_bytes': 562500,
                                     'queue_depth': 0,
                                     'total_drops': 0,
                                     'no_buffer_drops': 0,
@@ -1044,13 +1047,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                             'minimum_thresh': '140625',
                                             'maximum_thresh': '281250',
                                             'mark_prob': '1/10'},
-                                        '1': {
-                                            'transmitted': '0/0',
-                                            'random_drop': '0/0',
-                                            'tail_drop': '0/0',
-                                            'minimum_thresh': '158203',
-                                            'maximum_thresh': '281250',
-                                            'mark_prob': '1/10'},
+                                        '1': {'transmitted': '0/0',
+                                              'random_drop': '0/0',
+                                              'tail_drop': '0/0',
+                                              'minimum_thresh': '158203',
+                                              'maximum_thresh': '281250',
+                                              'mark_prob': '1/10'},
                                         '2': {
                                             'transmitted': '0/0',
                                             'random_drop': '0/0',
@@ -1194,8 +1196,9 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'drop_rate_bps': 0},
                                     'match': ['packet length min 100 max 300'],
                                     'qos_set': {
-                                        'qos_group': 20,
-                                        'packets_marked': 500}}}}}}}}}
+                                        'qos-group': {
+                                            '20': {
+                                                'packets_marked': 500}}}}}}}}}}}
 
     golden_output8 = {'execute.return_value': '''
         Router# show policy-map interface
@@ -1208,12 +1211,158 @@ class test_show_policy_map_type(unittest.TestCase):
                     Match: packet length min 100 max 300
                     QoS Set
                         qos-group 20
-                        Packets marked 500
+                            Packets marked 500
         '''}
 
-    golden_parsed_output10 = {}
+    golden_parsed_output9 = {
+        'TenGigabitEthernet0/0/2': {
+            'service_policy': {
+                'output': {
+                    'policy_name': {
+                        'shape_priority': {
+                            'queue_stats_for_all_priority_classes': {
+                                'priority_level': {
+                                    '1': {
+                                        'queueing': True,
+                                        'queue_limit_us': 3932,
+                                        'queue_limit_bytes': 49152,
+                                        'queue_depth': 49476,
+                                        'total_drops': 44577300,
+                                        'no_buffer_drops': 0,
+                                        'pkts_output': 2348138,
+                                        'bytes_output': 1202246656},
+                                    '2': {
+                                        'queueing': True,
+                                        'queue_limit_us': 1966,
+                                        'queue_limit_bytes': 49152,
+                                        'queue_depth': 51072,
+                                        'total_drops': 42228358,
+                                        'no_buffer_drops': 0,
+                                        'pkts_output': 4697080,
+                                        'bytes_output': 2404904960}}},
+                            'class_map': {
+                                'class_priority': {
+                                    'match_evaluation': 'match-any',
+                                    'packets': 46925438,
+                                    'bytes': 24025824256,
+                                    'rate': {'interval': 30,
+                                             'offered_rate_bps': 1871849000,
+                                             'drop_rate_bps': 1778171000},
+                                    'match': ['cos  1', 'cos  2'],
+                                    'priority': {
+                                        'percent': 10,
+                                        'kbps': 100000,
+                                        'burst_bytes': 2500000,
+                                        'exceed_drops': 44577300},
+                                    'priority_level': 1},
+                                'class_priority_level2': {
+                                    'match_evaluation': 'match-any',
+                                    'packets': 46925438,
+                                    'bytes': 24025824256,
+                                    'rate': {
+                                        'interval': 30,
+                                        'offered_rate_bps': 1871849000,
+                                        'drop_rate_bps': 1684485000},
+                                    'match': ['cos  3', 'cos  4'],
+                                    'priority': {
+                                        'percent': 20,
+                                        'kbps': 200000,
+                                        'burst_bytes': 5000000,
+                                        'exceed_drops': 42228358},
+                                    'priority_level': 2},
+                                'class_bw': {
+                                    'match_evaluation': 'match-any',
+                                    'packets': 23462719,
+                                    'bytes': 12012912128,
+                                    'rate': {
+                                        'interval': 30,
+                                        'offered_rate_bps': 935925000,
+                                        'drop_rate_bps': 281045000},
+                                    'match': ['cos  5'],
+                                    'queueing': True,
+                                    'queue_limit_us': 393,
+                                    'queue_limit_bytes': 49152,
+                                    'queue_depth': 49476,
+                                    'total_drops': 7045085,
+                                    'no_buffer_drops': 0,
+                                    'pkts_output': 16417634,
+                                    'bytes_output': 8405828608,
+                                    'bandwidth_remaining_percent': 70},
+                                'class-default': {
+                                    'match_evaluation': 'match-any',
+                                    'packets': 0,
+                                    'bytes': 0,
+                                    'rate': {
+                                        'interval': 30,
+                                        'offered_rate_bps': 0,
+                                        'drop_rate_bps': 0},
+                                    'match': ['any'],
+                                    'queue_limit_us': 393,
+                                    'queue_limit_bytes': 49152,
+                                    'queue_depth': 0,
+                                    'total_drops': 0,
+                                    'no_buffer_drops': 0,
+                                    'pkts_output': 0,
+                                    'bytes_output': 0}}}}}}}}
 
-    golden_output10 = {'execute.return_value': ''''''}
+    golden_output9 = {'execute.return_value': '''
+        Device# show policy-map interface TenGigabitEthernet0/0/2
+            show policy-map interface TenGigabitEthernet0/0/2
+            TenGigabitEthernet0/0/2
+
+                Service-policy output: shape_priority
+
+                    queue stats for all priority classes:
+                        priority level 1
+                        Queueing
+                        queue limit 3932 us/ 49152 bytes
+                        (queue depth/total drops/no-buffer drops) 49476/44577300/0
+                        (pkts output/bytes output) 2348138/1202246656
+
+                    queue stats for all priority classes:
+                        priority level 2
+                        Queueing
+                        queue limit 1966 us/ 49152 bytes
+                        (queue depth/total drops/no-buffer drops) 51072/42228358/0
+                        (pkts output/bytes output) 4697080/2404904960
+
+                    Class-map: class_priority (match-any)
+                        46925438 packets, 24025824256 bytes
+                        30 second offered rate 1871849000 bps, drop rate 1778171000 bps
+                        Match: cos  1
+                        Match: cos  2
+                        Priority: 10% (100000 kbps), burst bytes 2500000, b/w exceed drops: 44577300
+
+                        Priority Level: 1
+
+                    Class-map: class_priority_level2 (match-any)
+                        46925438 packets, 24025824256 bytes
+                        30 second offered rate 1871849000 bps, drop rate 1684485000 bps
+                        Match: cos  3
+                        Match: cos  4
+                        Priority: 20% (200000 kbps), burst bytes 5000000, b/w exceed drops: 42228358
+                
+                        Priority Level: 2
+
+                    Class-map: class_bw (match-any)
+                        23462719 packets, 12012912128 bytes
+                        30 second offered rate 935925000 bps, drop rate 281045000 bps
+                        Match: cos  5
+                        Queueing
+                        queue limit 393 us/ 49152 bytes
+                        (queue depth/total drops/no-buffer drops) 49476/7045085/0
+                        (pkts output/bytes output) 16417634/8405828608
+                        bandwidth remaining 70%
+
+                    Class-map: class-default (match-any)
+                        0 packets, 0 bytes
+                        30 second offered rate 0000 bps, drop rate 0000 bps
+                        Match: any
+                  
+                        queue limit 393 us/ 49152 bytes
+                        (queue depth/total drops/no-buffer drops) 0/0/0
+                        (pkts output/bytes output) 0/0
+    '''}
 
     def test_show_policy_map_control_plane_empty(self):
         self.maxDiff = None
@@ -1278,6 +1427,12 @@ class test_show_policy_map_type(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output8)
 
+    def test_show_policy_map_interface_full5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output9)
+        obj = ShowPolicyMapType(device=self.device)
+        parsed_output = obj.parse(interface='TenGigabitEthernet0/0/2')
+        self.assertEqual(parsed_output, self.golden_parsed_output9)
 
 # =============================================
 # Unit test for :

@@ -59,6 +59,8 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                     Optional('queue_limit_packets'): str,
                                     Optional('queue_size'): int,
                                     Optional('queue_limit'): int,
+                                    Optional('queue_limit_bytes'): int,
+                                    Optional('queue_limit_us'): int,
                                     Optional('queue_depth'): int,
                                     Optional('total_drops'): int,
                                     Optional('no_buffer_drops'): int,
@@ -78,11 +80,17 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                     Optional('bandwidth_kbps'): int,
                                     Optional('bandwidth'): str,
                                     Optional('bandwidth_remaining_ratio'): int,
-                                    Optional('bandwidth_remaining_percent'):int,
+                                    Optional('bandwidth_remaining_percent'): int,
                                     Optional('bandwidth_max_threshold_packets'): int,
                                     Optional('exponential_weight'): int,
                                     Optional('exp_weight_constant'): str,
                                     Optional('mean_queue_depth'): int,
+                                    Optional('priority_level'): int,
+                                    Optional('priority'): {
+                                        Optional('percent'): int,
+                                        Optional('kbps'): int,
+                                        Optional('burst_bytes'): int,
+                                        Optional('exceed_drops'): int},
                                     Optional('rate'): {
                                         Optional('interval'): int,
                                         Optional('offered_rate_bps'): int,
@@ -115,11 +123,15 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                         },
                                     },
                                     Optional('qos_set'): {
-                                        Optional('ip_precedence'): int,
-                                        Optional('marker_statistics'): str,
-                                        Optional('qos_group'): int,
-                                        Optional('packets_marked'): int,
-                                        Optional('dscp'): str,
+                                        Any(): {
+                                            Any(): {
+                                                Optional('packets_marked'): int,
+                                                Optional('marker_statistics'): str,
+                                            },
+                                        },
+                                    },
+                                    Optional('queue_stats_for_all_priority_classes'): {
+                                        Optional('')
                                     },
                                     Optional('police'): {
                                         Optional('cir_bps'): int,
@@ -146,6 +158,20 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                             'bps': int,
                                             'actions': str,
                                         },
+                                    },
+                                },
+                            },
+                            Optional('queue_stats_for_all_priority_classes'): {
+                                'priority_level': {
+                                    Any(): {
+                                        Optional('queueing'): bool,
+                                        Optional('queue_limit_bytes'): int,
+                                        Optional('queue_limit_us'): int,
+                                        Optional('queue_depth'): int,
+                                        Optional('total_drops'): int,
+                                        Optional('no_buffer_drops'): int,
+                                        Optional('pkts_output'): int,
+                                        Optional('bytes_output'): int,
                                     },
                                 },
                             },
@@ -194,6 +220,7 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
         ret_dict = {}
         ret_dict = collections.OrderedDict(ret_dict)
         class_line_type = None
+        queue_stats = 0
 
         # Control Plane
         # GigabitEthernet0/1/5
@@ -212,6 +239,12 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
         # Class-map: Ping_Class (match-all)
         # Class-map:TEST (match-all)
         p2 = re.compile(r'^[Cc]lass-map *:+(?P<class_map>([\s\w\-]+)) +(?P<match_all>(.*))$')
+
+        # queue stats for all priority classes:
+        p2_1 = re.compile(r'^queue +stats +for +all +priority +classes:$')
+
+        # priority level 2
+        p2_1_1 = re.compile(r'^priority +level +(?P<priority_level>(\d+))$')
 
         # 8 packets, 800 bytes
         p3 = re.compile(r'^(?P<packets>(\d+)) packets, (?P<bytes>(\d+)) +bytes')
@@ -276,16 +309,15 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
         p13 = re.compile(r'^QoS +Set+$')
 
         # ip precedence 6
-        p13_1 = re.compile(r'^ip +precedence +(?P<ip_precedence>(\d+))$')
+        # dscp af41
+        # qos-group 20
+        p13_1 = re.compile(r'^(?P<key>(ip precedence|qos-group|dscp)) +(?P<value>(\w+))$')
 
         # Marker statistics: Disabled
         p13_2 = re.compile(r'^Marker +statistics: +(?P<marker_statistics>(\w+))$')
 
-        # qos-group 20
-        p13_3 = re.compile(r'^qos-group +(?P<qos_group>(\d+))$')
-
         # Packets marked 500
-        p13_4 = re.compile(r'^Packets +marked +(?P<packets_marked>(\d+))$')
+        p13_3 = re.compile(r'^Packets +marked +(?P<packets_marked>(\d+))$')
 
         # Queueing
         p14 = re.compile(r'^Queueing$')
@@ -294,7 +326,10 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
         p15 = re.compile(r'^queue +size +(?P<queue_size>(\d+)), +queue +limit +(?P<queue_limit>(\d+))$')
 
         # queue limit 64 packets
-        p16 = re.compile(r'^queue +limit +(?P<queue_limit>(\d+)) .*$')
+        p16 = re.compile(r'^queue +limit +(?P<queue_limit>(\d+)) packets')
+
+        # queue limit 62500 bytes
+        p16_1 = re.compile(r'^queue +limit +(?P<queue_limit_bytes>(\d+)) bytes$')
 
         # (queue depth/total drops/no-buffer drops) 0/0/0
         p17 = re.compile(r'^\(+queue +depth/+total +drops/+no-buffer +drops+\) +(?P<queue_depth>(\d+))/'
@@ -389,6 +424,19 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
         p35 = re.compile(r'^tail/random drop +(?P<tail_random_drops>(\d+)), +no buffer drop +(?P<no_buffer_drops>(\d+)), '
                           '+other drop +(?P<other_drops>(\d+))$')
 
+        # queue limit 1966 us/ 49152 bytes
+        p37 = re.compile(r'^queue +limit +(?P<queue_limit_us>(\d+)) +us/ +(?P<queue_limit_bytes>(\d+)) bytes$')
+
+        # Priority: 10% (100000 kbps), burst bytes 2500000, b/w exceed drops: 44577300
+        p38 = re.compile(r'^Priority: +(?P<percent>(\d+))% +\((?P<kbps>(\d+)) kbps\), +burst bytes +(?P<burst_bytes>(\d)+), +'
+                          'b/w exceed drops: +(?P<exceed_drops>(\d+))$')
+
+        # Priority Level: 1
+        p39 = re.compile(r'^Priority +Level: +(?P<priority_level>(\d+))$')
+
+        # bandwidth remaining 70%
+        p40 = re.compile(r'^bandwidth +remaining +(?P<bandwidth_remaining_percent>(\d+))%$')
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -426,11 +474,26 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
             if m:
                 match_list = []
                 class_line_type = None
+                queue_stats = 0
                 class_map = m.groupdict()['class_map'].strip()
                 class_match = m.groupdict()['match_all'].strip()
                 class_map_dict = policy_name_dict.setdefault('class_map', {}).\
                                                   setdefault(class_map, {})
                 class_map_dict['match_evaluation'] = class_match.replace('(', '').replace(')', '')
+                continue
+
+            # queue stats for all priority classes:
+            m = p2_1.match(line)
+            if m:
+                queue_stats = 1
+                queue_dict = policy_name_dict.setdefault('queue_stats_for_all_priority_classes', {})
+                continue
+
+            # priority level 2
+            m = p2_1_1.match(line)
+            if m:
+                priority_level = m.groupdict()['priority_level']
+                priority_dict = queue_dict.setdefault('priority_level', {}).setdefault(priority_level, {})
                 continue
 
             # 8 packets, 800 bytes
@@ -586,31 +649,31 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
             # ip precedence 6
             m = p13_1.match(line)
             if m:
-                qos_dict['ip_precedence'] = int(m.groupdict()['ip_precedence'])
+                group = m.groupdict()
+                key = group['key'].strip()
+                value = group['value'].strip()
+                qos_dict_map = qos_dict.setdefault(key, {}).setdefault(value, {})
                 continue
 
             # Marker statistics: Disabled
             m = p13_2.match(line)
             if m:
-                qos_dict['marker_statistics'] = m.groupdict()['marker_statistics']
-                continue
-
-            # qos-group 20
-            m = p13_3.match(line)
-            if m:
-                qos_dict['qos_group'] = int(m.groupdict()['qos_group'])
+                qos_dict_map['marker_statistics'] = m.groupdict()['marker_statistics']
                 continue
 
             # Packets marked 500
-            m = p13_4.match(line)
+            m = p13_3.match(line)
             if m:
-                qos_dict['packets_marked'] = int(m.groupdict()['packets_marked'])
+                qos_dict_map['packets_marked'] = int(m.groupdict()['packets_marked'])
                 continue
 
             # Queueing
             m = p14.match(line)
             if m:
-                class_map_dict['queueing'] = True
+                if queue_stats == 1:
+                    priority_dict['queueing'] = True
+                else:
+                    class_map_dict['queueing'] = True
                 continue
 
             # queue size 0, queue limit 4068
@@ -626,12 +689,23 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
                 class_map_dict['queue_limit_packets'] = m.groupdict()['queue_limit']
                 continue
 
+            # queue limit 62500 bytes
+            m = p16_1.match(line)
+            if m:
+                class_map_dict['queue_limit_bytes'] = int(m.groupdict()['queue_limit_bytes'])
+                continue
+
             # (queue depth/total drops/no-buffer drops) 0/0/0
             m = p17.match(line)
             if m:
-                class_map_dict['queue_depth'] = int(m.groupdict()['queue_depth'])
-                class_map_dict['total_drops'] = int(m.groupdict()['total_drops'])
-                class_map_dict['no_buffer_drops'] = int(m.groupdict()['no_buffer_drops'])
+                if queue_stats == 1:
+                    priority_dict['queue_depth'] = int(m.groupdict()['queue_depth'])
+                    priority_dict['total_drops'] = int(m.groupdict()['total_drops'])
+                    priority_dict['no_buffer_drops'] = int(m.groupdict()['no_buffer_drops'])
+                else:
+                    class_map_dict['queue_depth'] = int(m.groupdict()['queue_depth'])
+                    class_map_dict['total_drops'] = int(m.groupdict()['total_drops'])
+                    class_map_dict['no_buffer_drops'] = int(m.groupdict()['no_buffer_drops'])
                 continue
 
             # depth/total drops/no-buffer drops) 147/38/0
@@ -645,8 +719,12 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
             # (pkts output/bytes output) 0/0
             m = p18_1.match(line)
             if m:
-                class_map_dict['pkts_output'] = int(m.groupdict()['pkts_output'])
-                class_map_dict['bytes_output'] = int(m.groupdict()['bytes_output'])
+                if queue_stats == 1:
+                    priority_dict['pkts_output'] = int(m.groupdict()['pkts_output'])
+                    priority_dict['bytes_output'] = int(m.groupdict()['bytes_output'])
+                else:
+                    class_map_dict['pkts_output'] = int(m.groupdict()['pkts_output'])
+                    class_map_dict['bytes_output'] = int(m.groupdict()['bytes_output'])
                 continue
 
             # (pkts matched/bytes matched) 363/87120
@@ -832,6 +910,39 @@ class ShowPolicyMapType(ShowPolicyMapTypeSchema):
                 class_map_dict['tail_random_drops'] = int(m.groupdict()['tail_random_drops'])
                 class_map_dict['no_buffer_drops'] = int(m.groupdict()['no_buffer_drops'])
                 class_map_dict['other_drops'] = int(m.groupdict()['other_drops'])
+                continue
+
+            # queue limit 1966 us/ 49152 bytes
+            m = p37.match(line)
+            if m:
+                if queue_stats == 1 :
+                    priority_dict['queue_limit_us'] = int(m.groupdict()['queue_limit_us'])
+                    priority_dict['queue_limit_bytes'] = int(m.groupdict()['queue_limit_bytes'])
+                else:
+                    class_map_dict['queue_limit_us'] = int(m.groupdict()['queue_limit_us'])
+                    class_map_dict['queue_limit_bytes'] = int(m.groupdict()['queue_limit_bytes'])
+                continue
+
+            # Priority: 10% (100000 kbps), burst bytes 2500000, b/w exceed drops: 44577300
+            m = p38.match(line)
+            if m:
+                pri_dict = class_map_dict.setdefault('priority', {})
+                pri_dict['percent'] = int(m.groupdict()['percent'])
+                pri_dict['kbps'] = int(m.groupdict()['kbps'])
+                pri_dict['burst_bytes'] = int(m.groupdict()['burst_bytes'])
+                pri_dict['exceed_drops'] = int(m.groupdict()['exceed_drops'])
+                continue
+
+            # Priority Level: 1
+            m = p39.match(line)
+            if m:
+                class_map_dict['priority_level'] = int(m.groupdict()['priority_level'])
+                continue
+
+            # bandwidth remaining 70%
+            m = p40.match(line)
+            if m:
+                class_map_dict['bandwidth_remaining_percent'] = int(m.groupdict()['bandwidth_remaining_percent'])
                 continue
 
         return ret_dict
