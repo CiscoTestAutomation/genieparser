@@ -61,7 +61,7 @@ class ShowBundleSchema(MetaParser):
     """Schema for show bundle"""
 
     schema = {
-        'bundle': {
+        'interfaces': {
             Any(): {
                 'bundle_id': int,
                 'status': str,
@@ -92,7 +92,7 @@ class ShowBundleSchema(MetaParser):
                     'non_revert': str,
                 },
                 'mlacp': str,
-                'ip_bfd': str,
+                'ipv4_bfd': str,
                 'ipv6_bfd': str,
                 'port': {
                     Any(): {
@@ -176,14 +176,12 @@ class ShowBundle(ShowBundleSchema):
         p17 = re.compile(r'^mLACP: *(?P<mlacp>[\w\s]+)$')
 
         # IPv4 BFD:  Not configured
-        p18 = re.compile(r'^IPv4 +BFD: *(?P<ip_bfd>[\w\s]+)$')
-
         # IPv6 BFD:  Not configured
-        p19 = re.compile(r'^IPv6 +BFD: *(?P<ipv6_bfd>[\w\s]+)$')
+        p18 = re.compile(r'^(?P<type>[\w]+) +BFD: *(?P<ip_bfd>[\w\s]+)$')
 
         # Port                  Device           State        Port ID         B/W, kbps
         # Gi0/0/0/0             Local            Active       0x000a, 0x0001     1000000
-        p20 = re.compile(r'^(?P<interface>[\S]+) +(?P<device>[\w]+) +(?P<state>[\w]+)'
+        p19 = re.compile(r'^(?P<interface>[\S]+) +(?P<device>[\w]+) +(?P<state>[\w]+)'
                          ' +(?P<port_id>[\w]+, *[\w]+) +(?P<bw>[\d]+)')
 
         for line in out.splitlines():
@@ -196,7 +194,7 @@ class ShowBundle(ShowBundleSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                bundle_dict = result_dict.setdefault('bundle', {}).setdefault(m.group(), {})
+                bundle_dict = result_dict.setdefault('interfaces', {}).setdefault(m.group(), {})
                 bundle_dict.update({'bundle_id': int(group['bundle_id'])})
                 continue
 
@@ -204,7 +202,7 @@ class ShowBundle(ShowBundleSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                bundle_dict.update({'status': group['status']})
+                bundle_dict.update({'status': group['status'].lower()})
                 continue
 
             # Local links <active/standby/configured>:  2 / 0 / 2
@@ -318,22 +316,20 @@ class ShowBundle(ShowBundleSchema):
                 continue
 
             # IPv4 BFD:  Not configured
+            # IPv6 BFD:  Not configured
             m = p18.match(line)
             if m:
                 group = m.groupdict()
-                bundle_dict.update({'ip_bfd': group['ip_bfd']})
+                bundle_dict.update({'ipv4_bfd': group['ip_bfd']})
+                bundle_dict.update({'ipv6_bfd': group['ip_bfd']})
                 continue
 
-            # IPv6 BFD:  Not configured
-            m = p19.match(line)
-            if m:
-                group = m.groupdict()
-                bundle_dict.update({'ipv6_bfd': group['ipv6_bfd']})
-                continue
+                
+
 
             # Port                  Device           State        Port ID         B/W, kbps
             # Gi0/0/0/0             Local            Active       0x000a, 0x0001     1000000
-            m = p20.match(line)
+            m = p19.match(line)
             if m:
                 group = m.groupdict()
                 interface = Common.convert_intf_name(group['interface'])
@@ -352,7 +348,7 @@ class ShowLacpSchema(MetaParser):
     """Schema for show lacp"""
 
     schema = {
-        'bundle': {
+        'interfaces': {
             Any(): {
                 'bundle_id': int,
                 'port': {
@@ -424,7 +420,7 @@ class ShowLacp(ShowLacpSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                bundle_dict = result_dict.setdefault('bundle', {}).setdefault(m.group(), {})
+                bundle_dict = result_dict.setdefault('interfaces', {}).setdefault(m.group(), {})
                 bundle_dict.update({'bundle_id': int(group['bundle_id'])})
                 continue
 

@@ -119,10 +119,10 @@ class test_show_bundle(unittest.TestCase):
     '''}
 
     golden_parsed_output = {
-        "bundle": {
+        "interfaces": {
             "Bundle-Ether1": {
                 "bundle_id": 1,
-                "status": "Up",
+                "status": "up",
                 "local_links": {
                     "active": 2,
                     "standby": 0,
@@ -150,7 +150,7 @@ class test_show_bundle(unittest.TestCase):
                     "non_revert": "Disabled"
                 },
                 "mlacp": "Not configured",
-                "ip_bfd": "Not configured",
+                "ipv4_bfd": "Not configured",
                 "ipv6_bfd": "Not configured",
                 "port": {
                     "GigabitEthernet0/0/0/0": {
@@ -171,7 +171,7 @@ class test_show_bundle(unittest.TestCase):
             },
             "Bundle-Ether2": {
                 "bundle_id": 2,
-                "status": "Up",
+                "status": "up",
                 "local_links": {
                     "active": 2,
                     "standby": 1,
@@ -199,7 +199,7 @@ class test_show_bundle(unittest.TestCase):
                     "non_revert": "Disabled"
                 },
                 "mlacp": "Not configured",
-                "ip_bfd": "Not configured",
+                "ipv4_bfd": "Not configured",
                 "ipv6_bfd": "Not configured",
                 "port": {
                     "GigabitEthernet0/0/0/2": {
@@ -301,7 +301,7 @@ class test_show_lacp(unittest.TestCase):
         '''}
 
     golden_parsed_output = {
-        "bundle": {
+        "interfaces": {
             "Bundle-Ether1": {
                 "bundle_id": 1,
                 "port": {
