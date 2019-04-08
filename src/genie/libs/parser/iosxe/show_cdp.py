@@ -77,9 +77,7 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
         if output is None:
             out = self.device.execute(self.cli_command)
         else:
-            out = output
-
-        parsed_dict = {'cdp': {}}
+            out = output       
 
         # Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge
         #                   S - Switch, H - Host, I - IGMP, r - Repeater
@@ -98,8 +96,8 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
                          '(?P<hold_time>\d+) +(?P<capability>[RTBSHIr\s]+) +'
                          '(?P<platform>\S+) (?P<port_id>[a-zA-Z0-9\/\s]+)$') 
 
-        device_id_index = 0        
-
+        device_id_index = 0
+        parsed_dict = {}
         devices_dict_info = {}
 
         for line in out.splitlines():
@@ -193,6 +191,8 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
         mngaddress_re = re.compile(r'Management\s*address\s*\([\w]+\)\s*\:\s*')
         # Entry address(es):
         entryaddress_re = re.compile(r'Entry\s*address\s*\(\w+\)\s*\:\s*')
+        # Technical Support: http://www.cisco.com/techsupport
+        version_end_re = re.compile(r'Technical\s*Support\s*:\s*')
 
         # IPv6 address: FE80::203:E3FF:FE6A:BF81  (link-local)
         # IPv6 address: 4000::BC:0:0:C0A8:BC06  (global unicast)
@@ -206,6 +206,8 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
         management_address_flag = 0
         software_version_flag = 0
 
+        # Init vars
+        sw_version = ''
         parsed_dict = {'total_entries_displayed': 0}
         index_device = 0
         devices_dict = {}
@@ -244,12 +246,6 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
                 entry_address_flag = 0
 
                 continue
-
-            result = advertver_re.match(line)
-
-            if result:
-                devices_dict[index_device]['advertisement_ver'] = \
-                    result.group('advertisement_ver')
 
             result = interface_port_re.match(line)
 
@@ -305,26 +301,27 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
                         [ipv6_address_dict['ip_adress']] = \
                         {'type': ipv6_address_dict['type']}
 
-                continue
+                continue            
 
-            result = advertver_re.match(line)
-
-            if result:
-                devices_dict[index_device]['advertisement_ver'] = \
-                    int(result.group('advertisement_ver'))
-                continue
-
-            if software_version_flag_re.match(line):
+            if software_version_flag_re.match(line):                
                 software_version_flag = 1
                 continue
 
-            result = software_version_re.match(line)
-
-            if result and software_version_flag:
-                devices_dict[index_device]['software_version'] = \
+            if software_version_flag:                
+                if line and not version_end_re.match(line) and not advertver_re.match(line):
+                    sw_version += line
+                    continue
+                elif version_end_re.match(line) or not line or advertver_re.match(line):
+                    result = software_version_re.match(sw_version)
+                    devices_dict[index_device]['software_version'] = \
                     result.group('software_version')
-                software_version_flag = 0
+                    software_version_flag = 0
+                    sw_version = ''
 
+            result = advertver_re.match(line)
+            if result:
+                devices_dict[index_device]['advertisement_ver'] = \
+                    int(result.group('advertisement_ver'))                
                 continue
 
             result = native_vlan_re.match(line)
