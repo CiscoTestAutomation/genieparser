@@ -258,7 +258,6 @@ class ShowIpv6RipDatabase(ShowIpv6RipDatabaseSchema):
                 vrf = group['vrf']
                 if 'default' in vrf.lower():
                     vrf = 'default'
-
                 address_family_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}).setdefault('address_family',{}). \
                     setdefault(address_family, {})
                 continue
