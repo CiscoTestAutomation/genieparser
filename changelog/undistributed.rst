@@ -8,6 +8,10 @@
 --------------------------------------------------------------------------------
                                    LAG
 --------------------------------------------------------------------------------
+* IOSXE
+    * Enhancement on ShowEtherchannelSummary for:
+        show etherchannel summary
+
 * IOS
     * Add ShowLacpSysId for:
         show lacp sys-id
