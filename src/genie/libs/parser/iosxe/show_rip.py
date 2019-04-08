@@ -234,8 +234,7 @@ class ShowIpv6RipDatabase(ShowIpv6RipDatabaseSchema):
 
         # RIP VRF "Default VRF", local RIB
         # RIP VRF "VRF1", local RIB
-        # RIP VRF "blue", Next Hops
-        p1 = re.compile(r'^\s*RIP +VRF +"(?P<vrf>[\S\s]+)", +\w+ +\w+$')
+        p1 = re.compile(r'^\s*RIP +VRF +"(?P<vrf>[\S\s]+)", local RIB$')
 
         # 2001:DB8:1:3::/64, metric 2
         # 2001:DB8:2:3::/64, metric 2, installed
@@ -243,9 +242,6 @@ class ShowIpv6RipDatabase(ShowIpv6RipDatabaseSchema):
 
         #     GigabitEthernet3.100/FE80::F816:3EFF:FEFF:1E3D, expires in 179 secs
         p3 = re.compile(r'^\s*(?P<interface>\S+), +expires +in +(?P<expire_time>[\d]+) +secs$')
-
-        # FE80::A8BB:CCFF:FE00:7C00/Ethernet0/0 [1 paths]
-        p4 = re.compile(r'^(?P<next_hop>[\w:]+)\/(?P<interface>[\w\/]+)$')
 
         result_dict = {}
 
@@ -266,7 +262,6 @@ class ShowIpv6RipDatabase(ShowIpv6RipDatabaseSchema):
 
                 address_family_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}).setdefault('address_family',{}). \
                     setdefault(address_family, {})
-
                 continue
 
             # 2001:DB8:2:3::/64, metric 2, installed
@@ -306,17 +301,6 @@ class ShowIpv6RipDatabase(ShowIpv6RipDatabaseSchema):
                 if installed:
                     index_dict.update({'installed': True})
 
-                index +=1
-                continue
-
-            # FE80::A8BB:CCFF:FE00:7C00/Ethernet0/0
-            m = p4.match(line)
-            if m:
-                group = m.groupdict()
-                index_dict = route_dict.setdefault('index', {}).setdefault(index, {})
-                interface_nexthop = group['interface']
-                index_dict.update({'interface': interface})
-                index_dict.update({'next_hop': next_hop})
                 index +=1
                 continue
 
