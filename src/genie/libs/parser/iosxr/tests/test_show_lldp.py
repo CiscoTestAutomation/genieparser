@@ -18,31 +18,91 @@ from genie.libs.parser.iosxr.show_lldp import ShowLldp, ShowLldpEntry, \
 
 class test_show_lldp(unittest.TestCase):
     dev = Device(name='d')
-    empty_output = {'execute.return_value': '      '}
-    golden_parsed_output = {}
+    empty_output = {'execute.return_value': ''}
+    golden_parsed_output = {
+        "hello_timer": 30,
+        "enabled": True,
+        "hold_timer": 120,
+        "status": "active",
+        "reinit_timer": 2
+    }
     golden_output = {'execute.return_value': '''\
+    
+    Mon Mar 19 18:23:08.490 UTC
+    Global LLDP information:
+            Status: ACTIVE
+            LLDP advertisements are sent every 30 seconds
+            LLDP hold time advertised is 120 seconds
+            LLDP interface reinitialisation delay is 2 seconds
     '''}
 
     def test_empty(self):
-        self.dev1 = Mock(**self.empty_output)
-        obj = ShowLldp(device=self.dev1)
+        self.dev = Mock(**self.empty_output)
+        obj = ShowLldp(device=self.dev)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
     def test_golden(self):
         self.maxDiff = None
-        self.dev_c3850 = Mock(**self.golden_output)
-        obj = ShowLldp(device=self.dev_c3850)
+        self.dev = Mock(**self.golden_output)
+        obj = ShowLldp(device=self.dev)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 class test_show_lldp_entry(unittest.TestCase):
     dev1 = Device(name='empty')
-    dev_c3850 = Device(name='c3850')
     empty_output = {'execute.return_value': '      '}
 
     golden_parsed_output = {}
     golden_output = {'execute.return_value': '''\
+        Mon Mar 19 18:23:32.251 UTC
+        Capability codes:
+                (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
+                (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
+
+        ------------------------------------------------
+        Local Interface: GigabitEthernet0/0/0/0
+        Chassis id: 001e.49f7.2c00
+        Port id: Gi2
+        Port Description: GigabitEthernet2
+        System Name: R1_csr1000v.openstacklocal
+
+        System Description: 
+        Cisco IOS Software [Everest], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.1, RELEASE SOFTWARE (fc2)
+        Technical Support: http://www.cisco.com/techsupport
+        Copyright (c) 1986-2017 by Cisco Systems, Inc.
+        Compiled Sat 22-Jul-17 05:51 by 
+
+        Time remaining: 117 seconds
+        Hold Time: 120 seconds
+        System Capabilities: B,R
+        Enabled Capabilities: R
+        Management Addresses:
+          IPv4 address: 10.1.2.1
+
+
+
+        ------------------------------------------------
+        Local Interface: GigabitEthernet0/0/0/1
+        Chassis id: 5e00.8002.0009
+        Port id: Ethernet1/2
+        Port Description: Ethernet1/2
+        System Name: R3_n9kv
+
+        System Description: 
+        Cisco Nexus Operating System (NX-OS) Software 7.0(3)I7(1)
+        TAC support: http://www.cisco.com/tac
+        Copyright (c) 2002-2017, Cisco Systems, Inc. All rights reserved.
+
+        Time remaining: 103 seconds
+        Hold Time: 120 seconds
+        System Capabilities: B,R
+        Enabled Capabilities: B,R
+        Management Addresses - not advertised
+
+
+        Total entries displayed: 2
+
      '''}
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
@@ -52,8 +112,8 @@ class test_show_lldp_entry(unittest.TestCase):
 
     def test_golden(self):
         self.maxDiff = None
-        self.dev_c3850 = Mock(**self.golden_output)
-        obj = ShowLldpEntry(device=self.dev_c3850)
+        self.dev1 = Mock(**self.golden_output)
+        obj = ShowLldpEntry(device=self.dev1)
         parsed_output = obj.parse(entry='*')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
@@ -62,6 +122,53 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
     empty_output = {'execute.return_value': '      '}
     golden_parsed_output = {}
     golden_output = {'execute.return_value': '''\
+    Mon Mar 19 18:24:29.512 UTC
+    Capability codes:
+            (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
+            (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
+
+    ------------------------------------------------
+    Local Interface: GigabitEthernet0/0/0/0
+    Chassis id: 001e.49f7.2c00
+    Port id: Gi2
+    Port Description: GigabitEthernet2
+    System Name: R1_csr1000v.openstacklocal
+
+    System Description: 
+    Cisco IOS Software [Everest], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.1, RELEASE SOFTWARE (fc2)
+    Technical Support: http://www.cisco.com/techsupport
+    Copyright (c) 1986-2017 by Cisco Systems, Inc.
+    Compiled Sat 22-Jul-17 05:51 by 
+
+    Time remaining: 90 seconds
+    Hold Time: 120 seconds
+    System Capabilities: B,R
+    Enabled Capabilities: R
+    Management Addresses:
+      IPv4 address: 10.1.2.1
+
+
+
+    ------------------------------------------------
+    Local Interface: GigabitEthernet0/0/0/1
+    Chassis id: 5e00.8002.0009
+    Port id: Ethernet1/2
+    Port Description: Ethernet1/2
+    System Name: R3_n9kv
+
+    System Description: 
+    Cisco Nexus Operating System (NX-OS) Software 7.0(3)I7(1)
+    TAC support: http://www.cisco.com/tac
+    Copyright (c) 2002-2017, Cisco Systems, Inc. All rights reserved.
+
+    Time remaining: 106 seconds
+    Hold Time: 120 seconds
+    System Capabilities: B,R
+    Enabled Capabilities: B,R
+    Management Addresses - not advertised
+
+
+    Total entries displayed: 2
     '''}
 
     def test_empty(self):
@@ -84,6 +191,17 @@ class test_show_lldp_traffic(unittest.TestCase):
 
     golden_parsed_output = {}
     golden_output = {'execute.return_value': '''\
+    RP/0/RP0/CPU0:R2_xrv9000#show lldp traffic 
+    Mon Mar 19 18:24:54.528 UTC
+
+    LLDP traffic statistics:
+            Total frames out: 588
+            Total entries aged: 0
+            Total frames in: 399
+            Total frames received in error: 0
+            Total frames discarded: 0
+            Total TLVs discarded: 119
+            Total TLVs unrecognized: 119
     '''}
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
@@ -105,6 +223,21 @@ class test_show_lldp_interface(unittest.TestCase):
 
     golden_parsed_output = {}
     golden_output = {'execute.return_value': '''\
+    Mon Mar 19 18:24:00.487 UTC
+
+
+    GigabitEthernet0/0/0/0:
+            Tx: enabled
+            Rx: enabled
+            Tx state: IDLE
+            Rx state: WAIT FOR FRAME
+
+
+    GigabitEthernet0/0/0/1:
+            Tx: enabled
+            Rx: enabled
+            Tx state: IDLE
+            Rx state: WAIT FOR FRAME
     '''}
 
     def test_empty(self):
