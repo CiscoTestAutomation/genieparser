@@ -1,4 +1,4 @@
-"""show_mcast.py
+"""show_rpf.py
 
 IOSXE parsers for the following show commands:
 
@@ -7,12 +7,7 @@ IOSXE parsers for the following show commands:
     * show ipv6 rpf <mroute address>
     * show ipv6 rpf vrf <WORD> <mroute address>
 """
-# Python
-import re
 
-# Metaparser
-from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional
 # import iosxe parser
 from genie.libs.parser.iosxe.show_rpf import ShowIpRpf as ShowIpRpf_iosxe, \
                                              ShowIpv6Rpf as ShowIpv6Rpf_iosxe

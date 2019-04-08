@@ -154,17 +154,6 @@
         show ipv6 rpf vrf <vrf> <mroute address>
 
 --------------------------------------------------------------------------------
-                                   ROUNTING
---------------------------------------------------------------------------------
-* IOS
-    * Add ShowIpRouteWord for:
-        show ip route <Hostname or A.B.C.D>
-        show ip route vrf <vrf> <Hostname or A.B.C.D>
-    * Add ShowIpv6RouteWord for:
-        show ipv6 route <Hostname or A.B.C.D>
-        show ipv6 route vrf <vrf> <Hostname or A.B.C.D>
-
---------------------------------------------------------------------------------
                                    BFD
 --------------------------------------------------------------------------------
 * IOS
