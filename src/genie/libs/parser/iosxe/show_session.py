@@ -71,9 +71,9 @@ class ShowLine(ShowLineSchema):
                 else:
                     tty_dict['active'] = False
                 tty_dict['type'] = group['type']
-                if group['tx']:
+                if 'tx' in group:
                     tty_dict['tx'] = int(group['tx'])
-                if group['rx']:
+                if 'rx' in group:
                     tty_dict['rx'] = int(group['rx'])
                 tty_dict['a'] = group['a']
                 tty_dict['modem'] = group['modem']
