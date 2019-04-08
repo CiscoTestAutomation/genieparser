@@ -1105,17 +1105,6 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                         isis_dict['redistributing'] = m.groupdict()['redistributing']
                     continue
 
-                # Redistributing: connected, static, rip
-                m = p109.match(line)
-                if m:
-                    if protocol == 'bgp':
-                        group = m.groupdict()
-                        redistributes = group['Redistributing'].split(',')
-                        redistribute_dict = bgp_dict.setdefault('redistribute', {})
-                        for key in redistributes:
-                            redistribute_dict.setdefault(key.strip(), {})
-                    continue
-
         return ret_dict
 
 

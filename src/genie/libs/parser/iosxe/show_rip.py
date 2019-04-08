@@ -187,7 +187,7 @@ class ShowIpv6RipDatabaseSchema(MetaParser):
             Any(): {
                 'address_family': {
                     Any(): {
-                        Optional('routes'): {
+                        'routes': {
                             Any(): {
                                 'index': {
                                     Any(): {
@@ -234,7 +234,7 @@ class ShowIpv6RipDatabase(ShowIpv6RipDatabaseSchema):
 
         # RIP VRF "Default VRF", local RIB
         # RIP VRF "VRF1", local RIB
-        p1 = re.compile(r'^\s*RIP +VRF +"(?P<vrf>[\S\s]+)", local RIB$')
+        p1 = re.compile(r'^\s*RIP +VRF +"(?P<vrf>[\S\s]+)", +local RIB$')
 
         # 2001:DB8:1:3::/64, metric 2
         # 2001:DB8:2:3::/64, metric 2, installed
@@ -244,7 +244,6 @@ class ShowIpv6RipDatabase(ShowIpv6RipDatabaseSchema):
         p3 = re.compile(r'^\s*(?P<interface>\S+), +expires +in +(?P<expire_time>[\d]+) +secs$')
 
         result_dict = {}
-
         for line in out.splitlines():
             if line:
                 line = line.strip()
@@ -346,7 +345,7 @@ class ShowIpv6RipSchema(MetaParser):
                             Optional('flush_interval'): int,
                             Optional('expire_time'):int,
                             },
-                        Optional('interfaces'): {
+                        'interfaces': {
                             Any(): {
                             },
                         },
