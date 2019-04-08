@@ -353,7 +353,7 @@ class test_show_acl_afi_all(unittest.TestCase):
 
 
 class test_show_acl_ethernet_services(unittest.TestCase):
-    dev = Device(name='d')
+    dev = Device(name='device')
     empty_output = {'execute.return_value': '      '}
 
     golden_parsed_output = {

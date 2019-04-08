@@ -17,7 +17,7 @@ from genie.libs.parser.utils.common import Common
 # Schema for 'show access-lists afi-all'
 # =======================================
 
-class ShowAclSchema(MetaParser):
+class ShowAclAfiAllSchema(MetaParser):
 	"""
 	Schema for 'show access-lists afi-all'
 	"""
@@ -82,7 +82,7 @@ class ShowAclSchema(MetaParser):
 # =======================================
 # Parser for 'show access-lists afi-all'
 # =======================================
-class ShowAclAfiAll(ShowAclSchema):
+class ShowAclAfiAll(ShowAclAfiAllSchema):
     """Parser for:
         'show access-lists afi-all'
     """
@@ -193,7 +193,7 @@ class ShowAclAfiAll(ShowAclSchema):
 # =======================================
 # Parser for 'show access-lists ethernet-services'
 # =======================================
-class ShowAclEthernetServices(ShowAclSchema):
+class ShowAclEthernetServices(ShowAclAfiAllSchema):
     """Parser for:
         'show access-lists ethernet-services'
     """
