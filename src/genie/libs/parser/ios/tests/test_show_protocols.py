@@ -62,7 +62,70 @@ class test_show_ip_protocols(test_show_ip_protocols_iosxe):
             parsed_output = obj.parse()
 
 class test_show_ip_protocols_section_rip(test_show_ip_protocols_section_rip_iosxe):
-    
+    golden_parsed_output_ios = {
+        'protocols': {
+            'bgp': {
+                'instance': {
+                    'default': {
+                        'bgp_id': 100,
+                        'vrf': {
+                            'default': {
+                                'address_family': {
+                                    'ipv4': {
+                                        'igp_sync': False,
+                                        'automatic_route_summarization': False,
+                                        'redistribute': {
+                                            'connected': {
+                                                },
+                                            'static': {
+                                                },
+                                            },
+                                        'neighbor': {
+                                            '10.13.13.13': {
+                                                'neighbor_id': '10.13.13.13',
+                                                'distance': 200,
+                                                'last_update': '02:20:54',
+                                                },
+                                            '10.18.18.18': {
+                                                'neighbor_id': '10.18.18.18',
+                                                'distance': 200,
+                                                'last_update': '03:26:15',
+                                                },
+                                            },
+                                        'preference': {
+                                            'multi_values': {
+                                                'external': 20,
+                                                'internal': 200,
+                                                'local': 200,
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+    golden_output_ios = {'execute.return_value': '''\
+    Router# show ip protocols vrf vpn1
+    Routing Protocol is "bgp 100"
+      Sending updates every 60 seconds, next due in 0 sec
+      Outgoing update filter list for all interfaces is
+      Incoming update filter list for all interfaces is
+      IGP synchronization is disabled
+      Automatic route summarization is disabled
+      Redistributing:connected, static
+      Routing for Networks:
+      Routing Information Sources:
+        Gateway         Distance      Last Update
+        10.13.13.13          200      02:20:54
+        10.18.18.18          200      03:26:15
+      Distance:external 20 internal 200 local 200
+      '''
+      }
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         obj = ShowIpProtocolsSectionRip(device=self.device1)
@@ -82,6 +145,13 @@ class test_show_ip_protocols_section_rip(test_show_ip_protocols_section_rip_iosx
         obj = ShowIpProtocolsSectionRip(device=self.device)
         parsed_output = obj.parse(vrf="VRF1")
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden_vrf_vrf_ios(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_ios)
+        obj = ShowIpProtocolsSectionRip(device=self.device)
+        parsed_output = obj.parse(vrf="VRF1")
+        self.assertEqual(parsed_output, self.golden_parsed_output_ios)
 
 
 # ============================================

@@ -386,7 +386,8 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                           " +(?P<route>(enabled|disabled))$")
 
         # Distance: external 20 internal 200 local 200
-        p15 = re.compile(r"^Distance: +external +(?P<external>(\d+)) +internal"
+        # Distance:external 20 internal 200 local 200
+        p15 = re.compile(r"^Distance: *external +(?P<external>(\d+)) +internal"
                           " +(?P<internal>(\d+)) +local +(?P<local>(\d+))$")
 
 
@@ -1078,6 +1079,7 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                     multi_values_dict['local'] = int(group['local'])
                     continue
 
+                
                 # Redistributing: isis banana
                 m = p16.match(line)
                 if m:
@@ -1085,6 +1087,16 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                         isis_dict['redistributing'] = m.groupdict()['redistributing']
                     continue
 
+                # Redistributing: connected, static, rip
+                m = p109.match(line)
+                if m:
+                    if protocol == 'bgp':
+                        group = m.groupdict()
+                        redistributes = group['Redistributing'].split(',')
+                        redistribute_dict = bgp_dict.setdefault('redistribute', {})
+                        for key in redistributes:
+                            redistribute_dict.setdefault(key.strip(), {})
+                    continue
         return ret_dict
 
 
