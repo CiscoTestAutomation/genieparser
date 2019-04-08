@@ -118,12 +118,7 @@ class test_show_cdp_neighbors(unittest.TestCase):
             }
         }
 
-
-
-
-    expected_parsed_empty_output = {
-        'cdp': {}
-    }
+    expected_parsed_empty_output = {}
 
     empty_device_output = {'execute.return_value': '''
         Device# show cdp neighbors
@@ -135,9 +130,16 @@ class test_show_cdp_neighbors(unittest.TestCase):
         Port ID
       '''}
 
-
     device_output_1 = {'execute.return_value': '''
         Device# show cdp neighbors
+
+        Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge
+                        S - Switch, H - Host, I - IGMP, r - Repeater
+
+        Device ID        Local Interfce     Holdtme    Capability  Platform  ''
+        Port ID
+
+
         R5.cisco.com     Gig 0/0           125              R B             Gig 0/0
         RX-SWV.cisco.com Fas 0/1            167         T S       WS-C3524-XFas 0/13
         C2950-1          Fas 0/0            148         S I       WS-C2950T-Fas 0/15
@@ -145,6 +147,13 @@ class test_show_cdp_neighbors(unittest.TestCase):
 
     device_output_2 = {'execute.return_value': '''
         Device# show cdp neighbors
+
+        Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge
+                        S - Switch, H - Host, I - IGMP, r - Repeater
+
+        Device ID        Local Interfce     Holdtme    Capability  Platform  ''
+        Port ID
+
         device2      Eth 0          152      R           AS5200    Eth 0
         device3      Eth 0          144      R           3640      Eth0/0
         device4      Eth 0          141                  RP1      Eth 0/0
@@ -152,6 +161,13 @@ class test_show_cdp_neighbors(unittest.TestCase):
 
     device_output_3 = {'execute.return_value': '''
         Device# show cdp neighbors
+
+        Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge
+                        S - Switch, H - Host, I - IGMP, r - Repeater
+
+        Device ID        Local Interfce     Holdtme    Capability  Platform  ''
+        Port ID
+
         R8.cisco.com     Gig 0/0           148              R B             Gig 0/0
         R9.cisco.com     Gig 0/0           156              R B             Gig 0/0
         device6    Gig 0          157      R S I       C887VA-W- WGi 0
@@ -159,9 +175,15 @@ class test_show_cdp_neighbors(unittest.TestCase):
 
     device_output_4 = {'execute.return_value': '''
         Device# show cdp neighbors
-        device4      Eth 0          141                  RP1      Eth 0/0
-        device5      Eth 0            164                  7206      Eth 1/0
+
+        Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge
+                        S - Switch, H - Host, I - IGMP, r - Repeater
+
+        Device ID        Local Interfce     Holdtme    Capability  Platform  ''
+        Port ID
         
+        device4      Eth 0          141                  RP1      Eth 0/0
+        device5      Eth 0            164                  7206      Eth 1/0        
     '''}
 
 
@@ -197,8 +219,8 @@ class test_show_cdp_neighbors(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.empty_device_output)
         obj = ShowCdpNeighbors(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.expected_parsed_empty_output)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
 
 
 class test_show_cdp_neighbors_detail(unittest.TestCase):
@@ -313,7 +335,6 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
                 }
             }
 
-
     device_output_1 = {'execute.return_value': '''
         Device# show cdp neighbors detail
         Device ID: R6(9P57K4EJ8CA)
@@ -379,7 +400,8 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         Holdtime : 143 sec
 
         Version :
-        Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)
+        Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RE
+        LEASE SOFTWARE (fc2)
         Technical Support: http://www.cisco.com/techsupport
         Copyright (c) 1986-2018 by Cisco Systems, Inc.
         Compiled Wed 01-Aug-18 16:45 by prod_rel_team
@@ -406,7 +428,6 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         Management address(es):
           IP address: 172.16.1.206
 
-
         Total cdp entries displayed : 2
     '''}
 
@@ -423,7 +444,8 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         Interface: Ethernet0/1,  Port ID (outgoing port): Ethernet0/1
         Holdtime : 160 sec
         Version :
-        Cisco Internetwork Operating System Software IOS (tm) 3600 Software (C3640-A2IS-M), Version 12.2(25)SEB4, RELE)
+        Cisco Internetwork Operating System Software I
+        OS (tm) 3600 Software (C3640-A2IS-M), Version 12.2(25)SEB4, RELE)
         advertisement version: 2
         Duplex Mode: half
         Native VLAN: 42
