@@ -40,6 +40,67 @@ class ShowEigrpNeighborsSchema(MetaParser):
     }
 
 
+# ====================================
+# Parser for 'show ip eigrp neighbors'
+# ====================================
+class ShowEigrpNeighbors(ShowEigrpNeighborsSchema):
+
+    cli_command = 'show ip eigrp neighbors'
+
+    def cli(self, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # H   Address      Interface  Hold  Uptime    SRTT   RTO    Q   Seq
+        #                             (sec)           (ms)          Cnt Num
+        # 0   10.1.1.2     Gi0/0      13    00:00:03  1996   5000   0   5
+        # 2   10.1.1.9     Gi0/0      14    00:02:24  206    5000   0   5
+        # 1   10.1.2.3     Gi0/1      11    00:20:39  2202   5000   0   5
+        r1 = re.compile(r'^(?P<peer_handle>\d+) +'
+                        '(?P<nbr_address>\S+) +'
+                        '(?P<eigrp_interface>[A-Za-z]+\s*[\d\/]+) +'
+                        '(?P<hold>\d+) +(?P<uptime>\S+) +'
+                        '(?P<srtt>\d+) +'
+                        '(?P<rto>\d+) +'
+                        '(?P<q_cnt>\d+) +'
+                        '(?P<last_seq_number>\d+)$')
+
+        parsed_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            result = r1.match(line)
+
+            if result:
+                group = result.groupdict()
+
+                eigrp_interface = Common.convert_intf_name\
+                    (intf=group['eigrp_interface'])
+
+                interface_dict = parsed_dict.setdefault('eigrp_interface', {})\
+                    .setdefault(eigrp_interface, {})\
+                    .setdefault('index', {})
+
+                index = max(parsed_dict['eigrp_interface'][eigrp_interface]['index'], default=0) + 1
+
+                nbr_address = group['nbr_address']
+                ip_dict = interface_dict.setdefault(index, {}).setdefault(nbr_address, {})
+
+                ip_dict['peer_handle'] = int(group['peer_handle'])
+                ip_dict['hold'] = int(group['hold'])
+                ip_dict['uptime'] = group['uptime']
+                ip_dict['srtt'] = float(group['srtt'])
+                ip_dict['rto'] = int(group['rto'])
+                ip_dict['q_cnt'] = int(group['q_cnt'])
+                ip_dict['last_seq_number'] = int(group['last_seq_number'])
+
+        return parsed_dict
+
+
 class ShowEigrpNeighborsDetailSchema(MetaParser):
     ''' Schema for
         * 'show ip eigrp neighbors detail'
@@ -79,74 +140,6 @@ class ShowEigrpNeighborsDetailSchema(MetaParser):
                     },
                 },
             }
-
-
-# ====================================
-# Parser for 'show ip eigrp neighbors'
-# ====================================
-class ShowEigrpNeighbors(ShowEigrpNeighborsSchema):
-
-    cli_command = 'show ip eigrp neighbors'
-
-    def cli(self, output=None):
-
-        if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
-
-        parsed_dict = {}
-
-        # H   Address      Interface  Hold  Uptime    SRTT   RTO    Q   Seq
-        #                             (sec)           (ms)          Cnt Num
-        # 0   10.1.1.2     Gi0/0      13    00:00:03  1996   5000   0   5
-        # 2   10.1.1.9     Gi0/0      14    00:02:24  206    5000   0   5
-        # 1   10.1.2.3     Gi0/1      11    00:20:39  2202   5000   0   5
-        r1 = re.compile(r'^(?P<peer_handle>\d+) +'
-                        '(?P<nbr_address>\S+) +'
-                        '(?P<eigrp_interface>[A-Za-z]+\s*[\d\/]+) +'
-                        '(?P<hold>\d+) +(?P<uptime>\S+) +'
-                        '(?P<srtt>\d+) +'
-                        '(?P<rto>\d+) +'
-                        '(?P<q_cnt>\d+) +'
-                        '(?P<last_seq_number>\d+)$')
-
-        parsed_dict = {'eigrp_interface': {}}
-
-        for line in out.splitlines():
-            line = line.strip()
-
-            result = r1.match(line)
-
-            if result:
-                group = result.groupdict()
-
-                eigrp_interface = Common.convert_intf_name\
-                    (intf=group['eigrp_interface'])
-                if eigrp_interface in parsed_dict['eigrp_interface']:
-                    index = max(parsed_dict['eigrp_interface']
-                                [eigrp_interface]['index'].keys()) + 1
-                else:
-                    index = 1
-
-                interface_dict = parsed_dict.setdefault('eigrp_interface', {})\
-                    .setdefault(eigrp_interface, {})\
-                    .setdefault('index', {}).setdefault(index, {})
-
-                nbr_address = group['nbr_address']
-
-                ip_dict = {}
-
-                ip_dict['peer_handle'] = int(group['peer_handle'])
-                ip_dict['hold'] = int(group['hold'])
-                ip_dict['uptime'] = group['uptime']
-                ip_dict['srtt'] = float(group['srtt'])
-                ip_dict['rto'] = int(group['rto'])
-                ip_dict['q_cnt'] = int(group['q_cnt'])
-                ip_dict['last_seq_number'] = int(group['last_seq_number'])
-                interface_dict[nbr_address] = ip_dict
-
-        return parsed_dict
 
 
 # ===========================================
@@ -198,7 +191,7 @@ class ShowEigrpNeighborsDetail(ShowEigrpNeighborsDetailSchema):
         r5 = re.compile(r'Topology\-ids\s+from\s+peer\s+\-\s+'
                         '(?P<topology_ids_from_peer>\d+)')
 
-        parsed_dict = {'eigrp_instance': {}}
+        parsed_dict = {}
 
         for line in out.splitlines():
             line = line.strip()
@@ -206,9 +199,23 @@ class ShowEigrpNeighborsDetail(ShowEigrpNeighborsDetailSchema):
             # EIGRP-IPv4 VR(foo) Address-Family Neighbors for AS(1)
             result = r1.match(line)
 
-            if not result:
-                # EIGRP-IPv4 Neighbors for AS(100)
-                result = r2.match(line)
+            if result:
+
+                group = result.groupdict()
+
+                address_family = group['address_family']
+                as_num = group['as_num']
+
+                # eigrp_instance_dict is used when matching r3
+                eigrp_instance_dict = parsed_dict\
+                    .setdefault('eigrp_instance', {})\
+                    .setdefault(as_num, {}).setdefault('address_family', {})\
+                    .setdefault(address_family, {})
+
+                continue
+
+            # EIGRP-IPv4 Neighbors for AS(100)
+            result = r2.match(line)
 
             if result:
 
@@ -237,28 +244,27 @@ class ShowEigrpNeighborsDetail(ShowEigrpNeighborsDetailSchema):
                     (intf=group['eigrp_interface'])
 
                 interface_dict = eigrp_instance_dict\
-                    .setdefault('eigrp_interface', {}).\
-                    setdefault(eigrp_interface, {}).setdefault('index', {})
+                    .setdefault('eigrp_interface', {})\
+                    .setdefault(eigrp_interface, {}).setdefault('index', {})
 
                 # Get highest index number
-                # Index is used later when matching r5
                 index = max(eigrp_instance_dict['eigrp_interface']
-                        [eigrp_interface]['index'], default=0) + 1                
+                            [eigrp_interface]['index'], default=0) + 1
 
-                # nbr_address is used in r4 and r5
                 nbr_address = group['nbr_address']
 
-                # dict for current IP Address
-                # ip_dict is also used in r5                
-                ip_dict = {nbr_address: {}}
+                ip_dict = interface_dict.setdefault(index, {})\
+                    .setdefault(nbr_address, {})
 
-                ip_dict[nbr_address]['peer_handle'] = int(group['peer_handle'])
-                ip_dict[nbr_address]['hold'] = int(group['hold'])
-                ip_dict[nbr_address]['uptime'] = group['uptime']
-                ip_dict[nbr_address]['srtt'] = float(group['srtt'])
-                ip_dict[nbr_address]['rto'] = int(group['rto'])
-                ip_dict[nbr_address]['q_cnt'] = int(group['q_cnt'])
-                ip_dict[nbr_address]['last_seq_number'] = \
+                # dict for current IP Address
+                # ip_dict is also used in r5
+                ip_dict['peer_handle'] = int(group['peer_handle'])
+                ip_dict['hold'] = int(group['hold'])
+                ip_dict['uptime'] = group['uptime']
+                ip_dict['srtt'] = float(group['srtt'])
+                ip_dict['rto'] = int(group['rto'])
+                ip_dict['q_cnt'] = int(group['q_cnt'])
+                ip_dict['last_seq_number'] = \
                     int(group['last_seq_number'])
 
                 continue
@@ -268,19 +274,19 @@ class ShowEigrpNeighborsDetail(ShowEigrpNeighborsDetailSchema):
             if result:
                 group = result.groupdict()
 
-                sw_ver_dict = ip_dict[nbr_address].setdefault('nbr_sw_ver', {})
+                sw_ver_dict = ip_dict.setdefault('nbr_sw_ver', {})
 
-                # Verison begin
+                # Version begin
                 sw_ver_dict['os_majorver'] = int(group['os_majorver'])
                 sw_ver_dict['os_minorver'] = int(group['os_minorver'])
                 sw_ver_dict['tlv_majorrev'] = int(group['tlv_majorrev'])
                 sw_ver_dict['tlv_minorrev'] = int(group['tlv_minorrev'])
                 # Version end
 
-                ip_dict[nbr_address]['retransmit_count'] = \
+                ip_dict['retransmit_count'] = \
                     int(group['retransmit_count'])
-                ip_dict[nbr_address]['retry_count'] = int(group['retry_count'])
-                ip_dict[nbr_address]['prefixes'] = int(group['prefixes'])
+                ip_dict['retry_count'] = int(group['retry_count'])
+                ip_dict['prefixes'] = int(group['prefixes'])
 
                 continue
 
@@ -289,13 +295,8 @@ class ShowEigrpNeighborsDetail(ShowEigrpNeighborsDetailSchema):
             if result:
                 group = result.groupdict()
 
-                ip_dict[nbr_address]['topology_ids_from_peer'] = \
+                ip_dict['topology_ids_from_peer'] = \
                     int(group['topology_ids_from_peer'])
-
-                # Index is used to store IP Addresses that have the same address
-                # Each IP Addres has a different index
-                interface_dict.setdefault(index, ip_dict)
-
                 continue
 
         return parsed_dict
