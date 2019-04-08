@@ -99,6 +99,10 @@ class test_show_ip_protocols_section_rip(test_show_ip_protocols_section_rip_iosx
                                                 'local': 200,
                                                 },
                                             },
+                                        'timers': {
+                                            'update_interval': 60,
+                                            'next_update': 0,
+                                        },
                                         },
                                     },
                                 },

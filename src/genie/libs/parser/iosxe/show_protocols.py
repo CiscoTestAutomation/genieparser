@@ -1079,6 +1079,15 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                     multi_values_dict['local'] = int(group['local'])
                     continue
 
+                # Sending updates every 60 seconds, next due in 0 sec
+                m = p106.match(line)
+                if m:
+                    group = m.groupdict()
+                    timers_dict = bgp_dict.setdefault('timers', {})
+                    timers_dict.update({'update_interval': int(group['update_interval'])})
+                    timers_dict.update({'next_update': int(group['next_update'])})
+                    continue
+
                 
                 # Redistributing: isis banana
                 m = p16.match(line)
