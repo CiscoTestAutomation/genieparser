@@ -256,26 +256,26 @@ class test_show_eigrp_neighbors(unittest.TestCase):
 
     device_output_empty = {'execute.return_value': ''}
 
-    # def test_show_eigrp_neighbors_1(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.device_output_1)
-    #     obj = ShowEigrpNeighbors(device=self.device)
-    #     parsed_output = obj.parse()
-    #     self.assertEqual(parsed_output, self.expected_parsed_output_1)
+    def test_show_eigrp_neighbors_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_1)
+        obj = ShowEigrpNeighbors(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_1)
 
-    # def test_show_eigrp_neighbors_2(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.device_output_2)
-    #     obj = ShowEigrpNeighbors(device=self.device)
-    #     parsed_output = obj.parse()
-    #     self.assertEqual(parsed_output, self.expected_parsed_output_2)
+    def test_show_eigrp_neighbors_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_2)
+        obj = ShowEigrpNeighbors(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_2)
 
-    # def test_show_eigrp_neighbors_3(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.device_output_3)
-    #     obj = ShowEigrpNeighbors(device=self.device)
-    #     parsed_output = obj.parse()
-    #     self.assertEqual(parsed_output, self.expected_parsed_output_3)
+    def test_show_eigrp_neighbors_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_3)
+        obj = ShowEigrpNeighbors(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_3)
 
     def test_show_eigrp_neighbors_4(self):
         self.maxDiff = None
