@@ -219,17 +219,6 @@ class ShowIpProtocolsSchema(MetaParser):
                                             'update_interval': int,
                                             'next_update': int,
                                         },
-                                        Optional('redistribute'): {
-                                            Any(): {
-                                                Optional(Any()): {
-                                                    Optional('metric'): int,
-                                                    Optional('route_policy'): int,
-                                                    Optional('route_type'): str,
-                                                },
-                                                Optional('metric'): int,
-                                                Optional('route_policy'): int,
-                                            },
-                                        },
                                         },
                                     },
                                 },
@@ -1087,15 +1076,6 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                     multi_values_dict['external'] = int(group['external'])
                     multi_values_dict['internal'] = int(group['internal'])
                     multi_values_dict['local'] = int(group['local'])
-                    continue
-
-                # Sending updates every 10 seconds, next due in 8 seconds
-                m = p106.match(line)
-                if m:
-                    group = m.groupdict()
-                    timers_dict = bgp_dict.setdefault('timers', {})
-                    timers_dict.update({'update_interval': int(group['update_interval'])})
-                    timers_dict.update({'next_update': int(group['next_update'])})
                     continue
 
                 # Redistributing: isis banana
