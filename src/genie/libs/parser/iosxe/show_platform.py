@@ -1088,6 +1088,18 @@ class ShowInventory(ShowInventorySchema):
                     subslot = group['subslot']
                     # Creat slot_dict
                     slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
+
+                # StackPort1/1
+                p1_5 = re.compile(r'^StackPort(?P<slot>(\d+))/(?P<subslot>(\d+))$')
+                m1_5 = p1_5.match(name)
+                if m1_5:
+                    group = m1_5.groupdict()
+                    slot = group['slot']
+                    subslot = group['subslot']
+                    # Create slot_dict
+                    slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
+
+                # go to next line
                 continue
 
             # PID: ASR-920-24SZ-IM   , VID: V01  , SN: CAT1902V19M

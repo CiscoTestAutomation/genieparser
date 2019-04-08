@@ -1913,14 +1913,13 @@ class test_show_inventory(unittest.TestCase):
         parsed_output = inventory_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_isr4k)
 
-    '''
     def test_show_inventory_golden_c3850(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_c3850)
         inventory_obj = ShowInventory(device=self.device)
         parsed_output = inventory_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_c3850)
-    '''
+
     def test_show_inventory_golden_asr901(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_asr901)
