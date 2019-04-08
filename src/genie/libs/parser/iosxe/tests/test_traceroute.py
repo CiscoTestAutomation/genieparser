@@ -30,46 +30,46 @@ class test_traceroute(unittest.TestCase):
                 {'hops': 
                     {'1': 
                         {'address': '172.31.255.125',
-                        'label_name': 
+                        'label_info': 
                             {'MPLS': 
                                 {'exp': 0,
-                                'label': 624}},
+                                'label': '624'}},
                         'probe_msec': ['70', '200', '19']},
                     '2': 
                         {'address': '10.0.9.1',
                         
-                        'label_name': 
+                        'label_info': 
                             {'MPLS': 
                                 {'exp': 0,
-                                'label': 300678}},
+                                'label': '300678'}},
                         'probe_msec': ['177', '150', '9']},
                     '3': 
                         {'address': '192.168.14.61',
-                        'label_name': 
+                        'label_info': 
                             {'MPLS': 
                                 {'exp': 0,
-                            'label': 302537}},
+                            'label': '302537'}},
                         'probe_msec': ['134', '1', '55']},
                     '4': 
                         {'address': '192.168.15.1',
-                        'label_name': 
+                        'label_info': 
                             {'MPLS': 
                                 {'exp': 0,
-                                'label': 24133}},
+                                'label': '24133'}},
                         'probe_msec': ['6', '7', '64']},
                     '5': 
                         {'address': '10.80.241.86',
-                        'label_name': 
+                        'label_info': 
                             {'MPLS': 
                                 {'exp': 0,
-                                'label': 24147}},
+                                'label': '24147'}},
                         'probe_msec': ['69', '65', '111']},
                     '6': 
                         {'address': '10.90.135.110',
-                        'label_name': 
+                        'label_info': 
                             {'MPLS': 
                                 {'exp': 0,
-                                'label': 24140}},
+                                'label': '24140'}},
                         'probe_msec': ['21', '4', '104']},
                     '7': 
                         {'address': '172.31.166.10',
@@ -109,16 +109,16 @@ class test_traceroute(unittest.TestCase):
                 {'hops': 
                     {'0': 
                         {'address': '192.168.197.94',
-                        'label_name': 
-                            {'1015': 
-                                {'exp': 0}},
+                        'label_info': 
+                            {'label_name': '1015',
+                            'exp': 0},
                         'mru': 1552},
                     '1': 
                         {'address': '192.168.197.93',
                         'code': 'L',
-                        'label_name': 
-                            {'implicit-null': 
-                                {'exp': 0}},
+                        'label_info': 
+                            {'label_name': 'implicit-null',
+                            'exp': 0},
                         'mru': 1552,
                         'probe_msec': ['1']},
                     '2': 

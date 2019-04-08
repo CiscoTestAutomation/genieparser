@@ -35,9 +35,11 @@ class TracerouteSchema(MetaParser):
                         Optional('vrf_out_name'): str,
                         Optional('vrf_in_id'): str,
                         Optional('vrf_out_id'): str,
-                        Optional('label_name'): 
-                            {Any(): 
-                                {Optional('label'): int,
+                        Optional('label_info'): 
+                            {Optional('label_name'): str,
+                            Optional('exp'): int,
+                            Optional(Any()): 
+                                {'label': str,
                                 'exp': int,
                                 },
                             },
@@ -159,8 +161,8 @@ class Traceroute(TracerouteSchema):
                 if group['mru']:
                     hops_dict['mru'] = int(group['mru'])
                 if group['label_name']:
-                    label_dict = hops_dict.setdefault('label_name', {}).\
-                                           setdefault(group['label_name'], {})
+                    label_dict = hops_dict.setdefault('label_info', {})
+                    label_dict['label_name'] = group['label_name']
                     label_dict['exp'] = int(group['exp'])
                 if group['probe_msec']:
                     hops_dict['probe_msec'] = group['probe_msec'].strip().\
@@ -179,8 +181,8 @@ class Traceroute(TracerouteSchema):
                 if group['mru']:
                     hops_dict['mru'] = int(group['mru'])
                 if group['label_name']:
-                    label_dict = hops_dict.setdefault('label_name', {}).\
-                                           setdefault(group['label_name'], {})
+                    label_dict = hops_dict.setdefault('label_info', {})
+                    label_dict['label_name'] = group['label_name']
                     label_dict['exp'] = int(group['exp'])
                 continue
 
@@ -202,9 +204,9 @@ class Traceroute(TracerouteSchema):
                                             replace(" ms", "").\
                                             split()
                 if group['label_name']:
-                    label_dict = hops_dict.setdefault('label_name', {}).\
+                    label_dict = hops_dict.setdefault('label_info', {}).\
                                            setdefault(group['label_name'], {})
-                    label_dict['label'] = int(group['label'])
+                    label_dict['label'] = group['label']
                     label_dict['exp'] = int(group['exp'])
                 continue
 
