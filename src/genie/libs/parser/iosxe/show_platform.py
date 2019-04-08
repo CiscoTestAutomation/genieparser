@@ -904,7 +904,7 @@ class ShowInventorySchema(MetaParser):
     '''
 
     schema = {
-        'main':
+        Optional('main'):
             {Optional('swstack'): bool,
             Optional('chassis'):
                 {Any():
