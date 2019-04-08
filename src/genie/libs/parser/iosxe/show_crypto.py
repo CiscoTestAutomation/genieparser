@@ -9,8 +9,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
-                                               Default, Use
+from genie.metaparser.util.schemaengine import Schema, Any, Optional
 
 # Genie Libs
 from genie.libs.parser.utils.common import Common
