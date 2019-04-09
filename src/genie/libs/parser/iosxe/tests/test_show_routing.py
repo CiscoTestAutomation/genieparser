@@ -7,8 +7,12 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from genie.libs.parser.iosxe.show_routing import ShowIpRoute, ShowIpv6RouteUpdated,\
-                                      ShowIpRouteWord, ShowIpv6RouteWord
+from genie.libs.parser.iosxe.show_routing import ShowIpRoute, \
+                                                 ShowIpv6RouteUpdated,\
+                                                 ShowIpRouteWord,\
+                                                 ShowIpv6RouteWord,\
+                                                 ShowIpCef,\
+                                                 ShowIpv6Cef
 
 # ============================================
 # unit test for 'show ip route'
@@ -1106,6 +1110,395 @@ class test_show_ipv6_route_word(unittest.TestCase):
         obj = ShowIpv6RouteWord(device=self.device)
         parsed_output = obj.parse(route='2000:2::4:1')
         self.assertEqual(parsed_output,self.golden_parsed_output_with_route)
+
+###################################################
+# unit test for show ip cef <prefix>
+####################################################
+class test_show_ip_cef(unittest.TestCase):
+    """unit test for show ip cef <ip>
+                     show ip cef"""
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_output_1 = {'execute.return_value': '''\
+        R1#sh ip cef
+        10.2.3.0/24
+          nexthop 10.1.2.2 GigabitEthernet2.100
+          nexthop 10.1.3.3 GigabitEthernet3.100
+           '''}
+
+    golden_parsed_output_1 = {
+        "vrf": {
+            "default": {
+                "address_family": {
+                    "ipv4": {
+                        "prefix": {
+                            "10.2.3.0/24": {
+                                "nexthop": {
+                                    "10.1.2.2": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet2.100": {}
+                                        }
+                                    },
+                                    "10.1.3.3": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet3.100": {}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_1 = {'execute.return_value': '''\
+    R1#sh ip cef 10.2.3.1
+    10.2.3.0/24
+      nexthop 10.1.2.2 GigabitEthernet2.100
+      nexthop 10.1.3.3 GigabitEthernet3.100
+       '''}
+    golden_parsed_output_2 = {
+        "vrf": {
+            "default": {
+                "address_family": {
+                    "ipv4": {
+                        "prefix": {
+                            "106.162.197.104/30": {
+                                "nexthop": {
+                                    "106.162.197.93": {
+                                        "outgoing_interface": {
+                                            "TenGigabitEthernet0/2/0": {
+                                                "local_label": 2043,
+                                                "outgoing_label": ['22']
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_2 = {'execute.return_value': '''\
+    PE1#show ip cef 106.162.197.104
+    Load for five secs: 2%/0%; one minute: 5%; five minutes: 4%
+    Time source is NTP, 17:33:18.269 JST Fri Apr 5 2019
+    106.162.197.104/30
+             nexthop 106.162.197.93 TenGigabitEthernet0/2/0 label 22-(local:2043)
+
+          '''}
+    golden_parsed_output_3 = {
+        "vrf": {
+            "default": {
+                "address_family": {
+                    "ipv4": {
+                        "prefix": {
+                            "200.1.1.1/32": {
+                                "nexthop": {
+                                    "attached": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet3.100": {}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_3 = {'execute.return_value': '''\
+    R1#sh ip cef 200.1.1.1
+    200.1.1.1/32
+        attached to GigabitEthernet3.100
+          '''}
+    golden_parsed_output_4 = {
+        "vrf": {
+            "default": {
+                "address_family": {
+                    "ipv4": {
+                        "prefix": {
+                            "0.0.0.0/0": {
+                                "nexthop": {
+                                    "10.1.2.1": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet2.100": {}
+                                        }
+                                    }
+                                }
+                            },
+                            "0.0.0.0/8": {
+                                "nexthop": {
+                                    "drop": {}
+                                }
+                            },
+                            "0.0.0.0/32": {
+                                "nexthop": {
+                                    "receive": {}
+                                }
+                            },
+                            "10.1.2.0/24": {
+                                "nexthop": {
+                                    "attached": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet2.100": {}
+                                        }
+                                    }
+                                }
+                            },
+                            "10.1.2.0/32": {
+                                "nexthop": {
+                                    "receive": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet2.100": {}
+                                        }
+                                    }
+                                }
+                            },
+                            "10.1.2.1/32": {
+                                "nexthop": {
+                                    "attached": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet2.100": {}
+                                        }
+                                    }
+                                }
+                            },
+                            "10.1.2.2/32": {
+                                "nexthop": {
+                                    "receive": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet2.100": {}
+                                        }
+                                    }
+                                }
+                            },
+                            "10.1.2.255/32": {
+                                "nexthop": {
+                                    "receive": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet2.100": {}
+                                        }
+                                    }
+                                }
+                            },
+                            "10.1.3.0/24": {
+                                "nexthop": {
+                                    "10.1.2.1": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet2.100": {}
+                                        }
+                                    },
+                                    "10.2.3.3": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet3.100": {}
+                                        }
+                                    }
+                                }
+                            },
+                            "10.2.3.0/24": {
+                                "nexthop": {
+                                    "attached": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet3.100": {}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    golden_output_4 = {'execute.return_value': '''\
+    R2#show ip cef
+    Prefix               Next Hop             Interface
+    0.0.0.0/0            10.1.2.1             GigabitEthernet2.100
+    0.0.0.0/8            drop
+    0.0.0.0/32           receive
+    10.1.2.0/24          attached             GigabitEthernet2.100
+    10.1.2.0/32          receive              GigabitEthernet2.100
+    10.1.2.1/32          attached             GigabitEthernet2.100
+    10.1.2.2/32          receive              GigabitEthernet2.100
+    10.1.2.255/32        receive              GigabitEthernet2.100
+    10.1.3.0/24          10.1.2.1             GigabitEthernet2.100
+                         10.2.3.3             GigabitEthernet3.100
+    10.2.3.0/24          attached             GigabitEthernet3.100
+
+              '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpCef(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowIpCef(device=self.device)
+        parsed_output = obj.parse(prefix='10.2.3.1')
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)
+
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowIpCef(device=self.device)
+        parsed_output = obj.parse(prefix='106.162.197.104')
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
+    def test_golden_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowIpCef(device=self.device)
+        parsed_output = obj.parse(prefix='200.1.1.1')
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
+
+    def test_golden_4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_4)
+        obj = ShowIpCef(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
+
+
+
+###################################################
+# unit test for show ipv6 cef <prefix>
+####################################################
+class test_show_ipv6_cef(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+
+    golden_output_1 = {'execute.return_value':'''
+    R2#show ipv6 cef
+    ::/0
+      no route
+    ::/127
+      discard
+    2001:DB8:1:2::/64
+      attached to GigabitEthernet2.100
+    2001:DB8:1:2::1/128
+      nexthop 2001:DB8:1:2::1 GigabitEthernet2.100
+    2001:DB8:1:2::2/128
+      receive for GigabitEthernet2.100
+    2001:DB8:1:3::/64
+      nexthop FE80::F816:3EFF:FE86:1D6D GigabitEthernet2.100
+      nexthop FE80::F816:3EFF:FEF3:7B32 GigabitEthernet3.100
+    2001:DB8:2:3::/64
+      attached to GigabitEthernet3.100
+    A::4:5:0/112
+      nexthop 10.2.3.3 FastEthernet1/0/0 label 17 21
+    '''}
+
+    golden_parsed_output_1 = {
+        "vrf": {
+            "default": {
+                "address_family": {
+                    "ipv6": {
+                        "prefix": {
+                            "::/0": {
+                                "nexthop": {
+                                    "no route": {}
+                                }
+                            },
+                            "::/127": {
+                                "nexthop": {
+                                    "discard": {}
+                                }
+                            },
+                            "2001:DB8:1:2::/64": {
+                                "nexthop": {
+                                    "attached": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet2.100": {}
+                                        }
+                                    }
+                                }
+                            },
+                            "2001:DB8:1:2::1/128": {
+                                "nexthop": {
+                                    "2001:DB8:1:2::1": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet2.100": {}
+                                        }
+                                    }
+                                }
+                            },
+                            "2001:DB8:1:2::2/128": {
+                                "nexthop": {
+                                    "receive": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet2.100": {}
+                                        }
+                                    }
+                                }
+                            },
+                            "2001:DB8:1:3::/64": {
+                                "nexthop": {
+                                    "FE80::F816:3EFF:FE86:1D6D": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet2.100": {}
+                                        }
+                                    },
+                                    "FE80::F816:3EFF:FEF3:7B32": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet3.100": {}
+                                        }
+                                    }
+                                }
+                            },
+                            "2001:DB8:2:3::/64": {
+                                "nexthop": {
+                                    "attached": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet3.100": {}
+                                        }
+                                    }
+                                }
+                            },
+                            'A::4:5:0/112': {
+                                'nexthop': {
+                                    '10.2.3.3': {
+                                        'outgoing_interface': {
+                                            'FastEthernet1/0/0': {
+                                                'outgoing_label': ['17','21']
+                                                }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpv6Cef(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowIpv6Cef(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
 if __name__ == '__main__':
     unittest.main()
