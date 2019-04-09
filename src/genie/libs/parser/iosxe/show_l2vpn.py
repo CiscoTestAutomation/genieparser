@@ -810,7 +810,6 @@ class ShowL2vpnVfi(ShowL2vpnVfiSchema):
                         False
                 continue
 
-            # import pdb; pdb.set_trace()
             m = p6_2.match(line)
             if m:
                 group = m.groupdict()
