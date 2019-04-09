@@ -835,7 +835,7 @@ class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetai
             # In the area 0 via interface GigabitEthernet0/0/0/2
             # In the area 0.0.0.0 via interface GigabitEthernet0/0/0/0 , BFD enabled, Mode: Default
             p3 = re.compile(r'^In +the +area +(?P<area>\S+) +via +interface'
-                             ' +(?P<interface>\S+)( , +BFD +(?P<bfd_status>\w+), +Mode: (?P<mode>\w+))?$')
+                             ' +(?P<interface>\S+)( +, +BFD +(?P<bfd_status>\w+), +Mode: (?P<mode>\w+))?$')
             m = p3.match(line)
             if m:
                 area = str(m.groupdict()['area'])

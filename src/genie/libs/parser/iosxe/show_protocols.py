@@ -1006,15 +1006,14 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                 if m:
                     group = m.groupdict()
                     if protocol == 'ospf':
-                        if group['external']:
-                            multi_values_dict = ospf_dict.setdefault('preference', {}). \
-                                setdefault('multi_values', {})
-                            multi_values_dict['external'] = int(group['external'])
-                            detail_dict = multi_values_dict. \
-                                setdefault('granularity', {}). \
-                                setdefault('detail', {})
-                            detail_dict['intra_area'] = int(group['intra'])
-                            detail_dict['inter_area'] = int(group['inter'])
+                        multi_values_dict = ospf_dict.setdefault('preference', {}). \
+                            setdefault('multi_values', {})
+                        multi_values_dict['external'] = int(group['external'])
+                        detail_dict = multi_values_dict. \
+                            setdefault('granularity', {}). \
+                            setdefault('detail', {})
+                        detail_dict['intra_area'] = int(group['intra'])
+                        detail_dict['inter_area'] = int(group['inter'])
                     continue
 
                 # Sending updates every 0 seconds
@@ -1055,12 +1054,11 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                 m = p15.match(line)
                 if m:
                     group = m.groupdict()
-                    if group['external']:
-                        if protocol == 'bgp':
-                            multi_values_dict = bgp_dict.setdefault('preference', {}).setdefault('multi_values', {})
-                            multi_values_dict['external'] = int(group['external'])
-                            multi_values_dict['internal'] = int(group['internal'])
-                            multi_values_dict['local'] = int(group['local'])
+                    if protocol == 'bgp':
+                        multi_values_dict = bgp_dict.setdefault('preference', {}).setdefault('multi_values', {})
+                        multi_values_dict['external'] = int(group['external'])
+                        multi_values_dict['internal'] = int(group['internal'])
+                        multi_values_dict['local'] = int(group['local'])
                     continue
 
                 # Redistributing: isis banana
