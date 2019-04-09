@@ -12,114 +12,6 @@ class test_show_cdp_neighbors(unittest.TestCase):
 
     device = Device(name='aDevice')
 
-    expected_parsed_output_1 = {
-        'cdp': {
-            'index': {
-                1: {
-                    'capability': 'R B',
-                    'device_id': 'R5.cisco.com',
-                    'hold_time': 125,
-                    'local_interface': 'GigabitEthernet0/0',
-                    'platform': '',
-                    'port_id': 'Gig 0/0'},
-                2: {
-                    'capability': 'T S',
-                    'device_id': 'RX-SWV.cisco.com',
-                    'hold_time': 167,
-                    'local_interface': 'FastEthernet0/1',
-                    'platform': 'WS-C3524-XFas',
-                    'port_id': '0/13'},
-                3: {
-                    'capability': 'S I',
-                    'device_id': 'C2950-1',
-                    'hold_time': 148,
-                    'local_interface': 'FastEthernet0/0',
-                    'platform': 'WS-C2950T-Fas',
-                    'port_id': '0/15'}
-                }
-            }
-        }
-
-
-    expected_parsed_output_2 = {
-        'cdp': {
-            'index': {
-                1: {
-                    'capability': 'R',
-                    'device_id': 'device2',
-                    'hold_time': 152,
-                    'local_interface': 'Ethernet0',
-                    'platform': 'AS5200',
-                    'port_id': 'Eth 0'},
-                2: {
-                    'capability': 'R',
-                    'device_id': 'device3',
-                    'hold_time': 144,
-                    'local_interface': 'Ethernet0',
-                    'platform': '3640',
-                    'port_id': 'Eth0/0'},
-                3: {
-                    'capability': '',
-                    'device_id': 'device4',
-                    'hold_time': 141,
-                    'local_interface': 'Ethernet0',
-                    'platform': 'RP1',
-                    'port_id': 'Eth 0/0'}
-                }
-            }
-        }
-
-    expected_parsed_output_3 = {
-        'cdp': {
-            'index': {
-                1: {
-                    'capability': 'R B',
-                    'device_id': 'R8.cisco.com',
-                    'hold_time': 148,
-                    'local_interface': 'GigabitEthernet0/0',
-                    'platform': '',
-                    'port_id': 'Gig 0/0'},
-                2: {
-                    'capability': 'R B',
-                    'device_id': 'R9.cisco.com',
-                    'hold_time': 156,
-                    'local_interface': 'GigabitEthernet0/0',
-                    'platform': '',
-                    'port_id': 'Gig 0/0'},
-                3: {
-                    'capability': 'R S I',
-                    'device_id': 'device6',
-                    'hold_time': 157,
-                    'local_interface': 'GigabitEthernet0',
-                    'platform': 'C887VA-W-',
-                    'port_id': 'WGi 0'}
-                }
-            }
-        }
-
-    expected_parsed_output_4 = {
-        'cdp': {
-            'index': {
-                1: {
-                    'capability': '',
-                    'device_id': 'device4',
-                    'hold_time': 141,
-                    'local_interface': 'Ethernet0',
-                    'platform': 'RP1',
-                    'port_id': 'Eth 0/0'},
-                2: {
-                    'capability': '',
-                    'device_id': 'device5',
-                    'hold_time': 164,
-                    'local_interface': 'Ethernet0',
-                    'platform': '7206',
-                    'port_id': 'Eth 1/0'}
-                }
-            }
-        }
-
-    expected_parsed_empty_output = {}
-
     empty_device_output = {'execute.return_value': '''
         Device# show cdp neighbors
 
@@ -130,6 +22,34 @@ class test_show_cdp_neighbors(unittest.TestCase):
         Port ID
       '''}
 
+    expected_parsed_output_1 = {
+        'cdp': {
+            'index': {
+                1: {
+                    'capability': 'R B',
+                    'device_id': 'R5.cisco.com',
+                    'hold_time': 125,
+                    'local_interface': 'GigabitEthernet0/0',
+                    'platform': '',
+                    'port_id': 'GigabitEthernet0/0'},
+                2: {
+                    'capability': 'T S',
+                    'device_id': 'RX-SWV.cisco.com',
+                    'hold_time': 167,
+                    'local_interface': 'FastEthernet0/1',
+                    'platform': 'WS-C3524-X',
+                    'port_id': 'FastEthernet0/13'},
+                3: {
+                    'capability': 'S I',
+                    'device_id': 'C2950-1',
+                    'hold_time': 148,
+                    'local_interface': 'FastEthernet0/0',
+                    'platform': 'WS-C2950T-',
+                    'port_id': 'FastEthernet0/15'}
+                }
+            }
+        }
+
     device_output_1 = {'execute.return_value': '''
         Device# show cdp neighbors
 
@@ -139,11 +59,38 @@ class test_show_cdp_neighbors(unittest.TestCase):
         Device ID        Local Interfce     Holdtme    Capability  Platform  ''
         Port ID
 
-
-        R5.cisco.com     Gig 0/0           125              R B             Gig 0/0
-        RX-SWV.cisco.com Fas 0/1            167         T S       WS-C3524-XFas 0/13
-        C2950-1          Fas 0/0            148         S I       WS-C2950T-Fas 0/15
+        R5.cisco.com     Gig 0/0           125              R B              Gig 0/0
+        RX-SWV.cisco.com Fas 0/1            167         T S       WS-C3524-X Fas 0/13
+        C2950-1          Fas 0/0            148         S I       WS-C2950T- Fas 0/15
     '''}
+
+    expected_parsed_output_2 = {
+        'cdp': {
+            'index': {
+                1: {
+                    'capability': 'R',
+                    'device_id': 'device2',
+                    'hold_time': 152,
+                    'local_interface': 'Ethernet0',
+                    'platform': 'AS5200',
+                    'port_id': 'Ethernet0'},
+                2: {
+                    'capability': 'R',
+                    'device_id': 'device3',
+                    'hold_time': 144,
+                    'local_interface': 'Ethernet0',
+                    'platform': '3640',
+                    'port_id': 'Ethernet0/0'},
+                3: {
+                    'capability': '',
+                    'device_id': 'device4',
+                    'hold_time': 141,
+                    'local_interface': 'Ethernet0',
+                    'platform': 'RP1',
+                    'port_id': 'Ethernet0/0'}
+                }
+            }
+        }
 
     device_output_2 = {'execute.return_value': '''
         Device# show cdp neighbors
@@ -159,6 +106,34 @@ class test_show_cdp_neighbors(unittest.TestCase):
         device4      Eth 0          141                  RP1      Eth 0/0
     '''}
 
+    expected_parsed_output_3 = {
+        'cdp': {
+            'index': {
+                1: {
+                    'capability': 'R B',
+                    'device_id': 'R8.cisco.com',
+                    'hold_time': 148,
+                    'local_interface': 'GigabitEthernet0/0',
+                    'platform': '',
+                    'port_id': 'GigabitEthernet0/0'},
+                2: {
+                    'capability': 'R B',
+                    'device_id': 'R9.cisco.com',
+                    'hold_time': 156,
+                    'local_interface': 'GigabitEthernet0/0',
+                    'platform': '',
+                    'port_id': 'GigabitEthernet0/0'},
+                3: {
+                    'capability': 'R S I',
+                    'device_id': 'device6',
+                    'hold_time': 157,
+                    'local_interface': 'GigabitEthernet0',
+                    'platform': 'C887VA-W-W',
+                    'port_id': 'GigabitEthernet0'}
+                }
+            }
+        }
+
     device_output_3 = {'execute.return_value': '''
         Device# show cdp neighbors
 
@@ -168,10 +143,31 @@ class test_show_cdp_neighbors(unittest.TestCase):
         Device ID        Local Interfce     Holdtme    Capability  Platform  ''
         Port ID
 
-        R8.cisco.com     Gig 0/0           148              R B             Gig 0/0
-        R9.cisco.com     Gig 0/0           156              R B             Gig 0/0
-        device6    Gig 0          157      R S I       C887VA-W- WGi 0
+        R8.cisco.com     Gig 0/0           148              R B                     Gig 0/0
+        R9.cisco.com     Gig 0/0           156              R B                     Gig 0/0
+        device6          Gig 0             157              R S I       C887VA-W-W  Gi 0
     '''}
+
+    expected_parsed_output_4 = {
+        'cdp': {
+            'index': {
+                1: {
+                    'capability': '',
+                    'device_id': 'device4',
+                    'hold_time': 141,
+                    'local_interface': 'Ethernet0',
+                    'platform': 'RP1',
+                    'port_id': 'Ethernet0/0'},
+                2: {
+                    'capability': '',
+                    'device_id': 'device5',
+                    'hold_time': 164,
+                    'local_interface': 'Ethernet0',
+                    'platform': '7206',
+                    'port_id': 'Ethernet1/0'}
+                }
+            }
+        }
 
     device_output_4 = {'execute.return_value': '''
         Device# show cdp neighbors
@@ -181,11 +177,10 @@ class test_show_cdp_neighbors(unittest.TestCase):
 
         Device ID        Local Interfce     Holdtme    Capability  Platform  ''
         Port ID
-        
-        device4      Eth 0          141                  RP1      Eth 0/0
-        device5      Eth 0            164                  7206      Eth 1/0        
-    '''}
 
+        device4      Eth 0          141                  RP1      Eth 0/0
+        device5      Eth 0            164                  7206      Eth 1/0
+    '''}
 
     def test_show_cdp_neighbors_1(self):
         self.maxDiff = None
@@ -214,7 +209,7 @@ class test_show_cdp_neighbors(unittest.TestCase):
         obj = ShowCdpNeighbors(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_4)
-        
+
     def test_show_cdp_neighbors_empty_output(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_device_output)
@@ -242,7 +237,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
                 'platform': 'N9K-9000v',
                 'port_id': 'mgmt0',
                 'software_version': 'Cisco Nexus Operating System (NX-OS) Software, Version 9.2(1)',
-                'vtp_mng_domain': ''},
+                'vtp_management_domain': ''},
             2: {
                 'advertisement_ver': 2,
                 'capabilities': 'Router Switch CVTA phone port',
@@ -256,7 +251,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
                 'platform': 'N9K-9000v',
                 'port_id': 'mgmt0',
                 'software_version': 'Cisco Nexus Operating System (NX-OS) Software, Version 9.2(1)',
-                'vtp_mng_domain': ''},
+                'vtp_management_domain': ''},
             3: {
                 'advertisement_ver': 2,
                 'capabilities': 'Router Source-Route-Bridge',
@@ -270,70 +265,10 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
                 'platform': 'Cisco ',
                 'port_id': 'GigabitEthernet0',
                 'software_version': 'Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)',
-                'vtp_mng_domain': ''},
+                'vtp_management_domain': ''},
 
             },
         }
-
-    expected_parsed_output_2 = {
-        'total_entries_displayed': 2,
-            'index': {
-                1: {
-                    'advertisement_ver': 2,
-                    'capabilities': 'Router Source-Route-Bridge',
-                    'device_id': 'R8.cisco.com',
-                    'duplex_mode': '',
-                    'entry_addresses': {'172.16.1.205': {}},
-                    'hold_time': 143,
-                    'local_interface': 'GigabitEthernet0/0',
-                    'management_addresses': {'172.16.1.205': {}},
-                    'native_vlan': '',
-                    'platform': 'Cisco ',
-                    'port_id': 'GigabitEthernet0',
-                    'software_version': 'Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)',
-                    'vtp_mng_domain': ''},
-                2: {
-                    'advertisement_ver': 2,
-                    'capabilities': 'Router Source-Route-Bridge',
-                    'device_id': 'R9.cisco.com',
-                    'duplex_mode': '',
-                    'entry_addresses': {'172.16.1.206': {}},
-                    'hold_time': 151,
-                    'local_interface': 'GigabitEthernet0/0',
-                    'management_addresses': {'172.16.1.206': {}},
-                    'native_vlan': '',
-                    'platform': 'Cisco ',
-                    'port_id': 'GigabitEthernet0',
-                    'software_version': 'Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)',
-                    'vtp_mng_domain': ''},
-                },
-        }
-
-    expected_parsed_output_3_empty = {'total_entries_displayed': 0}
-
-
-    expected_parsed_output_4_ipv6 = {
-        'total_entries_displayed': 1,
-            'index': {
-                1: {
-                    'advertisement_ver': 2,
-                    'capabilities': 'Router',
-                    'device_id': 'device.cisco.com',
-                    'duplex_mode': 'half',
-                    'entry_addresses': {
-                        '4000::BC:0:0:C0A8:BC06': {'type': 'global unicast'},
-                        'FE80::203:E3FF:FE6A:BF81': {'type': 'link-local'},
-                    },
-                    'hold_time': 160,
-                    'local_interface': 'Ethernet0/1',
-                    'management_addresses': {},
-                    'native_vlan': '42',
-                    'platform': 'cisco 3640',
-                    'port_id': 'Ethernet0',
-                    'software_version': 'Cisco Internetwork Operating System Software IOS (tm) 3600 Software (C3640-A2IS-M), Version 12.2(25)SEB4, RELE)',
-                    'vtp_mng_domain': 'Accounting Group'},
-                }
-            }
 
     device_output_1 = {'execute.return_value': '''
         Device# show cdp neighbors detail
@@ -390,6 +325,40 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         Total cdp entries displayed : 3
     '''}
 
+    expected_parsed_output_2 = {
+        'total_entries_displayed': 2,
+        'index': {
+                1: {
+                    'advertisement_ver': 2,
+                    'capabilities': 'Router Source-Route-Bridge',
+                    'device_id': 'R8.cisco.com',
+                    'duplex_mode': '',
+                    'entry_addresses': {'172.16.1.205': {}},
+                    'hold_time': 143,
+                    'local_interface': 'GigabitEthernet0/0',
+                    'management_addresses': {'172.16.1.205': {}},
+                    'native_vlan': '',
+                    'platform': 'Cisco ',
+                    'port_id': 'GigabitEthernet0',
+                    'software_version': 'Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)',
+                    'vtp_management_domain': ''},
+                2: {
+                    'advertisement_ver': 2,
+                    'capabilities': 'Router Source-Route-Bridge',
+                    'device_id': 'R9.cisco.com',
+                    'duplex_mode': '',
+                    'entry_addresses': {'172.16.1.206': {}},
+                    'hold_time': 151,
+                    'local_interface': 'GigabitEthernet0/0',
+                    'management_addresses': {'172.16.1.206': {}},
+                    'native_vlan': '',
+                    'platform': 'Cisco ',
+                    'port_id': 'GigabitEthernet0',
+                    'software_version': 'Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)',
+                    'vtp_management_domain': ''},
+                },
+        }
+
     device_output_2 = {'execute.return_value': '''
         Device# show cdp neighbors detail
         Device ID: R8.cisco.com
@@ -431,10 +400,30 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         Total cdp entries displayed : 2
     '''}
 
+    expected_parsed_output_3 = {
+        'total_entries_displayed': 1,
+        'index': {
+                1: {
+                    'advertisement_ver': 2,
+                    'capabilities': 'Router',
+                    'device_id': 'device.cisco.com',
+                    'duplex_mode': 'half',
+                    'entry_addresses': {
+                        '4000::BC:0:0:C0A8:BC06': {'type': 'global unicast'},
+                        'FE80::203:E3FF:FE6A:BF81': {'type': 'link-local'},
+                    },
+                    'hold_time': 160,
+                    'local_interface': 'Ethernet0/1',
+                    'management_addresses': {},
+                    'native_vlan': '42',
+                    'platform': 'cisco 3640',
+                    'port_id': 'Ethernet0',
+                    'software_version': 'Cisco Internetwork Operating System Software IOS (tm) 3600 Software (C3640-A2IS-M), Version 12.2(25)SEB4, RELE)',
+                    'vtp_management_domain': 'Accounting Group'},
+                }
+            }
 
-    device_output_3_empty = {'execute.return_value': ''}
-
-    device_output_4_ipv6 = {'execute.return_value': '''
+    device_output_3 = {'execute.return_value': '''
         Device# show cdp neighbors detail
         Device ID: device.cisco.com
         Entry address(es):
@@ -453,33 +442,35 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
 
     '''}
 
-    def test_show_cdp_neighbors_detail_full_1(self):
+    device_output_4_empty = {'execute.return_value': ''}
+
+    def test_show_cdp_neighbors_detail_1(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_1)
         obj = ShowCdpNeighborsDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_1)
 
-    def test_show_cdp_neighbors_detail_full_2(self):
+    def test_show_cdp_neighbors_detail_2(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_2)
         obj = ShowCdpNeighborsDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_2)
 
+    def test_show_cdp_neighbors_detail_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_3)
+        obj = ShowCdpNeighborsDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_3)
+
     def test_show_cdp_neighbors_detail_empty(self):
         self.maxDiff = None
-        self.device = Mock(**self.device_output_3_empty)
-        obj = ShowCdpNeighborsDetail(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.expected_parsed_output_3_empty)
-
-    def test_show_cdp_neighbors_detail_ipv6(self):
-        self.maxDiff = None
-        self.device = Mock(**self.device_output_4_ipv6)
-        obj = ShowCdpNeighborsDetail(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.expected_parsed_output_4_ipv6)
+        self.device = Mock(**self.device_output_4_empty)
+        obj = ShowCdpNeighbors(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
 
 
 if __name__ == '__main__':
