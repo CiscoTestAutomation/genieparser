@@ -376,7 +376,7 @@ class ShowLacpSchema(MetaParser):
                         'rate': int,
                         'state': str,
                         'port_id': str,
-                        'key': int,
+                        'key': str,
                         'system_id': str,
                         'synchronization': str,
                         'aggregatable': bool,
@@ -386,7 +386,7 @@ class ShowLacpSchema(MetaParser):
                             'rate': int,
                             'state': str,
                             'port_id': str,
-                            'key': int,
+                            'key': str,
                             'system_id': str,
                             'synchronization': str,
                             'aggregatable': bool,
@@ -467,7 +467,7 @@ class ShowLacp(ShowLacpSchema):
                 sub_dict.update({'rate': int(group['rate'])})
                 sub_dict.update({'state': state})
                 sub_dict.update({'port_id': group['port_id']})
-                sub_dict.update({'key': int(group['key'], 0)})
+                sub_dict.update({'key': group['key']})
                 sub_dict.update({'system_id': group['system_id']})
                 sub_dict.update({'aggregatable': True if 'a' in state else False})
                 sub_dict.update({'synchronization': 'in_sync' if 's' in state else 'out_sync'})
