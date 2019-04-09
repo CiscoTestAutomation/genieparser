@@ -3,13 +3,6 @@
 IOS parsers for the following show commands:
    * show crypto pki certificates <WORD>
 """
-
-# Python
-import re
-
-# Metaparser
-from genie.metaparser import MetaParser
-
 from genie.libs.parser.iosxe.show_crypto import ShowCryptoPkiCertificates as ShowCryptoPkiCertificates_iosxe
 
 

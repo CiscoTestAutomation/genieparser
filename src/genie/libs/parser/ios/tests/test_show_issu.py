@@ -11,8 +11,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissi
 from genie.libs.parser.ios.show_issu import ShowIssuStateDetail,\
                                               ShowIssuRollbackTimer
 
-from genie.libs.parser.iosxe.tests.test_show_issu import test_show_issu_state_detail as test_show_issu_state_detail_iosxe,\
-                                                         test_show_issu_rollback_timer as test_show_issu_rollback_timer_iosxe
+from genie.libs.parser.iosxe.tests.test_show_issu import test_show_issu_rollback_timer as test_show_issu_rollback_timer_iosxe
 
 
 # =======================================
