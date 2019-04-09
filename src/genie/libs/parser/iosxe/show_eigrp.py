@@ -2,6 +2,7 @@
 IOSXE parsers for the following commands
 
     * 'show ip eigrp neighbors'
+    * 'show ip eigrp vrf <vrf> neighbors'
     * 'show ip eigrp neighbors detail'
 '''
 
@@ -19,47 +20,58 @@ from genie.libs.parser.utils.common import Common
 class ShowEigrpNeighborsSchema(MetaParser):
     ''' Schema for:
         * 'show ip eigrp neighbors'
+        * 'show ip eigrp vrf <vrf> neighbors'
     '''
 
     schema = {
-        'eigrp_interface': {
+        'vrf': {
             Any(): {
-                'index': {
-                    Any(): {
-                        Any(): {
+                'eigrp_interface': {
+                Any(): {
+                    'eigrp_nbr': {
+                        Any(): {                        
                             'peer_handle': int,
                             'hold': int,
                             'uptime': str,
                             'q_cnt': int,
                             'last_seq_number': int,
                             'srtt': float,
-                            'rto': int, }, },
+                            'rto': int, }, }, },
+                    },
                 },
             },
         }
-    }
+    
 
 
 # ====================================
 # Parser for 'show ip eigrp neighbors'
+#            'show ip eigrp vrf <vrf> neighbors'
 # ====================================
 class ShowEigrpNeighbors(ShowEigrpNeighborsSchema):
 
-    cli_command = 'show ip eigrp neighbors'
+    cli_command = ['show ip eigrp neighbors',
+                   'show ip eigrp vrf {vrf} neighbors']
 
-    def cli(self, output=None):
+    def cli(self, vrf='', output=None):
 
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if vrf:
+                out = self.device.execute(self.cli_command[1]).format(vrf=vrf)
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
+
+        # EIGRP-IPv4 Neighbors for AS(1100) VRF(VRF1)
+        r1 = re.compile(r'^EIGRP\-(?P<address_family>IPv4|IPv6)\s*Neighbors\s*for \w+\(\s*(?P<as_num>\d+)\)\s*VRF\((?P<vrf>\S+)\)$')
 
         # H   Address      Interface  Hold  Uptime    SRTT   RTO    Q   Seq
         #                             (sec)           (ms)          Cnt Num
         # 0   10.1.1.2     Gi0/0      13    00:00:03  1996   5000   0   5
         # 2   10.1.1.9     Gi0/0      14    00:02:24  206    5000   0   5
         # 1   10.1.2.3     Gi0/1      11    00:20:39  2202   5000   0   5
-        r1 = re.compile(r'^(?P<peer_handle>\d+) +'
+        r2 = re.compile(r'^(?P<peer_handle>\d+) +'
                         '(?P<nbr_address>\S+) +'
                         '(?P<eigrp_interface>[A-Za-z]+\s*[\d\/]+) +'
                         '(?P<hold>\d+) +(?P<uptime>\S+) +'
@@ -68,7 +80,10 @@ class ShowEigrpNeighbors(ShowEigrpNeighborsSchema):
                         '(?P<q_cnt>\d+) +'
                         '(?P<last_seq_number>\d+)$')
 
+        
+
         parsed_dict = {}
+        vrf = 'default'
 
         for line in out.splitlines():
             line = line.strip()
@@ -76,19 +91,24 @@ class ShowEigrpNeighbors(ShowEigrpNeighborsSchema):
             result = r1.match(line)
 
             if result:
+                vrf = result.group('vrf')
+
+            result = r2.match(line)
+
+            if result:
+
                 group = result.groupdict()
 
                 eigrp_interface = Common.convert_intf_name\
                     (intf=group['eigrp_interface'])
 
-                interface_dict = parsed_dict.setdefault('eigrp_interface', {})\
+                nbr_address = group['nbr_address']                
+
+                ip_dict = parsed_dict.setdefault('vrf', {})\
+                    .setdefault(vrf, {})\
+                    .setdefault('eigrp_interface', {})\
                     .setdefault(eigrp_interface, {})\
-                    .setdefault('index', {})
-
-                index = max(parsed_dict['eigrp_interface'][eigrp_interface]['index'], default=0) + 1
-
-                nbr_address = group['nbr_address']
-                ip_dict = interface_dict.setdefault(index, {}).setdefault(nbr_address, {})
+                    .setdefault('eigrp_nbr', {}).setdefault(nbr_address, {})
 
                 ip_dict['peer_handle'] = int(group['peer_handle'])
                 ip_dict['hold'] = int(group['hold'])
@@ -97,6 +117,7 @@ class ShowEigrpNeighbors(ShowEigrpNeighborsSchema):
                 ip_dict['rto'] = int(group['rto'])
                 ip_dict['q_cnt'] = int(group['q_cnt'])
                 ip_dict['last_seq_number'] = int(group['last_seq_number'])
+
 
         return parsed_dict
 
@@ -109,12 +130,13 @@ class ShowEigrpNeighborsDetailSchema(MetaParser):
     schema = {
         'eigrp_instance': {
             Any(): {
-                'address_family': {
+                'vrf': {
                     Any(): {
-                        'eigrp_interface': {
-                            Any(): {
-                                'index': {
-                                    Any(): {
+                    'address_family': {
+                        Any(): {
+                            'eigrp_interface': {
+                                Any(): {
+                                    'eigrp_nbr': {                                    
                                         Any(): {
                                             'retransmit_count': int,
                                             'retry_count': int,
@@ -139,7 +161,8 @@ class ShowEigrpNeighborsDetailSchema(MetaParser):
                         },
                     },
                 },
-            }
+            },
+        }
 
 
 # ===========================================
@@ -147,23 +170,29 @@ class ShowEigrpNeighborsDetailSchema(MetaParser):
 # ===========================================
 class ShowEigrpNeighborsDetail(ShowEigrpNeighborsDetailSchema):
 
-    cli_command = 'show ip eigrp neighbors detail'
+    cli_command = ['show ip eigrp neighbors detail',
+                   'show ip eigrp vrf {vrf} neighbors detail']
 
-    def cli(self, output=None):
+    def cli(self, vrf='', output=None):
 
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if vrf:
+                out = self.device.execute(self.cli_command[1]).format(vrf=vrf)
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
+        
         # EIGRP-IPv4 VR(foo) Address-Family Neighbors for AS(1)
-        r1 = re.compile(r'(?P<address_family>[\w \-\(\)]+) +'
+        # EIGRP-IPv4 VR(foo) Address-Family Neighbors for AS(1) VRF(VRF1)
+        r1 = re.compile(r'EIGRP\-(?P<address_family>IPv4|IPv6)[\w \-\(\)]+ +'
                         'Address-Family\s*Neighbors\s*for '
-                        '\w*\(\s*(?P<as_num>[\S]+)\)')
+                        '\w*\(\s*(?P<as_num>[\S]+)\)\s*(?:VRF\((?P<vrf>\S+)\))?')
 
         # EIGRP-IPv4 Neighbors for AS(100)
-        r2 = re.compile(r'(?P<address_family>[\w \-\(\)]+) +'
-                        'Neighbors\s*for \w*\(\s*(?P<as_num>[\S]+)\)')
+        # EIGRP-IPv4 Neighbors for AS(100) VRF(VRF1)
+        r2 = re.compile(r'EIGRP\-(?P<address_family>IPv4|IPv6)\s*Neighbors\s*for \w+\(\s*(?P<as_num>\d+)\)\s*(?:VRF\((?P<vrf>\S+)\))?')
 
         # H     Address     Interface   Hold    Uptime   SRTT   RTO     Q       Seq
         #                               (sec)                   (ms)    Cnt     Num
@@ -180,12 +209,13 @@ class ShowEigrpNeighborsDetail(ShowEigrpNeighborsDetailSchema):
 
         # Version 8.0/2.0, Retrans: 0, Retries: 0, Prefixes: 1
         # Version 5.1/3.0, Retrans: 2, Retries: 0, Prefixes: 1
+        # Version 23.0/2.0, Retrans: 0, Retries: 0
         r4 = re.compile(r'Version\s*'
                         '(?P<os_majorver>\d+)\.(?P<os_minorver>\d+)\/'
                         '(?P<tlv_majorrev>\d+)\.(?P<tlv_minorrev>\d+), +'
                         'Retrans\s*:\s*(?P<retransmit_count>\d+)\, +'
-                        'Retries\s*:\s*(?P<retry_count>\d+)\, +'
-                        'Prefixes\s*:\s*(?P<prefixes>\d+)')
+                        'Retries\s*:\s*(?P<retry_count>\d+)\,* *'
+                        '(?:Prefixes\s*:\s*(?P<prefixes>\d+))?')
 
         # Topology-ids from peer - 0
         r5 = re.compile(r'Topology\-ids\s+from\s+peer\s+\-\s+'
@@ -194,9 +224,10 @@ class ShowEigrpNeighborsDetail(ShowEigrpNeighborsDetailSchema):
         parsed_dict = {}
 
         for line in out.splitlines():
-            line = line.strip()
+            line = line.strip()            
 
             # EIGRP-IPv4 VR(foo) Address-Family Neighbors for AS(1)
+            # EIGRP-IPv4 VR(foo) Address-Family Neighbors for AS(1) VRF(VRF1)
             result = r1.match(line)
 
             if result:
@@ -205,29 +236,37 @@ class ShowEigrpNeighborsDetail(ShowEigrpNeighborsDetailSchema):
 
                 address_family = group['address_family']
                 as_num = group['as_num']
+                vrf = group['vrf'] if group['vrf'] else 'default'                
 
                 # eigrp_instance_dict is used when matching r3
                 eigrp_instance_dict = parsed_dict\
                     .setdefault('eigrp_instance', {})\
-                    .setdefault(as_num, {}).setdefault('address_family', {})\
+                    .setdefault(as_num, {})\
+                    .setdefault('vrf', {})\
+                    .setdefault(vrf, {})\
+                    .setdefault('address_family', {})\
                     .setdefault(address_family, {})
 
                 continue
 
             # EIGRP-IPv4 Neighbors for AS(100)
+            # EIGRP-IPv4 Neighbors for AS(100) VRF(VRF1)
             result = r2.match(line)
-
             if result:
 
                 group = result.groupdict()
 
                 address_family = group['address_family']
                 as_num = group['as_num']
+                vrf = group['vrf'] if group['vrf'] else 'default'
 
                 # eigrp_instance_dict is used when matching r3
                 eigrp_instance_dict = parsed_dict\
                     .setdefault('eigrp_instance', {})\
-                    .setdefault(as_num, {}).setdefault('address_family', {})\
+                    .setdefault(as_num, {})\
+                    .setdefault('vrf', {})\
+                    .setdefault(vrf, {})\
+                    .setdefault('address_family', {})\
                     .setdefault(address_family, {})
 
                 continue
@@ -243,18 +282,14 @@ class ShowEigrpNeighborsDetail(ShowEigrpNeighborsDetailSchema):
                 eigrp_interface = Common.convert_intf_name\
                     (intf=group['eigrp_interface'])
 
-                interface_dict = eigrp_instance_dict\
-                    .setdefault('eigrp_interface', {})\
-                    .setdefault(eigrp_interface, {}).setdefault('index', {})
-
-                # Get highest index number
-                index = max(eigrp_instance_dict['eigrp_interface']
-                            [eigrp_interface]['index'], default=0) + 1
-
                 nbr_address = group['nbr_address']
 
-                ip_dict = interface_dict.setdefault(index, {})\
+                ip_dict = eigrp_instance_dict\
+                    .setdefault('eigrp_interface', {})\
+                    .setdefault(eigrp_interface, {})\
+                    .setdefault('eigrp_nbr', {})\
                     .setdefault(nbr_address, {})
+
 
                 # dict for current IP Address
                 # ip_dict is also used in r5
@@ -286,7 +321,10 @@ class ShowEigrpNeighborsDetail(ShowEigrpNeighborsDetailSchema):
                 ip_dict['retransmit_count'] = \
                     int(group['retransmit_count'])
                 ip_dict['retry_count'] = int(group['retry_count'])
-                ip_dict['prefixes'] = int(group['prefixes'])
+
+                prefixes = group['prefixes']
+
+                ip_dict['prefixes'] = int(prefixes) if prefixes else 0
 
                 continue
 
