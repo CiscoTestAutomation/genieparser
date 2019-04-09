@@ -2,7 +2,7 @@
    supported commands:
      *  show lldp
      *  show lldp entry [<WORD>|*]
-     *  show lldp interface [<WORD>]
+     *  show lldp interface
      *  show lldp neighbors detail
      *  show lldp traffic
 """
@@ -370,7 +370,7 @@ class ShowLldpInterfaceSchema(MetaParser):
 
 
 class ShowLldpInterface(ShowLldpInterfaceSchema):
-    """Parser for show lldp interface [<WORD>]"""
+    """Parser for show lldp interface"""
 
     cli_command = 'show lldp interface'
 
