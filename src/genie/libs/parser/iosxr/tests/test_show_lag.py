@@ -121,33 +121,35 @@ class test_show_bundle(unittest.TestCase):
     golden_parsed_output = {
         "interfaces": {
             "Bundle-Ether1": {
+                "name": "Bundle-Ether1",
                 "bundle_id": 1,
-                "status": "up",
+                "oper_status": "up",
                 "local_links": {
                     "active": 2,
                     "standby": 0,
                     "configured": 2
                 },
-                "local_bandwidth": {
+                "local_bandwidth_kbps": {
                     "effective": 2000000,
                     "available": 2000000
                 },
                 "mac_address": "001b.0c10.5a25",
-                "inter_link": "No",
+                "mac_address_source": "Chassis pool",
+                "inter_chassis_link": "No",
                 "min_active_link": 1,
-                "min_active_bw": 1,
+                "min_active_bw_kbps": 1,
                 "max_active_link": 8,
-                "wait_timer": 2000,
+                "wait_while_timer_ms": 2000,
                 "load_balance": {
-                    "link_order_sgl": "Not configured",
+                    "link_order_signaling": "Not configured",
                     "hash_type": "Default",
-                    "local_th": "None"
+                    "locality_threshold": "None"
                 },
                 "lacp": {
                     "lacp": "Operational",
-                    "flap_sup_timer": "Off",
-                    "cisco_ext": "Disabled",
-                    "non_revert": "Disabled"
+                    "flap_suppression_timer": "Off",
+                    "cisco_extensions": "Disabled",
+                    "non_revertive": "Disabled"
                 },
                 "mlacp": "Not configured",
                 "ipv4_bfd": "Not configured",
@@ -158,45 +160,49 @@ class test_show_bundle(unittest.TestCase):
                         "device": "Local",
                         "state": "Active",
                         "port_id": "0x000a, 0x0001",
-                        "bw": 1000000
+                        "bw_kbps": 1000000,
+                        "link_state": "Active"
                     },
                     "GigabitEthernet0/0/0/1": {
                         "interface": "GigabitEthernet0/0/0/1",
                         "device": "Local",
                         "state": "Active",
                         "port_id": "0x8000, 0x0002",
-                        "bw": 1000000
+                        "bw_kbps": 1000000,
+                        "link_state": "Active"
                     }
                 }
             },
             "Bundle-Ether2": {
+                "name": "Bundle-Ether2",
                 "bundle_id": 2,
-                "status": "up",
+                "oper_status": "up",
                 "local_links": {
                     "active": 2,
                     "standby": 1,
                     "configured": 3
                 },
-                "local_bandwidth": {
+                "local_bandwidth_kbps": {
                     "effective": 2000000,
                     "available": 2000000
                 },
                 "mac_address": "001b.0c10.5a24",
-                "inter_link": "No",
+                "mac_address_source": "Chassis pool",
+                "inter_chassis_link": "No",
                 "min_active_link": 2,
-                "min_active_bw": 1,
+                "min_active_bw_kbps": 1,
                 "max_active_link": 2,
-                "wait_timer": 2000,
+                "wait_while_timer_ms": 2000,
                 "load_balance": {
-                    "link_order_sgl": "Not configured",
+                    "link_order_signaling": "Not configured",
                     "hash_type": "Default",
-                    "local_th": "None"
+                    "locality_threshold": "None"
                 },
                 "lacp": {
                     "lacp": "Operational",
-                    "flap_sup_timer": "Off",
-                    "cisco_ext": "Disabled",
-                    "non_revert": "Disabled"
+                    "flap_suppression_timer": "Off",
+                    "cisco_extensions": "Disabled",
+                    "non_revertive": "Disabled"
                 },
                 "mlacp": "Not configured",
                 "ipv4_bfd": "Not configured",
@@ -207,21 +213,24 @@ class test_show_bundle(unittest.TestCase):
                         "device": "Local",
                         "state": "Standby",
                         "port_id": "0x8000, 0x0005",
-                        "bw": 1000000
+                        "bw_kbps": 1000000,
+                        "link_state": "Standby"
                     },
                     "GigabitEthernet0/0/0/3": {
                         "interface": "GigabitEthernet0/0/0/3",
                         "device": "Local",
                         "state": "Active",
                         "port_id": "0x8000, 0x0004",
-                        "bw": 1000000
+                        "bw_kbps": 1000000,
+                        "link_state": "Active"
                     },
                     "GigabitEthernet0/0/0/4": {
                         "interface": "GigabitEthernet0/0/0/4",
                         "device": "Local",
                         "state": "Active",
                         "port_id": "0x8000, 0x0003",
-                        "bw": 1000000
+                        "bw_kbps": 1000000,
+                        "link_state": "Active"
                     }
                 }
             }
@@ -303,23 +312,30 @@ class test_show_lacp(unittest.TestCase):
     golden_parsed_output = {
         "interfaces": {
             "Bundle-Ether1": {
+                "name": "Bundle-Ether1",
                 "bundle_id": 1,
                 "port": {
                     "GigabitEthernet0/0/0/0": {
                         "interface": "GigabitEthernet0/0/0/0",
-                        "rate": "30s",
+                        "rate": 30,
                         "state": "ascdA---",
                         "port_id": "0x000a,0x0001",
                         "key": 1,
-                        "system_priority": 100,
-                        "system_id": "00-1b-0c-10-5a-26",
+                        "system_id": "0x0064,00-1b-0c-10-5a-26",
+                        "aggregatable": True,
+                        "synchronization": "in_sync",
+                        "collecting": True,
+                        "distributing": True,
                         "partner": {
-                            "rate": "30s",
+                            "rate": 30,
                             "state": "ascdA---",
                             "port_id": "0x000a,0x0001",
                             "key": 1,
-                            "system_priority": 32768,
-                            "system_id": "00-0c-86-5e-68-23"
+                            "system_id": "0x8000,00-0c-86-5e-68-23",
+                            "aggregatable": True,
+                            "synchronization": "in_sync",
+                            "collecting": True,
+                            "distributing": True
                         },
                         "receive": "Current",
                         "period": "Slow",
@@ -330,19 +346,25 @@ class test_show_lacp(unittest.TestCase):
                     },
                     "GigabitEthernet0/0/0/1": {
                         "interface": "GigabitEthernet0/0/0/1",
-                        "rate": "30s",
+                        "rate": 30,
                         "state": "ascdA---",
                         "port_id": "0x8000,0x0002",
                         "key": 1,
-                        "system_priority": 100,
-                        "system_id": "00-1b-0c-10-5a-26",
+                        "system_id": "0x0064,00-1b-0c-10-5a-26",
+                        "aggregatable": True,
+                        "synchronization": "in_sync",
+                        "collecting": True,
+                        "distributing": True,
                         "partner": {
-                            "rate": "30s",
+                            "rate": 30,
                             "state": "ascdA---",
                             "port_id": "0x8000,0x0005",
                             "key": 1,
-                            "system_priority": 32768,
-                            "system_id": "00-0c-86-5e-68-23"
+                            "system_id": "0x8000,00-0c-86-5e-68-23",
+                            "aggregatable": True,
+                            "synchronization": "in_sync",
+                            "collecting": True,
+                            "distributing": True
                         },
                         "receive": "Current",
                         "period": "Slow",
@@ -354,23 +376,30 @@ class test_show_lacp(unittest.TestCase):
                 }
             },
             "Bundle-Ether2": {
+                "name": "Bundle-Ether2",
                 "bundle_id": 2,
                 "port": {
                     "GigabitEthernet0/0/0/2": {
                         "interface": "GigabitEthernet0/0/0/2",
-                        "rate": "30s",
+                        "rate": 30,
                         "state": "a---A---",
                         "port_id": "0x8000,0x0005",
                         "key": 2,
-                        "system_priority": 100,
-                        "system_id": "00-1b-0c-10-5a-26",
+                        "system_id": "0x0064,00-1b-0c-10-5a-26",
+                        "aggregatable": True,
+                        "synchronization": "out_sync",
+                        "collecting": False,
+                        "distributing": False,
                         "partner": {
-                            "rate": "30s",
+                            "rate": 30,
                             "state": "as--A---",
                             "port_id": "0x8000,0x0004",
                             "key": 2,
-                            "system_priority": 32768,
-                            "system_id": "00-0c-86-5e-68-23"
+                            "system_id": "0x8000,00-0c-86-5e-68-23",
+                            "aggregatable": True,
+                            "synchronization": "in_sync",
+                            "collecting": False,
+                            "distributing": False
                         },
                         "receive": "Current",
                         "period": "Slow",
@@ -381,19 +410,25 @@ class test_show_lacp(unittest.TestCase):
                     },
                     "GigabitEthernet0/0/0/3": {
                         "interface": "GigabitEthernet0/0/0/3",
-                        "rate": "30s",
+                        "rate": 30,
                         "state": "ascdA---",
                         "port_id": "0x8000,0x0004",
                         "key": 2,
-                        "system_priority": 100,
-                        "system_id": "00-1b-0c-10-5a-26",
+                        "system_id": "0x0064,00-1b-0c-10-5a-26",
+                        "aggregatable": True,
+                        "synchronization": "in_sync",
+                        "collecting": True,
+                        "distributing": True,
                         "partner": {
-                            "rate": "30s",
+                            "rate": 30,
                             "state": "ascdA---",
                             "port_id": "0x8000,0x0003",
                             "key": 2,
-                            "system_priority": 32768,
-                            "system_id": "00-0c-86-5e-68-23"
+                            "system_id": "0x8000,00-0c-86-5e-68-23",
+                            "aggregatable": True,
+                            "synchronization": "in_sync",
+                            "collecting": True,
+                            "distributing": True
                         },
                         "receive": "Current",
                         "period": "Slow",
@@ -404,19 +439,25 @@ class test_show_lacp(unittest.TestCase):
                     },
                     "GigabitEthernet0/0/0/4": {
                         "interface": "GigabitEthernet0/0/0/4",
-                        "rate": "30s",
+                        "rate": 30,
                         "state": "ascdA---",
                         "port_id": "0x8000,0x0003",
                         "key": 2,
-                        "system_priority": 100,
-                        "system_id": "00-1b-0c-10-5a-26",
+                        "system_id": "0x0064,00-1b-0c-10-5a-26",
+                        "aggregatable": True,
+                        "synchronization": "in_sync",
+                        "collecting": True,
+                        "distributing": True,
                         "partner": {
-                            "rate": "30s",
+                            "rate": 30,
                             "state": "ascdA---",
                             "port_id": "0x8000,0x0002",
                             "key": 2,
-                            "system_priority": 32768,
-                            "system_id": "00-0c-86-5e-68-23"
+                            "system_id": "0x8000,00-0c-86-5e-68-23",
+                            "aggregatable": True,
+                            "synchronization": "in_sync",
+                            "collecting": True,
+                            "distributing": True
                         },
                         "receive": "Current",
                         "period": "Slow",
