@@ -8,6 +8,10 @@
 --------------------------------------------------------------------------------
                                    LAG
 --------------------------------------------------------------------------------
+* IOSXE
+    * Enhancement on ShowEtherchannelSummary for:
+        show etherchannel summary
+
 * IOS
     * Add ShowLacpSysId for:
         show lacp sys-id
@@ -126,6 +130,43 @@
           show mpls interfaces <interface>
           show mpls interfaces <interface> detail
           show mpls interfaces detail
+          
+--------------------------------------------------------------------------------
+                                   SESSION
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowLine for:
+        show line
+    * Add ShowUsers for:
+        show users
+
+--------------------------------------------------------------------------------
+                                   ACCESS
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowAccessSession for:
+        show access-session
+
+--------------------------------------------------------------------------------
+                                   SYSTEM
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowClock for:
+        show clock
+
+--------------------------------------------------------------------------------
+                                   VTP
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowVtpStatus for:
+        show vtp status
+
+--------------------------------------------------------------------------------
+                                   SNMP
+--------------------------------------------------------------------------------
+* IOS
+    * Added ShowSnmpMib for:
+        'show snmp mib'
 
 --------------------------------------------------------------------------------
                                    BFD
@@ -168,5 +209,11 @@
     * Add ShowClnsIsNeighborDetail for:
         show clns is-neighbor detail
     * Add ShowClnsTraffic for:
-        *  show clns traffic
+        show clns traffic
+    * Add ShowIsisHostname for:
+        show isis hostname
+    * Add ShowIsisLspLog for:
+        show isis lsp-log
+    * Add ShowIsisDatabaseDetail for:
+        show isis database detail
 
