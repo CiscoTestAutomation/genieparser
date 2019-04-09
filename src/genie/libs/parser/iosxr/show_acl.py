@@ -157,6 +157,7 @@ class ShowAclAfiAll(ShowAclAfiAllSchema):
                 des_operator = group['des_operator']
                 des_port = group['des_port']
                 established_log = group['established_log']
+                log = group['log']
                
 
                 seq_dict = acl_dict.setdefault('aces', {}).setdefault(seq, {})
@@ -205,7 +206,7 @@ class ShowAclAfiAll(ShowAclAfiAllSchema):
                     actions_forwarding = group['actions_forwarding']
                     seq_dict.setdefault('actions', {}).setdefault('forwarding', actions_forwarding)
 
-                seq_dict['actions']['logging'] = 'log-syslog' if group['log'] else 'log-none'
+                seq_dict['actions']['logging'] = 'log-syslog' if log or established_log else 'log-none'
                 continue
         return ret_dict
 

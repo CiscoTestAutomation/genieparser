@@ -170,3 +170,11 @@
     * Add ShowClnsTraffic for:
         *  show clns traffic
 
+----------------------------------------------------------------------------------
+                                   ACL
+----------------------------------------------------------------------------------
+* IOSXR
+    * Add ShowAclAfiAll for:
+        show access-lists afi-all
+    * Add ShowAclEthernetServices for:
+        show access-lists ethernet-services

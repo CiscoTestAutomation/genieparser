@@ -177,7 +177,7 @@ class test_show_acl_afi_all(unittest.TestCase):
 		                },
 		            'actions': {
 		                'forwarding': 'permit',
-		                'logging': 'log-none',
+		                'logging': 'log-syslog',
 		                },
 		            },
 		        20: {
