@@ -7,7 +7,7 @@ from unittest.mock import Mock
 from ats.topology import Device
 
 # Genie
-from genie.metaparser.util.exceptions import SchemaEmptyParserError
+from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 from genie.libs.parser.ios.show_issu import ShowIssuStateDetail,\
                                               ShowIssuRollbackTimer
 
@@ -18,9 +18,13 @@ from genie.libs.parser.iosxe.tests.test_show_issu import test_show_issu_state_de
 # =======================================
 #  Unit test for 'show issu state detail'
 # =======================================
-class test_show_issu_state_detail(test_show_issu_state_detail_iosxe):
+class test_show_issu_state_detail(unittest.TestCase):
 
-    golden_output_ios = {'execute.return_value': '''
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    semi_empty_output = {'execute.return_value': '''
         Router# show issu state detail
  
         --- Starting installation state synchronization ---
@@ -28,26 +32,37 @@ class test_show_issu_state_detail(test_show_issu_state_detail_iosxe):
         No ISSU operation is in progress
     '''}
 
-    golden_parsed_output_ios = {
-        "slot": {
-            "default": {
-                "issu_in_progress": False
-            }
-        }
-     }
+    golden_output = {'execute.return_value': '''
+        R1#show issu state detail
+        --- Starting local lock acquisition on switch 1 ---
+        Finished local lock acquisition on switch 1
+
+        No ISSU operation is in progress
+        '''}
+
+    golden_parsed_output = {
+        'slot':
+            {'1':
+                {'issu_in_progress': False}}}
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIssuStateDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()    
+            parsed_output = obj.parse()
 
-    def test_golden_ios(self):
+    def test_semi_empty(self):
+        self.device = Mock(**self.semi_empty_output)
+        obj = ShowIssuStateDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output_ios)
+        self.device = Mock(**self.golden_output)
         obj = ShowIssuStateDetail(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_ios)
+        self.assertEqual(parsed_output, self.golden_parsed_output)
         
 
 # =========================================
