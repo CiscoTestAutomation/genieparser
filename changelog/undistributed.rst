@@ -217,3 +217,17 @@
     * Add ShowIsisDatabaseDetail for:
         show isis database detail
 
+----------------------------------------------------------------------------------
+                                   ISIS
+----------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowIpCef for :
+            show ip cef
+            show ip cef vrf <vrf>
+            show ip cef <prefix>
+            show ip cef vrf <vrf> <prefix>
+    * Add ShowIpv6Cef for :
+            show ipv6 cef
+            show ipv6 cef vrf <vrf>
+            show ipv6 cef <prefix>
+            show ipv6 cef vrf <vrf> <prefix>
