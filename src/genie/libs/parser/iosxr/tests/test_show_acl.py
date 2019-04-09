@@ -38,6 +38,7 @@ class test_show_acl_afi_all(unittest.TestCase):
 		                },
 		            'actions': {
 		                'forwarding': 'permit',
+		                'logging': 'log-none',
 		                },
 		            },
 		        },
@@ -76,6 +77,7 @@ class test_show_acl_afi_all(unittest.TestCase):
 		                },
 		            'actions': {
 		                'forwarding': 'permit',
+		                'logging': 'log-none',
 		                },
 		            },
 		        20: {
@@ -108,6 +110,7 @@ class test_show_acl_afi_all(unittest.TestCase):
 		                },
 		            'actions': {
 		                'forwarding': 'permit',
+		                'logging': 'log-none',
 		                },
 		            },
 		        30: {
@@ -140,6 +143,7 @@ class test_show_acl_afi_all(unittest.TestCase):
 		                },
 		            'actions': {
 		                'forwarding': 'permit',
+		                'logging': 'log-none',
 		                },
 		            },
 		        },
@@ -173,6 +177,7 @@ class test_show_acl_afi_all(unittest.TestCase):
 		                },
 		            'actions': {
 		                'forwarding': 'permit',
+		                'logging': 'log-none',
 		                },
 		            },
 		        20: {
@@ -208,6 +213,7 @@ class test_show_acl_afi_all(unittest.TestCase):
 		                },
 		            'actions': {
 		                'forwarding': 'permit',
+		                'logging': 'log-none',
 		                },
 		            },
 		        30: {
@@ -230,6 +236,7 @@ class test_show_acl_afi_all(unittest.TestCase):
 		                },
 		            'actions': {
 		                'forwarding': 'deny',
+		                'logging': 'log-none',
 		                },
 		            },
 		        },
@@ -258,6 +265,7 @@ class test_show_acl_afi_all(unittest.TestCase):
 		                },
 		            'actions': {
 		                'forwarding': 'permit',
+		                'logging': 'log-syslog',
 		                },
 		            },
 		        20: {
@@ -280,6 +288,7 @@ class test_show_acl_afi_all(unittest.TestCase):
 		                },
 		            'actions': {
 		                'forwarding': 'permit',
+		                'logging': 'log-none',
 		                },
 		            },
 		        30: {
@@ -312,6 +321,7 @@ class test_show_acl_afi_all(unittest.TestCase):
 		                },
 		            'actions': {
 		                'forwarding': 'permit',
+		                'logging': 'log-none',
 		                },
 		            },
 		        },
