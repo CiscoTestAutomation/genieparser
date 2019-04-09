@@ -87,16 +87,17 @@ class ShowLldpEntrySchema(MetaParser):
                         'system_description': str,
                         'technical_support': str,
                         'copyright': str,
-                        'compiled_by': str,
+                        Optional('compiled_by'): str,
                         'time_remaining': int,
+                        'neighbor_id': str,
                         'hold_time': int,
                         'capabilities': {
                             Any():{
-                                'system': bool,
-                                'enabled': bool
+                                Optional('system'): bool,
+                                Optional('enabled'): bool
                             }
                         },
-                        'management_address': str,
+                        Optional('management_address'): str,
                     }
                 }
             }
@@ -121,7 +122,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
     cli_command = 'show lldp entry {entry}'
 
     def cli(self, entry='*',output=None):
-    	if output is None:
+        if output is None:
             # get output from device
             if hasattr(self, 'CMD'):
                 out = self.device.execute(self.CMD)
@@ -145,13 +146,13 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         p6 = re.compile(r'^System +Description:$')
         # Cisco IOS Software [Everest], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.1, RELEASE SOFTWARE (fc2)
         # Cisco Nexus Operating System (NX-OS) Software 7.0(3)I7(1)
-        p7 = re.compile(r'^(?P<msg>Cisco +((IOS +Software +\[Everest\])|(Nexus +Operating +System))[\S\s]+)$')
+        p7 = re.compile(r'^(?P<system_description>Cisco +((IOS +Software +\[Everest\])|(Nexus +Operating +System))[\S\s]+)$')
         # Copyright (c) 1986-2017 by Cisco Systems, Inc.
-        p8 = re.compile(r'^Copyright +\(c\) +(?P<copyright>)$')
+        p8 = re.compile(r'^Copyright +\(c\) +(?P<copyright>[\S\s]+)$')
         # Compiled Sat 22-Jul-17 05:51 by 
-        p9 = re.compile(r'Compiled +\w{3} +\d{1,2}\-\w{3}\-\d{1,2} +\d{2}:\d{2} +by +(?P<compiled_by>[\S\s]+)$ ')
+        p9 = re.compile(r'Compiled +\w{3} +\d{1,2}\-\w{3}\-\d{1,2} +\d{2}:\d{2} +by +(?P<compiled_by>[\S\s]+)$')
         # Technical Support: http://www.cisco.com/techsupport
-        p10 = re.compile(r'^Technical Support: +(?P<technical_support>[\S\s])$')
+        p10 = re.compile(r'^(Technical|TAC) (S|s)upport: +(?P<technical_support>[\S\s]+)$')
         # Time remaining: 117 seconds
         p11 = re.compile(r'Time +remaining: +(?P<time_remaining>\d+) +seconds$')
         # Hold Time: 120 seconds
@@ -161,7 +162,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         # Enabled Capabilities: R
         p14 = re.compile(r'Enabled +Capabilities: +(?P<enabled>[\w+,]+)$')
         # IPv4 address: 10.1.2.1
-        p15 = re.compile(r'IPv4 +address: +(?P<address>[\d\.]+)$')
+        p15 = re.compile(r'IPv4 +address: +(?P<management_address>[\d\.]+)$')
         # Total entries displayed: 2
         p16 = re.compile(r'Total +entries +displayed: +(?P<total_entries>\d+)$')
 
@@ -185,54 +186,106 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 sub_dict.setdefault('chassis_id', group['chassis_id'])
                 continue
             
-            # Port Description: GigabitEthernet1/0/4
+            # Port id: Gi1/0/4
             m = p3.match(line)
             if m:
-                sub_dict.setdefault('port_description', m.groupdict()['desc'])
+                group = m.groupdict()
+                sub_dict.setdefault('port_id',
+                    Common.convert_intf_name(group['port_id']))
+                continue
+
+            # Port Description: GigabitEthernet1/0/4
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict.setdefault('port_description', group['port_description'])
                 continue
 
             # System Name: R5
-            m = p4.match(line)
-            if m:
-                name = m.groupdict()['name']
-                sub_dict['system_name'] = name
-                continue
-
-            # System Description: 
             m = p5.match(line)
             if m:
-                sub_dict['system_description'] = ''
+                group = m.groupdict()
+                sub_dict['system_name'] = group['system_name']
                 continue
 
             # Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)
-            m = p6.match(line)
-            if m:
-                item = m.groupdict()['msg']
-                sub_dict['system_description'] = item
-                continue
-
-            # Technical Support: http://www.cisco.com/techsupport 
             m = p7.match(line)
             if m:
-                item = m.groupdict()['msg']
-                sub_dict['technical_support'] = item
+                group = m.groupdict()
+                sub_dict['system_description'] = group['system_description']
                 continue
 
             # Copyright (c) 1986-2011 by Cisco Systems, Inc.
             m = p8.match(line)
             if m:
-                item = m.groupdict()['msg']
-                sub_dict['copyright'] = item
+                group = m.groupdict()
+                sub_dict['copyright'] = group['copyright']
                 continue
 
             # Compiled Thu 21-Jul-11 01:23 by prod_rel_team
             m = p9.match(line)
             if m:
-                item = m.groupdict()['msg']
-                sub_dict['compiled_by'] = item
+                group = m.groupdict()
+                sub_dict['compiled_by'] = group['compiled_by']
                 continue
 
-            
+            # Technical Support: http://www.cisco.com/techsupport 
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict['technical_support'] = group['technical_support']
+                continue
+
+            # Time remaining: 112 seconds
+            m = p11.match(line)
+            if m:
+                nei = sub_dict.get('system_name', '') if sub_dict.get('system_name', '') else \
+                    sub_dict.get('chassis_id', '')
+                nei_dict = intf_dict.setdefault('neighbors', {}).setdefault(nei, {})
+                nei_dict.update(sub_dict)
+                nei_dict['time_remaining'] = int(m.groupdict()['time_remaining'])
+                nei_dict['neighbor_id'] = nei
+                continue
+
+            # Hold Time: 120 seconds
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                nei_dict['hold_time'] = int(group['hold_time'])
+                continue
+
+            # System Capabilities: B,R
+            m = p13.match(line)
+            if m:
+                cap = [self.CAPABILITY_CODES[n] for n in m.groupdict()['system'].split(',')]
+                for item in cap:
+                    cap_dict = nei_dict.setdefault('capabilities', {}).\
+                        setdefault(item, {})
+                    cap_dict['system'] = True
+                continue
+
+            # Enabled Capabilities: B,R
+            m = p14.match(line)
+            if m:
+                cap = [self.CAPABILITY_CODES[n] for n in m.groupdict()['enabled'].split(',')]
+                for item in cap:
+                    cap_dict = nei_dict.setdefault('capabilities', {}).\
+                        setdefault(item, {})
+                    cap_dict['enabled'] = True
+                continue   
+
+            # IPv4 address: 10.1.2.1
+            m = p15.match(line)
+            if m:
+                nei_dict['management_address'] = m.groupdict()['management_address']
+                continue  
+
+            # Total entries displayed: 2
+            m = p16.match(line)
+            if m:
+                ret_dict['total_entries'] = int(m.groupdict()['total_entries'])
+                continue  
+        return ret_dict     
 
 
 class ShowLldpNeighborsDetail(ShowLldpEntry):
@@ -241,7 +294,15 @@ class ShowLldpNeighborsDetail(ShowLldpEntry):
 
 class ShowLldpTrafficSchema(MetaParser):
     """Schema for show lldp traffic"""
-    schema = {}
+    schema = {
+        "frame_in": int,
+        "frame_out": int,
+        "frame_error_in": int,
+        "frame_discard": int,
+        "tlv_discard": int,
+        'tlv_unknown': int,
+        'entries_aged_out': int
+    }
 
 class ShowLldpTraffic(ShowLldpTrafficSchema):
     """Parser for show lldp traffic"""
@@ -249,19 +310,106 @@ class ShowLldpTraffic(ShowLldpTrafficSchema):
     cli_command = 'show lldp traffic'
 
     def cli(self,output=None):
-    	ret_dict = {}
-    	return ret_dict
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+    	# initial return dictionary
+        ret_dict = {}
+
+        # initial regexp pattern
+        # Total frames out: 588
+        # Total frames in: 399
+        # Total frames received in error: 0
+        # Total frames discarded: 0
+        p1 = re.compile(r'^Total +frames +(in: +(?P<frame_in>\d+))?(out: +'
+            '(?P<frame_out>\d+))?(received +in +error: +(?P<frame_error_in>'
+            '\d+))?(discarded: +(?P<frame_discard>\d+))?$')
+
+        # Total entries aged: 0
+        p2 = re.compile(r'Total +entries +aged: +(?P<entries_aged_out>\d+)$')
+
+        # Total TLVs discarded: 119
+        # Total TLVs unrecognized: 119
+        p3 = re.compile(r'Total +TLVs +(discarded: +(?P<tlv_discard>\d+))?'
+            '(unrecognized: +(?P<tlv_unknown>\d+))?')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({k:int(v) for k, v in group.items() if v is not None})
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({k:int(v) for k, v in group.items() if v is not None})
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({k:int(v) for k, v in group.items() if v is not None})
+        
+        return ret_dict
 
 class ShowLldpInterfaceSchema(MetaParser):
-    """Schema for show lldp interface [<WORD>]"""
-    schema = {}
+    """Schema for show lldp interface"""
+    schema = {
+        'interfaces': {
+            Any(): {
+                'tx': str,
+                'rx': str,
+                'tx_state': str,
+                'rx_state': str,
+            },
+        }
+    }
+
 
 class ShowLldpInterface(ShowLldpInterfaceSchema):
     """Parser for show lldp interface [<WORD>]"""
 
-    cli_command = ['show lldp interface {interface}','show lldp interface']
+    cli_command = 'show lldp interface'
 
     def cli(self, interface='',output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+    	# initial return dictionary
+        ret_dict = {}
 
-    	ret_dict = {}
-    	return ret_dict
+        # initial regexp pattern
+        # GigabitEthernet0/0/0/0:
+        p1 = re.compile(r'^(?P<interface>[\w\/\-\.]+):$')
+        # Tx: enabled
+        # Rx: enabled
+        # Tx state: IDLE
+        # Rx state: WAIT FOR FRAME
+        p2 = re.compile(r'^(Tx: (?P<tx>\w+))?(Rx: (?P<rx>\w+))?(Tx +state: +'
+            '(?P<tx_state>\w+))?(Rx +state: +(?P<rx_state>[\w ]+))?$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            # GigabitEthernet1/0/15
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict = ret_dict.setdefault('interfaces', {}).\
+                    setdefault(group['interface'], {})
+                continue
+            
+            # Tx: enabled
+            # Rx: enabled
+            # Tx state: IDLE
+            # Rx state: WAIT FOR FRAME
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({k:v.lower() for k, v in group.items() if v is not None})
+                continue
+        
+        return ret_dict
