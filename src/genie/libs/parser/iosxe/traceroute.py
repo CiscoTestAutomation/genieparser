@@ -38,7 +38,7 @@ class TracerouteSchema(MetaParser):
                         Optional('label_info'): 
                             {Optional('label_name'): str,
                             Optional('exp'): int,
-                            Optional(Any()): 
+                            Optional('MPLS'): 
                                 {'label': str,
                                 'exp': int,
                                 },
