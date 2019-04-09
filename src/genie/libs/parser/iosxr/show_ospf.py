@@ -832,9 +832,10 @@ class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetai
                 address = str(m.groupdict()['address'])
                 continue
 
-            # In the area 0 via interface GigabitEthernet0/0/0/2 
-            p3 = re.compile(r'^In +the +area +(?P<area>(\S+)) +via +interface'
-                             ' +(?P<interface>(\S+))$')
+            # In the area 0 via interface GigabitEthernet0/0/0/2
+            # In the area 0.0.0.0 via interface GigabitEthernet0/0/0/0 , BFD enabled, Mode: Default
+            p3 = re.compile(r'^In +the +area +(?P<area>\S+) +via +interface'
+                             ' +(?P<interface>\S+)( , +BFD +(?P<bfd_status>\w+), +Mode: (?P<mode>\w+))?$')
             m = p3.match(line)
             if m:
                 area = str(m.groupdict()['area'])
@@ -908,6 +909,7 @@ class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetai
                         [instance]['areas'][area][intf_type][intf_name]\
                         ['neighbors'][neighbor] = {}
                 # Set sub_dict
+
                 sub_dict = ret_dict['vrf'][vrf]['address_family'][af]\
                             ['instance'][instance]['areas'][area][intf_type]\
                             [intf_name]['neighbors'][neighbor]
