@@ -10,7 +10,7 @@ from genie.libs.parser.iosxr.show_acl import ShowAclAfiAll, \
 
 
 class test_show_acl_afi_all(unittest.TestCase):
-    dev = Device(name='d')
+    dev = Device(name='device')
     empty_output = {'execute.return_value': '      '}
 
     golden_parsed_output = {
@@ -50,7 +50,7 @@ class test_show_acl_afi_all(unittest.TestCase):
 		            'name': '10',
 		            'matches': {
 		                'l3': {
-		                    'tcp': {
+		                    'ipv4': {
 		                        'source_ipv4_network': {
 		                            'any': {
 		                                'source_ipv4_network': 'any',
@@ -82,7 +82,7 @@ class test_show_acl_afi_all(unittest.TestCase):
 		            'name': '20',
 		            'matches': {
 		                'l3': {
-		                    'tcp': {
+		                    'ipv4': {
 		                        'source_ipv4_network': {
 		                            'any': {
 		                                'source_ipv4_network': 'any',
@@ -114,7 +114,7 @@ class test_show_acl_afi_all(unittest.TestCase):
 		            'name': '30',
 		            'matches': {
 		                'l3': {
-		                    'tcp': {
+		                    'ipv4': {
 		                        'source_ipv4_network': {
 		                            'any': {
 		                                'source_ipv4_network': 'any',
@@ -152,7 +152,7 @@ class test_show_acl_afi_all(unittest.TestCase):
 		            'name': '10',
 		            'matches': {
 		                'l3': {
-		                    'tcp': {
+		                    'ipv4': {
 		                        'source_ipv4_network': {
 		                            '192.168.1.0 0.0.0.255': {
 		                                'source_ipv4_network': '192.168.1.0 0.0.0.255',
@@ -179,7 +179,7 @@ class test_show_acl_afi_all(unittest.TestCase):
 		            'name': '20',
 		            'matches': {
 		                'l3': {
-		                    'tcp': {
+		                    'ipv4': {
 		                        'source_ipv4_network': {
 		                            'host 2.2.2.2': {
 		                                'source_ipv4_network': 'host 2.2.2.2',
@@ -243,14 +243,14 @@ class test_show_acl_afi_all(unittest.TestCase):
 		            'matches': {
 		                'l3': {
 		                    'ipv6': {
-		                        'source_ipv4_network': {
+		                        'source_ipv6_network': {
 		                            'any': {
-		                                'source_ipv4_network': 'any',
+		                                'source_ipv6_network': 'any',
 		                                },
 		                            },
-		                        'destination_ipv4_network': {
+		                        'destination_ipv6_network': {
 		                            'any': {
-		                                'destination_ipv4_network': 'any',
+		                                'destination_ipv6_network': 'any',
 		                                },
 		                            },
 		                        },
@@ -265,14 +265,14 @@ class test_show_acl_afi_all(unittest.TestCase):
 		            'matches': {
 		                'l3': {
 		                    'ipv6': {
-		                        'source_ipv4_network': {
+		                        'source_ipv6_network': {
 		                            'host 2001::1': {
-		                                'source_ipv4_network': 'host 2001::1',
+		                                'source_ipv6_network': 'host 2001::1',
 		                                },
 		                            },
-		                        'destination_ipv4_network': {
+		                        'destination_ipv6_network': {
 		                            'host 2001::1': {
-		                                'destination_ipv4_network': 'host 2001:1::2',
+		                                'destination_ipv6_network': 'host 2001:1::2',
 		                                },
 		                            },
 		                        },
@@ -286,15 +286,15 @@ class test_show_acl_afi_all(unittest.TestCase):
 		            'name': '30',
 		            'matches': {
 		                'l3': {
-		                    'tcp': {
-		                        'source_ipv4_network': {
+		                    'ipv6': {
+		                        'source_ipv6_network': {
 		                            'any': {
-		                                'source_ipv4_network': 'any',
+		                                'source_ipv6_network': 'any',
 		                                },
 		                            },
-		                        'destination_ipv4_network': {
+		                        'destination_ipv6_network': {
 		                            'any': {
-		                                'destination_ipv4_network': 'host 2001:2::2',
+		                                'destination_ipv6_network': 'host 2001:2::2',
 		                                },
 		                            },
 		                        },
@@ -360,11 +360,41 @@ class test_show_acl_ethernet_services(unittest.TestCase):
 		'eth_acl': {
 		    'name': 'eth_acl',
 		    'type': 'eth-acl-type',
+		    'aces': {
+		        10: {
+		            'name': '10',
+		            'matches': {
+		                'l2': {
+		                    'eth': {
+		                        'destination_mac_address': 'any',
+		                        'source_mac_address': 'any',
+		                        },
+		                    },
+		                },
+		            'actions': {
+		                'forwarding': 'permit',
+		                },
+		            },
+		        },
 		    },
 		'mac_acl': {
 		    'name': 'mac_acl',
 		    'type': 'eth-acl-type',
 		    'aces': {
+		        10: {
+		            'name': '10',
+		            'matches': {
+		                'l2': {
+		                    'eth': {
+		                        'destination_mac_address': 'host 0000.0000.0000',
+		                        'source_mac_address': 'host 0000.0000.0000',
+		                        },
+		                    },
+		                },
+		            'actions': {
+		                'forwarding': 'permit',
+		                },
+		            },
 		        20: {
 		            'name': '20',
 		            'matches': {
@@ -387,7 +417,7 @@ class test_show_acl_ethernet_services(unittest.TestCase):
 		                    'eth': {
 		                        'destination_mac_address': 'host 0000.0000.0000',
 		                        'source_mac_address': 'host 0000.0000.0000',
-		                        'ether_type': 'vlan 10',
+		                        'vlan': 10,
 		                        },
 		                    },
 		                },

@@ -34,10 +34,11 @@ class ShowAclAfiAllSchema(MetaParser):
                                 'destination_mac_address': str,
                                 'source_mac_address': str,
                                 Optional('ether_type'): str,
+                                Optional('vlan'): int,
                             }
                         },
                         Optional('l3'): {
-                            Any(): {   # protocols
+                            Optional('ipv4'): {   # protocols
                                 Optional('ttl'): int,
                                 Optional('ttl_operator'): str,
                                 Optional('precedence'): str,
@@ -49,6 +50,21 @@ class ShowAclAfiAllSchema(MetaParser):
                                 'source_ipv4_network': {
                                     Any(): {
                                         'source_ipv4_network': str,
+                                    }
+                                }
+                            },
+                            Optional('ipv6'): {   # protocols
+                                Optional('ttl'): int,
+                                Optional('ttl_operator'): str,
+                                Optional('precedence'): str,
+                                'destination_ipv6_network': {
+                                    Any(): {
+                                        'destination_ipv6_network': str,
+                                    }
+                                },
+                                'source_ipv6_network': {
+                                    Any(): {
+                                        'source_ipv6_network': str,
                                     }
                                 }
                             },
@@ -121,10 +137,10 @@ class ShowAclAfiAll(ShowAclAfiAllSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                acl_type = group['ip'] + '-acl-type'
+                acl_type = group['ip']
                 acl_dict = ret_dict.setdefault(group['name'], {})
                 acl_dict['name'] = group['name']
-                acl_dict['type'] = acl_type
+                acl_dict['type'] = acl_type + '-acl-type'
                 continue
 
             m = p2.match(line)
@@ -145,13 +161,13 @@ class ShowAclAfiAll(ShowAclAfiAllSchema):
                 seq_dict = acl_dict.setdefault('aces', {}).setdefault(seq, {})
                 seq_dict['name'] = group['seq']
                 l3_dict = seq_dict.setdefault('matches', {}).setdefault('l3', {})\
-                    .setdefault(protocol, {})
+                    .setdefault(acl_type, {})
 
-                l3_dict.setdefault('source_ipv4_network', {}).\
-                    setdefault(src, {}).setdefault('source_ipv4_network', src)
+                l3_dict.setdefault('source_'+acl_type+'_network', {}).\
+                    setdefault(src, {}).setdefault('source_'+acl_type+'_network', src)
 
-                l3_dict.setdefault('destination_ipv4_network', {}).\
-                    setdefault(src, {}).setdefault('destination_ipv4_network', dst)
+                l3_dict.setdefault('destination_'+acl_type+'_network', {}).\
+                    setdefault(src, {}).setdefault('destination_'+acl_type+'_network', dst)
 
                 if src_operator and src_port:
                     l4_dict = seq_dict.setdefault('matches', {}).setdefault('l4', {})\
@@ -212,9 +228,11 @@ class ShowAclEthernetServices(ShowAclAfiAllSchema):
         # 20 deny host 0000.0000.0000 host 0000.0000.0000 8041
         # 30 deny host 0000.0000.0000 host 0000.0000.0000 vlan 10
         # 40 permit host aaaa.aaaa.aaaa host bbbb.bbbb.bbbb 80f3
-        p2 = re.compile(r'^(?P<seq>\d+) +(?P<actions_forwarding>permit|deny)? +(?P<source_mac_address>'
-            '(any|(host +[\d\.\w]+))|([\d\.]+ +[\d\.]+))'
-            ' +(?P<destination_mac_address>(host +[\d\.\w]+)|any) +(?P<ether_type>[\w\s]+)$')
+        p2 = re.compile(r'^(?P<seq>\d+) +(?P<actions_forwarding>permit|deny)? +'
+            '(?P<source_mac_address>(any|(host +[\d\.\w]+))|([\d\.]+ +[\d\.]+))'
+            ' +(?P<destination_mac_address>(host +[\d\.\w]+)|any)( +'
+            '(?P<ether_type_dynamic>\w+) +(?P<ether_type_value>\d+))?'
+            '( +(?P<ether_type>[\w\s]+))?$')
 
         # initial variables
         ret_dict = {}
@@ -244,7 +262,12 @@ class ShowAclEthernetServices(ShowAclAfiAllSchema):
                     .setdefault('eth', {})
                 l2_dict.update({'destination_mac_address' : group['destination_mac_address']})
                 l2_dict.update({'source_mac_address' : group['source_mac_address']})
-                l2_dict.update({'ether_type' : group['ether_type']})
+
+                if group['ether_type_dynamic'] and group['ether_type_value']:
+                    l2_dict.update({group['ether_type_dynamic'] : int(group['ether_type_value'])})
+
+                if group['ether_type']:
+                    l2_dict.update({'ether_type' : group['ether_type']})
 
                 if group['actions_forwarding']:
                     actions_forwarding = group['actions_forwarding']
