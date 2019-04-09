@@ -175,135 +175,6 @@ class ShowIpRipDatabase(ShowIpRipDatabaseSchema):
 
         return result_dict
 
-# =======================================================
-#  schema for show ipv6 rip database
-# =======================================================
-class ShowIpv6RipDatabaseSchema(MetaParser):
-    """Schema for
-            show ipv6 rip database
-            show ipv6 rip database vrf {vrf}"""
-    schema = {
-        'vrf': {
-            Any(): {
-                'address_family': {
-                    Any(): {
-                        'routes': {
-                            Any(): {
-                                'index': {
-                                    Any(): {
-                                        Optional('next_hop'): str,
-                                        Optional('interface'): str,
-                                        Optional('metric'): int,
-                                        Optional('installed'): bool,
-                                        Optional('route_type'): str,
-                                        Optional('expire_time'): str,
-                                    }
-                                }
-                            },
-                        },
-                    },
-                },
-            },
-        }
-    }
-
-# ======================================================
-#  parser for show ipv6 rip database
-# =======================================================
-class ShowIpv6RipDatabase(ShowIpv6RipDatabaseSchema):
-    """Parser for :
-           show ipv6 rip database
-           show ipv6 rip database vrf {vrf}
-           """
-
-    cli_command = ["show ipv6 rip database", "show ipv6 rip vrf {vrf} database"]
-
-    def cli(self, vrf="", output=None):
-        if output is None:
-            if vrf:
-                cmd = self.cli_command[1].format(vrf=vrf)
-            else:
-                vrf = 'default'
-                cmd = self.cli_command[0]
-            out = self.device.execute(cmd)
-        else:
-            out = output
-
-        address_family= "ipv6"
-        index = 1
-
-        # RIP VRF "Default VRF", local RIB
-        # RIP VRF "VRF1", local RIB
-        p1 = re.compile(r'^\s*RIP +VRF +"(?P<vrf>[\S\s]+)", +local RIB$')
-
-        # 2001:DB8:1:3::/64, metric 2
-        # 2001:DB8:2:3::/64, metric 2, installed
-        p2 = re.compile(r'^\s*(?P<route>[\w\:\/]+), +metric +(?P<metric>\d+)(, +(?P<installed>(installed)+))?$')
-
-        #     GigabitEthernet3.100/FE80::F816:3EFF:FEFF:1E3D, expires in 179 secs
-        p3 = re.compile(r'^\s*(?P<interface>\S+), +expires +in +(?P<expire_time>[\d]+) +secs$')
-
-        result_dict = {}
-        for line in out.splitlines():
-            if line:
-                line = line.strip()
-            else:
-                continue
-
-            # RIP VRF "Default VRF", local RIB
-            # RIP VRF "VRF1", local RIB
-            m = p1.match(line)
-            if m:
-                group = m.groupdict()
-                vrf = group['vrf']
-                if 'default' in vrf.lower():
-                    vrf = 'default'
-                address_family_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}).setdefault('address_family',{}). \
-                    setdefault(address_family, {})
-                continue
-
-            # 2001:DB8:2:3::/64, metric 2, installed
-            m = p2.match(line)
-            if m:
-                index = 1
-                group = m.groupdict()
-                metric = int(group['metric'])
-                installed = group['installed']
-                route = group['route']
-                route_dict = address_family_dict.setdefault('routes', {}).setdefault(route, {})
-                index_dict = route_dict.setdefault('index', {}).setdefault(index, {})
-
-                index_dict.update({'metric': metric})
-                if installed:
-                    index_dict.update({'installed': True})
-                continue
-
-            #  GigabitEthernet3.100/FE80::F816:3EFF:FEFF:1E3D, expires in 179 secs
-            m = p3.match(line)
-            if m:
-                group = m.groupdict()
-                index_dict = route_dict.setdefault('index', {}).setdefault(index, {})
-                interface_nexthop = group['interface']
-                if '/' in interface_nexthop:
-                    interface = interface_nexthop.split('/')[0]
-                    next_hop = interface_nexthop.split('/')[1]
-
-                    index_dict.update({'interface': interface})
-                    index_dict.update({'next_hop': next_hop})
-                else:
-                    index_dict.update({'interface': group['interface']})
-
-                index_dict.update({'expire_time': group['expire_time']})
-                if metric:
-                    index_dict.update({'metric': metric})
-                if installed:
-                    index_dict.update({'installed': True})
-
-                index +=1
-                continue
-
-        return result_dict
-
 # ====================================================
 #  schema for show ip rip
 # ====================================================
@@ -344,7 +215,7 @@ class ShowIpv6RipSchema(MetaParser):
                             Optional('flush_interval'): int,
                             Optional('expire_time'):int,
                             },
-                        'interfaces': {
+                        Optional('interfaces'): {
                             Any(): {
                             },
                         },
@@ -567,3 +438,131 @@ class ShowIpv6Rip(ShowIpv6RipSchema):
 
         return result_dict
 
+# =======================================================
+#  schema for show ipv6 rip database
+# =======================================================
+class ShowIpv6RipDatabaseSchema(MetaParser):
+    """Schema for
+            show ipv6 rip database
+            show ipv6 rip database vrf {vrf}"""
+    schema = {
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        'routes': {
+                            Any(): {
+                                'index': {
+                                    Any(): {
+                                        Optional('next_hop'): str,
+                                        Optional('interface'): str,
+                                        Optional('metric'): int,
+                                        Optional('installed'): bool,
+                                        Optional('route_type'): str,
+                                        Optional('expire_time'): str,
+                                    }
+                                }
+                            },
+                        },
+                    },
+                },
+            },
+        }
+    }
+
+# ======================================================
+#  parser for show ipv6 rip database
+# =======================================================
+class ShowIpv6RipDatabase(ShowIpv6RipDatabaseSchema):
+    """Parser for :
+           show ipv6 rip database
+           show ipv6 rip database vrf {vrf}
+           """
+
+    cli_command = ["show ipv6 rip database", "show ipv6 rip vrf {vrf} database"]
+
+    def cli(self, vrf="", output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                vrf = 'default'
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        address_family= "ipv6"
+        index = 1
+
+        # RIP VRF "Default VRF", local RIB
+        # RIP VRF "VRF1", local RIB
+        p1 = re.compile(r'^\s*RIP +VRF +"(?P<vrf>[\S\s]+)", +local +RIB$')
+
+        # 2001:DB8:1:3::/64, metric 2
+        # 2001:DB8:2:3::/64, metric 2, installed
+        p2 = re.compile(r'^\s*(?P<route>[\w\:\/]+), +metric +(?P<metric>\d+)(, +(?P<installed>(installed)+))?$')
+
+        #     GigabitEthernet3.100/FE80::F816:3EFF:FEFF:1E3D, expires in 179 secs
+        p3 = re.compile(r'^\s*(?P<interface>\S+), +expires +in +(?P<expire_time>[\d]+) +secs$')
+
+        result_dict = {}
+        for line in out.splitlines():
+            if line:
+                line = line.strip()
+            else:
+                continue
+
+            # RIP VRF "Default VRF", local RIB
+            # RIP VRF "VRF1", local RIB
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vrf = group['vrf']
+                if 'default' in vrf.lower():
+                    vrf = 'default'
+                address_family_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}).setdefault('address_family',{}). \
+                    setdefault(address_family, {})
+                continue
+
+            # 2001:DB8:2:3::/64, metric 2, installed
+            m = p2.match(line)
+            if m:
+                index = 1
+                group = m.groupdict()
+                metric = int(group['metric'])
+                installed = group['installed']
+                route = group['route']
+                route_dict = address_family_dict.setdefault('routes', {}).setdefault(route, {})
+                index_dict = route_dict.setdefault('index', {}).setdefault(index, {})
+
+                index_dict.update({'metric': metric})
+                if installed:
+                    index_dict.update({'installed': True})
+                continue
+
+            #  GigabitEthernet3.100/FE80::F816:3EFF:FEFF:1E3D, expires in 179 secs
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                index_dict = route_dict.setdefault('index', {}).setdefault(index, {})
+                interface_nexthop = group['interface']
+                if '/' in interface_nexthop:
+                    interface = interface_nexthop.split('/')[0]
+                    next_hop = interface_nexthop.split('/')[1]
+
+                    index_dict.update({'interface': interface})
+                    index_dict.update({'next_hop': next_hop})
+                else:
+                    index_dict.update({'interface': group['interface']})
+
+                index_dict.update({'expire_time': group['expire_time']})
+                if metric:
+                    index_dict.update({'metric': metric})
+                if installed:
+                    index_dict.update({'installed': True})
+
+                index +=1
+                continue
+
+        return result_dict

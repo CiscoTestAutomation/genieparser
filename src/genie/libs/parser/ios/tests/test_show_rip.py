@@ -52,7 +52,65 @@ class test_show_ip_rip_database(test_show_ip_rip_database_iosxe):
 class test_show_ipv6_rip(test_show_ipv6_rip_iosxe):
 
 	device = Device(name='aDevice')
-
+	golden_parsed_output_ios_none = {
+	  "vrf": {
+	    "one": {
+	      "address_family": {
+	        "ipv6": {
+	          "distance": 25,
+	          "interfaces": {
+	            "Ethernet2": {}
+	          },
+	          "maximum_paths": 4,
+	          "multicast_group": "FF02::9",
+	          "originate_default_route": {
+	            "enabled": False
+	          },
+	          "pid": 55,
+	          "poison_reverse": False,
+	          "port": 521,
+	          "split_horizon": True,
+	          "statistics": {
+	            "periodic_updates": 8883,
+	            "trigger_updates": 2
+	          },
+	          "timers": {
+	            "expire_time": 180,
+	            "flush_interval": 120,
+	            "holddown_interval": 0,
+	            "update_interval": 30
+	          }
+	        }
+	      }
+	    },
+	"two": {
+	      "address_family": {
+	        "ipv6": {
+	          "distance": 120,
+	          "maximum_paths": 4,
+	          "multicast_group": "FF02::9",
+	          "originate_default_route": {
+	            "enabled": False
+	          },
+	          "pid": 61,
+	          "poison_reverse": False,
+	          "port": 521,
+	          "split_horizon": True,
+	          "statistics": {
+	            "periodic_updates": 8883,
+	            "trigger_updates": 0
+	          },
+	          "timers": {
+	            "expire_time": 180,
+	            "flush_interval": 120,
+	            "holddown_interval": 0,
+	            "update_interval": 30
+	          }
+	        }
+	      }
+	    }
+	  }
+	}
 	golden_parsed_output_ios = {
 		"vrf": {
 			"process1": {
@@ -108,6 +166,30 @@ class test_show_ipv6_rip(test_show_ipv6_rip_iosxe):
 		  Redistribution:
 		    Redistributing protocol bgp 65001 route-map bgp-to-rip
     '''}
+
+
+	golden_output_ios_none = {'execute.return_value': '''\
+	RIP process "one", port 521, multicast-group FF02::9, pid 55
+		Administrative distance is 25. Maximum paths is 4
+		Updates every 30 seconds, expire after 180
+		Holddown lasts 0 seconds, garbage collect after 120
+		Split horizon is on; poison reverse is off
+		Default routes are not generated
+		Periodic updates 8883, trigger updates 2
+		Interfaces:
+		Ethernet2
+		Redistribution:
+	RIP process "two", port 521, multicast-group FF02::9, pid 61
+		Administrative distance is 120. Maximum paths is 4
+		Updates every 30 seconds, expire after 180
+		Holddown lasts 0 seconds, garbage collect after 120
+		Split horizon is on; poison reverse is off
+		Default routes are not generated
+		Periodic updates 8883, trigger updates 0
+		Interfaces:
+		None
+		Redistribution:
+    '''}
 	def test_empty(self):
 	    self.device1 = Mock(**self.empty_output)
 	    obj = ShowIpv6Rip(device=self.device1)
@@ -141,6 +223,13 @@ class test_show_ipv6_rip(test_show_ipv6_rip_iosxe):
 	    obj = ShowIpv6Rip(device=self.device)
 	    parsed_output = obj.parse()
 	    self.assertEqual(parsed_output, self.golden_parsed_output_ios)
+
+	def test_golden_ios_none(self):
+		self.maxDiff = None
+		self.device = Mock(**self.golden_output_ios_none)
+		obj = ShowIpv6Rip(device=self.device)
+		parsed_output = obj.parse()
+		self.assertEqual(parsed_output, self.golden_parsed_output_ios_none)
 
 # ============================================
 # unit test for 'show ipv6 rip database'
