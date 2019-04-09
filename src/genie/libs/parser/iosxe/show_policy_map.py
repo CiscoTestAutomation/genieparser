@@ -1,12 +1,15 @@
 ''' show_policy_map.py
 
 IOSXE parsers for the following show commands:
+    * 'show policy-map interface {interface} input class {class_name}',
+    * 'show policy-map interface {interface} output class {class_name}',
+    * 'show policy-map interface {interface} class {class_name}',
+    * 'show policy-map interface {interface} input',
+    * 'show policy-map interface {interface} output',
+    * 'show policy-map interface {interface}',
+    * 'show policy-map target service-group {num}',
     * 'show policy-map control-plane'
-    * 'show policy-map interface '
-    * 'show policy map'
-    * 'show policy map {name}'
-    * 'show policy-map interface {interface}'
-    * 'show policy-map interface {interface} output class {class_name}'
+    * 'show policy-map interface',
 '''
 
 # Python
@@ -25,18 +28,27 @@ from genie.libs.parser.utils.common import Common
 
 # ==========================================================================
 # Schema for :
-#   *'show policy-map control-plane'
-#   *'show policy-map interface '
-#   *'show policy-map interface {interface}'
-#   *'show policy-map interface {interface} output class {class_name}'
+#   * 'show policy-map interface {interface} input class {class_name}',
+#   * 'show policy-map interface {interface} output class {class_name}',
+#   * 'show policy-map interface {interface} class {class_name}',
+#   * 'show policy-map interface {interface} input',
+#   * 'show policy-map interface {interface} output',
+#   * 'show policy-map interface {interface}',
+#   * 'show policy-map target service-group {num}',
+#   * 'show policy-map control-plane'
+#   * 'show policy-map interface',
 # ===========================================================================
 class ShowPolicyMapTypeSchema(MetaParser):
 
     ''' Schema for :
-            *'show policy-map control-plane'
-            *'show policy-map interface '
-            *'show policy-map interface {interface}'
-            *'show policy-map interface {interface} output class {class_name}'
+        * 'show policy-map interface {interface} input class {class_name}',
+        * 'show policy-map interface {interface} output class {class_name}',
+        * 'show policy-map interface {interface} class {class_name}',
+        * 'show policy-map interface {interface} input',
+        * 'show policy-map interface {interface} output',
+        * 'show policy-map interface {interface}',
+        * 'show policy-map control-plane'
+        * 'show policy-map interface',
     '''
 
     schema = {
@@ -82,10 +94,23 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                     Optional('bandwidth_remaining_ratio'): int,
                                     Optional('bandwidth_remaining_percent'): int,
                                     Optional('bandwidth_max_threshold_packets'): int,
-                                    Optional('exponential_weight'): int,
-                                    Optional('exp_weight_constant'): str,
-                                    Optional('mean_queue_depth'): int,
                                     Optional('priority_level'): int,
+                                    Optional('random_detect'):{
+                                        Optional('exp_weight_constant'): str,
+                                        Optional('exponential_weight'): str,
+                                        Optional('mean_queue_depth'): int,
+                                        Optional('class'): {
+                                            Any(): {
+                                                'transmitted': str,
+                                                'random_drop': str,
+                                                'tail_drop': str,
+                                                'minimum_thresh': str,
+                                                'maximum_thresh': str,
+                                                'mark_prob': str,
+                                                Optional('ecn_mark'): str
+                                            },
+                                        },
+                                    },
                                     Optional('priority'): {
                                         Optional('percent'): int,
                                         Optional('kbps'): int,
@@ -111,17 +136,6 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                             },
                                         },
                                     },
-                                    Optional('class'): {
-                                        Any(): {
-                                            'transmitted': str,
-                                            'random_drop': str,
-                                            'tail_drop': str,
-                                            'minimum_thresh': str,
-                                            'maximum_thresh': str,
-                                            'mark_prob': str,
-                                            Optional('ecn_mark'): str
-                                        },
-                                    },
                                     Optional('qos_set'): {
                                         Any(): {
                                             Any(): {
@@ -129,9 +143,6 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                                 Optional('marker_statistics'): str,
                                             },
                                         },
-                                    },
-                                    Optional('queue_stats_for_all_priority_classes'): {
-                                        Optional('')
                                     },
                                     Optional('police'): {
                                         Optional('cir_bps'): int,
@@ -185,10 +196,15 @@ class ShowPolicyMapTypeSchema(MetaParser):
 
 # =====================================================================
 # Super Parser for:
+#   * 'show policy-map interface {interface} input class {class_name}',
+#   * 'show policy-map interface {interface} output class {class_name}',
+#   * 'show policy-map interface {interface} class {class_name}',
+#   * 'show policy-map interface {interface} input',
+#   * 'show policy-map interface {interface} output',
+#   * 'show policy-map interface {interface}',
+#   * 'show policy-map target service-group {num}',
 #   * 'show policy-map control-plane'
-#   * 'show policy-map interface '
-#   * 'show policy-map interface {interface} output class {class_name}'
-#   * 'show policy-map interface {interface}'
+#   * 'show policy-map interface',
 # =====================================================================
 class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
     ''' Super Parser for
@@ -198,11 +214,12 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         * 'show policy-map interface {interface} input',
         * 'show policy-map interface {interface} output',
         * 'show policy-map interface {interface}',
+        * 'show policy-map target service-group {num},
         * 'show policy-map control-plane'
         * 'show policy-map interface',
     '''
 
-    def cli(self, interface='', class_name='', cmd='', output=None):
+    def cli(self, interface='', class_name='', num='', cmd='', output=None):
         
         if output is None:
             # Execute command on device
@@ -359,11 +376,10 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         p23 = re.compile(r'^bandwidth (?P<bandwidth_kbps>(\d+)) \(kbps\)$')
 
         # exponential weight: 9
-        p24 = re.compile(r'^exponential +weight:+ *(?P<exponential_weight>(\d+))$')
-
+        # exponential weight:9
         # Exp-weight-constant: 9 (1/512)
         # Exp-weight-constant:9 (1/512)
-        p25 = re.compile(r'^Exp-weight-constant:+ *(?P<exp_weight_constant>([\w\(\)\s\/]+))')
+        p24 = re.compile(r'^(?P<key>(Exp-weight-constant|exponential.*)):+ *(?P<value>([\w\(\)\s\/]+))')
 
         # mean queue depth: 25920
         # Mean queue depth: 0 bytes
@@ -771,20 +787,21 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             # exponential weight: 9
             m = p24.match(line)
             if m:
-                class_map_dict['exponential_weight'] = int(m.groupdict()['exponential_weight'])
-                continue
-
-            # Exp-weight-constant: 9 (1/512)
-            m = p25.match(line)
-            if m:
-                class_map_dict['exp_weight_constant'] = m.groupdict()['exp_weight_constant'].strip()
+                group = m.groupdict()
+                key = group['key'].strip()
+                value = group['value'].strip()
+                random_detect_dict = class_map_dict.setdefault('random_detect', {})
+                if key.startswith('exponential'):
+                    random_detect_dict['exponential_weight'] = value
+                else:
+                    random_detect_dict['exp_weight_constant'] = value
                 continue
 
             # mean queue depth: 25920
             # Mean queue depth: 0 bytes
             m = p26.match(line)
             if m:
-                class_map_dict['mean_queue_depth'] = int(m.groupdict()['mean_queue_depth'])
+                random_detect_dict['mean_queue_depth'] = int(m.groupdict()['mean_queue_depth'])
                 continue
 
             # class     Transmitted       Random drop      Tail drop     Minimum Maximum Mark
@@ -827,7 +844,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                     continue
                 group = m.groupdict()
                 class_val = group['class']
-                class_dict = class_map_dict.setdefault('class', {}).\
+                class_dict = random_detect_dict.setdefault('class', {}).\
                                             setdefault(class_val, {})
                 class_dict[value1] = group['value1']
                 class_dict[value2] = group['value2']
@@ -1050,7 +1067,7 @@ class ShowPolicyMapInterfaceOutput(ShowPolicyMapTypeSuperParser, ShowPolicyMapTy
                    'show policy-map interface {interface} output'
                    ]
 
-    def cli(self, interface, class_name='', output=None):
+    def cli(self, interface='', class_name='', output=None):
 
         if output is None:
             # Build command
@@ -1067,20 +1084,20 @@ class ShowPolicyMapInterfaceOutput(ShowPolicyMapTypeSuperParser, ShowPolicyMapTy
         return super().cli(cmd=cmd, output=show_output, interface=interface, class_name=class_name)
 
 
-# ==============================================================
+# ================================================================
 # Parser for:
 #   * 'show policy-map interface {interface} class {class_name}'
-# ==============================================================
+# ================================================================
 class ShowPolicyMapInterfaceClass(ShowPolicyMapTypeSuperParser, ShowPolicyMapTypeSchema):
     
     ''' Parser for:
         * 'show policy-map interface {interface} class {class_name}'
     '''
 
-    cli_command = ['show policy-map interface {interface} class',
+    cli_command = ['show policy-map interface {interface} class {class_name}',
                    ]
 
-    def cli(self, interface, class_name, output=None):
+    def cli(self, interface='', class_name='', output=None):
 
         if output is None:
             # Build command
@@ -1093,6 +1110,32 @@ class ShowPolicyMapInterfaceClass(ShowPolicyMapTypeSuperParser, ShowPolicyMapTyp
 
         # Call super
         return super().cli(cmd=cmd, output=show_output, interface=interface, class_name=class_name)
+
+
+# ==============================================================
+# Parser for:
+#   * 'show policy-map target service-group {num}'
+# ==============================================================
+class ShowPolicyMapTargetClass(ShowPolicyMapTypeSuperParser, ShowPolicyMapTypeSchema):
+    ''' Parser for:
+        * 'show policy-map target service-group {num}'
+    '''
+
+    cli_command = ['show policy-map target service-group {num}']
+
+    def cli(self, num='', output=None):
+
+        if output is None:
+            # Build command
+            if num :
+                cmd = self.cli_command[0].format(num=num)
+            # Execute command
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+
+        # Call super
+        return super().cli(cmd=cmd, output=show_output, num=num)
 
 
 # ===================================

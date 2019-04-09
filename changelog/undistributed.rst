@@ -5,6 +5,29 @@
 | ------------------------|:-------------:|
 | ``genie.libs.parser``   |               |
 
+
+--------------------------------------------------------------------------------
+                                   POLICY-MAP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowPolicyMapControlPlane for:
+        show policy-map control-plane
+    * Add ShowPolicyMapInterface for:
+        show policy-map interface {interface}
+        show policy-map interface
+    * Add ShowPolicyMapInterfaceInput for:
+        show policy-map interface {interface} input class {class_name}
+        show policy-map interface {interface} input
+    * Add ShowPolicyMapInterfaceOutput for:
+        show policy-map interface {interface} output class {class_name}
+        show policy-map interface {interface} output
+    * Add ShowPolicyMapInterfaceClass for:
+        show policy-map interface {interface} class {class_name}
+    * Add ShowPolicyMapTargetClass for:
+        show policy-map target service-group {num}
+    * Add ShowPolicyMap for :
+        show policy-map
+        show policy-map {name}
 --------------------------------------------------------------------------------
                                    LAG
 --------------------------------------------------------------------------------

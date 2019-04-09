@@ -15,23 +15,28 @@ from genie.libs.parser.iosxe.show_policy_map import ShowPolicyMap,\
                                                     ShowPolicyMapInterface,\
                                                     ShowPolicyMapInterfaceInput,\
                                                     ShowPolicyMapInterfaceOutput,\
-                                                    ShowPolicyMapInterfaceClass
+                                                    ShowPolicyMapInterfaceClass,\
+                                                    ShowPolicyMapTargetClass
 
 
 # ====================================================================
 # Unit test for :
+#   * 'show policy-map interface {interface} input class {class_name}',
+#   * 'show policy-map interface {interface} output class {class_name}',
+#   * 'show policy-map interface {interface}',
+#   * 'show policy-map target service-group {num}',
 #   * 'show policy-map control-plane'
-#   * 'show policy-map interface '
-#   * 'show policy-map interface {interface}'
-#   * 'show policy-map interface {interface} output class {class_name}'
+#   * 'show policy-map interface',
 # =====================================================================
 
 class test_show_policy_map_type(unittest.TestCase):
     ''' Unit test for
-           "show policy-map control-plane"
-           "show policy-map interface"
-           "show policy-map interface {interface}"
-           "show policy-map interface {interface} output class {class_name}"
+           * 'show policy-map interface {interface} input class {class_name}',
+           * 'show policy-map interface {interface} output class {class_name}',
+           * 'show policy-map interface {interface}',
+           * 'show policy-map target service-group {num}',
+           * 'show policy-map control-plane'
+           * 'show policy-map interface',
     '''
 
     device = Device(name='aDevice')
@@ -680,54 +685,55 @@ class test_show_policy_map_type(unittest.TestCase):
     '''}
 
     golden_parsed_output5 = {
-        'GigabitEthernet0/1/5': {
+        'GigabitEthernet0/1/4': {
             'service_policy': {
-                'output': {
+                'input': {
                     'policy_name': {
-                        'shape-out': {
+                        'police-in': {
                             'class_map': {
                                 'class-default': {
+                                    'bytes': 0,
+                                    'match': ['any'],
                                     'match_evaluation': 'match-any',
                                     'packets': 0,
-                                    'bytes': 0,
+                                    'police': {
+                                        'bc_bytes': 83619,
+                                        'cir_bps': 445500,
+                                        'conformed': {
+                                            'actions': 'transmit',
+                                            'bps': 0,
+                                            'bytes': 0,
+                                            'packets': 0},
+                                        'exceeded': {
+                                            'actions': 'drop',
+                                            'bps': 0,
+                                            'bytes': 0,
+                                            'packets': 0}},
                                     'rate': {
+                                        'drop_rate_bps': 0,
                                         'interval': 300,
-                                        'offered_rate_bps': 0,
-                                        'drop_rate_bps': 0},
-                                    'match': ['any'],
-                                    'queueing': True,
-                                    'queue_limit_packets': '64',
-                                    'queue_depth': 0,
-                                    'total_drops': 0,
-                                    'no_buffer_drops': 0,
-                                    'pkts_output': 0,
-                                    'bytes_output': 0,
-                                    'shape_type': 'average',
-                                    'shape_cir_bps': 474656,
-                                    'shape_bc_bps': 1899,
-                                    'shape_be_bps': 1899,
-                                    'target_shape_rate': 474656}}}}}}}}
+                                        'offered_rate_bps': 0}}}}}}}}}
 
     golden_output5 = {'execute.return_value': '''
-        Router#show policy-map interface gigabitEthernet 0/1/5 output class class-default
+        show policy-map interface gigabitEthernet 0/1/4 input class class-default
+        Load for five secs: 1%/0%; one minute: 3%; five minutes: 3%
+        Time source is NTP, 12:22:26.378 JST Wed Oct 26 2016
 
-        Load for five secs: 1%/0%; one minute: 5%; five minutes: 6%
-        Time source is NTP, 11:16:50.635 JST Tue Oct 25 2016
+        GigabitEthernet0/1/4 
 
-        GigabitEthernet0/1/5
+            Service-policy input: police-in
 
-        Service-policy output: shape-out
-
-        Class-map: class-default (match-any)
-            0 packets, 0 bytes
-            5 minute offered rate 0000 bps, drop rate 0000 bps
-            Match: any
-            Queueing
-            queue limit 64 packets
-            (queue depth/total drops/no-buffer drops) 0/0/0
-            (pkts output/bytes output) 0/0
-            shape (average) cir 474656, bc 1899, be 1899
-            target shape rate 474656
+                Class-map: class-default (match-any)  
+                    0 packets, 0 bytes
+                    5 minute offered rate 0000 bps, drop rate 0000 bps
+                    Match: any 
+                    police:
+                        cir 445500 bps, bc 83619 bytes
+                        conformed 0 packets, 0 bytes; actions:
+                          transmit 
+                        exceeded 0 packets, 0 bytes; actions:
+                          drop 
+                        conformed 0000 bps, exceeded 0000 bps
     Router#'''}
 
     golden_parsed_output6 = {
@@ -890,44 +896,45 @@ class test_show_policy_map_type(unittest.TestCase):
                                     'queue_depth': 147,
                                     'total_drops': 38,
                                     'no_buffer_drops': 0,
-                                    'exponential_weight': 9,
-                                    'mean_queue_depth': 25920,
-                                    'class': {
-                                        '0': {
-                                            'transmitted': '0/0',
-                                            'random_drop': '0/0',
-                                            'tail_drop': '0/0',
-                                            'minimum_thresh': '20000',
-                                            'maximum_thresh': '40000',
-                                            'mark_prob': '1/10'},
-                                        '1': {
-                                            'transmitted': '328/78720',
-                                            'random_drop': '38/9120',
-                                            'tail_drop': '0/0',
-                                            'minimum_thresh': '22000',
-                                            'maximum_thresh': '40000',
-                                            'mark_prob': '1/10'},
-                                        '2': {
-                                            'transmitted': '0/0',
-                                            'random_drop': '0/0',
-                                            'tail_drop': '0/0',
-                                            'minimum_thresh': '24000',
-                                            'maximum_thresh': '40000',
-                                            'mark_prob': '1/10'},
-                                        '3': {
-                                            'transmitted': '0/0',
-                                            'random_drop': '0/0',
-                                            'tail_drop': '0/0',
-                                            'minimum_thresh': '26000',
-                                            'maximum_thresh': '40000',
-                                            'mark_prob': '1/10'},
-                                        '4': {
-                                            'transmitted': '0/0',
-                                            'random_drop': '0/0',
-                                            'tail_drop': '0/0',
-                                            'minimum_thresh': '28000',
-                                            'maximum_thresh': '40000',
-                                            'mark_prob': '1/10'}},
+                                    'random_detect': {
+                                        'exponential_weight': '9',
+                                        'mean_queue_depth': 25920,
+                                        'class': {
+                                            '0': {
+                                                'transmitted': '0/0',
+                                                'random_drop': '0/0',
+                                                'tail_drop': '0/0',
+                                                'minimum_thresh': '20000',
+                                                'maximum_thresh': '40000',
+                                                'mark_prob': '1/10'},
+                                            '1': {
+                                                'transmitted': '328/78720',
+                                                'random_drop': '38/9120',
+                                                'tail_drop': '0/0',
+                                                'minimum_thresh': '22000',
+                                                'maximum_thresh': '40000',
+                                                'mark_prob': '1/10'},
+                                            '2': {
+                                                'transmitted': '0/0',
+                                                'random_drop': '0/0',
+                                                'tail_drop': '0/0',
+                                                'minimum_thresh': '24000',
+                                                'maximum_thresh': '40000',
+                                                'mark_prob': '1/10'},
+                                            '3': {
+                                                'transmitted': '0/0',
+                                                'random_drop': '0/0',
+                                                'tail_drop': '0/0',
+                                                'minimum_thresh': '26000',
+                                                'maximum_thresh': '40000',
+                                                'mark_prob': '1/10'},
+                                            '4': {
+                                                'transmitted': '0/0',
+                                                'random_drop': '0/0',
+                                                'tail_drop': '0/0',
+                                                'minimum_thresh': '28000',
+                                                'maximum_thresh': '40000',
+                                                'mark_prob': '1/10'}}},
                                     'policy': {
                                         'wred-policy': {
                                             'class': {
@@ -967,65 +974,66 @@ class test_show_policy_map_type(unittest.TestCase):
                                     'pkts_queued': 0,
                                     'bytes_queued': 0,
                                     'bandwidth_kbps': 1000,
-                                    'exp_weight_constant': '9 (1/512)',
-                                    'mean_queue_depth': 0,
-                                    'class': {
-                                        '0': {
-                                            'transmitted': '0/0',
-                                            'random_drop': '0/0',
-                                            'tail_drop': '0/0',
-                                            'minimum_thresh': '15625',
-                                            'maximum_thresh': '31250',
-                                            'mark_prob': '1/10'},
-                                        '1': {
-                                            'transmitted': '0/0',
-                                            'random_drop': '0/0',
-                                            'tail_drop': '0/0',
-                                            'minimum_thresh': '17578',
-                                            'maximum_thresh': '31250',
-                                            'mark_prob': '1/10'},
-                                        '2': {
-                                            'transmitted': '0/0',
-                                            'random_drop': '0/0',
-                                            'tail_drop': '0/0',
-                                            'minimum_thresh': '100',
-                                            'maximum_thresh': '200',
-                                            'mark_prob': '1/10'},
-                                        '3': {
-                                            'transmitted': '0/0',
-                                            'random_drop': '0/0',
-                                            'tail_drop': '0/0',
-                                            'minimum_thresh': '21484',
-                                            'maximum_thresh': '31250',
-                                            'mark_prob': '1/10'},
-                                        '4': {
-                                            'transmitted': '0/0',
-                                            'random_drop': '0/0',
-                                            'tail_drop': '0/0',
-                                            'minimum_thresh': '23437',
-                                            'maximum_thresh': '31250',
-                                            'mark_prob': '1/10'},
-                                        '5': {
-                                            'transmitted': '0/0',
-                                            'random_drop': '0/0',
-                                            'tail_drop': '0/0',
-                                            'minimum_thresh': '25390',
-                                            'maximum_thresh': '31250',
-                                            'mark_prob': '1/10'},
-                                        '6': {
-                                            'transmitted': '0/0',
-                                            'random_drop': '0/0',
-                                            'tail_drop': '0/0',
-                                            'minimum_thresh': '27343',
-                                            'maximum_thresh': '31250',
-                                            'mark_prob': '1/10'},
-                                        '7': {
-                                            'transmitted': '0/0',
-                                            'random_drop': '0/0',
-                                            'tail_drop': '0/0',
-                                            'minimum_thresh': '29296',
-                                            'maximum_thresh': '31250',
-                                            'mark_prob': '1/10'}}},
+                                    'random_detect': {
+                                        'exp_weight_constant': '9 (1/512)',
+                                        'mean_queue_depth': 0,
+                                        'class': {
+                                            '0': {
+                                                'transmitted': '0/0',
+                                                'random_drop': '0/0',
+                                                'tail_drop': '0/0',
+                                                'minimum_thresh': '15625',
+                                                'maximum_thresh': '31250',
+                                                'mark_prob': '1/10'},
+                                            '1': {
+                                                'transmitted': '0/0',
+                                                'random_drop': '0/0',
+                                                'tail_drop': '0/0',
+                                                'minimum_thresh': '17578',
+                                                'maximum_thresh': '31250',
+                                                'mark_prob': '1/10'},
+                                            '2': {
+                                                'transmitted': '0/0',
+                                                'random_drop': '0/0',
+                                                'tail_drop': '0/0',
+                                                'minimum_thresh': '100',
+                                                'maximum_thresh': '200',
+                                                'mark_prob': '1/10'},
+                                            '3': {
+                                                'transmitted': '0/0',
+                                                'random_drop': '0/0',
+                                                'tail_drop': '0/0',
+                                                'minimum_thresh': '21484',
+                                                'maximum_thresh': '31250',
+                                                'mark_prob': '1/10'},
+                                            '4': {
+                                                'transmitted': '0/0',
+                                                'random_drop': '0/0',
+                                                'tail_drop': '0/0',
+                                                'minimum_thresh': '23437',
+                                                'maximum_thresh': '31250',
+                                                'mark_prob': '1/10'},
+                                            '5': {
+                                                'transmitted': '0/0',
+                                                'random_drop': '0/0',
+                                                'tail_drop': '0/0',
+                                                'minimum_thresh': '25390',
+                                                'maximum_thresh': '31250',
+                                                'mark_prob': '1/10'},
+                                            '6': {
+                                                'transmitted': '0/0',
+                                                'random_drop': '0/0',
+                                                'tail_drop': '0/0',
+                                                'minimum_thresh': '27343',
+                                                'maximum_thresh': '31250',
+                                                'mark_prob': '1/10'},
+                                            '7': {
+                                                'transmitted': '0/0',
+                                                'random_drop': '0/0',
+                                                'tail_drop': '0/0',
+                                                'minimum_thresh': '29296',
+                                                'maximum_thresh': '31250',
+                                                'mark_prob': '1/10'}}}},
                                 'class-default': {
                                     'match_evaluation': 'match-any 1182/0',
                                     'packets': 0,
@@ -1041,64 +1049,66 @@ class test_show_policy_map_type(unittest.TestCase):
                                     'no_buffer_drops': 0,
                                     'pkts_queued': 0,
                                     'bytes_queued': 0,
-                                    'exp_weight_constant': '9 (1/512)',
-                                    'mean_queue_depth': 0,
-                                    'class': {
-                                        '0': {
-                                            'transmitted': '0/0',
-                                            'random_drop': '0/0',
-                                            'tail_drop': '0/0',
-                                            'minimum_thresh': '140625',
-                                            'maximum_thresh': '281250',
-                                            'mark_prob': '1/10'},
-                                        '1': {'transmitted': '0/0',
-                                              'random_drop': '0/0',
-                                              'tail_drop': '0/0',
-                                              'minimum_thresh': '158203',
-                                              'maximum_thresh': '281250',
-                                              'mark_prob': '1/10'},
-                                        '2': {
-                                            'transmitted': '0/0',
-                                            'random_drop': '0/0',
-                                            'tail_drop': '0/0',
-                                            'minimum_thresh': '175781',
-                                            'maximum_thresh': '281250',
-                                            'mark_prob': '1/10'},
-                                        '3': {
-                                            'transmitted': '0/0',
-                                            'random_drop': '0/0',
-                                            'tail_drop': '0/0',
-                                            'minimum_thresh': '193359',
-                                            'maximum_thresh': '281250',
-                                            'mark_prob': '1/10'},
-                                        '4': {
-                                            'transmitted': '0/0',
-                                            'random_drop': '0/0',
-                                            'tail_drop': '0/0',
-                                            'minimum_thresh': '150',
-                                            'maximum_thresh': '300',
-                                            'mark_prob': '1/15'},
-                                        '5': {
-                                            'transmitted': '0/0',
-                                            'random_drop': '0/0',
-                                            'tail_drop': '0/0',
-                                            'minimum_thresh': '228515',
-                                            'maximum_thresh': '281250',
-                                            'mark_prob': '1/10'},
-                                        '6': {
-                                            'transmitted': '0/0',
-                                            'random_drop': '0/0',
-                                            'tail_drop': '0/0',
-                                            'minimum_thresh': '200',
-                                            'maximum_thresh': '400',
-                                            'mark_prob': '1/5'},
-                                        '7': {
-                                            'transmitted': '0/0',
-                                            'random_drop': '0/0',
-                                            'tail_drop': '0/0',
-                                            'minimum_thresh': '263671',
-                                            'maximum_thresh': '281250',
-                                            'mark_prob': '1/10'}}}}}}}}}}
+                                    'random_detect': {
+                                        'exp_weight_constant': '9 (1/512)',
+                                        'mean_queue_depth': 0,
+                                        'class': {
+                                            '0': {
+                                                'transmitted': '0/0',
+                                                'random_drop': '0/0',
+                                                'tail_drop': '0/0',
+                                                'minimum_thresh': '140625',
+                                                'maximum_thresh': '281250',
+                                                'mark_prob': '1/10'},
+                                            '1': {
+                                                'transmitted': '0/0',
+                                                'random_drop': '0/0',
+                                                'tail_drop': '0/0',
+                                                'minimum_thresh': '158203',
+                                                'maximum_thresh': '281250',
+                                                'mark_prob': '1/10'},
+                                            '2': {
+                                                'transmitted': '0/0',
+                                                'random_drop': '0/0',
+                                                'tail_drop': '0/0',
+                                                'minimum_thresh': '175781',
+                                                'maximum_thresh': '281250',
+                                                'mark_prob': '1/10'},
+                                            '3': {
+                                                'transmitted': '0/0',
+                                                'random_drop': '0/0',
+                                                'tail_drop': '0/0',
+                                                'minimum_thresh': '193359',
+                                                'maximum_thresh': '281250',
+                                                'mark_prob': '1/10'},
+                                            '4': {
+                                                'transmitted': '0/0',
+                                                'random_drop': '0/0',
+                                                'tail_drop': '0/0',
+                                                'minimum_thresh': '150',
+                                                'maximum_thresh': '300',
+                                                'mark_prob': '1/15'},
+                                            '5': {
+                                                'transmitted': '0/0',
+                                                'random_drop': '0/0',
+                                                'tail_drop': '0/0',
+                                                'minimum_thresh': '228515',
+                                                'maximum_thresh': '281250',
+                                                'mark_prob': '1/10'},
+                                            '6': {
+                                                'transmitted': '0/0',
+                                                'random_drop': '0/0',
+                                                'tail_drop': '0/0',
+                                                'minimum_thresh': '200',
+                                                'maximum_thresh': '400',
+                                                'mark_prob': '1/5'},
+                                            '7': {
+                                                'transmitted': '0/0',
+                                                'random_drop': '0/0',
+                                                'tail_drop': '0/0',
+                                                'minimum_thresh': '263671',
+                                                'maximum_thresh': '281250',
+                                                'mark_prob': '1/10'}}}}}}}}}}}
 
     golden_output7 = {'execute.return_value': '''
         Router# show policy-map interface
@@ -1368,6 +1378,145 @@ class test_show_policy_map_type(unittest.TestCase):
                         (pkts output/bytes output) 0/0
     '''}
 
+    golden_parsed_output10 = {
+        'GigabitEthernet0/1/1': {
+            'service_policy': {
+                'output': {
+                    'policy_name': {
+                        'shape-out': {
+                            'class_map': {
+                                'class-default': {
+                                    'bytes': 0,
+                                    'bytes_output': 0,
+                                    'match': ['any'],
+                                    'match_evaluation': 'match-any',
+                                    'no_buffer_drops': 0,
+                                    'packets': 0,
+                                    'pkts_output': 0,
+                                    'queue_depth': 0,
+                                    'queue_limit_packets': '64',
+                                    'queueing': True,
+                                    'rate': {
+                                        'drop_rate_bps': 0,
+                                        'interval': 300,
+                                        'offered_rate_bps': 0},
+                                    'shape_bc_bps': 2000,
+                                    'shape_be_bps': 2000,
+                                    'shape_cir_bps': 500000,
+                                    'shape_type': 'average',
+                                    'target_shape_rate': 500000,
+                                    'total_drops': 0}}}}}}}}
+
+    golden_output10 = {'execute.return_value': '''
+        Router#show policy-map interface gigabitEthernet 0/1/1 output class class-default
+        Load for five secs: 11%/0%; one minute: 5%; five minutes: 5%
+        Time source is NTP, 22:21:45.748 JST Fri Nov 4 2016
+
+        GigabitEthernet0/1/1 
+
+            Service-policy output: shape-out
+
+                Class-map: class-default (match-any)  
+                    0 packets, 0 bytes
+                    5 minute offered rate 0000 bps, drop rate 0000 bps
+                    Match: any 
+                    Queueing
+                    queue limit 64 packets
+                    (queue depth/total drops/no-buffer drops) 0/0/0
+                    (pkts output/bytes output) 0/0
+                    shape (average) cir 500000, bc 2000, be 2000
+                    target shape rate 500000
+    '''}
+
+    golden_parsed_output11 = {
+        'Port-channel1: Service Group 1': {
+            'service_policy': {
+                'output': {
+                    'policy_name': {
+                        'VLAN51_QoS': {
+                            'class_map': {
+                                'VLAN51_QoS': {
+                                    'match_evaluation': 'match-all',
+                                    'packets': 210,
+                                    'bytes': 55834,
+                                    'rate': {
+                                        'interval': 300,
+                                        'offered_rate_bps': 2000,
+                                        'drop_rate_bps': 2000},
+                                    'match': ['access-group name VLAN51_QoS'],
+                                    'police': {
+                                        'cir_bps': 8000,
+                                        'bc_bytes': 1000,
+                                        'conformed': {
+                                            'packets': 172,
+                                            'bytes': 15166,
+                                            'actions': 'transmit',
+                                            'bps': 0},
+                                        'exceeded': {
+                                            'packets': 38,
+                                            'bytes': 40668,
+                                            'actions': 'drop',
+                                            'bps': 2000}}},
+                                'class-default': {
+                                    'match_evaluation': 'match-any',
+                                    'packets': 0,
+                                    'bytes': 0,
+                                    'rate': {
+                                        'interval': 300,
+                                        'offered_rate_bps': 0,
+                                        'drop_rate_bps': 0},
+                                    'match': ['any']}}}}}}}}
+
+    golden_output11 = {'execute.return_value': '''
+        Router#show policy-map target service-group 1
+        Load for five secs: 98%/0%; one minute: 98%; five minutes: 96%
+        Time source is NTP, 18:59:17.791 JST Wed Nov 9 2016
+
+            Port-channel1: Service Group 1
+          
+            Service-policy output: VLAN51_QoS
+    
+                Class-map: VLAN51_QoS (match-all)
+                    30 packets, 13638 bytes
+                    5 minute offered rate 1000 bps, drop rate 1000 bps
+                    Match: access-group name VLAN51_QoS
+                    police:
+                        cir 8000 bps, bc 1000 bytes
+                        conformed 22 packets, 1494 bytes; actions:
+                        transmit
+                        exceeded 8 packets, 12144 bytes; actions:
+                        drop
+                        conformed 0000 bps, exceeded 1000 bps
+    
+                Class-map: class-default (match-any)
+                    0 packets, 0 bytes
+                    5 minute offered rate 0000 bps, drop rate 0000 bps
+                    Match: any
+        Load for five secs: 98%/0%; one minute: 99%; five minutes: 97%
+        Time source is NTP, 19:02:12.368 JST Wed Nov 9 2016
+
+            Port-channel1: Service Group 1
+
+            Service-policy output: VLAN51_QoS
+
+                Class-map: VLAN51_QoS (match-all)
+                    210 packets, 55834 bytes
+                    5 minute offered rate 2000 bps, drop rate 2000 bps
+                    Match: access-group name VLAN51_QoS
+                    police:
+                        cir 8000 bps, bc 1000 bytes
+                        conformed 172 packets, 15166 bytes; actions:
+                        transmit
+                        exceeded 38 packets, 40668 bytes; actions:
+                        drop
+                        conformed 0000 bps, exceeded 2000 bps
+
+                Class-map: class-default (match-any)
+                    0 packets, 0 bytes
+                    5 minute offered rate 0000 bps, drop rate 0000 bps
+                    Match: any
+    '''}
+
     def test_show_policy_map_control_plane_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -1405,20 +1554,20 @@ class test_show_policy_map_type(unittest.TestCase):
 
     # ---------------------------------------------------------------------
 
-    '''
     def test_show_policy_map_interface_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output5)
-        obj = ShowPolicyMapInterface(device=self.device)
-        parsed_output = obj.parse(interface='gigabitEthernet 0/1/5', class_name='class-default')
+        obj = ShowPolicyMapInterfaceInput(device=self.device)
+        parsed_output = obj.parse(interface='gigabitEthernet 0/1/4', class_name='class-default')
+        #import pdb;pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output5)
-    '''
 
     def test_show_policy_map_interface_full2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output6)
         obj = ShowPolicyMapInterface(device=self.device)
         parsed_output = obj.parse(interface='gigabitEthernet 0/0/0')
+        # import pdb;pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output6)
 
     def test_show_policy_map_interface_full3(self):
@@ -1426,6 +1575,7 @@ class test_show_policy_map_type(unittest.TestCase):
         self.device = Mock(**self.golden_output7)
         obj = ShowPolicyMapInterface(device=self.device)
         parsed_output = obj.parse()
+        # import pdb;pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output7)
 
     def test_show_policy_map_interface_full4(self):
@@ -1440,13 +1590,32 @@ class test_show_policy_map_type(unittest.TestCase):
         self.device = Mock(**self.golden_output9)
         obj = ShowPolicyMapInterface(device=self.device)
         parsed_output = obj.parse(interface='TenGigabitEthernet0/0/2')
+        # import pdb;pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output9)
+
+    def test_show_policy_map_interface_full6(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output10)
+        obj = ShowPolicyMapInterfaceOutput(device=self.device)
+        parsed_output = obj.parse(interface='gigabitEthernet 0/1/1', class_name='class-default')
+        #import pdb;pdb.set_trace()
+        self.assertEqual(parsed_output, self.golden_parsed_output10)
+
+    def test_show_policy_map_interface_full7(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output11)
+        obj = ShowPolicyMapTargetClass(device=self.device)
+        parsed_output = obj.parse(num='1')
+        #import pdb;pdb.set_trace()
+        self.assertEqual(parsed_output, self.golden_parsed_output11)
+
 
 # =============================================
 # Unit test for :
 #    *'show policy map'
 #    *'show policy map {name}'
 # =============================================
+
 class test_show_policy_map(unittest.TestCase):
     '''Unit test for "show policy map"
                      "show policy map {name}"
