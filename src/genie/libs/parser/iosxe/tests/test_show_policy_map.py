@@ -676,7 +676,6 @@ class test_show_policy_map_control_plane(unittest.TestCase):
         self.device = Mock(**self.golden_output1)
         obj = ShowPolicyMapControlPlane(device=self.device)
         parsed_output = obj.parse()
-        #import pdb;pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_show_policy_map_control_plane_full2(self):
