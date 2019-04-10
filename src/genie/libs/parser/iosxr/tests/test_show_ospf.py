@@ -830,6 +830,90 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
+    golden_output0 = {'execute.return_value': '''
+    show ospf vrf all-inclusive neighbor detail
+
+    Tue Apr  9 09:54:13.528 UTC
+
+    * Indicates MADJ interface
+    # Indicates Neighbor awaiting BFD session up
+
+    Neighbors for OSPF 1
+
+     Neighbor 10.1.1.1, interface address 10.1.1.8
+        In the area 0.0.0.0 via interface GigabitEthernet0/0/0/0 , BFD enabled, Mode: Default
+        Neighbor priority is 1, State is FULL, 6 state changes
+        DR is 192.168.1.19 BDR is 192.168.1.18
+        Options is 0x52
+        LLS Options is 0x1 (LR)
+        Dead timer due in 00:00:35
+        Neighbor is up for 21:29:29
+        Number of DBD retrans during last exchange 0
+        Index 4/4, retransmission queue length 0, number of retransmission 0
+        First 0(0)/0(0) Next 0(0)/0(0)
+        Last retransmission scan length is 0, maximum is 0
+        Last retransmission scan time is 0 msec, maximum is 0 msec
+        LS Ack list: NSR-sync pending 0, high water mark 0
+        Neighbor BFD status: Waiting for BFD session up #
+
+    Total neighbor count: 1
+            '''
+                             }
+    golden_parsed_output0 = {
+        "vrf": {
+            "default": {
+                "address_family": {
+                    "ipv4": {
+                        "instance": {
+                            "1": {
+                                "areas": {
+                                    "0.0.0.0": {
+                                        "interfaces": {
+                                            "GigabitEthernet0/0/0/0": {
+                                                "neighbors": {
+                                                    "10.1.1.1": {
+                                                        "neighbor_router_id": "10.1.1.1",
+                                                        "bfd_enable": True,
+                                                        "bfd_mode": "Default",
+                                                        "address": "10.1.1.8",
+                                                        "priority": 1,
+                                                        "state": "full",
+                                                        "statistics": {
+                                                            "nbr_event_count": 6,
+                                                            "total_dbd_retrans": 0,
+                                                            "nbr_retrans_qlen": 0,
+                                                            "total_retransmission": 0,
+                                                            "last_retrans_scan_length": 0,
+                                                            "last_retrans_max_scan_length": 0,
+                                                            "last_retrans_scan_time_msec": 0,
+                                                            "last_retrans_max_scan_time_msec": 0
+                                                        },
+                                                        "dr_ip_addr": "192.168.1.19",
+                                                        "bdr_ip_addr": "192.168.1.18",
+                                                        "options": "0x52",
+                                                        "lls_options": "0x1 (LR)",
+                                                        "dead_timer": "00:00:35",
+                                                        "neighbor_uptime": "21:29:29",
+                                                        "index": "4/4,",
+                                                        "first": "0(0)/0(0)",
+                                                        "next": "0(0)/0(0)",
+                                                        "ls_ack_list": "NSR-sync",
+                                                        "ls_ack_list_pending": 0,
+                                                        "high_water_mark": 0
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "total_neighbor_count": 1
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     golden_parsed_output1 = {
         'vrf': 
@@ -1116,10 +1200,10 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
             Neighbors for OSPF 1
 
              Neighbor 10.64.4.4, interface address 10.229.4.4
-                In the area 0 via interface OSPF_VL0 
+                In the area 0 via interface OSPF_VL0
                 Neighbor priority is 1, State is FULL, 7 state changes
                 DR is 0.0.0.0 BDR is 0.0.0.0
-                Options is 0x72  
+                Options is 0x72
                 LLS Options is 0x1 (LR)
                 Neighbor is up for 04:58:24
                 Number of DBD retrans during last exchange 0
@@ -1130,10 +1214,10 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                 LS Ack list: NSR-sync pending 0, high water mark 0
 
              Neighbor 10.36.3.3, interface address 10.229.3.3
-                In the area 1 via interface GigabitEthernet0/0/0/1 
+                In the area 1 via interface GigabitEthernet0/0/0/1
                 Neighbor priority is 1, State is FULL, 6 state changes
                 DR is 10.229.3.3 BDR is 10.229.3.2
-                Options is 0x42  
+                Options is 0x42
                 Dead timer due in 00:00:31
                 Neighbor is up for 05:00:13
                 Number of DBD retrans during last exchange 0
@@ -1144,10 +1228,10 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                 LS Ack list: NSR-sync pending 0, high water mark 0
 
              Neighbor 10.64.4.4, interface address 10.229.4.4
-                In the area 1 via interface GigabitEthernet0/0/0/3 
+                In the area 1 via interface GigabitEthernet0/0/0/3
                 Neighbor priority is 1, State is FULL, 6 state changes
                 DR is 10.229.4.4 BDR is 10.229.4.2
-                Options is 0x52  
+                Options is 0x52
                 LLS Options is 0x1 (LR)
                 Dead timer due in 00:00:32
                 Neighbor is up for 05:00:21
@@ -1162,13 +1246,13 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
         '''
 
         raw2 = '''\
-            RP/0/0/CPU0:R2_ospf_xr#show ospf vrf all-inclusive virtual-links 
+            RP/0/0/CPU0:R2_ospf_xr#show ospf vrf all-inclusive virtual-links
             Fri Nov  3 01:25:44.845 UTC
 
             Virtual Links for OSPF 1
 
             Virtual Link OSPF_VL0 to router 10.64.4.4 is up
-              
+
               DoNotAge LSA not allowed Run as demand circuit (Number of DCbitless LSA is 1).
               Transit area 1, via interface GigabitEthernet0/0/0/3, Cost of using 65535
               Transmit Delay is 5 sec, State POINT_TO_POINT,
@@ -1184,7 +1268,7 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
 
         self.device.execute = Mock()
         self.device.execute.side_effect = mapper
-        
+
         obj = ShowOspfVrfAllInclusiveNeighborDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
@@ -1195,6 +1279,13 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
         obj = ShowOspfVrfAllInclusiveNeighborDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+
+    def test_show_ospf_vrf_all_inclusive_neighbor_0(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output0)
+        obj = ShowOspfVrfAllInclusiveNeighborDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output0)
 
 
 # ============================================
