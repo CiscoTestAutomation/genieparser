@@ -242,4 +242,4 @@
                                  ROUTING
 ----------------------------------------------------------------------------------
 * NXOS
-	* Updated ShowRoutingVrfAll to support different vrf
+	* Updated ShowRoutingIpv6VrfAll to support different vrf
