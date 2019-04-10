@@ -334,9 +334,6 @@ class ShowBundle(ShowBundleSchema):
                 bundle_dict.update({'ipv6_bfd': group['ip_bfd']})
                 continue
 
-                
-
-
             # Port                  Device           State        Port ID         B/W, kbps
             # Gi0/0/0/0             Local            Active       0x000a, 0x0001     1000000
             m = p19.match(line)
@@ -491,3 +488,4 @@ class ShowLacp(ShowLacpSchema):
                 continue
 
         return result_dict
+

@@ -17,6 +17,11 @@ class test_show_lacp_sysid(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
+    golden_parsed_output = {
+        "system_priority": 100,
+        "system_id_mac": "00-1b-0c-10-5a-26"
+    }
+
     golden_output = {'execute.return_value': '''
         RP/0/RP0/CPU0:iosxrv9000-1#show lacp system-id 
         Tue Apr  3 20:33:23.108 UTC
@@ -25,11 +30,6 @@ class test_show_lacp_sysid(unittest.TestCase):
         --------  -----------------
           0x0064  00-1b-0c-10-5a-26
     '''}
-
-    golden_parsed_output = {
-        "system_priority": 100,
-        "system_id_mac": "00-1b-0c-10-5a-26"
-    }
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -50,8 +50,8 @@ class test_show_lacp_sysid(unittest.TestCase):
 ####################################################
 class test_show_bundle(unittest.TestCase):
     """unit test for show bundle"""
-    device = Device(name='aDevice')
 
+    device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
@@ -255,8 +255,8 @@ class test_show_bundle(unittest.TestCase):
 ####################################################
 class test_show_lacp(unittest.TestCase):
     """unit test for show lacp"""
+    
     device = Device(name='aDevice')
-
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
