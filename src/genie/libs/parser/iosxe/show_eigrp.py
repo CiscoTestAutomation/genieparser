@@ -3,7 +3,10 @@ IOSXE parsers for the following commands
 
     * 'show ip eigrp neighbors'
     * 'show ip eigrp vrf <vrf> neighbors'
+    * 'show ipv6 eigrp neighbors'
+    * 'show ipv6 eigrp vrf <vrf> neighbors'
     * 'show ip eigrp neighbors detail'
+    * 'show ip eigrp vrf <vrf> neighbors detail'
 '''
 
 # Python
@@ -21,50 +24,57 @@ class ShowEigrpNeighborsSchema(MetaParser):
     ''' Schema for:
         * 'show ip eigrp neighbors'
         * 'show ip eigrp vrf <vrf> neighbors'
+        * 'show ipv6 eigrp neighbors'
+        * 'show ipv6 eigrp vrf <vrf> neighbors
     '''
 
     schema = {
-        'vrf': {
+        'eigrp_instance': {
             Any(): {
-                'eigrp_interface': {
-                Any(): {
-                    'eigrp_nbr': {
-                        Any(): {                        
-                            'peer_handle': int,
-                            'hold': int,
-                            'uptime': str,
-                            'q_cnt': int,
-                            'last_seq_number': int,
-                            'srtt': float,
-                            'rto': int, }, }, },
+                'vrf': {
+                    Any(): {
+                        'address_family': {
+                            Any(): {
+                                'eigrp_interface': {
+                                    Any(): {
+                                        'eigrp_nbr': {
+                                            Any(): {
+                                                'peer_handle': int,
+                                                'hold': int,
+                                                'uptime': str,
+                                                'q_cnt': int,
+                                                'last_seq_number': int,
+                                                'srtt': float,
+                                                'rto': int, }, }, 
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
                     },
                 },
-            },
-        }
-    
+            } 
 
 
 # ====================================
 # Parser for 'show ip eigrp neighbors'
 #            'show ip eigrp vrf <vrf> neighbors'
+#            'show ipv6 eigrp neighbors'
+#            'show ipv6 eigrp vrf <vrf> neighbors'
 # ====================================
-class ShowEigrpNeighbors(ShowEigrpNeighborsSchema):
+class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):    
 
-    cli_command = ['show ip eigrp neighbors',
-                   'show ip eigrp vrf {vrf} neighbors']
+    def cli(self, cmd='', vrf='', output=None):
 
-    def cli(self, vrf='', output=None):
-
-        if output is None:
-            if vrf:
-                out = self.device.execute(self.cli_command[1]).format(vrf=vrf)
-            else:
-                out = self.device.execute(self.cli_command[0])
+        if output is None:            
+            out = self.device.execute(cmd)
         else:
             out = output
 
         # EIGRP-IPv4 Neighbors for AS(1100) VRF(VRF1)
-        r1 = re.compile(r'^EIGRP\-(?P<address_family>IPv4|IPv6)\s*Neighbors\s*for \w+\(\s*(?P<as_num>\d+)\)\s*VRF\((?P<vrf>\S+)\)$')
+        r1 = re.compile(r'^EIGRP\-(?P<address_family>IPv4|IPv6)\s'
+            '*Neighbors\s*for \w+\(\s*(?P<as_num>\d+)\)\s*(?:VRF\((?P<vrf>\S+)\))?$')
 
         # H   Address      Interface  Hold  Uptime    SRTT   RTO    Q   Seq
         #                             (sec)           (ms)          Cnt Num
@@ -80,10 +90,13 @@ class ShowEigrpNeighbors(ShowEigrpNeighborsSchema):
                         '(?P<q_cnt>\d+) +'
                         '(?P<last_seq_number>\d+)$')
 
-        
+        # show ip eigrp
+        r3 = re.compile(r'show\s+ip\s+eigrp')
 
-        parsed_dict = {}
-        vrf = 'default'
+        parsed_dict = {}        
+        eigrp_instance = ''
+        if r3.match(cmd):
+            address_family = 'IPv4'
 
         for line in out.splitlines():
             line = line.strip()
@@ -92,6 +105,8 @@ class ShowEigrpNeighbors(ShowEigrpNeighborsSchema):
 
             if result:
                 vrf = result.group('vrf')
+                address_family = result.group('address_family')
+                eigrp_instance = result.group('as_num')
 
             result = r2.match(line)
 
@@ -99,13 +114,24 @@ class ShowEigrpNeighbors(ShowEigrpNeighborsSchema):
 
                 group = result.groupdict()
 
+                if not vrf:
+                    vrf = 'default'
+
+                if not eigrp_instance:
+                    eigrp_instance = ''
+
                 eigrp_interface = Common.convert_intf_name\
                     (intf=group['eigrp_interface'])
 
-                nbr_address = group['nbr_address']                
+                nbr_address = group['nbr_address']
 
-                ip_dict = parsed_dict.setdefault('vrf', {})\
+                ip_dict = parsed_dict\
+                    .setdefault('eigrp_instance', {})\
+                    .setdefault(eigrp_instance, {})\
+                    .setdefault('vrf', {})\
                     .setdefault(vrf, {})\
+                    .setdefault('address_family', {})\
+                    .setdefault(address_family, {})\
                     .setdefault('eigrp_interface', {})\
                     .setdefault(eigrp_interface, {})\
                     .setdefault('eigrp_nbr', {}).setdefault(nbr_address, {})
@@ -118,13 +144,61 @@ class ShowEigrpNeighbors(ShowEigrpNeighborsSchema):
                 ip_dict['q_cnt'] = int(group['q_cnt'])
                 ip_dict['last_seq_number'] = int(group['last_seq_number'])
 
-
         return parsed_dict
+
+
+# ===============================================
+# Parser for:
+#   * 'show ip eigrp vrf {vrf} neighbors'
+#   * 'show ip eigrp neighbors'
+# ===============================================
+class ShowIpEigrpNeighbors(ShowEigrpNeighborsSuperParser, ShowEigrpNeighborsSchema):
+
+    cli_command = ['show ip eigrp vrf {vrf} neighbors',
+                   'show ip eigrp neighbors',]
+
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:                
+                cmd = self.cli_command[1]
+            show_output = self.device.execute(cmd)
+
+        else:
+            show_output = output
+
+        return super().cli(cmd=cmd, output=show_output, vrf=vrf)
+
+
+# ===============================================
+# Parser for:
+#   * 'show ipv6 eigrp vrf {vrf} neighbors'
+#   * 'show ipv6 eigrp neighbors'
+# ===============================================
+class ShowIpv6EigrpNeighbors(ShowEigrpNeighborsSuperParser, ShowEigrpNeighborsSchema):
+    
+    cli_command = ['show ipv6 eigrp vrf {vrf} neighbors',
+                   'show ipv6 eigrp neighbors',]
+
+    def cli(self, vrf='', output=None):
+        if output is None:            
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:                
+                cmd = self.cli_command[1]
+            show_output = self.device.execute(cmd)
+
+        else:
+            show_output = output
+
+        return super().cli(cmd=cmd, output=show_output, vrf=vrf)
 
 
 class ShowEigrpNeighborsDetailSchema(MetaParser):
     ''' Schema for
         * 'show ip eigrp neighbors detail'
+        * 'show ip eigrp vrf <vrf> neighbors detail'
     '''
 
     schema = {
@@ -136,7 +210,7 @@ class ShowEigrpNeighborsDetailSchema(MetaParser):
                         Any(): {
                             'eigrp_interface': {
                                 Any(): {
-                                    'eigrp_nbr': {                                    
+                                    'eigrp_nbr': {
                                         Any(): {
                                             'retransmit_count': int,
                                             'retry_count': int,
@@ -166,9 +240,11 @@ class ShowEigrpNeighborsDetailSchema(MetaParser):
 
 
 # ===========================================
-# Parser for 'show ip eigrp neighbors detail'
+# Parser for:
+#       'show ip eigrp neighbors detail'
+#       'show ip eigrp vrf <vrf> neighbors detail'
 # ===========================================
-class ShowEigrpNeighborsDetail(ShowEigrpNeighborsDetailSchema):
+class ShowEigrpNeighborsDetailParser(ShowEigrpNeighborsDetailSchema):
 
     cli_command = ['show ip eigrp neighbors detail',
                    'show ip eigrp vrf {vrf} neighbors detail']
@@ -182,7 +258,6 @@ class ShowEigrpNeighborsDetail(ShowEigrpNeighborsDetailSchema):
                 out = self.device.execute(self.cli_command[0])
         else:
             out = output
-
         
         # EIGRP-IPv4 VR(foo) Address-Family Neighbors for AS(1)
         # EIGRP-IPv4 VR(foo) Address-Family Neighbors for AS(1) VRF(VRF1)
@@ -192,7 +267,8 @@ class ShowEigrpNeighborsDetail(ShowEigrpNeighborsDetailSchema):
 
         # EIGRP-IPv4 Neighbors for AS(100)
         # EIGRP-IPv4 Neighbors for AS(100) VRF(VRF1)
-        r2 = re.compile(r'EIGRP\-(?P<address_family>IPv4|IPv6)\s*Neighbors\s*for \w+\(\s*(?P<as_num>\d+)\)\s*(?:VRF\((?P<vrf>\S+)\))?')
+        r2 = re.compile(r'EIGRP\-(?P<address_family>IPv4|IPv6)\s*'
+            'Neighbors\s*for \w+\(\s*(?P<as_num>\d+)\)\s*(?:VRF\((?P<vrf>\S+)\))?')
 
         # H     Address     Interface   Hold    Uptime   SRTT   RTO     Q       Seq
         #                               (sec)                   (ms)    Cnt     Num
@@ -236,7 +312,7 @@ class ShowEigrpNeighborsDetail(ShowEigrpNeighborsDetailSchema):
 
                 address_family = group['address_family']
                 as_num = group['as_num']
-                vrf = group['vrf'] if group['vrf'] else 'default'                
+                vrf = group['vrf'] if group['vrf'] else 'default'
 
                 # eigrp_instance_dict is used when matching r3
                 eigrp_instance_dict = parsed_dict\
@@ -289,7 +365,6 @@ class ShowEigrpNeighborsDetail(ShowEigrpNeighborsDetailSchema):
                     .setdefault(eigrp_interface, {})\
                     .setdefault('eigrp_nbr', {})\
                     .setdefault(nbr_address, {})
-
 
                 # dict for current IP Address
                 # ip_dict is also used in r5
