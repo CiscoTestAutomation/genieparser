@@ -50,73 +50,9 @@ class test_show_lacp_sysid(unittest.TestCase):
 ####################################################
 class test_show_bundle(unittest.TestCase):
     """unit test for show bundle"""
-
     device = Device(name='aDevice')
 
     empty_output = {'execute.return_value': ''}
-
-    golden_output = {'execute.return_value': '''
-        RP/0/RP0/CPU0:iosxrv9000-1#show bundle 
-        Tue Apr  3 20:30:23.603 UTC
-
-        Bundle-Ether1
-          Status:                                    Up
-          Local links <active/standby/configured>:   2 / 0 / 2
-          Local bandwidth <effective/available>:     2000000 (2000000) kbps
-          MAC address (source):                      001b.0c10.5a25 (Chassis pool)
-          Inter-chassis link:                        No
-          Minimum active links / bandwidth:          1 / 1 kbps
-          Maximum active links:                      8
-          Wait while timer:                          2000 ms
-          Load balancing:                            
-            Link order signaling:                    Not configured
-            Hash type:                               Default
-            Locality threshold:                      None
-          LACP:                                      Operational
-            Flap suppression timer:                  Off
-            Cisco extensions:                        Disabled
-            Non-revertive:                           Disabled
-          mLACP:                                     Not configured
-          IPv4 BFD:                                  Not configured
-          IPv6 BFD:                                  Not configured
-
-          Port                  Device           State        Port ID         B/W, kbps
-          --------------------  ---------------  -----------  --------------  ----------
-          Gi0/0/0/0             Local            Active       0x000a, 0x0001     1000000
-              Link is Active
-          Gi0/0/0/1             Local            Active       0x8000, 0x0002     1000000
-              Link is Active
-
-        Bundle-Ether2
-          Status:                                    Up
-          Local links <active/standby/configured>:   2 / 1 / 3
-          Local bandwidth <effective/available>:     2000000 (2000000) kbps
-          MAC address (source):                      001b.0c10.5a24 (Chassis pool)
-          Inter-chassis link:                        No
-          Minimum active links / bandwidth:          2 / 1 kbps
-          Maximum active links:                      2
-          Wait while timer:                          2000 ms
-          Load balancing:                            
-            Link order signaling:                    Not configured
-            Hash type:                               Default
-            Locality threshold:                      None
-          LACP:                                      Operational
-            Flap suppression timer:                  Off
-            Cisco extensions:                        Disabled
-            Non-revertive:                           Disabled
-          mLACP:                                     Not configured
-          IPv4 BFD:                                  Not configured
-          IPv6 BFD:                                  Not configured
-
-          Port                  Device           State        Port ID         B/W, kbps
-          --------------------  ---------------  -----------  --------------  ----------
-          Gi0/0/0/2             Local            Standby      0x8000, 0x0005     1000000
-              Link is Standby due to maximum-active links configuration
-          Gi0/0/0/3             Local            Active       0x8000, 0x0004     1000000
-              Link is Active
-          Gi0/0/0/4             Local            Active       0x8000, 0x0003     1000000
-              Link is Active
-    '''}
 
     golden_parsed_output = {
         "interfaces": {
@@ -214,7 +150,7 @@ class test_show_bundle(unittest.TestCase):
                         "state": "Standby",
                         "port_id": "0x8000, 0x0005",
                         "bw_kbps": 1000000,
-                        "link_state": "Standby"
+                        "link_state": "Standby due to maximum-active links configuration"
                     },
                     "GigabitEthernet0/0/0/3": {
                         "interface": "GigabitEthernet0/0/0/3",
@@ -237,6 +173,69 @@ class test_show_bundle(unittest.TestCase):
         }
     }
 
+    golden_output = {'execute.return_value': '''
+        RP/0/RP0/CPU0:iosxrv9000-1#show bundle 
+        Tue Apr  3 20:30:23.603 UTC
+
+        Bundle-Ether1
+          Status:                                    Up
+          Local links <active/standby/configured>:   2 / 0 / 2
+          Local bandwidth <effective/available>:     2000000 (2000000) kbps
+          MAC address (source):                      001b.0c10.5a25 (Chassis pool)
+          Inter-chassis link:                        No
+          Minimum active links / bandwidth:          1 / 1 kbps
+          Maximum active links:                      8
+          Wait while timer:                          2000 ms
+          Load balancing:                            
+            Link order signaling:                    Not configured
+            Hash type:                               Default
+            Locality threshold:                      None
+          LACP:                                      Operational
+            Flap suppression timer:                  Off
+            Cisco extensions:                        Disabled
+            Non-revertive:                           Disabled
+          mLACP:                                     Not configured
+          IPv4 BFD:                                  Not configured
+          IPv6 BFD:                                  Not configured
+
+          Port                  Device           State        Port ID         B/W, kbps
+          --------------------  ---------------  -----------  --------------  ----------
+          Gi0/0/0/0             Local            Active       0x000a, 0x0001     1000000
+              Link is Active
+          Gi0/0/0/1             Local            Active       0x8000, 0x0002     1000000
+              Link is Active
+
+        Bundle-Ether2
+          Status:                                    Up
+          Local links <active/standby/configured>:   2 / 1 / 3
+          Local bandwidth <effective/available>:     2000000 (2000000) kbps
+          MAC address (source):                      001b.0c10.5a24 (Chassis pool)
+          Inter-chassis link:                        No
+          Minimum active links / bandwidth:          2 / 1 kbps
+          Maximum active links:                      2
+          Wait while timer:                          2000 ms
+          Load balancing:                            
+            Link order signaling:                    Not configured
+            Hash type:                               Default
+            Locality threshold:                      None
+          LACP:                                      Operational
+            Flap suppression timer:                  Off
+            Cisco extensions:                        Disabled
+            Non-revertive:                           Disabled
+          mLACP:                                     Not configured
+          IPv4 BFD:                                  Not configured
+          IPv6 BFD:                                  Not configured
+
+          Port                  Device           State        Port ID         B/W, kbps
+          --------------------  ---------------  -----------  --------------  ----------
+          Gi0/0/0/2             Local            Standby      0x8000, 0x0005     1000000
+              Link is Standby due to maximum-active links configuration
+          Gi0/0/0/3             Local            Active       0x8000, 0x0004     1000000
+              Link is Active
+          Gi0/0/0/4             Local            Active       0x8000, 0x0003     1000000
+              Link is Active
+    '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBundle(device=self.device)
@@ -256,58 +255,9 @@ class test_show_bundle(unittest.TestCase):
 ####################################################
 class test_show_lacp(unittest.TestCase):
     """unit test for show lacp"""
-
     device = Device(name='aDevice')
 
     empty_output = {'execute.return_value': ''}
-
-    golden_output = {'execute.return_value': '''
-        RP/0/RP0/CPU0:iosxrv9000-1#show lacp
-        Tue Apr  3 20:32:49.966 UTC
-        State: a - Port is marked as Aggregatable.
-               s - Port is Synchronized with peer.
-               c - Port is marked as Collecting.
-               d - Port is marked as Distributing.
-               A - Device is in Active mode.
-               F - Device requests PDUs from the peer at fast rate.
-               D - Port is using default values for partner information.
-               E - Information about partner has expired.
-
-        Bundle-Ether1
-
-          Port          (rate)  State    Port ID       Key    System ID
-          --------------------  -------- ------------- ------ ------------------------
-        Local
-          Gi0/0/0/0        30s  ascdA--- 0x000a,0x0001 0x0001 0x0064,00-1b-0c-10-5a-26
-           Partner         30s  ascdA--- 0x000a,0x0001 0x0001 0x8000,00-0c-86-5e-68-23
-          Gi0/0/0/1        30s  ascdA--- 0x8000,0x0002 0x0001 0x0064,00-1b-0c-10-5a-26
-           Partner         30s  ascdA--- 0x8000,0x0005 0x0001 0x8000,00-0c-86-5e-68-23
-
-          Port                  Receive    Period Selection  Mux       A Churn P Churn
-          --------------------  ---------- ------ ---------- --------- ------- -------
-        Local
-          Gi0/0/0/0             Current    Slow   Selected   Distrib   None    None   
-          Gi0/0/0/1             Current    Slow   Selected   Distrib   None    None   
-
-        Bundle-Ether2
-
-          Port          (rate)  State    Port ID       Key    System ID
-          --------------------  -------- ------------- ------ ------------------------
-        Local
-          Gi0/0/0/2        30s  a---A--- 0x8000,0x0005 0x0002 0x0064,00-1b-0c-10-5a-26
-           Partner         30s  as--A--- 0x8000,0x0004 0x0002 0x8000,00-0c-86-5e-68-23
-          Gi0/0/0/3        30s  ascdA--- 0x8000,0x0004 0x0002 0x0064,00-1b-0c-10-5a-26
-           Partner         30s  ascdA--- 0x8000,0x0003 0x0002 0x8000,00-0c-86-5e-68-23
-          Gi0/0/0/4        30s  ascdA--- 0x8000,0x0003 0x0002 0x0064,00-1b-0c-10-5a-26
-           Partner         30s  ascdA--- 0x8000,0x0002 0x0002 0x8000,00-0c-86-5e-68-23
-
-          Port                  Receive    Period Selection  Mux       A Churn P Churn
-          --------------------  ---------- ------ ---------- --------- ------- -------
-        Local
-          Gi0/0/0/2             Current    Slow   Standby    Waiting   Churn   None   
-          Gi0/0/0/3             Current    Slow   Selected   Distrib   None    None   
-          Gi0/0/0/4             Current    Slow   Selected   Distrib   None    None  
-        '''}
 
     golden_parsed_output = {
         "interfaces": {
@@ -470,6 +420,54 @@ class test_show_lacp(unittest.TestCase):
             }
         }
     }
+
+    golden_output = {'execute.return_value': '''
+        RP/0/RP0/CPU0:iosxrv9000-1#show lacp
+        Tue Apr  3 20:32:49.966 UTC
+        State: a - Port is marked as Aggregatable.
+               s - Port is Synchronized with peer.
+               c - Port is marked as Collecting.
+               d - Port is marked as Distributing.
+               A - Device is in Active mode.
+               F - Device requests PDUs from the peer at fast rate.
+               D - Port is using default values for partner information.
+               E - Information about partner has expired.
+
+        Bundle-Ether1
+
+          Port          (rate)  State    Port ID       Key    System ID
+          --------------------  -------- ------------- ------ ------------------------
+        Local
+          Gi0/0/0/0        30s  ascdA--- 0x000a,0x0001 0x0001 0x0064,00-1b-0c-10-5a-26
+           Partner         30s  ascdA--- 0x000a,0x0001 0x0001 0x8000,00-0c-86-5e-68-23
+          Gi0/0/0/1        30s  ascdA--- 0x8000,0x0002 0x0001 0x0064,00-1b-0c-10-5a-26
+           Partner         30s  ascdA--- 0x8000,0x0005 0x0001 0x8000,00-0c-86-5e-68-23
+
+          Port                  Receive    Period Selection  Mux       A Churn P Churn
+          --------------------  ---------- ------ ---------- --------- ------- -------
+        Local
+          Gi0/0/0/0             Current    Slow   Selected   Distrib   None    None   
+          Gi0/0/0/1             Current    Slow   Selected   Distrib   None    None   
+
+        Bundle-Ether2
+
+          Port          (rate)  State    Port ID       Key    System ID
+          --------------------  -------- ------------- ------ ------------------------
+        Local
+          Gi0/0/0/2        30s  a---A--- 0x8000,0x0005 0x0002 0x0064,00-1b-0c-10-5a-26
+           Partner         30s  as--A--- 0x8000,0x0004 0x0002 0x8000,00-0c-86-5e-68-23
+          Gi0/0/0/3        30s  ascdA--- 0x8000,0x0004 0x0002 0x0064,00-1b-0c-10-5a-26
+           Partner         30s  ascdA--- 0x8000,0x0003 0x0002 0x8000,00-0c-86-5e-68-23
+          Gi0/0/0/4        30s  ascdA--- 0x8000,0x0003 0x0002 0x0064,00-1b-0c-10-5a-26
+           Partner         30s  ascdA--- 0x8000,0x0002 0x0002 0x8000,00-0c-86-5e-68-23
+
+          Port                  Receive    Period Selection  Mux       A Churn P Churn
+          --------------------  ---------- ------ ---------- --------- ------- -------
+        Local
+          Gi0/0/0/2             Current    Slow   Standby    Waiting   Churn   None   
+          Gi0/0/0/3             Current    Slow   Selected   Distrib   None    None   
+          Gi0/0/0/4             Current    Slow   Selected   Distrib   None    None  
+        '''}
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)

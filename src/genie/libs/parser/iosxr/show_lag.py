@@ -189,7 +189,7 @@ class ShowBundle(ShowBundleSchema):
 
         # Link is Active
         # Link is Standby due to maximum-active links configuration
-        p20 = re.compile(r'^Link +is +(?P<link_state>[\S]+).*$')
+        p20 = re.compile(r'^Link +is +(?P<link_state>.*)$')
 
         for line in out.splitlines():
             if line:
@@ -353,7 +353,6 @@ class ShowBundle(ShowBundleSchema):
 
             # Link is Active
             # Link is Standby due to maximum-active links configuration
-            p20 = re.compile(r'^Link +is +(?P<link_state>[\S]+).*$')
             m = p20.match(line)
             if m:
                 group = m.groupdict()
