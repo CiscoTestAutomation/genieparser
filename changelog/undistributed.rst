@@ -6,6 +6,12 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
+                                   PLATFORM
+--------------------------------------------------------------------------------
+* IOSXE
+  * ShowInventory enhanced to support ASR901 platform
+
+--------------------------------------------------------------------------------
                                    LAG
 --------------------------------------------------------------------------------
 * IOSXE
@@ -202,6 +208,25 @@
           show crypto pki certificates <WORD>
 
 --------------------------------------------------------------------------------
+                                   SERVICE
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowServiceGroupTrafficStats for:
+        show service-group traffic-stats
+        show service-group traffic-stats <group>
+
+--------------------------------------------------------------------------------
+                                   FDB
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowMacAddressTable for:
+        show mac address-table
+    * Add ShowMacAddressTableAgingTime for:
+        show mac address-table aging-time
+    * Add ShowMacAddressTableLearning for:
+        show mac address-table learning
+
+--------------------------------------------------------------------------------
                                    BFD
 --------------------------------------------------------------------------------
 * IOS
@@ -250,3 +275,17 @@
     * Add ShowIsisDatabaseDetail for:
         show isis database detail
 
+----------------------------------------------------------------------------------
+                                   ISIS
+----------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowIpCef for :
+            show ip cef
+            show ip cef vrf <vrf>
+            show ip cef <prefix>
+            show ip cef vrf <vrf> <prefix>
+    * Add ShowIpv6Cef for :
+            show ipv6 cef
+            show ipv6 cef vrf <vrf>
+            show ipv6 cef <prefix>
+            show ipv6 cef vrf <vrf> <prefix>
