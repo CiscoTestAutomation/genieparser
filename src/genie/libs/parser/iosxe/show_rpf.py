@@ -31,6 +31,7 @@ class ShowIpRpfSchema(MetaParser):
                 {Any(): {
                     'source_address': str,
                     Optional('source_host'): str,
+                    Optional('mofrr'): str,
                     'path':
                         {Any():
                             {'neighbor_address': str,
@@ -81,27 +82,27 @@ class ShowIpRpf(ShowIpRpfSchema):
 
         # RPF information for 2001:99:99::99
         # RPF information for sj-eng-mbone.cisco.com
-        p1 = re.compile(r'^RPF +information +for +(?P<mroute>[\w\:\.\-]+)$')
+        p1 = re.compile(r'^RPF +information +for +(?P<mroute>[\S]+)$')
 
         # RPF information for host1 (172.16.10.13)
         # RPF information for ? (10.1.1.100)
         # RPF information for sj-eng-mbone.cisco.com (171.69.10.13)
         # RPF information for ? (209.165.200.226) MoFRR Enabled
-        p1_1 = re.compile(r'^RPF +information +for +(?P<host>[\w\?\.\-]+) +'
-                           '\((?P<mroute>[\w\:\.]+)\).*$')
+        p1_1 = re.compile(r'^RPF +information +for +(?P<host>[\S]+) +'
+                           '\((?P<mroute>[\w\:\.]+)\)( +MoFRR +(?P<mofrr>[\w]+))?$')
 
         # RPF interface: BRI0
         # RPF interface:GigabitEthernet3/2/0
-        p2 = re.compile(r'^RPF +interface: *(?P<intf>[\w\/\.\-]+)$')
+        p2 = re.compile(r'^RPF +interface: *(?P<intf>[\S]+)$')
 
         # RPF neighbor: 2001:99:99::99
         # RPF neighbor: eng-isdn-pri3.cisco.com
         # RPF neighbor:FE80::40:1:3
-        p3 = re.compile(r'^RPF +neighbor: *(?P<neighbor>[\w\.\:\-]+)$')
+        p3 = re.compile(r'^RPF +neighbor: *(?P<neighbor>[\S]+)$')
 
         # RPF neighbor: sj1.cisco.com (172.16.121.10)
         # RPF neighbor: eng-isdn-pri3.cisco.com (171.69.121.10)
-        p3_1 = re.compile(r'^RPF +neighbor: +(?P<host>[\w\.\?\-]+) +'
+        p3_1 = re.compile(r'^RPF +neighbor: +(?P<host>[\S]+) +'
                            '\((?P<neighbor>[\w\.\:]+)\)$')
 
         # RPF route/mask: 10.1.1.0/24
@@ -158,10 +159,12 @@ class ShowIpRpf(ShowIpRpfSchema):
 
             # RPF information for host1 (172.16.10.13)
             # RPF information for ? (10.1.1.100)
+            # RPF information for ? (209.165.200.226) MoFRR Enabled
             m = p1_1.match(line)
             if m:
                 mroute = m.groupdict()['mroute']
                 host = m.groupdict()['host']
+                mofrr = m.groupdict()['mofrr']
                 if 'vrf' not in ret_dict:
                     ret_dict['vrf'] = {}
                 if vrf not in ret_dict['vrf']:
@@ -169,6 +172,8 @@ class ShowIpRpf(ShowIpRpfSchema):
 
                 ret_dict['vrf'][vrf]['source_address'] = mroute
                 ret_dict['vrf'][vrf]['source_host'] = host
+                if mofrr:
+                    ret_dict['vrf'][vrf]['mofrr'] = mofrr
                 continue
            
             # RPF interface: BRI0

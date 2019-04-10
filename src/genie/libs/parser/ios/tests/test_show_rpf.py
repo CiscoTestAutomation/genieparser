@@ -11,15 +11,84 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
 # Parser
 from genie.libs.parser.ios.show_rpf import ShowIpRpf, ShowIpv6Rpf
 
-from genie.libs.parser.iosxe.tests.test_show_rpf import \
-                    test_show_ip_rpf as test_show_ip_rpf_iosxe,\
-                    test_show_ipv6_rpf as test_show_ipv6_rpf_iosxe
+from genie.libs.parser.iosxe.tests.test_show_rpf import test_show_ipv6_rpf as test_show_ipv6_rpf_iosxe
 
 # =============================================
 # Unit test for 'show ip rpf <x.x.x.x>'
 # Unit test for 'show ip rpf vrf xxx <x.x.x.x>'
 # ==============================================
-class test_show_ip_rpf(test_show_ip_rpf_iosxe):
+class test_show_ip_rpf(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output = {
+        "vrf": {
+            "default": {
+                "source_address": "209.165.200.226",
+                "source_host": "?",
+                "mofrr": "Enabled",
+                "path": {
+                    "209.165.201.2 Ethernet1/4": {
+                        "interface_name": "Ethernet1/4",
+                        "neighbor_host": "?",
+                        "neighbor_address": "209.165.201.2",
+                        "table_type": "unicast",
+                        "table_feature": "ospf",
+                        "table_feature_instance": "200",
+                        "distance_preferred_lookup": True,
+                        "lookup_topology": "ipv4 multicast base",
+                        "originated_topology": "ipv4 unicast base"
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''\
+        Router# show ip rpf 209.165.200.226
+        RPF information for ? (209.165.200.226) MoFRR Enabled
+          RPF interface: Ethernet1/4
+          RPF neighbor: ? (209.165.201.2)
+          RPF route/mask: 255.255.255.225
+          RPF type: unicast (ospf 200)
+          Doing distance-preferred lookups across tables
+          RPF topology: ipv4 multicast base, originated from ipv4 unicast base
+    '''}
+
+    golden_parsed_output2 = {
+        "vrf": {
+            "VRF1": {
+                "source_address": "209.165.200.226",
+                "source_host": "?",
+                "mofrr": "Enabled",
+                "path": {
+                    "209.165.201.2 Ethernet1/4": {
+                        "interface_name": "Ethernet1/4",
+                        "neighbor_host": "?",
+                        "neighbor_address": "209.165.201.2",
+                        "table_type": "unicast",
+                        "table_feature": "ospf",
+                        "table_feature_instance": "200",
+                        "distance_preferred_lookup": True,
+                        "lookup_topology": "ipv4 multicast base",
+                        "originated_topology": "ipv4 unicast base"
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output2 = {'execute.return_value': '''\
+        Router# show ip rpf 209.165.200.226
+        RPF information for ? (209.165.200.226) MoFRR Enabled
+          RPF interface: Ethernet1/4
+          RPF neighbor: ? (209.165.201.2)
+          RPF route/mask: 255.255.255.225
+          RPF type: unicast (ospf 200)
+          Doing distance-preferred lookups across tables
+          RPF topology: ipv4 multicast base, originated from ipv4 unicast base
+    '''}
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
@@ -30,13 +99,13 @@ class test_show_ip_rpf(test_show_ip_rpf_iosxe):
     def test_golden_vrf_default(self):
         self.device = Mock(**self.golden_output)
         obj = ShowIpRpf(device=self.device)
-        parsed_output = obj.parse(mroute='172.16.10.13')
+        parsed_output = obj.parse(mroute='209.165.200.226')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_golden_vrf_non_default(self):
         self.device = Mock(**self.golden_output2)
         obj = ShowIpRpf(device=self.device)
-        parsed_output = obj.parse(mroute='10.1.1.100', vrf='VRF1')
+        parsed_output = obj.parse(mroute='209.165.200.226', vrf='VRF1')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 
