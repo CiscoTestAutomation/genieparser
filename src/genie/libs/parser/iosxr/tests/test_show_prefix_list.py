@@ -28,23 +28,23 @@ class test_show_rpl_prefix_set(unittest.TestCase):
                 'protocol': 'ip',
                 'prefixes': {
                     '35.0.0.0/8 8..8': {
-                        'prefix': '35.0.0.0',
+                        'prefix': '35.0.0.0/8',
                         'masklength_range': '8..8'
                     },
                     '35.0.0.0/8 8..16': {
-                        'prefix': '35.0.0.0',
+                        'prefix': '35.0.0.0/8',
                         'masklength_range': '8..16'
                     },
                     '36.0.0.0/8 8..16': {
-                        'prefix': '36.0.0.0',
+                        'prefix': '36.0.0.0/8',
                         'masklength_range': '8..16'
                     },
                     '37.0.0.0/8 24..32': {
-                        'prefix': '37.0.0.0',
+                        'prefix': '37.0.0.0/8',
                         'masklength_range': '24..32'
                     },
                     '38.0.0.0/8 16..24': {
-                        'prefix': '38.0.0.0',
+                        'prefix': '38.0.0.0/8',
                         'masklength_range': '16..24'
                     }
                 }
@@ -54,19 +54,19 @@ class test_show_rpl_prefix_set(unittest.TestCase):
                 'protocol': 'ipv6',
                 'prefixes': {
                     '2001:db8:1::/64 64..64': {
-                        'prefix': '2001:db8:1::',
+                        'prefix': '2001:db8:1::/64',
                         'masklength_range': '64..64'
                     },
                     '2001:db8:2::/64 65..128': {
-                        'prefix': '2001:db8:2::',
+                        'prefix': '2001:db8:2::/64',
                         'masklength_range': '65..128'
                     },
                     '2001:db8:3::/64 64..128': {
-                        'prefix': '2001:db8:3::',
+                        'prefix': '2001:db8:3::/64',
                         'masklength_range': '64..128'
                     },
                     '2001:db8:4::/64 65..98': {
-                        'prefix': '2001:db8:4::',
+                        'prefix': '2001:db8:4::/64',
                         'masklength_range': '65..98'
                     }
                 }
