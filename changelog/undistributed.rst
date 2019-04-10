@@ -297,3 +297,15 @@
 * NXOS
 	* Updated ShowRoutingIpv6VrfAll to support different vrf
 
+----------------------------------------------------------------------------------
+                                 OSPF
+----------------------------------------------------------------------------------
+* IOSXR
+	* Updated ShowOspfVrfAllInclusiveNeighborDetail to have bfd mode/status
+
+----------------------------------------------------------------------------------
+                                 PROTOCOLS
+----------------------------------------------------------------------------------
+* IOSXE
+	* Fixed ShowProtocols for bgp and ospf
+
