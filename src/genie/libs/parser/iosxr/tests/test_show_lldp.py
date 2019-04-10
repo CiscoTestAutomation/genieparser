@@ -293,8 +293,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 class test_show_lldp_traffic(unittest.TestCase):
-    dev1 = Device(name='empty')
-    dev_c3850 = Device(name='c3850')
+    dev = Device(name='empty')
     empty_output = {'execute.return_value': '      '}
 
     golden_parsed_output = {
@@ -322,15 +321,14 @@ class test_show_lldp_traffic(unittest.TestCase):
             Total TLVs unrecognized: 119
     '''}
     def test_empty(self):
-        self.dev1 = Mock(**self.empty_output)
-        obj = ShowLldpTraffic(device=self.dev1)
+        self.dev = Mock(**self.empty_output)
+        obj = ShowLldpTraffic(device=self.dev)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
     def test_golden(self):
-        self.maxDiff = None
-        self.dev_c3850 = Mock(**self.golden_output)
-        obj = ShowLldpTraffic(device=self.dev_c3850)
+        self.dev = Mock(**self.golden_output)
+        obj = ShowLldpTraffic(device=self.dev)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
