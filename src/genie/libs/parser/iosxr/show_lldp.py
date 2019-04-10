@@ -44,7 +44,11 @@ class ShowLldp(ShowLldpSchema):
         # initial return dictionary
         ret_dict = {}
         # initial regexp pattern
+        # Status: ACTIVE
         p1 = re.compile(r'^Status: +(?P<status>\w+)$')
+        # LLDP advertisements are sent every 30 seconds
+        # LLDP hold time advertised is 120 seconds
+        # LLDP interface reinitialisation delay is 2 seconds
         p2 = re.compile(r'^LLDP( +advertisements +are +sent +every +'
             '(?P<hello_timer>\d+))?( +hold +time +advertised +is +'
             '(?P<hold_timer>\d+))?( +interface +reinitialisation '
