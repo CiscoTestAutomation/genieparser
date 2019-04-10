@@ -1,17 +1,28 @@
-"""show_platform.py
+''' show_platform.py
 
-"""
+IOSXE parsers for the following show commands:
+
+    * 'show version'
+    * 'dir'
+    * 'show redundancy'
+    * 'show inventory'
+    * 'show platform'
+    * 'show boot'
+    * 'show switch detail'
+    * 'show switch'
+    * 'show environment all'
+    * 'show module'
+'''
+
+# Python
 import re
 import logging
 
+# Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, \
-                                         Any, \
-                                         Optional, \
-                                         Or, \
-                                         And, \
-                                         Default, \
-                                         Use
+from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
+
+# genie.parsergen
 try:
     import genie.parsergen
 except (ImportError, OSError):
@@ -882,248 +893,318 @@ class ShowRedundancy(ShowRedundancySchema):
         return redundancy_dict
 
 
+# =====================
+# Schema for:
+#   * 'show inventory'
+# =====================
 class ShowInventorySchema(MetaParser):
-    """Schema for show inventory"""
+
+    ''' Schema for:
+        * 'show inventory'
+    '''
+
     schema = {
-                Optional('main'): {
-                    Optional('swstack'): bool,
-                    Optional('chassis'): {
-                        Any(): {
-                            Optional('name'): str,
-                            Optional('descr'): str,
-                            Optional('pid'): str,
-                            Optional('vid'): str,
-                            Optional('sn'): str,
-                        }
-                    }
+        Optional('main'):
+            {Optional('swstack'): bool,
+            Optional('chassis'):
+                {Any():
+                    {Optional('name'): str,
+                    Optional('descr'): str,
+                    Optional('pid'): str,
+                    Optional('vid'): str,
+                    Optional('sn'): str,
+                    },
                 },
-                'slot': {
-                    Any(): {
-                        Optional('rp'): {
-                            Any(): {
-                                Optional('name'): str,
-                                Optional('descr'): str,
-                                Optional('pid'): str,
-                                Optional('vid'): str,
-                                Optional('sn'): str,
-                                Optional('swstack_power'): str,
-                                Optional('swstack_power_sn'): str,
-                                Optional('subslot'): {
-                                    Any(): {
-                                        Any(): {
-                                            Optional('name'): str,
-                                            Optional('descr'): str,
-                                            Optional('pid'): str,
-                                            Optional('vid'): str,
-                                            Optional('sn'): str,
-                                        }
-                                    }
-                                }
-                            }
+            },
+        'slot':
+            {Any():
+                {Optional('rp'):
+                    {Any():
+                        {Optional('name'): str,
+                        Optional('descr'): str,
+                        Optional('pid'): str,
+                        Optional('vid'): str,
+                        Optional('sn'): str,
+                        Optional('swstack_power'): str,
+                        Optional('swstack_power_sn'): str,
+                        Optional('subslot'):
+                            {Any(): 
+                                {Any(): 
+                                    {Optional('name'): str,
+                                    Optional('descr'): str,
+                                    Optional('pid'): str,
+                                    Optional('vid'): str,
+                                    Optional('sn'): str,
+                                    },
+                                },
+                            },
                         },
-                        Optional('lc'): {
-                            Any(): {
-                                Optional('name'): str,
-                                Optional('descr'): str,
-                                Optional('pid'): str,
-                                Optional('vid'): str,
-                                Optional('sn'): str,
-                                Optional('subslot'): {
-                                    Any(): {
-                                        Any(): {
-                                            Optional('name'): str,
-                                            Optional('descr'): str,
-                                            Optional('pid'): str,
-                                            Optional('vid'): str,
-                                            Optional('sn'): str,
-                                        }
-                                    }
-                                }
-                            }
+                    },
+                Optional('lc'):
+                    {Any():
+                        {Optional('name'): str,
+                        Optional('descr'): str,
+                        Optional('pid'): str,
+                        Optional('vid'): str,
+                        Optional('sn'): str,
+                        Optional('swstack_power'): str,
+                        Optional('swstack_power_sn'): str,
+                        Optional('subslot'):
+                            {Any(): 
+                                {Any(): 
+                                    {Optional('name'): str,
+                                    Optional('descr'): str,
+                                    Optional('pid'): str,
+                                    Optional('vid'): str,
+                                    Optional('sn'): str,
+                                    },
+                                },
+                            },
                         },
-                        Optional('other'): {
-                            Any(): {
-                                Optional('name'): str,
-                                Optional('descr'): str,
-                                Optional('pid'): str,
-                                Optional('vid'): str,
-                                Optional('sn'): str
-                            }
-                        }
-                    }
-                }
-            }
+                    },
+                Optional('other'):
+                    {Any():
+                        {Optional('name'): str,
+                        Optional('descr'): str,
+                        Optional('pid'): str,
+                        Optional('vid'): str,
+                        Optional('sn'): str,
+                        Optional('swstack_power'): str,
+                        Optional('swstack_power_sn'): str,
+                        Optional('subslot'):
+                            {Any(): 
+                                {Any(): 
+                                    {Optional('name'): str,
+                                    Optional('descr'): str,
+                                    Optional('pid'): str,
+                                    Optional('vid'): str,
+                                    Optional('sn'): str,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
 
 
+# ====================
+# Parser for:
+#   * 'show inventory'
+# ====================
 class ShowInventory(ShowInventorySchema):
-    """Parser for show Inventory
-    parser class - implements detail parsing mechanisms for cli output.
-    """
-    # *************************
-    # schema - class variable
-    #
-    # Purpose is to make sure the parser always return the output
-    # (nested dict) that has the same data structure across all supported
-    # parsing mechanisms (cli(), yang(), xml()).
-    cli_command = 'show inventory'
+    
+    ''' Parser for:
+        * 'show inventory'
+    '''
+
+    cli_command = ['show inventory']
 
     def cli(self, output=None):
-        """parsing mechanism: cli
 
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: exe
-        cuting, transforming, returning
-        """
         if output is None:
-            out = self.device.execute(self.cli_command)
+            # Build command
+            cmd = self.cli_command[0]
+            # Execute command
+            out = self.device.execute(cmd)
         else:
             out = output
 
+        # Init vars
+        ret_dict = {}
         name = descr = slot = subslot = pid = ''
-        inventory_dict = {}
+        asr900_rp = False
+
+        # NAME: "Switch 1", DESCR: "WS-C3850-24P-E"
+        # NAME: "StackPort5/2", DESCR: "StackPort5/2"
+        # NAME: "Switch 5 - Power Supply A", DESCR: "Switch 5 - Power Supply A"
+        # NAME: "subslot 0/0 transceiver 2", DESCR: "GE T"
+        # NAME: "NIM subslot 0/0", DESCR: "Front Panel 3 ports Gigabitethernet Module"
+        p1 = re.compile(r'^NAME: +\"(?P<name>(.*))\",'
+                         ' +DESCR: +\"(?P<descr>(.*))\"$')
+
+        # PID: ASR-920-24SZ-IM   , VID: V01  , SN: CAT1902V19M
+        # PID: SFP-10G-LR        , VID: CSCO , SN: CD180456291
+        # PID: A900-IMA3G-IMSG   , VID: V01  , SN: FOC2204PAP1
+        # PID: SFP-GE-T          , VID: V02  , SN: MTC2139029X
+        # PID: ISR4331-3x1GE     , VID: V01  , SN:
+        # PID: ISR4331/K9        , VID:      , SN: FDO21520TGH
+        # PID: ISR4331/K9        , VID:      , SN:
+        p2 = re.compile(r'^PID: +(?P<pid>(\S+)) *, +VID:(?: +(?P<vid>(\S+)))? *,'
+                         ' +SN:(?: +(?P<sn>(\S+)))?$')
+
+
         for line in out.splitlines():
             line = line.strip()
 
-            # check 1st line and get slot number
+            # NAME: "Switch 1", DESCR: "WS-C3850-24P-E"
+            # NAME: "StackPort5/2", DESCR: "StackPort5/2"
+            # NAME: "Switch 5 - Power Supply A", DESCR: "Switch 5 - Power Supply A"
             # NAME: "subslot 0/0 transceiver 2", DESCR: "GE T"
             # NAME: "NIM subslot 0/0", DESCR: "Front Panel 3 ports Gigabitethernet Module"
-            p1 = re.compile(r'^\s*NAME\:\s+\"(?P<name>.*)\",\s+DESCR\:\s+\"(?P<descr>.*)\"')
             m = p1.match(line)
             if m:
-                name = m.groupdict()['name']
-                descr = m.groupdict()['descr']
-                p1_2 = re.compile(r'\s*\S+[ t](?P<slot>[a-zA-Z]*\d+)[ /]*')
-                m = p1_2.match(name)
-                if m:
-                    slot = m.groupdict()['slot']
-                    if 'slot' not in inventory_dict:
-                        inventory_dict['slot'] = {}
-                    if slot not in inventory_dict['slot']:
-                        inventory_dict['slot'][slot] = {}
+                group = m.groupdict()
+                name = group['name'].strip()
+                descr = group['descr'].strip()
 
-                p1_2 = re.compile(r'(SPA|IM) subslot (?P<slot>\d+)/(?P<subslot>\d+)')
-                m = p1_2.match(name)
-                if m:
-                    slot = m.groupdict()['slot']
-                    subslot = m.groupdict()['subslot']
-                    if 'slot' not in inventory_dict:
-                        inventory_dict['slot'] = {}
-                    if slot not in inventory_dict['slot']:
-                        inventory_dict['slot'][slot] = {}
+                # Switch 1
+                # module 0
+                p1_1 = re.compile(r'^(Switch|[Mm]odule) +(?P<slot>(\S+))')
+                m1_1 = p1_1.match(name)
+                if m1_1:
+                    slot = m1_1.groupdict()['slot']
+                    # Creat slot_dict
+                    slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
 
-                if 'Power Supply Module' in name:
+                # Power Supply Module 0
+                # Power Supply Module 1
+                p1_2 = re.compile(r'Power Supply Module')
+                m1_2 = p1_2.match(name)
+                if m1_2:
                     slot = name.replace('Power Supply Module ', 'P')
-                    if 'slot' not in inventory_dict:
-                        inventory_dict['slot'] = {}
-                    if slot not in inventory_dict['slot']:
-                        inventory_dict['slot'][slot] = {}
+                    # Creat slot_dict
+                    slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
 
-                p1_3 = re.compile(r'\s*\S+ *\d+[ /]*(?P<subslot>\d+.*)$')
-                m = p1_3.match(name)
-                if m:
-                    subslot = m.groupdict()['subslot']
+                # SPA subslot 0/0
+                # IM subslot 0/1
+                # NIM subslot 0/0
+                p1_3 = re.compile(r'^(SPA|IM|NIM) +subslot +(?P<slot>(\d+))/(?P<subslot>(\d+))')
+                m1_3 = p1_3.match(name)
+                if m1_3:
+                    group = m1_3.groupdict()
+                    slot = group['slot']
+                    subslot = group['subslot']
+                    # Creat slot_dict
+                    slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
+
+                # subslot 0/0 transceiver 0
+                p1_4 = re.compile(r'^subslot +(?P<slot>(\d+))\/(?P<subslot>(.*))')
+                m1_4 = p1_4.match(name)
+                if m1_4:
+                    group = m1_4.groupdict()
+                    slot = group['slot']
+                    subslot = group['subslot']
+                    # Creat slot_dict
+                    slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
+
+                # StackPort1/1
+                p1_5 = re.compile(r'^StackPort(?P<slot>(\d+))/(?P<subslot>(\d+))$')
+                m1_5 = p1_5.match(name)
+                if m1_5:
+                    group = m1_5.groupdict()
+                    slot = group['slot']
+                    subslot = group['subslot']
+                    # Create slot_dict
+                    slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
+
+                # go to next line
                 continue
 
-            # check 2nd line
-
+            # PID: ASR-920-24SZ-IM   , VID: V01  , SN: CAT1902V19M
+            # PID: SFP-10G-LR        , VID: CSCO , SN: CD180456291
+            # PID: A900-IMA3G-IMSG   , VID: V01  , SN: FOC2204PAP1
             # PID: SFP-GE-T          , VID: V02  , SN: MTC2139029X
             # PID: ISR4331-3x1GE     , VID: V01  , SN:
             # PID: ISR4331/K9        , VID:      , SN: FDO21520TGH
             # PID: ISR4331/K9        , VID:      , SN:
-            # PID: ASR-920-24SZ-IM   , VID: V01  , SN: CAT1902V19M
-            # PID: SFP-10G-LR        , VID: CSCO , SN: CD180456291
-            # PID: A900-IMA3G-IMSG   , VID: V01  , SN: FOC2204PAP1
-            p2 = re.compile(r'^\s*PID: +(?P<pid>\S+) +, +VID: +((?P<vid>\S+) +)?, +SN:( +(?P<sn>.*))?$')
             m = p2.match(line)
             if m:
-                if 'WS-C' in pid:
-                    old_pid = pid
-                pid = m.groupdict()['pid']
-                vid = m.groupdict()['vid'] or ''
-                sn = m.groupdict()['sn'] or ''
-                if name:
-                    if 'STACK' in pid:
-                        inventory_dict['main'] = {}
-                        inventory_dict['main']['swstack'] = True
-                    if pid and ('Chassis' in name):
-                        inventory_dict['main'] = {}
-                        inventory_dict['main']['chassis'] = {}
-                        inventory_dict['main']['chassis'][pid] = {}
-                        inventory_dict['main']['chassis'][pid]['name'] = name
-                        inventory_dict['main']['chassis'][pid]['descr'] = descr
-                        inventory_dict['main']['chassis'][pid]['pid'] = pid
-                        inventory_dict['main']['chassis'][pid]['vid'] = vid
-                        inventory_dict['main']['chassis'][pid]['sn'] = sn
-                    if slot:
-                        if 'WS-C' in pid or 'RP' in pid:
-                            if 'rp' not in inventory_dict['slot'][slot]:
-                                inventory_dict['slot'][slot]['rp'] = {}
-                                if pid not in inventory_dict['slot'][slot]['rp']:
-                                    inventory_dict['slot'][slot]['rp'][pid] = {}
-                                    if 'PWR' in pid:
-                                        inventory_dict['slot'][slot]['rp'][pid][swstack_power] = pid
-                                        inventory_dict['slot'][slot]['rp'][pid][swstack_power_sn] = sn
-                                    else:
-                                        inventory_dict['slot'][slot]['rp'][pid]['name'] = name
-                                        inventory_dict['slot'][slot]['rp'][pid]['descr'] = descr
-                                        inventory_dict['slot'][slot]['rp'][pid]['pid'] = pid
-                                        inventory_dict['slot'][slot]['rp'][pid]['vid'] = vid
-                                        inventory_dict['slot'][slot]['rp'][pid]['sn'] = sn
-                        elif 'SIP' in pid or 'ISR' in pid in pid or 'ONS' in pid:
-                            if 'lc' not in inventory_dict['slot'][slot]:
-                                inventory_dict['slot'][slot]['lc'] = {}
-                                if pid not in inventory_dict['slot'][slot]['lc']:
-                                    inventory_dict['slot'][slot]['lc'][pid] = {}
-                                    inventory_dict['slot'][slot]['lc'][pid]['name'] = name
-                                    inventory_dict['slot'][slot]['lc'][pid]['descr'] = descr
-                                    inventory_dict['slot'][slot]['lc'][pid]['pid'] = pid
-                                    inventory_dict['slot'][slot]['lc'][pid]['vid'] = vid
-                                    inventory_dict['slot'][slot]['lc'][pid]['sn'] = sn
-                                    mod = pid
-                        elif ('STACK' in pid) and subslot:
-                            if 'rp' not in inventory_dict['slot'][slot]:
-                                inventory_dict['slot'][slot]['rp'] = {}
-                            if old_pid not in inventory_dict['slot'][slot]['rp']:
-                                inventory_dict['slot'][slot]['rp'][old_pid] = {}
-                            if 'subslot' not in inventory_dict['slot'][slot]['rp'][old_pid]:
-                                inventory_dict['slot'][slot]['rp'][old_pid]['subslot'] = {}
-                            if subslot not in inventory_dict['slot'][slot]['rp'][old_pid]['subslot']:
-                                inventory_dict['slot'][slot]['rp'][old_pid]['subslot'][subslot] = {}
-                            if pid not in inventory_dict['slot'][slot]['rp'][old_pid]['subslot'][subslot]:
-                                inventory_dict['slot'][slot]['rp'][old_pid]['subslot'][subslot][pid] = {}
-                            inventory_dict['slot'][slot]['rp'][old_pid]['subslot'][subslot][pid]['name'] = name
-                            inventory_dict['slot'][slot]['rp'][old_pid]['subslot'][subslot][pid]['descr'] = descr
-                            inventory_dict['slot'][slot]['rp'][old_pid]['subslot'][subslot][pid]['pid'] = pid
-                            inventory_dict['slot'][slot]['rp'][old_pid]['subslot'][subslot][pid]['vid'] = vid
-                            inventory_dict['slot'][slot]['rp'][old_pid]['subslot'][subslot][pid]['sn'] = sn
-                            slot = subslot = ''
-                        elif subslot:
-                            if 'subslot' not in inventory_dict['slot'][slot]['lc'][mod]:
-                                inventory_dict['slot'][slot]['lc'][mod]['subslot'] = {}
-                            if subslot not in inventory_dict['slot'][slot]['lc'][mod]['subslot']:
-                                inventory_dict['slot'][slot]['lc'][mod]['subslot'][subslot] = {}
-                            if pid not in inventory_dict['slot'][slot]['lc'][mod]['subslot'][subslot]:
-                                inventory_dict['slot'][slot]['lc'][mod]['subslot'][subslot][pid] = {}
-                            inventory_dict['slot'][slot]['lc'][mod]['subslot'][subslot][pid]['name'] = name
-                            inventory_dict['slot'][slot]['lc'][mod]['subslot'][subslot][pid]['descr'] = descr
-                            inventory_dict['slot'][slot]['lc'][mod]['subslot'][subslot][pid]['pid'] = pid
-                            inventory_dict['slot'][slot]['lc'][mod]['subslot'][subslot][pid]['vid'] = vid
-                            inventory_dict['slot'][slot]['lc'][mod]['subslot'][subslot][pid]['sn'] = sn
-                            slot = subslot = ''
-                        else:
-                            if 'other' not in inventory_dict['slot'][slot]:
-                                inventory_dict['slot'][slot]['other'] = {}
-                                if pid not in inventory_dict['slot'][slot]['other']:
-                                    inventory_dict['slot'][slot]['other'][pid] = {}
-                                    inventory_dict['slot'][slot]['other'][pid]['name'] = name
-                                    inventory_dict['slot'][slot]['other'][pid]['descr'] = descr
-                                    inventory_dict['slot'][slot]['other'][pid]['pid'] = pid
-                                    inventory_dict['slot'][slot]['other'][pid]['vid'] = vid
-                                    inventory_dict['slot'][slot]['other'][pid]['sn'] = sn
+                group = m.groupdict()
+                pid = group['pid']
+                vid = group['vid'] or ''
+                sn = group['sn'] or ''
+
+                # NAME: "Chassis", DESCR: "Cisco ASR1006 Chassis"
+                if 'Chassis' in name:
+                    main_dict = ret_dict.setdefault('main', {}).\
+                                         setdefault('chassis', {}).\
+                                         setdefault(pid, {})
+                    main_dict['name'] = name
+                    main_dict['descr'] = descr
+                    main_dict['pid'] = pid
+                    main_dict['vid'] = vid
+                    main_dict['sn'] = sn
+
+                # PID: STACK-T1-50CM     , VID: V01  , SN: LCC1921G250
+                if 'STACK' in pid:
+                    main_dict = ret_dict.setdefault('main', {})
+                    main_dict['swstack'] = True
+
+                if ('ASR-9') in pid and ('PWR' not in pid) and ('FAN' not in pid):
+                    rp_dict = ret_dict.setdefault('slot', {}).\
+                                       setdefault('0', {}).\
+                                       setdefault('rp', {}).\
+                                       setdefault(pid, {})
+                    rp_dict['name'] = name
+                    rp_dict['descr'] = descr
+                    rp_dict['pid'] = pid
+                    rp_dict['vid'] = vid
+                    rp_dict['sn'] = sn
+                    asr900_rp = True
+
+                # Ensure name, slot have been previously parsed
+                if not name or not slot:
+                    continue
+
+                # PID: ASR1000-RP2       , VID: V02  , SN: JAE153408NJ
+                # PID: ASR1000-RP2       , VID: V03  , SN: JAE1703094H
+                # PID: WS-C3850-24P-E    , VID: V01  , SN: FCW1932D0LB
+                if ('RP' in pid) or ('WS-C' in pid):
+                    rp_dict = slot_dict.setdefault('rp', {}).\
+                                        setdefault(pid, {})
+                    rp_dict['name'] = name
+                    rp_dict['descr'] = descr
+                    rp_dict['pid'] = pid
+                    rp_dict['vid'] = vid
+                    rp_dict['sn'] = sn
+
+                # PID: ASR1000-SIP40     , VID: V02  , SN: JAE200609WP
+                # PID: ISR4331/K9        , VID:      , SN: FDO21520TGH
+                elif ('SIP' in pid) or ('ISR' in pid):
+                    lc_dict = slot_dict.setdefault('lc', {}).\
+                                        setdefault(pid, {})
+                    lc_dict['name'] = name
+                    lc_dict['descr'] = descr
+                    lc_dict['pid'] = pid
+                    lc_dict['vid'] = vid
+                    lc_dict['sn'] = sn
+
+                # PID: SP7041-E          , VID: E    , SN: MTC164204VE
+                # PID: SFP-GE-T          , VID: V02  , SN: MTC2139029X   
+                elif subslot:
+                    if ('STACK' in pid) or asr900_rp:
+                        subslot_dict = rp_dict.setdefault('subslot', {}).\
+                                               setdefault(subslot, {}).\
+                                               setdefault(pid, {})
+                    else:
+                        subslot_dict = lc_dict.setdefault('subslot', {}).\
+                                               setdefault(subslot, {}).\
+                                               setdefault(pid, {})
+                    subslot_dict['name'] = name
+                    subslot_dict['descr'] = descr
+                    subslot_dict['pid'] = pid
+                    subslot_dict['vid'] = vid
+                    subslot_dict['sn'] = sn
+
+                # PID: ASR1006-PWR-AC    , VID: V01  , SN: ART1210Q049
+                # PID: ASR1006-PWR-AC    , VID: V01  , SN: ART1210Q04C
+                # PID: ASR-920-FAN-M     , VID: V01  , SN: CAT1903V028
+                else:
+                    other_dict = slot_dict.setdefault('other', {}).\
+                                           setdefault(pid, {})
+                    other_dict['name'] = name
+                    other_dict['descr'] = descr
+                    other_dict['pid'] = pid
+                    other_dict['vid'] = vid
+                    other_dict['sn'] = sn
+
+                # Reset to avoid overwrite
                 name = descr = slot = subslot = ''
                 continue
 
-        return inventory_dict
+        return ret_dict
 
 
 class ShowPlatformSchema(MetaParser):
@@ -1475,7 +1556,8 @@ class ShowBoot(ShowBootSchema):
                 continue
 
             # BOOT variable = bootflash:/asr1000rpx.bin,12;
-            # BOOT variable = flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150907_031219.bin;flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150828_174328.SSA.bin;flash:ISSUCleanGolden;
+            # BOOT variable = flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150907_031219.bin;
+            #                 flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150828_174328.SSA.bin;flash:ISSUCleanGolden;
             p1_1 = re.compile(r'^BOOT +variable +=( *(?P<var>\S+);)?$')
             m = p1_1.match(line)
             if m:
