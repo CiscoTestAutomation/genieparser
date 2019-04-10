@@ -11,11 +11,7 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, \
                                          Any, \
-                                         Optional, \
-                                         Or, \
-                                         And, \
-                                         Default, \
-                                         Use
+                                         Optional
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
