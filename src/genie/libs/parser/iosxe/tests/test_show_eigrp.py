@@ -9,29 +9,43 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # iosxe show ip eigrp
-from genie.libs.parser.iosxe.show_eigrp import ShowEigrpNeighbors, ShowEigrpNeighborsDetail
-
+from genie.libs.parser.iosxe.show_eigrp import ShowEigrpNeighborsDetailParser
+from genie.libs.parser.iosxe.show_eigrp import ShowIpEigrpNeighbors
+from genie.libs.parser.iosxe.show_eigrp import ShowIpv6EigrpNeighbors
 
 class test_show_eigrp_neighbors(unittest.TestCase):
 
     device = Device(name='aDevice')
 
     expected_parsed_output_1 = {
-        'vrf': {
-            'default': {
-                'eigrp_interface': {
-                    'GigabitEthernet0/0': {
-                        'eigrp_nbr': {
-                            '10.1.1.2': {
-                                'hold': 13,
-                                'last_seq_number': 5,
-                                'peer_handle': 0,
-                                'q_cnt': 0,
-                                'rto': 5000,
-                                'srtt': 1996.0,
-                                'uptime': '00:00:03'}}}}}}}
-        
-    
+	    "eigrp_instance": {
+	        "": {
+	            "vrf": {
+	                "default": {
+	                    "address_family": {
+	                        "IPv4": {
+	                            "eigrp_interface": {
+	                                "GigabitEthernet0/0": {
+	                                    "eigrp_nbr": {
+	                                        "10.1.1.2": {
+	                                            "peer_handle": 0,
+	                                            "hold": 13,
+	                                            "uptime": "00:00:03",
+	                                            "srtt": 1996.0,
+	                                            "rto": 5000,
+	                                            "q_cnt": 0,
+	                                            "last_seq_number": 5
+	                                        }
+	                                    }
+	                                }
+	                            }
+	                        }
+	                    }
+	                }
+	            }
+	        }
+	    }
+	}  
 
     device_output_1 = {'execute.return_value': '''
         Device# show ip eigrp neighbors
@@ -41,28 +55,43 @@ class test_show_eigrp_neighbors(unittest.TestCase):
     '''}
 
     expected_parsed_output_2 = {
-        'vrf': {
-            'default': {
-                'eigrp_interface': {
-                    'GigabitEthernet0/0': {
-                        'eigrp_nbr': {
-                            '10.1.1.2': {
-                                'hold': 13,
-                                'last_seq_number': 5,
-                                'peer_handle': 0,
-                                'q_cnt': 0,
-                                'rto': 5000,
-                                'srtt': 1996.0,
-                                'uptime': '00:00:03'},
-                            '10.1.1.9': {
-                                'hold': 14,
-                                'last_seq_number': 5,
-                                'peer_handle': 2,
-                                'q_cnt': 0,
-                                'rto': 5000,
-                                'srtt': 206.0,
-                                'uptime': '00:02:24'}}}}}}}
-
+	    "eigrp_instance": {
+	        "": {
+	            "vrf": {
+	                "default": {
+	                    "address_family": {
+	                        "IPv4": {
+	                            "eigrp_interface": {
+	                                "GigabitEthernet0/0": {
+	                                    "eigrp_nbr": {
+	                                        "10.1.1.9": {
+	                                            "peer_handle": 2,
+	                                            "hold": 14,
+	                                            "uptime": "00:02:24",
+	                                            "srtt": 206.0,
+	                                            "rto": 5000,
+	                                            "q_cnt": 0,
+	                                            "last_seq_number": 5
+	                                        },
+	                                        "10.1.1.2": {
+	                                            "peer_handle": 0,
+	                                            "hold": 13,
+	                                            "uptime": "00:00:03",
+	                                            "srtt": 1996.0,
+	                                            "rto": 5000,
+	                                            "q_cnt": 0,
+	                                            "last_seq_number": 5
+	                                        }
+	                                    }
+	                                }
+	                            }
+	                        }
+	                    }
+	                }
+	            }
+	        }
+	    }
+	}
 
     device_output_2 = {'execute.return_value': '''
         Device# show ip eigrp neighbors
@@ -73,30 +102,47 @@ class test_show_eigrp_neighbors(unittest.TestCase):
     '''}
 
     expected_parsed_output_3 = {
-        'vrf': {
-            'default': {
-                'eigrp_interface': {
-                    'GigabitEthernet0/0': {
-                        'eigrp_nbr': {
-                            '10.1.1.9': {
-                                'hold': 14,
-                                'last_seq_number': 5,
-                                'peer_handle': 2,
-                                'q_cnt': 0,
-                                'rto': 5000,
-                                'srtt': 206.0,
-                                'uptime': '00:02:24'}}},
-                    'GigabitEthernet0/1': {
-                        'eigrp_nbr': {
-                            '10.1.2.3': {
-                                'hold': 11,
-                                'last_seq_number': 5,
-                                'peer_handle': 1,
-                                'q_cnt': 0,
-                                'rto': 5000,
-                                'srtt': 2202.0,
-                                'uptime': '00:20:39'}}}}}}}
-
+	    "eigrp_instance": {
+	        "": {
+	            "vrf": {
+	                "default": {
+	                    "address_family": {
+	                        "IPv4": {
+	                            "eigrp_interface": {
+	                                "GigabitEthernet0/0": {
+	                                    "eigrp_nbr": {
+	                                        "10.1.1.9": {
+	                                            "peer_handle": 2,
+	                                            "hold": 14,
+	                                            "uptime": "00:02:24",
+	                                            "srtt": 206.0,
+	                                            "rto": 5000,
+	                                            "q_cnt": 0,
+	                                            "last_seq_number": 5
+	                                        }
+	                                    }
+	                                },
+	                                "GigabitEthernet0/1": {
+	                                    "eigrp_nbr": {
+	                                        "10.1.2.3": {
+	                                            "peer_handle": 1,
+	                                            "hold": 11,
+	                                            "uptime": "00:20:39",
+	                                            "srtt": 2202.0,
+	                                            "rto": 5000,
+	                                            "q_cnt": 0,
+	                                            "last_seq_number": 5
+	                                        }
+	                                    }
+	                                }
+	                            }
+	                        }
+	                    }
+	                }
+	            }
+	        }
+	    }
+	}
 
     device_output_3 = {'execute.return_value': '''
         Device# show ip eigrp neighbors
@@ -106,39 +152,57 @@ class test_show_eigrp_neighbors(unittest.TestCase):
         1   10.1.2.3     Gi0/1      11    00:20:39  2202   5000   0   5
     '''}
 
-    expected_parsed_output_4 = {
-        'vrf': {
-            'default': {
-                'eigrp_interface': {
-                    'GigabitEthernet0/0': {
-                        'eigrp_nbr': {
-                            '10.1.1.2': {
-                                'hold': 13,
-                                'last_seq_number': 5,
-                                'peer_handle': 0,
-                                'q_cnt': 0,
-                                'rto': 5000,
-                                'srtt': 1996.0,
-                                'uptime': '00:00:03'},
-                            '10.1.1.9': {
-                                'hold': 14,
-                                'last_seq_number': 5,
-                                'peer_handle': 2,
-                                'q_cnt': 0,
-                                'rto': 5000,
-                                'srtt': 206.0,
-                                'uptime': '00:02:24'}}},
-                    'GigabitEthernet0/1': {
-                        'eigrp_nbr': {
-                            '10.1.2.3': {
-                                'hold': 11,
-                                'last_seq_number': 5,
-                                'peer_handle': 1,
-                                'q_cnt': 0,
-                                'rto': 5000,
-                                'srtt': 2202.0,
-                                'uptime': '00:20:39'}}}}}}}
-
+    expected_parsed_output_4 ={
+	    "eigrp_instance": {
+	        "": {
+	            "vrf": {
+	                "default": {
+	                    "address_family": {
+	                        "IPv4": {
+	                            "eigrp_interface": {
+	                                "GigabitEthernet0/0": {
+	                                    "eigrp_nbr": {
+	                                        "10.1.1.2": {
+	                                            "peer_handle": 0,
+	                                            "hold": 13,
+	                                            "uptime": "00:00:03",
+	                                            "srtt": 1996.0,
+	                                            "rto": 5000,
+	                                            "q_cnt": 0,
+	                                            "last_seq_number": 5
+	                                        },
+	                                        "10.1.1.9": {
+	                                            "peer_handle": 2,
+	                                            "hold": 14,
+	                                            "uptime": "00:02:24",
+	                                            "srtt": 206.0,
+	                                            "rto": 5000,
+	                                            "q_cnt": 0,
+	                                            "last_seq_number": 5
+	                                        }
+	                                    }
+	                                },
+	                                "GigabitEthernet0/1": {
+	                                    "eigrp_nbr": {
+	                                        "10.1.2.3": {
+	                                            "peer_handle": 1,
+	                                            "hold": 11,
+	                                            "uptime": "00:20:39",
+	                                            "srtt": 2202.0,
+	                                            "rto": 5000,
+	                                            "q_cnt": 0,
+	                                            "last_seq_number": 5
+	                                        }
+	                                    }
+	                                }
+	                            }
+	                        }
+	                    }
+	                }
+	            }
+	        }
+	    }
+	}
 
     device_output_4 = {'execute.return_value': '''
         Device# show ip eigrp neighbors
@@ -152,37 +216,56 @@ class test_show_eigrp_neighbors(unittest.TestCase):
     '''}
 
     expected_parsed_output_5 = {
-        'vrf': {
-            'default': {
-                'eigrp_interface': {
-                    'GigabitEthernet0/0': {
-                        'eigrp_nbr': {
-                            '10.1.1.2': {
-                                'hold': 13,
-                                'last_seq_number': 5,
-                                'peer_handle': 0,
-                                'q_cnt': 0,
-                                'rto': 5000,
-                                'srtt': 1996.0,
-                                'uptime': '00:00:03'},
-                            '10.1.1.9': {
-                                'hold': 14,
-                                'last_seq_number': 5,
-                                'peer_handle': 2,
-                                'q_cnt': 0,
-                                'rto': 5000,
-                                'srtt': 206.0,
-                                'uptime': '00:02:24'}}},
-                    'GigabitEthernet0/1': {
-                        'eigrp_nbr': {
-                            '10.1.2.3': {
-                                'hold': 11,
-                                'last_seq_number': 5,
-                                'peer_handle': 1,
-                                'q_cnt': 0,
-                                'rto': 5000,
-                                'srtt': 2202.0,
-                                'uptime': '00:20:39'}}}}}}}
+	    "eigrp_instance": {
+	        "": {
+	            "vrf": {
+	                "default": {
+	                    "address_family": {
+	                        "IPv4": {
+	                            "eigrp_interface": {
+	                                "GigabitEthernet0/0": {
+	                                    "eigrp_nbr": {
+	                                        "10.1.1.2": {
+	                                            "peer_handle": 0,
+	                                            "hold": 13,
+	                                            "uptime": "00:00:03",
+	                                            "srtt": 1996.0,
+	                                            "rto": 5000,
+	                                            "q_cnt": 0,
+	                                            "last_seq_number": 5
+	                                        },
+	                                        "10.1.1.9": {
+	                                            "peer_handle": 2,
+	                                            "hold": 14,
+	                                            "uptime": "00:02:24",
+	                                            "srtt": 206.0,
+	                                            "rto": 5000,
+	                                            "q_cnt": 0,
+	                                            "last_seq_number": 5
+	                                        }
+	                                    }
+	                                },
+	                                "GigabitEthernet0/1": {
+	                                    "eigrp_nbr": {
+	                                        "10.1.2.3": {
+	                                            "peer_handle": 1,
+	                                            "hold": 11,
+	                                            "uptime": "00:20:39",
+	                                            "srtt": 2202.0,
+	                                            "rto": 5000,
+	                                            "q_cnt": 0,
+	                                            "last_seq_number": 5
+	                                        }
+	                                    }
+	                                }
+	                            }
+	                        }
+	                    }
+	                }
+	            }
+	        }
+	    }
+	}
 
     device_output_5 = {'execute.return_value': '''
         Device# show ip eigrp neighbors
@@ -193,41 +276,59 @@ class test_show_eigrp_neighbors(unittest.TestCase):
         2   10.1.1.9     Gi0/0           14 00:02:24   206   5000  0  5
         1   10.1.2.3     Gi0/1           11 00:20:39  2202   5000  0  5
 
-    '''}
-        
+    '''}        
 
     expected_parsed_output_6 = {
-    'vrf': {
-        'default': {
-            'eigrp_interface': {
-                'Ethernet0/0': {
-                    'eigrp_nbr': {
-                        '10.1.1.2': {
-                            'hold': 13,
-                            'last_seq_number': 5,
-                            'peer_handle': 0,
-                            'q_cnt': 0,
-                            'rto': 5000,
-                            'srtt': 1996.0,
-                            'uptime': '00:00:03'},
-                        '10.1.1.9': {
-                            'hold': 14,
-                            'last_seq_number': 5,
-                            'peer_handle': 2,
-                            'q_cnt': 0,
-                            'rto': 5000,
-                            'srtt': 206.0,
-                            'uptime': '00:02:24'}}},
-                'Ethernet0/1': {
-                    'eigrp_nbr': {
-                        '10.1.2.3': {
-                            'hold': 11,
-                            'last_seq_number': 5,
-                            'peer_handle': 1,
-                            'q_cnt': 0,
-                            'rto': 5000,
-                            'srtt': 2202.0,
-                            'uptime': '00:20:39'}}}}}}}
+	    "eigrp_instance": {
+	        "": {
+	            "vrf": {
+	                "default": {
+	                    "address_family": {
+	                        "IPv4": {
+	                            "eigrp_interface": {
+	                                "Ethernet0/0": {
+	                                    "eigrp_nbr": {
+	                                        "10.1.1.2": {
+	                                            "peer_handle": 0,
+	                                            "hold": 13,
+	                                            "uptime": "00:00:03",
+	                                            "srtt": 1996.0,
+	                                            "rto": 5000,
+	                                            "q_cnt": 0,
+	                                            "last_seq_number": 5
+	                                        },
+	                                        "10.1.1.9": {
+	                                            "peer_handle": 2,
+	                                            "hold": 14,
+	                                            "uptime": "00:02:24",
+	                                            "srtt": 206.0,
+	                                            "rto": 5000,
+	                                            "q_cnt": 0,
+	                                            "last_seq_number": 5
+	                                        }
+	                                    }
+	                                },
+	                                "Ethernet0/1": {
+	                                    "eigrp_nbr": {
+	                                        "10.1.2.3": {
+	                                            "peer_handle": 1,
+	                                            "hold": 11,
+	                                            "uptime": "00:20:39",
+	                                            "srtt": 2202.0,
+	                                            "rto": 5000,
+	                                            "q_cnt": 0,
+	                                            "last_seq_number": 5
+	                                        }
+	                                    }
+	                                }
+	                            }
+	                        }
+	                    }
+	                }
+	            }
+	        }
+	    }
+	}
 
     device_output_6 = {'execute.return_value': '''
         Router# show ip eigrp neighbors
@@ -240,20 +341,35 @@ class test_show_eigrp_neighbors(unittest.TestCase):
 
     '''}
 
-    expected_parsed_output_7 = {
-        'vrf': {
-            'VRF1': {
-                'eigrp_interface': {
-                    'GigabitEthernet3': {
-                        'eigrp_nbr': {
-                            '10.1.2.2': {
-                            'hold': 13,
-                            'last_seq_number': 2,
-                            'peer_handle': 0,
-                            'q_cnt': 0,
-                            'rto': 100,
-                            'srtt': 2.0,
-                            'uptime': '00:01:01'}}}}}}}
+    expected_parsed_output_7 ={
+	    "eigrp_instance": {
+	        "1100": {
+	            "vrf": {
+	                "VRF1": {
+	                    "address_family": {
+	                        "IPv4": {
+	                            "eigrp_interface": {
+	                                "GigabitEthernet3": {
+	                                    "eigrp_nbr": {
+	                                        "10.1.2.2": {
+	                                            "peer_handle": 0,
+	                                            "hold": 13,
+	                                            "uptime": "00:01:01",
+	                                            "srtt": 2.0,
+	                                            "rto": 100,
+	                                            "q_cnt": 0,
+	                                            "last_seq_number": 2
+	                                        }
+	                                    }
+	                                }
+	                            }
+	                        }
+	                    }
+	                }
+	            }
+	        }
+	    }
+	}
 
     device_output_7 = {'execute.return_value': '''
         R1#show ip eigrp vrf VRF1 neighbors
@@ -264,61 +380,107 @@ class test_show_eigrp_neighbors(unittest.TestCase):
         0   10.1.2.2                Gi3                      13 00:01:01    2   100  0  2
     '''}
 
+    expected_parsed_output_8 = {
+	    "eigrp_instance": {
+	        "100": {
+	            "vrf": {
+	                "default": {
+	                    "address_family": {
+	                        "IPv6": {
+	                            "eigrp_interface": {
+	                                "GigabitEthernet2": {
+	                                    "eigrp_nbr": {
+	                                        "FE80::F816:3EFF:FE7D:7953": {
+	                                            "peer_handle": 0,
+	                                            "hold": 14,
+	                                            "uptime": "00:00:12",
+	                                            "srtt": 2.0,
+	                                            "rto": 100,
+	                                            "q_cnt": 0,
+	                                            "last_seq_number": 2
+	                                        }
+	                                    }
+	                                }
+	                            }
+	                        }
+	                    }
+	                }
+	            }
+	        }
+	    }
+	}
+
+    device_output_8 = {'execute.return_value': '''
+    	R1#show ipv6 eigrp neighbors 
+		
+		EIGRP-IPv6 Neighbors for AS(100) 
+		H Address Interface Hold Uptime SRTT RTO Q Seq (sec) (ms) Cnt Num 
+		Link-local address:
+		0 FE80::F816:3EFF:FE7D:7953 Gi2 14 00:00:12 2 100 0 2 
+    '''}
+
     device_output_empty = {'execute.return_value': ''}
 
     def test_show_eigrp_neighbors_1(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_1)
-        obj = ShowEigrpNeighbors(device=self.device)
+        obj = ShowIpEigrpNeighbors(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_1)
 
     def test_show_eigrp_neighbors_2(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_2)
-        obj = ShowEigrpNeighbors(device=self.device)
+        obj = ShowIpEigrpNeighbors(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_2)
 
     def test_show_eigrp_neighbors_3(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_3)
-        obj = ShowEigrpNeighbors(device=self.device)
+        obj = ShowIpEigrpNeighbors(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_3)
 
     def test_show_eigrp_neighbors_4(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_4)
-        obj = ShowEigrpNeighbors(device=self.device)
+        obj = ShowIpEigrpNeighbors(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_4)
 
     def test_show_eigrp_neighbors_5(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_5)
-        obj = ShowEigrpNeighbors(device=self.device)
+        obj = ShowIpEigrpNeighbors(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_5)
 
     def test_show_eigrp_neighbors_6(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_6)
-        obj = ShowEigrpNeighbors(device=self.device)
+        obj = ShowIpEigrpNeighbors(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_6)
 
     def test_show_eigrp_neighbors_7(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_7)
-        obj = ShowEigrpNeighbors(device=self.device)
+        obj = ShowIpEigrpNeighbors(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_7)
+
+    def test_show_eigrp_neighbors_8(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_8)
+        obj = ShowIpv6EigrpNeighbors(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_8)
 
     def test_show_eigrp_neighbors_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_empty)
-        obj = ShowEigrpNeighbors(device=self.device)
+        obj = ShowIpEigrpNeighbors(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
@@ -354,7 +516,6 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                                 'srtt': 12.0,
                                                 'topology_ids_from_peer': 0,
                                                 'uptime': '00:02:31'}}}}}}}}}}}
-
 
     device_output_1 = {'execute.return_value': '''
         Device# show ip eigrp neighbors detail
@@ -404,8 +565,6 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                                 'prefixes': 1, 
                                                 'topology_ids_from_peer': 0}}}}}}}}}}}
 
-
-
     device_output_2 = {'execute.return_value': '''
         Device# show ip eigrp neighbors detail
 
@@ -445,7 +604,6 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                                 'topology_ids_from_peer': 0,
                                                 'uptime': '00:01:03'}}}}}}}}}}}
 
-
     device_output_3 = {'execute.return_value': '''
         R1#show ip eigrp vrf VRF1 neighbors detail 
         EIGRP-IPv4 Neighbors for AS(1100) VRF(VRF1)
@@ -458,7 +616,6 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
 
         Max Nbrs: 0, Current Nbrs: 0
     '''}
-
 
     expected_parsed_output_4 = {
         'eigrp_instance': {
@@ -488,9 +645,6 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                                 'topology_ids_from_peer': 0,
                                                 'uptime': '00:01:03'}}}}}}}}}}}
 
-
-
-
     device_output_4 = {'execute.return_value': '''
         R1#show ip eigrp vrf VRF1 neighbors detail 
         EIGRP-IPv4 VR(foo) Address-Family Neighbors for AS(1) VRF(VRF1)
@@ -509,21 +663,21 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
     def test_show_eigrp_neighbors_detail_1(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_1)
-        obj = ShowEigrpNeighborsDetail(device=self.device)
+        obj = ShowEigrpNeighborsDetailParser(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_1)
 
     def test_show_eigrp_neighbors_detail_2(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_2)
-        obj = ShowEigrpNeighborsDetail(device=self.device)
+        obj = ShowEigrpNeighborsDetailParser(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_2)
 
     def test_show_eigrp_neighbors_detail_3(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_3)
-        obj = ShowEigrpNeighborsDetail(device=self.device)
+        obj = ShowEigrpNeighborsDetailParser(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_3)
 
@@ -531,14 +685,14 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
     def test_show_eigrp_neighbors_detail_4(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_3)
-        obj = ShowEigrpNeighborsDetail(device=self.device)
+        obj = ShowEigrpNeighborsDetailParser(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_4)
 
     def test_show_eigrp_neighbors_detail_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_empty)
-        obj = ShowEigrpNeighborsDetail(device=self.device)
+        obj = ShowEigrpNeighborsDetailParser(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
