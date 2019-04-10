@@ -241,9 +241,7 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
         mngaddress_re = re.compile(r'Mgmt\s*address\s*\([\w]+\)\s*\:\s*')
         # Interface address(es):
         interface_address_re = re.compile(r''
-                    'Interface\s*address\s*\(\w+\)\s*\:\s*')
-        # Copyright (c) 1986-2007 by Cisco Systems, Inc.
-        version_end_re = re.compile(r'Copyright\s*\(c\)\s*')
+                    'Interface\s*address\s*\(\w+\)\s*\:\s*')        
 
         # IPv6 address: FE80::203:E3FF:FE6A:BF81  (link-local)
         # IPv6 address: 4000::BC:0:0:C0A8:BC06  (global unicast)
@@ -372,13 +370,11 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
                 continue
 
             if software_version_flag:
-                if line and not version_end_re.match(line) and \
-                        not advertver_re.match(line):
+                if line and not advertver_re.match(line):
 
                     sw_version += line
                     continue
-                elif version_end_re.match(line) or not line \
-                        or advertver_re.match(line):
+                elif not line or advertver_re.match(line):
 
                     result = software_version_re.match(sw_version)
                     devices_dict['software_version'] = \

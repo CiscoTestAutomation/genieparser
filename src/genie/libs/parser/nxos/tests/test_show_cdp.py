@@ -128,8 +128,10 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
                 'platform': 'cisco WS-C3750E-24TD',
                 'port_id': 'GigabitEthernet1',
                 'software_version': 'Cisco IOS Software, C3750E Software '
-                                    '(C3750E-UNIVERSAL-M), Version 12.2(35)SE5, '
-                                    'RELEASE SOFTWARE (fc1)',
+                                   '(C3750E-UNIVERSAL-M), Version 12.2(35)SE5, '
+                                   'RELEASE SOFTWARE (fc1)Copyright (c) '
+                                   '1986-2007 by Cisco Systems, Inc.Compiled '
+                                   'Thu 19-Jul-07 16:17 by nachen',
                 'system_name': '',
                 'advertisement_ver': 2,
                 'vtp_management_domain': ''}},
