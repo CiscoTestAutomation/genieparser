@@ -97,7 +97,8 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
 
             # IP Route Table for VRF "default"
             # IPv6 Routing Table for VRF "default"
-            p1 = re.compile(r'^(IP|IPv6) +(Route|Routing) +Table +for +VRF +"(?P<vrf>\w+)"$')
+            # IPv6 Routing Table for VRF "otv-vrf139"            
+            p1 = re.compile(r'^(IP|IPv6) +(Route|Routing) +Table +for +VRF +"(?P<vrf>[\w\-]+)"$')
             m = p1.match(line)
             if m:
                 vrf = str(m.groupdict()['vrf'])
