@@ -870,11 +870,11 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                                     "0.0.0.0": {
                                         "interfaces": {
                                             "GigabitEthernet0/0/0/0": {
-                                                "bfd_enable": True,
-                                                "bfd_mode": "Default",
                                                 "neighbors": {
                                                     "10.1.1.1": {
                                                         "neighbor_router_id": "10.1.1.1",
+                                                        "bfd_enable": True,
+                                                        "bfd_mode": "Default",
                                                         "address": "10.1.1.8",
                                                         "priority": 1,
                                                         "state": "full",
