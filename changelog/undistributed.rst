@@ -290,3 +290,10 @@
             show ipv6 cef vrf <vrf>
             show ipv6 cef <prefix>
             show ipv6 cef vrf <vrf> <prefix>
+
+----------------------------------------------------------------------------------
+                                 ROUTING
+----------------------------------------------------------------------------------
+* NXOS
+	* Updated ShowRoutingIpv6VrfAll to support different vrf
+
