@@ -264,7 +264,14 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
                 'native_vlan': '',
                 'platform': 'Cisco ',
                 'port_id': 'GigabitEthernet0',
-                'software_version': 'Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)',
+                'software_version': 'Cisco IOS Software, IOSv Software '
+                                   '(VIOS-ADVENTERPRISEK9-M), Version '
+                                   '15.7(3)M3, RELEASE SOFTWARE (fc2)Technical '
+                                   'Support: '
+                                   'http://www.cisco.com/techsupportCopyright '
+                                   '(c) 1986-2018 by Cisco Systems, '
+                                   'Inc.Compiled Wed 01-Aug-18 16:45 by '
+                                   'prod_rel_team',
                 'vtp_management_domain': ''},
 
             },
@@ -340,7 +347,14 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
                     'native_vlan': '',
                     'platform': 'Cisco ',
                     'port_id': 'GigabitEthernet0',
-                    'software_version': 'Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)',
+                    'software_version': 'Cisco IOS Software, IOSv Software '
+                                   '(VIOS-ADVENTERPRISEK9-M), Version '
+                                   '15.7(3)M3, RELEASE SOFTWARE (fc2)Technical '
+                                   'Support: '
+                                   'http://www.cisco.com/techsupportCopyright '
+                                   '(c) 1986-2018 by Cisco Systems, '
+                                   'Inc.Compiled Wed 01-Aug-18 16:45 by '
+                                   'prod_rel_team',
                     'vtp_management_domain': ''},
                 2: {
                     'advertisement_ver': 2,
@@ -354,7 +368,14 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
                     'native_vlan': '',
                     'platform': 'Cisco ',
                     'port_id': 'GigabitEthernet0',
-                    'software_version': 'Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)',
+                     'software_version': 'Cisco IOS Software, IOSv Software '
+                                   '(VIOS-ADVENTERPRISEK9-M), Version '
+                                   '15.7(3)M3, RELEASE SOFTWARE (fc2)Technical '
+                                   'Support: '
+                                   'http://www.cisco.com/techsupportCopyright '
+                                   '(c) 1986-2018 by Cisco Systems, '
+                                   'Inc.Compiled Wed 01-Aug-18 16:45 by '
+                                   'prod_rel_team',
                     'vtp_management_domain': ''},
                 },
         }
