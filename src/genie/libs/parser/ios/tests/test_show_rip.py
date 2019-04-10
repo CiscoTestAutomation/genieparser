@@ -54,62 +54,62 @@ class test_show_ipv6_rip(test_show_ipv6_rip_iosxe):
 	device = Device(name='aDevice')
 	golden_parsed_output_ios_none = {
 	  "vrf": {
-	    "one": {
-	      "address_family": {
-	        "ipv6": {
-	          "distance": 25,
-	          "interfaces": {
-	            "Ethernet2": {}
-	          },
-	          "maximum_paths": 4,
-	          "multicast_group": "FF02::9",
-	          "originate_default_route": {
-	            "enabled": False
-	          },
-	          "pid": 55,
-	          "poison_reverse": False,
-	          "port": 521,
-	          "split_horizon": True,
-	          "statistics": {
-	            "periodic_updates": 8883,
-	            "trigger_updates": 2
-	          },
-	          "timers": {
-	            "expire_time": 180,
-	            "flush_interval": 120,
-	            "holddown_interval": 0,
-	            "update_interval": 30
-	          }
-	        }
-	      }
-	    },
-	"two": {
-	      "address_family": {
-	        "ipv6": {
-	          "distance": 120,
-	          "maximum_paths": 4,
-	          "multicast_group": "FF02::9",
-	          "originate_default_route": {
-	            "enabled": False
-	          },
-	          "pid": 61,
-	          "poison_reverse": False,
-	          "port": 521,
-	          "split_horizon": True,
-	          "statistics": {
-	            "periodic_updates": 8883,
-	            "trigger_updates": 0
-	          },
-	          "timers": {
-	            "expire_time": 180,
-	            "flush_interval": 120,
-	            "holddown_interval": 0,
-	            "update_interval": 30
-	          }
-	        }
-	      }
-	    }
-	  }
+		"one": {
+		  "address_family": {
+		    "ipv6": {
+		      "distance": 25,
+		      "interfaces": {
+		        "Ethernet2": {}
+		      },
+		      "maximum_paths": 4,
+		      "multicast_group": "FF02::9",
+		      "originate_default_route": {
+		        "enabled": False
+		      },
+		      "pid": 55,
+		      "poison_reverse": False,
+		      "port": 521,
+		      "split_horizon": True,
+		      "statistics": {
+		        "periodic_updates": 8883,
+		        "trigger_updates": 2
+		      },
+		      "timers": {
+		        "expire_time": 180,
+		        "flush_interval": 120,
+		        "holddown_interval": 0,
+		        "update_interval": 30
+		      }
+		    }
+		  }
+		},
+		"two": {
+		      "address_family": {
+		        "ipv6": {
+		          "distance": 120,
+		          "maximum_paths": 4,
+		          "multicast_group": "FF02::9",
+		          "originate_default_route": {
+		            "enabled": False
+		          },
+		          "pid": 61,
+		          "poison_reverse": False,
+		          "port": 521,
+		          "split_horizon": True,
+		          "statistics": {
+		            "periodic_updates": 8883,
+		            "trigger_updates": 0
+		          },
+		          "timers": {
+		            "expire_time": 180,
+		            "flush_interval": 120,
+		            "holddown_interval": 0,
+		            "update_interval": 30
+		          }
+		        }
+		      }
+		    }
+		}
 	}
 	golden_parsed_output_ios = {
 		"vrf": {
@@ -176,9 +176,9 @@ class test_show_ipv6_rip(test_show_ipv6_rip_iosxe):
 		Split horizon is on; poison reverse is off
 		Default routes are not generated
 		Periodic updates 8883, trigger updates 2
-		Interfaces:
+	 Interfaces:
 		Ethernet2
-		Redistribution:
+	 Redistribution:
 	RIP process "two", port 521, multicast-group FF02::9, pid 61
 		Administrative distance is 120. Maximum paths is 4
 		Updates every 30 seconds, expire after 180
@@ -186,9 +186,9 @@ class test_show_ipv6_rip(test_show_ipv6_rip_iosxe):
 		Split horizon is on; poison reverse is off
 		Default routes are not generated
 		Periodic updates 8883, trigger updates 0
-		Interfaces:
+	 Interfaces:
 		None
-		Redistribution:
+	 Redistribution:
     '''}
 	def test_empty(self):
 	    self.device1 = Mock(**self.empty_output)
