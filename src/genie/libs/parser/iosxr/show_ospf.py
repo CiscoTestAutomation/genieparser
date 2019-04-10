@@ -699,9 +699,11 @@ class ShowOspfVrfAllInclusiveNeighborDetailSchema(MetaParser):
                                 'areas': 
                                     {Any(): 
                                         {Optional('interfaces'): 
-                                            {Any(): 
-                                                {'neighbors': 
-                                                    {Any(): 
+                                            {Any(): {
+                                                Optional('bfd_enable'): bool,
+                                                Optional('bfd_mode'): str,
+                                                'neighbors': {
+                                                    Any():
                                                         {'neighbor_router_id': str,
                                                         'address': str,
                                                         'priority': int,
@@ -896,6 +898,8 @@ class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetai
                         ['instance'][instance]['areas'][area][intf_type]:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
                         [instance]['areas'][area][intf_type][intf_name] = {}
+                    intf_dict = ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area][intf_type][intf_name]
                 if 'neighbors' not in ret_dict['vrf'][vrf]['address_family']\
                         [af]['instance'][instance]['areas'][area][intf_type]\
                         [intf_name]:
@@ -908,8 +912,12 @@ class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetai
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
                         [instance]['areas'][area][intf_type][intf_name]\
                         ['neighbors'][neighbor] = {}
-                # Set sub_dict
 
+                if m.groupdict()['bfd_status']:
+                    intf_dict.update({'bfd_enable': True})
+                if m.groupdict()['mode']:
+                    intf_dict.update({'bfd_mode': m.groupdict()['mode']})
+                # Set sub_dict
                 sub_dict = ret_dict['vrf'][vrf]['address_family'][af]\
                             ['instance'][instance]['areas'][area][intf_type]\
                             [intf_name]['neighbors'][neighbor]
