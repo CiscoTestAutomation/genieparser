@@ -1,7 +1,7 @@
 """show_spanning_tree.py
    supported commands:
      *  show lldp
-     *  show lldp entry [<WORD>|*]
+     *  show lldp entry *
      *  show lldp interface
      *  show lldp neighbors detail
      *  show lldp traffic
@@ -27,7 +27,7 @@ class ShowLldpSchema(MetaParser):
         'enabled': bool,
         'hello_timer': int,
         'hold_timer': int,
-        'reinit_timer': int
+        'reinit_delay': int
     }
 
 
@@ -48,7 +48,7 @@ class ShowLldp(ShowLldpSchema):
         p2 = re.compile(r'^LLDP( +advertisements +are +sent +every +'
             '(?P<hello_timer>\d+))?( +hold +time +advertised +is +'
             '(?P<hold_timer>\d+))?( +interface +reinitialisation '
-            '+delay +is +(?P<reinit_timer>\d+))? +seconds$')
+            '+delay +is +(?P<reinit_delay>\d+))? +seconds$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -73,10 +73,10 @@ class ShowLldp(ShowLldpSchema):
         return ret_dict
 
 class ShowLldpEntrySchema(MetaParser):
-    """Schema for show lldp entry [<WORD>|*]"""
+    """Schema for show lldp entry *"""
     schema = {
         'total_entries': int,
-        Optional('interfaces'): {
+        'interfaces': {
             Any(): {
                 'neighbors': {
                     Any(): {                        
@@ -85,9 +85,6 @@ class ShowLldpEntrySchema(MetaParser):
                         'port_description': str,
                         'system_name': str,
                         'system_description': str,
-                        'technical_support': str,
-                        'copyright': str,
-                        Optional('compiled_by'): str,
                         'time_remaining': int,
                         'neighbor_id': str,
                         'hold_time': int,
@@ -105,7 +102,7 @@ class ShowLldpEntrySchema(MetaParser):
     }
 
 class ShowLldpEntry(ShowLldpEntrySchema):
-    """Parser for show lldp entry [<WORD>|*]"""
+    """Parser for show lldp entry *"""
 
     # Capability codes:
     #    (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
@@ -119,40 +116,37 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                         'S': 'station_only',
                         'O': 'other'}
 
-    cli_command = 'show lldp entry {entry}'
+    cli_command = 'show lldp entry *'
 
-    def cli(self, entry='*',output=None):
+    def cli(self, output=None):
         if output is None:
             # get output from device
-            if hasattr(self, 'CMD'):
-                out = self.device.execute(self.CMD)
-            else:
-                out = self.device.execute(self.cli_command.format(entry=entry))
+            out = self.device.execute(self.cli_command)
         else:
             out = output
         # initial return dictionary
         ret_dict = {}
         # Local Interface: GigabitEthernet0/0/0/0
-        p1 = re.compile(r'^Local +Interface: +(?P<local_interface>[\w\/\.\-]+)$')
+        p1 = re.compile(r'^Local +Interface: +(?P<local_interface>\S+)$')
         # Chassis id: 001e.49f7.2c00
         p2 = re.compile(r'^Chassis +id: +(?P<chassis_id>[\w\.]+)$')
         # Port id: Gi2
-        p3 = re.compile(r'^Port +id: +(?P<port_id>[\w\/\.\-]+)$')
+        p3 = re.compile(r'^Port +id: +(?P<port_id>\S+)$')
         # Port Description: GigabitEthernet2
-        p4 = re.compile(r'^Port +Description: +(?P<port_description>[\w\/\.\-]+)$')
+        p4 = re.compile(r'^Port +Description: +(?P<port_description>\S+)$')
         # System Name: R1_csr1000v.openstacklocal
-        p5 = re.compile(r'System +Name: +(?P<system_name>[\w\.]+)$')
+        p5 = re.compile(r'System +Name: +(?P<system_name>\S+)$')
         # System Description: 
         p6 = re.compile(r'^System +Description:$')
         # Cisco IOS Software [Everest], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.1, RELEASE SOFTWARE (fc2)
         # Cisco Nexus Operating System (NX-OS) Software 7.0(3)I7(1)
         p7 = re.compile(r'^(?P<system_description>Cisco +((IOS +Software +\[Everest\])|(Nexus +Operating +System))[\S\s]+)$')
         # Copyright (c) 1986-2017 by Cisco Systems, Inc.
-        p8 = re.compile(r'^Copyright +\(c\) +(?P<copyright>[\S\s]+)$')
+        p8 = re.compile(r'^(?P<copyright>Copyright +\(c\) +[\S\s]+)$')
         # Compiled Sat 22-Jul-17 05:51 by 
-        p9 = re.compile(r'Compiled +\w{3} +\d{1,2}\-\w{3}\-\d{1,2} +\d{2}:\d{2} +by +(?P<compiled_by>[\S\s]+)$')
+        p9 = re.compile(r'^(?P<compiled_by>Compiled +[\S\s]+)$')
         # Technical Support: http://www.cisco.com/techsupport
-        p10 = re.compile(r'^(Technical|TAC) (S|s)upport: +(?P<technical_support>[\S\s]+)$')
+        p10 = re.compile(r'^(?P<technical_support>(Technical|TAC) (S|s)upport: +[\S\s]+)$')
         # Time remaining: 117 seconds
         p11 = re.compile(r'Time +remaining: +(?P<time_remaining>\d+) +seconds$')
         # Hold Time: 120 seconds
@@ -212,28 +206,28 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             m = p7.match(line)
             if m:
                 group = m.groupdict()
-                sub_dict['system_description'] = group['system_description']
+                sub_dict['system_description'] = group['system_description'] + '\n'
                 continue
 
             # Copyright (c) 1986-2011 by Cisco Systems, Inc.
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                sub_dict['copyright'] = group['copyright']
+                sub_dict['system_description'] += group['copyright'] + '\n'
                 continue
 
             # Compiled Thu 21-Jul-11 01:23 by prod_rel_team
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                sub_dict['compiled_by'] = group['compiled_by']
+                sub_dict['system_description'] += group['compiled_by']
                 continue
 
             # Technical Support: http://www.cisco.com/techsupport 
             m = p10.match(line)
             if m:
                 group = m.groupdict()
-                sub_dict['technical_support'] = group['technical_support']
+                sub_dict['system_description'] += group['technical_support'] + '\n'
                 continue
 
             # Time remaining: 112 seconds
@@ -290,18 +284,23 @@ class ShowLldpEntry(ShowLldpEntrySchema):
 
 class ShowLldpNeighborsDetail(ShowLldpEntry):
     '''Parser for show lldp neighbors detail'''
-    CMD = 'show lldp neighbors detail'
+    cli_command = 'show lldp neighbors detail'
+
+    def cli(self, output=None):
+    	return super().cli(output=output)
 
 class ShowLldpTrafficSchema(MetaParser):
     """Schema for show lldp traffic"""
     schema = {
-        "frame_in": int,
-        "frame_out": int,
-        "frame_error_in": int,
-        "frame_discard": int,
-        "tlv_discard": int,
-        'tlv_unknown': int,
-        'entries_aged_out': int
+    	"counters": {
+	        "frame_in": int,
+	        "frame_out": int,
+	        "frame_error_in": int,
+	        "frame_discard": int,
+	        "tlv_discard": int,
+	        'tlv_unknown': int,
+	        'entries_aged_out': int
+        }
     }
 
 class ShowLldpTraffic(ShowLldpTrafficSchema):
@@ -338,20 +337,30 @@ class ShowLldpTraffic(ShowLldpTrafficSchema):
         for line in out.splitlines():
             line = line.strip()
 
+            # Total frames out: 588
+	        # Total frames in: 399
+	        # Total frames received in error: 0
+	        # Total frames discarded: 0
             m = p1.match(line)
             if m:
-                group = m.groupdict()
-                ret_dict.update({k:int(v) for k, v in group.items() if v is not None})
+            	counters = ret_dict.setdefault('counters', {})
+            	group = m.groupdict()
+            	counters.update({k:int(v) for k, v in group.items() if v is not None})
 
+            # Total entries aged: 0
             m = p2.match(line)
             if m:
-                group = m.groupdict()
-                ret_dict.update({k:int(v) for k, v in group.items() if v is not None})
+            	counters = ret_dict.setdefault('counters', {})
+            	group = m.groupdict()
+            	counters.update({k:int(v) for k, v in group.items() if v is not None})
 
+            # Total TLVs discarded: 119
+        	# Total TLVs unrecognized: 119
             m = p3.match(line)
             if m:
-                group = m.groupdict()
-                ret_dict.update({k:int(v) for k, v in group.items() if v is not None})
+            	counters = ret_dict.setdefault('counters', {})
+            	group = m.groupdict()
+            	counters.update({k:int(v) for k, v in group.items() if v is not None})
         
         return ret_dict
 
