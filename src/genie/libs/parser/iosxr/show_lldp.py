@@ -118,10 +118,13 @@ class ShowLldpEntry(ShowLldpEntrySchema):
 
     cli_command = 'show lldp entry *'
 
-    def cli(self, output=None):
+    def cli(self, cmd='', output=None):
         if output is None:
             # get output from device
-            out = self.device.execute(self.cli_command)
+            if cmd:
+                out = self.device.execute(cmd)
+            else:
+                out = self.device.execute(self.cli_command)
         else:
             out = output
         # initial return dictionary
@@ -287,7 +290,7 @@ class ShowLldpNeighborsDetail(ShowLldpEntry):
     cli_command = 'show lldp neighbors detail'
 
     def cli(self, output=None):
-    	return super().cli(output=output)
+    	return super().cli(cmd=self.cli_command, output=output)
 
 class ShowLldpTrafficSchema(MetaParser):
     """Schema for show lldp traffic"""
