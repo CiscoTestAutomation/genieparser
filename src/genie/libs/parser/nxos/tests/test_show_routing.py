@@ -720,23 +720,22 @@ class test_show_routing_ipv6_vrf_all(unittest.TestCase):
     def test_golden_1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
-        bgp_obj = ShowRoutingIpv6VrfAll(device=self.device)
-        parsed_output = bgp_obj.parse()
+        obj = ShowRoutingIpv6VrfAll(device=self.device)
+        parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
     def test_golden_2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_2)
-        bgp_obj = ShowRoutingIpv6VrfAll(device=self.device)
-        parsed_output = bgp_obj.parse()
+        obj = ShowRoutingIpv6VrfAll(device=self.device)
+        parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
-
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
-        bgp_obj = ShowRoutingIpv6VrfAll(device=self.device1)
+        obj = ShowRoutingIpv6VrfAll(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = bgp_obj.parse()
+            parsed_output = obj.parse()
 
 
 # ============================================
