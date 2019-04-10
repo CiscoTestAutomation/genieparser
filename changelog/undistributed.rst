@@ -175,6 +175,25 @@
         'show snmp mib'
 
 --------------------------------------------------------------------------------
+                                   SERVICE
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowServiceGroupTrafficStats for:
+        show service-group traffic-stats
+        show service-group traffic-stats <group>
+
+--------------------------------------------------------------------------------
+                                   FDB
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowMacAddressTable for:
+        show mac address-table
+    * Add ShowMacAddressTableAgingTime for:
+        show mac address-table aging-time
+    * Add ShowMacAddressTableLearning for:
+        show mac address-table learning
+
+--------------------------------------------------------------------------------
                                    BFD
 --------------------------------------------------------------------------------
 * IOS
