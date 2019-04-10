@@ -92,10 +92,11 @@ class ShowRplPrefixSet(ShowRplPrefixSetSchema):
                             max_val = '128' if ":" in prefix else '32'
                             masklength_range = '{}..{}'.format(split_ranges[1], max_val)
                             
-                name_dict.update({'protocol': 'ipv6' if ":" in prefix else 'ip'})
+                name_dict.update({'protocol': 'ipv6' if ":" in prefix else 'ipv4'})
 
                 prefix_dict = name_dict.setdefault('prefixes', {}).setdefault("{} {}".format(prefix, masklength_range), {})
-                prefix_dict.update({'prefix': prefix, 'masklength_range': masklength_range})
+                prefix_dict.update({'prefix': prefix})
+                prefix_dict.update({'masklength_range': masklength_range})
                 continue
 
         return ret_dict

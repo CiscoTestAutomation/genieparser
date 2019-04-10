@@ -25,7 +25,7 @@ class test_show_rpl_prefix_set(unittest.TestCase):
         'prefix_set_name': {
             'test': {
                 'prefix_set_name': 'test',
-                'protocol': 'ip',
+                'protocol': 'ipv4',
                 'prefixes': {
                     '35.0.0.0/8 8..8': {
                         'prefix': '35.0.0.0/8',
