@@ -3,10 +3,10 @@
 IOSXE parsers for the following show commands:
     * 'show policy-map interface {interface} input class {class_name}',
     * 'show policy-map interface {interface} output class {class_name}',
-    * 'show policy-map interface {interface} class {class_name}',
     * 'show policy-map interface {interface} input',
     * 'show policy-map interface {interface} output',
     * 'show policy-map interface {interface}',
+    * 'show policy-map interface class {class_name}',
     * 'show policy-map target service-group {num}',
     * 'show policy-map control-plane'
     * 'show policy-map interface',
@@ -30,10 +30,10 @@ from genie.libs.parser.utils.common import Common
 # Schema for :
 #   * 'show policy-map interface {interface} input class {class_name}',
 #   * 'show policy-map interface {interface} output class {class_name}',
-#   * 'show policy-map interface {interface} class {class_name}',
 #   * 'show policy-map interface {interface} input',
 #   * 'show policy-map interface {interface} output',
 #   * 'show policy-map interface {interface}',
+#   * 'show policy-map interface class {class_name}',
 #   * 'show policy-map target service-group {num}',
 #   * 'show policy-map control-plane'
 #   * 'show policy-map interface',
@@ -43,21 +43,22 @@ class ShowPolicyMapTypeSchema(MetaParser):
     ''' Schema for :
         * 'show policy-map interface {interface} input class {class_name}',
         * 'show policy-map interface {interface} output class {class_name}',
-        * 'show policy-map interface {interface} class {class_name}',
         * 'show policy-map interface {interface} input',
         * 'show policy-map interface {interface} output',
         * 'show policy-map interface {interface}',
+        * 'show policy-map interface class {class_name}',
         * 'show policy-map control-plane'
         * 'show policy-map interface',
     '''
 
     schema = {
         Any(): {
+            Optional('service_group'): int,
             'service_policy': {
                 Any(): {
                     'policy_name': {
                         Any(): {
-                            'class_map': {
+                            Optional('class_map'): {
                                 Any(): {
                                     'match_evaluation': str,
                                     'match': list,
@@ -198,10 +199,10 @@ class ShowPolicyMapTypeSchema(MetaParser):
 # Super Parser for:
 #   * 'show policy-map interface {interface} input class {class_name}',
 #   * 'show policy-map interface {interface} output class {class_name}',
-#   * 'show policy-map interface {interface} class {class_name}',
 #   * 'show policy-map interface {interface} input',
 #   * 'show policy-map interface {interface} output',
 #   * 'show policy-map interface {interface}',
+#   * 'show policy-map interface class {class_name}',
 #   * 'show policy-map target service-group {num}',
 #   * 'show policy-map control-plane'
 #   * 'show policy-map interface',
@@ -210,10 +211,10 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
     ''' Super Parser for
         * 'show policy-map interface {interface} input class {class_name}',
         * 'show policy-map interface {interface} output class {class_name}',
-        * 'show policy-map interface {interface} class {class_name}',
         * 'show policy-map interface {interface} input',
         * 'show policy-map interface {interface} output',
         * 'show policy-map interface {interface}',
+        * 'show policy-map interface class {class_name}',
         * 'show policy-map target service-group {num},
         * 'show policy-map control-plane'
         * 'show policy-map interface',
@@ -237,7 +238,10 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         # GigabitEthernet0/1/5
         # Something else
         p0 = re.compile(r'^(?P<top_level>(Control Plane|Giga.*|[Pp]seudo.*|Fast.*|[Ss]erial.*|'
-                         'Ten.*|[Ee]thernet.*|[Tt]unnel.*|[Pp]ort.*))$')
+                         'Ten.*|[Ee]thernet.*|[Tt]unnel.*))$')
+
+        # Port-channel1: Service Group 1
+        p0_1 = re.compile(r'^(?P<top_level>([Pp]ort.*)): +Service Group +(?P<service_group>(\d+))$')
 
         # Service-policy input: Control_Plane_In
         # Service-policy output: shape-out
@@ -304,12 +308,15 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         p10 = re.compile(r'^violated (?P<packets>(\d+)) packets, +(?P<bytes>(\d+)) bytes;'
                           ' action:(?P<action>(\w+))$')
 
+        # violated 0 packets, 0 bytes; actions:
+        p10_1 = re.compile(r'^violated (?P<packets>(\d+)) packets, +(?P<bytes>(\d+)) bytes; actions:$')
+
         # conformed 0000 bps, exceeded 0000 bps
         p11 = re.compile(r'^conformed +(?P<c_bps>(\d+)) bps, exceeded (?P<e_bps>(\d+)) bps$')
 
         # conformed 0 bps, exceed 0 bps, violate 0 bps
-        p11_1 = re.compile(r'^conformed +(?P<c_bps>(\d+)) bps, exceed (?P<e_bps>(\d+)) bps,'
-                            ' violate (?P<v_bps>(\d+)) bps$')
+        p11_1 = re.compile(r'^conformed +(?P<c_bps>(\d+)) bps,+ excee(d|ded) (?P<e_bps>(\d+)) bps, '
+                            'violat(e|ed) (?P<v_bps>(\d+)) bps$')
 
         # drop
         # transmit
@@ -457,6 +464,15 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 top_level_dict = ret_dict.setdefault(top_level, {})
                 continue
 
+            # Port-channel1: Service Group 1
+            m = p0_1.match(line)
+            if m:
+                top_level = m.groupdict()['top_level']
+                service_group = int(m.groupdict()['service_group'])
+                top_level_dict = ret_dict.setdefault(top_level, {})
+                top_level_dict['service_group'] = service_group
+                continue
+
             # Service-policy input: Control_Plane_In
             # Service-policy output: Control_Plane_Out
             m = p1.match(line)
@@ -582,6 +598,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             if m:
                 conformed_line = True
                 exceeded_line = False
+                violated_line = False
                 conformed_dict = police_dict.setdefault('conformed', {})
                 conformed_dict['packets'] = int(m.groupdict()['packets'])
                 conformed_dict['bytes'] = int(m.groupdict()['bytes'])
@@ -600,6 +617,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             m = p9.match(line)
             if m:
                 conformed_line = False
+                violated_line = False
                 exceeded_line = True
                 exceeded_dict = police_dict.setdefault('exceeded', {})
                 exceeded_dict['packets'] = int(m.groupdict()['packets'])
@@ -622,6 +640,17 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 violated_dict['packets'] = int(m.groupdict()['packets'])
                 violated_dict['bytes'] = int(m.groupdict()['bytes'])
                 violated_dict['actions'] = m.groupdict()['action']
+                continue
+
+            # violated 0 packets, 0 bytes; action:
+            m = p10_1.match(line)
+            if m:
+                conformed_line = False
+                exceeded_line = False
+                violated_line = True
+                violated_dict = police_dict.setdefault('violated', {})
+                violated_dict['packets'] = int(m.groupdict()['packets'])
+                violated_dict['bytes'] = int(m.groupdict()['bytes'])
                 continue
 
             # conformed 0000 bps, exceeded 0000 bps
@@ -648,6 +677,8 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                     conformed_dict['actions'] = m.groupdict()['action']
                 elif exceeded_line:
                     exceeded_dict['actions'] = m.groupdict()['action']
+                elif violated_line:
+                    violated_dict['actions'] = m.groupdict()['action']
                 continue
 
             # QoS Set
@@ -1067,7 +1098,7 @@ class ShowPolicyMapInterfaceOutput(ShowPolicyMapTypeSuperParser, ShowPolicyMapTy
                    'show policy-map interface {interface} output'
                    ]
 
-    def cli(self, interface='', class_name='', output=None):
+    def cli(self, interface, class_name='', output=None):
 
         if output is None:
             # Build command
@@ -1086,30 +1117,30 @@ class ShowPolicyMapInterfaceOutput(ShowPolicyMapTypeSuperParser, ShowPolicyMapTy
 
 # ================================================================
 # Parser for:
-#   * 'show policy-map interface {interface} class {class_name}'
+#   * 'show policy-map interface class {class_name}'
 # ================================================================
 class ShowPolicyMapInterfaceClass(ShowPolicyMapTypeSuperParser, ShowPolicyMapTypeSchema):
     
     ''' Parser for:
-        * 'show policy-map interface {interface} class {class_name}'
+        * 'show policy-map interface class {class_name}'
     '''
 
-    cli_command = ['show policy-map interface {interface} class {class_name}',
+    cli_command = ['show policy-map interface class {class_name}',
                    ]
 
-    def cli(self, interface='', class_name='', output=None):
+    def cli(self, class_name='', output=None):
 
         if output is None:
             # Build command
-            if interface and class_name:
-                cmd = self.cli_command[0].format(interface=interface, class_name=class_name)
+            if class_name:
+                cmd = self.cli_command[0].format(class_name=class_name)
             # Execute command
             show_output = self.device.execute(cmd)
         else:
             show_output = output
 
         # Call super
-        return super().cli(cmd=cmd, output=show_output, interface=interface, class_name=class_name)
+        return super().cli(cmd=cmd, output=show_output,class_name=class_name)
 
 
 # ==============================================================

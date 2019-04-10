@@ -18,22 +18,28 @@ from genie.libs.parser.iosxe.show_policy_map import ShowPolicyMap,\
                                                     ShowPolicyMapInterfaceClass,\
                                                     ShowPolicyMapTargetClass
 
-
 # ====================================================================
 # Unit test for :
 #   * 'show policy-map interface {interface} input class {class_name}',
 #   * 'show policy-map interface {interface} output class {class_name}',
+#   * 'show policy-map interface {interface} input',
+#   * 'show policy-map interface {interface} output',
 #   * 'show policy-map interface {interface}',
+#   * 'show policy-map interface class {class_name}',
 #   * 'show policy-map target service-group {num}',
 #   * 'show policy-map control-plane'
 #   * 'show policy-map interface',
 # =====================================================================
 
+
 class test_show_policy_map_type(unittest.TestCase):
     ''' Unit test for
            * 'show policy-map interface {interface} input class {class_name}',
            * 'show policy-map interface {interface} output class {class_name}',
+           * 'show policy-map interface {interface} input',
+           * 'show policy-map interface {interface} output',
            * 'show policy-map interface {interface}',
+           * 'show policy-map interface class {class_name}',
            * 'show policy-map target service-group {num}',
            * 'show policy-map control-plane'
            * 'show policy-map interface',
@@ -685,58 +691,6 @@ class test_show_policy_map_type(unittest.TestCase):
     '''}
 
     golden_parsed_output5 = {
-        'GigabitEthernet0/1/4': {
-            'service_policy': {
-                'input': {
-                    'policy_name': {
-                        'police-in': {
-                            'class_map': {
-                                'class-default': {
-                                    'bytes': 0,
-                                    'match': ['any'],
-                                    'match_evaluation': 'match-any',
-                                    'packets': 0,
-                                    'police': {
-                                        'bc_bytes': 83619,
-                                        'cir_bps': 445500,
-                                        'conformed': {
-                                            'actions': 'transmit',
-                                            'bps': 0,
-                                            'bytes': 0,
-                                            'packets': 0},
-                                        'exceeded': {
-                                            'actions': 'drop',
-                                            'bps': 0,
-                                            'bytes': 0,
-                                            'packets': 0}},
-                                    'rate': {
-                                        'drop_rate_bps': 0,
-                                        'interval': 300,
-                                        'offered_rate_bps': 0}}}}}}}}}
-
-    golden_output5 = {'execute.return_value': '''
-        show policy-map interface gigabitEthernet 0/1/4 input class class-default
-        Load for five secs: 1%/0%; one minute: 3%; five minutes: 3%
-        Time source is NTP, 12:22:26.378 JST Wed Oct 26 2016
-
-        GigabitEthernet0/1/4 
-
-            Service-policy input: police-in
-
-                Class-map: class-default (match-any)  
-                    0 packets, 0 bytes
-                    5 minute offered rate 0000 bps, drop rate 0000 bps
-                    Match: any 
-                    police:
-                        cir 445500 bps, bc 83619 bytes
-                        conformed 0 packets, 0 bytes; actions:
-                          transmit 
-                        exceeded 0 packets, 0 bytes; actions:
-                          drop 
-                        conformed 0000 bps, exceeded 0000 bps
-    Router#'''}
-
-    golden_parsed_output6 = {
         'GigabitEthernet0/0/0': {
             'service_policy': {
                 'output': {
@@ -817,7 +771,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'drop_rate_bps': 0},
                                     'match': ['any']}}}}}}}}
 
-    golden_output6 = {'execute.return_value': '''
+    golden_output5 = {'execute.return_value': '''
         Router#show policy-map interface gigabitEthernet 0/0/0
         Load for five secs: 1%/0%; one minute: 4%; five minutes: 5%
         Time source is NTP, 14:58:52.473 JST Fri Oct 28 2016
@@ -872,7 +826,7 @@ class test_show_policy_map_type(unittest.TestCase):
             Match: any 
     Router#    '''}
 
-    golden_parsed_output7 = {
+    golden_parsed_output6 = {
         'serial3/1': {
             'service_policy': {
                 'output': {
@@ -1110,7 +1064,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                                 'maximum_thresh': '281250',
                                                 'mark_prob': '1/10'}}}}}}}}}}}
 
-    golden_output7 = {'execute.return_value': '''
+    golden_output6 = {'execute.return_value': '''
         Router# show policy-map interface
         serial3/1
         Service-policy output: pol
@@ -1193,7 +1147,7 @@ class test_show_policy_map_type(unittest.TestCase):
             
     '''}
 
-    golden_parsed_output8 = {
+    golden_parsed_output7 = {
         'FastEthernet4/1/1': {
             'service_policy': {
                 'input': {
@@ -1214,7 +1168,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                             '20': {
                                                 'packets_marked': 500}}}}}}}}}}}
 
-    golden_output8 = {'execute.return_value': '''
+    golden_output7 = {'execute.return_value': '''
         Router# show policy-map interface
         FastEthernet4/1/1
         FastEthernet4/1/1
@@ -1228,7 +1182,7 @@ class test_show_policy_map_type(unittest.TestCase):
                             Packets marked 500
         '''}
 
-    golden_parsed_output9 = {
+    golden_parsed_output8 = {
         'TenGigabitEthernet0/0/2': {
             'service_policy': {
                 'output': {
@@ -1319,7 +1273,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                     'pkts_output': 0,
                                     'bytes_output': 0}}}}}}}}
 
-    golden_output9 = {'execute.return_value': '''
+    golden_output8 = {'execute.return_value': '''
         Device# show policy-map interface TenGigabitEthernet0/0/2
             show policy-map interface TenGigabitEthernet0/0/2
             TenGigabitEthernet0/0/2
@@ -1378,6 +1332,58 @@ class test_show_policy_map_type(unittest.TestCase):
                         (pkts output/bytes output) 0/0
     '''}
 
+    golden_parsed_output9 = {
+        'GigabitEthernet0/0/1': {
+            'service_policy': {
+                'input': {
+                    'policy_name': {
+                        'TEST': {
+                            'class_map': {
+                                'class-default': {
+                                    'match_evaluation': 'match-any',
+                                    'packets': 0,
+                                    'bytes': 0,
+                                    'rate': {
+                                        'interval': 300,
+                                        'offered_rate_bps': 0,
+                                        'drop_rate_bps': 0},
+                                    'match': ['any']}}}}},
+                'output': {
+                    'policy_name': {
+                        'TEST2': {
+                            'class_map': {
+                                'class-default': {
+                                    'match_evaluation': 'match-any',
+                                    'packets': 0,
+                                    'bytes': 0,
+                                    'rate': {
+                                        'interval': 300,
+                                        'offered_rate_bps': 0,
+                                        'drop_rate_bps': 0},
+                                    'match': ['any']}}}}}}}}
+
+    golden_output9 = {'execute.return_value': '''
+            PE1#show policy-map interface GigabitEthernet0/0/1
+
+            Load for five secs: 3%/0%; one minute: 3%; five minutes: 2%
+            Time source is NTP, 17:47:15.313 JST Tue Apr 9 2019
+
+            GigabitEthernet0/0/1
+
+                Service-policy input: TEST
+
+                    Class-map: class-default (match-any)
+                        0 packets, 0 bytes
+                        5 minute offered rate 0000 bps, drop rate 0000 bps
+                        Match: any
+
+                Service-policy output: TEST2
+
+                    Class-map: class-default (match-any)
+                        0 packets, 0 bytes
+                        5 minute offered rate 0000 bps, drop rate 0000 bps
+                        Match: any      '''}
+
     golden_parsed_output10 = {
         'GigabitEthernet0/1/1': {
             'service_policy': {
@@ -1429,7 +1435,7 @@ class test_show_policy_map_type(unittest.TestCase):
     '''}
 
     golden_parsed_output11 = {
-        'Port-channel1: Service Group 1': {
+        'TenGigabitEthernet0/3/0.41': {
             'service_policy': {
                 'output': {
                     'policy_name': {
@@ -1437,26 +1443,156 @@ class test_show_policy_map_type(unittest.TestCase):
                             'class_map': {
                                 'VLAN51_QoS': {
                                     'match_evaluation': 'match-all',
-                                    'packets': 210,
-                                    'bytes': 55834,
+                                    'packets': 0,
+                                    'bytes': 0,
                                     'rate': {
                                         'interval': 300,
-                                        'offered_rate_bps': 2000,
-                                        'drop_rate_bps': 2000},
+                                        'offered_rate_bps': 0,
+                                        'drop_rate_bps': 0},
                                     'match': ['access-group name VLAN51_QoS'],
+                                    'queueing': True,
+                                    'queue_limit_packets': '64',
+                                    'queue_depth': 0,
+                                    'total_drops': 0,
+                                    'no_buffer_drops': 0,
+                                    'pkts_output': 0,
+                                    'bytes_output': 0,
+                                    'shape_type': 'average',
+                                    'shape_cir_bps': 80000,
+                                    'shape_bc_bps': 320,
+                                    'shape_be_bps': 0,
+                                    'target_shape_rate': 80000,
                                     'police': {
-                                        'cir_bps': 8000,
-                                        'bc_bytes': 1000,
                                         'conformed': {
-                                            'packets': 172,
-                                            'bytes': 15166,
+                                            'packets': 0,
+                                            'bytes': 0,
                                             'actions': 'transmit',
                                             'bps': 0},
                                         'exceeded': {
-                                            'packets': 38,
-                                            'bytes': 40668,
+                                            'packets': 0,
+                                            'bytes': 0,
+                                            'actions': 'transmit',
+                                            'bps': 0},
+                                        'violated': {
+                                            'packets': 0,
+                                            'bytes': 0,
                                             'actions': 'drop',
-                                            'bps': 2000}}},
+                                            'bps': 0}}},
+                                'class-default': {
+                                    'match_evaluation': 'match-any',
+                                    'packets': 0,
+                                    'bytes': 0,
+                                    'rate': {
+                                        'interval': 300,
+                                        'offered_rate_bps': 0,
+                                        'drop_rate_bps': 0},
+                                    'match': ['any'],
+                                    'queue_limit_packets': '41666',
+                                    'queue_depth': 0,
+                                    'total_drops': 0,
+                                    'no_buffer_drops': 0,
+                                    'pkts_output': 0,
+                                    'bytes_output': 0}}}}}}}}
+
+    golden_output11 = {'execute.return_value': '''
+        PE1#show policy-map interface TenGigabitEthernet 0/3/0.41 output
+
+        Load for five secs: 2%/0%; one minute: 2%; five minutes: 2%
+        Time source is NTP, 17:42:14.490 JST Tue Apr 9 2019
+        
+        TenGigabitEthernet0/3/0.41
+
+            Service-policy output: VLAN51_QoS
+
+                Class-map: VLAN51_QoS (match-all)
+                    0 packets, 0 bytes
+                    5 minute offered rate 0000 bps, drop rate 0000 bps
+                    Match: access-group name VLAN51_QoS
+                    Queueing
+                    queue limit 64 packets
+                    (queue depth/total drops/no-buffer drops) 0/0/0
+                    (pkts output/bytes output) 0/0
+                    shape (average) cir 80000, bc 320, be 0
+                    target shape rate 80000
+                    police:
+                        cir 8000000 bps, bc 4000 bytes, be 1000 bytes
+                        conformed 0 packets, 0 bytes; actions:
+                            transmit
+                        exceeded 0 packets, 0 bytes; actions:
+                            transmit
+                        violated 0 packets, 0 bytes; actions:
+                             drop
+                        conformed 0000 bps, exceeded 0000 bps, violated 0000 bps
+
+                Class-map: class-default (match-any)
+                    0 packets, 0 bytes
+                    5 minute offered rate 0000 bps, drop rate 0000 bps
+                    Match: any
+            
+                    queue limit 41666 packets
+                    (queue depth/total drops/no-buffer drops) 0/0/0
+                    (pkts output/bytes output) 0/0
+        PE1# '''}
+
+    golden_parsed_output12 = {
+        'GigabitEthernet0/1/4': {
+            'service_policy': {
+                'input': {
+                    'policy_name': {
+                        'police-in': {
+                            'class_map': {
+                                'class-default': {
+                                    'bytes': 0,
+                                    'match': ['any'],
+                                    'match_evaluation': 'match-any',
+                                    'packets': 0,
+                                    'police': {
+                                        'bc_bytes': 83619,
+                                        'cir_bps': 445500,
+                                        'conformed': {
+                                            'actions': 'transmit',
+                                            'bps': 0,
+                                            'bytes': 0,
+                                            'packets': 0},
+                                        'exceeded': {
+                                            'actions': 'drop',
+                                            'bps': 0,
+                                            'bytes': 0,
+                                            'packets': 0}},
+                                    'rate': {
+                                        'drop_rate_bps': 0,
+                                        'interval': 300,
+                                        'offered_rate_bps': 0}}}}}}}}}
+
+    golden_output12 = {'execute.return_value': '''
+            show policy-map interface gigabitEthernet 0/1/4 input class class-default
+            Load for five secs: 1%/0%; one minute: 3%; five minutes: 3%
+            Time source is NTP, 12:22:26.378 JST Wed Oct 26 2016
+
+            GigabitEthernet0/1/4 
+
+                Service-policy input: police-in
+
+                    Class-map: class-default (match-any)  
+                        0 packets, 0 bytes
+                        5 minute offered rate 0000 bps, drop rate 0000 bps
+                        Match: any 
+                        police:
+                            cir 445500 bps, bc 83619 bytes
+                            conformed 0 packets, 0 bytes; actions:
+                              transmit 
+                            exceeded 0 packets, 0 bytes; actions:
+                              drop 
+                            conformed 0000 bps, exceeded 0000 bps
+        Router#'''}
+
+    golden_parsed_output13 = {
+        'GigabitEthernet0/0/1': {
+            'service_policy': {
+                'input': {
+                    'policy_name': {
+                        'TEST': {
+                            'class_map': {
                                 'class-default': {
                                     'match_evaluation': 'match-any',
                                     'packets': 0,
@@ -1467,55 +1603,208 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'drop_rate_bps': 0},
                                     'match': ['any']}}}}}}}}
 
-    golden_output11 = {'execute.return_value': '''
-        Router#show policy-map target service-group 1
-        Load for five secs: 98%/0%; one minute: 98%; five minutes: 96%
-        Time source is NTP, 18:59:17.791 JST Wed Nov 9 2016
+    golden_output13 = {'execute.return_value': '''
+            PE1#show policy-map interface GigabitEthernet 0/0/1 input
 
-            Port-channel1: Service Group 1
-          
+            Load for five secs: 2%/0%; one minute: 2%; five minutes: 2%
+            Time source is NTP, 17:41:12.649 JST Tue Apr 9 2019
+
+            GigabitEthernet0/0/1
+
+                Service-policy input: TEST
+
+                    Class-map: class-default (match-any)
+                        0 packets, 0 bytes
+                        5 minute offered rate 0000 bps, drop rate 0000 bps
+                        Match: any
+            PE1# '''}
+
+    golden_parsed_output14 = {
+        'GigabitEthernet0/0/1': {
+            'service_policy': {
+                'input': {
+                    'policy_name': {
+                        'TEST': {}}},
+                'output': {
+                    'policy_name': {
+                        'TEST2': {}}}}},
+        'TenGigabitEthernet0/3/0.41': {
+            'service_policy': {
+                'output': {
+                    'policy_name': {
+                        'VLAN51_QoS': {}}}}}}
+
+    golden_output14 = {'execute.return_value': '''
+        PE1#show policy-map interface class TEST2
+
+        Load for five secs: 4%/0%; one minute: 2%; five minutes: 2%
+        Time source is NTP, 18:05:19.663 JST Tue Apr 9 2019
+
+        GigabitEthernet0/0/1
+
+            Service-policy input: TEST
+
+            Service-policy output: TEST2
+        TenGigabitEthernet0/3/0.41
+
             Service-policy output: VLAN51_QoS
-    
+        PE1# '''}
+
+    golden_parsed_output15 = {
+        'GigabitEthernet0/0/1': {
+            'service_policy': {
+                'input': {
+                    'policy_name': {
+                        'TEST': {}}},
+                'output': {
+                    'policy_name': {
+                        'TEST2': {}}}}},
+        'TenGigabitEthernet0/3/0.41': {
+            'service_policy': {
+                'output': {
+                    'policy_name': {
+                        'VLAN51_QoS': {
+                            'class_map': {
+                                'VLAN51_QoS': {
+                                    'match_evaluation': 'match-all',
+                                    'packets': 0,
+                                    'bytes': 0,
+                                    'rate': {
+                                        'interval': 300,
+                                        'offered_rate_bps': 0,
+                                        'drop_rate_bps': 0},
+                                    'match': ['access-group name VLAN51_QoS'],
+                                    'queueing': True,
+                                    'queue_limit_packets': '64',
+                                    'queue_depth': 0,
+                                    'total_drops': 0,
+                                    'no_buffer_drops': 0,
+                                    'pkts_output': 0,
+                                    'bytes_output': 0,
+                                    'shape_type': 'average',
+                                    'shape_cir_bps': 80000,
+                                    'shape_bc_bps': 320,
+                                    'shape_be_bps': 0,
+                                    'target_shape_rate': 80000,
+                                    'police': {
+                                        'conformed': {
+                                            'packets': 0,
+                                            'bytes': 0,
+                                            'actions': 'transmit',
+                                            'bps': 0},
+                                        'exceeded': {
+                                            'packets': 0,
+                                            'bytes': 0,
+                                            'actions': 'transmit',
+                                            'bps': 0},
+                                        'violated': {
+                                            'packets': 0,
+                                            'bytes': 0,
+                                            'actions': 'drop',
+                                            'bps': 0}}}}}}}}}}
+
+    golden_output15 = {'execute.return_value': '''
+        PE1#show policy-map interface class VLAN51_QoS
+
+        Load for five secs: 4%/0%; one minute: 3%; five minutes: 2%
+        Time source is NTP, 18:05:52.025 JST Tue Apr 9 2019
+
+        GigabitEthernet0/0/1
+
+            Service-policy input: TEST
+
+            Service-policy output: TEST2
+        TenGigabitEthernet0/3/0.41
+
+            Service-policy output: VLAN51_QoS
+
                 Class-map: VLAN51_QoS (match-all)
-                    30 packets, 13638 bytes
-                    5 minute offered rate 1000 bps, drop rate 1000 bps
-                    Match: access-group name VLAN51_QoS
-                    police:
-                        cir 8000 bps, bc 1000 bytes
-                        conformed 22 packets, 1494 bytes; actions:
-                        transmit
-                        exceeded 8 packets, 12144 bytes; actions:
-                        drop
-                        conformed 0000 bps, exceeded 1000 bps
-    
-                Class-map: class-default (match-any)
                     0 packets, 0 bytes
                     5 minute offered rate 0000 bps, drop rate 0000 bps
-                    Match: any
-        Load for five secs: 98%/0%; one minute: 99%; five minutes: 97%
-        Time source is NTP, 19:02:12.368 JST Wed Nov 9 2016
-
-            Port-channel1: Service Group 1
-
-            Service-policy output: VLAN51_QoS
-
-                Class-map: VLAN51_QoS (match-all)
-                    210 packets, 55834 bytes
-                    5 minute offered rate 2000 bps, drop rate 2000 bps
                     Match: access-group name VLAN51_QoS
+                    Queueing
+                    queue limit 64 packets
+                    (queue depth/total drops/no-buffer drops) 0/0/0
+                    (pkts output/bytes output) 0/0
+                    shape (average) cir 80000, bc 320, be 0
+                    target shape rate 80000
                     police:
-                        cir 8000 bps, bc 1000 bytes
-                        conformed 172 packets, 15166 bytes; actions:
-                        transmit
-                        exceeded 38 packets, 40668 bytes; actions:
-                        drop
-                        conformed 0000 bps, exceeded 2000 bps
+                        cir 8000000 bps, bc 4000 bytes, be 1000 bytes
+                        conformed 0 packets, 0 bytes; actions:
+                            transmit
+                        exceeded 0 packets, 0 bytes; actions:
+                            transmit
+                        violated 0 packets, 0 bytes; actions:
+                            drop
+                        conformed 0000 bps, exceeded 0000 bps, violated 0000 bps
+        PE1# '''}
 
-                Class-map: class-default (match-any)
-                    0 packets, 0 bytes
-                    5 minute offered rate 0000 bps, drop rate 0000 bps
-                    Match: any
-    '''}
+    golden_parsed_output16 = {
+        'Port-channel1': {
+            'service_group': 1,
+            'service_policy': {
+                'output': {
+                    'policy_name': {
+                        'VLAN51_QoS': {
+                            'class_map': {
+                                'VLAN51_QoS': {
+                                    'match_evaluation': 'match-all',
+                                    'packets': 30,
+                                    'bytes': 13638,
+                                    'rate': {
+                                        'interval': 300,
+                                        'offered_rate_bps': 1000,
+                                        'drop_rate_bps': 1000},
+                                    'match': ['access-group name VLAN51_QoS'],
+                                    'police': {
+                                        'cir_bps': 8000,
+                                        'bc_bytes': 1000,
+                                        'conformed': {
+                                            'packets': 22,
+                                            'bytes': 1494,
+                                            'actions': 'transmit',
+                                            'bps': 0},
+                                        'exceeded': {
+                                            'packets': 8,
+                                            'bytes': 12144,
+                                            'actions': 'drop',
+                                            'bps': 1000}}},
+                                'class-default': {
+                                    'match_evaluation': 'match-any',
+                                    'packets': 0,
+                                    'bytes': 0,
+                                    'rate': {
+                                        'interval': 300,
+                                        'offered_rate_bps': 0,
+                                        'drop_rate_bps': 0},
+                                    'match': ['any']}}}}}}}}
+
+    golden_output16 = {'execute.return_value': '''
+            Router#show policy-map target service-group 1
+            Load for five secs: 98%/0%; one minute: 98%; five minutes: 96%
+            Time source is NTP, 18:59:17.791 JST Wed Nov 9 2016
+
+                Port-channel1: Service Group 1
+
+                Service-policy output: VLAN51_QoS
+
+                    Class-map: VLAN51_QoS (match-all)
+                        30 packets, 13638 bytes
+                        5 minute offered rate 1000 bps, drop rate 1000 bps
+                        Match: access-group name VLAN51_QoS
+                        police:
+                            cir 8000 bps, bc 1000 bytes
+                            conformed 22 packets, 1494 bytes; actions:
+                            transmit
+                            exceeded 8 packets, 12144 bytes; actions:
+                            drop
+                            conformed 0000 bps, exceeded 1000 bps
+
+                    Class-map: class-default (match-any)
+                        0 packets, 0 bytes
+                        5 minute offered rate 0000 bps, drop rate 0000 bps
+                        Match: any
+            '''}
 
     def test_show_policy_map_control_plane_empty(self):
         self.maxDiff = None
@@ -1557,17 +1846,15 @@ class test_show_policy_map_type(unittest.TestCase):
     def test_show_policy_map_interface_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output5)
-        obj = ShowPolicyMapInterfaceInput(device=self.device)
-        parsed_output = obj.parse(interface='gigabitEthernet 0/1/4', class_name='class-default')
-        #import pdb;pdb.set_trace()
+        obj = ShowPolicyMapInterface(device=self.device)
+        parsed_output = obj.parse(interface='gigabitEthernet 0/0/0')
         self.assertEqual(parsed_output, self.golden_parsed_output5)
 
     def test_show_policy_map_interface_full2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output6)
         obj = ShowPolicyMapInterface(device=self.device)
-        parsed_output = obj.parse(interface='gigabitEthernet 0/0/0')
-        # import pdb;pdb.set_trace()
+        parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output6)
 
     def test_show_policy_map_interface_full3(self):
@@ -1575,39 +1862,70 @@ class test_show_policy_map_type(unittest.TestCase):
         self.device = Mock(**self.golden_output7)
         obj = ShowPolicyMapInterface(device=self.device)
         parsed_output = obj.parse()
-        # import pdb;pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output7)
 
     def test_show_policy_map_interface_full4(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output8)
         obj = ShowPolicyMapInterface(device=self.device)
-        parsed_output = obj.parse()
+        parsed_output = obj.parse(interface='TenGigabitEthernet0/0/2')
         self.assertEqual(parsed_output, self.golden_parsed_output8)
 
     def test_show_policy_map_interface_full5(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output9)
         obj = ShowPolicyMapInterface(device=self.device)
-        parsed_output = obj.parse(interface='TenGigabitEthernet0/0/2')
-        # import pdb;pdb.set_trace()
+        parsed_output = obj.parse(interface='GigabitEthernet0/0/1')
         self.assertEqual(parsed_output, self.golden_parsed_output9)
 
-    def test_show_policy_map_interface_full6(self):
+    def test_show_policy_map_interface_output_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output10)
         obj = ShowPolicyMapInterfaceOutput(device=self.device)
         parsed_output = obj.parse(interface='gigabitEthernet 0/1/1', class_name='class-default')
-        #import pdb;pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output10)
 
-    def test_show_policy_map_interface_full7(self):
+    def test_show_policy_map_interface_output_full2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output11)
+        obj = ShowPolicyMapInterfaceOutput(device=self.device)
+        parsed_output = obj.parse(interface='TenGigabitEthernet 0/3/0.41')
+        self.assertEqual(parsed_output, self.golden_parsed_output11)
+
+    def test_show_policy_map_interface_input_full1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output12)
+        obj = ShowPolicyMapInterfaceInput(device=self.device)
+        parsed_output = obj.parse(interface='gigabitEthernet 0/1/4', class_name='class-default')
+        self.assertEqual(parsed_output, self.golden_parsed_output12)
+
+    def test_show_policy_map_interface_input_full2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output13)
+        obj = ShowPolicyMapInterfaceInput(device=self.device)
+        parsed_output = obj.parse(interface='GigabitEthernet 0/0/1')
+        self.assertEqual(parsed_output, self.golden_parsed_output13)
+
+    def test_show_policy_map_interface_class_full1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output14)
+        obj = ShowPolicyMapInterfaceClass(device=self.device)
+        parsed_output = obj.parse(class_name='TEST2')
+        self.assertEqual(parsed_output, self.golden_parsed_output14)
+
+    def test_show_policy_map_interface_class_full2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output15)
+        obj = ShowPolicyMapInterfaceClass(device=self.device)
+        parsed_output = obj.parse(class_name='VLAN51_QoS')
+        self.assertEqual(parsed_output, self.golden_parsed_output15)
+
+    def test_show_policy_map_target_full(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output16)
         obj = ShowPolicyMapTargetClass(device=self.device)
         parsed_output = obj.parse(num='1')
-        #import pdb;pdb.set_trace()
-        self.assertEqual(parsed_output, self.golden_parsed_output11)
+        self.assertEqual(parsed_output, self.golden_parsed_output16)
 
 
 # =============================================

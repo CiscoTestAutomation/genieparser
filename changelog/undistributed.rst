@@ -22,7 +22,7 @@
         show policy-map interface {interface} output class {class_name}
         show policy-map interface {interface} output
     * Add ShowPolicyMapInterfaceClass for:
-        show policy-map interface {interface} class {class_name}
+        show policy-map interface class {class_name}
     * Add ShowPolicyMapTargetClass for:
         show policy-map target service-group {num}
     * Add ShowPolicyMap for :
