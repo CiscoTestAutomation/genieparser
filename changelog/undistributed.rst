@@ -277,8 +277,16 @@
 	* Fixed ShowProtocols for bgp and ospf
 
 ----------------------------------------------------------------------------------
-                                   ACL
+                                 ACL
 ----------------------------------------------------------------------------------
+* IOSXE
+  * Updated ShowAccessLists
+  * Add ShowIpAccessLists for :
+          show ip access-lists
+          show ip access-lists <acl>
+  * Add ShowIpv6AccessLists for :
+          show ipv6 access-list
+          show ipv6 access-list <acl>
 * IOSXR
     * Add ShowAclAfiAll for:
         show access-lists afi-all
