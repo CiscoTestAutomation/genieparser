@@ -1249,7 +1249,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
 
     def cli(self, name='', output=None):
         if output is None:
-            if name:
+            if name and (name != 'interface') and (name != 'control-plane'):
                 cmd = self.cli_command[0].format(name=name)
             else:
                 cmd = self.cli_command[1]
