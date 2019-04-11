@@ -97,6 +97,8 @@ def _find_command(command, data, device):
             new_pattern = '(?P<{p}>.*)'.format(p=word)
             reg = re.sub(pattern, new_pattern, reg)
         reg += '$'
+        # Convert | to \|
+        reg = reg.replace('|', '\|')
 
         match = re.match(reg, command)
         if match:

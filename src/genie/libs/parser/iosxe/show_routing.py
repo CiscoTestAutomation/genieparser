@@ -1154,3 +1154,213 @@ class ShowIpv6RouteWord(ShowIpv6RouteWordSchema, ShowIpRouteWord):
        show ipv6 route <Hostname or A.B.C.D>
        show ipv6 route vrf <vrf> <Hostname or A.B.C.D>"""
     IP_VER = 'ipv6'
+
+# ====================================================
+#  schema for show ip cef
+# ====================================================
+class ShowIpCefSchema(MetaParser):
+    """Schema for show ip cef show ip cef
+                  show ip cef vrf <vrf>
+                  show ip cef <prefix>
+                  show ip cef vrf <vrf> <prefix>"""
+    schema ={
+        'vrf':{
+            Any():{
+                'address_family':{
+                    Any():{
+                        'prefix': {
+                            Any(): {
+                                'nexthop': {
+                                    Any(): {
+                                        Optional('outgoing_interface'): {
+                                             Any(): {
+                                                 Optional('local_label'): int,
+                                                 Optional('outgoing_label'): list,
+                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# ====================================================
+#  parser  for show ip cef <ip>
+# ====================================================
+class ShowIpCef(ShowIpCefSchema):
+    """parser for show ip cef
+                  show ip cef vrf <vrf>
+                  show ip cef <prefix>
+                  show ip cef vrf <vrf> <prefix>"""
+
+    cli_command = ['show ip cef',
+                   'show ip cef vrf {vrf}',
+                   'show ip cef {prefix}',
+                   'show ip cef vrf {vrf} {prefix}']
+
+    def cli(self, vrf="", prefix="", cmd="", output=None):
+
+        if output is None:
+            if not cmd:
+                if vrf:
+                    if prefix:
+                        cmd = self.cli_command[3].format(vrf=vrf,prefix=prefix)
+                    else:
+                        cmd = self.cli_command[1].format(vrf=vrf)
+                else:
+                    if prefix:
+                        cmd = self.cli_command[2].format(prefix=prefix)
+                    else:
+                        cmd = self.cli_command[0]
+
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        if not vrf:
+            vrf = 'default'
+
+        # initial return dictionary
+        result_dict = {}
+
+        # 106.162.197.104/30
+        # 2001:DB8:1:3::/64
+        p1 = re.compile(r'^(?P<prefix>[\w\:\.]+[\/]+[\d]+)$')
+        #     nexthop 106.162.197.93 TenGigabitEthernet0/2/0 label 22-(local:2043)
+        #     nexthop 10.1.2.2 GigabitEthernet2.100
+        #     nexthop FE80::A8BB:CCFF:FE03:2101 FastEthernet0/0/0 label 18
+        #     nexthop 10.2.3.3 FastEthernet1/0/0 label 17 24
+        p2 = re.compile(r'^nexthop +(?P<nexthop>[\w\.\:]+) +(?P<interface>\S+)'
+                        '( +label +(?P<outgoing_label>[\d\ ]+)(-\(local:(?P<local_label>\w+)\))?)?$')
+        #     attached to GigabitEthernet3.100
+        p3 = re.compile(r'^(?P<nexthop>\w+) +(to|for) +(?P<interface>\S+)$')
+
+        #  no route
+        p4 = re.compile(r'^(?P<nexthop>[a-z\ ]+)$')
+
+        # 10.1.2.255/32        receive              GigabitEthernet2.100
+        # 10.1.3.0/24          10.1.2.1             GigabitEthernet2.100
+        #                      10.2.3.3             GigabitEthernet3.100
+        p5 = re.compile(r'^((?P<prefix>[\w\:\.]+[\/]+[\d]+) +)?(?P<nexthop>[\w\.]+)( +(?P<interface>[^a-z][\S]+))?$')
+
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # 106.162.197.104/30
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                if ':' in group['prefix']:
+                    address_family = 'ipv6'
+                else:
+                    address_family = 'ipv4'
+                prefix_dict = result_dict.setdefault('vrf',{}).\
+                                          setdefault(vrf, {}).\
+                                          setdefault('address_family', {}).\
+                                          setdefault(address_family,{}).\
+                                          setdefault('prefix',{}).\
+                                          setdefault(group['prefix'], {})
+                continue
+
+            #   nexthop 106.162.197.93 TenGigabitEthernet0/2/0 label 22-(local:2043)
+            #   nexthop 10.1.2.2 GigabitEthernet2.100
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                nexthop_dict = prefix_dict.setdefault('nexthop', {}).\
+                                           setdefault(group['nexthop'], {}).\
+                                           setdefault('outgoing_interface', {}).\
+                                           setdefault(group['interface'], {})
+
+                if group['local_label']:
+                    nexthop_dict.update({'local_label': int(group['local_label'])})
+                if group['outgoing_label']:
+                    nexthop_dict.update({'outgoing_label': group['outgoing_label'].split()})
+
+                continue
+
+            # attached to GigabitEthernet3.100
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                prefix_dict.setdefault('nexthop', {}). \
+                            setdefault(group['nexthop'], {}). \
+                            setdefault('outgoing_interface', {}). \
+                            setdefault(group['interface'], {})
+                continue
+
+            #  no route
+            #  discard
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                prefix_dict.setdefault('nexthop', {}). \
+                            setdefault(group['nexthop'], {})
+
+                continue
+
+            # 10.1.2.255/32        receive              GigabitEthernet2.100
+            # 10.1.3.0/24          10.1.2.1             GigabitEthernet2.100
+            #                      10.2.3.3             GigabitEthernet3.100
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                if group['prefix']:
+                    prefix = group['prefix']
+
+                    if ':' in group['prefix']:
+                        address_family = 'ipv6'
+                    else:
+                        address_family = 'ipv4'
+                prefix_dict = result_dict.setdefault('vrf', {}). \
+                    setdefault(vrf, {}). \
+                    setdefault('address_family', {}). \
+                    setdefault(address_family, {}). \
+                    setdefault('prefix', {}). \
+                    setdefault(prefix, {}).\
+                    setdefault('nexthop', {}).\
+                    setdefault(group['nexthop'], {})
+                if group['interface']:
+                    prefix_dict.setdefault('outgoing_interface', {}).\
+                                setdefault(group['interface'], {})
+                continue
+
+        return result_dict
+
+
+# ====================================================
+#  parser  for show ipv6 cef
+# ====================================================
+class ShowIpv6Cef(ShowIpCef):
+    """parser for show ipv6 cef
+                  show ipv6 cef vrf <vrf>
+                  show ipv6 cef <prefix>
+                  show ipv6 cef vrf <vrf> <prefix>"""
+
+    cli_command = ['show ipv6 cef',
+                   'show ipv6 cef vrf {vrf}',
+                   'show ipv6 cef {prefix}',
+                   'show ipv6 cef vrf {vrf} {prefix}']
+
+    def cli(self, vrf="", prefix="", cmd="", output=None):
+
+        if output is None:
+            if vrf:
+                if prefix:
+                    cmd = self.cli_command[3].format(vrf=vrf,prefix=prefix)
+                else:
+                    cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                if prefix:
+                    cmd = self.cli_command[2].format(prefix=prefix)
+                else:
+                    cmd = self.cli_command[0]
+        else:
+            output = output
+
+        return super().cli(cmd=cmd, vrf=vrf, prefix=prefix, output=output)

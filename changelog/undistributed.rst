@@ -5,9 +5,33 @@
 | ------------------------|:-------------:|
 | ``genie.libs.parser``   |               |
 
+----------------------------------------------------------------------------------
+                                   CDP
+----------------------------------------------------------------------------------
+* IOSXE
+  * Add ShowCdpNeighbors for:
+      show cdp neighbors
+  * Add ShowCdpNeighborsDetail for:
+      show cdp neighbors detail
+* NXOS
+  * Add ShowCdpNeighbors for:
+      show cdp neighbors
+  * Add ShowCdpNeighborsDetail for:
+      show cdp neighbors detail
+
+--------------------------------------------------------------------------------
+                                   PLATFORM
+--------------------------------------------------------------------------------
+* IOSXE
+  * ShowInventory enhanced to support ASR901 platform
+
 --------------------------------------------------------------------------------
                                    LAG
 --------------------------------------------------------------------------------
+* IOSXE
+    * Enhancement on ShowEtherchannelSummary for:
+        show etherchannel summary
+
 * IOS
     * Add ShowLacpSysId for:
         show lacp sys-id
@@ -126,6 +150,62 @@
           show mpls interfaces <interface>
           show mpls interfaces <interface> detail
           show mpls interfaces detail
+          
+--------------------------------------------------------------------------------
+                                   SESSION
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowLine for:
+        show line
+    * Add ShowUsers for:
+        show users
+
+--------------------------------------------------------------------------------
+                                   ACCESS
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowAccessSession for:
+        show access-session
+
+--------------------------------------------------------------------------------
+                                   SYSTEM
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowClock for:
+        show clock
+
+--------------------------------------------------------------------------------
+                                   VTP
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowVtpStatus for:
+        show vtp status
+
+--------------------------------------------------------------------------------
+                                   SNMP
+--------------------------------------------------------------------------------
+* IOS
+    * Added ShowSnmpMib for:
+        'show snmp mib'
+
+--------------------------------------------------------------------------------
+                                   SERVICE
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowServiceGroupTrafficStats for:
+        show service-group traffic-stats
+        show service-group traffic-stats <group>
+
+--------------------------------------------------------------------------------
+                                   FDB
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowMacAddressTable for:
+        show mac address-table
+    * Add ShowMacAddressTableAgingTime for:
+        show mac address-table aging-time
+    * Add ShowMacAddressTableLearning for:
+        show mac address-table learning
 
 --------------------------------------------------------------------------------
                                    BFD
@@ -135,3 +215,89 @@
         show bfd neighbors details
         show bfd neighbors client <client> details
 
+----------------------------------------------------------------------------------
+                                   ARP
+----------------------------------------------------------------------------------
+* IOS
+    * Add ShowArpApplication for:
+        show arp application
+    * Add ShowArpSummary for:
+        show arp summary
+
+--------------------------------------------------------------------------------
+                                   L2VPN
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowMplsL2TransportVC for:
+        show mpls l2transport vc
+* IOS
+    * Add ShowMplsL2TransportVC for:
+        show mpls l2transport vc
+
+----------------------------------------------------------------------------------
+                                   ISIS
+----------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowClnsInterface for:
+        show clns interface
+        show clns interface <interface>
+    * Add ShowClnsProtocol for:
+        show clns protocol
+    * Add ShowClnsNeighborDetail for:
+        show clns neighbor detail
+    * Add ShowClnsIsNeighborDetail for:
+        show clns is-neighbor detail
+    * Add ShowClnsTraffic for:
+        show clns traffic
+    * Add ShowIsisHostname for:
+        show isis hostname
+    * Add ShowIsisLspLog for:
+        show isis lsp-log
+    * Add ShowIsisDatabaseDetail for:
+        show isis database detail
+
+----------------------------------------------------------------------------------
+                                   ISIS
+----------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowIpCef for :
+            show ip cef
+            show ip cef vrf <vrf>
+            show ip cef <prefix>
+            show ip cef vrf <vrf> <prefix>
+    * Add ShowIpv6Cef for :
+            show ipv6 cef
+            show ipv6 cef vrf <vrf>
+            show ipv6 cef <prefix>
+            show ipv6 cef vrf <vrf> <prefix>
+
+----------------------------------------------------------------------------------
+                                 ROUTING
+----------------------------------------------------------------------------------
+* NXOS
+  * Updated ShowRoutingIpv6VrfAll to support different vrf
+
+
+----------------------------------------------------------------------------------
+                                 OSPF
+----------------------------------------------------------------------------------
+* IOSXR
+  * Updated ShowOspfVrfAllInclusiveNeighborDetail to have bfd mode/status
+
+----------------------------------------------------------------------------------
+                                 PROTOCOLS
+----------------------------------------------------------------------------------
+* IOSXE
+  * Fixed ShowProtocols for bgp and ospf
+
+----------------------------------------------------------------------------------
+                                 ACL
+----------------------------------------------------------------------------------
+* IOSXE
+  * Updated ShowAccessLists
+  * Add ShowIpAccessLists for :
+          show ip access-lists
+          show ip access-lists <acl>
+  * Add ShowIpv6AccessLists for :
+          show ipv6 access-list
+          show ipv6 access-list <acl>

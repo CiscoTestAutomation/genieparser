@@ -23,6 +23,7 @@ from genie.libs.parser.utils.common import Common
 
 class ShowAccessListsSchema(MetaParser):
     """Schema for show access-lists
+                  show access-lists <acl>
                   show ip access-lists
                   show ip access-lists <acl>
                   show ipv6 access-list
@@ -117,10 +118,8 @@ class ShowAccessListsSchema(MetaParser):
 
 class ShowAccessLists(ShowAccessListsSchema):
     """Parser for show access-lists
-                  show ip access-lists
-                  show ip access-lists <acl>
-                  show ipv6 access-lists
-                  show ipv6 access-lists <acl>"""
+                  show access-lists <acl>"""
+
     OPT_MAP = {
         'add-ext':       147,
        'any-options':   random.randint(0, 255),
@@ -226,28 +225,15 @@ class ShowAccessLists(ShowAccessListsSchema):
        'xdmcp':          177
     }
 
-    cli_command = [ 'show access-lists', 'show access-lists {acl}',
-                    'show ip access-lists','show ip access-lists {acl}',
-                    'show ipv6 access-list', 'show ipv6 access-list {acl}']
+    cli_command = ['show access-lists',
+                   'show access-lists {acl}']
 
-    def cli(self,ip="",acl="",output=None):
-        assert ip in ['ip', 'ipv4', 'ipv6', '']
+    def cli(self, acl="", output=None):
         if output is None:
-            if ip == 'ip' or ip == 'ipv4':
-                if acl:
-                    cmd = self.cli_command[3].format(acl=acl)
-                else:
-                    cmd = self.cli_command[2]
-            if ip == 'ipv6':
-                if acl:
-                    cmd = self.cli_command[5].format(acl=acl)
-                else:
-                    cmd = self.cli_command[4]
+            if acl:
+                cmd = self.cli_command[1].format(acl=acl)
             else:
-                if acl:
-                    cmd = self.cli_command[1].format(acl=acl)
-                else:
-                    cmd = self.cli_command[0]
+                cmd = self.cli_command[0]
             # get output from device
             out = self.device.execute(cmd)
         else:
@@ -551,3 +537,46 @@ class ShowAccessLists(ShowAccessListsSchema):
                     l2_dict['ether_type'] = left
 
         return ret_dict
+
+
+class ShowIpAccessLists(ShowAccessLists, ShowAccessListsSchema):
+    """Parser for show ip access-lists
+                  show ip access-lists <acl>"""
+
+    cli_command = ['show ip access-lists',
+                   'show ip access-lists {acl}']
+
+    def cli(self, acl='', output=None):
+        # Build command
+        if output is None:
+            if acl:
+                cmd = self.cli_command[1].format(acl=acl)
+            else:
+                cmd = self.cli_command[0]
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+
+        # Call super
+        return super().cli(output=show_output)
+
+class ShowIpv6AccessLists(ShowAccessLists, ShowAccessListsSchema):
+    """Parser for show ipv6 access-lists
+                  show ipv6 access-lists <acl>"""
+
+    cli_command = ['show ipv6 access-list',
+                   'show ipv6 access-list {acl}']
+
+    def cli(self, acl='', output=None):
+        # Build command
+        if output is None:
+            if acl:
+                cmd = self.cli_command[1].format(acl=acl)
+            else:
+                cmd = self.cli_command[0]
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+
+        # Call super
+        return super().cli(output=show_output)
