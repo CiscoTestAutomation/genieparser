@@ -177,17 +177,15 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                chassis_id = group['chassis_id']
-                sub_dict.update({'chassis_id': chassis_id})
+                sub_dict.update({'chassis_id': group['chassis_id']})
                 continue
             
             # Port id: Gi1/0/4
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                sub_dict.setdefault('port_id',
-                    Common.convert_intf_name(group['port_id']))
-                intf = Common.convert_intf_name(sub_dict['port_id'])
+                intf = Common.convert_intf_name(group['port_id'])
+                sub_dict.update({'port_id' : intf})
                 intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(intf, {})
                 continue
 
@@ -204,8 +202,8 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 group = m.groupdict()
                 system_name = group['system_name']
                 sub_dict.update({'system_name': system_name})
-                sub_dict['neighbor_id'] = system_name
-                intf_dict.setdefault('neighbors', {}).setdefault(system_name, sub_dict)
+                sub_dict.update({'neighbor_id' : system_name})
+                nei_dict = intf_dict.setdefault('neighbors', {}).setdefault(system_name, sub_dict)
                 continue
 
             # Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)
@@ -280,7 +278,6 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             if m:
                 ret_dict['total_entries'] = int(m.groupdict()['total_entries'])
                 continue  
-            
         return ret_dict     
 
 

@@ -185,9 +185,9 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
                         'port_id': 'GigabitEthernet2',
                         'port_description': 'GigabitEthernet2',
                         'system_name': 'R1_csr1000v.openstacklocal',
+                        'neighbor_id': 'R1_csr1000v.openstacklocal',
                         'system_description': 'Cisco IOS Software [Everest], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.1, RELEASE SOFTWARE (fc2)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2017 by Cisco Systems, Inc.\nCompiled Sat 22-Jul-17 05:51 by',
                         'time_remaining': 90,
-                        'neighbor_id': 'R1_csr1000v.openstacklocal',
                         'hold_time': 120,
                         'capabilities': {
                             'bridge': {
@@ -209,9 +209,9 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
                         'port_id': 'Ethernet1/2',
                         'port_description': 'Ethernet1/2',
                         'system_name': 'R3_n9kv',
+                        'neighbor_id': 'R3_n9kv',
                         'system_description': 'Cisco Nexus Operating System (NX-OS) Software 7.0(3)I7(1)\nTAC support: http://www.cisco.com/tac\nCopyright (c) 2002-2017, Cisco Systems, Inc. All rights reserved.\n',
                         'time_remaining': 106,
-                        'neighbor_id': 'R3_n9kv',
                         'hold_time': 120,
                         'capabilities': {
                             'bridge': {
