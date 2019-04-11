@@ -222,7 +222,6 @@ class ShowPolicyMapControlPlane(ShowPolicyMapControlPlaneSchema):
                 group = m.groupdict()
                 packets = group['packets']
                 bytes = group['bytes']
-                #import pdb;pdb.set_trace()
                 class_map_dict['packets'] = int(packets)
                 class_map_dict['bytes'] = int(bytes)
                 continue
