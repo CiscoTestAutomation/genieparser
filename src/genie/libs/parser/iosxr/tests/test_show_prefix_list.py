@@ -95,17 +95,64 @@ class test_show_rpl_prefix_set(unittest.TestCase):
         !
     '''}
 
+    golden_parsed_output_2 = {
+        'prefix_set_name': {
+            'test': {
+                'prefix_set_name': 'test',
+                'protocol': 'ipv4',
+                'prefixes': {
+                    '35.0.0.0/8 8..8': {
+                        'prefix': '35.0.0.0/8',
+                        'masklength_range': '8..8'
+                    },
+                    '35.0.0.0/8 8..16': {
+                        'prefix': '35.0.0.0/8',
+                        'masklength_range': '8..16'
+                    },
+                    '36.0.0.0/8 8..16': {
+                        'prefix': '36.0.0.0/8',
+                        'masklength_range': '8..16'
+                    },
+                    '37.0.0.0/8 24..32': {
+                        'prefix': '37.0.0.0/8',
+                        'masklength_range': '24..32'
+                    },
+                    '38.0.0.0/8 16..24': {
+                        'prefix': '38.0.0.0/8',
+                        'masklength_range': '16..24'
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_2 = {'execute.return_value': '''\
+        prefix-set test
+             35.0.0.0/8,
+             35.0.0.0/8 le 16,
+             36.0.0.0/8 le 16,
+             37.0.0.0/8 ge 24,
+             38.0.0.0/8 ge 16 le 24
+        end-set
+    '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRplPrefixSet(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
-    def test_golden(self):
+    def test_golden_default(self):
         self.device = Mock(**self.golden_output)
         obj = ShowRplPrefixSet(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_name(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowRplPrefixSet(device=self.device)
+        parsed_output = obj.parse(name='test')
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 if __name__ == '__main__':
     unittest.main()

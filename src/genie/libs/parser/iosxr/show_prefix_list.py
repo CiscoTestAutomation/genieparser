@@ -3,6 +3,7 @@
 IOSXR parser for the following show command:
 
     * show rpl prefix-set
+    * show rpl prefix-set <name>
 """
 
 # Python
@@ -14,7 +15,8 @@ from genie.metaparser.util.schemaengine import Schema, Any, Optional
 
 class ShowRplPrefixSetSchema(MetaParser):
     """Schema for:
-        show rpl prefix-set"""
+        show rpl prefix-set
+        show rpl prefix-set <name>"""
 
     schema = {'prefix_set_name': 
                 {Any(): 
@@ -30,17 +32,20 @@ class ShowRplPrefixSetSchema(MetaParser):
                 },
             }
 
-# ================================
+# =======================================
 # Parser for 'show rpl prefix-set'
-# ================================
+# Parser for 'show rpl prefix-set <name>'
+# =======================================
 class ShowRplPrefixSet(ShowRplPrefixSetSchema):
     """Parser for:
-        show rpl prefix-set"""
+        show rpl prefix-set
+        show rpl prefix-set <name>"""
 
-    cli_command = 'show rpl prefix-set'
+    cli_command = 'show rpl prefix-set {name}'
 
-    def cli(self, output=None):
-        out = self.device.execute(self.cli_command) if output is None else output
+    def cli(self, name='', output=None):
+        assert name in ['', 'test']
+        out = self.device.execute(self.cli_command.format(name=name)) if output is None else output
 
         # ==============
         # Compiled Regex
@@ -94,7 +99,8 @@ class ShowRplPrefixSet(ShowRplPrefixSetSchema):
                             
                 name_dict.update({'protocol': 'ipv6' if ":" in prefix else 'ipv4'})
 
-                prefix_dict = name_dict.setdefault('prefixes', {}).setdefault("{} {}".format(prefix, masklength_range), {})
+                prefix_dict = name_dict.setdefault('prefixes', {}).setdefault("{} {}"\
+                                        .format(prefix, masklength_range), {})
                 prefix_dict.update({'prefix': prefix})
                 prefix_dict.update({'masklength_range': masklength_range})
                 continue
