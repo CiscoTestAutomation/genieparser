@@ -41,11 +41,16 @@ class ShowRplPrefixSet(ShowRplPrefixSetSchema):
         show rpl prefix-set
         show rpl prefix-set <name>"""
 
-    cli_command = 'show rpl prefix-set {name}'
+    cli_commands = ['show rpl prefix-set', 'show rpl prefix-set {name}']
 
     def cli(self, name='', output=None):
-        assert name in ['', 'test']
-        out = self.device.execute(self.cli_command.format(name=name)) if output is None else output
+        if output is None:
+            if not name:
+                out = self.device.execute(self.cli_commands[0])
+            else:
+                out = self.device.execute(self.cli_commands[1].format(name=name))
+        else:
+            out = output
 
         # ==============
         # Compiled Regex
