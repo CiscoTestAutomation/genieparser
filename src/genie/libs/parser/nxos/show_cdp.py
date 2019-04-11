@@ -119,7 +119,7 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
                 device_id_index += 1
 
                 device_dict = parsed_dict.setdefault('cdp', {})\
-                    .setdefault(device_id_index, {})
+                    .setdefault('index', {}).setdefault(device_id_index, {})
 
                 group = result.groupdict()
 
@@ -139,9 +139,10 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
                 elif not group['platform']:
                     device_dict['platform'] = ''
 
-                device_dict['port_id'] = group['port_id'].strip()
+                device_dict['port_id'] = Common\
+                    .convert_intf_name(intf=group['port_id'].strip())
                 continue
-
+        # import pdb; pdb.set_trace()
         return parsed_dict
 
 
