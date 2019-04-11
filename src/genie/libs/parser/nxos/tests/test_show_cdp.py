@@ -77,6 +77,52 @@ class test_show_cdp_neighbors(unittest.TestCase):
         swordfish-6k-2 Eth3/2 149 R S I WS-C6506-E Gig1/38
     '''}
 
+    expected_parsed_output_3 = {
+        "cdp": {
+            "index": {
+                1: {
+                    "device_id": "Mgmt-switch",
+                    "local_interface": "mgmt0",
+                    "hold_time": 148,
+                    "capability": "R S I",
+                    "platform": "WS-C4948-10GE",
+                    "port_id": "GigabitEthernet1/37"
+                },
+                2: {
+                    "device_id": "switch88(FOX1518GRE6)",
+                    "local_interface": "Ethernet1/25",
+                    "hold_time": 164,
+                    "capability": "R S I s",
+                    "platform": "N5K-C5596UP",
+                    "port_id": "Ethernet1/25"
+                },
+                3: {
+                    "device_id": "switch89(FOX1518GQJ2)",
+                    "local_interface": "Ethernet1/26",
+                    "hold_time": 163,
+                    "capability": "R S I s",
+                    "platform": "N5K-C5596UP",
+                    "port_id": "Ethernet1/25"
+                }
+            }
+        }
+    }
+
+    device_output_3 = {'execute.return_value': '''
+
+        Capability Codes: R - Router, T - Trans-Bridge, B - Source-Route-Bridge
+                          S - Switch, H - Host, I - IGMP, r - Repeater,
+                          V - VoIP-Phone, D - Remotely-Managed-Device,
+                          s - Supports-STP-Dispute
+        Device-ID           Local Intrfce    Hldtme Capability    Platform        Port ID
+        Mgmt-switch
+                            mgmt0             148    R S I         WS-C4948-10GE Gig1/37
+        switch88(FOX1518GRE6)
+                            Eth1/25           164    R S I s       N5K-C5596UP   Eth1/25
+        switch89(FOX1518GQJ2)
+                            Eth1/26           163    R S I s       N5K-C5596UP   Eth1/25
+    '''}
+
     empty_device_output = {'execute.return_value': '''
         Device# show cdp neighbors
         Capability Codes:
@@ -85,7 +131,7 @@ class test_show_cdp_neighbors(unittest.TestCase):
                         V - VoIP-Phone, D - Remotely-Managed-Device,
                         s - Supports-STP-Dispute
         Device ID              Local Intrfce   Hldtme  Capability  Platform      Port ID
-      '''}
+    '''}
 
     def test_show_cdp_neighbors_1(self):
         self.maxDiff = None
@@ -100,6 +146,14 @@ class test_show_cdp_neighbors(unittest.TestCase):
         obj = ShowCdpNeighbors(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_2)
+
+    def test_show_cdp_neighbors_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_3)
+        obj = ShowCdpNeighbors(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_3)
+
 
     def test_show_cdp_neighbors_empty_output(self):
         self.maxDiff = None
