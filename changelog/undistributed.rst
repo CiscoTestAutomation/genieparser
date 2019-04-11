@@ -5,6 +5,20 @@
 | ------------------------|:-------------:|
 | ``genie.libs.parser``   |               |
 
+----------------------------------------------------------------------------------
+                                   CDP
+----------------------------------------------------------------------------------
+* IOSXE
+  * Add ShowCdpNeighbors for:
+      show cdp neighbors
+  * Add ShowCdpNeighborsDetail for:
+      show cdp neighbors detail
+* NXOS
+  * Add ShowCdpNeighbors for:
+      show cdp neighbors
+  * Add ShowCdpNeighborsDetail for:
+      show cdp neighbors detail
+
 --------------------------------------------------------------------------------
                                    PLATFORM
 --------------------------------------------------------------------------------
@@ -261,20 +275,20 @@
                                  ROUTING
 ----------------------------------------------------------------------------------
 * NXOS
-	* Updated ShowRoutingIpv6VrfAll to support different vrf
+  * Updated ShowRoutingIpv6VrfAll to support different vrf
 
 
 ----------------------------------------------------------------------------------
                                  OSPF
 ----------------------------------------------------------------------------------
 * IOSXR
-	* Updated ShowOspfVrfAllInclusiveNeighborDetail to have bfd mode/status
+  * Updated ShowOspfVrfAllInclusiveNeighborDetail to have bfd mode/status
 
 ----------------------------------------------------------------------------------
                                  PROTOCOLS
 ----------------------------------------------------------------------------------
 * IOSXE
-	* Fixed ShowProtocols for bgp and ospf
+  * Fixed ShowProtocols for bgp and ospf
 
 ----------------------------------------------------------------------------------
                                  ACL
