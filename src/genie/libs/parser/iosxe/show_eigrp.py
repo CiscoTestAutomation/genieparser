@@ -45,7 +45,7 @@ class ShowEigrpNeighborsSchema(MetaParser):
                                                 'q_cnt': int,
                                                 'last_seq_number': int,
                                                 'srtt': float,
-                                                'rto': int, }, }, 
+                                                'rto': int, }, },
                                             },
                                         },
                                     },
@@ -54,7 +54,7 @@ class ShowEigrpNeighborsSchema(MetaParser):
                         },
                     },
                 },
-            } 
+            }
 
 
 # ====================================
@@ -63,14 +63,9 @@ class ShowEigrpNeighborsSchema(MetaParser):
 #            'show ipv6 eigrp neighbors'
 #            'show ipv6 eigrp vrf <vrf> neighbors'
 # ====================================
-class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):    
+class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
 
-    def cli(self, cmd='', vrf='', output=None):
-
-        if output is None:            
-            out = self.device.execute(cmd)
-        else:
-            out = output
+    def cli(self, address_family='', vrf='', output=None):
 
         # EIGRP-IPv4 Neighbors for AS(1100) VRF(VRF1)
         r1 = re.compile(r'^EIGRP\-(?P<address_family>IPv4|IPv6)\s'
@@ -90,13 +85,11 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
                         '(?P<q_cnt>\d+) +'
                         '(?P<last_seq_number>\d+)$')
 
-        # show ip eigrp
-        r3 = re.compile(r'show\s+ip\s+eigrp')
-
-        parsed_dict = {}        
+        parsed_dict = {}
         eigrp_instance = ''
-        if r3.match(cmd):
-            address_family = 'IPv4'
+
+        # Get output
+        out = output
 
         for line in out.splitlines():
             line = line.strip()
@@ -105,7 +98,7 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
 
             if result:
                 vrf = result.group('vrf')
-                address_family = result.group('address_family')
+                address_family = result.group('address_family').lower()
                 eigrp_instance = result.group('as_num')
 
             result = r2.match(line)
@@ -161,14 +154,14 @@ class ShowIpEigrpNeighbors(ShowEigrpNeighborsSuperParser, ShowEigrpNeighborsSche
         if output is None:
             if vrf:
                 cmd = self.cli_command[0].format(vrf=vrf)
-            else:                
+            else:
                 cmd = self.cli_command[1]
             show_output = self.device.execute(cmd)
 
         else:
             show_output = output
 
-        return super().cli(cmd=cmd, output=show_output, vrf=vrf)
+        return super().cli(output=show_output, address_family='ipv4', vrf=vrf)
 
 
 # ===============================================
@@ -177,22 +170,22 @@ class ShowIpEigrpNeighbors(ShowEigrpNeighborsSuperParser, ShowEigrpNeighborsSche
 #   * 'show ipv6 eigrp neighbors'
 # ===============================================
 class ShowIpv6EigrpNeighbors(ShowEigrpNeighborsSuperParser, ShowEigrpNeighborsSchema):
-    
+
     cli_command = ['show ipv6 eigrp vrf {vrf} neighbors',
                    'show ipv6 eigrp neighbors',]
 
     def cli(self, vrf='', output=None):
-        if output is None:            
+        if output is None:
             if vrf:
                 cmd = self.cli_command[0].format(vrf=vrf)
-            else:                
+            else:
                 cmd = self.cli_command[1]
             show_output = self.device.execute(cmd)
 
         else:
             show_output = output
 
-        return super().cli(cmd=cmd, output=show_output, vrf=vrf)
+        return super().cli(output=show_output, address_family='ipv6', vrf=vrf)
 
 
 class ShowEigrpNeighborsDetailSchema(MetaParser):
@@ -258,7 +251,7 @@ class ShowEigrpNeighborsDetailParser(ShowEigrpNeighborsDetailSchema):
                 out = self.device.execute(self.cli_command[0])
         else:
             out = output
-        
+
         # EIGRP-IPv4 VR(foo) Address-Family Neighbors for AS(1)
         # EIGRP-IPv4 VR(foo) Address-Family Neighbors for AS(1) VRF(VRF1)
         r1 = re.compile(r'EIGRP\-(?P<address_family>IPv4|IPv6)[\w \-\(\)]+ +'
@@ -300,7 +293,7 @@ class ShowEigrpNeighborsDetailParser(ShowEigrpNeighborsDetailSchema):
         parsed_dict = {}
 
         for line in out.splitlines():
-            line = line.strip()            
+            line = line.strip()
 
             # EIGRP-IPv4 VR(foo) Address-Family Neighbors for AS(1)
             # EIGRP-IPv4 VR(foo) Address-Family Neighbors for AS(1) VRF(VRF1)
@@ -310,7 +303,7 @@ class ShowEigrpNeighborsDetailParser(ShowEigrpNeighborsDetailSchema):
 
                 group = result.groupdict()
 
-                address_family = group['address_family']
+                address_family = group['address_family'].lower()
                 as_num = group['as_num']
                 vrf = group['vrf'] if group['vrf'] else 'default'
 
@@ -332,7 +325,7 @@ class ShowEigrpNeighborsDetailParser(ShowEigrpNeighborsDetailSchema):
 
                 group = result.groupdict()
 
-                address_family = group['address_family']
+                address_family = group['address_family'].lower()
                 as_num = group['as_num']
                 vrf = group['vrf'] if group['vrf'] else 'default'
 
