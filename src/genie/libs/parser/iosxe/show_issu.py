@@ -122,10 +122,8 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
             m = p1.match(line)
             if m:
                 # semi empty output
-                if not ret_dict:
-                    return ret_dict
-                    
-                slot_dict['issu_in_progress'] = False
+                if 'slot' in ret_dict:
+                    slot_dict['issu_in_progress'] = False
                 continue
 
             # Slot being modified: R1
