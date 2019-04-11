@@ -217,3 +217,10 @@
     * Add ShowIsisDatabaseDetail for:
         show isis database detail
 
+--------------------------------------------------------------------------------
+                                PREFIX_LIST
+--------------------------------------------------------------------------------
+* IOSXR
+    * Add ShowRplPrefixSet for:
+        show rpl prefix-set
+        show rpl prefix-set <set_name>
