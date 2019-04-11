@@ -321,7 +321,7 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
 
         # Routing on Interfaces Configured Explicitly (Area 0):
         p6_2 = re.compile(r"^Routing +on +Interfaces +Configured +Explicitly"
-                         " +\(Area +(?P<area>(\d+))\)\:$")
+                         " +\(Area +(?P<area>[\d\.]+)\)\:$")
 
 
         # Routing Information Sources:
@@ -1056,9 +1056,9 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                     group = m.groupdict()
                     if protocol == 'bgp':
                         multi_values_dict = bgp_dict.setdefault('preference', {}).setdefault('multi_values', {})
-                    multi_values_dict['external'] = int(group['external'])
-                    multi_values_dict['internal'] = int(group['internal'])
-                    multi_values_dict['local'] = int(group['local'])
+                        multi_values_dict['external'] = int(group['external'])
+                        multi_values_dict['internal'] = int(group['internal'])
+                        multi_values_dict['local'] = int(group['local'])
                     continue
 
                 # Redistributing: isis banana

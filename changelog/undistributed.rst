@@ -175,6 +175,25 @@
         'show snmp mib'
 
 --------------------------------------------------------------------------------
+                                   SERVICE
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowServiceGroupTrafficStats for:
+        show service-group traffic-stats
+        show service-group traffic-stats <group>
+
+--------------------------------------------------------------------------------
+                                   FDB
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowMacAddressTable for:
+        show mac address-table
+    * Add ShowMacAddressTableAgingTime for:
+        show mac address-table aging-time
+    * Add ShowMacAddressTableLearning for:
+        show mac address-table learning
+
+--------------------------------------------------------------------------------
                                    BFD
 --------------------------------------------------------------------------------
 * IOS
@@ -239,13 +258,32 @@
             show ipv6 cef vrf <vrf> <prefix>
 
 ----------------------------------------------------------------------------------
+                                 ROUTING
+----------------------------------------------------------------------------------
+* NXOS
+	* Updated ShowRoutingIpv6VrfAll to support different vrf
+
+
+----------------------------------------------------------------------------------
+                                 OSPF
+----------------------------------------------------------------------------------
+* IOSXR
+	* Updated ShowOspfVrfAllInclusiveNeighborDetail to have bfd mode/status
+
+----------------------------------------------------------------------------------
+                                 PROTOCOLS
+----------------------------------------------------------------------------------
+* IOSXE
+	* Fixed ShowProtocols for bgp and ospf
+
+----------------------------------------------------------------------------------
                                    LLDP
 ----------------------------------------------------------------------------------
 * IOSXR
     * Add ShowLldp for:
         show lldp
     * Add ShowLldpEntry for:
-        show lldp entry [<WORD>|*]
+        show lldp entry *
     * Add ShowLldpNeighborsDetail for:
         show lldp neighbors detail
     * Add ShowLldpTraffic for:
