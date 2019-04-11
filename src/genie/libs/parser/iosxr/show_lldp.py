@@ -143,7 +143,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         p6 = re.compile(r'^System +Description:$')
         # Cisco IOS Software [Everest], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.1, RELEASE SOFTWARE (fc2)
         # Cisco Nexus Operating System (NX-OS) Software 7.0(3)I7(1)
-        p7 = re.compile(r'^(?P<system_description>Cisco +((IOS +Software +\[Everest\])|(Nexus +Operating +System))[\S\s]+)$')
+        p7 = re.compile(r'^(?P<system_description>Cisco +((IOS +Software +\[Everest\])|(Nexus +Operating +System)|(IOS +XR +Software))[\S\s]+)$')
         # Copyright (c) 1986-2017 by Cisco Systems, Inc.
         p8 = re.compile(r'^(?P<copyright>Copyright +\(c\) +[\S\s]+)$')
         # Compiled Sat 22-Jul-17 05:51 by 
@@ -169,18 +169,16 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             # Local Interface: GigabitEthernet0/0/0/0
             m = p1.match(line)
             if m:
-                group = m.groupdict()
-                intf = Common.convert_intf_name(group['local_interface'])
-                intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(intf, {})
                 sub_dict = {}
+                group = m.groupdict()
                 continue
             
             # Chassis id: 001e.49f7.2c00
             m = p2.match(line)
             if m:
-                sub_dict = {}
                 group = m.groupdict()
-                sub_dict.setdefault('chassis_id', group['chassis_id'])
+                chassis_id = group['chassis_id']
+                sub_dict.update({'chassis_id': chassis_id})
                 continue
             
             # Port id: Gi1/0/4
@@ -189,6 +187,8 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 group = m.groupdict()
                 sub_dict.setdefault('port_id',
                     Common.convert_intf_name(group['port_id']))
+                intf = Common.convert_intf_name(sub_dict['port_id'])
+                intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(intf, {})
                 continue
 
             # Port Description: GigabitEthernet1/0/4
@@ -202,7 +202,10 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                sub_dict['system_name'] = group['system_name']
+                system_name = group['system_name']
+                sub_dict.update({'system_name': system_name})
+                sub_dict['neighbor_id'] = system_name
+                intf_dict.setdefault('neighbors', {}).setdefault(system_name, sub_dict)
                 continue
 
             # Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)
@@ -236,19 +239,14 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             # Time remaining: 112 seconds
             m = p11.match(line)
             if m:
-                nei = sub_dict.get('system_name', '') if sub_dict.get('system_name', '') else \
-                    sub_dict.get('chassis_id', '')
-                nei_dict = intf_dict.setdefault('neighbors', {}).setdefault(nei, {})
-                nei_dict.update(sub_dict)
-                nei_dict['time_remaining'] = int(m.groupdict()['time_remaining'])
-                nei_dict['neighbor_id'] = nei
+                sub_dict['time_remaining'] = int(m.groupdict()['time_remaining'])
                 continue
 
             # Hold Time: 120 seconds
             m = p12.match(line)
             if m:
                 group = m.groupdict()
-                nei_dict['hold_time'] = int(group['hold_time'])
+                sub_dict['hold_time'] = int(group['hold_time'])
                 continue
 
             # System Capabilities: B,R
@@ -256,7 +254,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             if m:
                 cap = [self.CAPABILITY_CODES[n] for n in m.groupdict()['system'].split(',')]
                 for item in cap:
-                    cap_dict = nei_dict.setdefault('capabilities', {}).\
+                    cap_dict = sub_dict.setdefault('capabilities', {}).\
                         setdefault(item, {})
                     cap_dict['system'] = True
                 continue
@@ -266,7 +264,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             if m:
                 cap = [self.CAPABILITY_CODES[n] for n in m.groupdict()['enabled'].split(',')]
                 for item in cap:
-                    cap_dict = nei_dict.setdefault('capabilities', {}).\
+                    cap_dict = sub_dict.setdefault('capabilities', {}).\
                         setdefault(item, {})
                     cap_dict['enabled'] = True
                 continue   
@@ -274,7 +272,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             # IPv4 address: 10.1.2.1
             m = p15.match(line)
             if m:
-                nei_dict['management_address'] = m.groupdict()['management_address']
+                sub_dict['management_address'] = m.groupdict()['management_address']
                 continue  
 
             # Total entries displayed: 2
@@ -282,6 +280,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             if m:
                 ret_dict['total_entries'] = int(m.groupdict()['total_entries'])
                 continue  
+            
         return ret_dict     
 
 

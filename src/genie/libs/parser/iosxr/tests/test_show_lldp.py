@@ -57,7 +57,7 @@ class test_show_lldp_entry(unittest.TestCase):
 
     golden_parsed_output = {
         'interfaces': {
-            'GigabitEthernet0/0/0/0': {
+            'GigabitEthernet2': {
                 'neighbors': {
                     'R1_csr1000v.openstacklocal': {
                         'chassis_id': '001e.49f7.2c00',
@@ -81,7 +81,7 @@ class test_show_lldp_entry(unittest.TestCase):
                         },
                     },
                 },
-            'GigabitEthernet0/0/0/1': {
+            'Ethernet1/2': {
                 'neighbors': {
                     'R3_n9kv': {
                         'chassis_id': '5e00.8002.0009',
@@ -178,7 +178,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
     empty_output = {'execute.return_value': '      '}
     golden_parsed_output = {
         'interfaces': {
-            'GigabitEthernet0/0/0/0': {
+            'GigabitEthernet2': {
                 'neighbors': {
                     'R1_csr1000v.openstacklocal': {
                         'chassis_id': '001e.49f7.2c00',
@@ -202,7 +202,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
                         },
                     },
                 },
-            'GigabitEthernet0/0/0/1': {
+            'Ethernet1/2': {
                 'neighbors': {
                     'R3_n9kv': {
                         'chassis_id': '5e00.8002.0009',
