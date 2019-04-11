@@ -5,7 +5,9 @@ from ats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
-from genie.libs.parser.iosxe.show_acl import ShowAccessLists
+from genie.libs.parser.iosxe.show_acl import ShowAccessLists, \
+                                             ShowIpAccessLists, \
+                                             ShowIpv6AccessLists
 
 
 class test_show_access_lists(unittest.TestCase):
@@ -1305,22 +1307,22 @@ IPv6 access list OutFilter_IPv6
     def test_ip_access_list_golden(self):
         self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_ip_access_list_output)
-        obj = ShowAccessLists(device=self.dev_c3850)
-        parsed_output = obj.parse(ip="ip",acl="ACL_TEST")
+        obj = ShowIpAccessLists(device=self.dev_c3850)
+        parsed_output = obj.parse(acl="ACL_TEST")
         self.assertEqual(parsed_output,self.golden_parsed_ip_access_list_output)
 
     def test_ipv6_access_list_golden(self):
         self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_ipv6_access_list_output)
-        obj = ShowAccessLists(device=self.dev_c3850)
-        parsed_output = obj.parse(ip="ipv6",acl="OutFilter_IPv6")
+        obj = ShowIpv6AccessLists(device=self.dev_c3850)
+        parsed_output = obj.parse(acl="OutFilter_IPv6")
         self.assertEqual(parsed_output,self.golden_parsed_ipv6_access_list_output)
 
     def test_ipv6_access_list_all_golden(self):
         self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_ipv6_access_list_all_output)
-        obj = ShowAccessLists(device=self.dev_c3850)
-        parsed_output = obj.parse(ip="ipv6")
+        obj = ShowIpv6AccessLists(device=self.dev_c3850)
+        parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_ipv6_access_list_all_output)
 
 if __name__ == '__main__':

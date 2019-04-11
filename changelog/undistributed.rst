@@ -308,3 +308,14 @@
 * IOSXE
 	* Fixed ShowProtocols for bgp and ospf
 
+----------------------------------------------------------------------------------
+                                 ACL
+----------------------------------------------------------------------------------
+* IOSXE
+  * Updated ShowAccessLists
+  * Add ShowIpAccessLists for :
+          show ip access-lists
+          show ip access-lists <acl>
+  * Add ShowIpv6AccessLists for :
+          show ipv6 access-list
+          show ipv6 access-list <acl>
