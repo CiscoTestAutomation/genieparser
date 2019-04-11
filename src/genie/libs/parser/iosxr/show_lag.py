@@ -77,25 +77,53 @@ class ShowBundleSchema(MetaParser):
                 },
                 'mac_address': str,
                 'mac_address_source': str,
-                'inter_chassis_link': str,
+                Optional('inter_chassis_link'): str,
                 'min_active_link': int,
                 'min_active_bw_kbps': int,
                 'max_active_link': int,
                 'wait_while_timer_ms': int,
-                'load_balance': {
-                    'link_order_signaling': str,
-                    'hash_type': str,
-                    'locality_threshold': str,
+                Optional('load_balance'): {
+                    Optional('load_balance'): str,
+                    Optional('link_order_signaling'): str,
+                    Optional('hash_type'): str,
+                    Optional('locality_threshold'): str,
                 },
                 'lacp': {
                     'lacp': str,
-                    'flap_suppression_timer': str,
-                    'cisco_extensions': str,
-                    'non_revertive': str,
+                    Optional('flap_suppression_timer'): str,
+                    Optional('cisco_extensions'): str,
+                    Optional('non_revertive'): str,
                 },
-                'mlacp': str,
-                'ipv4_bfd': str,
-                'ipv6_bfd': str,
+                'mlacp': {
+                    'mlacp': str,
+                    Optional('iccp_group'): str,
+                    Optional('role'): str,
+                    Optional('foreign_links_active'): int,
+                    Optional('foreign_links_configured'): int,
+                    Optional('switchover_type'): str,
+                    Optional('recovery_delay'): str,
+                    Optional('maximize_threshold'): str,
+                },
+                'ipv4_bfd': {
+                    'ipv4_bfd': str,
+                    Optional('state'): str,
+                    Optional('fast_detect'): str,
+                    Optional('start_timer'): str,
+                    Optional('neighbor_unconfigured_timer'): str,
+                    Optional('preferred_min_interval_ms'): int,
+                    Optional('preferred_multiple'): int,
+                    Optional('destination_address'): str,
+                },
+                Optional('ipv6_bfd'): {
+                    Optional('ipv6_bfd'): str,
+                    Optional('state'): str,
+                    Optional('fast_detect'): str,
+                    Optional('start_timer'): str,
+                    Optional('neighbor_unconfigured_timer'): str,
+                    Optional('preferred_min_interval_ms'): int,
+                    Optional('preferred_multiple'): int,
+                    Optional('destination_address'): str,
+                },
                 'port': {
                     Any(): {
                         'interface': str,
@@ -103,7 +131,7 @@ class ShowBundleSchema(MetaParser):
                         'state': str,
                         'port_id': str,
                         'bw_kbps': int,
-                        'link_state': str,
+                        Optional('link_state'): str,
                     },
                 },
             },
@@ -125,17 +153,20 @@ class ShowBundle(ShowBundleSchema):
         result_dict = {}
 
         # Bundle-Ether1
-        p1 = re.compile(r'^Bundle-Ether(?P<bundle_id>[\d]+)$')
+        # Bundle-Ether 2
+        p1 = re.compile(r'^Bundle-Ether *(?P<bundle_id>[\d]+)$')
 
         # Status:  Up
-        p2 = re.compile(r'^Status: +(?P<oper_status>[\w]+)$')
+        # Status: mLACP hot standby
+        p2 = re.compile(r'^Status: +(?P<oper_status>[\w\s]+)$')
 
         # Local links <active/standby/configured>:  2 / 0 / 2
         p3 = re.compile(r'^Local +links.*: *(?P<active>[\d]+)'
-                        ' *\/ *(?P<standby>[\d]+) *\/ *(?P<configured>[\d]+)$')
+                         ' *\/ *(?P<standby>[\d]+) *\/ *(?P<configured>[\d]+)$')
 
         # Local bandwidth <effective/available>:  2000000 (2000000) kbps
-        p4 = re.compile(r'^Local +bandwidth.*: *(?P<effective>[\d]+) *\((?P<available>[\d]+)\).*$')
+        # Local bandwidth <effective/available>:  100000 / 100000 kbps
+        p4 = re.compile(r'^Local +bandwidth.*: *(?P<effective>[\d]+) *(\/ *|\()(?P<available>[\d]+)\)?.*$')
 
         # MAC address (source):  001b.0c10.5a24 (Chassis pool)
         p5 = re.compile(r'^MAC address.*: *(?P<mac_address>[\w.-]+) +\((?P<mac_address_source>.*)\)$')
@@ -145,51 +176,99 @@ class ShowBundle(ShowBundleSchema):
 
         # Minimum active links / bandwidth:  1 / 1 kbps
         p7 = re.compile(r'^Minimum +active +links.*: *(?P<min_active_link>[\d]+)'
-                        ' *\/ *(?P<min_active_bw_kbps>[\d]+).*$')
+                         ' *\/ *(?P<min_active_bw_kbps>[\d]+).*$')
 
         # Maximum active links:  8
-        p8 = re.compile(r'^Maximum +active +links: *(?P<max_active_link>[\d]+)$')
+        # Maximum active links:  32 (from partner)
+        p8 = re.compile(r'^Maximum +active +links: *(?P<max_active_link>[\d]+).*$')
 
         # Wait while timer:  2000 ms
-        p9 = re.compile(r'^Wait +while +timer: *(?P<wait_while_timer_ms>[\d]+).*$')
+        # Wait-while timer:  2000 ms
+        p9 = re.compile(r'^Wait( +|-)while +timer: *(?P<wait_while_timer_ms>[\d]+).*$')
 
         # Load balancing:
+        # Load-balancing:  Default
+        p10 = re.compile(r'^Load( +|-)balancing: *(?P<load_balance>[\w]+)$')
+
         # Link order signaling:  Not configured
-        p10 = re.compile(r'^Link +order +signaling: *(?P<link_order_signaling>[\w\s]+)$')
+        p10_1 = re.compile(r'^Link +order +signaling: *(?P<link_order_signaling>[\w\s]+)$')
 
         # Hash type:  Default
-        p11 = re.compile(r'^Hash +type: *(?P<hash_type>[\w]+)$')
+        # Hash type:  Src-IP
+        p10_2 = re.compile(r'^Hash +type: *(?P<hash_type>[\S]+)$')
 
         # Locality threshold:  None
-        p12 = re.compile(r'^Locality +threshold: *(?P<locality_threshold>[\w]+)$')
+        p10_3 = re.compile(r'^Locality +threshold: *(?P<locality_threshold>[\w]+)$')
 
         # LACP:  Operational
-        p13 = re.compile(r'^LACP: *(?P<lacp>[\w]+)$')
+        p11 = re.compile(r'^LACP: *(?P<lacp>[\w]+)$')
 
         # Flap suppression timer:  Off
-        p14 = re.compile(r'^Flap +suppression +timer: *(?P<flap_suppression_timer>[\w]+)$')
+        # Flap suppression timer:  2500 ms
+        p11_1 = re.compile(r'^Flap +suppression +timer: *(?P<flap_suppression_timer>[\w\s]+)$')
 
         # Cisco extensions:  Disabled
-        p15 = re.compile(r'^Cisco +extensions: *(?P<cisco_extensions>[\w]+)$')
+        p11_2 = re.compile(r'^Cisco +extensions: *(?P<cisco_extensions>[\w]+)$')
 
         # Non-revertive:  Disabled
-        p16 = re.compile(r'^Non-revertive: *(?P<non_revertive>[\w]+)$')
+        p11_3 = re.compile(r'^Non-revertive: *(?P<non_revertive>[\w]+)$')
 
         # mLACP:  Not configured
-        p17 = re.compile(r'^mLACP: *(?P<mlacp>[\w\s]+)$')
+        p12 = re.compile(r'^mLACP: *(?P<mlacp>[\w\s]+)$')
+
+        # Interchassis group:  3
+        # ICCP group:  1
+        p12_1 = re.compile(r'^(Interchassis|ICCP) +group: *(?P<iccp_group>[\w\s]+)$')
+
+        # Role: Active
+        p12_2 = re.compile(r'^Role: *(?P<role>[\w]+)$')
+
+        # Foreign links <active/configured>:  1 / 1
+        p12_3 = re.compile(r'^Foreign +links.*: *(?P<foreign_links_active>[\d]+)'
+                            ' *\/ *(?P<foreign_links_configured>[\d]+)$')
+
+        # Switchover type:  Revertive
+        p12_4 = re.compile(r'^Switchover +type: *(?P<switchover_type>[\w\s\-]+)$')
+
+        # Recovery delay:  300 s
+        p12_5 = re.compile(r'^Recovery delay: *(?P<recovery_delay>[\w\s]+)$')
+
+        # Maximize threshold: 2 links
+        p12_6 = re.compile(r'^Maximize +threshold: *(?P<maximize_threshold>[\w\s]+)$')
 
         # IPv4 BFD:  Not configured
         # IPv6 BFD:  Not configured
-        p18 = re.compile(r'^(?P<type>[\w]+) +BFD: *(?P<ip_bfd>[\w\s]+)$')
+        p13 = re.compile(r'^(?P<type>[\w]+) +BFD: *(?P<ip_bfd>[\w\s]+)$')
+
+        # State:   Off
+        p13_1 = re.compile(r'^State: *(?P<state>[\w]+)$')
+
+        # Fast detect:  Enabled
+        p13_2 = re.compile(r'^Fast +detect: *(?P<fast_detect>[\w]+)$')
+
+        # Start timer:  Off
+        p13_3 = re.compile(r'^Start +timer: *(?P<start_timer>[\w\s]+)$')
+
+        # Neighbor-unconfigured timer:   Off
+        p13_4 = re.compile(r'^Neighbor-unconfigured +timer: *(?P<neighbor_unconfigured_timer>[\w\s]+)$')
+
+        # Preferred min interval:    150 ms
+        p13_5 = re.compile(r'^Preferred +min +interval: *(?P<preferred_min_interval_ms>[\d]+).*$')
+
+        # Preferred multiple:   3
+        p13_6 = re.compile(r'^Preferred +multiple: *(?P<preferred_multiple>[\d]+)$')
+
+        # Destination address:  Not Configured
+        p13_7 = re.compile(r'^Destination +address: *(?P<destination_address>[\w\s\.]+)$')
 
         # Port                  Device           State        Port ID         B/W, kbps
         # Gi0/0/0/0             Local            Active       0x000a, 0x0001     1000000
-        p19 = re.compile(r'^(?P<interface>[\S]+) +(?P<device>[\w]+) +(?P<state>[\w]+)'
-                         ' +(?P<port_id>[\w]+, *[\w]+) +(?P<bw_kbps>[\d]+)')
+        p14 = re.compile(r'^(?P<interface>[\S]+) +(?P<device>[\S]+) +(?P<state>[\w]+)'
+                          ' +(?P<port_id>[\w]+, *[\w]+) +(?P<bw_kbps>[\d]+)$')
 
         # Link is Active
         # Link is Standby due to maximum-active links configuration
-        p20 = re.compile(r'^Link +is +(?P<link_state>.*)$')
+        p15 = re.compile(r'^Link +is +(?P<link_state>.*)$')
 
         for line in out.splitlines():
             if line:
@@ -235,7 +314,8 @@ class ShowBundle(ShowBundleSchema):
             if m:
                 group = m.groupdict()
                 bundle_dict.update({'mac_address': group['mac_address']})
-                bundle_dict.update({'mac_address_source': group['mac_address_source']})
+                bundle_dict.update({'mac_address_source': \
+                        Common.convert_intf_name(group['mac_address_source'])})
                 continue
 
             # Inter-chassis link:  No
@@ -267,8 +347,16 @@ class ShowBundle(ShowBundleSchema):
                 continue
 
             # Load balancing:
-            # Link order signaling:  Not configured
+            # Load-balancing:  Default
             m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                lb_dict = bundle_dict.setdefault('load_balance', {})
+                lb_dict.update({'load_balance': group['load_balance']})
+                continue
+
+            # Link order signaling:  Not configured
+            m = p10_1.match(line)
             if m:
                 group = m.groupdict()
                 lb_dict = bundle_dict.setdefault('load_balance', {})
@@ -276,21 +364,22 @@ class ShowBundle(ShowBundleSchema):
                 continue
 
             # Hash type:  Default
-            m = p11.match(line)
+            # Hash type:  Src-IP
+            m = p10_2.match(line)
             if m:
                 group = m.groupdict()
                 lb_dict.update({'hash_type': group['hash_type']})
                 continue
 
             # Locality threshold:  None
-            m = p12.match(line)
+            m = p10_3.match(line)
             if m:
                 group = m.groupdict()
                 lb_dict.update({'locality_threshold': group['locality_threshold']})
                 continue
 
             # LACP:  Operational
-            m = p13.match(line)
+            m = p11.match(line)
             if m:
                 group = m.groupdict()
                 lacp_dict = bundle_dict.setdefault('lacp', {})
@@ -298,59 +387,159 @@ class ShowBundle(ShowBundleSchema):
                 continue
 
             # Flap suppression timer:  Off
-            m = p14.match(line)
+            m = p11_1.match(line)
             if m:
                 group = m.groupdict()
                 lacp_dict.update({'flap_suppression_timer': group['flap_suppression_timer']})
                 continue
 
             # Cisco extensions:  Disabled
-            m = p15.match(line)
+            m = p11_2.match(line)
             if m:
                 group = m.groupdict()
                 lacp_dict.update({'cisco_extensions': group['cisco_extensions']})
                 continue
 
             # Non-revertive:  Disabled
-            m = p16.match(line)
+            m = p11_3.match(line)
             if m:
                 group = m.groupdict()
                 lacp_dict.update({'non_revertive': group['non_revertive']})
                 continue
 
             # mLACP:  Not configured
-            m = p17.match(line)
+            m = p12.match(line)
             if m:
                 group = m.groupdict()
-                bundle_dict.update({'mlacp': group['mlacp']})
+                mlacp_dict = bundle_dict.setdefault('mlacp', {})
+                mlacp_dict.update({'mlacp': group['mlacp']})
+                continue
+
+            # Interchassis group:  3
+            # ICCP group:  1
+            m = p12_1.match(line)
+            if m:
+                group = m.groupdict()
+                mlacp_dict.update({'iccp_group': group['iccp_group']})
+                continue
+
+            # Role: Active
+            m = p12_2.match(line)
+            if m:
+                group = m.groupdict()
+                mlacp_dict.update({'role': group['role']})
+                continue
+
+            # Foreign links <active/configured>:  1 / 1
+            m = p12_3.match(line)
+            if m:
+                group = m.groupdict()
+                mlacp_dict.update({k : int(v) for k, v in group.items()})
+                continue
+
+            # Switchover type:  Revertive
+            m = p12_4.match(line)
+            if m:
+                group = m.groupdict()
+                mlacp_dict.update({'switchover_type': group['switchover_type']})
+                continue
+
+            # Recovery delay:  300 s
+            m = p12_5.match(line)
+            if m:
+                group = m.groupdict()
+                mlacp_dict.update({'recovery_delay': group['recovery_delay']})
+                continue
+
+            # Maximize threshold: 2 links
+            m = p12_6.match(line)
+            if m:
+                group = m.groupdict()
+                mlacp_dict.update({'maximize_threshold': group['maximize_threshold']})
                 continue
 
             # IPv4 BFD:  Not configured
-            # IPv6 BFD:  Not configured
-            m = p18.match(line)
+            # IPv6 BFD:  Not operational
+            m = p13.match(line)
             if m:
                 group = m.groupdict()
-                bundle_dict.update({'ipv4_bfd': group['ip_bfd']})
-                bundle_dict.update({'ipv6_bfd': group['ip_bfd']})
+                bfd_type = group['type'].lower() + '_bfd'
+                bfd_dict = bundle_dict.setdefault(bfd_type, {})
+                bfd_dict.update({bfd_type: group['ip_bfd']})
+                continue
+
+            # State:   Off
+            p13_1 = re.compile(r'^State: *(?P<state>[\w]+)$')
+            m = p13_1.match(line)
+            if m:
+                group = m.groupdict()
+                bfd_dict.update({'state': group['state']})
+                continue
+
+            # Fast detect:  Enabled
+            p13_2 = re.compile(r'^Fast +detect: *(?P<fast_detect>[\w]+)$')
+            m = p13_2.match(line)
+            if m:
+                group = m.groupdict()
+                bfd_dict.update({'fast_detect': group['fast_detect']})
+                continue
+
+            # Start timer:  Off
+            p13_3 = re.compile(r'^Start +timer: *(?P<start_timer>[\w\s]+)$')
+            m = p13_3.match(line)
+            if m:
+                group = m.groupdict()
+                bfd_dict.update({'start_timer': group['start_timer']})
+                continue
+
+            # Neighbor-unconfigured timer:   Off
+            p13_4 = re.compile(r'^Neighbor-unconfigured +timer: *(?P<neighbor_unconfigured_timer>[\w\s]+)$')
+            m = p13_4.match(line)
+            if m:
+                group = m.groupdict()
+                bfd_dict.update({'neighbor_unconfigured_timer': group['neighbor_unconfigured_timer']})
+                continue
+
+            # Preferred min interval:    150 ms
+            p13_5 = re.compile(r'^Preferred +min +interval: *(?P<preferred_min_interval_ms>[\d]+).*$')
+            m = p13_5.match(line)
+            if m:
+                group = m.groupdict()
+                bfd_dict.update({'preferred_min_interval_ms': int(group['preferred_min_interval_ms'])})
+                continue
+
+            # Preferred multiple:   3
+            p13_6 = re.compile(r'^Preferred +multiple: *(?P<preferred_multiple>[\d]+)$')
+            m = p13_6.match(line)
+            if m:
+                group = m.groupdict()
+                bfd_dict.update({'preferred_multiple': int(group['preferred_multiple'])})
+                continue
+
+            # Destination address:  Not Configured
+            p13_7 = re.compile(r'^Destination +address: *(?P<destination_address>[\w\s\.]+)$')
+            m = p13_7.match(line)
+            if m:
+                group = m.groupdict()
+                bfd_dict.update({'destination_address': group['destination_address']})
                 continue
 
             # Port                  Device           State        Port ID         B/W, kbps
             # Gi0/0/0/0             Local            Active       0x000a, 0x0001     1000000
-            m = p19.match(line)
+            m = p14.match(line)
             if m:
                 group = m.groupdict()
-                interface = Common.convert_intf_name(group['interface'])
+                interface = Common.convert_intf_name(group.pop('interface'))
+                bw_kbps = int(group.pop('bw_kbps'))
                 port_dict = bundle_dict.setdefault('port', {}).setdefault(interface, {})
                 port_dict.update({'interface': interface})
-                port_dict.update({'device': group['device']})
-                port_dict.update({'state': group['state']})
-                port_dict.update({'port_id': group['port_id']})
-                port_dict.update({'bw_kbps': int(group['bw_kbps'])})
+                port_dict.update({'bw_kbps': bw_kbps})
+                port_dict.update({k : v for k, v in group.items()})
                 continue
 
             # Link is Active
             # Link is Standby due to maximum-active links configuration
-            m = p20.match(line)
+            m = p15.match(line)
             if m:
                 group = m.groupdict()
                 port_dict.update({'link_state': group['link_state']})
