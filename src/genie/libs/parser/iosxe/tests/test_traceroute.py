@@ -25,67 +25,92 @@ class test_traceroute(unittest.TestCase):
     empty_output = ''
 
     golden_parsed_output1 = {
-        'traceroute': 
-            {'172.16.166.253': 
-                {'hops': 
-                    {'1': 
-                        {'address': '172.31.255.125',
-                        'label_info': 
-                            {'MPLS': 
-                                {'exp': 0,
-                                'label': '624'}},
-                        'probe_msec': ['70', '200', '19']},
-                    '2': 
-                        {'address': '10.0.9.1',
-                        
-                        'label_info': 
-                            {'MPLS': 
-                                {'exp': 0,
-                                'label': '300678'}},
-                        'probe_msec': ['177', '150', '9']},
-                    '3': 
-                        {'address': '192.168.14.61',
-                        'label_info': 
-                            {'MPLS': 
-                                {'exp': 0,
-                            'label': '302537'}},
-                        'probe_msec': ['134', '1', '55']},
-                    '4': 
-                        {'address': '192.168.15.1',
-                        'label_info': 
-                            {'MPLS': 
-                                {'exp': 0,
-                                'label': '24133'}},
-                        'probe_msec': ['6', '7', '64']},
-                    '5': 
-                        {'address': '10.80.241.86',
-                        'label_info': 
-                            {'MPLS': 
-                                {'exp': 0,
-                                'label': '24147'}},
-                        'probe_msec': ['69', '65', '111']},
-                    '6': 
-                        {'address': '10.90.135.110',
-                        'label_info': 
-                            {'MPLS': 
-                                {'exp': 0,
-                                'label': '24140'}},
-                        'probe_msec': ['21', '4', '104']},
-                    '7': 
-                        {'address': '172.31.166.10',
-                        'probe_msec': ['92', '51', '148']},
-                    '8': 
-                        {'address': '10.1.1.2',
+        'traceroute': {
+            '172.16.166.253': {
+                'address': '172.16.166.253',
+                'hops': {
+                    '9': {
+                        'address': '10.2.1.2',
+                        'vrf_out_id': '2001',
+                        'vrf_out_name': 'blue',
                         'vrf_in_id': '1001',
                         'vrf_in_name': 'red',
+                        },
+                    '4': {
+                        'address': '192.168.15.1',
+                        'label_info': {
+                            'MPLS': {
+                                'label': '24133',
+                                'exp': 0,
+                                },
+                            },
+                        'probe_msec': ['6', '7', '64'],
+                        },
+                    '5': {
+                        'address': '10.80.241.86',
+                        'label_info': {
+                            'MPLS': {
+                                'label': '24147',
+                                'exp': 0,
+                                },
+                            },
+                        'probe_msec': ['69', '65', '111'],
+                        },
+                    '8': {
+                        'address': '10.1.1.2',
                         'vrf_out_id': '2001',
-                        'vrf_out_name': 'blue'},
-                    '9': 
-                        {'address': '10.2.1.2',
+                        'vrf_out_name': 'blue',
                         'vrf_in_id': '1001',
                         'vrf_in_name': 'red',
-                        'vrf_out_id': '2001',
-                        'vrf_out_name': 'blue'}}}}}
+                        },
+                    '2': {
+                        'address': '10.0.9.1',
+                        'label_info': {
+                            'MPLS': {
+                                'label': '300678',
+                                'exp': 0,
+                                },
+                            },
+                        'probe_msec': ['177', '150', '9'],
+                        },
+                    '1': {
+                        'address': '172.31.255.125',
+                        'label_info': {
+                            'MPLS': {
+                                'label': '624',
+                                'exp': 0,
+                                },
+                            },
+                        'probe_msec': ['70', '200', '19'],
+                        },
+                    '6': {
+                        'address': '10.90.135.110',
+                        'label_info': {
+                            'MPLS': {
+                                'label': '24140',
+                                'exp': 0,
+                                },
+                            },
+                        'probe_msec': ['21', '4', '104'],
+                        },
+                    '3': {
+                        'address': '192.168.14.61',
+                        'label_info': {
+                            'MPLS': {
+                                'label': '302537',
+                                'exp': 0,
+                                },
+                            },
+                        'probe_msec': ['134', '1', '55'],
+                        },
+                    '7': {
+                        'address': '172.31.166.10',
+                        'probe_msec': ['92', '51', '148'],
+                        },
+                    },
+                },
+            },
+        }
 
     golden_output1 = '''\
         router#traceroute 172.16.166.253 numeric timeout 1 probe 3 ttl 1 15 source 61.200.255.248 
@@ -104,28 +129,39 @@ class test_traceroute(unittest.TestCase):
         '''
 
     golden_parsed_output2 = {
-        'traceroute': 
-            {'172.31.165.220/32': 
-                {'hops': 
-                    {'0': 
-                        {'address': '192.168.197.94',
-                        'label_info': 
-                            {'label_name': '1015',
-                            'exp': 0},
-                        'mru': 1552},
-                    '1': 
-                        {'address': '192.168.197.93',
+        'traceroute': {
+            '172.31.165.220/32': {
+                'address': '172.31.165.220',
+                'mask': '32',
+                'timeout_seconds': 2,
+                'hops': {
+                    '1': {
+                        'address': '192.168.197.93',
                         'code': 'L',
-                        'label_info': 
-                            {'label_name': 'implicit-null',
-                            'exp': 0},
+                        'label_info': {
+                            'label_name': 'implicit-null',
+                            'exp': 0,
+                            },
+                        'probe_msec': ['1'],
                         'mru': 1552,
-                        'probe_msec': ['1']},
-                    '2': 
-                        {'address': '192.168.197.102',
+                        },
+                    '2': {
+                        'address': '192.168.197.102',
                         'code': '!',
-                        'probe_msec': ['1']}},
-                'timeout_seconds': 2}}}
+                        'probe_msec': ['1'],
+                        },
+                    '0': {
+                        'address': '192.168.197.94',
+                        'label_info': {
+                            'label_name': '1015',
+                            'exp': 0,
+                            },
+                        'mru': 1552,
+                        },
+                    },
+                },
+            },
+        }
 
     golden_output2 = '''\
         router#traceroute mpls ipv4 172.31.165.220 255.255.255.255
@@ -146,6 +182,31 @@ class test_traceroute(unittest.TestCase):
         ! 2 192.168.197.102 1 ms
         '''
 
+    golden_parsed_output3 = {
+        'traceroute': {
+            '1.1.1.1': {
+                'address': '1.1.1.1',
+                'hops': {
+                    '1': {
+                        'address': '10.10.10.10',
+                        'probe_msec': ['1', '1', '*'],
+                        },
+                    },
+                'url': 'www.xyz.com',
+                },
+            },
+        }
+
+    golden_output3 = '''\
+        [2019-04-11 11:02:15,834] +++ PE1: executing command 'traceroute www.xyz.com' +++
+        traceroute www.xyz.com
+        Type escape sequence to abort.
+        Tracing the route to www.xyz.com (1.1.1.1)
+        VRF info: (vrf in name/id, vrf out name/id)
+          1 10.10.10.10 1 msec 1 msec * 
+        PE1#
+        '''
+
     def test_traceroute_empty(self):
         obj = Traceroute(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
@@ -162,6 +223,12 @@ class test_traceroute(unittest.TestCase):
         obj = Traceroute(device=self.device)
         parsed_output = obj.parse(output=self.golden_output2)
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_traceroute_golden3(self):
+        self.maxDiff = None
+        obj = Traceroute(device=self.device)
+        parsed_output = obj.parse(output=self.golden_output3)
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 if __name__ == '__main__':
     unittest.main()
