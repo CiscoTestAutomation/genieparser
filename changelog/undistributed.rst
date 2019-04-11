@@ -5,12 +5,6 @@
 | ------------------------|:-------------:|
 | ``genie.libs.parser``   |               |
 
---------------------------------------------------------------------------------
-                                   PLATFORM
---------------------------------------------------------------------------------
-* IOSXE
-  * ShowInventory enhanced to support ASR901 platform
-
 ----------------------------------------------------------------------------------
                                    CDP
 ----------------------------------------------------------------------------------
@@ -24,6 +18,12 @@
       show cdp neighbors
   * Add ShowCdpNeighborsDetail for:
       show cdp neighbors detail
+
+--------------------------------------------------------------------------------
+                                   PLATFORM
+--------------------------------------------------------------------------------
+* IOSXE
+  * ShowInventory enhanced to support ASR901 platform
 
 --------------------------------------------------------------------------------
                                    LAG
@@ -275,20 +275,20 @@
                                  ROUTING
 ----------------------------------------------------------------------------------
 * NXOS
-        * Updated ShowRoutingIpv6VrfAll to support different vrf
+  * Updated ShowRoutingIpv6VrfAll to support different vrf
 
 
 ----------------------------------------------------------------------------------
                                  OSPF
 ----------------------------------------------------------------------------------
 * IOSXR
-        * Updated ShowOspfVrfAllInclusiveNeighborDetail to have bfd mode/status
+  * Updated ShowOspfVrfAllInclusiveNeighborDetail to have bfd mode/status
 
 ----------------------------------------------------------------------------------
                                  PROTOCOLS
 ----------------------------------------------------------------------------------
 * IOSXE
-        * Fixed ShowProtocols for bgp and ospf
+  * Fixed ShowProtocols for bgp and ospf
 
 ----------------------------------------------------------------------------------
                                  ACL
