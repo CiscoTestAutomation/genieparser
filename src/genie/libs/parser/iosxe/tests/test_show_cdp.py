@@ -264,14 +264,10 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
                 'native_vlan': '',
                 'platform': 'Cisco ',
                 'port_id': 'GigabitEthernet0',
-                'software_version': 'Cisco IOS Software, IOSv Software '
-                                   '(VIOS-ADVENTERPRISEK9-M), Version '
-                                   '15.7(3)M3, RELEASE SOFTWARE (fc2)Technical '
-                                   'Support: '
-                                   'http://www.cisco.com/techsupportCopyright '
-                                   '(c) 1986-2018 by Cisco Systems, '
-                                   'Inc.Compiled Wed 01-Aug-18 16:45 by '
-                                   'prod_rel_team',
+                'software_version': 'Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)\n'
+        							'Technical Support: http://www.cisco.com/techsupport\n'
+        							'Copyright (c) 1986-2018 by Cisco Systems, Inc.\n'
+        							'Compiled Wed 01-Aug-18 16:45 by prod_rel_team',
                 'vtp_management_domain': ''},
 
             },
@@ -347,14 +343,10 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
                     'native_vlan': '',
                     'platform': 'Cisco ',
                     'port_id': 'GigabitEthernet0',
-                    'software_version': 'Cisco IOS Software, IOSv Software '
-                                   '(VIOS-ADVENTERPRISEK9-M), Version '
-                                   '15.7(3)M3, RELEASE SOFTWARE (fc2)Technical '
-                                   'Support: '
-                                   'http://www.cisco.com/techsupportCopyright '
-                                   '(c) 1986-2018 by Cisco Systems, '
-                                   'Inc.Compiled Wed 01-Aug-18 16:45 by '
-                                   'prod_rel_team',
+                    'software_version': 'Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)\n'
+        								'Technical Support: http://www.cisco.com/techsupport\n'
+        								'Copyright (c) 1986-2018 by Cisco Systems, Inc.\n'
+        								'Compiled Wed 01-Aug-18 16:45 by prod_rel_team',
                     'vtp_management_domain': ''},
                 2: {
                     'advertisement_ver': 2,
@@ -368,14 +360,10 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
                     'native_vlan': '',
                     'platform': 'Cisco ',
                     'port_id': 'GigabitEthernet0',
-                     'software_version': 'Cisco IOS Software, IOSv Software '
-                                   '(VIOS-ADVENTERPRISEK9-M), Version '
-                                   '15.7(3)M3, RELEASE SOFTWARE (fc2)Technical '
-                                   'Support: '
-                                   'http://www.cisco.com/techsupportCopyright '
-                                   '(c) 1986-2018 by Cisco Systems, '
-                                   'Inc.Compiled Wed 01-Aug-18 16:45 by '
-                                   'prod_rel_team',
+                     'software_version': 'Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)\n'
+        								 'Technical Support: http://www.cisco.com/techsupport\n'
+        								 'Copyright (c) 1986-2018 by Cisco Systems, Inc.\n'
+        								 'Compiled Wed 01-Aug-18 16:45 by prod_rel_team',
                     'vtp_management_domain': ''},
                 },
         }
@@ -390,8 +378,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         Holdtime : 143 sec
 
         Version :
-        Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RE
-        LEASE SOFTWARE (fc2)
+        Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)
         Technical Support: http://www.cisco.com/techsupport
         Copyright (c) 1986-2018 by Cisco Systems, Inc.
         Compiled Wed 01-Aug-18 16:45 by prod_rel_team
@@ -454,8 +441,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         Interface: Ethernet0/1,  Port ID (outgoing port): Ethernet0/1
         Holdtime : 160 sec
         Version :
-        Cisco Internetwork Operating System Software I
-        OS (tm) 3600 Software (C3640-A2IS-M), Version 12.2(25)SEB4, RELE)
+        Cisco Internetwork Operating System Software IOS (tm) 3600 Software (C3640-A2IS-M), Version 12.2(25)SEB4, RELE)
         advertisement version: 2
         Duplex Mode: half
         Native VLAN: 42
