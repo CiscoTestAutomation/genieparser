@@ -1862,6 +1862,7 @@ class test_show_policy_map_type(unittest.TestCase):
         self.device = Mock(**self.golden_output7)
         obj = ShowPolicyMapInterface(device=self.device)
         parsed_output = obj.parse()
+        import pdb;pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output7)
 
     def test_show_policy_map_interface_full4(self):
@@ -2209,6 +2210,22 @@ class test_show_policy_map(unittest.TestCase):
                 Policy-map egress policy
                     Class cos5
                         Shape average 30m '''}
+
+    golden_parsed_output6 = {}
+
+    golden_output6 = {'execute.return_value': '''
+        Router# show policy-map child
+
+  Policy Map child
+    Class voice
+      priority
+      police 8000 9216 0
+       conform-action transmit
+       exceed-action drop
+       violate-action drop
+    Class video
+      bandwidth remaining 80 (%)
+    '''}
 
     def test_show_policy_map_golden1(self):
         self.maxDiff = None
