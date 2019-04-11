@@ -176,3 +176,16 @@
     * Add ShowIsisDatabaseDetail for:
         show isis database detail
 
+----------------------------------------------------------------------------------
+                                   CDP
+----------------------------------------------------------------------------------
+* IOSXE
+  * Add ShowCdpNeighbors for:
+      show cdp neighbors
+  * Add ShowCdpNeighborsDetail for:
+      show cdp neighbors detail
+* NXOS
+  * Add ShowCdpNeighbors for:
+      show cdp neighbors
+  * Add ShowCdpNeighborsDetail for:
+      show cdp neighbors detail
