@@ -11,6 +11,20 @@
 * IOSXE
   * ShowInventory enhanced to support ASR901 platform
 
+----------------------------------------------------------------------------------
+                                   CDP
+----------------------------------------------------------------------------------
+* IOSXE
+  * Add ShowCdpNeighbors for:
+      show cdp neighbors
+  * Add ShowCdpNeighborsDetail for:
+      show cdp neighbors detail
+* NXOS
+  * Add ShowCdpNeighbors for:
+      show cdp neighbors
+  * Add ShowCdpNeighborsDetail for:
+      show cdp neighbors detail
+
 --------------------------------------------------------------------------------
                                    LAG
 --------------------------------------------------------------------------------
@@ -287,17 +301,3 @@
   * Add ShowIpv6AccessLists for :
           show ipv6 access-list
           show ipv6 access-list <acl>
-
-----------------------------------------------------------------------------------
-                                   CDP
-----------------------------------------------------------------------------------
-* IOSXE
-  * Add ShowCdpNeighbors for:
-      show cdp neighbors
-  * Add ShowCdpNeighborsDetail for:
-      show cdp neighbors detail
-* NXOS
-  * Add ShowCdpNeighbors for:
-      show cdp neighbors
-  * Add ShowCdpNeighborsDetail for:
-      show cdp neighbors detail
