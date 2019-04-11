@@ -60,8 +60,8 @@ class test_show_cdp_neighbors(unittest.TestCase):
         Port ID
 
         R5.cisco.com     Gig 0/0           125              R B              Gig 0/0
-        RX-SWV.cisco.com Fas 0/1            167         T S       WS-C3524-X Fas 0/13
-        C2950-1          Fas 0/0            148         S I       WS-C2950T- Fas 0/15
+        RX-SWV.cisco.com Fas 0/1            167         T S       WS-C3524-XFas 0/13
+        C2950-1          Fas 0/0            148         S I       WS-C2950T-Fas 0/15
     '''}
 
     expected_parsed_output_2 = {
@@ -475,7 +475,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
     def test_show_cdp_neighbors_detail_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_4_empty)
-        obj = ShowCdpNeighbors(device=self.device)
+        obj = ShowCdpNeighborsDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
