@@ -52,19 +52,30 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
         # Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge
         #                   S - Switch, H - Host, I - IGMP, r - Repeater
 
+        # Specifically for situations when Platform and Port Id are concatenated        
+        # RX-SWV.cisco.com Fas 0/1            167         T S       WS-C3524-XFas 0/13
+        # C2950-1          Fas 0/0            148         S I       WS-C2950T-Fas 0/15
+        p1 = re.compile(r'^(?P<device_id>\S+) +'
+                         '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
+                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIr\s]+) +'
+                         '(?P<platform>\S+)'
+                         '(?P<port_id>(Fa|Gi|GE).\s*\d*\/*\d*)$')
+
         # No platform
         # R5.cisco.com Gig 0/0 125 R B Gig 0/0
-        p1 = re.compile(r'^(?P<device_id>\S+) +'
+        p2 = re.compile(r'^(?P<device_id>\S+) +'
                          '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
                          '(?P<hold_time>\d+) +(?P<capability>[RTBSHIr\s]+)'
                          '(?: +(?P<platform>[\w\-]+) )? +'
                          '(?P<port_id>[a-zA-Z0-9\/\s]+)$')
 
         # device6 Gig 0 157 R S I C887VA-W-W Gi 0
-        p2 = re.compile(r'^(?P<device_id>\S+) +'
+        p3 = re.compile(r'^(?P<device_id>\S+) +'
                          '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
                          '(?P<hold_time>\d+) +(?P<capability>[RTBSHIr\s]+) +'
                          '(?P<platform>\S+) (?P<port_id>[a-zA-Z0-9\/\s]+)$')
+
+        
 
         device_id_index = 0
         parsed_dict = {}
@@ -77,6 +88,8 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
 
             if not result:
                 result = p2.match(line)
+                if not result:
+                    result = p3.match(line)
             if result:
 
                 device_id_index += 1
