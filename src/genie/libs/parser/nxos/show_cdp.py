@@ -258,7 +258,7 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
 
         parsed_dict = {}
         index_device = 0
-        sw_version = ''
+        sw_version = []
 
         for line in out.splitlines():
             line = line.strip()
@@ -372,15 +372,18 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
             if software_version_flag:
                 if line and not advertver_re.match(line):
 
-                    sw_version += line
+                    sw_version.append(line)
                     continue
                 elif not line or advertver_re.match(line):
 
-                    result = software_version_re.match(sw_version)
+                    parsed_sw_ver = '\n'.join(sw_version)
+                    
+                    result = software_version_re.match(parsed_sw_ver)
+
                     devices_dict['software_version'] = \
                         result.group('software_version')
                     software_version_flag = 0
-                    sw_version = ''
+                    sw_version.clear()
 
             result = advertver_re.match(line)
             if result:
