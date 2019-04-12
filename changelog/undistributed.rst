@@ -286,6 +286,8 @@
         show arp application
     * Add ShowArpSummary for:
         show arp summary
+    * Add ShowArp
+        show arp
 
 --------------------------------------------------------------------------------
                                    L2VPN
@@ -352,6 +354,15 @@
 * IOSXE
   * Fixed ShowProtocols for bgp and ospf
 
+* IOS
+  * Add ShowIpProtocolsSectionRip for:
+      show ip protocols | sec rip
+      show ip protocols vrf {vrf} | sec rip
+  * Add ShowIpv6ProtocolsSectionRip for:
+      show ipv6 protocols | sec rip
+      show ipv6 protocols vrf {vrf} | sec rip
+
+
 ----------------------------------------------------------------------------------
                                  ACL
 ----------------------------------------------------------------------------------
@@ -383,6 +394,28 @@
         show lldp traffic
     * Add ShowLldpInterface for:
         show lldp interface
+
+----------------------------------------------------------------------------------
+                                   IGMP
+----------------------------------------------------------------------------------
+* IOS
+    * Add ShowIpIgmpSsmMapping for:
+        show ip igmp ssm-mapping <WORD>
+        show ip igmp vrf <WORD> ssm-mapping <WORD>
+
+----------------------------------------------------------------------------------
+                                   RIP
+----------------------------------------------------------------------------------
+* IOS
+    * Add ShowIpRipDatabase for:
+        show ip rip database
+        show ip rip database vrf {vrf}
+    * Add ShowIpv6RipDatabase for:
+        show ipv6 rip database
+        show ipv6 rip database vrf {vrf}
+    * Add ShowIpv6Rip for:
+        show ipv6 rip
+        show ipv6 rip vrf {vrf}
 
 --------------------------------------------------------------------------------
                                 PREFIX_LIST
