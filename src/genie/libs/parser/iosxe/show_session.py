@@ -48,7 +48,7 @@ class ShowLine(ShowLineSchema):
         #       1 AUX   9600/9600  -    -      -    -    -      0       0     0/0       -
         # *     2 VTY              -    -      -    -    -      3       0     0/0       -
         p1 = re.compile(r'^((?P<busy>\*) +)?(?P<tty>\d+)'
-                         ' +(?P<type>\w+)( +(?P<Tx>\d+)\/(?P<Rx>\d+))?'
+                         ' +(?P<type>\w+)( +(?P<tx>\d+)\/(?P<rx>\d+))?'
                          ' +(?P<a>[\w\-]+) +(?P<modem>[\w\-]+)'
                          ' +(?P<roty>[\w\-]+) +(?P<acco>[\w\-]+)'
                          ' +(?P<acci>[\w\-]+) +(?P<uses>\d+)'
@@ -71,9 +71,9 @@ class ShowLine(ShowLineSchema):
                 else:
                     tty_dict['active'] = False
                 tty_dict['type'] = group['type']
-                if 'tx' in group:
+                if group['tx']:
                     tty_dict['tx'] = int(group['tx'])
-                if 'rx' in group:
+                if group['rx']:
                     tty_dict['rx'] = int(group['rx'])
                 tty_dict['a'] = group['a']
                 tty_dict['modem'] = group['modem']
