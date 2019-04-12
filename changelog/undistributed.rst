@@ -403,7 +403,6 @@
         show ip igmp ssm-mapping <WORD>
         show ip igmp vrf <WORD> ssm-mapping <WORD>
 
-
 ----------------------------------------------------------------------------------
                                    RIP
 ----------------------------------------------------------------------------------
@@ -417,3 +416,11 @@
     * Add ShowIpv6Rip for:
         show ipv6 rip
         show ipv6 rip vrf {vrf}
+
+--------------------------------------------------------------------------------
+                                PREFIX_LIST
+--------------------------------------------------------------------------------
+* IOSXR
+    * Add ShowRplPrefixSet for:
+        show rpl prefix-set
+        show rpl prefix-set <name>
