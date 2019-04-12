@@ -363,3 +363,18 @@
   * Add ShowIpv6AccessLists for :
           show ipv6 access-list
           show ipv6 access-list <acl>
+
+----------------------------------------------------------------------------------
+                                   LLDP
+----------------------------------------------------------------------------------
+* IOSXR
+    * Add ShowLldp for:
+        show lldp
+    * Add ShowLldpEntry for:
+        show lldp entry *
+    * Add ShowLldpNeighborsDetail for:
+        show lldp neighbors detail
+    * Add ShowLldpTraffic for:
+        show lldp traffic
+    * Add ShowLldpInterface for:
+        show lldp interface
