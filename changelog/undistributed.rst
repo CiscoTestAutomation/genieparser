@@ -36,6 +36,12 @@
       show cdp neighbors detail
 
 --------------------------------------------------------------------------------
+                                   TRACEROUTE
+--------------------------------------------------------------------------------
+* IOSXE
+  * Enhanced Traceroute to parse URL along with the Ip Address
+
+--------------------------------------------------------------------------------
                                    PLATFORM
 --------------------------------------------------------------------------------
 * IOSXE
@@ -75,6 +81,14 @@
         show etherchannel load-balancing
     * Add ShowLacpNeighborDetail for:
         show lacp neighbor detail
+
+* IOSXR
+    * Add ShowLacpSystemId for:
+        show lacp system-id
+    * Add ShowBundle for:
+        show lacp bundle
+    * Add ShowLacp for:
+        show lacp
 
 --------------------------------------------------------------------------------
                                    INTERFACE
@@ -205,6 +219,39 @@
         'show snmp mib'
 
 --------------------------------------------------------------------------------
+                                   ISSU
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowIssuStateDetail for:
+          show issu state detail
+    * Add ShowIssuRollbackTimer for:
+          show issu rollback-timer
+
+--------------------------------------------------------------------------------
+                                   POWER
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowStackPower for:
+          show stack-power
+    * Add ShowPowerInlineInterface for:
+          show power inline <interface>
+
+--------------------------------------------------------------------------------
+                                   DOT1X
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowDot1xAllStatistics for:
+          show dot1x all statistics
+
+--------------------------------------------------------------------------------
+                                   CRYPTO
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowCryptoPkiCertificates for:
+          show crypto pki certificates
+          show crypto pki certificates <WORD>
+
+--------------------------------------------------------------------------------
                                    SERVICE
 --------------------------------------------------------------------------------
 * IOS
@@ -293,7 +340,6 @@
 * NXOS
   * Updated ShowRoutingIpv6VrfAll to support different vrf
 
-
 ----------------------------------------------------------------------------------
                                  OSPF
 ----------------------------------------------------------------------------------
@@ -322,3 +368,19 @@
         show access-lists afi-all
     * Add ShowAclEthernetServices for:
         show access-lists ethernet-services
+
+----------------------------------------------------------------------------------
+                                   LLDP
+----------------------------------------------------------------------------------
+* IOSXR
+    * Add ShowLldp for:
+        show lldp
+    * Add ShowLldpEntry for:
+        show lldp entry *
+    * Add ShowLldpNeighborsDetail for:
+        show lldp neighbors detail
+    * Add ShowLldpTraffic for:
+        show lldp traffic
+    * Add ShowLldpInterface for:
+        show lldp interface
+
