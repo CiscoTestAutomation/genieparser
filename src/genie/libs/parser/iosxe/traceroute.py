@@ -48,7 +48,7 @@ class TracerouteSchema(MetaParser):
                         },
                     },
                 Optional('timeout_seconds'): int,
-                Optional('url'): str,
+                Optional('name_of_address'): str,
                 'address': str,
                 Optional('mask'): str,
                 },
@@ -85,7 +85,8 @@ class Traceroute(TracerouteSchema):
                            ' +(?P<timeout>(\d+)) +seconds$')
 
         # Tracing the route to www.kddi.com (3.3.3.3)
-        p1_3 = re.compile(r'^Tracing +the +route +to +(?P<url>\S+) \(+(?P<traceroute>\S+)\)$')
+        p1_3 = re.compile(r'^Tracing +the +route +to +(?P<name_of_address>\S+)'
+                           ' \(+(?P<traceroute>\S+)\)$')
 
         # VRF info: (vrf in name/id, vrf out name/id)
 
@@ -156,10 +157,10 @@ class Traceroute(TracerouteSchema):
             if m:
                 group = m.groupdict()
                 traceroute = group['traceroute']
-                url = group['url']
+                name_of_address = group['name_of_address']
                 tr_dict = ret_dict.setdefault('traceroute', {}).\
                                    setdefault(traceroute, {})
-                tr_dict['url'] = url
+                tr_dict['name_of_address'] = name_of_address
                 tr_dict['address'] = traceroute
                 continue
 
