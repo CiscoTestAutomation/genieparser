@@ -6,6 +6,22 @@
 | ``genie.libs.parser``   |               |
 
 ----------------------------------------------------------------------------------
+                                  EIGRP
+----------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowIpEigrpNeighbors for:
+            show ip eigrp neighbors
+            show ip eigrp vrf <vrf> neighbors
+
+      * Add ShowIpv6EigrpNeighbors for:
+            show ipv6 eigrp neighbors
+            show ipv6 eigrp vrf <vrf> neighbors
+
+      * Add ShowIpEigrpNeighborsDetail for:
+            show ip eigrp neighbors detail
+            show ip eigrp vrf <vrf> neighbors detail
+
+----------------------------------------------------------------------------------
                                    CDP
 ----------------------------------------------------------------------------------
 * IOSXE
@@ -150,7 +166,7 @@
           show mpls interfaces <interface>
           show mpls interfaces <interface> detail
           show mpls interfaces detail
-          
+
 --------------------------------------------------------------------------------
                                    SESSION
 --------------------------------------------------------------------------------
