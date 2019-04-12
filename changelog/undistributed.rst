@@ -223,4 +223,4 @@
 * IOSXR
     * Add ShowRplPrefixSet for:
         show rpl prefix-set
-        show rpl prefix-set <set_name>
+        show rpl prefix-set <name>
