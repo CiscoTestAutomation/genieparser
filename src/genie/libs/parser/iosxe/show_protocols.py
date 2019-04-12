@@ -185,17 +185,6 @@ class ShowIpProtocolsSchema(MetaParser):
                                 {'address_family':
                                     {'ipv4':
                                         {
-                                        Optional('redistribute'): {
-                                            Any(): {
-                                                Optional(Any()): {
-                                                    Optional('metric'): int,
-                                                    Optional('route_policy'): int,
-                                                    Optional('route_type'): str,
-                                                },
-                                                Optional('metric'): int,
-                                                Optional('route_policy'): int,
-                                            },
-                                        },
                                         Optional('outgoing_filter_list'): str,
                                         Optional('incoming_filter_list'): str,
                                         'igp_sync': bool,
@@ -1096,16 +1085,6 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                         isis_dict['redistributing'] = m.groupdict()['redistributing']
                     continue
 
-                # Redistributing: connected, static, rip
-                m = p109.match(line)
-                if m:
-                    if protocol == 'bgp':
-                        group = m.groupdict()
-                        redistributes = group['Redistributing'].split(',')
-                        redistribute_dict = bgp_dict.setdefault('redistribute', {})
-                        for key in redistributes:
-                            redistribute_dict.setdefault(key.strip(), {})
-                    continue
         return ret_dict
 
 

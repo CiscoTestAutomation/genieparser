@@ -18,7 +18,9 @@ from genie.libs.parser.iosxe.show_rip import \
     ShowIpv6RipDatabase as ShowIpv6RipDatabase_iosxe
 
 class ShowIpRipDatabase(ShowIpRipDatabase_iosxe):
-    """Parser for show version
+    """Parser for :
+        show ip rip database
+        show ip rip database vrf {vrf}
     """
     pass
 
