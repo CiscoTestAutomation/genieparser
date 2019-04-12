@@ -120,13 +120,14 @@ class ShowAclAfiAll(ShowAclAfiAllSchema):
         # 10 permit tcp 192.168.1.0 0.0.0.255 host 1.1.1.1 established log
         # 20 permit tcp host 2.2.2.2 eq www any precedence network ttl eq 255
         # 30 deny ipv4 any any
+        # 10 permit ipv4 65.21.21.0 0.0.0.255 65.6.6.0 0.0.0.255
         p2 = re.compile(r'^(?P<seq>\d+) +(?P<actions_forwarding>permit|deny) +'
-            '(?P<protocol>tcp|ipv4|ipv6) +(?P<src>(any|(host +[\d\.:]+))|'
-            '([\d\.]+ +[\d\.]+))( ?(?P<src_operator>eq) +(?P<src_port>\w+))? '
-            '+(?P<dst>(host +[\d\.:]+)|any)(?P<log> +log)?'
-            '( +(?P<des_operator>eq) +(?P<des_port>\w+))?(?P<established_log>'
-            ' +established +log)?( +precedence +(?P<precedence>network) +ttl '
-            '+(?P<ttl_operator>eq) +(?P<ttl>\d+))?')
+            '(?P<protocol>tcp|ipv4|ipv6) +(?P<src>(([\d\.]+ +[\d\.]+)|any|'
+            '(host +[\d\.:]+))|([\d\.]+ +[\d\.]+))( ?(?P<src_operator>eq) +'
+            '(?P<src_port>\w+))? +(?P<dst>(host +[\d\.:]+)|any|([\d\.]+ +'
+            '[\d\.]+))(?P<log> +log)?( +(?P<des_operator>eq) +(?P<des_port>\w+))'
+            '?(?P<established_log> +established +log)?( +precedence +'
+            '(?P<precedence>network) +ttl +(?P<ttl_operator>eq) +(?P<ttl>\d+))?')
 
         # initial variables
         ret_dict = {}
