@@ -24,20 +24,22 @@ class test_show_isis_adjacency(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output1 = {
+    golden_parsed_output1 ={
         'isis': {
             'p': {
                 'level': {
-                    'Level-2': {
+                    'Level-1': {
                         'system_id': {
                             '12a4': {
                                 'interface': 'GigabitEthernet0/6/0/2',
                                 'snpa': '0004.2893.f2f6',
                                 'state': 'Up',
-                                'hold': '26',
-                                'changed': '00:00:13',
-                                'nsf': 'CapableInit'}},
-                        'total_adjacency_count': 2}}}}}
+                                'hold': '56',
+                                'changed': '00:04:01',
+                                'nsf': 'Capable Up'}},
+                        'total_adjacency_count': 2},
+                    'Level-2': {'system_id': {'12a4': {'interface': 'GigabitEthernet0/6/0/2', 'snpa': '0004.2893.f2f6', 'state': 'Up', 'hold': '26', 'changed': '00:00:13', 'nsf': 'CapableInit'}}, 'total_adjacency_count': 2}}}}}
+
 
     golden_output1 = {'execute.return_value': '''
         RP/0/RP0/CPU0:router# show isis adjacency

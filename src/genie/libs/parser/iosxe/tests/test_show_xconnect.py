@@ -47,7 +47,6 @@ class test_show_xconnect_all(unittest.TestCase):
                         'st': 'sec'}},
                 's1': 'UP'}}}
 
-
     golden_output1 = {'execute.return_value': '''
         Router# show xconnect all
         Legend: XC ST=Xconnect State, S1=Segment1 State, S2=Segment2 State
