@@ -192,7 +192,7 @@ class test_traceroute(unittest.TestCase):
                         'probe_msec': ['1', '1', '*'],
                         },
                     },
-                'url': 'www.xyz.com',
+                'name_of_address': 'www.xyz.com',
                 },
             },
         }
