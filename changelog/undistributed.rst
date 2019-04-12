@@ -5,6 +5,36 @@
 | ------------------------|:-------------:|
 | ``genie.libs.parser``   |               |
 
+----------------------------------------------------------------------------------
+                                  EIGRP
+----------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowIpEigrpNeighbors for:
+            show ip eigrp neighbors
+            show ip eigrp vrf <vrf> neighbors
+
+      * Add ShowIpv6EigrpNeighbors for:
+            show ipv6 eigrp neighbors
+            show ipv6 eigrp vrf <vrf> neighbors
+
+      * Add ShowIpEigrpNeighborsDetail for:
+            show ip eigrp neighbors detail
+            show ip eigrp vrf <vrf> neighbors detail
+
+----------------------------------------------------------------------------------
+                                   CDP
+----------------------------------------------------------------------------------
+* IOSXE
+  * Add ShowCdpNeighbors for:
+      show cdp neighbors
+  * Add ShowCdpNeighborsDetail for:
+      show cdp neighbors detail
+* NXOS
+  * Add ShowCdpNeighbors for:
+      show cdp neighbors
+  * Add ShowCdpNeighborsDetail for:
+      show cdp neighbors detail
+
 --------------------------------------------------------------------------------
                                    PLATFORM
 --------------------------------------------------------------------------------
@@ -136,7 +166,7 @@
           show mpls interfaces <interface>
           show mpls interfaces <interface> detail
           show mpls interfaces detail
-          
+
 --------------------------------------------------------------------------------
                                    SESSION
 --------------------------------------------------------------------------------
@@ -261,20 +291,20 @@
                                  ROUTING
 ----------------------------------------------------------------------------------
 * NXOS
-	* Updated ShowRoutingIpv6VrfAll to support different vrf
+  * Updated ShowRoutingIpv6VrfAll to support different vrf
 
 
 ----------------------------------------------------------------------------------
                                  OSPF
 ----------------------------------------------------------------------------------
 * IOSXR
-	* Updated ShowOspfVrfAllInclusiveNeighborDetail to have bfd mode/status
+  * Updated ShowOspfVrfAllInclusiveNeighborDetail to have bfd mode/status
 
 ----------------------------------------------------------------------------------
                                  PROTOCOLS
 ----------------------------------------------------------------------------------
 * IOSXE
-	* Fixed ShowProtocols for bgp and ospf
+  * Fixed ShowProtocols for bgp and ospf
 
 ----------------------------------------------------------------------------------
                                  ACL
