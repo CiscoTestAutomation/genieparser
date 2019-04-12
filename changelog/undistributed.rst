@@ -384,3 +384,10 @@
     * Add ShowLldpInterface for:
         show lldp interface
 
+--------------------------------------------------------------------------------
+                                PREFIX_LIST
+--------------------------------------------------------------------------------
+* IOSXR
+    * Add ShowRplPrefixSet for:
+        show rpl prefix-set
+        show rpl prefix-set <name>
