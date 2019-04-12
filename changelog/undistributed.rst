@@ -363,6 +363,11 @@
   * Add ShowIpv6AccessLists for :
           show ipv6 access-list
           show ipv6 access-list <acl>
+* IOSXR
+    * Add ShowAclAfiAll for:
+        show access-lists afi-all
+    * Add ShowAclEthernetServices for:
+        show access-lists ethernet-services
 
 ----------------------------------------------------------------------------------
                                    LLDP
