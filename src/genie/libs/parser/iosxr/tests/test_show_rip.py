@@ -10,7 +10,7 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # Parser
-from genie.libs.parser.iosxr.show_rip import ShowRip, ShowRipDatabase
+from genie.libs.parser.iosxr.show_rip import ShowRipDatabase
 
 # ===============================
 # Unit tests for:
