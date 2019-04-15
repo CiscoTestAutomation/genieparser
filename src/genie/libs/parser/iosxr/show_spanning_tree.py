@@ -54,45 +54,6 @@ class ShowSpanningTreeMstSchema(MetaParser):
 		}
 	}
 
-class ShowSpanningTreeMstagSchema(MetaParser):
-	schema = {
-		'mstag': {
-			Any(): {
-				'domain': str,
-				'interfaces': {
-					Any(): {
-						'interface': str,
-						'name': str,
-						'revision': int,
-						'max_age': int,
-						'provider_bridge': str,
-						'bridge_id': str,
-						'port_id': int,
-						'external_cost': int,
-						'hello_time': int,
-						'active': bool,
-						'counters': {
-							'bdpu_sent': int,
-						}
-					},
-					'instances': {
-						Any(): {
-							'instance': int,
-							'vlans': str,
-							'priority': int,
-							'root_bridge': str,
-							'root_priority': int,
-							'port_priority': int,
-							'cost': int,
-							'counters': {
-								'topology_changes': int
-							}
-						}
-					}
-				}
-			}
-		}
-	}
 
 class ShowSpanningTreePvrstSchema(MetaParser):
 	schema = {
@@ -304,7 +265,273 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 		    	continue
 		return ret_dict
 
+class ShowSpanningTreeMstagSchema(MetaParser):
+	schema = {
+		'mstag': {
+			Any(): {
+				'domain': str,
+				'interfaces': {
+					Any(): {
+						'interface': str,
+						'preempt_delay': bool,
+						'preempt_delay_state': str,
+						'name': str,
+						'revision': int,
+						'max_age': int,
+						'provider_bridge': str,
+						'bridge_id': str,
+						'port_id': int,
+						'external_cost': int,
+						'hello_time': int,
+						'active': bool,
+						'counters': {
+							'bdpu_sent': int,
+						}
+					},
+					'instances': {
+						Any(): {
+							'instance': int,
+							'vlans': str,
+							'priority': int,
+							'root_bridge': str,
+							'root_priority': int,
+							'port_priority': int,
+							'cost': int,
+							'counters': {
+								'topology_changes': int
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 
 class ShowSpanningTreeMstag(ShowSpanningTreeMstagSchema):
 	"""Parser for 'show spanning-tree mstag <mag_domain>'"""
 	cli_command = 'show spanning-tree mstag {mag_domain}'
+
+	def cli(self,mag_domain, output=None):
+		if output is None:
+		    # get output from device
+		    out = self.device.execute(self.cli_command.format(mag_domain=mag_domain))
+		else:
+		    out = output
+
+		# initial return dictionary
+		ret_dict = {}
+
+		# Bundle-Ether10.0
+		p1 = re.compile(r'^Bundle\-(?P<mag_interface>\S+)$$')
+		# Pre-empt delay is disabled
+		p2 = re.compile(r'^Pre\-empt +delay +is +(?P<preempt_delay_state>\w+)$')
+		# Name:            risc
+		p3 = re.compile(r'^Name: (\S+)$')
+		# Revision: 1
+		p4 = re.compile(r'^Revision: +(?P<revision>\d+)$')
+		# Max Age: 20
+		p5 = re.compile(r'^Max Age: +(?P<max_age>\d+)$')
+		# Provider Bridge: no
+		p6 = re.compile(r'^Provider +Bridge: +(?P<provider_bridge>\w+)$')
+		# Bridge ID:       0000.0000.0002
+		p7 = re.compile(r'^Bridge +ID: +(?P<bridge_id>[\w\.]+)$')
+		# Port ID:         1
+		p8 = re.compile(r'^Port +ID: +(?P<port_id>\d+)$')
+		# External Cost:   0
+		p9 = re.compile(r'^External +Cost: +(?P<external_cost>\d+)$')
+		# Hello Time:      2
+		p10 = re.compile(r'^Hello +Time: +(?P<hello_time>\d+)$')
+		# Active:          yes
+		p11 = re.compile(r'^Active: +(?P<active>\w+)$')
+		# BPDUs sent:      39921
+		p12 = re.compile(r'^BPDUs +sent: +(?P<bdpu_sent>\d+)$')
+		# MSTI 0 (CIST):
+		p13 = re.compile(r'^MSTI +(?P<mst_id>\d+)( +\(CIST\))?:$')
+		#     VLAN IDs:         1-2,4-4094
+		p14 = re.compile(r'^VLAN +IDs: +(?P<vlans>\S+)$')
+		#     Bridge Priority:  8192
+		p15 = re.compile(r'^Bridge +Priority: +(?P<bridge_priority>\d+)$')
+		#     Port Priority:    128
+		p16 = re.compile(r'^Port +Priority: +(?P<port_priority>\d+)$')
+		#     Cost:             0
+		p17 = re.compile(r'^Cost: +(?P<cost>\d+)$')
+		#     Root Bridge:      0000.0000.0001
+		p18 = re.compile(r'^Root +Bridge: +(?P<root_bridge>[\w\.]+)$')
+		#     Root Priority:    4096
+		p19 = re.compile(r'^Root +Priority: +(?P<root_priority>\d+)$')
+		#     Topology Changes: 31
+		p20 = re.compile(r'^Topology +Changes: +(?P<topology_changes>\d+)$')
+
+		for line in out.splitlines():
+            line = line.strip()
+
+            # Bundle-Ether10.0
+            m = p1.match(line)
+            if m:
+            	group = m.groupdict()
+            	mstag = ret_dict.setdefault('mstag', {}).\
+            		.setdefault(mag_domain, {})
+            	mstag.update({'domain' : mag_domain})
+            	interface = mstag.setdefault('interfaces', {}).\
+            		.setdefault(group['mag_interface'], {})
+            	interface.update({'interface' : group['mag_interface']})
+            	continue
+
+            # Pre-empt delay is disabled
+            m = p2.match(line)
+            if m:
+            	group = m.groupdict()
+            	preempt_delay_state = group['preempt_delay_state']
+        		interface.update({'preempt_delay' : (preempt_delay_state != 'disabled')})
+        		interface.update({'preempt_delay_state' : preempt_delay_statee})
+            	continue
+            # Name:            risc
+           	m = p3.match(line)
+           	if m:
+           		group = m.groupdict()
+           		interface.update({'name' : group['name']})
+           		continue
+
+           	# Name:            risc
+           	m = p3.match(line)
+           	if m:
+           		group = m.groupdict()
+           		interface.update({k:v for k, v in group.items()})
+           		continue
+
+           	# Revision: 1
+           	m = p4.match(line)
+           	if m:
+           		group = m.groupdict()
+           		interface.update({k:int(v) for k, v in group.items()})
+           		continue
+
+           	# Max Age: 20
+           	m = p5.match(line)
+           	if m:
+           		group = m.groupdict()
+           		interface.update({k:int(v) for k, v in group.items()})
+           		continue
+
+           	# Provider Bridge: no
+           	m = p6.match(line)
+           	if m:
+           		group = m.groupdict()
+           		interface.update({k:v for k, v in group.items()})
+           		continue
+
+           	# Bridge ID:       0000.0000.0002
+           	m = p7.match(line)
+           	if m:
+           		group = m.groupdict()
+           		interface.update({k:v for k, v in group.items()})
+           		continue
+
+           	# Port ID:         1
+           	m = p8.match(line)
+           	if m:
+           		group = m.groupdict()
+           		interface.update({k:int(v) for k, v in group.items()})
+           		continue
+
+           	# External Cost:   0
+           	m = p9.match(line)
+           	if m:
+           		group = m.groupdict()
+           		interface.update({k:int(v) for k, v in group.items()})
+           		continue
+
+           	# Hello Time:      2
+           	m = p10.match(line)
+           	if m:
+           		group = m.groupdict()
+           		interface.update({k:int(v) for k, v in group.items()})
+           		continue
+
+           	# Active:          yes
+           	m = p11.match(line)
+           	if m:
+           		group = m.groupdict()
+           		interface.update({'active': (group['active'] == 'yes')})
+           		continue
+
+           	# BPDUs sent:      39921
+           	m = p12.match(line)
+           	if m:
+           		group = m.groupdict()
+           		bdpu_sent = {'bdpu_sent' : group['bdpu_sent']}
+           		interface.update({'counters': bdpu_sent})
+           		continue
+
+           	# MSTI 0 (CIST):
+           	m = p13.match(line)
+           	if m:
+           		group = m.groupdict()
+           		instances = interface.setdefault('instances', {}).\
+           			setdefault(group['mst_id'], {})
+           		instances.update({'instance': group['mst_id']})
+           		continue
+
+           	#     VLAN IDs:         1-2,4-4094
+           	m = p14.match(line)
+           	if m:
+           		group = m.groupdict()
+           		instances.update({k:v for k, v in group.items()})
+           		continue
+
+           	#     Bridge Priority:  8192
+           	m = p15.match(line)
+           	if m:
+           		group = m.groupdict()
+           		instances.update({k:int(v) for k, v in group.items()})
+           		continue
+
+           	#     Port Priority:    128
+           	m = p16.match(line)
+           	if m:
+           		group = m.groupdict()
+           		instances.update({k:int(v) for k, v in group.items()})
+           		continue
+
+           	#     Cost:             0
+           	m = p17.match(line)
+           	if m:
+           		group = m.groupdict()
+           		instances.update({k:int(v) for k, v in group.items()})
+           		continue
+
+           	#     Root Bridge:      0000.0000.0001
+           	m = p18.match(line)
+           	if m:
+           		group = m.groupdict()
+           		instances.update({k:v for k, v in group.items()})
+           		continue
+
+           	#     Root Priority:    4096
+           	m = p19.match(line)
+           	if m:
+           		group = m.groupdict()
+           		instances.update({k:int(v) for k, v in group.items()})
+           		continue
+
+           	#     Topology Changes: 31
+           	m = p20.match(line)
+           	if m:
+           		group = m.groupdict()
+           		topology_changes = {'topology_changes' : group['topology_changes']}
+           		instances.update({'counters': topology_changes})
+           		continue
+        
+        return ret_dict
+
+
+
+
+
+
+
+
+
+
+
+
