@@ -22,30 +22,38 @@ from genie.libs.parser.utils.common import Common
 #==================================
 class ShowIsisAdjacencySchema(MetaParser):
     """Schema for show run isis adjacency"""
-        
+
     schema = {
         'isis': {
             Any(): {
-                'level': {
+                'vrf': {
                     Any(): {
-                        'total_adjacency_count': int,
-                        'system_id': {
+                        'level': {
                             Any(): {
-                                'interface': str,
-                                'snpa': str,
-                                'state': str,
-                                'hold': str,
-                                'changed': str,
-                                Optional('nsf'): str,
-                                Optional('ipv4_bfd'): str,
-                                Optional('ipv6_bfd'): str,
+                                'total_adjacency_count': int,
+                                'interfaces': {
+                                    Any(): {
+                                        'system_id': {
+                                            Any(): {
+                                                'interface': str,
+                                                'snpa': str,
+                                                'state': str,
+                                                'hold': str,
+                                                'changed': str,
+                                                Optional('nsf'): str,
+                                                Optional('bfd'): str,
+                                            },
+                                        },
+                                    },
+                                },
                             },
-                        }
+                        },
                     },
                 },
             },
-        }
+        },
     }
+
 
 class ShowIsisAdjacency(ShowIsisAdjacencySchema):
     """Parser for show isis adjacency"""
@@ -59,46 +67,61 @@ class ShowIsisAdjacency(ShowIsisAdjacencySchema):
             out = output
         
         ret_dict = {}
+        vrf = 'default'
+
+        # IS-IS p Level-1 adjacencies:
+        p1 = re.compile(r'^IS-IS +(?P<isis_name>\w+) +(?P<level_name>\S+) adjacencies:$')
+
+        # 12a4           PO0/1/0/1        *PtoP*         Up    23       00:00:06 Capable  None
+        p2 = re.compile(r'^(?P<system_id>\S+) +(?P<interface>\S+) +(?P<snpa>\S+) +(?P<state>(Up|Down|None)) +(?P<hold>\S+) '
+                         '+(?P<changed>\S+) +(?P<nsf>\S+) +(?P<bfd>(Up|Down|None|Init))$')
+
+        # Total adjacency count: 1
+        p3 = re.compile(r'^Total +adjacency +count: +(?P<adjacency_count>(\d+))$')
+
         for line in out.splitlines():
             line = line.strip()
-            
-            # IS-IS 4445 Level-2 adjacencies:
-            p1 = re.compile(r'^IS-IS +(?P<isis_name>\w+) +(?P<level_name>\S+) adjacencies:$')
+
+            # IS-IS p Level-1 adjacencies:
             m = p1.match(line)
             if m:
                 isis_name = m.groupdict()['isis_name']
                 level_name = m.groupdict()['level_name']
                 isis_adjacency_dict = ret_dict.setdefault('isis', {}).\
                                                setdefault(isis_name, {}).\
-                                               setdefault('level', {}).\
-                                               setdefault(level_name, {})
+                                               setdefault('vrf', {}).\
+                                               setdefault(vrf, {})
 
-                #isis_adjacency_dict['isis'][isis_name] = {'level': {level_name: {}}}
+                level_dict = isis_adjacency_dict.setdefault('level', {}).setdefault(level_name, {})
                 continue
-            
-            # BKL-P-C9010-02 BE2              *PtoP*         Up    23   16w0d    Yes Up   None
-            p2 = re.compile(r'^(?P<system_id>\S+) +(?P<interface>\S+) +(?P<snpa>\S+) '
-                             '+(?P<state>(Up|Down|None)) +(?P<hold>\S+) +(?P<changed>\S+) '
-                             '+(?P<nsf>([\w\s]+))$')
+
+            # 12a4           PO0/1/0/1        *PtoP*         Up    23       00:00:06 Capable  None
             m = p2.match(line)
             if m:
                 system_id = m.groupdict()['system_id']
-                system_dict = isis_adjacency_dict.setdefault('system_id', {}).setdefault(system_id, {})
-                system_dict['interface'] = Common.convert_intf_name(m.groupdict()['interface'])
-                system_dict['snpa'] = m.groupdict()['snpa']
-                system_dict['state'] = m.groupdict()['state']
-                system_dict['hold'] = m.groupdict()['hold']
-                system_dict['changed'] = m.groupdict()['changed']
-                system_dict['nsf'] = m.groupdict()['nsf']
-                #isis_adjacency_dict['isis'][isis_name]['level'][level_name]['system_id'][system_id]['ipv4_bfd'] = m.groupdict()['ipv4_bfd']
-                #isis_adjacency_dict['isis'][isis_name]['level'][level_name]['system_id'][system_id]['ipv6_bfd'] = m.groupdict()['ipv6_bfd']
+                interface = m.groupdict()['interface']
+                interface_name = Common.convert_intf_name(m.groupdict()['interface'])
+                snpa = m.groupdict()['snpa']
+                state = m.groupdict()['state']
+                hold = m.groupdict()['hold']
+                changed = m.groupdict()['changed']
+                nsf = m.groupdict()['nsf']
+                bfd = m.groupdict()['bfd']
+                interface_dict = level_dict.setdefault('interfaces', {}).setdefault(interface, {})
+                system_dict = interface_dict.setdefault('system_id', {}).setdefault(system_id, {})
+                system_dict['interface'] = interface_name
+                system_dict['snpa'] = snpa
+                system_dict['state'] = state
+                system_dict['hold'] = hold
+                system_dict['changed'] = changed
+                system_dict['nsf'] = nsf
+                system_dict['bfd'] = bfd
                 continue
-            
+
             # Total adjacency count: 1
-            p3 = re.compile(r'^\s*Total\sadjacency\scount:\s+(?P<adjacency_count>\S+)\s*$')
             m = p3.match(line)
             if m:
-                isis_adjacency_dict['total_adjacency_count'] = int(m.groupdict()['adjacency_count'])
+                level_dict['total_adjacency_count'] = int(m.groupdict()['adjacency_count'])
                 continue
         
         return ret_dict
@@ -109,24 +132,32 @@ class ShowIsisAdjacency(ShowIsisAdjacencySchema):
 #======================================
 class ShowIsisNeighborsSchema(MetaParser):
     """Schema for show run isis neighbors"""
-    
+
     schema = {
         'isis': {
             Any(): {
-                'total_neighbor_count': int,
-                'neighbors': {
+                'vrf': {
                     Any(): {
-                        'interface': str,
-                        'snpa': str,
-                        'state': str,
-                        'holdtime': str,
-                        'type': str,
-                        Optional('ietf_nsf'): str,
+                        'total_neighbor_count': int,
+                        'interfaces': {
+                            Any(): {
+                                'neighbors': {
+                                    Any(): {
+                                        'snpa': str,
+                                        'state': str,
+                                        'holdtime': str,
+                                        'type': str,
+                                        Optional('ietf_nsf'): str,
+                                    },
+                                },
+                            },
+                        },
                     },
                 },
             },
-        }
+        },
     }
+
 
 class ShowIsisNeighbors(ShowIsisNeighborsSchema):
     """Parser for show isis neighbors"""

@@ -97,6 +97,30 @@ class test_show_mpls_ldp_neighbor_brief(unittest.TestCase):
             6.6.6.1:0          Y   N    23:25:50    0     1     0     2     0      5
         '''}
 
+    golden_parsed_output2 = {
+        'peer': {
+            '3.3.3.3:0': {
+                'gr': 'Y',
+                'up_time': '00:01:04',
+                'discovery': {
+                    'discovery': 3},
+                'addresses': {
+                    'address': 8}},
+            '2.2.2.2:0': {
+                'gr': 'N',
+                'up_time': '00:01:02',
+                'discovery': {'discovery': 2},
+                'addresses': {'address': 5}}}}
+
+    golden_output2 = {'execute.return_value': '''
+        RP/0/RP0/CPU0:router# show mpls ldp neighbor brief
+  
+        Peer              GR Up Time         Discovery Address
+        ----------------- -- --------------- --------- -------
+        3.3.3.3:0         Y  00:01:04                3       8
+        2.2.2.2:0         N  00:01:02                2       5
+    '''}
+
     def test_show_mpls_ldp_neighbor_brief_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowMplsLdpNeighborBrief(device=self.device)
@@ -109,6 +133,13 @@ class test_show_mpls_ldp_neighbor_brief(unittest.TestCase):
         obj = ShowMplsLdpNeighborBrief(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_mpls_ldp_neighbor_brief_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowMplsLdpNeighborBrief(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 
 if __name__ == '__main__':

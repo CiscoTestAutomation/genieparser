@@ -24,39 +24,73 @@ class test_show_isis_adjacency(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output1 ={
+    golden_parsed_output1 = {
         'isis': {
             'p': {
-                'level': {
-                    'Level-1': {
-                        'system_id': {
-                            '12a4': {
-                                'interface': 'GigabitEthernet0/6/0/2',
-                                'snpa': '0004.2893.f2f6',
-                                'state': 'Up',
-                                'hold': '56',
-                                'changed': '00:04:01',
-                                'nsf': 'Capable Up'}},
-                        'total_adjacency_count': 2},
-                    'Level-2': {'system_id': {'12a4': {'interface': 'GigabitEthernet0/6/0/2', 'snpa': '0004.2893.f2f6', 'state': 'Up', 'hold': '26', 'changed': '00:00:13', 'nsf': 'CapableInit'}}, 'total_adjacency_count': 2}}}}}
-
+                'vrf': {
+                    'default': {
+                        'level': {
+                            'Level-1': {
+                                'interfaces': {
+                                    'PO0/1/0/1': {
+                                        'system_id': {
+                                            '12a4': {
+                                                'interface': 'Port-channel0/1/0/1',
+                                                'snpa': '*PtoP*',
+                                                'state': 'Up',
+                                                'hold': '23',
+                                                'changed': '00:00:06',
+                                                'nsf': 'Capable',
+                                                'bfd': 'Init'}}},
+                                    'Gi0/6/0/2': {
+                                        'system_id': {
+                                            '12a4': {
+                                                'interface': 'GigabitEthernet0/6/0/2',
+                                                'snpa': '0004.2893.f2f6',
+                                                'state': 'Up',
+                                                'hold': '56',
+                                                'changed': '00:04:01',
+                                                'nsf': 'Capable',
+                                                'bfd': 'Up'}}}},
+                                'total_adjacency_count': 2},
+                            'Level-2': {
+                                'interfaces': {
+                                    'PO0/1/0/1': {
+                                        'system_id': {
+                                            '12a4': {
+                                                'interface': 'Port-channel0/1/0/1',
+                                                'snpa': '*PtoP*',
+                                                'state': 'Up',
+                                                'hold': '23',
+                                                'changed': '00:00:06',
+                                                'nsf': 'Capable',
+                                                'bfd': 'None'}}},
+                                    'Gi0/6/0/2': {
+                                        'system_id': {
+                                            '12a4': {
+                                                'interface': 'GigabitEthernet0/6/0/2',
+                                                'snpa': '0004.2893.f2f6',
+                                                'state': 'Up',
+                                                'hold': '26',
+                                                'changed': '00:00:13',
+                                                'nsf': 'Capable',
+                                                'bfd': 'Init'}}}},
+                                'total_adjacency_count': 2}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
-        RP/0/RP0/CPU0:router# show isis adjacency
-
-        IS-IS p Level-1 adjacencies:
-        System Id      Interface        SNPA           State Hold Changed NSFBFD
-        12a4           PO0/1/0/1        *PtoP*         Up    23       00:00:06 Capable Init
-        12a4           Gi0/6/0/2        0004.2893.f2f6 Up    56       00:04:01 Capable Up
-      
-        Total adjacency count: 2
-      
-        IS-IS p Level-2 adjacencies:
-        System Id      Interface        SNPA           State Hold Changed NSFBFD
-        12a4           PO0/1/0/1        *PtoP*         Up    23       00:00:06 CapableNone
-        12a4           Gi0/6/0/2        0004.2893.f2f6 Up    26       00:00:13 CapableInit
-      
-        Total adjacency count: 2
+          IS-IS p Level-1 adjacencies:
+          System Id      Interface        SNPA           State Hold     Changed  NSF      BFD
+          12a4           PO0/1/0/1        *PtoP*         Up    23       00:00:06 Capable  Init
+          12a4           Gi0/6/0/2        0004.2893.f2f6 Up    56       00:04:01 Capable  Up
+          
+          Total adjacency count: 2
+          
+          IS-IS p Level-2 adjacencies:
+          System Id      Interface        SNPA           State Hold     Changed  NSF      BFD
+          12a4           PO0/1/0/1        *PtoP*         Up    23       00:00:06 Capable  None
+          12a4           Gi0/6/0/2        0004.2893.f2f6 Up    26       00:00:13 Capable  Init
+          
+          Total adjacency count: 2
     '''}
 
     def test_show_isis_adjacency_empty(self):
@@ -70,7 +104,6 @@ class test_show_isis_adjacency(unittest.TestCase):
         self.device = Mock(**self.golden_output1)
         obj = ShowIsisAdjacency(device=self.device)
         parsed_output = obj.parse()
-        import pdb;pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 # ====================================
