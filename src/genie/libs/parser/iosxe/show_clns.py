@@ -295,28 +295,28 @@ class ShowClnsProtocolSchema(MetaParser):
     """Schema for show clns protocol"""
 
     schema = {
-        'IS-IS': {
-            'process_tag': str,
-            'system_id': str,
-            'process_handle': str,
-            'is_type': str,
-            'manual_area_address': list,
-            'routing_for_area_address': list,
-            'interfaces': {
-                Any(): {
-                    'topology': list,
+        'instance': {
+             Any(): {
+                'system_id': str,
+                'process_handle': str,
+                'is_type': str,
+                'manual_area_address': list,
+                'routing_for_area_address': list,
+                'interfaces': {
+                    Any(): {
+                        'topology': list,
+                    },
                 },
-            },
-            'redistribute': str,
-            'distance_for_l2_clns_routes': int,
-            'rrr_level': str,
-            'metrics': {
-              'generate_narrow': str,
-              'accept_narrow': str,
-              'generate_wide': str,
-              'accept_wide': str,
+                'redistribute': str,
+                'distance_for_l2_clns_routes': int,
+                'rrr_level': str,
+                'metrics': {
+                  'generate_narrow': str,
+                  'accept_narrow': str,
+                  'generate_wide': str,
+                  'accept_wide': str,
+                }
             }
-
         }
     }
 
@@ -376,8 +376,7 @@ class ShowClnsProtocol(ShowClnsProtocolSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                clns_dict = result_dict.setdefault('IS-IS', {})
-                clns_dict.update({'process_tag': group['tag_process']})
+                clns_dict = result_dict.setdefault('instance', {}).setdefault(group['tag_process'],{})
                 clns_dict.update({'process_handle': group['tag']})
                 continue
 

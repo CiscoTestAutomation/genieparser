@@ -263,7 +263,6 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
     cli_command = ['show ip protocols','show ip protocols vrf {vrf}']
 
     def cli(self, vrf="" ,cmd="",output=None):
-
         if output is None:
             if not cmd :
                 if vrf:
@@ -494,6 +493,7 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
             # Routing Protocol is "bgp 100"
             # Routing Protocol is "isis banana"
             # Routing Protocol is "eigrp 1"
+
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -546,8 +546,10 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                     # Set isis_dict
                     if not group['pid']:
                         instance = 'default'
+                    if not vrf:
+                        vrf = "default"
                     isis_dict = protocol_dict.setdefault('vrf', {}). \
-                        setdefault('default', {}). \
+                        setdefault(vrf, {}). \
                         setdefault('address_family', {}). \
                         setdefault('ipv4', {}). \
                         setdefault('instance', {}). \
