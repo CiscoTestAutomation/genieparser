@@ -631,9 +631,11 @@ class test_show_lacp(unittest.TestCase):
             "Bundle-Ether1": {
                 "name": "Bundle-Ether1",
                 "bundle_id": 1,
+                "lacp_mode": "active",
                 "port": {
                     "GigabitEthernet0/0/0/0": {
                         "interface": "GigabitEthernet0/0/0/0",
+                        "bundle_id": 1,
                         "rate": 30,
                         "state": "ascdA---",
                         "port_id": "0x000a,0x0001",
@@ -663,6 +665,7 @@ class test_show_lacp(unittest.TestCase):
                     },
                     "GigabitEthernet0/0/0/1": {
                         "interface": "GigabitEthernet0/0/0/1",
+                        "bundle_id": 1,
                         "rate": 30,
                         "state": "ascdA---",
                         "port_id": "0x8000,0x0002",
@@ -695,9 +698,11 @@ class test_show_lacp(unittest.TestCase):
             "Bundle-Ether2": {
                 "name": "Bundle-Ether2",
                 "bundle_id": 2,
+                "lacp_mode": "active",
                 "port": {
                     "GigabitEthernet0/0/0/2": {
                         "interface": "GigabitEthernet0/0/0/2",
+                        "bundle_id": 2,
                         "rate": 30,
                         "state": "a---A---",
                         "port_id": "0x8000,0x0005",
@@ -727,6 +732,7 @@ class test_show_lacp(unittest.TestCase):
                     },
                     "GigabitEthernet0/0/0/3": {
                         "interface": "GigabitEthernet0/0/0/3",
+                        "bundle_id": 2,
                         "rate": 30,
                         "state": "ascdA---",
                         "port_id": "0x8000,0x0004",
@@ -756,6 +762,7 @@ class test_show_lacp(unittest.TestCase):
                     },
                     "GigabitEthernet0/0/0/4": {
                         "interface": "GigabitEthernet0/0/0/4",
+                        "bundle_id": 2,
                         "rate": 30,
                         "state": "ascdA---",
                         "port_id": "0x8000,0x0003",
