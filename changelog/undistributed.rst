@@ -237,3 +237,11 @@
             show ipv6 cef vrf <vrf>
             show ipv6 cef <prefix>
             show ipv6 cef vrf <vrf> <prefix>
+
+----------------------------------------------------------------------------------
+                                   RIP
+----------------------------------------------------------------------------------
+* IOSXR
+    * Add ShowRip for:
+        show rip
+        show rip vrf <vrf>

@@ -10,7 +10,7 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # Parser
-from genie.libs.parser.iosxr.show_rip import ShowRip, ShowRipDatabase
+from genie.libs.parser.iosxr.show_rip import ShowRip
 
 # ===============================
 # Unit tests for:
@@ -39,10 +39,10 @@ class test_show_rip(unittest.TestCase):
                                 'packet_source_validation': 'Yes',
                                 'nsf': 'Disabled',
                                 'timers': {
-                                    'update_interval': '10 seconds',
-                                    'invalid_interval': '31 seconds',
-                                    'holddown_interval': '32 seconds',
-                                    'flush_interval': '33 seconds'
+                                    'update_interval': 10,
+                                    'invalid_interval': 31,
+                                    'holddown_interval': 32,
+                                    'flush_interval': 33
                                 }
                             }
                         }
@@ -90,10 +90,10 @@ class test_show_rip(unittest.TestCase):
                                 'packet_source_validation': 'No',
                                 'nsf': 'Disabled',
                                 'timers': {
-                                    'update_interval': '30 seconds',
-                                    'invalid_interval': '180 seconds',
-                                    'holddown_interval': '180 seconds',
-                                    'flush_interval': '240 seconds'
+                                    'update_interval': 30,
+                                    'invalid_interval': 180,
+                                    'holddown_interval': 180,
+                                    'flush_interval': 240
                                 }
                             }
                         }
@@ -143,3 +143,6 @@ class test_show_rip(unittest.TestCase):
         obj = ShowRip(device=self.device)
         parsed_output = obj.parse(vrf='all')
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
+if __name__ == '__main__':
+    unittest.main()

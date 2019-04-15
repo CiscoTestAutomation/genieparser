@@ -47,10 +47,10 @@ class ShowRipSchema(MetaParser):
                                 'packet_source_validation': str,
                                 'nsf': str,
                                 'timers': {
-                                    'update_interval': str,
-                                    'invalid_interval': str,
-                                    'holddown_interval': str,
-                                    'flush_interval': str
+                                    'update_interval': int,
+                                    'invalid_interval': int,
+                                    'holddown_interval': int,
+                                    'flush_interval': int
                                 }
                             }
                         }
@@ -98,12 +98,12 @@ class ShowRip(ShowRipSchema):
         # Broadcast for V2:          No
         # Packet source validation:  Yes
         # NSF:                        Disabled
-        p2 = re.compile(r'^(?P<parameter>[A-Z][\w\- ]*?):\s+(?P<value>[\w.]+)$')
+        p2 = re.compile(r'^(?P<parameter>[\w\-\s]+):\s+(?P<value>[\w.]+)$')
         # Timers: Update:             10 seconds (7 seconds until next update)
         # Invalid:            31 seconds
         # Holddown:           32 seconds
         # Flush:              33 seconds
-        p3 = re.compile(r'^(\w+: )?(?P<timer_type>\w+):\s+(?P<interval>\d+ +seconds)([ \w\(\)]+)?$')
+        p3 = re.compile(r'^(\w+: )?(?P<timer_type>\w+):\s+(?P<interval>\d+) +seconds([ \w\(\)]+)?$')
 
         ret_dict = {}
 
@@ -129,10 +129,7 @@ class ShowRip(ShowRipSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                parameter = group['parameter']
-                parameter = re.sub(r'[ -]', '_', parameter)
-                parameter = parameter.lower()
-                # parameter = parameter.replace(" ", "_").replace("-", "_")
+                parameter = re.sub(r'[ -]', '_', group['parameter']).lower()
                 value = group['value']
 
                 if parameter in ['version', 'default_metric', 'maximum_paths']:
@@ -147,10 +144,8 @@ class ShowRip(ShowRipSchema):
                     timer_dict = rip_dict.setdefault('timers', {})
 
                 group = m.groupdict()
-                timer_type = group['timer_type']
-                timer_type = timer_type.lower()
-                interval = group['interval']
+                timer_type = group['timer_type'].lower()
 
-                timer_dict.update({'{}_interval'.format(timer_type): interval})
+                timer_dict.update({'{}_interval'.format(timer_type): int(group['interval'])})
 
         return ret_dict
