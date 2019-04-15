@@ -237,3 +237,11 @@
             show ipv6 cef vrf <vrf>
             show ipv6 cef <prefix>
             show ipv6 cef vrf <vrf> <prefix>
+
+----------------------------------------------------------------------------------
+                                   RIP
+----------------------------------------------------------------------------------
+* IOSXR
+    * Add ShowRipDatabase for:
+        show rip database
+        show rip vrf <vrf> database
