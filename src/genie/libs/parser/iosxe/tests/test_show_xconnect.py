@@ -34,16 +34,6 @@ class test_show_xconnect_all(unittest.TestCase):
                     'mpls 10.55.55.3:1001': {
                         's2': 'DN',
                         'xc': 'IA',
-                        'st': 'sec'}}, 's1': 'UP'},
-            'ac   Se6/0:150(FR DLCI)': {
-                'segment_2': {
-                    'ac   Se8/0:150(FR DLCI)': {
-                        's2': 'UP',
-                        'xc': 'UP',
-                        'st': 'pri'},
-                    'mpls 10.55.55.3:7151': {
-                        's2': 'DN',
-                        'xc': 'IA',
                         'st': 'sec'}},
                 's1': 'UP'}}}
 
@@ -56,26 +46,30 @@ class test_show_xconnect_all(unittest.TestCase):
         UP pri ac   Et0/0(Ethernet)              UP mpls 10.55.55.2:1000              UP
         IA sec ac   Et0/0(Ethernet)              UP mpls 10.55.55.3:1001              DN
         
+        '''}
+
+    golden_parsed_output2 = {
+        'segment_1': {
+            'ac   Se6/0:150(FR DLCI)': {
+                'segment_2': {
+                    'ac   Se8/0:150(FR DLCI)': {
+                        's2': 'UP',
+                        'xc': 'UP',
+                        'st': 'pri'},
+                    'mpls 10.55.55.3:7151': {
+                        's2': 'DN',
+                        'xc': 'IA',
+                        'st': 'sec'}},
+                's1': 'UP'}}}
+
+    golden_output2 = {'execute.return_value': '''
+        Router# show xconnect all
         Legend: XC ST=Xconnect State, S1=Segment1 State, S2=Segment2 State
         UP=Up, DN=Down, AD=Admin Down, IA=Inactive, NH=No Hardware
         XC ST  Segment 1                         S1 Segment 2                         S2
         ------+---------------------------------+--+---------------------------------+--
         UP pri ac   Se6/0:150(FR DLCI)           UP ac   Se8/0:150(FR DLCI)           UP
         IA sec ac   Se6/0:150(FR DLCI)           UP mpls 10.55.55.3:7151              DN
-        
-        Legend: XC ST=Xconnect State, S1=Segment1 State, S2=Segment2 State
-        UP=Up, DN=Down, AD=Admin Down, IA=Inactive, NH=No Hardware
-        XC ST  Segment 1                         S1 Segment 2                         S2
-        ------+---------------------------------+--+---------------------------------+--
-        UP pri ac   Et0/0(Ethernet)              UP mpls 10.55.55.2:1000              UP
-        IA sec ac   Et0/0(Ethernet)              UP mpls 10.55.55.3:1001              DN
-        
-        Legend: XC ST=Xconnect State, S1=Segment1 State, S2=Segment2 State
-        UP=Up, DN=Down, AD=Admin Down, IA=Inactive, NH=No Hardware
-        XC ST  Segment 1                         S1 Segment 2                         S2
-        ------+---------------------------------+--+---------------------------------+--
-        UP pri ac   Se6/0:150(FR DLCI)           UP ac   Se8/0:150(FR DLCI)           UP
-        IA sec ac   Se6/0:150(FR DLCI)           UP mpls 10.55.55.3:7151              DN  
     '''}
 
     def test_show_xconnect_all_empty(self):
@@ -90,6 +84,13 @@ class test_show_xconnect_all(unittest.TestCase):
         obj = ShowXconnectAll(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_xconnect_all_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowXconnectAll(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 
 if __name__ == '__main__':
