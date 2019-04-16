@@ -2632,6 +2632,7 @@ class ShowBgpNeighborSuperParser(MetaParser):
 
 
         #  Multisession Capability:
+        #  Multisession Capability: advertised
         p17 = re.compile(r'^Multisession +Capability: +(?P<multisession>(.*))$')
 
         #  Stateful switchover support enabled: NO for session 1
@@ -3117,9 +3118,10 @@ class ShowBgpNeighborSuperParser(MetaParser):
                 continue
 
             #  Multisession Capability:
+            #  Multisession Capability: advertised
             m = p17.match(line)
             if m:
-                nbr_cap_dict['multisession'] = multisession_capability
+                nbr_cap_dict['multisession'] = m.groupdict()['multisession']
                 continue
 
             # Stateful switchover support enabled: NO for session 1

@@ -411,7 +411,7 @@ RIP VRF "VRF1", local RIB
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
-        obj = ShowIpRipDatabase(device=self.device1)
+        obj = ShowIpv6RipDatabase(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 

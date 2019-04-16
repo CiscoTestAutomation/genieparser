@@ -9,9 +9,9 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # iosxe show ip eigrp
-from genie.libs.parser.iosxe.show_eigrp import ShowEigrpNeighborsDetailParser
-from genie.libs.parser.iosxe.show_eigrp import ShowIpEigrpNeighbors
-from genie.libs.parser.iosxe.show_eigrp import ShowIpv6EigrpNeighbors
+from genie.libs.parser.iosxe.show_eigrp import ShowIpEigrpNeighborsDetail,\
+						ShowIpEigrpNeighbors,\
+						ShowIpv6EigrpNeighbors
 
 class test_show_eigrp_neighbors(unittest.TestCase):
 
@@ -663,21 +663,21 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
     def test_show_eigrp_neighbors_detail_1(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_1)
-        obj = ShowEigrpNeighborsDetailParser(device=self.device)
+        obj = ShowIpEigrpNeighborsDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_1)
 
     def test_show_eigrp_neighbors_detail_2(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_2)
-        obj = ShowEigrpNeighborsDetailParser(device=self.device)
+        obj = ShowIpEigrpNeighborsDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_2)
 
     def test_show_eigrp_neighbors_detail_3(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_3)
-        obj = ShowEigrpNeighborsDetailParser(device=self.device)
+        obj = ShowIpEigrpNeighborsDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_3)
 
@@ -685,14 +685,14 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
     def test_show_eigrp_neighbors_detail_4(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_3)
-        obj = ShowEigrpNeighborsDetailParser(device=self.device)
+        obj = ShowIpEigrpNeighborsDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_4)
 
     def test_show_eigrp_neighbors_detail_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_empty)
-        obj = ShowEigrpNeighborsDetailParser(device=self.device)
+        obj = ShowIpEigrpNeighborsDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 

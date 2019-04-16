@@ -188,7 +188,7 @@ class ShowIpv6EigrpNeighbors(ShowEigrpNeighborsSuperParser, ShowEigrpNeighborsSc
         return super().cli(output=show_output, address_family='ipv6', vrf=vrf)
 
 
-class ShowEigrpNeighborsDetailSchema(MetaParser):
+class ShowIpEigrpNeighborsDetailSchema(MetaParser):
     ''' Schema for
         * 'show ip eigrp neighbors detail'
         * 'show ip eigrp vrf <vrf> neighbors detail'
@@ -237,7 +237,7 @@ class ShowEigrpNeighborsDetailSchema(MetaParser):
 #       'show ip eigrp neighbors detail'
 #       'show ip eigrp vrf <vrf> neighbors detail'
 # ===========================================
-class ShowEigrpNeighborsDetailParser(ShowEigrpNeighborsDetailSchema):
+class ShowIpEigrpNeighborsDetail(ShowIpEigrpNeighborsDetailSchema):
 
     cli_command = ['show ip eigrp neighbors detail',
                    'show ip eigrp vrf {vrf} neighbors detail']
