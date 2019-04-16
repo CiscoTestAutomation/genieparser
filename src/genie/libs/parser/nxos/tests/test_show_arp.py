@@ -585,114 +585,6 @@ class test_show_ip_arp_statistics_vrf_all(unittest.TestCase):
 	'''
 	}
 
-	golden_parsed_output_2 = {
-		'statistics': {
-		    'sent': {
-		        'total': 219626299,
-		        'requests': 180000316,
-		        'replies': 39625981,
-		        'l2_requests': 0,
-		        'l2_replies': 0,
-		        'gratuitous': 2,
-		        'tunneled': 0,
-		        'dropped': 0,
-		        'drops_details': {
-		            'mbuf_operation_failed': 0,
-		            },
-		        },
-		    'received': {
-		        'total': 631992384,
-		        'requests': 39625981,
-		        'replies': 26354559,
-		        'l2_requests': 0,
-		        'l2_replies': 0,
-		        'proxy_arp': 0,
-		        'local_proxy_arp': 0,
-		        'tunneled': 0,
-		        'dropped': 566011844,
-		        'drops_details': {
-		            'appeared_on_a_wrong_interface': 0,
-		            'incorrect_length': 0,
-		            'invalid_protocol_packet': 0,
-		            'invalid_context': 0,
-		            'context_not_created': 0,
-		            'invalid_layer2_address_length': 0,
-		            'invalid_layer3_address_length': 0,
-		            'invalid_source_ip_address': 4436855,
-		            'no_mem_to_create_per_intf_structure': 0,
-		            'source_address_mismatch_with_subnet': 33298,
-		            'directed_broadcast_source': 0,
-		            'invalid_destination_ip_address': 430,
-		            'non_local_destination_ip_address': 544933444,
-		            'non_active_fhrp_dest_ip': 16607815,
-		            'invalid_source_mac_address': 0,
-		            'source_mac_address_is_our_own': 0,
-		            'received_before_arp_initialization': 0,
-		            'l2_packet_on_untrusted_l2_port': 0,
-		            'packet_with_vip_on_standby_fhrp': 0,
-		            'grat_arp_received_on_proxy': 0,
-		            'requests_came_for_exising_entries': 119927,
-		            'requests_came_on_a_l2_interface': 0,
-		            'l2fm_query_failed_for_a_l2address': 0,
-		            'dropping_due_to_tunneling_failures': 0,
-		            },
-		        },
-		    'adjacency': {
-		        'adjacency_adds': 39227841,
-		        'adjacency_deletes': 39226645,
-		        'adjacency_timeouts': 39226645,
-		        },
-		    },
-		}
-
-	golden_output_2 = {'execute.return_value': '''
-	ARP packet statistics for context default
-	 Sent:
-	 Total 219626299, Requests 180000316, Replies 39625981, Requests on L2 0, Replies on L2 0,
-	 Gratuitous 2, Tunneled 0, Dropped 0
-	 Send packet drops details:
-	    MBUF operation failed               : 0
-	 Received:
-	 Total 631992384, Requests 39625981, Replies 26354559, Requests on L2 0, Replies on L2 0
-	 Proxy arp 0, Local-Proxy arp 0, Tunneled 0, Dropped 566011844
-	 Received packet drops details:
-	    Appeared on a wrong interface       : 0
-	    Incorrect length                    : 0
-	    Invalid protocol packet             : 0
-	    Invalid context                     : 0
-	    Context not yet created             : 0
-	    Invalid layer 2 address length      : 0
-	    Invalid layer 3 address length      : 0
-	    Invalid source IP address           : 4436855
-	    Source IP address is our own        : 2
-	    No mem to create per intf structure : 0
-	    Source address mismatch with subnet : 33298
-	    Directed broadcast source           : 0
-	    Invalid destination IP address      : 430
-	    Non-local destination IP address    : 544933444
-	    Non-active FHRP dest IP address. Learn and drop
-	                                        : 16607815
-	    Invalid source MAC address          : 0
-	    Source MAC address is our own       : 0
-	    Received before arp initialization  : 0
-	    L2 packet on proxy-arp-enabled interface
-	                                        : 0
-	    L2 packet on untrusted L2 port      : 0
-	    Packet with VIP on standby FHRP     : 0
-	    Grat arp received on proxy-arp-enabled interface
-	                                        : 0
-	    Requests came for exising entries   : 119927
-	    Requests came on a l2 interface     : 0
-	    L2FM query failed for a L2 Address  : 0
-	    Dropping due to tunneling failures  : 0
-
-	 ARP adjacency statistics
-
-	 Adds 39227841, Deletes 39226645, Timeouts 39226645
-
-	'''
-	}
-
 	def test_empty(self):
 		self.device = Mock(**self.empty_output)
 		obj = ShowIpArpstatisticsVrfAll(device=self.device)
@@ -712,14 +604,6 @@ class test_show_ip_arp_statistics_vrf_all(unittest.TestCase):
 		obj = ShowIpArpstatisticsVrfAll(device=self.device)
 		parsed_output = obj.parse()
 		self.assertEqual(parsed_output, self.golden_parsed_output_1)
-
-	def test_golden_2(self):
-		self.maxDiff = None
-		self.device = Mock(**self.golden_output_2)
-		obj = ShowIpArpstatisticsVrfAll(device=self.device)
-		parsed_output = obj.parse()
-		
-		self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
 if __name__ == '__main__':
