@@ -2524,6 +2524,85 @@ class test_show_interface_switchport(unittest.TestCase):
           Administrative private-vlan trunk private VLANs: none
           Operational private-vlan: none
         '''}
+    golden_parsed_output_3 = {
+        'port-channel44': {
+            'switchport_status': 'enabled',
+            'switchport_enable': True,
+            'switchport_monitor': 'Not enabled',
+            'switchport_mode': 'access',
+            'access_vlan': 551,
+            'access_vlan_mode': 'VM_Test_192.168.1.0/24',
+            'native_vlan': 1,
+            'native_vlan_mode': 'default',
+            'trunk_vlans': '1-4094',
+            'admin_priv_vlan_primary_host_assoc': 'none',
+            'admin_priv_vlan_secondary_host_assoc': 'none',
+            'admin_priv_vlan_primary_mapping': 'none',
+            'admin_priv_vlan_secondary_mapping': 'none',
+            'admin_priv_vlan_trunk_native_vlan': 'none',
+            'admin_priv_vlan_trunk_encapsulation': 'dot1q',
+            'admin_priv_vlan_trunk_normal_vlans': 'none',
+            'admin_priv_vlan_trunk_private_vlans': 'none',
+            'operational_private_vlan': 'none',
+            },
+        'port-channel26': {
+            'switchport_status': 'enabled',
+            'switchport_enable': True,
+            'switchport_monitor': 'Not enabled',
+            'switchport_mode': 'trunk',
+            'access_vlan': 1,
+            'access_vlan_mode': 'default',
+            'native_vlan': 451,
+            'native_vlan_mode': 'VM_Machines_192.168.1.0/24',
+            'trunk_vlans': '86,88,154-158,180,233,850-871',
+            'admin_priv_vlan_primary_host_assoc': 'none',
+            'admin_priv_vlan_secondary_host_assoc': 'none',
+            'admin_priv_vlan_primary_mapping': 'none',
+            'admin_priv_vlan_secondary_mapping': 'none',
+            'admin_priv_vlan_trunk_native_vlan': 'none',
+            'admin_priv_vlan_trunk_encapsulation': 'dot1q',
+            'admin_priv_vlan_trunk_normal_vlans': 'none',
+            'admin_priv_vlan_trunk_private_vlans': 'none',
+            'operational_private_vlan': 'none',
+            },
+        }
+    golden_output_3 = {'execute.return_value': '''
+    Name: port-channel44
+      Switchport: Enabled
+      Switchport Monitor: Not enabled 
+      Operational Mode: access
+      Access Mode VLAN: 551 (VM_Test_192.168.1.0/24)
+      Trunking Native Mode VLAN: 1 (default)
+      Trunking VLANs Allowed: 1-4094
+      FabricPath Topology List Allowed: 0
+      Administrative private-vlan primary host-association: none
+      Administrative private-vlan secondary host-association: none
+      Administrative private-vlan primary mapping: none
+      Administrative private-vlan secondary mapping: none
+      Administrative private-vlan trunk native VLAN: none
+      Administrative private-vlan trunk encapsulation: dot1q
+      Administrative private-vlan trunk normal VLANs: none
+      Administrative private-vlan trunk private VLANs: none
+      Operational private-vlan: none
+    Name: port-channel26
+      Switchport: Enabled
+      Switchport Monitor: Not enabled 
+      Operational Mode: trunk
+      Access Mode VLAN: 1 (default)
+      Trunking Native Mode VLAN: 451 (VM_Machines_192.168.1.0/24)
+      Trunking VLANs Allowed: 86,88,154-158,180,233,850-871
+      FabricPath Topology List Allowed: 0
+      Administrative private-vlan primary host-association: none
+      Administrative private-vlan secondary host-association: none
+      Administrative private-vlan primary mapping: none
+      Administrative private-vlan secondary mapping: none
+      Administrative private-vlan trunk native VLAN: none
+      Administrative private-vlan trunk encapsulation: dot1q
+      Administrative private-vlan trunk normal VLANs: none
+      Administrative private-vlan trunk private VLANs: none
+      Operational private-vlan: none
+    '''
+    }
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
@@ -2544,6 +2623,13 @@ class test_show_interface_switchport(unittest.TestCase):
         interface_switchport_obj = ShowInterfaceSwitchport(device=self.device)
         parsed_output = interface_switchport_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_3)
+        interface_switchport_obj = ShowInterfaceSwitchport(device=self.device)
+        parsed_output = interface_switchport_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 
 # #############################################################################
