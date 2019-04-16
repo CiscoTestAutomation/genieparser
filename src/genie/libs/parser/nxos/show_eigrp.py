@@ -58,7 +58,7 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
         * 'show ipv6 eigrp neighbors vrf all'
     '''
 
-    def cli(self, vrf='', output=None):
+    def cli(self, vrf='all', output=None):
 
         # IP-EIGRP neighbors for process 100 VRF default
         # IP-EIGRP neighbors for process 100 VRF VRF1
@@ -153,12 +153,10 @@ class ShowIpv4EigrpNeighbors(ShowEigrpNeighborsSuperParser,
 
     def cli(self, vrf='', output=None):
         if output is None:
-            if vrf:
-                cmd = self.cli_command.format(vrf=vrf)
-            else:
-                cmd = self.cli_command.format(vrf='all')
+            cmd = self.cli_command.format(vrf=vrf)
 
             show_output = self.device.execute(cmd)
+
         else:
             show_output = output
 
@@ -171,10 +169,7 @@ class ShowIpv6EigrpNeighbors(ShowEigrpNeighborsSuperParser,
 
     def cli(self, vrf='', output=None):
         if output is None:
-            if vrf:
-                cmd = self.cli_command.format(vrf=vrf)
-            else:
-                cmd = self.cli_command.format(vrf='all')
+            cmd = self.cli_command.format(vrf=vrf)
 
             show_output = self.device.execute(cmd)
         else:
@@ -233,7 +228,7 @@ class ShowEigrpNeighborsDetailSuperParser(ShowEigrpNeighborsDetailSchema):
         * 'show ipv6 eigrp neighbors detail vrf all'
     '''
 
-    def cli(self, vrf='', output=None):
+    def cli(self, vrf='all', output=None):
 
         # IP-EIGRP neighbors for process 100 VRF default
         # IP-EIGRP neighbors for process 100 VRF VRF1
@@ -366,12 +361,9 @@ class ShowIpv4EigrpNeighborsDetail(ShowEigrpNeighborsDetailSuperParser,
     cli_command = 'show ip eigrp neighbors detail vrf {vrf}'
 
     def cli(self, vrf='', output=None):
-        if output is None:
-            if vrf:
-                cmd = self.cli_command.format(vrf=vrf)
-            else:
-                cmd = self.cli_command.format(vrf='all')
-
+        if output is None:            
+            cmd = self.cli_command.format(vrf=vrf)
+                
             show_output = self.device.execute(cmd)
         else:
             show_output = output
@@ -386,10 +378,7 @@ class ShowIpv6EigrpNeighborsDetail(ShowEigrpNeighborsDetailSuperParser,
 
     def cli(self, vrf='', output=None):
         if output is None:
-            if vrf:
-                cmd = self.cli_command.format(vrf=vrf)
-            else:
-                cmd = self.cli_command.format(vrf='all')
+            cmd = self.cli_command.format(vrf=vrf)
 
             show_output = self.device.execute(cmd)
         else:
