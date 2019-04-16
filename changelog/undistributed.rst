@@ -416,6 +416,10 @@
     * Add ShowIpv6Rip for:
         show ipv6 rip
         show ipv6 rip vrf {vrf}
+* IOSXR
+    * Add ShowRipInterface for:
+        show rip interface
+        show rip vrf {vrf} interface
 
 --------------------------------------------------------------------------------
                                 PREFIX_LIST
