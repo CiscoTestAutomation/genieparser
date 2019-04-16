@@ -205,9 +205,9 @@ Active Package(s):
       Hardware
         cisco Nexus7000 C7010 (10 Slot) Chassis ("Supervisor module-1X")
         Intel(R) Xeon(R) CPU         with 4115656 kB of memory.
-        Processor Board ID JAF1308AKJP 
+        Processor Board ID JAF1111AKJP 
 
-        Device name: VACRS01001001E
+        Device name: Nexus7000
         bootflash:    2029608 kB
         slot0:        2075246 kB (expansion flash)
 
@@ -258,8 +258,8 @@ Active Package(s):
               'chassis': 'Supervisor module-1X',
               'cpu': None,
               'memory': '4115656 kB',
-              'processor_board_id': 'JAF1308AKJP',
-              'device_name': 'VACRS01001001E',
+              'processor_board_id': 'JAF1111AKJP',
+              'device_name': 'Nexus7000',
               'bootflash': '2029608 kB',
               'slot0': '2075246 kB',
               },
@@ -381,73 +381,73 @@ class test_show_inventory(unittest.TestCase):
 
     golden_output_2 = {'execute.return_value': '''
     NAME: "Chassis",  DESCR: "Nexus7000 C7010 (10 Slot) Chassis "    
-    PID: N7K-C7010           ,  VID: V01 ,  SN: TBM13215635          
+    PID: N7K-C7010           ,  VID: V01 ,  SN: TBM11111111          
 
     NAME: "Slot 1",  DESCR: "10 Gbps Ethernet Module"               
-    PID: N7K-M132XP-12       ,  VID: V06 ,  SN: JAF1246ATMS          
+    PID: N7K-M132XP-12       ,  VID: V06 ,  SN: JAF1111ATMS          
 
     NAME: "Slot 2",  DESCR: "10 Gbps Ethernet Module"               
-    PID: N7K-M132XP-12       ,  VID: V06 ,  SN: JAF1242BGRG          
+    PID: N7K-M132XP-12       ,  VID: V06 ,  SN: JAF1111BGRG          
 
     NAME: "Slot 3",  DESCR: "1/10 Gbps Ethernet Module"             
-    PID: N7K-F132XP-15       ,  VID: V02 ,  SN: JAF1515BCSA          
+    PID: N7K-F132XP-15       ,  VID: V02 ,  SN: JAF1111BCSA          
 
     NAME: "Slot 4",  DESCR: "1/10 Gbps Ethernet Module"             
-    PID: N7K-F132XP-15       ,  VID: V02 ,  SN: JAF1527BDTA          
+    PID: N7K-F132XP-15       ,  VID: V02 ,  SN: JAF1111BDTA          
 
     NAME: "Slot 5",  DESCR: "Supervisor module-1X"                  
-    PID: N7K-SUP1            ,  VID: V14 ,  SN: JAF1308AKJP          
+    PID: N7K-SUP1            ,  VID: V14 ,  SN: JAF1111AKJP          
 
     NAME: "Slot 6",  DESCR: "Supervisor module-1X"                  
-    PID: N7K-SUP1            ,  VID: V09 ,  SN: JAF1423EESP          
+    PID: N7K-SUP1            ,  VID: V09 ,  SN: JAF1111EESP          
 
     NAME: "Slot 7",  DESCR: "1/10 Gbps Ethernet Module"             
-    PID: N7K-F132XP-15       ,  VID: V04 ,  SN: JAF1751BJPH          
+    PID: N7K-F132XP-15       ,  VID: V04 ,  SN: JAF1111BJPH          
 
     NAME: "Slot 8",  DESCR: "10/100/1000 Mbps Ethernet Module"      
-    PID: N7K-M148GT-11       ,  VID: V07 ,  SN: JAF1323ALEQ          
+    PID: N7K-M148GT-11       ,  VID: V07 ,  SN: JAF1111ALEQ          
 
     NAME: "Slot 9",  DESCR: "10/100/1000 Mbps Ethernet Module"      
-    PID: N7K-M148GT-11       ,  VID: V07 ,  SN: JAF1323ALFN          
+    PID: N7K-M148GT-11       ,  VID: V07 ,  SN: JAF1111ALFN          
 
     NAME: "Slot 10",  DESCR: "10/100/1000 Mbps Ethernet Module"      
-    PID: N7K-M148GT-11       ,  VID: V07 ,  SN: JAF1323ALEP          
+    PID: N7K-M148GT-11       ,  VID: V07 ,  SN: JAF1111ALEP          
 
     NAME: "Slot 11",  DESCR: "Fabric card module"                    
-    PID: N7K-C7010-FAB-1     ,  VID: V02 ,  SN: JAF1321BFKT          
+    PID: N7K-C7010-FAB-1     ,  VID: V02 ,  SN: JAF1111BFKT          
 
     NAME: "Slot 12",  DESCR: "Fabric card module"                    
-    PID: N7K-C7010-FAB-1     ,  VID: V02 ,  SN: JAF1320ALPC          
+    PID: N7K-C7010-FAB-1     ,  VID: V02 ,  SN: JAF1111ALPC          
 
     NAME: "Slot 13",  DESCR: "Fabric card module"                    
-    PID: N7K-C7010-FAB-1     ,  VID: V02 ,  SN: JAF1321BFLA          
+    PID: N7K-C7010-FAB-1     ,  VID: V02 ,  SN: JAF1111BFLA          
 
     NAME: "Slot 14",  DESCR: "Fabric card module"                    
-    PID: N7K-C7010-FAB-1     ,  VID: V02 ,  SN: JAF1321BFNA          
+    PID: N7K-C7010-FAB-1     ,  VID: V02 ,  SN: JAF1111BFNA          
 
     NAME: "Slot 15",  DESCR: "Fabric card module"                    
-    PID: N7K-C7010-FAB-1     ,  VID: V02 ,  SN: JAF1321BFNF          
+    PID: N7K-C7010-FAB-1     ,  VID: V02 ,  SN: JAF1111BFNF          
 
     NAME: "Slot 33",  DESCR: "Nexus7000 C7010 (10 Slot) Chassis Power Supply"
-    PID: N7K-AC-6.0KW        ,  VID: V01 ,  SN: DTM13180213          
+    PID: N7K-AC-6.0KW        ,  VID: V01 ,  SN: DTM11111111          
 
     NAME: "Slot 34",  DESCR: "Nexus7000 C7010 (10 Slot) Chassis Power Supply"
-    PID: N7K-AC-6.0KW        ,  VID: V01 ,  SN: DTM13180209          
+    PID: N7K-AC-6.0KW        ,  VID: V01 ,  SN: DTM11111111          
 
     NAME: "Slot 35",  DESCR: "Nexus7000 C7010 (10 Slot) Chassis Power Supply"
-    PID: N7K-AC-6.0KW        ,  VID: V01 ,  SN: DTM131801Z4          
+    PID: N7K-AC-6.0KW        ,  VID: V01 ,  SN: DTM111111Z1          
 
     NAME: "Slot 36",  DESCR: "Nexus7000 C7010 (10 Slot) Chassis Fan Module"
-    PID: N7K-C7010-FAN-S     ,  VID: V01 ,  SN: FOX1315XAA9          
+    PID: N7K-C7010-FAN-S     ,  VID: V01 ,  SN: FOX1111XAA1          
 
     NAME: "Slot 37",  DESCR: "Nexus7000 C7010 (10 Slot) Chassis Fan Module"
-    PID: N7K-C7010-FAN-S     ,  VID: V01 ,  SN: FOX1313XAC8          
+    PID: N7K-C7010-FAN-S     ,  VID: V01 ,  SN: FOX1111XAC1          
 
     NAME: "Slot 38",  DESCR: "Nexus7000 C7010 (10 Slot) Chassis Fan Module"
-    PID: N7K-C7010-FAN-F     ,  VID: V02 ,  SN: FOX1313XA28          
+    PID: N7K-C7010-FAN-F     ,  VID: V02 ,  SN: FOX1111XA11          
 
     NAME: "Slot 39",  DESCR: "Nexus7000 C7010 (10 Slot) Chassis Fan Module"
-    PID: N7K-C7010-FAN-F     ,  VID: V02 ,  SN: FOX1311XA9F          
+    PID: N7K-C7010-FAN-F     ,  VID: V02 ,  SN: FOX1111XA1F          
     '''}
     golden_parsed_output_2 = {
       'name': {
@@ -456,161 +456,161 @@ class test_show_inventory(unittest.TestCase):
               'slot': 'None',
               'pid': 'N7K-C7010',
               'vid': 'V01',
-              'serial_number': 'TBM13215635',
+              'serial_number': 'TBM11111111',
               },
           'Slot 1': {
               'description': '10 Gbps Ethernet Module',
               'slot': '1',
               'pid': 'N7K-M132XP-12',
               'vid': 'V06',
-              'serial_number': 'JAF1246ATMS',
+              'serial_number': 'JAF1111ATMS',
               },
           'Slot 2': {
               'description': '10 Gbps Ethernet Module',
               'slot': '2',
               'pid': 'N7K-M132XP-12',
               'vid': 'V06',
-              'serial_number': 'JAF1242BGRG',
+              'serial_number': 'JAF1111BGRG',
               },
           'Slot 3': {
               'description': '1/10 Gbps Ethernet Module',
               'slot': '3',
               'pid': 'N7K-F132XP-15',
               'vid': 'V02',
-              'serial_number': 'JAF1515BCSA',
+              'serial_number': 'JAF1111BCSA',
               },
           'Slot 4': {
               'description': '1/10 Gbps Ethernet Module',
               'slot': '4',
               'pid': 'N7K-F132XP-15',
               'vid': 'V02',
-              'serial_number': 'JAF1527BDTA',
+              'serial_number': 'JAF1111BDTA',
               },
           'Slot 5': {
               'description': 'Supervisor module-1X',
               'slot': '5',
               'pid': 'N7K-SUP1',
               'vid': 'V14',
-              'serial_number': 'JAF1308AKJP',
+              'serial_number': 'JAF1111AKJP',
               },
           'Slot 6': {
               'description': 'Supervisor module-1X',
               'slot': '6',
               'pid': 'N7K-SUP1',
               'vid': 'V09',
-              'serial_number': 'JAF1423EESP',
+              'serial_number': 'JAF1111EESP',
               },
           'Slot 7': {
               'description': '1/10 Gbps Ethernet Module',
               'slot': '7',
               'pid': 'N7K-F132XP-15',
               'vid': 'V04',
-              'serial_number': 'JAF1751BJPH',
+              'serial_number': 'JAF1111BJPH',
               },
           'Slot 8': {
               'description': '10/100/1000 Mbps Ethernet Module',
               'slot': '8',
               'pid': 'N7K-M148GT-11',
               'vid': 'V07',
-              'serial_number': 'JAF1323ALEQ',
+              'serial_number': 'JAF1111ALEQ',
               },
           'Slot 9': {
               'description': '10/100/1000 Mbps Ethernet Module',
               'slot': '9',
               'pid': 'N7K-M148GT-11',
               'vid': 'V07',
-              'serial_number': 'JAF1323ALFN',
+              'serial_number': 'JAF1111ALFN',
               },
           'Slot 10': {
               'description': '10/100/1000 Mbps Ethernet Module',
               'slot': '10',
               'pid': 'N7K-M148GT-11',
               'vid': 'V07',
-              'serial_number': 'JAF1323ALEP',
+              'serial_number': 'JAF1111ALEP',
               },
           'Slot 11': {
               'description': 'Fabric card module',
               'slot': '11',
               'pid': 'N7K-C7010-FAB-1',
               'vid': 'V02',
-              'serial_number': 'JAF1321BFKT',
+              'serial_number': 'JAF1111BFKT',
               },
           'Slot 12': {
               'description': 'Fabric card module',
               'slot': '12',
               'pid': 'N7K-C7010-FAB-1',
               'vid': 'V02',
-              'serial_number': 'JAF1320ALPC',
+              'serial_number': 'JAF1111ALPC',
               },
           'Slot 13': {
               'description': 'Fabric card module',
               'slot': '13',
               'pid': 'N7K-C7010-FAB-1',
               'vid': 'V02',
-              'serial_number': 'JAF1321BFLA',
+              'serial_number': 'JAF1111BFLA',
               },
           'Slot 14': {
               'description': 'Fabric card module',
               'slot': '14',
               'pid': 'N7K-C7010-FAB-1',
               'vid': 'V02',
-              'serial_number': 'JAF1321BFNA',
+              'serial_number': 'JAF1111BFNA',
               },
           'Slot 15': {
               'description': 'Fabric card module',
               'slot': '15',
               'pid': 'N7K-C7010-FAB-1',
               'vid': 'V02',
-              'serial_number': 'JAF1321BFNF',
+              'serial_number': 'JAF1111BFNF',
               },
           'Slot 33': {
               'description': 'Nexus7000 C7010 (10 Slot) Chassis Power Supply',
               'slot': '33',
               'pid': 'N7K-AC-6.0KW',
               'vid': 'V01',
-              'serial_number': 'DTM13180213',
+              'serial_number': 'DTM11111111',
               },
           'Slot 34': {
               'description': 'Nexus7000 C7010 (10 Slot) Chassis Power Supply',
               'slot': '34',
               'pid': 'N7K-AC-6.0KW',
               'vid': 'V01',
-              'serial_number': 'DTM13180209',
+              'serial_number': 'DTM11111111',
               },
           'Slot 35': {
               'description': 'Nexus7000 C7010 (10 Slot) Chassis Power Supply',
               'slot': '35',
               'pid': 'N7K-AC-6.0KW',
               'vid': 'V01',
-              'serial_number': 'DTM131801Z4',
+              'serial_number': 'DTM111111Z1',
               },
           'Slot 36': {
               'description': 'Nexus7000 C7010 (10 Slot) Chassis Fan Module',
               'slot': '36',
               'pid': 'N7K-C7010-FAN-S',
               'vid': 'V01',
-              'serial_number': 'FOX1315XAA9',
+              'serial_number': 'FOX1111XAA1',
               },
           'Slot 37': {
               'description': 'Nexus7000 C7010 (10 Slot) Chassis Fan Module',
               'slot': '37',
               'pid': 'N7K-C7010-FAN-S',
               'vid': 'V01',
-              'serial_number': 'FOX1313XAC8',
+              'serial_number': 'FOX1111XAC1',
               },
           'Slot 38': {
               'description': 'Nexus7000 C7010 (10 Slot) Chassis Fan Module',
               'slot': '38',
               'pid': 'N7K-C7010-FAN-F',
               'vid': 'V02',
-              'serial_number': 'FOX1313XA28',
+              'serial_number': 'FOX1111XA21',
               },
           'Slot 39': {
               'description': 'Nexus7000 C7010 (10 Slot) Chassis Fan Module',
               'slot': '39',
               'pid': 'N7K-C7010-FAN-F',
               'vid': 'V02',
-              'serial_number': 'FOX1311XA9F',
+              'serial_number': 'FOX1111XA1F',
               },
           },
       }
