@@ -23,28 +23,24 @@ class test_show_rip(unittest.TestCase):
 
     golden_parsed_output = {
         'vrf': {
-            None: {
-                'address_family': {
-                    None: {
-                        'instance': {
-                            'rip': {
-                                'active': 'Yes',
-                                'added_to_socket': 'Yes',
-                                'out_of_memory_state': 'Normal',
-                                'version': 2,
-                                'default_metric': 3,
-                                'maximum_paths': 4,
-                                'auto_summarize': 'No',
-                                'broadcast_for_v2': 'No',
-                                'packet_source_validation': 'Yes',
-                                'nsf': 'Disabled',
-                                'timers': {
-                                    'update_interval': 10,
-                                    'invalid_interval': 31,
-                                    'holddown_interval': 32,
-                                    'flush_interval': 33
-                                }
-                            }
+            'default': {
+                'instance': {
+                    'rip': {
+                        'active': 'Yes',
+                        'added_to_socket': 'Yes',
+                        'out_of_memory_state': 'Normal',
+                        'version': 2,
+                        'default_metric': 3,
+                        'maximum_paths': 4,
+                        'auto_summarize': 'No',
+                        'broadcast_for_v2': 'No',
+                        'packet_source_validation': 'Yes',
+                        'nsf': 'Disabled',
+                        'timers': {
+                            'update_interval': 10,
+                            'invalid_interval': 31,
+                            'holddown_interval': 32,
+                            'flush_interval': 33
                         }
                     }
                 }
@@ -52,7 +48,8 @@ class test_show_rip(unittest.TestCase):
         }
     }
 
-    golden_output = {'execute.return_value': '''\                                                    
+    golden_output = {'execute.return_value': '''\  
+        RP/0/RP0/CPU0:R1#show rip                                                                                                      
         Wed Jan 30 18:47:49.312 UTC                                                     
                                                                                         
         RIP config:                                                                     
@@ -74,28 +71,24 @@ class test_show_rip(unittest.TestCase):
 
     golden_parsed_output_2 = {
         'vrf': {
-            'VRF1': {
-                'address_family': {
-                    None: {
-                        'instance': {
-                            'rip': {
-                                'active': 'Yes',
-                                'added_to_socket': 'Yes',
-                                'out_of_memory_state': 'Normal',
-                                'version': 2,
-                                'default_metric': 1,
-                                'maximum_paths': 4,
-                                'auto_summarize': 'No',
-                                'broadcast_for_v2': 'No',
-                                'packet_source_validation': 'No',
-                                'nsf': 'Disabled',
-                                'timers': {
-                                    'update_interval': 30,
-                                    'invalid_interval': 180,
-                                    'holddown_interval': 180,
-                                    'flush_interval': 240
-                                }
-                            }
+            'all': {
+                'instance': {
+                    'rip': {
+                        'active': 'Yes',
+                        'added_to_socket': 'Yes',
+                        'out_of_memory_state': 'Normal',
+                        'version': 2,
+                        'default_metric': 1,
+                        'maximum_paths': 4,
+                        'auto_summarize': 'No',
+                        'broadcast_for_v2': 'No',
+                        'packet_source_validation': 'No',
+                        'nsf': 'Disabled',
+                        'timers': {
+                            'update_interval': 30,
+                            'invalid_interval': 180,
+                            'holddown_interval': 180,
+                            'flush_interval': 240
                         }
                     }
                 }
@@ -104,6 +97,7 @@ class test_show_rip(unittest.TestCase):
     }
 
     golden_output_2 = {'execute.return_value': '''\                                                    
+        RP/0/RP0/CPU0:R1#show rip vrf all                                               
         Wed Jan 30 18:48:40.235 UTC                                                     
                                                                                 
                                                                                 
