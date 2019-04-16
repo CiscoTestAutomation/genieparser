@@ -1717,7 +1717,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
 
             # Access Mode VLAN: 1 (default)
             # Access Mode VLAN: 7 (server-vlan7)
-            # Access Mode VLAN: 155 (VM_Storage_72.34.155.0/24)
+            # Access Mode VLAN: 551 (Test_VM_192.168.1.0/24)
             p5 = re.compile(r'^\s*Access *Mode *VLAN: *(?P<access_vlan>[0-9]+)'
                              '(?: *\((?P<access_vlan_mode>[\S\s]+)\))?$')
             m = p5.match(line)
@@ -1734,7 +1734,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
             # Trunking Native Mode VLAN: 1 (default)
             # Trunking Native Mode VLAN: 200 (VLAN0200)
             # Trunking Native Mode VLAN: 3967 (Vlan not created)
-            # Trunking Native Mode VLAN: 154 (VM_Hosts_72.34.154.0/24)
+            # Trunking Native Mode VLAN: 451 (VM_Machines_192.168.1.0/24)
             p6 = re.compile(r'^\s*Trunking *Native *Mode *VLAN:'
                              ' *(?P<native_vlan>[0-9]+)'
                              ' *\((?P<native_vlan_mode>[\S\s]+)\)$')
