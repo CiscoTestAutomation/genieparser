@@ -71,39 +71,39 @@ class ShowRipDatabase(ShowRipDatabaseSchema):
 
     cli_commands = ['show rip database', 'show rip vrf {vrf} database']
 
-    def cli(self, vrf=None, output=None):
+    def cli(self, vrf='', output=None):
         if output is None:
             if not vrf:
+                vrf = 'default'
                 out = self.device.execute(self.cli_commands[0])
             else:
                 out = self.device.execute(self.cli_commands[1].format(vrf=vrf))
         else:
             out = output
-
-        # ==============
-        # Compiled Regex
-        # ==============
-        # 172.16.0.0/16    auto-summary
-        # 192.168.1.1/32
-        p1 = re.compile(r'^(?P<route>\d+\.\d+\.\d+\.\d+/\d+)(\s+(?P<summary_type>[\w-]+))?')
-        # [0]    directly connected, GigabitEthernet0/0/0/1.100
-        p2 = re.compile(r'^\[(?P<metric>\d+)\]\s+directly +connected, +(?P<interface>[\w\d/\.]+)$')
-        # [3] distance: 1    redistributed
-        p3 = re.compile(r'^\[(?P<metric>\d+)\]\s+distance: +\d+\s+redistributed$')
-        # [11] via 10.1.2.2, next hop 10.1.2.2, Uptime: 15s, GigabitEthernet0/0/0/0.100
-        p4 = re.compile(r'^\[(?P<metric>\d+)\] +via +[\d\.]+, +next +hop +(?P<next_hop>[\d\.]+)'
-                        r', +Uptime: +(?P<expire_time>\d+s), +(?P<interface>[\w\d/\.]+)$')
-
+        
         ret_dict = {}
 
-        if out:
-            routes_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {}).setdefault('address_family', {}). \
-                                setdefault(None, {}).setdefault('instance', {}).setdefault('rip', {}). \
-                                setdefault('routes', {})
+        # 172.16.0.0/16    auto-summary
+        # 192.168.1.1/32
+        # 2001:DB8:2:3::/64
+        p1 = re.compile(r'^(?P<route>[\w\.\/:]+)(\s+(?P<summary_type>[\w-]+))?$')
+
+        # [0]    directly connected, GigabitEthernet0/0/0/1.100
+        p2 = re.compile(r'^\[(?P<metric>\d+)\]\s+directly +connected, +(?P<interface>[\w\d/\.]+)$')
+
+        # [3] distance: 1    redistributed
+        p3 = re.compile(r'^\[(?P<metric>\d+)\]\s+distance: +\d+\s+redistributed$')
+
+        # [11] via 10.1.2.2, next hop 10.1.2.2, Uptime: 15s, GigabitEthernet0/0/0/0.100
+        p4 = re.compile(r'^\[(?P<metric>\d+)\] +via +[\d\.]+, +next +hop +(?P<next_hop>[\d\.]+)'
+                        r', +Uptime: +(?P<expire_time>\w+), +(?P<interface>[\w\d/\.]+)$')
 
         for line in out.splitlines():
             line = line.strip()
 
+            # 172.16.0.0/16    auto-summary
+            # 192.168.1.1/32
+            # 2001:DB8:2:3::/64
             m = p1.match(line)
             if m:
                 index_counter = 0
@@ -111,6 +111,12 @@ class ShowRipDatabase(ShowRipDatabaseSchema):
                 groups = m.groupdict()
                 route = groups['route']
                 summary_type = groups['summary_type']
+                address_family = 'ipv6' if ':' in route else 'ipv4'
+                
+                if not ret_dict:
+                    routes_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {}).setdefault('address_family', {}). \
+                                        setdefault(address_family, {}).setdefault('instance', {}).setdefault('rip', {}). \
+                                        setdefault('routes', {})
 
                 route_dict = routes_dict.setdefault(route, {}).setdefault('index', {})
 
@@ -119,6 +125,7 @@ class ShowRipDatabase(ShowRipDatabaseSchema):
                     index_dict = route_dict.setdefault(index_counter, {})
                     index_dict.update({'summary_type': summary_type})
 
+            # [0]    directly connected, GigabitEthernet0/0/0/1.100
             m = p2.match(line)
             if m:
                 index_counter += 1
@@ -132,6 +139,7 @@ class ShowRipDatabase(ShowRipDatabaseSchema):
                 index_dict.update({'route_type': 'connected'})
                 index_dict.update({'interface': interface})
 
+            # [3] distance: 1    redistributed
             m = p3.match(line)
             if m:
                 index_counter += 1
@@ -143,6 +151,7 @@ class ShowRipDatabase(ShowRipDatabaseSchema):
                 index_dict.update({'metric': int(metric)})
                 index_dict.update({'redistributed': True})
 
+            # [11] via 10.1.2.2, next hop 10.1.2.2, Uptime: 15s, GigabitEthernet0/0/0/0.100
             m = p4.match(line)
             if m:
                 index_counter += 1

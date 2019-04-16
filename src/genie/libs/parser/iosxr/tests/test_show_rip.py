@@ -23,9 +23,9 @@ class test_show_rip_database(unittest.TestCase):
 
     golden_parsed_output = {
         'vrf': {
-            None: {
+            'default': {
                 'address_family': {
-                    None: {
+                    'ipv4': {
                         'instance': {
                             'rip': {
                                 'routes': {
@@ -112,6 +112,7 @@ class test_show_rip_database(unittest.TestCase):
     }
 
     golden_output = {'execute.return_value': '''\  
+        RP/0/RP0/CPU0:R1#show rip database
         Wed Jan 30 18:48:59.532 UTC                                                     
                                                                                 
         Routes held in RIP's topology database:                                         
@@ -136,7 +137,7 @@ class test_show_rip_database(unittest.TestCase):
         'vrf': {
             'VRF1': {
                 'address_family': {
-                    None: {
+                    'ipv4': {
                         'instance': {
                             'rip': {
                                 'routes': {
@@ -242,6 +243,7 @@ class test_show_rip_database(unittest.TestCase):
     }
 
     golden_output_2 = {'execute.return_value': '''\  
+        RP/0/RP0/CPU0:R1#show rip vrf VRF1 database  
         Wed Jan 30 18:49:22.086 UTC                                                     
                                                                                 
         Routes held in RIP's topology database:                                         
