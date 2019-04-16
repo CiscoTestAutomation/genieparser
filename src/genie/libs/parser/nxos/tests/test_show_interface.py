@@ -2530,8 +2530,8 @@ class test_show_interface_switchport(unittest.TestCase):
             'switchport_enable': True,
             'switchport_monitor': 'Not enabled',
             'switchport_mode': 'access',
-            'access_vlan': 155,
-            'access_vlan_mode': 'VM_Storage_72.34.155.0/24',
+            'access_vlan': 551,
+            'access_vlan_mode': 'VM_Test_192.168.1.0/24',
             'native_vlan': 1,
             'native_vlan_mode': 'default',
             'trunk_vlans': '1-4094',
@@ -2552,8 +2552,8 @@ class test_show_interface_switchport(unittest.TestCase):
             'switchport_mode': 'trunk',
             'access_vlan': 1,
             'access_vlan_mode': 'default',
-            'native_vlan': 154,
-            'native_vlan_mode': 'VM_Hosts_72.34.154.0/24',
+            'native_vlan': 451,
+            'native_vlan_mode': 'VM_Machines_192.168.1.0/24',
             'trunk_vlans': '86,88,154-158,180,233,850-871',
             'admin_priv_vlan_primary_host_assoc': 'none',
             'admin_priv_vlan_secondary_host_assoc': 'none',
@@ -2571,7 +2571,7 @@ class test_show_interface_switchport(unittest.TestCase):
       Switchport: Enabled
       Switchport Monitor: Not enabled 
       Operational Mode: access
-      Access Mode VLAN: 155 (VM_Storage_72.34.155.0/24)
+      Access Mode VLAN: 551 (VM_Test_192.168.1.0/24)
       Trunking Native Mode VLAN: 1 (default)
       Trunking VLANs Allowed: 1-4094
       FabricPath Topology List Allowed: 0
@@ -2589,7 +2589,7 @@ class test_show_interface_switchport(unittest.TestCase):
       Switchport Monitor: Not enabled 
       Operational Mode: trunk
       Access Mode VLAN: 1 (default)
-      Trunking Native Mode VLAN: 154 (VM_Hosts_72.34.154.0/24)
+      Trunking Native Mode VLAN: 451 (VM_Machines_192.168.1.0/24)
       Trunking VLANs Allowed: 86,88,154-158,180,233,850-871
       FabricPath Topology List Allowed: 0
       Administrative private-vlan primary host-association: none
@@ -2629,8 +2629,6 @@ class test_show_interface_switchport(unittest.TestCase):
         self.device = Mock(**self.golden_output_3)
         interface_switchport_obj = ShowInterfaceSwitchport(device=self.device)
         parsed_output = interface_switchport_obj.parse()
-        from genie.libs.parser.utils.common import format_output
-        print(format_output(parsed_output))
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 
