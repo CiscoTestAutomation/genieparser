@@ -368,7 +368,14 @@ class ShowIpArpstatisticsVrfAll(ShowIpArpstatisticsVrfAllSchema):
 
 		# Proxy arp 0, Local-Proxy arp 0,  Enhanced Proxy arp 0, Anycast proxy Proxy arp 0,  L2 Port-track Proxy arp 0,  Tunneled 0, Fastpath 0, Snooped 0, Dropped 28218  on Server Port 0 
 		# Proxy arp 0, Local-Proxy arp 0, Tunneled 0, Fastpath 0, Snooped 0, Dropped 4
-		p4 = re.compile(r'^Proxy +arp +(?P<proxy_arp>[\w]+), +Local-Proxy +arp +(?P<local_proxy_arp>[\w]+),( +Enhanced +Proxy +arp +(?P<enhanced_proxy_arp>[\w]+),)?( +Anycast +proxy +Proxy +arp +(?P<anycast_proxy_arp>[\w]+),)?( +L2 +Port-track +Proxy +arp +(?P<l2_port_track_proxy_arp>[\w]+),?)?( +Tunneled +(?P<tunneled>[\w]+))?,?( +Fastpath +(?P<fastpath>[\w]+))?,?( +Snooped +(?P<snooped>[\w]+))?,?( +Dropped +(?P<dropped>[\w]+))?,?( +on +Server +Port +(?P<dropped_server_port>[\w]+))?')
+		p4 = re.compile(r'^Proxy +arp +(?P<proxy_arp>[\w]+), +Local-Proxy +'
+			'arp +(?P<local_proxy_arp>[\w]+),( +Enhanced +Proxy +arp +'
+			'(?P<enhanced_proxy_arp>[\w]+),)?( +Anycast +proxy +Proxy +'
+			'arp +(?P<anycast_proxy_arp>[\w]+),)?( +L2 +Port-track +Proxy +'
+			'arp +(?P<l2_port_track_proxy_arp>[\w]+),?)?( +Tunneled +'
+			'(?P<tunneled>[\w]+))?,?( +Fastpath +(?P<fastpath>[\w]+))?,?'
+			'( +Snooped +(?P<snooped>[\w]+))?,?( +Dropped +(?P<dropped>[\w]+))'
+			'?,?( +on +Server +Port +(?P<dropped_server_port>[\w]+))?')
 
 		# MBUF operation failed               : 0
 		p5 = re.compile(r'^\s*MBUF +operation +failed +: +(?P<mbuf_operation_failed>[\d]+)$')
