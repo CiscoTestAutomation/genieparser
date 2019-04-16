@@ -137,7 +137,7 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
                 ip_dict['peer_handle'] = int(group['peer_handle'])
                 ip_dict['hold'] = int(group['hold'])
                 ip_dict['uptime'] = group['uptime']
-                ip_dict['srtt'] = float(group['srtt'])
+                ip_dict['srtt'] = float(group['srtt'])/1000
                 ip_dict['rto'] = int(group['rto'])
                 ip_dict['q_cnt'] = int(group['q_cnt'])
                 ip_dict['last_seq_number'] = int(group['last_seq_number'])
@@ -322,7 +322,7 @@ class ShowEigrpNeighborsDetailSuperParser(ShowEigrpNeighborsDetailSchema):
                 ip_dict['peer_handle'] = int(group['peer_handle'])
                 ip_dict['hold'] = int(group['hold'])
                 ip_dict['uptime'] = group['uptime']
-                ip_dict['srtt'] = float(group['srtt'])
+                ip_dict['srtt'] = float(group['srtt'])/1000
                 ip_dict['rto'] = int(group['rto'])
                 ip_dict['q_cnt'] = int(group['q_cnt'])
                 ip_dict['last_seq_number'] = int(group['last_seq_number'])
