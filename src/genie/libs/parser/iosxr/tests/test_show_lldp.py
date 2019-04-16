@@ -160,6 +160,7 @@ class test_show_lldp_entry(unittest.TestCase):
         Total entries displayed: 2
 
      '''}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowLldpEntry(device=self.dev1)
@@ -279,6 +280,97 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
     Total entries displayed: 2
     '''}
 
+    golden_output_2 = {'execute.return_value': '''
+        Local Interface: GigabitEthernet0/0/0/8
+        Chassis id: 0026.9815.c3e6
+        Port id: Gi0/0/0/8
+        Port Description: GigabitEthernet0/0/0/8
+        System Name: asr9k-5
+
+        System Description: 
+        Cisco IOS XR Software, Version 4.1.0.32I[Default]
+        Copyright (c) 2011 by Cisco Systems, Inc.
+
+        Time remaining: 102 seconds
+        Hold Time: 120 seconds
+        System Capabilities: R
+        Enabled Capabilities: R
+        Management Addresses:
+          IPv4 address: 10.5.173.110
+
+
+
+        ------------------------------------------------
+        Local Interface: GigabitEthernet0/0/0/8
+        Chassis id: 0026.9815.c3e6
+        Port id: Gi0/0/0/8.1
+        Port Description: GigabitEthernet0/0/0/8.1
+        System Name: asr9k-5
+
+        System Description: 
+        Cisco IOS XR Software, Version 4.1.0.32I[Default]
+        Copyright (c) 2011 by Cisco Systems, Inc.
+
+        Time remaining: 96 seconds
+        Hold Time: 120 seconds
+        System Capabilities: R
+        Enabled Capabilities: R
+        Management Addresses:
+          IPv4 address: 10.5.173.110
+
+
+
+        Total entries displayed: 2
+    '''
+    }
+    golden_parsed_output_2 = {
+        'interfaces': {
+            'GigabitEthernet0/0/0/8': {
+                'neighbors': {
+                    'asr9k-5': {
+                        'chassis_id': '0026.9815.c3e6',
+                        'port_id': 'GigabitEthernet0/0/0/8',
+                        'port_description': 'GigabitEthernet0/0/0/8',
+                        'system_name': 'asr9k-5',
+                        'neighbor_id': 'asr9k-5',
+                        'system_description': 'Cisco IOS XR Software, Version 4.1.0.32I[Default]\nCopyright (c) 2011 by Cisco Systems, Inc.\n',
+                        'time_remaining': 102,
+                        'hold_time': 120,
+                        'capabilities': {
+                            'router': {
+                                'system': True,
+                                'enabled': True,
+                                },
+                            },
+                        'management_address': '10.5.173.110',
+                        },
+                    },
+                },
+            'GigabitEthernet0/0/0/8.1': {
+                'neighbors': {
+                    'asr9k-5': {
+                        'chassis_id': '0026.9815.c3e6',
+                        'port_id': 'GigabitEthernet0/0/0/8.1',
+                        'port_description': 'GigabitEthernet0/0/0/8.1',
+                        'system_name': 'asr9k-5',
+                        'neighbor_id': 'asr9k-5',
+                        'system_description': 'Cisco IOS XR Software, Version 4.1.0.32I[Default]\nCopyright (c) 2011 by Cisco Systems, Inc.\n',
+                        'time_remaining': 96,
+                        'hold_time': 120,
+                        'capabilities': {
+                            'router': {
+                                'system': True,
+                                'enabled': True,
+                                },
+                            },
+                        'management_address': '10.5.173.110',
+                        },
+                    },
+                },
+            },
+        'total_entries': 2,
+        }
+
     def test_empty(self):
         self.dev = Mock(**self.empty_output)
         obj = ShowLldpNeighborsDetail(device=self.dev)
@@ -291,6 +383,13 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
         obj = ShowLldpNeighborsDetail(device=self.dev)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output_2)
+        obj = ShowLldpNeighborsDetail(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 class test_show_lldp_traffic(unittest.TestCase):
     dev = Device(name='empty')
