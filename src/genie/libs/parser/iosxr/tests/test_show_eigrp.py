@@ -25,6 +25,8 @@ class test_show_eigrp_neighbors(unittest.TestCase):
                     'default': {
                         'address_family': {
                             'ipv4': {
+                                'name': 'test',
+                                'named_mode': True,
                                 'eigrp_interface': {
                                     'GigabitEthernet0/0/0/1.90': {
                                         'eigrp_nbr': {
@@ -79,6 +81,8 @@ class test_show_eigrp_neighbors(unittest.TestCase):
                     'VRF1': {
                         'address_family': {
                             'ipv4': {
+                                'name': 'test',
+                                'named_mode': True,
                                 'eigrp_interface': {
                                     'GigabitEthernet0/0/0/1.390': {
                                         'eigrp_nbr': {
@@ -135,6 +139,8 @@ class test_show_eigrp_neighbors(unittest.TestCase):
                     'default': {
                         'address_family': {
                             'ipv6': {
+                                'name': 'test',
+                                'named_mode': True,
                                 'eigrp_interface': {
                                     'GigabitEthernet0/0/0/1.90': {
                                         'eigrp_nbr': {
@@ -192,6 +198,8 @@ class test_show_eigrp_neighbors(unittest.TestCase):
                     'VRF1': {
                         'address_family': {
                             'ipv6': {
+                                'name': 'test',
+                                'named_mode': True,
                                 'eigrp_interface': {
                                     'GigabitEthernet0/0/0/1.390': {
                                         'eigrp_nbr': {
