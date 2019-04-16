@@ -58,7 +58,7 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
         * 'show ipv6 eigrp neighbors vrf all'
     '''
 
-    def cli(self, vrf='all', output=None):
+    def cli(self, vrf='', output=None):
 
         # IP-EIGRP neighbors for process 100 VRF default
         # IP-EIGRP neighbors for process 100 VRF VRF1
@@ -151,7 +151,7 @@ class ShowIpv4EigrpNeighbors(ShowEigrpNeighborsSuperParser,
 
     cli_command = 'show ip eigrp neighbors vrf {vrf}'
 
-    def cli(self, vrf='', output=None):
+    def cli(self, vrf='all', output=None):
         if output is None:
             cmd = self.cli_command.format(vrf=vrf)
 
@@ -167,7 +167,7 @@ class ShowIpv6EigrpNeighbors(ShowEigrpNeighborsSuperParser,
                              ShowEigrpNeighborsSchema):
     cli_command = 'show ipv6 eigrp neighbors vrf {vrf}'
 
-    def cli(self, vrf='', output=None):
+    def cli(self, vrf='all', output=None):
         if output is None:
             cmd = self.cli_command.format(vrf=vrf)
 
@@ -228,7 +228,7 @@ class ShowEigrpNeighborsDetailSuperParser(ShowEigrpNeighborsDetailSchema):
         * 'show ipv6 eigrp neighbors detail vrf all'
     '''
 
-    def cli(self, vrf='all', output=None):
+    def cli(self, vrf='', output=None):
 
         # IP-EIGRP neighbors for process 100 VRF default
         # IP-EIGRP neighbors for process 100 VRF VRF1
@@ -360,7 +360,7 @@ class ShowIpv4EigrpNeighborsDetail(ShowEigrpNeighborsDetailSuperParser,
 
     cli_command = 'show ip eigrp neighbors detail vrf {vrf}'
 
-    def cli(self, vrf='', output=None):
+    def cli(self, vrf='all', output=None):
         if output is None:            
             cmd = self.cli_command.format(vrf=vrf)
                 
@@ -376,7 +376,7 @@ class ShowIpv6EigrpNeighborsDetail(ShowEigrpNeighborsDetailSuperParser,
 
     cli_command = 'show ipv6 eigrp neighbors detail vrf {vrf}'
 
-    def cli(self, vrf='', output=None):
+    def cli(self, vrf='all', output=None):
         if output is None:
             cmd = self.cli_command.format(vrf=vrf)
 
