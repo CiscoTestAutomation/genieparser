@@ -10437,6 +10437,7 @@ class test_show_ip_bgp_neighbors(unittest.TestCase):
                             'l2vpn_vpls': 'advertised '
                                           'and '
                                           'received',
+                            'multisession': 'advertised',
                             'remote_restart_timer': 120,
                             'route_refresh': 'advertised '
                                              'and '
@@ -10517,7 +10518,7 @@ class test_show_ip_bgp_neighbors(unittest.TestCase):
               Address families advertised by peer before restart:
                 IPv4 Unicast, VPNv4 Unicast, L2VPN Vpls
             Enhanced Refresh Capability: advertised and received
-            Multisession Capability: 
+            Multisession Capability: advertised
             Stateful switchover support enabled: NO for session 1
           Message statistics:
             InQ depth is 0
