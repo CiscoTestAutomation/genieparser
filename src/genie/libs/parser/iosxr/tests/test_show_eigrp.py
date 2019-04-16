@@ -32,7 +32,7 @@ class test_show_eigrp_neighbors(unittest.TestCase):
                                                 'peer_handle': 1,
                                                 'hold': 13,
                                                 'uptime': '01:41:56',
-                                                'srtt': 13.0,
+                                                'srtt': 0.013,
                                                 'rto': 200,
                                                 'q_cnt': 0,
                                                 'last_seq_number': 23
@@ -45,7 +45,7 @@ class test_show_eigrp_neighbors(unittest.TestCase):
                                                 'peer_handle': 0,
                                                 'hold': 14,
                                                 'uptime': '02:55:10',
-                                                'srtt': 1.0,
+                                                'srtt': 0.001,
                                                 'rto': 200,
                                                 'q_cnt': 0,
                                                 'last_seq_number': 17
@@ -86,7 +86,7 @@ class test_show_eigrp_neighbors(unittest.TestCase):
                                                 'peer_handle': 1,
                                                 'hold': 12,
                                                 'uptime': '01:40:17',
-                                                'srtt': 4.0,
+                                                'srtt': 0.004,
                                                 'rto': 200,
                                                 'q_cnt': 0,
                                                 'last_seq_number': 15
@@ -99,7 +99,7 @@ class test_show_eigrp_neighbors(unittest.TestCase):
                                                 'peer_handle': 0,
                                                 'hold': 12,
                                                 'uptime': '02:52:31',
-                                                'srtt': 816.0,
+                                                'srtt': 0.816,
                                                 'rto': 4896,
                                                 'q_cnt': 0,
                                                 'last_seq_number': 8
@@ -142,7 +142,7 @@ class test_show_eigrp_neighbors(unittest.TestCase):
                                                 'peer_handle': 1,
                                                 'hold': 12,
                                                 'uptime': '01:36:14',
-                                                'srtt': 11.0,
+                                                'srtt': 0.011,
                                                 'rto': 200,
                                                 'q_cnt': 0,
                                                 'last_seq_number': 28
@@ -155,7 +155,7 @@ class test_show_eigrp_neighbors(unittest.TestCase):
                                                 'peer_handle': 0,
                                                 'hold': 11,
                                                 'uptime': '02:30:16',
-                                                'srtt': 1.0,
+                                                'srtt': 0.001,
                                                 'rto': 200,
                                                 'q_cnt': 0,
                                                 'last_seq_number': 23
@@ -199,7 +199,7 @@ class test_show_eigrp_neighbors(unittest.TestCase):
                                                 'peer_handle': 1,
                                                 'hold': 12,
                                                 'uptime': '01:40:51',
-                                                'srtt': 9.0,
+                                                'srtt': 0.009,
                                                 'rto': 200,
                                                 'q_cnt': 0,
                                                 'last_seq_number': 14
@@ -212,7 +212,7 @@ class test_show_eigrp_neighbors(unittest.TestCase):
                                                 'peer_handle': 0,
                                                 'hold': 12,
                                                 'uptime': '02:29:54',
-                                                'srtt': 4.0,
+                                                'srtt': 0.004,
                                                 'rto': 200,
                                                 'q_cnt': 0,
                                                 'last_seq_number': 9
@@ -290,6 +290,8 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                     'default': {
                         'address_family': {
                             'ipv4': {
+                                'name': 'test',
+                                'named_mode': True,
                                 'eigrp_interface': {
                                     'GigabitEthernet0/0/0/1.90': {
                                         'eigrp_nbr': {
@@ -297,7 +299,7 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                                 'peer_handle': 1,
                                                 'hold': 11,
                                                 'uptime': '01:43:15',
-                                                'srtt': 13.0,
+                                                'srtt': 0.013,
                                                 'rto': 200,
                                                 'q_cnt': 0,
                                                 'last_seq_number': 23,
@@ -309,6 +311,7 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                                 },
                                                 'retransmit_count': 1,
                                                 'retry_count': 0,
+                                                'bfd': 'disabled',
                                                 'prefixes': 3
                                             }
                                         }
@@ -319,7 +322,7 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                                 'peer_handle': 0,
                                                 'hold': 14,
                                                 'uptime': '02:56:28',
-                                                'srtt': 1.0,
+                                                'srtt': 0.001,
                                                 'rto': 200,
                                                 'q_cnt': 0,
                                                 'last_seq_number': 17,
@@ -331,6 +334,7 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                                 },
                                                 'retransmit_count': 1,
                                                 'retry_count': 0,
+                                                'bfd': 'disabled',
                                                 'prefixes': 3
                                             }
                                         }
@@ -367,6 +371,8 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                     'VRF1': {
                         'address_family': {
                             'ipv4': {
+                                'name': 'test',
+                                'named_mode': True,
                                 'eigrp_interface': {
                                     'GigabitEthernet0/0/0/1.390': {
                                         'eigrp_nbr': {
@@ -374,7 +380,7 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                                 'peer_handle': 1,
                                                 'hold': 14,
                                                 'uptime': '01:41:47',
-                                                'srtt': 4.0,
+                                                'srtt': 0.004,
                                                 'rto': 200,
                                                 'q_cnt': 0,
                                                 'last_seq_number': 15,
@@ -386,6 +392,7 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                                 },
                                                 'retransmit_count': 1,
                                                 'retry_count': 0,
+                                                'bfd': 'disabled',
                                                 'prefixes': 3
                                             }
                                         }
@@ -396,7 +403,7 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                                 'peer_handle': 0,
                                                 'hold': 13,
                                                 'uptime': '02:54:01',
-                                                'srtt': 816.0,
+                                                'srtt': 0.816,
                                                 'rto': 4896,
                                                 'q_cnt': 0,
                                                 'last_seq_number': 8,
@@ -408,6 +415,7 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                                 },
                                                 'retransmit_count': 0,
                                                 'retry_count': 0,
+                                                'bfd': 'disabled',
                                                 'prefixes': 3
                                             }
                                         }
@@ -444,6 +452,8 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                     'default': {
                         'address_family': {
                             'ipv6': {
+                                'name': 'test',
+                                'named_mode': True,
                                 'eigrp_interface': {
                                     'GigabitEthernet0/0/0/1.90': {
                                         'eigrp_nbr': {
@@ -451,7 +461,7 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                                 'peer_handle': 1,
                                                 'hold': 13,
                                                 'uptime': '01:37:57',
-                                                'srtt': 11.0,
+                                                'srtt': 0.011,
                                                 'rto': 200,
                                                 'q_cnt': 0,
                                                 'last_seq_number': 28,
@@ -463,6 +473,7 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                                 },
                                                 'retransmit_count': 1,
                                                 'retry_count': 0,
+                                                'bfd': 'disabled',
                                                 'prefixes': 5
                                             }
                                         }
@@ -473,7 +484,7 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                                 'peer_handle': 0,
                                                 'hold': 12,
                                                 'uptime': '02:31:58',
-                                                'srtt': 1.0,
+                                                'srtt': 0.001,
                                                 'rto': 200,
                                                 'q_cnt': 0,
                                                 'last_seq_number': 23,
@@ -485,6 +496,7 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                                 },
                                                 'retransmit_count': 1,
                                                 'retry_count': 0,
+                                                'bfd': 'disabled',
                                                 'prefixes': 6
                                             }
                                         }
@@ -523,6 +535,8 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                     'VRF1': {
                         'address_family': {
                             'ipv6': {
+                                'name': 'test',
+                                'named_mode': True,
                                 'eigrp_interface': {
                                     'GigabitEthernet0/0/0/1.390': {
                                         'eigrp_nbr': {
@@ -530,7 +544,7 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                                 'peer_handle': 1,
                                                 'hold': 11,
                                                 'uptime': '01:42:44',
-                                                'srtt': 9.0,
+                                                'srtt': 0.009,
                                                 'rto': 200,
                                                 'q_cnt': 0,
                                                 'last_seq_number': 14,
@@ -542,6 +556,7 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                                 },
                                                 'retransmit_count': 1,
                                                 'retry_count': 0,
+                                                'bfd': 'disabled',
                                                 'prefixes': 5
                                             }
                                         }
@@ -552,7 +567,7 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                                 'peer_handle': 0,
                                                 'hold': 12,
                                                 'uptime': '02:31:47',
-                                                'srtt': 4.0,
+                                                'srtt': 0.004,
                                                 'rto': 200,
                                                 'q_cnt': 0,
                                                 'last_seq_number': 9,
@@ -564,6 +579,7 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                                 },
                                                 'retransmit_count': 1,
                                                 'retry_count': 0,
+                                                'bfd': 'disabled',
                                                 'prefixes': 6
                                             }
                                         }
