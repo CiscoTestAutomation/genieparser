@@ -1718,7 +1718,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
             # Access Mode VLAN: 1 (default)
             # Access Mode VLAN: 7 (server-vlan7)
             p5 = re.compile(r'^\s*Access *Mode *VLAN: *(?P<access_vlan>[0-9]+)'
-                             '(?: *\((?P<access_vlan_mode>[\w\-\s]+)\))?$')
+                             '(?: *\((?P<access_vlan_mode>[\S\s]+)\))?$')
             m = p5.match(line)
             if m:
                 access_vlan = int(m.groupdict()['access_vlan'])
@@ -1735,7 +1735,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
             # Trunking Native Mode VLAN: 3967 (Vlan not created)
             p6 = re.compile(r'^\s*Trunking *Native *Mode *VLAN:'
                              ' *(?P<native_vlan>[0-9]+)'
-                             ' *\((?P<native_vlan_mode>[a-zA-Z0-9\-\_\s]+)\)$')
+                             ' *\((?P<native_vlan_mode>[\S\s]+)\)$')
             m = p6.match(line)
             if m:
                 native_vlan = int(m.groupdict()['native_vlan'])
@@ -1865,7 +1865,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
                 interface_switchport_dict[interface]\
                 ['operational_private_vlan'] = operational_private_vlan
                 continue
-
+        
         return interface_switchport_dict
 
 
