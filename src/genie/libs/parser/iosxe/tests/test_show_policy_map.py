@@ -1171,7 +1171,6 @@ class test_show_policy_map_type(unittest.TestCase):
     golden_output7 = {'execute.return_value': '''
         Router# show policy-map interface
         FastEthernet4/1/1
-        FastEthernet4/1/1
             Service-policy input: mypolicy
                 Class-map: class1 (match-all)
                     500 packets, 125000 bytes
@@ -1862,7 +1861,6 @@ class test_show_policy_map_type(unittest.TestCase):
         self.device = Mock(**self.golden_output7)
         obj = ShowPolicyMapInterface(device=self.device)
         parsed_output = obj.parse()
-        import pdb;pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output7)
 
     def test_show_policy_map_interface_full4(self):
@@ -2211,21 +2209,60 @@ class test_show_policy_map(unittest.TestCase):
                     Class cos5
                         Shape average 30m '''}
 
-    golden_parsed_output6 = {}
+    golden_parsed_output6 = {
+        'policy_map': {
+            'child': {
+                'class': {
+                    'voice': {
+                        'priority': True,
+                        'police': {
+                            'cir_bps': 8000,
+                            'bc_bytes': 9216,
+                            'be_bytes': 0,
+                            'conform_action': 'transmit',
+                            'exceed_action': 'drop',
+                            'violate_action': 'drop'}},
+                    'video': {
+                        'bandwidth_remaining_percent': 80}}}}}
 
     golden_output6 = {'execute.return_value': '''
         Router# show policy-map child
 
-  Policy Map child
-    Class voice
-      priority
-      police 8000 9216 0
-       conform-action transmit
-       exceed-action drop
-       violate-action drop
-    Class video
-      bandwidth remaining 80 (%)
+        Policy Map child
+            Class voice
+                priority
+                police 8000 9216 0
+                    conform-action transmit
+                    exceed-action drop
+                    violate-action drop
+            Class video
+                bandwidth remaining 80 (%)
+        '''}
+
+    golden_parsed_output7 = {
+        'policy_map': {
+            'parent': {
+                'class': {
+                    'class-default': {
+                        'average_rate_traffic_shaping': True,
+                        'cir_bps': 10000000,
+                        'service_policy': 'child'}}}}}
+
+    golden_output7 = {'execute.return_value': '''
+        Router# show policy-map parent
+        Policy Map parent
+            Class class-default
+                Average Rate Traffic Shaping
+                cir 10000000 (bps)
+                service-policy child
     '''}
+
+    def test_show_policy_map_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowPolicyMap(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
 
     def test_show_policy_map_golden1(self):
         self.maxDiff = None
@@ -2262,12 +2299,19 @@ class test_show_policy_map(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output5)
 
-    def test_show_policy_map_empty(self):
+    def test_show_policy_map_golden6(self):
         self.maxDiff = None
-        self.device = Mock(**self.empty_output)
+        self.device = Mock(**self.golden_output6)
         obj = ShowPolicyMap(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output6)
+
+    def test_show_policy_map_golden7(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output7)
+        obj = ShowPolicyMap(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output7)
 
 
 if __name__ == '__main__':
