@@ -449,6 +449,7 @@ class test_show_inventory(unittest.TestCase):
     NAME: "Slot 39",  DESCR: "Nexus7000 C7010 (10 Slot) Chassis Fan Module"
     PID: N7K-C7010-FAN-F     ,  VID: V02 ,  SN: FOX1111XA1F          
     '''}
+    
     golden_parsed_output_2 = {
       'name': {
           'Chassis': {
@@ -788,6 +789,7 @@ class test_show_redundancy_status(unittest.TestCase):
     Active supervisor uptime:   0 days, 7 hours, 57 minutes, 30 seconds
 
 '''}
+
     golden_output2 = {'execute.return_value' : '''
       Redundancy mode
       ---------------
@@ -813,6 +815,7 @@ class test_show_redundancy_status(unittest.TestCase):
       Kernel uptime:              404 days, 22 hours, 35 minutes, 19 seconds
       Active supervisor uptime:   404 days, 20 hours, 40 minutes, 0 seconds
     '''}
+
     golden_parsed_output2 = {
       'redundancy_mode': {
           'administrative': 'HA',
@@ -911,6 +914,7 @@ class test_show_boot(unittest.TestCase):
     No module boot variable set
 
 '''}
+
     golden_output2 = {'execute.return_value': '''
       Current Boot Variables:
 
@@ -1811,7 +1815,6 @@ class test_show_vdc_detail(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
  
-
     Switchwide mode is m1 f1 m1xl f2 m2xl f2e f3 m3 
 
     vdc id: 1
@@ -1866,6 +1869,7 @@ class test_show_vdc_detail(unittest.TestCase):
     vdc supported linecards: f3 
 
 '''}
+
     golden_output_2 = {'execute.return_value':
     '''
     vdc id: 1
@@ -2060,6 +2064,7 @@ class test_show_vdc_membership_status(unittest.TestCase):
     Eth4/2(b)   OK
 
 '''}
+
     golden_output_2 = {'execute.return_value': '''
       dc_id: 0 vdc_name: Unallocated interfaces:
       Port        Status      
@@ -2073,6 +2078,7 @@ class test_show_vdc_membership_status(unittest.TestCase):
       Eth2/21     OK
       Eth2/23     OK
     '''}
+
     golden_parsed_output_2 = {
       'virtual_device': {
           '2': {
@@ -2112,7 +2118,6 @@ class test_show_vdc_membership_status(unittest.TestCase):
         self.device = Mock(**self.golden_output_2)
         vdc_membership_status_obj = ShowVdcMembershipStatus(device=self.device)
         parsed_output = vdc_membership_status_obj.parse()
-        
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
     def test_empty(self):
