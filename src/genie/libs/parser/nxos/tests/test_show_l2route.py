@@ -259,13 +259,50 @@ class test_show_l2route_evpn_mac_ip_all(unittest.TestCase):
             },
         }
 
+    golden_output_2 = {'execute.return_value': '''
+    leaf3# show l2route evpn mac-ip all
+    Topology ID Mac Address    Prod Host IP                 Next Hop (s)
+    ----------- -------------- ---- ------------------------------------------------------
+    101         0011.0000.0034 BGP  5.1.3.2                      40.0.0.2
+    102         0011.0000.0034 BGP  5.1.3.2                      40.0.0.2
+    '''}
 
-    def test_show_l2route_evpn_mac_ip_all(self):
+    golden_parsed_output_2 = {
+      'topology': {
+        '101': {
+          'mac_address': {
+            '0011.0000.0034': {
+              'host_ip': '5.1.3.2',
+              'next_hops': '40.0.0.2',
+              'prod': 'BGP'
+            }
+          }
+        },
+        '102': {
+          'mac_address': {
+            '0011.0000.0034': {
+              'host_ip': '5.1.3.2',
+              'next_hops': '40.0.0.2',
+              'prod': 'BGP'
+            }
+          }
+        }
+      }
+    }
+
+    def test_golden_output_1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowL2routeEvpnMacIpAll(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_output_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowL2routeEvpnMacIpAll(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
     def test_empty_output(self):
         self.device = Mock(**self.empty_output)
