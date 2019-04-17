@@ -4,7 +4,7 @@ from unittest.mock import Mock
 from ats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
-    SchemaMissingKeyError
+                                        SchemaMissingKeyError
 from genie.libs.parser.ios.show_platform import ShowVersion,\
     Dir,\
     ShowRedundancy,\
@@ -27,7 +27,10 @@ from genie.libs.parser.ios.show_platform import ShowVersion,\
     ShowPlatformHardwareSerdesInternal,\
     ShowPlatformHardwareQfpBqsStatisticsChannelAll,\
     ShowPlatformHardwareQfpInterfaceIfnameStatistics,\
-    ShowPlatformHardwareQfpStatisticsDrop
+    ShowPlatformHardwareQfpStatisticsDrop,\
+    ShowEnvironment,\
+    ShowModule,\
+    ShowSwitch, ShowSwitchDetail
 
 from genie.libs.parser.iosxe.tests.test_show_platform import test_show_platform as test_show_platform_iosxe,\
     test_show_platform_power as test_show_platform_power_iosxe,\
@@ -45,7 +48,12 @@ from genie.libs.parser.iosxe.tests.test_show_platform import test_show_platform 
     test_show_platform_hardware_serdes_statistics_internal as test_show_platform_hardware_serdes_statistics_internal_iosxe,\
     show_platform_hardware_qfp_bqs_statistics_channel_all as show_platform_hardware_qfp_bqs_statistics_channel_all_iosxe,\
     show_platform_hardware_qfp_interface as show_platform_hardware_qfp_interface_iosxe,\
-    test_show_platform_hardware_qfp_statistics_drop as test_show_platform_hardware_qfp_statistics_drop_iosxe
+    test_show_platform_hardware_qfp_statistics_drop as test_show_platform_hardware_qfp_statistics_drop_iosxe,\
+    test_show_env as test_show_env_iosxe,\
+    test_show_module as test_show_module_iosxe,\
+    test_show_switch as test_show_switch_iosxe,\
+    test_show_switch_detail as test_show_switch_detail_iosxe
+
 
 
 class test_show_version(unittest.TestCase):
@@ -921,6 +929,70 @@ class test_show_platform_hardware_qfp_statistics_drop(test_show_platform_hardwar
             device=self.device)
         parsed_output = platform_obj.parse(status='active')
         self.assertEqual(parsed_output, self.golden_parsed_output_active)
+
+
+class test_show_env(test_show_env_iosxe):
+
+    def test_empty(self):
+        self.dev = Mock(**self.empty_output)
+        obj = ShowEnvironment(device=self.dev)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsered_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output)
+        obj = ShowEnvironment(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+class test_show_module(test_show_module_iosxe):
+
+    def test_empty(self):
+        self.dev1 = Mock(**self.empty_output)
+        platform_obj = ShowModule(device=self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse()    
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_c3850)
+        platform_obj = ShowModule(device=self.dev_c3850)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
+
+
+class test_show_switch(test_show_switch_iosxe):
+   
+    def test_empty(self):
+        self.dev1 = Mock(**self.empty_output)
+        platform_obj = ShowSwitch(device=self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse()    
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_c3850)
+        platform_obj = ShowSwitch(device=self.dev_c3850)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
+
+
+class test_show_switch_detail(test_show_switch_detail_iosxe):
+
+    def test_empty(self):
+        self.dev1 = Mock(**self.empty_output)
+        platform_obj = ShowSwitchDetail(device=self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse()    
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_c3850)
+        platform_obj = ShowSwitchDetail(device=self.dev_c3850)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
 
 
 if __name__ == '__main__':
