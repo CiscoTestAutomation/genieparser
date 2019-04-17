@@ -345,7 +345,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                 tag_dict = result_dict.setdefault('tag', {}). \
                                        setdefault(tag, {}). \
                                        setdefault('level', {}). \
-                                       setdefault(int(group['level']), {})
+                                       setdefault("L"+group['level'], {})
 
                 continue
 
