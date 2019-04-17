@@ -27,6 +27,19 @@
       * Add ShowIpEigrpNeighborsDetail for:
             show ip eigrp neighbors detail
             show ip eigrp vrf <vrf> neighbors detail
+* IOSXR
+    * Add ShowEigrpIpv4Neighbors for:
+            show eigrp ipv4 neighbors
+            show eigrp ipv4 vrf <vrf> neighbors
+    * Add ShowEigrpIpv6Neighbors for:
+            show eigrp ipv6 neighbors
+            show eigrp ipv6 vrf <all> neighbors
+    * Add ShowEigrpIpv4NeighborsDetail for:
+            show eigrp ipv4 neighbors detail
+            show eigrp ipv4 vrf <vrf> neighbors detail
+    * Add ShowEigrpIpv6NeighborsDetail for:
+            show eigrp ipv6 neighbors detail
+            show eigrp ipv6 vrf <all> neighbors detail
 
 ----------------------------------------------------------------------------------
                                    CDP
