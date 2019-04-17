@@ -52,7 +52,7 @@ class ShowEigrpNeighborsSchema(MetaParser):
                                                 'uptime': str,
                                                 'q_cnt': int,
                                                 'last_seq_number': int,
-                                                'srtt': float,
+                                                'srtt_ms': float,
                                                 'rto': int, }, },
                                             },
                                         },
@@ -94,7 +94,7 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
                         '(?P<nbr_address>\S+) +'
                         '(?P<eigrp_interface>[A-Za-z]+\s*[\d\/\.]+) +'
                         '(?P<hold>\d+) +(?P<uptime>\S+) +'
-                        '(?P<srtt>\d+) +'
+                        '(?P<srtt_ms>\d+) +'
                         '(?P<rto>\d+) +'
                         '(?P<q_cnt>\d+) +'
                         '(?P<last_seq_number>\d+)$')
@@ -104,7 +104,7 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
         # 1   Link Local Address:     Gi0/0/0/1.90      12 01:36:14   11   200  0  28
         r3 = re.compile(r'^(?P<peer_handle>\d+) +Link\s+Local\s+Address: +'
                         '(?P<eigrp_interface>[A-Za-z]+\s*[\d\/\.]+) +'
-                        '(?P<hold>\d+) +(?P<uptime>\S+) +(?P<srtt>\d+) +'
+                        '(?P<hold>\d+) +(?P<uptime>\S+) +(?P<srtt_ms>\d+) +'
                         '(?P<rto>\d+) +(?P<q_cnt>\d+) +'
                         '(?P<last_seq_number>\d+)$')
 
@@ -171,7 +171,7 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
                 ip_dict['peer_handle'] = int(group['peer_handle'])
                 ip_dict['hold'] = int(group['hold'])
                 ip_dict['uptime'] = group['uptime']
-                ip_dict['srtt'] = float(group['srtt'])/1000
+                ip_dict['srtt_ms'] = float(group['srtt_ms'])/1000
                 ip_dict['rto'] = int(group['rto'])
                 ip_dict['q_cnt'] = int(group['q_cnt'])
                 ip_dict['last_seq_number'] = int(group['last_seq_number'])
@@ -196,7 +196,7 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
                 peer_handle = int(group['peer_handle'])
                 hold = int(group['hold'])
                 uptime = group['uptime']
-                srtt = float(group['srtt'])/1000
+                srtt_ms = float(group['srtt_ms'])/1000
                 rto = int(group['rto'])
                 q_cnt = int(group['q_cnt'])
                 last_seq_number = int(group['last_seq_number'])
@@ -229,7 +229,7 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
                 ip_dict['peer_handle'] = peer_handle
                 ip_dict['hold'] = hold
                 ip_dict['uptime'] = uptime
-                ip_dict['srtt'] = srtt
+                ip_dict['srtt_ms'] = srtt_ms
                 ip_dict['rto'] = rto
                 ip_dict['q_cnt'] = q_cnt
                 ip_dict['last_seq_number'] = last_seq_number
@@ -303,7 +303,7 @@ class ShowEigrpNeighborsDetailSchema(MetaParser):
                                                 'retransmit_count': int,
                                                 'retry_count': int,
                                                 'last_seq_number': int,
-                                                'srtt': float,
+                                                'srtt_ms': float,
                                                 'rto': int,
                                                 'q_cnt': int,
                                                 'peer_handle': int,
@@ -353,7 +353,7 @@ class ShowEigrpNeighborsDetailSuperParser(ShowEigrpNeighborsDetailSchema):
                         '(?P<nbr_address>\S+) +'
                         '(?P<eigrp_interface>[A-Za-z]+\s*[\d\/\.]+) +'
                         '(?P<hold>\d+) +(?P<uptime>\S+) +'
-                        '(?P<srtt>\d+) +'
+                        '(?P<srtt_ms>\d+) +'
                         '(?P<rto>\d+) +'
                         '(?P<q_cnt>\d+) +'
                         '(?P<last_seq_number>\d+)$')
@@ -362,7 +362,7 @@ class ShowEigrpNeighborsDetailSuperParser(ShowEigrpNeighborsDetailSchema):
         # 0   Link Local Address:     Gi0/0/0/0.390     12 02:31:47    4   200  0  9
         r3 = re.compile(r'^(?P<peer_handle>\d+) +Link\s+Local\s+Address: +'
                         '(?P<eigrp_interface>[A-Za-z]+\s*[\d\/\.]+) +'
-                        '(?P<hold>\d+) +(?P<uptime>\S+) +(?P<srtt>\d+) +'
+                        '(?P<hold>\d+) +(?P<uptime>\S+) +(?P<srtt_ms>\d+) +'
                         '(?P<rto>\d+) +(?P<q_cnt>\d+) +'
                         '(?P<last_seq_number>\d+)$')
 
@@ -438,7 +438,7 @@ class ShowEigrpNeighborsDetailSuperParser(ShowEigrpNeighborsDetailSchema):
                 ip_dict['peer_handle'] = int(group['peer_handle'])
                 ip_dict['hold'] = int(group['hold'])
                 ip_dict['uptime'] = group['uptime']
-                ip_dict['srtt'] = float(group['srtt'])/1000
+                ip_dict['srtt_ms'] = float(group['srtt_ms'])/1000
                 ip_dict['rto'] = int(group['rto'])
                 ip_dict['q_cnt'] = int(group['q_cnt'])
                 ip_dict['last_seq_number'] = int(group['last_seq_number'])
@@ -463,7 +463,7 @@ class ShowEigrpNeighborsDetailSuperParser(ShowEigrpNeighborsDetailSchema):
                 peer_handle = int(group['peer_handle'])
                 hold = int(group['hold'])
                 uptime = group['uptime']
-                srtt = float(group['srtt'])/1000
+                srtt_ms = float(group['srtt_ms'])/1000
                 rto = int(group['rto'])
                 q_cnt = int(group['q_cnt'])
                 last_seq_number = int(group['last_seq_number'])
@@ -496,7 +496,7 @@ class ShowEigrpNeighborsDetailSuperParser(ShowEigrpNeighborsDetailSchema):
                 ip_dict['peer_handle'] = peer_handle
                 ip_dict['hold'] = hold
                 ip_dict['uptime'] = uptime
-                ip_dict['srtt'] = srtt
+                ip_dict['srtt_ms'] = srtt_ms
                 ip_dict['rto'] = rto
                 ip_dict['q_cnt'] = q_cnt
                 ip_dict['last_seq_number'] = last_seq_number
