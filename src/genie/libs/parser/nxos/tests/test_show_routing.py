@@ -1,4 +1,3 @@
-
 # Python
 import unittest
 from unittest.mock import Mock
@@ -293,7 +292,7 @@ class test_show_routing_ipv6_vrf_all(unittest.TestCase):
     device1 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
     
-    golden_parsed_output = {
+    golden_parsed_output_1 = {
         "vrf": {
             "default": {
                "address_family": {
@@ -432,7 +431,7 @@ class test_show_routing_ipv6_vrf_all(unittest.TestCase):
                                                                  "protocol_id": "100"}}}}}}}}}}}}
     }
 
-    golden_output = {'execute.return_value': '''
+    golden_output_1 = {'execute.return_value': '''
         IPv6 Routing Table for VRF "default"
         '*' denotes best ucast next-hop
         '**' denotes best mcast next-hop
@@ -462,18 +461,281 @@ class test_show_routing_ipv6_vrf_all(unittest.TestCase):
             *via ::ffff:10.4.1.1%default:IPv4, [200/2219], 00:35:51, bgp-100, internal, tag 200  (mpls-vpn)
         '''}
 
-    def test_golden(self):
+    golden_parsed_output_2 = {
+        'vrf': {
+            'otv-vrf139': {
+                'address_family': {
+                    'vpnv6 unicast': {
+                        'ip': {
+                            '2001:112:1:2b3::/64': {
+                                'attach': 'attached',
+                                'best_route': {
+                                    'unicast': {
+                                        'nexthop': {
+                                            '2001:112:1:2b3::2': {
+                                                'protocol': {
+                                                    'direct': {
+                                                        'interface': 'Vlan1191',
+                                                        'metric': '0',
+                                                        'preference': '0',
+                                                        'uptime': '20:58:10'}}}}}},
+                                'mbest_num': '0',
+                                'ubest_num': '1'},
+                            '2001:112:1:2b3::1/128': {
+                                'attach': 'attached',
+                                'best_route': {
+                                    'unicast': {
+                                        'nexthop': {
+                                            '2001:112:1:2b3::1': {
+                                                'protocol': {
+                                                    'hsrp': {
+                                                        'interface': 'Vlan1191',
+                                                         'metric': '0',
+                                                         'preference': '0',
+                                                         'uptime': '20:57:53'}}}}}},
+                                'mbest_num': '0',
+                                'ubest_num': '1'},
+                            '2001:112:1:2b3::2/128': {
+                                'attach': 'attached',
+                                'best_route': {
+                                    'unicast': {
+                                        'nexthop': {
+                                            '2001:112:1:2b3::2': {
+                                                'protocol': {
+                                                    'local': {
+                                                    'interface': 'Vlan1191',
+                                                    'metric': '0',
+                                                    'preference': '0',
+                                                    'uptime': '20:58:10'}}}}}},
+                                'mbest_num': '0',
+                                'ubest_num': '1'},
+                        '2001:112:1:2b4::/64': {
+                            'attach': 'attached',
+                            'best_route': {
+                                'unicast': {
+                                    'nexthop': {
+                                        '2001:112:1:2b4::2': {
+                                            'protocol': {
+                                                'direct': {
+                                                    'interface': 'Vlan1192',
+                                                    'metric': '0',
+                                                    'preference': '0',
+                                                    'uptime': '20:58:10'}}}}}},
+                            'mbest_num': '0',
+                            'ubest_num': '1'},
+                        '2001:112:1:2b4::1/128': {
+                            'attach': 'attached',
+                            'best_route': {
+                                'unicast': {
+                                    'nexthop': {
+                                        '2001:112:1:2b4::1': {
+                                            'protocol': {
+                                                'hsrp': {
+                                                    'interface': 'Vlan1192',
+                                                    'metric': '0',
+                                                    'preference': '0',
+                                                    'uptime': '20:57:53'}}}}}},
+                            'mbest_num': '0',
+                            'ubest_num': '1'},
+                        '2001:112:1:2b4::2/128': {
+                            'attach': 'attached',
+                            'best_route': {
+                                'unicast': {
+                                    'nexthop': {
+                                        '2001:112:1:2b4::2': {
+                                            'protocol': {
+                                                'local': {
+                                                    'interface': 'Vlan1192',
+                                                    'metric': '0',
+                                                    'preference': '0',
+                                                    'uptime': '20:58:10'}}}}}},
+                            'mbest_num': '0',
+                            'ubest_num': '1'},
+                        '2001:112:1:2b5::/64': {
+                            'attach': 'attached',
+                            'best_route': {
+                                'unicast': {
+                                    'nexthop': {
+                                    '2001:112:1:2b5::2': {
+                                        'protocol': {
+                                            'direct': {
+                                                'interface': 'Vlan1193',
+                                                'metric': '0',
+                                                'preference': '0',
+                                                'uptime': '20:58:10'}}}}}},
+                            'mbest_num': '0',
+                            'ubest_num': '1'},
+                        '2001:112:1:2b5::1/128': {
+                            'attach': 'attached',
+                            'best_route': {
+                                'unicast': {
+                                    'nexthop': {
+                                        '2001:112:1:2b5::1': {
+                                            'protocol': {
+                                                'hsrp': {
+                                                    'interface': 'Vlan1193',
+                                                    'metric': '0',
+                                                    'preference': '0',
+                                                    'uptime': '20:57:52'}}}}}},
+                            'mbest_num': '0',
+                            'ubest_num': '1'},
+                        '2001:112:1:2b5::2/128': {
+                            'attach': 'attached',
+                            'best_route': {
+                                'unicast': {
+                                    'nexthop': {
+                                        '2001:112:1:2b5::2': {
+                                            'protocol': {
+                                                'local': {
+                                                    'interface': 'Vlan1193',
+                                                    'metric': '0',
+                                                    'preference': '0',
+                                                    'uptime': '20:58:10'}}}}}},
+                            'mbest_num': '0',
+                            'ubest_num': '1'},
+                        '2001:112:1:2b6::/64': {
+                            'attach': 'attached',
+                            'best_route': {
+                                'unicast': {
+                                    'nexthop': {
+                                        '2001:112:1:2b6::2': {
+                                            'protocol': {
+                                                'direct': {
+                                                    'interface': 'Vlan1194',
+                                                    'metric': '0',
+                                                    'preference': '0',
+                                                    'uptime': '20:58:10'}}}}}},
+                            'mbest_num': '0',
+                            'ubest_num': '1'},
+                        '2001:112:1:2b6::1/128': {
+                            'attach': 'attached',
+                            'best_route': {
+                                'unicast': {
+                                    'nexthop': {
+                                        '2001:112:1:2b6::1': {
+                                            'protocol': {
+                                                'hsrp': {
+                                                    'interface': 'Vlan1194',
+                                                    'metric': '0',
+                                                    'preference': '0',
+                                                    'uptime': '20:57:52'}}}}}},
+                            'mbest_num': '0',
+                            'ubest_num': '1'},
+                        '2001:112:1:2b6::2/128': {
+                            'attach': 'attached',
+                            'best_route': {
+                                'unicast': {
+                                    'nexthop': {
+                                        '2001:112:1:2b6::2': {
+                                            'protocol': {
+                                                'local': {
+                                                    'interface': 'Vlan1194',
+                                                    'metric': '0',
+                                                    'preference': '0',
+                                                    'uptime': '20:58:10'}}}}}},
+                            'mbest_num': '0',
+                            'ubest_num': '1'},
+                        '2001:112:1:2b7::/64': {
+                            'attach': 'attached',
+                            'best_route': {
+                                'unicast': {
+                                    'nexthop': {
+                                        '2001:112:1:2b7::2': {
+                                            'protocol': {
+                                                'direct': {
+                                                    'interface': 'Vlan1195',
+                                                    'metric': '0',
+                                                    'preference': '0',
+                                                    'uptime': '20:58:10'}}}}}},
+                            'mbest_num': '0',
+                            'ubest_num': '1'},
+                        '2001:112:1:2b7::1/128': {
+                            'attach': 'attached',
+                            'best_route': {
+                                'unicast': {
+                                    'nexthop': {
+                                        '2001:112:1:2b7::1': {
+                                            'protocol': {
+                                                'hsrp': {
+                                                    'interface': 'Vlan1195',
+                                                    'metric': '0',
+                                                    'preference': '0',
+                                                    'uptime': '20:57:52'}}}}}},
+                            'mbest_num': '0',
+                            'ubest_num': '1'},
+                        '2001:112:1:2b7::2/128': {
+                            'attach': 'attached',
+                            'best_route': {
+                                'unicast': {
+                                    'nexthop': {
+                                        '2001:112:1:2b7::2': {
+                                            'protocol': {
+                                                'local': {
+                                                    'interface': 'Vlan1195',
+                                                    'metric': '0',
+                                                    'preference': '0',
+                                                    'uptime': '20:58:10'}}}}}},
+                            'mbest_num': '0',
+                            'ubest_num': '1'}}}}}}}
+
+    golden_output_2 = {'execute.return_value': '''
+        IPv6 Routing Table for VRF "otv-vrf139"
+        '*' denotes best ucast next-hop
+        '**' denotes best mcast next-hop
+        '[x/y]' denotes [preference/metric]
+
+        2001:112:1:2b3::/64, ubest/mbest: 1/0, attached
+            *via 2001:112:1:2b3::2, Vlan1191, [0/0], 20:58:10, direct, 
+        2001:112:1:2b3::1/128, ubest/mbest: 1/0, attached
+            *via 2001:112:1:2b3::1, Vlan1191, [0/0], 20:57:53, hsrp
+        2001:112:1:2b3::2/128, ubest/mbest: 1/0, attached
+            *via 2001:112:1:2b3::2, Vlan1191, [0/0], 20:58:10, local
+        2001:112:1:2b4::/64, ubest/mbest: 1/0, attached
+            *via 2001:112:1:2b4::2, Vlan1192, [0/0], 20:58:10, direct, 
+        2001:112:1:2b4::1/128, ubest/mbest: 1/0, attached
+            *via 2001:112:1:2b4::1, Vlan1192, [0/0], 20:57:53, hsrp
+        2001:112:1:2b4::2/128, ubest/mbest: 1/0, attached
+            *via 2001:112:1:2b4::2, Vlan1192, [0/0], 20:58:10, local
+        2001:112:1:2b5::/64, ubest/mbest: 1/0, attached
+            *via 2001:112:1:2b5::2, Vlan1193, [0/0], 20:58:10, direct, 
+        2001:112:1:2b5::1/128, ubest/mbest: 1/0, attached
+            *via 2001:112:1:2b5::1, Vlan1193, [0/0], 20:57:52, hsrp
+        2001:112:1:2b5::2/128, ubest/mbest: 1/0, attached
+            *via 2001:112:1:2b5::2, Vlan1193, [0/0], 20:58:10, local
+        2001:112:1:2b6::/64, ubest/mbest: 1/0, attached
+            *via 2001:112:1:2b6::2, Vlan1194, [0/0], 20:58:10, direct, 
+        2001:112:1:2b6::1/128, ubest/mbest: 1/0, attached
+            *via 2001:112:1:2b6::1, Vlan1194, [0/0], 20:57:52, hsrp
+        2001:112:1:2b6::2/128, ubest/mbest: 1/0, attached
+            *via 2001:112:1:2b6::2, Vlan1194, [0/0], 20:58:10, local
+        2001:112:1:2b7::/64, ubest/mbest: 1/0, attached
+            *via 2001:112:1:2b7::2, Vlan1195, [0/0], 20:58:10, direct, 
+        2001:112:1:2b7::1/128, ubest/mbest: 1/0, attached
+            *via 2001:112:1:2b7::1, Vlan1195, [0/0], 20:57:52, hsrp
+        2001:112:1:2b7::2/128, ubest/mbest: 1/0, attached
+            *via 2001:112:1:2b7::2, Vlan1195, [0/0], 20:58:10, local
+    '''}
+
+
+    def test_golden_1(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output)
-        bgp_obj = ShowRoutingIpv6VrfAll(device=self.device)
-        parsed_output = bgp_obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output)
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowRoutingIpv6VrfAll(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowRoutingIpv6VrfAll(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
-        bgp_obj = ShowRoutingIpv6VrfAll(device=self.device1)
+        obj = ShowRoutingIpv6VrfAll(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = bgp_obj.parse()
+            parsed_output = obj.parse()
 
 
 # ============================================

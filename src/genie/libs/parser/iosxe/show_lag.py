@@ -735,6 +735,7 @@ class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
             out = output
 
         result_dict = {}
+        intf_dict = {}
         m1 = ""
         # Number of channel-groups in use: 2
         # Number of aggregators:           2
@@ -743,12 +744,22 @@ class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
         # ------+-------------+-----------+-----------------------------------------------
         # 1      Po1(SU)         PAgP      Gi0/1(P)    Gi0/2(P)
 
+        # Group  Port-channel  Protocol    Ports
+        # ------+-------------+-----------+-----------------------------------------------
+        # 10     Po10(SU)        PAgP        Gi1/0/15(P)     Gi1/0/16(P)     
+        #                                    Gi1/0/17(P)     
         p1 = re.compile(r'^\s*Number +of +channel-groups +in +use: +(?P<number_of_lag_in_use>[\d]+)$')
         p2 = re.compile(r'^\s*Number +of +aggregators: +(?P<number_of_aggregators>[\d]+)$')
         p3 = re.compile(r'^\s*(?P<bundle_id>[\d\s]+)(?P<name>[\w\-]+)\((?P<flags>[\w]+)\)?'
                         '( +(?P<protocol>[\w\-]+))?( +((?P<ports>[\w\-\s\/\(\)]+)))?$')
         p4 = re.compile(r'^\s*(?P<bundle_id>[\d\t]+)(?P<name>[\w\-\t]+)\((?P<flags>[\w]+)\)'
                         '(?P<protocol>[\w\-\t]+)?((?P<ports>[\w\-\s\/\(\)]+))?$')
+        # Group  Port-channel  Protocol    Ports
+        # ------+-------------+-----------+-----------------------------------------------
+        # 10     Po10(SU)        PAgP        Gi1/0/15(P)     Gi1/0/16(P)     
+        #                                    Gi1/0/17(P)     
+        p5 = re.compile(r'^\s*(?P<ports>[\w\-\/\(\)]+)$')
+
         for line in out.splitlines():
             if line:
                 line = line.rstrip()
@@ -823,7 +834,34 @@ class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
                         port_dict = intf_dict.setdefault('port_channel', {})
                         port_dict['port_channel_member'] = True
                         port_dict['port_channel_member_intfs'] = sorted(eth_list)
+                m1 = ""
                 continue
+
+            m = p5.match(line)
+            if m and intf_dict:
+                group = m.groupdict()
+                ports = group.pop('ports').split()
+
+                for port in ports:
+                    port_value = port.split('(')
+                    interface = Common.convert_intf_name(port_value[0])
+                    state = port_value[1].replace(')','')
+                    eth_list.append(interface)
+                    port_item = intf_dict['members'].setdefault(interface, {})
+
+                    port_item.update({'interface': interface})
+                    port_item.update({'flags': state})
+                    port_item.update({'bundled': True if state in ['bndl','P'] else False})
+
+                    # port_channel
+                    port_item.setdefault('port_channel', {}).update({'port_channel_member': True,
+                                                                     'port_channel_int': name})
+
+                # port_channel
+                if eth_list:
+                    intf_dict['port_channel']['port_channel_member_intfs'] = sorted(eth_list)
+                continue
+
         return result_dict
 
 
