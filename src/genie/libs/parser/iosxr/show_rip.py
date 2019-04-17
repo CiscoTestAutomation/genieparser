@@ -32,23 +32,28 @@ class ShowRipSchema(MetaParser):
     schema = {
         'vrf': {
             Any(): {
-                'instance': {
+                'address_family': {
                     Any(): {
-                        'active': str,
-                        'added_to_socket': str,
-                        'out_of_memory_state': str,
-                        'version': int,
-                        'default_metric': int,
-                        'maximum_paths': int,
-                        'auto_summarize': str,
-                        'broadcast_for_v2': str,
-                        'packet_source_validation': str,
-                        'nsf': str,
-                        'timers': {
-                            'update_interval': int,
-                            'invalid_interval': int,
-                            'holddown_interval': int,
-                            'flush_interval': int
+                        'instance': {
+                            Any(): {
+                                'active': str,
+                                'added_to_socket': str,
+                                'out_of_memory_state': str,
+                                'version': int,
+                                'default_metric': int,
+                                'maximum_paths': int,
+                                'auto_summarize': str,
+                                'broadcast_for_v2': str,
+                                'packet_source_validation': str,
+                                'nsf': str,
+                                'timers': {
+                                    'until_next_update': int,
+                                    'update_interval': int,
+                                    'invalid_interval': int,
+                                    'holddown_interval': int,
+                                    'flush_interval': int
+                                }
+                            }
                         }
                     }
                 }
@@ -117,7 +122,7 @@ class ShowRip(ShowRipSchema):
         p11 = re.compile(r'^NSF:\s+(?P<nsf>\w+)$')
 
         # Timers: Update:             10 seconds (7 seconds until next update)
-        p12 = re.compile(r'^Timers: +Update:\s+(?P<update_timer>\d+)[\s\w\(\)]+$')
+        p12 = re.compile(r'^Timers: +Update:\s+(?P<update_timer>\d+) +seconds +\((?P<next_update>\d+)[\s\w]+\)$')
 
         # Invalid:            31 seconds
         p13 = re.compile(r'^Invalid:\s+(?P<invalid_timer>\d+)[\s\w]+$')
@@ -134,8 +139,8 @@ class ShowRip(ShowRipSchema):
             # RIP config:
             m = p1.match(line)
             if m:
-                instance_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {}).setdefault('instance', {}). \
-                                         setdefault(instance, {})
+                instance_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {}).setdefault('address_family', {}). \
+                                        setdefault('ipv4', {}).setdefault('instance', {}).setdefault(instance, {})
                 continue
 
             # Active:                    Yes
@@ -214,6 +219,7 @@ class ShowRip(ShowRipSchema):
                 groups = m.groupdict()
 
                 timer_dict = instance_dict.setdefault('timers', {})
+                timer_dict.update({'until_next_update': int(groups['next_update'])})
                 timer_dict.update({'update_interval': int(groups['update_timer'])})
                 continue
 
