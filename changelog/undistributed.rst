@@ -226,6 +226,40 @@
         'show snmp mib'
 
 --------------------------------------------------------------------------------
+                                   PLATFORM
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowEnvironment for:
+        show environment
+    * Add ShowEnvironmentAll for:
+        show environment all
+    * Add ShowModule for:
+        show module
+    * Add ShowSwitch for:
+        show switch
+    * Add ShowSwitchDetail for:
+        show switch detail
+
+--------------------------------------------------------------------------------
+                                   RPF
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowIpRpf for:
+        show ip rpf <mroute address>
+        show ip rpf vrf <vrf> <mroute address>
+    * Add ShowIpv6Rpf for:
+        show ipv6 rpf <mroute address>
+        show ipv6 rpf vrf <vrf> <mroute address>
+
+--------------------------------------------------------------------------------
+                                   ROUTING
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowIpv6RouteWord for:
+        show ipv6 route <Hostname or A.B.C.D>
+        show ipv6 route vrf <vrf> <Hostname or A.B.C.D>
+
+--------------------------------------------------------------------------------
                                    ISSU
 --------------------------------------------------------------------------------
 * IOS
@@ -381,6 +415,7 @@
   * Add ShowIpv6AccessLists for :
           show ipv6 access-list
           show ipv6 access-list <acl>
+
 * IOSXR
     * Add ShowAclAfiAll for:
         show access-lists afi-all
@@ -431,3 +466,4 @@
     * Add ShowRplPrefixSet for:
         show rpl prefix-set
         show rpl prefix-set <name>
+
