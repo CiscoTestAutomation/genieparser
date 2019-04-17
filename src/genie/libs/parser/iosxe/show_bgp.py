@@ -3669,7 +3669,7 @@ class ShowBgpNeighborSuperParser(MetaParser):
             if m:
                 session_transport_dict['tcp_connection'] = False
                 continue
-        # import pdb; pdb.set_trace()
+
         return ret_dict
 
 
