@@ -58,6 +58,7 @@ class test_show_rip_database(unittest.TestCase):
                                         'index': {
                                             1: {
                                                 'metric': 3,
+                                                'distance': 0,
                                                 'redistributed': True
                                             }
                                         }
@@ -66,6 +67,7 @@ class test_show_rip_database(unittest.TestCase):
                                         'index': {
                                             1: {
                                                 'metric': 3,
+                                                'distance': 1,
                                                 'redistributed': True
                                             }
                                         }
@@ -75,7 +77,7 @@ class test_show_rip_database(unittest.TestCase):
                                             1: {
                                                 'metric': 11,
                                                 'next_hop': '10.1.2.2',
-                                                'expire_time': '15s',
+                                                'up_time': '15s',
                                                 'interface': 'GigabitEthernet0/0/0/0.100'
                                             }
                                         }
@@ -91,6 +93,7 @@ class test_show_rip_database(unittest.TestCase):
                                         'index': {
                                             1: {
                                                 'metric': 3,
+                                                'distance': 0,
                                                 'redistributed': True
                                             }
                                         }
@@ -164,7 +167,7 @@ class test_show_rip_database(unittest.TestCase):
                                             1: {
                                                 'metric': 1,
                                                 'next_hop': '10.1.2.2',
-                                                'expire_time': '10s',
+                                                'up_time': '10s',
                                                 'interface': 'GigabitEthernet0/0/0/0.200'
                                             }
                                         }
@@ -180,6 +183,7 @@ class test_show_rip_database(unittest.TestCase):
                                         'index': {
                                             1: {
                                                 'metric': 15,
+                                                'distance': 1,
                                                 'redistributed': True
                                             }
                                         }
@@ -189,7 +193,7 @@ class test_show_rip_database(unittest.TestCase):
                                             1: {
                                                 'metric': 1,
                                                 'next_hop': '10.1.2.2',
-                                                'expire_time': '10s',
+                                                'up_time': '10s',
                                                 'interface': 'GigabitEthernet0/0/0/0.200'
                                             }
                                         }
@@ -205,6 +209,7 @@ class test_show_rip_database(unittest.TestCase):
                                         'index': {
                                             1: {
                                                 'metric': 1,
+                                                'distance': 0,
                                                 'redistributed': True
                                             }
                                         }
@@ -221,7 +226,7 @@ class test_show_rip_database(unittest.TestCase):
                                             1: {
                                                 'metric': 1,
                                                 'next_hop': '10.1.2.2',
-                                                'expire_time': '10s',
+                                                'up_time': '10s',
                                                 'interface': 'GigabitEthernet0/0/0/0.200'
                                             }
                                         }

@@ -45,7 +45,8 @@ class ShowRipDatabaseSchema(MetaParser):
                                                 Optional('next_hop'): str,
                                                 Optional('redistributed'): bool,
                                                 Optional('summary_type'): str,
-                                                Optional('expire_time'): str,
+                                                Optional('up_time'): str,
+                                                Optional('distance'): int
                                             }
                                         }
                                     }
@@ -92,11 +93,11 @@ class ShowRipDatabase(ShowRipDatabaseSchema):
         p2 = re.compile(r'^\[(?P<metric>\d+)\]\s+directly +connected, +(?P<interface>[\w\d/\.]+)$')
 
         # [3] distance: 1    redistributed
-        p3 = re.compile(r'^\[(?P<metric>\d+)\]\s+distance: +\d+\s+redistributed$')
+        p3 = re.compile(r'^\[(?P<metric>\d+)\]\s+distance: +(?P<distance>\d+)\s+redistributed$')
 
         # [11] via 10.1.2.2, next hop 10.1.2.2, Uptime: 15s, GigabitEthernet0/0/0/0.100
         p4 = re.compile(r'^\[(?P<metric>\d+)\] +via +[\d\.]+, +next +hop +(?P<next_hop>[\d\.]+)'
-                        r', +Uptime: +(?P<expire_time>\w+), +(?P<interface>[\w\d/\.]+)$')
+                        r', +Uptime: +(?P<up_time>\w+), +(?P<interface>[\w\d/\.]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -146,10 +147,12 @@ class ShowRipDatabase(ShowRipDatabaseSchema):
 
                 groups = m.groupdict()
                 metric = groups['metric']
+                distance = groups['distance']
 
                 index_dict = route_dict.setdefault(index_counter, {})
                 index_dict.update({'metric': int(metric)})
                 index_dict.update({'redistributed': True})
+                index_dict.update({'distance': int(distance)})
 
             # [11] via 10.1.2.2, next hop 10.1.2.2, Uptime: 15s, GigabitEthernet0/0/0/0.100
             m = p4.match(line)
@@ -159,13 +162,13 @@ class ShowRipDatabase(ShowRipDatabaseSchema):
                 groups = m.groupdict()
                 metric = groups['metric']
                 next_hop = groups['next_hop']
-                expire_time = groups['expire_time']
+                up_time = groups['up_time']
                 interface = groups['interface']
 
                 index_dict = route_dict.setdefault(index_counter, {})
                 index_dict.update({'metric': int(metric)})
                 index_dict.update({'next_hop': next_hop})
-                index_dict.update({'expire_time': expire_time})
+                index_dict.update({'up_time': up_time})
                 index_dict.update({'interface': interface})
 
         return ret_dict
