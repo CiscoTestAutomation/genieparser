@@ -11532,3 +11532,114 @@ class ShowBgpIpMvpn(ShowBgpIpMvpnRouteType):
             cmd = ""
 
         return super().cli(cmd=cmd,output=output)
+
+# ============================================
+# Schema for 'show bgp vrf <vrf> ipv4 unicast'
+# ============================================
+class ShowBgpVrfIpv4UnicastSchema(MetaParser):
+    """Schema for show bgp vrf <vrf> ipv4 unicast"""
+
+    schema = {
+        'vrf': 
+            {Any(): 
+                {'address_family': 
+                    {Any(): 
+                        {'bgp_table_version': int,
+                         'local_router_id': str,
+                         Optional('prefixes'):
+                            {Any(): 
+                                {'index': 
+                                    {Any(): 
+                                        {
+                                            'next_hop': str,
+                                            'status_codes': str,
+                                            'path_type': str,
+                                            'metric': int,
+                                            'localprf': int,
+                                            'weight': int,
+                                            'path': str,
+                                            'origin_codes': str,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+# ============================================
+# Parser for 'show bgp vrf <vrf> ipv4 unicast'
+# ============================================
+class ShowBgpVrfIpv4Unicast(ShowBgpVrfAllAllSchema):
+    """Parser for show bgp vrf <vrf> ipv4 unicast"""
+
+    cli_command = 'show bgp vrf {vrf} ipv4 unicast'
+
+    def cli(self, vrf, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(vrf=vrf))
+        else:
+            out = output
+        
+        # Init vars
+        ret_dict = {}
+        index_dict = {}
+        # BGP routing table information for VRF vni_10100, address family IPv4 Unicast
+        p1 = re.compile(r'^BGP +routing +table +information +for +VRF +' +
+          vrf + ', +address +family +(?P<address_family>[\w ]+)$')
+        # BGP table version is 12, Local Router ID is 100.101.0.1
+        p2 = re.compile(r'^BGP +table +version +is +(?P<bgp_table_version>\d+)'
+          ', +(L|l)ocal +(R|r)outer +ID +is +(?P<local_router_id>[\d\.]+)$')
+        # *>i100.101.8.3/32     66.66.66.66           2000        100          0 200 i
+        # *>i100.101.8.4/32     66.66.66.66           2000        100          0 200 i
+        p3 = re.compile(r'^(?P<status_codes>(s|x|S|d|h|\*|\>)+)(?P<path_type>'
+          '(i|e|c|l|a|r|I))(?P<prefix>[\w\.\/]+) +(?P<next_hop>[\w\.\/]+) +'
+          '(?P<metric>\d+) +(?P<localprf>\d+) +(?P<weight>\d+) +(?P<path>[\d ]+) +'
+          '(?P<origin_codes>(i|e|\?|\||&))$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            # BGP routing table information for VRF vni_10100, address family IPv4 Unicast
+            m = p1.match(line)
+            if m:
+              group = m.groupdict()
+              vrf = ret_dict.setdefault('vrf', {}).setdefault(vrf, {}).\
+                setdefault('address_family' , {}).setdefault('ipv4 unicast',{})
+              continue
+            # BGP table version is 12, Local Router ID is 100.101.0.1
+            m = p2.match(line)
+            if m:
+              group = m.groupdict()
+              vrf.update({'bgp_table_version' : int(group['bgp_table_version'])})
+              vrf.update({'local_router_id' : group['local_router_id']})
+              continue
+            # *>i100.101.8.3/32     66.66.66.66           2000        100          0 200 i
+            # *>i100.101.8.4/32     66.66.66.66           2000        100          0 200 i
+            m = p3.match(line)
+            if m:
+              group = m.groupdict()
+              index = index_dict.get(group['prefix'], 0)  + 1
+              prefixes = vrf.setdefault('prefixes', {}).setdefault(group['prefix'], {}).\
+                setdefault('index', {}).setdefault(index, {})
+              prefixes.update({'status_codes' : group['status_codes']})
+              prefixes.update({'path_type' : group['path_type']})
+              prefixes.update({'next_hop' : group['next_hop']})
+              prefixes.update({'metric' : int(group['metric'])})
+              prefixes.update({'localprf' : int(group['localprf'])})
+              prefixes.update({'weight' : int(group['weight'])})
+              prefixes.update({'path' : group['path']})
+              prefixes.update({'origin_codes' : group['origin_codes']})
+              index_dict.update({group['prefix']: index})
+              continue
+
+        return ret_dict
+
+
+
+
+
+
+
+
