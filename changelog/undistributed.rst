@@ -10,7 +10,7 @@
 --------------------------------------------------------------------------------
 * IOSXE
   * ShowBgpNeighborSuperParser enhanced to support 'Multisession Capability'
-
+  * Updated ShowBgpAllNeighbors to support different session states
 
 ----------------------------------------------------------------------------------
                                   EIGRP
