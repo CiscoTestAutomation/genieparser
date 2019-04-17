@@ -195,12 +195,14 @@ class ShowRipInterface(ShowRipInterfaceSchema):
                 groups = m.groupdict()
                 passive = True if 'passive' in groups['passive'].lower() else False
                 interface_dict.update({'passive': passive})
+                continue
 
             # Out-of-memory state:        Normal
             m = p3.match(line)
             if m:
                 groups = m.groupdict()
                 interface_dict.update({'out_of_memory_state': groups['state']})
+                continue
 
             # Broadcast for V2:           No
             m = p4.match(line)
@@ -208,6 +210,7 @@ class ShowRipInterface(ShowRipInterfaceSchema):
                 groups = m.groupdict()
                 broadcast = True if 'yes' in groups['broadcast'].lower() else False
                 interface_dict.update({'broadcast_for_v2': broadcast})
+                continue
 
             # Accept Metric 0:           No
             m = p5.match(line)
@@ -215,36 +218,42 @@ class ShowRipInterface(ShowRipInterfaceSchema):
                 groups = m.groupdict()
                 accept_metric = True if 'yes' in groups['accept_metric'].lower() else False
                 interface_dict.update({'accept_metric_0': accept_metric})
+                continue
 
             # Send versions:              2
             m = p6.match(line)
             if m:
                 groups = m.groupdict()
                 interface_dict.update({'send_versions': int(groups['version'])})
+                continue
 
             # Receive versions:           2
             m = p7.match(line)
             if m:
                 groups = m.groupdict()
                 interface_dict.update({'receive_versions': int(groups['version'])})
+                continue
 
             # Interface state:            Up
             m = p8.match(line)
             if m:
                 groups = m.groupdict()
                 interface_dict.update({'oper_status': groups['state']})
+                continue
 
             # IP address:                 10.1.2.1/24
             m = p9.match(line)
             if m:
                 groups = m.groupdict()
                 interface_dict.update({'address': groups['ip_address']})
+                continue
 
             # Metric Cost:                0
             m = p10.match(line)
             if m:
                 groups = m.groupdict()
                 interface_dict.update({'cost': int(groups['cost'])})
+                continue
 
             # Split horizon:              Enabled
             m = p11.match(line)
@@ -252,6 +261,7 @@ class ShowRipInterface(ShowRipInterfaceSchema):
                 groups = m.groupdict()
                 split_horizon = True if 'enabled' in groups['split_horizon'].lower() else False
                 interface_dict.update({'split_horizon': split_horizon})
+                continue
 
             # Poison Reverse:             Disabled
             m = p12.match(line)
@@ -259,11 +269,13 @@ class ShowRipInterface(ShowRipInterfaceSchema):
                 groups = m.groupdict()
                 poison_reverse = True if 'enabled' in groups['poison_reverse'].lower() else False
                 interface_dict.update({'poison_reverse': poison_reverse})
+                continue
 
             # Socket set options:
             m = p13.match(line)
             if m:
                 socket_dict = interface_dict.setdefault('socket_set', {})
+                continue
 
             # Joined multicast group:    Yes
             m = p14.match(line)
@@ -271,6 +283,7 @@ class ShowRipInterface(ShowRipInterfaceSchema):
                 groups = m.groupdict()
                 joined = True if 'yes' in groups['joined'].lower() else False
                 socket_dict.update({'multicast_group': joined})
+                continue
 
             # LPTS filter set:           Yes
             m = p15.match(line)
@@ -278,6 +291,7 @@ class ShowRipInterface(ShowRipInterfaceSchema):
                 groups = m.groupdict()
                 filter_set = True if 'yes' in groups['filter_set'].lower() else False
                 socket_dict.update({'lpts_filter': filter_set})
+                continue
 
             # Authentication mode:        None
             m = p16.match(line)
@@ -288,6 +302,7 @@ class ShowRipInterface(ShowRipInterfaceSchema):
                 
                 auth_key_dict = auth_dict.setdefault('auth_key', {})
                 auth_key_dict.update({'crypto_algorithm': groups['mode']})
+                continue
 
             # Authentication keychain:    Not set
             m = p17.match(line)
@@ -298,6 +313,7 @@ class ShowRipInterface(ShowRipInterfaceSchema):
 
                 auth_key_chain_dict = auth_dict.setdefault('auth_key_chain', {})
                 auth_key_chain_dict.update({'key_chain': groups['keychain']})
+                continue
 
             # Total packets received: 4877
             m = p18.match(line)
@@ -305,11 +321,13 @@ class ShowRipInterface(ShowRipInterfaceSchema):
                 groups = m.groupdict()
                 statistics_dict = interface_dict.setdefault('statistics', {})
                 statistics_dict.update({'total_packets_received': int(groups['packets_received'])})
+                continue
 
             # RIP peers attached to this interface:
             m = p19.match(line)
             if m:
                 neighbors_dict = interface_dict.setdefault('neighbors', {})
+                continue
 
             # 10.1.2.2
             m = p20.match(line)
@@ -318,6 +336,7 @@ class ShowRipInterface(ShowRipInterfaceSchema):
 
                 neighbor_dict = neighbors_dict.setdefault(groups['peer_address'], {})
                 neighbor_dict.update({'address': groups['peer_address']})
+                continue
 
             # uptime (sec): 2    version: 2
             m = p21.match(line)
@@ -325,6 +344,7 @@ class ShowRipInterface(ShowRipInterfaceSchema):
                 groups = m.groupdict()
                 neighbor_dict.update({'uptime': int(groups['uptime'])})
                 neighbor_dict.update({'version': int(groups['version'])})
+                continue
 
             # packets discarded: 0    routes discarded: 4733
             m = p22.match(line)
