@@ -29,7 +29,6 @@ from genie.libs.parser.ios.show_platform import ShowVersion,\
     ShowPlatformHardwareQfpInterfaceIfnameStatistics,\
     ShowPlatformHardwareQfpStatisticsDrop,\
     ShowEnvironment,\
-    ShowEnvironmentAll,\
     ShowModule,\
     ShowSwitch, ShowSwitchDetail
 
