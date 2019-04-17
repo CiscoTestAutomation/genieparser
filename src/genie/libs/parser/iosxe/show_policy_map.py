@@ -1261,6 +1261,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         # Init vars
         ret_dict = {}
         police_line = 0
+        weight_line = None
 
         # Policy Map police-in
         p1 = re.compile(r'^Policy +Map +(?P<policy_map>([\w\-]+))$')
@@ -1516,9 +1517,9 @@ class ShowPolicyMap(ShowPolicyMapSchema):
             # rsvp     -                -                1/10
             m = p8_3.match(line)
             if m:
+                group = m.groupdict()
+                class_val = group['class_val']
                 if weight_line == 1:
-                    group = m.groupdict()
-                    class_val = group['class_val']
                     class_dict = weight_dict.setdefault('class_val', {}).setdefault(class_val, {})
                     class_dict['min_threshold'] = group['min_threshold']
                     class_dict['max_threshold'] = group['max_threshold']
