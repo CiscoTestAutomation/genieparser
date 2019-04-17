@@ -2,16 +2,16 @@
 IOSXR parser for the following commands
 
     * 'show eigrp ipv4 neighbors'
-    * 'show eigrp ipv4 vrf all neighbors'
+    * 'show eigrp ipv4 vrf {vrf} neighbors'
 
     * 'show eigrp ipv6 neighbors'
-    * 'show eigrp ipv6 vrf all neighbors'
+    * 'show eigrp ipv6 vrf {vrf} neighbors'
 
     * 'show eigrp ipv4 neighbors detail'
-    * 'show eigrp ipv4 vrf all neighbors detail'
+    * 'show eigrp ipv4 vrf {vrf} neighbors detail'
 
     * 'show eigrp ipv6 neighbors detail'
-    * 'show eigrp ipv6 vrf all neighbors detail'
+    * 'show eigrp ipv6 vrf {vrf} neighbors detail'
 '''
 
 # Python
@@ -28,10 +28,10 @@ from genie.libs.parser.utils.common import Common
 class ShowEigrpNeighborsSchema(MetaParser):
     ''' Schema for:
         * 'show eigrp ipv4 neighbors'
-        * 'show eigrp ipv4 vrf all neighbors'
+        * 'show eigrp ipv4 vrf {vrf} neighbors'
 
         * 'show eigrp ipv6 neighbors'
-        * 'show eigrp ipv6 vrf all neighbors'
+        * 'show eigrp ipv6 vrf {vrf} neighbors'
     '''
 
     schema = {
@@ -68,9 +68,9 @@ class ShowEigrpNeighborsSchema(MetaParser):
 # =======================================
 # Parser for:
 #   'show eigrp ipv4 neighbors'
-#   'show eigrp ipv4 vrf all neighbors'
+#   'show eigrp ipv4 vrf {vrf} neighbors'
 #   'show eigrp ipv6 neighbors'
-#   'show eigrp ipv6 vrf all neighbors'
+#   'show eigrp ipv6 vrf {vrf} neighbors'
 # =======================================
 class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
 
@@ -282,9 +282,9 @@ class ShowEigrpIpv6Neighbors(ShowEigrpNeighborsSuperParser,
 class ShowEigrpNeighborsDetailSchema(MetaParser):
     ''' Schema for
         * 'show eigrp ipv4 neighbors detail'
-        * 'show eigrp ipv4 vrf all neighbors detail'
+        * 'show eigrp ipv4 vrf {vrf} neighbors detail'
         * 'show eigrp ipv6 neighbors detail'
-        * 'show eigrp ipv6 vrf all neighbors detail'
+        * 'show eigrp ipv6 vrf {vrf} neighbors detail'
     '''
 
     schema = {
@@ -330,9 +330,9 @@ class ShowEigrpNeighborsDetailSchema(MetaParser):
 # ================================================
 # Parser fpr
 #   'show eigrp ipv4 neighbors detail'
-#   'show eigrp ipv4 vrf all neighbors detail'
+#   'show eigrp ipv4 vrf {vrf} neighbors detail'
 #   'show eigrp ipv6 neighbors detail'
-#   'show eigrp ipv6 vrf all neighbors detail'
+#   'show eigrp ipv6 vrf {vrf} neighbors detail'
 # ================================================
 class ShowEigrpNeighborsDetailSuperParser(ShowEigrpNeighborsDetailSchema):
 
