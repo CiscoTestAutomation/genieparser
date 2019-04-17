@@ -203,17 +203,19 @@ class ShowL2routeEvpnMacIpAll(ShowL2routeEvpnMacIpAllSchema):
             out = output
 
         ret_dict = {}
-
+        # 101         fa16.3ed1.37b5 HMM    --            0          100.101.1.3    Local
+        # 101         fa16.3e04.e54a BGP    --            0          100.101.8.3    66.66.66.66 
+        # 101         0011.0000.0034 BGP  5.1.3.2                      40.0.0.2
+        p1 = re.compile(r'^\s*(?P<topology>[0-9]+) +(?P<mac_address>'
+            '[a-z0-9\.]+) +(?P<prod>[a-zA-Z]+)( +(?P<flags>[a-zA-Z\,\-]+))'
+            '?( +(?P<seq_no>[0-9]+))? +(?P<host_ip>[\d\.]+) +'
+            '(?P<next_hops>[a-zA-Z0-9\/\.]+)')
+        
         for line in out.splitlines():
             line = line.strip()
-
             # 101         fa16.3ed1.37b5 HMM    --            0          100.101.1.3    Local
             # 101         fa16.3e04.e54a BGP    --            0          100.101.8.3    66.66.66.66 
             # 101         0011.0000.0034 BGP  5.1.3.2                      40.0.0.2
-            p1 = re.compile(r'^\s*(?P<topology>[0-9]+) +(?P<mac_address>'
-                '[a-z0-9\.]+) +(?P<prod>[a-zA-Z]+)( +(?P<flags>[a-zA-Z\,\-]+))'
-                '?( +(?P<seq_no>[0-9]+))? +(?P<host_ip>[\d\.]+) +'
-                '(?P<next_hops>[a-zA-Z0-9\/\.]+)')
             m = p1.match(line)
             if m:
                 group = m.groupdict()
