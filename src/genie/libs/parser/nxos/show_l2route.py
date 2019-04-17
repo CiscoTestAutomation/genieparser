@@ -166,3 +166,75 @@ class ShowL2routeEvpnMacEvi(ShowL2routeEvpnMacEviSchema):
         return ret_dict
 
 # vim: ft=python ts=8 sw=4 et
+
+# ====================================================
+#  schema for 'show l2route evpn mac-ip all'
+# ====================================================
+class ShowL2routeEvpnMacIpAllSchema(MetaParser):
+    """Schema for show l2route evpn mac-ip all"""
+
+    schema = {
+        'topology':
+            {Any():
+                {'mac_address':
+                    {Any():
+                        {'prod': str,
+                         'flags': str,
+                         'seq_no': str,
+                         'host_ip': str,
+                         'next_hops': str}
+                    },
+                }
+            },
+        }
+
+# ====================================================
+#  parser for 'show l2route evpn mac-ip all'
+# ====================================================
+class ShowL2routeEvpnMacIpAll(ShowL2routeEvpnMacIpAllSchema):
+    """Parser for show l2route evpn mac-ip all"""
+
+    cli_command = 'show l2route evpn mac-ip all'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # 101         fa16.3ed1.37b5 HMM    --            0          100.101.1.3    Local
+            # 101         fa16.3e04.e54a BGP    --            0          100.101.8.3    66.66.66.66 
+            p1 = re.compile(r'^\s*(?P<topology>[0-9]+) +(?P<mac_address>[a-z0-9\.]+) +(?P<prod>[a-zA-Z]+) +(?P<flags>[a-zA-Z\,\-]+) +(?P<seq_no>[0-9]+) +(?P<host_ip>[\d\.]+) +(?P<next_hops>[a-zA-Z0-9\/\.]+)')
+            m = p1.match(line)
+            if m:
+
+                topology = str(m.groupdict()['topology'])
+                mac_address = str(m.groupdict()['mac_address'])
+
+                if 'topology' not in ret_dict:
+                    ret_dict['topology'] = {}
+                if topology not in ret_dict['topology']:
+                    ret_dict['topology'][topology] = {}
+                if 'mac_address' not in ret_dict['topology'][topology]:
+                    ret_dict['topology'][topology]['mac_address'] = {}
+                if mac_address not in ret_dict['topology'][topology]['mac_address']:
+                    ret_dict['topology'][topology]['mac_address'][mac_address] = {}
+
+                ret_dict['topology'][topology]['mac_address'][mac_address]['prod'] = \
+                    str(m.groupdict()['prod'])
+                ret_dict['topology'][topology]['mac_address'][mac_address]['flags'] = \
+                    str(m.groupdict()['flags'])
+                ret_dict['topology'][topology]['mac_address'][mac_address]['seq_no'] = \
+                    str(m.groupdict()['seq_no'])
+                ret_dict['topology'][topology]['mac_address'][mac_address]['host_ip'] = \
+                    str(m.groupdict()['host_ip'])
+                ret_dict['topology'][topology]['mac_address'][mac_address]['next_hops'] = \
+                    str(m.groupdict()['next_hops'])
+
+                continue
+        return ret_dict
