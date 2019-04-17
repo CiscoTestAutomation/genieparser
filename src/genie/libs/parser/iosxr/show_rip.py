@@ -48,7 +48,11 @@ class ShowRipInterfaceSchema(MetaParser):
                                         'cost': int,
                                         Optional('neighbors'): {
                                             Any(): {
-                                                'address': str
+                                                'address': str,
+                                                'uptime': int,
+                                                'version': int,
+                                                'packets_discarded': int,
+                                                'routes_discarded': int
                                             }
                                         },
                                         'out_of_memory_state': str,
@@ -56,7 +60,7 @@ class ShowRipInterfaceSchema(MetaParser):
                                         'accept_metric_0': bool,
                                         'receive_versions': int,
                                         'send_versions': int,
-                                        'interface_state': str,
+                                        'oper_status': str,
                                         'address': str,
                                         'passive': bool,
                                         'split_horizon': bool,
@@ -66,12 +70,8 @@ class ShowRipInterfaceSchema(MetaParser):
                                             'lpts_filter': bool
                                         },
                                         'statistics': {
-                                            Optional('discontinuity_time'): int,
-                                            Optional('bad_packets_rcvd'): int,
-                                            Optional('bad_routes_rcvd'): int,
-                                            'updates_sent': int
+                                            'total_packets_received': int
                                         }
-
                                     }
                                 }
                             }
@@ -95,155 +95,242 @@ class ShowRipInterface(ShowRipInterfaceSchema):
 
     cli_commands = ['show rip interface', 'show rip vrf {vrf} interface']
 
-    def cli(self, vrf=None, output=None):
+    def cli(self, vrf='', output=None):
         if output is None:
             if not vrf:
+                vrf = 'default'
                 out = self.device.execute(self.cli_commands[0])
             else:
                 out = self.device.execute(self.cli_commands[1].format(vrf=vrf))
         else:
             out = output
 
-        # ==============
-        # Compiled Regex
-        # ==============
-        # GigabitEthernet0/0/0/0.100
-        p1 = re.compile(r'^(?P<interface>\w+[\d/]+\.\d+)$')
-        # Rip enabled?:               Passive
-        # Out-of-memory state:        Normal
-        # Broadcast for V2:           No
-        # Accept Metric 0:           No
-        # Send versions:              2
-        # Receive versions:           2
-        # Interface state:            Up
-        # IP address:                 10.1.2.1/24
-        # Metric Cost:                0
-        # Split horizon:              Enabled
-        # Poison Reverse:             Disabled
-        p2 = re.compile(r'^(?P<parameter>[\w\s\-\?]+):\s+(?P<value>[\w\./\s]+)$')
-        # 10.1.2.2
-        p3 = re.compile(r'^(?P<peer_address>[\d\.]+)$')
-        # uptime (sec): 2    version: 2
-        # packets discarded: 0    routes discarded: 4733
-        p4 = re.compile(r'^(?P<parameter1>[\w\s\(\)]+): +(?P<value1>\d+)\s+'
-                        r'(?P<parameter2>[\w\s]+): +(?P<value2>\d+)$')
-
         ret_dict = {}
 
-        if out:
-            interfaces_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {}).setdefault('address_family', {}). \
-                                       setdefault(None, {}).setdefault('instance', {}).setdefault('rip', {}). \
-                                       setdefault('interfaces', {})
+        # GigabitEthernet0/0/0/0.100
+        p1 = re.compile(r'^(?P<interface>\w+[\d/]+\.\d+)$')
+
+        # Rip enabled?:               Passive
+        p2 = re.compile(r'^Rip +enabled\?:\s+(?P<passive>\w+)$')
+
+        # Out-of-memory state:        Normal
+        p3 = re.compile(r'^Out-of-memory +state:\s+(?P<state>\w+)$')
+
+        # Broadcast for V2:           No
+        p4 = re.compile(r'^Broadcast +for +V2:\s+(?P<broadcast>\w+)$')
+
+        # Accept Metric 0:           No
+        p5 = re.compile(r'^Accept +Metric +0:\s+(?P<accept_metric>\w+)$')
+
+        # Send versions:              2
+        p6 = re.compile(r'^Send +versions:\s+(?P<version>\d+)$')
+
+        # Receive versions:           2
+        p7 = re.compile(r'^Receive +versions:\s+(?P<version>\d+)$')
+
+        # Interface state:            Up
+        p8 = re.compile(r'^Interface +state:\s+(?P<state>\w+)$')
+
+        # IP address:                 10.1.2.1/24
+        p9 = re.compile(r'^IP +address:\s+(?P<ip_address>[\d\/\.]+)$')
+
+        # Metric Cost:                0
+        p10 = re.compile(r'^Metric +Cost:\s+(?P<cost>\d+)$')
+
+        # Split horizon:              Enabled
+        p11 = re.compile(r'^Split +horizon:\s+(?P<split_horizon>\w+)$')
+
+        # Poison Reverse:             Disabled
+        p12 = re.compile(r'^Poison +Reverse:\s+(?P<poison_reverse>\w+)$')
+
+        # Socket set options:
+        p13 = re.compile(r'^Socket +set +options:$')
+
+        # Joined multicast group:    Yes
+        p14 = re.compile(r'^Joined +multicast +group:\s+(?P<joined>\w+)$')
+
+        # LPTS filter set:           Yes
+        p15 = re.compile(r'^LPTS +filter +set:\s+(?P<filter_set>\w+)$')
+
+        # Authentication mode:        None
+        p16 = re.compile(r'^Authentication +mode:\s+(?P<mode>\w+)$')
+
+        # Authentication keychain:    Not set
+        p17 = re.compile(r'^Authentication +keychain:\s+(?P<keychain>[\w\s]+)$')
+
+        # Total packets received: 4877
+        p18 = re.compile(r'^Total +packets +received:\s+(?P<packets_received>\d+)$')
+
+        # RIP peers attached to this interface:
+        p19 = re.compile(r'^RIP +peers +attached +to +this +interface:$')
+
+        # 10.1.2.2
+        p20 = re.compile(r'^(?P<peer_address>[\d\.]+)$')
+
+        # uptime (sec): 2    version: 2
+        p21 = re.compile(r'^uptime \(sec\): +(?P<uptime>\d+)\s+version: +(?P<version>\d+)$')
+
+        # packets discarded: 0    routes discarded: 4733
+        p22 = re.compile(r'packets +discarded: +(?P<packets_discarded>\d+)\s+routes +'
+                        r'discarded: +(?P<routes_discarded>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
 
+            # GigabitEthernet0/0/0/0.100
             m = p1.match(line)
             if m:
-                # Reset dictionaries for parsing of new interface
-                auth_dict = None 
-                neighbors_dict = None
-                socket_set_dict = None
-                statistics_dict = None
+                if not ret_dict:
+                    interfaces_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {}).setdefault('address_family', {}). \
+                                       setdefault('ipv4', {}).setdefault('instance', {}).setdefault('rip', {}). \
+                                       setdefault('interfaces', {})
                 
                 groups = m.groupdict()
                 interface_dict = interfaces_dict.setdefault(groups['interface'], {})
                 continue
 
-            if 'Socket set options' in line:
-                if not socket_set_dict:
-                    socket_set_dict = interface_dict.setdefault('socket_set', {})
-                continue
-
+            # Rip enabled?:               Passive
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
-                parameter = groups['parameter']
-                value = groups['value']
+                passive = True if 'passive' in groups['passive'].lower() else False
+                interface_dict.update({'passive': passive})
 
-                # !START COMMENT BLOCK
-                # These if blocks are used for ops model specific parameters
-                if 'Rip enabled?' in parameter:
-                    value = True if value in ['Yes', 'Passive'] else False
-                    interface_dict.update({'passive': value})
-                    continue
-                
-                if 'Authentication' in parameter:
-                    if not auth_dict:
-                        auth_dict = interface_dict.setdefault('authentication', {})
-                    
-                    if 'Authentication mode' in parameter:
-                        auth_key_dict = auth_dict.setdefault('auth_key', {})
-                        auth_key_dict.update({'crypto_algorithm': value})
-                    
-                    if 'Authentication keychain' in parameter:
-                        auth_key_chain_dict = auth_dict.setdefault('auth_key_chain', {})
-                        auth_key_chain_dict.update({'key_chain': value})
-
-                    continue
-
-                if 'Metric Cost' in parameter:
-                    interface_dict.update({'cost': int(value)})
-                    continue
-
-                if 'IP address' in parameter:
-                    interface_dict.update({'address': value})
-                    continue
-                
-                if 'Joined multicast group' in parameter:
-                    socket_set_dict.update({'multicast_group': True if 'Yes' in value else False})
-                    continue
-                
-                if 'LPTS filter set' in parameter:
-                    socket_set_dict.update({'lpts_filter': True if 'Yes' in value else False})
-                    continue
-                
-                if 'packets received' in parameter:
-                    if not statistics_dict:
-                        statistics_dict = interface_dict.setdefault('statistics', {})
-
-                    statistics_dict.update({'updates_sent': int(value)})
-                    continue
-                # !END COMMENT BLOCK
-
-                parameter = re.sub(r'[ -]', '_', parameter).lower()
-                if parameter in ['broadcast_for_v2', 'accept_metric_0', 
-                                    'split_horizon', 'poison_reverse']:
-                    value = True if value in ['Yes', 'Enabled'] else False
-                    interface_dict.update({parameter: value})
-                    continue
-                
-                if parameter in ['receive_versions', 'send_versions']:
-                    interface_dict.update({parameter: int(value)})
-                    continue
-
-                interface_dict.update({parameter: value})
-                continue
-
+            # Out-of-memory state:        Normal
             m = p3.match(line)
             if m:
                 groups = m.groupdict()
+                interface_dict.update({'out_of_memory_state': groups['state']})
 
-                if not neighbors_dict:
-                    neighbors_dict = interface_dict.setdefault('neighbors', {})
-
-                neighbor_dict = neighbors_dict.setdefault(groups['peer_address'], {})
-                neighbor_dict.update({'address': groups['peer_address']})
-                continue
-
+            # Broadcast for V2:           No
             m = p4.match(line)
             if m:
                 groups = m.groupdict()
+                broadcast = True if 'yes' in groups['broadcast'].lower() else False
+                interface_dict.update({'broadcast_for_v2': broadcast})
+
+            # Accept Metric 0:           No
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                accept_metric = True if 'yes' in groups['accept_metric'].lower() else False
+                interface_dict.update({'accept_metric_0': accept_metric})
+
+            # Send versions:              2
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                interface_dict.update({'send_versions': int(groups['version'])})
+
+            # Receive versions:           2
+            m = p7.match(line)
+            if m:
+                groups = m.groupdict()
+                interface_dict.update({'receive_versions': int(groups['version'])})
+
+            # Interface state:            Up
+            m = p8.match(line)
+            if m:
+                groups = m.groupdict()
+                interface_dict.update({'oper_status': groups['state']})
+
+            # IP address:                 10.1.2.1/24
+            m = p9.match(line)
+            if m:
+                groups = m.groupdict()
+                interface_dict.update({'address': groups['ip_address']})
+
+            # Metric Cost:                0
+            m = p10.match(line)
+            if m:
+                groups = m.groupdict()
+                interface_dict.update({'cost': int(groups['cost'])})
+
+            # Split horizon:              Enabled
+            m = p11.match(line)
+            if m:
+                groups = m.groupdict()
+                split_horizon = True if 'enabled' in groups['split_horizon'].lower() else False
+                interface_dict.update({'split_horizon': split_horizon})
+
+            # Poison Reverse:             Disabled
+            m = p12.match(line)
+            if m:
+                groups = m.groupdict()
+                poison_reverse = True if 'enabled' in groups['poison_reverse'].lower() else False
+                interface_dict.update({'poison_reverse': poison_reverse})
+
+            # Socket set options:
+            m = p13.match(line)
+            if m:
+                socket_dict = interface_dict.setdefault('socket_set', {})
+
+            # Joined multicast group:    Yes
+            m = p14.match(line)
+            if m:
+                groups = m.groupdict()
+                joined = True if 'yes' in groups['joined'].lower() else False
+                socket_dict.update({'multicast_group': joined})
+
+            # LPTS filter set:           Yes
+            m = p15.match(line)
+            if m:
+                groups = m.groupdict()
+                filter_set = True if 'yes' in groups['filter_set'].lower() else False
+                socket_dict.update({'lpts_filter': filter_set})
+
+            # Authentication mode:        None
+            m = p16.match(line)
+            if m:
+                groups = m.groupdict()
+                if 'authentication' not in interface_dict:
+                    auth_dict = interface_dict.setdefault('authentication', {})
                 
-                if 'uptime' in groups['parameter1']:
-                    parameter1 = 'discontinuity_time'
-                elif 'packets' in groups['parameter1']:
-                    parameter1 = 'bad_packets_rcvd'
+                auth_key_dict = auth_dict.setdefault('auth_key', {})
+                auth_key_dict.update({'crypto_algorithm': groups['mode']})
 
-                statistics_dict.update({parameter1: int(groups['value1'])})
+            # Authentication keychain:    Not set
+            m = p17.match(line)
+            if m:
+                groups = m.groupdict()
+                if 'authentication' not in interface_dict:
+                    auth_dict = interface_dict.setdefault('authentication', {})
 
-                if 'routes' in groups['parameter2']:
-                    parameter2 = 'bad_routes_rcvd'
-                    statistics_dict.update({parameter2: int(groups['value2'])})
-                    
+                auth_key_chain_dict = auth_dict.setdefault('auth_key_chain', {})
+                auth_key_chain_dict.update({'key_chain': groups['keychain']})
+
+            # Total packets received: 4877
+            m = p18.match(line)
+            if m:
+                groups = m.groupdict()
+                statistics_dict = interface_dict.setdefault('statistics', {})
+                statistics_dict.update({'total_packets_received': int(groups['packets_received'])})
+
+            # RIP peers attached to this interface:
+            m = p19.match(line)
+            if m:
+                neighbors_dict = interface_dict.setdefault('neighbors', {})
+
+            # 10.1.2.2
+            m = p20.match(line)
+            if m:
+                groups = m.groupdict()
+
+                neighbor_dict = neighbors_dict.setdefault(groups['peer_address'], {})
+                neighbor_dict.update({'address': groups['peer_address']})
+
+            # uptime (sec): 2    version: 2
+            m = p21.match(line)
+            if m:
+                groups = m.groupdict()
+                neighbor_dict.update({'uptime': int(groups['uptime'])})
+                neighbor_dict.update({'version': int(groups['version'])})
+
+            # packets discarded: 0    routes discarded: 4733
+            m = p22.match(line)
+            if m:
+                groups = m.groupdict()
+                neighbor_dict.update({'packets_discarded': int(groups['packets_discarded'])})
+                neighbor_dict.update({'routes_discarded': int(groups['routes_discarded'])})
+
         return ret_dict

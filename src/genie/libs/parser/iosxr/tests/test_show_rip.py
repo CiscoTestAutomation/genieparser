@@ -23,9 +23,9 @@ class test_show_rip_interface(unittest.TestCase):
 
     golden_parsed_output = {
         'vrf': {
-            None: {
+            'default': {
                 'address_family': {
-                    None: {
+                    'ipv4': {
                         'instance': {
                             'rip': {
                                 'interfaces': {
@@ -41,7 +41,11 @@ class test_show_rip_interface(unittest.TestCase):
                                         'cost': 0,
                                         'neighbors': {
                                             '10.1.2.2': {
-                                                'address': '10.1.2.2'
+                                                'address': '10.1.2.2',
+                                                'uptime': 2,
+                                                'version': 2,
+                                                'packets_discarded': 0,
+                                                'routes_discarded': 4733
                                             }
                                         },
                                         'out_of_memory_state': 'Normal',
@@ -49,7 +53,7 @@ class test_show_rip_interface(unittest.TestCase):
                                         'accept_metric_0': False,
                                         'send_versions': 2,
                                         'receive_versions': 2,
-                                        'interface_state': 'Up',
+                                        'oper_status': 'Up',
                                         'address': '10.1.2.1/24',
                                         'passive': True,
                                         'split_horizon': True,
@@ -59,10 +63,7 @@ class test_show_rip_interface(unittest.TestCase):
                                             'lpts_filter': True
                                         },
                                         'statistics': {
-                                            'discontinuity_time': 2,
-                                            'bad_packets_rcvd': 0,
-                                            'bad_routes_rcvd': 4733,
-                                            'updates_sent': 4877
+                                            'total_packets_received': 4877
                                         }
                                     },
                                     'GigabitEthernet0/0/0/1.100': {
@@ -80,9 +81,9 @@ class test_show_rip_interface(unittest.TestCase):
                                         'accept_metric_0': False,
                                         'send_versions': 2,
                                         'receive_versions': 2,
-                                        'interface_state': 'Up',
+                                        'oper_status': 'Up',
                                         'address': '10.1.3.1/24',
-                                        'passive': True,
+                                        'passive': False,
                                         'split_horizon': True,
                                         'poison_reverse': False,
                                         'socket_set': {
@@ -90,7 +91,7 @@ class test_show_rip_interface(unittest.TestCase):
                                             'lpts_filter': True
                                         },
                                         'statistics': {
-                                            'updates_sent': 0
+                                            'total_packets_received': 0
                                         }
                                     }
                                 }
@@ -103,6 +104,7 @@ class test_show_rip_interface(unittest.TestCase):
     }
 
     golden_output = {'execute.return_value': '''\  
+        RP/0/RP0/CPU0:R1#show rip interface  
         Wed Jan 30 18:49:59.943 UTC                                                     
                                                                                 
         GigabitEthernet0/0/0/0.100                                                      
@@ -156,7 +158,7 @@ class test_show_rip_interface(unittest.TestCase):
         'vrf': {
             'VRF1': {
                 'address_family': {
-                    None: {
+                    'ipv4': {
                         'instance': {
                             'rip': {
                                 'interfaces': {
@@ -172,7 +174,11 @@ class test_show_rip_interface(unittest.TestCase):
                                         'cost': 0,
                                         'neighbors': {
                                             '10.1.2.2': {
-                                                'address': '10.1.2.2'
+                                                'address': '10.1.2.2',
+                                                'uptime': 15,
+                                                'version': 2,
+                                                'packets_discarded': 0,
+                                                'routes_discarded': 0
                                             }
                                         },
                                         'out_of_memory_state': 'Normal',
@@ -180,9 +186,9 @@ class test_show_rip_interface(unittest.TestCase):
                                         'accept_metric_0': False,
                                         'send_versions': 2,
                                         'receive_versions': 2,
-                                        'interface_state': 'Up',
+                                        'oper_status': 'Up',
                                         'address': '10.1.2.1/24',
-                                        'passive': True,
+                                        'passive': False,
                                         'split_horizon': True,
                                         'poison_reverse': False,
                                         'socket_set': {
@@ -190,10 +196,7 @@ class test_show_rip_interface(unittest.TestCase):
                                             'lpts_filter': True
                                         },
                                         'statistics': {
-                                            'discontinuity_time': 15,
-                                            'bad_packets_rcvd': 0,
-                                            'bad_routes_rcvd': 0,
-                                            'updates_sent': 493
+                                            'total_packets_received': 493
                                         }
                                     },
                                     'GigabitEthernet0/0/0/1.200': {
@@ -211,9 +214,9 @@ class test_show_rip_interface(unittest.TestCase):
                                         'accept_metric_0': False,
                                         'send_versions': 2,
                                         'receive_versions': 2,
-                                        'interface_state': 'Up',
+                                        'oper_status': 'Up',
                                         'address': '10.1.3.1/24',
-                                        'passive': True,
+                                        'passive': False,
                                         'split_horizon': True,
                                         'poison_reverse': False,
                                         'socket_set': {
@@ -221,7 +224,7 @@ class test_show_rip_interface(unittest.TestCase):
                                             'lpts_filter': True
                                         },
                                         'statistics': {
-                                            'updates_sent': 0
+                                            'total_packets_received': 0
                                         }
                                     }
                                 }
@@ -234,6 +237,7 @@ class test_show_rip_interface(unittest.TestCase):
     }
 
     golden_output_2 = {'execute.return_value': '''\  
+        RP/0/RP0/CPU0:R1#show rip vrf VRF1 interface 
         Wed Jan 30 18:50:24.640 UTC                                                     
                                                                                 
         GigabitEthernet0/0/0/0.200                                                      
