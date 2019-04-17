@@ -212,6 +212,8 @@ class ShowL2routeEvpnMacIpEvi(ShowL2routeEvpnMacIpEviSchema):
 
         for line in out.splitlines():
             line = line.strip()
+            # 101         fa16.3e04.e54a BGP    --            0          100.101.8.3    66.66.66.66
+            # 101         fa16.3ec5.fcab HMM    --            0          100.101.1.4    Local
             m = p1.match(line)
             if m:
                 group = m.groupdict()

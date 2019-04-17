@@ -238,7 +238,7 @@ class test_show_l2route_evpn_mac_ip_evi(unittest.TestCase):
             },
         }
 
-    def test_show_l2route_evpn_mac(self):
+    def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowL2routeEvpnMacIpEvi(device=self.device)
