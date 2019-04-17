@@ -216,31 +216,17 @@ class ShowL2routeEvpnMacIpAll(ShowL2routeEvpnMacIpAllSchema):
                 '(?P<next_hops>[a-zA-Z0-9\/\.]+)')
             m = p1.match(line)
             if m:
-
-                topology = str(m.groupdict()['topology'])
-                mac_address = str(m.groupdict()['mac_address'])
-
-                if 'topology' not in ret_dict:
-                    ret_dict['topology'] = {}
-                if topology not in ret_dict['topology']:
-                    ret_dict['topology'][topology] = {}
-                if 'mac_address' not in ret_dict['topology'][topology]:
-                    ret_dict['topology'][topology]['mac_address'] = {}
-                if mac_address not in ret_dict['topology'][topology]['mac_address']:
-                    ret_dict['topology'][topology]['mac_address'][mac_address] = {}
-
-                ret_dict['topology'][topology]['mac_address'][mac_address]['prod'] = \
-                    str(m.groupdict()['prod'])
-                if m.groupdict()['flags']:
-                    ret_dict['topology'][topology]['mac_address'][mac_address]['flags'] = \
-                        str(m.groupdict()['flags'])
-                if m.groupdict()['seq_no']:
-                    ret_dict['topology'][topology]['mac_address'][mac_address]['seq_no'] = \
-                        str(m.groupdict()['seq_no'])
-                ret_dict['topology'][topology]['mac_address'][mac_address]['host_ip'] = \
-                    str(m.groupdict()['host_ip'])
-                ret_dict['topology'][topology]['mac_address'][mac_address]['next_hops'] = \
-                    str(m.groupdict()['next_hops'])
-
+                group = m.groupdict()
+                topology = ret_dict.setdefault('topology', {}).\
+                    setdefault(group['topology'], {}). \
+                    setdefault('mac_address', {}).\
+                    setdefault(group['mac_address'], {})
+                topology.update({'prod' : group['prod']})
+                if group['flags']:
+                    topology.update({'flags' : group['flags']})
+                if group['seq_no']:
+                    topology.update({'seq_no' : group['seq_no']})
+                topology.update({'host_ip' : group['host_ip']})
+                topology.update({'next_hops' : group['next_hops']})
                 continue
         return ret_dict
