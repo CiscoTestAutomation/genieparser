@@ -488,22 +488,23 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # Members in this channel: Gi1/0/2
+            # Members in this channel: Fo1/0/2 Fo1/0/4
             p15 = re.compile(r'^Members +in +this +channel: +'
                               '(?P<port_channel_member_intfs>[\w\/\.\s\,]+)$')
             m = p15.match(line)
             if m:
                 interface_dict[interface]['port_channel']\
                     ['port_channel_member'] = True
-                intfs = m.groupdict()['port_channel_member_intfs'].split(',')
+                intfs = m.groupdict()['port_channel_member_intfs'].split(' ')
                 intfs = [Common.convert_intf_name(i.strip()) for i in intfs]
                 interface_dict[interface]['port_channel']\
                     ['port_channel_member_intfs'] = intfs
 
-                # build connected interface port_channle
+                # build connected interface port_channel
                 for intf in intfs:
                     if intf not in interface_dict:
                         interface_dict[intf] = {}
-                    if 'port_channle' not in interface_dict[intf]:
+                    if 'port_channel' not in interface_dict[intf]:
                         interface_dict[intf]['port_channel'] = {}
                     interface_dict[intf]['port_channel']['port_channel_member'] = True
                     interface_dict[intf]['port_channel']['port_channel_int'] = interface
