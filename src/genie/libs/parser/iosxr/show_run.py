@@ -18,7 +18,7 @@ class ShowRunKeyChainSchema(MetaParser):
     """Schema for show run key chain"""
     
     schema = {
-        'key_chain': {
+        'key_chains': {
             Optional(Any()): {
                 Optional('keys'): {
                     Optional(Any()): {
@@ -53,13 +53,10 @@ class ShowRunKeyChain(ShowRunKeyChainSchema):
             p1 = re.compile(r'^key\schain\s+(?P<key_chain_name>.*)$')
             m = p1.match(line)
             if m:
-                key_chain_dict['key_chain'] = {}
-                import pdb;pdb.set_trace()
+                key_chain_dict['key_chains'] = {}
                 key_chain_name = m.groupdict()['key_chain_name']
-                #key_dict = key_chain_dict.setdefault('key_chains', {}).setdefault(key_chain_name, {})
-
-                key_chain_dict['key_chain'][key_chain_name] = {}
-                key_chain_dict['key_chain'][key_chain_name]['keys'] = {}
+                key_chain_dict['key_chains'][key_chain_name] = {}
+                key_chain_dict['key_chains'][key_chain_name]['keys'] = {}
                 continue
             
             # key 1
@@ -67,148 +64,46 @@ class ShowRunKeyChain(ShowRunKeyChainSchema):
             m = p2.match(line)
             if m:
                 key_name = m.groupdict()['key_name']
-
-                #key_dict_2 = key_dict.setdefault('keys', {}).setdefault(key_name, {})
-                key_chain_dict['key_chain'][key_chain_name]['keys'][key_name] = {}
-
+                key_chain_dict['key_chains'][key_chain_name]['keys'][key_name] = {}
                 continue
             
             # accept-lifetime 00:01:00 january 01 2013 infinite
             p3 = re.compile(r'^\s*accept-lifetime\s+(?P<accept_lifetime>.*)$')
             m = p3.match(line)
             if m:
-                key_chain_dict['key_chain'][key_chain_name]['keys'][key_name]['accept_lifetime'] = m.groupdict()['accept_lifetime']
+                key_chain_dict['key_chains'][key_chain_name]['keys'][key_name]['accept_lifetime'] = m.groupdict()['accept_lifetime']
                 continue
             
             # key-string password 020F175218
             p4 = re.compile(r'^\s*key-string\s+(?P<key_string>.*)$')
             m = p4.match(line)
             if m:
-                key_chain_dict['key_chain'][key_chain_name]['keys'][key_name]['key_string'] = m.groupdict()['key_string']
+                key_chain_dict['key_chains'][key_chain_name]['keys'][key_name]['key_string'] = m.groupdict()['key_string']
                 continue
             
             # send-lifetime 00:01:00 january 01 2013 infinite
             p5 = re.compile(r'^\s*send-lifetime\s+(?P<send_lifetime>.*)$')
             m = p5.match(line)
             if m: 
-                key_chain_dict['key_chain'][key_chain_name]['keys'][key_name]['send_lifetime'] = m.groupdict()['send_lifetime']
+                key_chain_dict['key_chains'][key_chain_name]['keys'][key_name]['send_lifetime'] = m.groupdict()['send_lifetime']
                 continue
             
             # cryptographic-algorithm HMAC-MD5
             p6 = re.compile(r'^\s*cryptographic-algorithm\s+(?P<cryptographic_algorithm>.*)$')
             m = p6.match(line)
             if m:
-                key_chain_dict['key_chain'][key_chain_name]['keys'][key_name]['cryptographic_algorithm'] = m.groupdict()['cryptographic_algorithm']
+                key_chain_dict['key_chains'][key_chain_name]['keys'][key_name]['cryptographic_algorithm'] = m.groupdict()['cryptographic_algorithm']
                 continue
             
             # accept-tolerance infinite
             p7 = re.compile(r'^\s*accept-tolerance\s+(?P<accept_tolerance>.*)$')
             m = p7.match(line)
             if m:
-                key_chain_dict['key_chain'][key_chain_name]['accept_tolerance'] = m.groupdict()['accept_tolerance']
+                key_chain_dict['key_chains'][key_chain_name]['accept_tolerance'] = m.groupdict()['accept_tolerance']
                 continue
         
         return key_chain_dict
 
-
-# ===============================
-# Schema for 'show run key chain_komal'
-# ===============================
-class ShowRunKeyChainsSchema(MetaParser):
-    """Schema for show run key chain"""
-
-    schema = {
-        'key_chain': {
-            Optional(Any()): {
-                Optional('keys'): {
-                    Optional(Any()): {
-                        Optional('accept_lifetime'): str,
-                        Optional('key_string'): str,
-                        Optional('send_lifetime'): str,
-                        Optional('cryptographic_algorithm'): str
-                    },
-                },
-                Optional('accept_tolerance'): str
-            },
-        },
-    }
-
-
-class ShowRunKeyChains(ShowRunKeyChainsSchema):
-    """Parser for show run key chain"""
-
-    cli_command = 'show run key chain'
-
-    def cli(self, output=None):
-        if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
-
-        ret_dict = {}
-
-        # key chain ISIS-HELLO-CORE
-        p1 = re.compile(r'^key\schain\s+(?P<key_chain_name>.*)$')
-
-        # key 1
-        p2 = re.compile(r'^\s*key\s+(?P<key_name>.*)$')
-
-        for line in out.splitlines():
-            line = line.rstrip()
-
-            # key chain ISIS-HELLO-CORE
-            m = p1.match(line)
-            if m:
-                key_chain_name = m.groupdict()['key_chain_name']
-                import pdb;pdb.set_trace()
-                key_chain_dict = ret_dict.setdefault('key_chain', {}).setdefault(key_chain_name, {})
-
-                continue
-
-            # key 1
-            m = p2.match(line)
-            if m:
-                key_name = m.groupdict()['key_name']
-                import pdb;pdb.set_trace()
-                key_dict = key_chain_dict.setdefault('keys', {}).setdefault(key_name, {})
-                continue
-
-            # accept-lifetime 00:01:00 january 01 2013 infinite
-            p3 = re.compile(r'^\s*accept-lifetime\s+(?P<accept_lifetime>.*)$')
-            m = p3.match(line)
-            if m:
-                key_dict['accept_lifetime']= m.groupdict()['accept_lifetime']
-                continue
-
-            # key-string password 020F175218
-            p4 = re.compile(r'^\s*key-string\s+(?P<key_string>.*)$')
-            m = p4.match(line)
-            if m:
-                key_dict['key_string'] = m.groupdict()['key_string']
-                continue
-
-            # send-lifetime 00:01:00 january 01 2013 infinite
-            p5 = re.compile(r'^\s*send-lifetime\s+(?P<send_lifetime>.*)$')
-            m = p5.match(line)
-            if m:
-                key_dict['send_lifetime'] = m.groupdict()['send_lifetime']
-                continue
-
-            # cryptographic-algorithm HMAC-MD5
-            p6 = re.compile(r'^\s*cryptographic-algorithm\s+(?P<cryptographic_algorithm>.*)$')
-            m = p6.match(line)
-            if m:
-                key_dict['cryptographic_algorithm'] = m.groupdict()['cryptographic_algorithm']
-                continue
-
-            # accept-tolerance infinite
-            p7 = re.compile(r'^\s*accept-tolerance\s+(?P<accept_tolerance>.*)$')
-            m = p7.match(line)
-            if m:
-                key_chain_dict['accept_tolerance'] = m.groupdict()['accept_tolerance']
-                continue
-
-        return ret_dict
 
 
 # =================================
