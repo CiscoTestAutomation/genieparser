@@ -29266,6 +29266,5 @@ class test_show_bgp_vrf_ipv4_unicast(unittest.TestCase):
         parsed_output = obj.parse(vrf='vni_10100')
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
-
 if __name__ == '__main__':
     unittest.main()

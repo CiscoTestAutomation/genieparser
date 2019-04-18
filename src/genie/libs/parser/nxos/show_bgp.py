@@ -11566,11 +11566,3 @@ class ShowBgpVrfIpv4Unicast(ShowBgpVrfAllAll):
 
     def cli(self, vrf, output=None):
         return super().cli(vrf, output=output)
-
-
-
-
-
-
-
-
