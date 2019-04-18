@@ -1784,8 +1784,8 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
             
             # *>i[2]:[77][7,0][10.69.9.9,1,151587081][10.135.1.1,22][10.106.101.1,10.76.1.30]/616
             # *>iaaaa:1::/113       ::ffff:10.106.101.1
-            p3_1 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)'
-                             '(?P<path_type>(i|e|c|l|a|r|I))'
+            p3_1 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
+                             '(?P<path_type>(i|e|c|l|a|r|I))?'
                              '(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,]+)'
                              '(?: *(?P<next_hop>[a-zA-Z0-9\.\:\/\[\]\,]+))?$')
             m = p3_1.match(line)
@@ -1807,7 +1807,8 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                 status_codes = str(m.groupdict()['status_codes'])
                 path_type = str(m.groupdict()['path_type'])
                 prefix = str(m.groupdict()['prefix'])
-
+                if status_codes == 'None' or path_type == 'None' or prefix == 'None':
+                    continue
                 # Init dict
                 if 'prefixes' not in af_dict:
                     af_dict['prefixes'] = {}
@@ -1821,16 +1822,17 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                 # Set keys
                 af_dict['prefixes'][prefix]['index'][index]['status_codes'] = status_codes
                 af_dict['prefixes'][prefix]['index'][index]['path_type'] = path_type
-                if m.groupdict()['next_hop']:
+                if 'next_hop' in m.groupdict():
                     af_dict['prefixes'][prefix]['index'][index]['next_hop'] = str(m.groupdict()['next_hop'])
-
                 if 'metric' in m.groupdict():
-                    af_dict['prefixes'][prefix]['index'][index]['metric'] = str(m.groupdict()['metric'])
+                    af_dict['prefixes'][prefix]['index'][index]['metric'] = int(m.groupdict()['metric'])
                 if 'localprf' in m.groupdict():
-                    af_dict['prefixes'][prefix]['index'][index]['localprf'] = str(m.groupdict()['localprf'])
+                    af_dict['prefixes'][prefix]['index'][index]['localprf'] = int(m.groupdict()['localprf'])
                 if 'weight' in m.groupdict():
-                    af_dict['prefixes'][prefix]['index'][index]['weight'] = str(m.groupdict()['weight'])
-                if 'origin_codes' in m.groupdict():
+                    af_dict['prefixes'][prefix]['index'][index]['weight'] = int(m.groupdict()['weight'])
+                if 'path' in m.groupdict():
+                    af_dict['prefixes'][prefix]['index'][index]['path'] = m.groupdict()['path'].strip()
+                if 'origin_codes' in m.groupdict():                
                     af_dict['prefixes'][prefix]['index'][index]['origin_codes'] = str(m.groupdict()['origin_codes'])
                 
                 # Check if aggregate_address_ipv4_address
