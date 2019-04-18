@@ -220,15 +220,10 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         * 'show policy-map interface',
     '''
 
-    def cli(self, interface='', class_name='', num='', cmd='', output=None):
-        
-        if output is None:
-            # Execute command on device
-            out = self.device.execute(cmd)
-        else:
-            out = output
+    def cli(self, interface='', class_name='', num='', output=None):
 
         # Init vars
+        out = output
         ret_dict = {}
         ret_dict = collections.OrderedDict(ret_dict)
         class_line_type = None
@@ -312,7 +307,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         p10_1 = re.compile(r'^violated (?P<packets>(\d+)) packets, +(?P<bytes>(\d+)) bytes; actions:$')
 
         # conformed 0000 bps, exceeded 0000 bps
-        p11 = re.compile(r'^conformed +(?P<c_bps>(\d+)) bps, exceeded (?P<e_bps>(\d+)) bps$')
+        p11 = re.compile(r'^conformed +(?P<c_bps>(\d+)) bps, excee(ded|d) (?P<e_bps>(\d+)) bps$')
 
         # conformed 0 bps, exceed 0 bps, violate 0 bps
         p11_1 = re.compile(r'^conformed +(?P<c_bps>(\d+)) bps,+ excee(d|ded) (?P<e_bps>(\d+)) bps, '
@@ -1013,7 +1008,7 @@ class ShowPolicyMapControlPlane(ShowPolicyMapTypeSuperParser, ShowPolicyMapTypeS
             show_output = output
 
         # Call super
-        return super().cli(cmd=cmd, output=show_output)
+        return super().cli(output=show_output)
 
 
 # ===========================================
@@ -1046,8 +1041,7 @@ class ShowPolicyMapInterface(ShowPolicyMapTypeSuperParser, ShowPolicyMapTypeSche
             show_output = output
 
         # Call super
-        # return super().cli(cmd=cmd, output=show_output, interface=interface)
-        return super().cli(cmd=cmd, output=show_output)
+        return super().cli(output=show_output)
 
 
 # =====================================================================
@@ -1080,7 +1074,7 @@ class ShowPolicyMapInterfaceInput(ShowPolicyMapTypeSuperParser, ShowPolicyMapTyp
             show_output = output
 
         # Call super
-        return super().cli(cmd=cmd, output=show_output, interface=interface, class_name=class_name)
+        return super().cli(output=show_output, interface=interface, class_name=class_name)
 
 
 # =====================================================================
@@ -1113,7 +1107,7 @@ class ShowPolicyMapInterfaceOutput(ShowPolicyMapTypeSuperParser, ShowPolicyMapTy
             show_output = output
 
         # Call super
-        return super().cli(cmd=cmd, output=show_output, interface=interface, class_name=class_name)
+        return super().cli(output=show_output, interface=interface, class_name=class_name)
 
 
 # ================================================================
@@ -1141,7 +1135,7 @@ class ShowPolicyMapInterfaceClass(ShowPolicyMapTypeSuperParser, ShowPolicyMapTyp
             show_output = output
 
         # Call super
-        return super().cli(cmd=cmd, output=show_output,class_name=class_name)
+        return super().cli(output=show_output,class_name=class_name)
 
 
 # ==============================================================
@@ -1167,7 +1161,7 @@ class ShowPolicyMapTargetClass(ShowPolicyMapTypeSuperParser, ShowPolicyMapTypeSc
             show_output = output
 
         # Call super
-        return super().cli(cmd=cmd, output=show_output, num=num)
+        return super().cli(output=show_output, num=num)
 
 
 # ===================================

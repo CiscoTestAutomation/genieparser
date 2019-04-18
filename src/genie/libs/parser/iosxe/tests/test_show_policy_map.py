@@ -1805,6 +1805,57 @@ class test_show_policy_map_type(unittest.TestCase):
                         Match: any
             '''}
 
+    golden_parsed_output17 = {
+        'GigabitEthernet9/5: Service Group 1': {
+            'service_policy': {
+                'input': {
+                    'policy_name': {
+                        'policy1': {
+                            'class_map': {
+                                'class-default': {
+                                    'match_evaluation': 'match-any',
+                                    'packets': 0,
+                                    'bytes': 0,
+                                    'rate': {
+                                        'interval': 300,
+                                        'offered_rate_bps': 0,
+                                        'drop_rate_bps': 0},
+                                    'match': ['any'], 'police': {'cir_bps': 200000, 'bc_bytes': 6250, 'conformed': {'packets': 0, 'bytes': 0, 'actions': 'transmit', 'bps': 0}, 'exceeded': {'packets': 0, 'bytes': 0, 'actions': 'drop', 'bps': 0}}}}}}}, 'output': {'policy_name': {'policy2': {'class_map': {'class-default': {'match_evaluation': 'match-any', 'packets': 0, 'bytes': 0, 'rate': {'interval': 300, 'offered_rate_bps': 0, 'drop_rate_bps': 0}, 'match': ['any'], 'queueing': True, 'queue_limit_packets': '131072', 'queue_depth': 0, 'total_drops': 0, 'no_buffer_drops': 0, 'pkts_output': 0, 'bytes_output': 0, 'bandwidth': 'remaining ratio 2'}}}}}}}}
+
+
+    golden_output17 = {'execute.return_value': '''
+        Device# show policy-map target service-group 1
+
+ GigabitEthernet9/5: Service Group 1
+
+  Service-policy input: policy1
+
+    Class-map: class-default (match-any)
+      0 packets, 0 bytes
+      5 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: any
+      police:
+          cir 200000 bps, bc 6250 bytes
+        conformed 0 packets, 0 bytes; actions:
+          transmit
+        exceeded 0 packets, 0 bytes; actions:
+          drop
+        conformed 0000 bps, exceed 0000 bps
+
+  Service-policy output: policy2
+
+  Counters last updated 00:00:34 ago
+    Class-map: class-default (match-any)
+      0 packets, 0 bytes
+      5 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: any
+      Queueing
+      queue limit 131072 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 0/0
+      bandwidth remaining ratio 2
+    '''}
+
     def test_show_policy_map_control_plane_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -1926,6 +1977,13 @@ class test_show_policy_map_type(unittest.TestCase):
         parsed_output = obj.parse(num='1')
         self.assertEqual(parsed_output, self.golden_parsed_output16)
 
+    def test_show_policy_map_target_full2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output17)
+        obj = ShowPolicyMapTargetClass(device=self.device)
+        parsed_output = obj.parse(num='1')
+        #import pdb;pdb.set_trace()
+        self.assertEqual(parsed_output, self.golden_parsed_output17)
 
 # =============================================
 # Unit test for :
