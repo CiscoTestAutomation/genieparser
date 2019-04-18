@@ -8,7 +8,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
 
 from genie.libs.parser.iosxe.show_isis import ShowIsisHostname,\
                                               ShowIsisLspLog,\
-                                              ShowIsisDatabaseDetail
+                                              ShowIsisDatabaseDetail,\
+                                              ShowIsisNeighbors
 
 
 
@@ -448,6 +449,67 @@ class test_show_isis_database_detail(unittest.TestCase):
         platform_obj = ShowIsisDatabaseDetail(device=self.device)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+# ====================================
+#  Unit test for 'show isis neighbors'
+# ====================================
+
+class test_show_isis_neighbors(unittest.TestCase):
+    '''Unit test for "show isis neighbors"'''
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'isis': {
+            'test': {
+                'vrf': {
+                    'default': {
+                        'interfaces': {
+                            'GigabitEthernet0/0/0/0.115': {
+                                'neighbors': {
+                                    'R1_xe': {
+                                        'snpa': 'fa16.3eab.a39d',
+                                        'state': 'Up',
+                                        'holdtime': '24',
+                                        'type': 'L1L2',
+                                        'ietf_nsf': 'Capable'}}},
+                            'GigabitEthernet0/0/0/1.115': {
+                                'neighbors': {
+                                    'R3_nx': {
+                                        'snpa': '5e00.4002.0007',
+                                        'state': 'Up',
+                                        'holdtime': '25',
+                                        'type': 'L1L2',
+                                        'ietf_nsf': 'Capable'}}}},
+                        'total_neighbor_count': 2}}}}}
+
+    golden_output1 = {'execute.return_value': '''
+        +++ R2_xr: executing command 'show isis neighbors' +++
+        show isis neighbors
+        Wed Apr 17 16:21:30.075 UTC
+
+        IS-IS test neighbors:
+        System Id      Interface        SNPA           State Holdtime Type IETF-NSF
+        R1_xe          Gi0/0/0/0.115    fa16.3eab.a39d Up    24       L1L2 Capable
+        R3_nx          Gi0/0/0/1.115    5e00.4002.0007 Up    25       L1L2 Capable
+
+        Total neighbor count: 2
+    '''}
+
+    def test_show_isis_neighbors_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIsisNeighbors(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_isis_neighbors_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowIsisNeighbors(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 
 if __name__ == '__main__':
