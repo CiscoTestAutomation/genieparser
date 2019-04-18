@@ -26,7 +26,7 @@ from genie.libs.parser.utils.common import Common
 class ShowSpanningTreeMstSchema(MetaParser):
 	schema = {
 		'mstp': {
-		    'mst_domain': {
+		    Any(): {
 				'mst_instances': {
 					Any(): {
 						'mst_id': str,
@@ -70,10 +70,10 @@ class ShowSpanningTreeMstSchema(MetaParser):
 class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 	"""Parser for 'show spanning-tree mst <mst_id>'"""
 	cli_command = 'show spanning-tree mst {mst_id}'
-	def cli(self,output=None):
+	def cli(self, mst_id, output=None):
 		if output is None:
 		    # get output from device
-		    out = self.device.execute(self.cli_command)
+		    out = self.device.execute(self.cli_command.format(mst_id=mst_id))
 		else:
 		    out = output
 
@@ -112,11 +112,10 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 		    m = p1.match(line)
 		    if m:
 		    	group = m.groupdict()
-		    	mst_id = group['mst_id']
 		    	mst_instances = ret_dict.setdefault('mstp', {}). \
-		    		setdefault('mst_domain', {}). \
-		    		setdefault('mst_instances', {}).setdefault(mst_id, {})
-		    	mst_instances.update({'mst_id' : mst_id})
+		    		setdefault(mst_id, {}). \
+		    		setdefault('mst_instances', {}).setdefault(group['mst_id'], {})
+		    	mst_instances.update({'mst_id' : group['mst_id']})
 		    	continue
 
 		    # VLANS Mapped: 1-4094

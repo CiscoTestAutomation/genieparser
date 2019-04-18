@@ -19,7 +19,7 @@ class show_spanning_tree_mst(unittest.TestCase):
 	empty_output = {'execute.return_value': ''}
 	golden_parsed_output = {
 		'mstp': {
-		    'mst_domain': {
+		    'test': {
 		        'mst_instances': {
 		            '0': {
 		                'mst_id': '0',
@@ -113,12 +113,12 @@ class show_spanning_tree_mst(unittest.TestCase):
 	    self.dev = Mock(**self.empty_output)
 	    obj = ShowSpanningTreeMst(device=self.dev)
 	    with self.assertRaises(SchemaEmptyParserError):
-	        parsed_output = obj.parse()
+	        parsed_output = obj.parse(mst_id='test')
 
 	def test_golden_mst(self):
 	    self.dev = Mock(**self.golden_output)
 	    obj = ShowSpanningTreeMst(device=self.dev)
-	    parsed_output = obj.parse()
+	    parsed_output = obj.parse(mst_id='test')
 	    self.assertEqual(parsed_output,self.golden_parsed_output)
 
 """
