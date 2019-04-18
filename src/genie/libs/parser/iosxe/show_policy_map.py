@@ -1197,7 +1197,13 @@ class ShowPolicyMapSchema(MetaParser):
                             Optional('conform_burst'): int,
                             Optional('pir'): int,
                             Optional('peak_burst'): int,
+                            Optional('cir_percent'): int,
+                            Optional('bc_ms'): int,
+                            Optional('pir_percent'): int,
+                            Optional('be_ms'): int,
                             },
+                        Optional('queue_limit_ms'): int,
+                        Optional('queue_limit_packets'): int,
                         Optional('service_policy'): str,
                         Optional('bandwidth_kbps'): int,
                         Optional('bandwidth'): int,
@@ -1207,12 +1213,28 @@ class ShowPolicyMapSchema(MetaParser):
                         Optional('set'): str,
                         Optional('conform_burst'): int,
                         Optional('priority'): bool,
+                        Optional('priority_level'): int,
                         Optional('peak_burst'): int,
                         Optional('average_rate_traffic_shaping'): bool,
+                        Optional('adaptive_rate_traffic_shaping'): bool,
                         Optional('cir_percent'): int,
                         Optional('bc_msec'): int,
                         Optional('be_msec'): int,
                         Optional('cir_bps'): int,
+                        Optional('cir_upper_bound_bps'): int,
+                        Optional('cir_lower_bound_bps'): int,
+                        Optional('random_detect'): {
+                            Optional('exponential_weight'): int,
+                            Optional('bandwidth_percent'): int,
+                            Optional('time_based'): str,
+                            Optional('class_val'): {
+                                Any(): {
+                                    'min_threshold': str,
+                                    'max_threshold': str,
+                                    'mark_probability': str,
+                                },
+                            },
+                        },
                         Optional('weighted_fair_queueing'): {
                             'bandwidth_percent': int,
                             'exponential_weight': int,
@@ -1267,10 +1289,15 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         p1 = re.compile(r'^Policy +Map +(?P<policy_map>([\w\-]+))$')
         
         # Class class-default
-        p2 = re.compile(r'^Class +(?P<class_map>([\w\-]+))$')
+        # Class class c1
+        p2 = re.compile(r'^Class +(?P<class_map>([\w\-\s]+))$')
 
         # police 8000 9216 0
         p2_0 = re.compile(r'^police +(?P<cir_bps>(\d+)) +(?P<bc_bytes>(\d+)) +(?P<be_bytes>(\d+))$')
+
+        # police cir percent 20 bc 300 ms pir percent 40 be 400 ms
+        p2_1 = re.compile(r'police +cir +percent +(?P<cir_percent>(\d+)) +bc +(?P<bc_ms>(\d+)) +ms +pir +percent +'
+                           '(?P<pir_percent>(\d+)) +be +(?P<be_ms>(\d+)) ms$')
 
         # police cir 445500 bc 83619
         p3 = re.compile(r'^police +cir +(?P<cir_bps>(\d+)) +bc +(?P<bc_bytes>(\d+))$')
@@ -1296,6 +1323,12 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         # Average Rate Traffic Shaping
         p4 = re.compile(r'^Average +Rate +Traffic +Shaping$')
 
+        # Adaptive Rate Traffic Shaping
+        p4_0 = re.compile(r'Adaptive +Rate +Traffic +Shaping$')
+
+        #cir upper-bound 2120000 (bps) cir lower-bound 1120000 (bps)
+        p4_1 = re.compile(r'^cir +upper-bound +(?P<cir_upper_bound_bps>(\d+)) \(bps\) +cir +lower-bound +(?P<cir_lower_bound_bps>(\d+)) \(bps\)$')
+
         # cir 1000000 (bps)
         p5 = re.compile(r'^cir +(?P<cir_bps>(\d+)) \(bps\)$')
 
@@ -1306,8 +1339,14 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         p6 = re.compile(r'^priority +level +(?P<priority_level>(\d+)) +(?P<kb_per_sec>(\d+))')
 
         # bandwidth 20000 (kb/s)
+        p7_0 = re.compile(r'^bandwidth +(?P<bandwidth>(\d+)) \(kb\/s\)$')
+
+        # bandwidth 100
+        p7_1 = re.compile(r'^bandwidth +(?P<bandwidth>(\d+))$')
+
         # Bandwidth 70 (%)
-        p7 = re.compile(r'^(?P<key>bandwidth|Bandwidth) +(?P<bandwidth>(\d+))')
+        # bandwidth 80 (%)
+        p7 = re.compile(r'^[bB]andwidth +(?P<bandwidth>(\d+)) \(%\)$')
 
         # Weighted Fair Queueing
         p8 = re.compile(r'^Weighted +Fair +Queueing$')
@@ -1341,6 +1380,9 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         # priority
         p10 = re.compile(r'^priority$')
 
+        # priority level 1
+        p10_1 = re.compile(r'priority +level +(?P<priority_level>(\d+))$')
+
         #  Set cos 5
         p11 = re.compile(r'^Set +(?P<set>([\w\s]+))$')
 
@@ -1365,6 +1407,19 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                           '(?P<conform_action>(\w+)) +exceed-action +(?P<exceed_action>([\w\-\s]+)) +'
                           'violate-action +(?P<violate_action>(\w+))$')
 
+        # police percent 5 2 ms 0 ms conform-action transmit exceed-action drop violate-action drop
+        p15_1 = re.compile(r'^police +percent +(?P<cir_percent>(\d+)) +(?P<bc_ms>(\d+)) ms +(?P<be_ms>(\d+)) ms +conform-action +(?P<conform_action>(\w+)) '
+                            '+exceed-action +(?P<exceed_action>([\w\-\s]+)) +violate-action +(?P<violate_action>(\w+))$')
+
+        # time-based wred, exponential weight 9
+        p16 = re.compile(r'^time-based +(?P<time_based>(\w+)), +exponential +weight +(?P<exponential_weight>(\d+))$')
+
+        # queue-limit 200 ms
+        p17 = re.compile(r'^queue-limit +(?P<queue_limit_ms>(\d+)) ms$')
+
+        # queue-limit 77 packets
+        p17_1 = re.compile(r'^queue-limit +(?P<queue_limit_packets>(\d+)) packets$')
+
         for line in out.splitlines():
 
             line = line.strip()
@@ -1377,6 +1432,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 continue
 
             # Class class-default
+            # Class class c1
             m = p2.match(line)
             if m:
                 class_map = m.groupdict()['class_map']
@@ -1393,6 +1449,16 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 police_dict['be_bytes'] = int(m.groupdict()['be_bytes'])
                 continue
 
+            #police cir percent 20 bc 300 ms pir percent 40 be 400 ms
+            m = p2_1.match(line)
+            if m:
+                police_line = 1
+                police_dict = class_map_dict.setdefault('police', {})
+                police_dict['cir_percent'] = int(m.groupdict()['cir_percent'])
+                police_dict['bc_ms'] = int(m.groupdict()['bc_ms'])
+                police_dict['pir_percent'] = int(m.groupdict()['pir_percent'])
+                police_dict['be_ms'] = int(m.groupdict()['be_ms'])
+                continue
 
             # police cir 445500 bc 83619
             m = p3.match(line)
@@ -1452,6 +1518,19 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 class_map_dict['average_rate_traffic_shaping'] = True
                 continue
 
+            # Adaptive Rate Traffic Shaping
+            m = p4_0.match(line)
+            if m:
+                class_map_dict['adaptive_rate_traffic_shaping'] = True
+                continue
+
+            # cir upper-bound 2120000 (bps) cir lower-bound 1120000 (bps)
+            m = p4_1.match(line)
+            if m:
+                class_map_dict['cir_upper_bound_bps'] = int(m.groupdict()['cir_upper_bound_bps'])
+                class_map_dict['cir_lower_bound_bps'] = int(m.groupdict()['cir_lower_bound_bps'])
+                continue
+
             # cir 1000000 (bps)
             m = p5.match(line)
             if m:
@@ -1474,14 +1553,25 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 continue
 
             # bandwidth 20000 (kb/s)
+            m = p7_0.match(line)
+            if m:
+                class_map_dict['bandwidth_kbps'] = int(m.groupdict()['bandwidth'])
+                continue
+
+            m = p7_1.match(line)
+            if m:
+                class_map_dict['bandwidth_kbps'] = int(m.groupdict()['bandwidth'])
+                continue
+
             # Bandwidth 70( %)
+            # bandwidth 80 (%)
             m = p7.match(line)
             if m:
-                key = m.groupdict()['key']
-                if key == 'bandwidth':
-                    class_map_dict['bandwidth_kbps'] = int(m.groupdict()['bandwidth'])
-                elif key == 'Bandwidth':
+                if weight_line == 1 :
                     weight_dict['bandwidth_percent'] = int(m.groupdict()['bandwidth'])
+                elif weight_line != 1 :
+                    random_detect = class_map_dict.setdefault('random_detect', {})  # initialize random_detect{}
+                    random_detect['bandwidth_percent'] = int(m.groupdict()['bandwidth'])
                 continue
 
             # Weighted Fair Queueing
@@ -1494,7 +1584,10 @@ class ShowPolicyMap(ShowPolicyMapSchema):
             # exponential weight 9
             m = p8_1.match(line)
             if m:
-                weight_dict['exponential_weight'] = int(m.groupdict()['exponential_weight'])
+                if weight_line == 1:
+                    weight_dict['exponential_weight'] = int(m.groupdict()['exponential_weight'])
+                else:
+                    random_detect['exponential_weight'] = int(m.groupdict()['exponential_weight'])
                 continue
 
             # explicit congestion notification
@@ -1525,7 +1618,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                     class_dict['max_threshold'] = group['max_threshold']
                     class_dict['mark_probability'] = group['mark_probability']
                 else:
-                    class_dict = class_map_dict.setdefault('class_val', {}).setdefault(class_val, {})
+                    class_dict = random_detect.setdefault('class_val', {}).setdefault(class_val, {})
                     class_dict['min_threshold'] = group['min_threshold']
                     class_dict['max_threshold'] = group['max_threshold']
                     class_dict['mark_probability'] = group['mark_probability']
@@ -1543,6 +1636,12 @@ class ShowPolicyMap(ShowPolicyMapSchema):
             m = p10.match(line)
             if m:
                 class_map_dict['priority'] = True
+                continue
+
+            # priority level 1
+            m = p10_1.match(line)
+            if m:
+                class_map_dict['priority_level'] = True
                 continue
 
             #  Set cos 5
@@ -1593,6 +1692,38 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 police_dict['conform_action'] = m.groupdict()['conform_action']
                 police_dict['exceed_action'] = m.groupdict()['exceed_action']
                 police_dict['violate_action'] = m.groupdict()['violate_action']
+                continue
+
+            # police percent 5 2 ms 0 ms conform-action transmit exceed-action drop violate-action drop
+            m = p15_1.match(line)
+            if m:
+                police_line = 1
+                police_dict = class_map_dict.setdefault('police', {})
+                police_dict['cir_percent'] = int(m.groupdict()['cir_percent'])
+                police_dict['bc_ms'] = int(m.groupdict()['bc_ms'])
+                police_dict['be_ms'] = int(m.groupdict()['be_ms'])
+                police_dict['conform_action'] = m.groupdict()['conform_action']
+                police_dict['exceed_action'] = m.groupdict()['exceed_action']
+                police_dict['violate_action'] = m.groupdict()['violate_action']
+                continue
+
+            #  time-based wred, exponential weight 9
+            m = p16.match(line)
+            if m:
+                random_detect['time_based'] = m.groupdict()['time_based']
+                random_detect['exponential_weight'] = int(m.groupdict()['exponential_weight'])
+                continue
+
+            # queue-limit 200 ms
+            m = p17.match(line)
+            if m:
+                class_map_dict['queue_limit_ms'] = int(m.groupdict()['queue_limit_ms'])
+                continue
+
+            # queue-limit 77 packets
+            m = p17_1.match(line)
+            if m:
+                class_map_dict['queue_limit_packets'] = int(m.groupdict()['queue_limit_packets'])
                 continue
 
         return ret_dict

@@ -2257,6 +2257,96 @@ class test_show_policy_map(unittest.TestCase):
                 service-policy child
     '''}
 
+    golden_parsed_output8 = {
+        'policy_map': {
+            'policy1': {
+                'class': {
+                    'class1': {
+                        'police': {
+                            'cir_percent': 20,
+                            'bc_ms': 300,
+                            'pir_percent': 40,
+                            'be_ms': 400,
+                            'conform_action': 'transmit',
+                            'exceed_action': 'drop',
+                            'violate_action': 'drop'}}}}}}
+
+    golden_output8 = {'execute.return_value': '''
+        Router# show policy-map policy1
+            Policy Map policy1
+                Class class1
+                    police cir percent 20 bc 300 ms pir percent 40 be 400 ms
+                        conform-action transmit
+                        exceed-action drop
+                        violate-action drop
+    '''}
+
+    golden_parsed_output9 = {
+        'policy_map': {
+            'pol1': {
+                'class': {
+                    'class c1': {
+                        'random_detect': {
+                            'bandwidth_percent': 10,
+                            'exponential_weight': 9,
+                            'class_val': {
+                                '0': {
+                                    'min_threshold': '-',
+                                    'max_threshold': '-',
+                                    'mark_probability': '1/10'},
+                                '1': {
+                                    'min_threshold': '20000',
+                                    'max_threshold': '30000',
+                                    'mark_probability': '1/10'},
+                                '2': {
+                                    'min_threshold': '-',
+                                    'max_threshold': '-',
+                                    'mark_probability': '1/10'},
+                                '3': {
+                                    'min_threshold': '-',
+                                    'max_threshold': '-',
+                                    'mark_probability': '1/10'},
+                                '4': {
+                                    'min_threshold': '-',
+                                    'max_threshold': '-',
+                                    'mark_probability': '1/10'},
+                                '5': {
+                                    'min_threshold': '-',
+                                    'max_threshold': '-',
+                                    'mark_probability': '1/10'},
+                                '6': {
+                                    'min_threshold': '-',
+                                    'max_threshold': '-',
+                                    'mark_probability': '1/10'},
+                                '7': {
+                                    'min_threshold': '-',
+                                    'max_threshold': '-',
+                                    'mark_probability': '1/10'},
+                                'rsvp': {
+                                    'min_threshold': '-',
+                                    'max_threshold': '-',
+                                    'mark_probability': '1/10'}}}}}}}}
+
+    golden_output9 = {'execute.return_value': '''
+        Router# show policy-map
+        Policy Map pol1
+            Class class c1
+        Bandwidth 10 (%)
+        exponential weight 9
+        class   min-threshold(bytes)   max-threshold(bytes)  mark-probability
+        -------------------------------------------------------------------
+ 
+        0       -                       -                      1/10
+        1       20000                   30000                  1/10
+        2       -                       -                      1/10
+        3       -                       -                      1/10
+        4       -                       -                      1/10
+        5       -                       -                      1/10
+        6       -                       -                      1/10
+        7       -                       -                      1/10
+        rsvp    -                       -                      1/10
+    '''}
+
     def test_show_policy_map_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -2312,6 +2402,20 @@ class test_show_policy_map(unittest.TestCase):
         obj = ShowPolicyMap(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output7)
+
+    def test_show_policy_map_golden8(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output8)
+        obj = ShowPolicyMap(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output8)
+
+    def test_show_policy_map_golden9(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output9)
+        obj = ShowPolicyMap(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output9)
 
 
 if __name__ == '__main__':
