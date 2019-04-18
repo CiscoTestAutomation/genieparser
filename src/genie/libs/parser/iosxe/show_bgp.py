@@ -3016,10 +3016,11 @@ class ShowBgpNeighborSuperParser(MetaParser):
                 nbr_dict['session_state'] = group['session_state']
                 if af_name:
                     af_dict['session_state'] = group['session_state']
-                    if 'down' in group['state']:
-                        af_dict['down_time'] = group['time']
-                    elif 'up' in group['state']:
-                        af_dict['up_time'] = group['time']
+                    if group['state']:
+                        if 'down' in group['state']:
+                            af_dict['down_time'] = group['time']
+                        elif 'up' in group['state']:
+                            af_dict['up_time'] = group['time']
                 continue
 
             # Last read 00:00:04, last write 00:00:09, hold time is 180, keepalive interval is 60 seconds
