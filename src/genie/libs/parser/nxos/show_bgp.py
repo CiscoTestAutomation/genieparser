@@ -1694,7 +1694,7 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
 
     def cli(self, vrf_value=None, output=None):
         if output is None:
-            if vrf_value is not None:
+            if vrf_value:
                 out = self.device.execute(self.cli_command[1].format(vrf=vrf_value))
             else:
               out = self.device.execute(self.cli_command[0])
