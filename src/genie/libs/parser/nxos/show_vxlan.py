@@ -1300,16 +1300,15 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
     """parser for:
         show l2route mac-ip all detail"""
 
-    cli_command = ['show l2route mac-ip all detail',
-        'show l2route evpn mac-ip evi {evi}']
+    cli_command = 'show l2route mac-ip all detail'
 
-    def cli(self, evi='', output=None):
+    def cli(self, cmd='', evi='', output=None):
         # excute command to get output
         if output is None:
-            if evi:
-                out = self.device.execute(self.cli_command[1].format(evi=evi))
+            if cmd and evi:
+                out = self.device.execute(cmd.format(evi=evi))
             else:
-                out = self.device.execute(self.cli_command[0])
+                out = self.device.execute(self.cli_command)
         else:
             out = output
 
@@ -2224,6 +2223,7 @@ class ShowFabricMulticastIpL2Mroute(ShowFabricMulticastIpL2MrouteSchema):
 # ====================================================
 class ShowL2routeEvpnMacIpEvi(ShowL2routeMacIpAllDetail):
     """Parser for show l2route evpn mac-ip evi <evi>"""
+    cli_command = 'show l2route evpn mac-ip evi {evi}'
 
     def cli(self, evi, output=None):
-        return super().cli(evi=evi, output=output)
+        return super().cli(cmd=self.cli_command, evi=evi, output=output)

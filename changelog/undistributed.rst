@@ -40,6 +40,15 @@
     * Add ShowEigrpIpv6NeighborsDetail for:
             show eigrp ipv6 neighbors detail
             show eigrp ipv6 vrf <all> neighbors detail
+* NXOS
+    * Add ShowIpv4EigrpNeighbors for:
+        show ip eigrp neighbors vrf <vrf>
+    * Add ShowIpv6EigrpNeighbors for:
+        show ipv6 eigrp neighbors vrf <all>
+    * Add ShowIpv4EigrpNeighborsDetail for:
+        show ip eigrp neighbors detail vrf <all>
+    * Add ShowIpv6EigrpNeighborsDetail for:
+        show ipv6 eigrp neighbors detail vrf <all>
 
 ----------------------------------------------------------------------------------
                                    CDP
@@ -479,6 +488,13 @@
     * Add ShowRplPrefixSet for:
         show rpl prefix-set
         show rpl prefix-set <name>
+
+--------------------------------------------------------------------------------
+                                L2ROUTE
+--------------------------------------------------------------------------------
+* NXOS
+    * Add ShowL2routeEvpnMac for:
+        show l2route evpn mac evi {evi}
 
 --------------------------------------------------------------------------------
                                 VXLAN
