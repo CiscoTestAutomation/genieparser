@@ -35,6 +35,8 @@ class ShowEigrpNeighborsSchema(MetaParser):
                     Any(): {
                         'address_family': {
                             Any(): {
+                                'name': str,
+                                'named_mode': bool,
                                 'eigrp_interface': {
                                     Any(): {
                                         'eigrp_nbr': {
@@ -71,12 +73,18 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
         r1 = re.compile(r'^EIGRP\-(?P<address_family>IPv4|IPv6)\s'
             '*Neighbors\s*for \w+\(\s*(?P<as_num>\d+)\)\s*(?:VRF\((?P<vrf>\S+)\))?$')
 
+        # EIGRP-IPv6 VR(test) Address-Family Neighbors for AS(100)
+        r2 = re.compile('^EIGRP\-(?P<address_family>IPv4|IPv6)\s* '
+                        'VR\s*\((?P<name>\S+)\) Address-Family Neighbors\s'
+                        '*for \w+\(\s*(?P<as_num>\d+)\)\s*'
+                        '(?:VRF\((?P<vrf>\S+)\))?$')
+
         # H   Address      Interface  Hold  Uptime    SRTT   RTO    Q   Seq
         #                             (sec)           (ms)          Cnt Num
         # 0   10.1.1.2     Gi0/0      13    00:00:03  1996   5000   0   5
         # 2   10.1.1.9     Gi0/0      14    00:02:24  206    5000   0   5
         # 1   10.1.2.3     Gi0/1      11    00:20:39  2202   5000   0   5
-        r2 = re.compile(r'^(?P<peer_handle>\d+) +'
+        r3 = re.compile(r'^(?P<peer_handle>\d+) +'
                         '(?P<nbr_address>\S+) +'
                         '(?P<eigrp_interface>[A-Za-z]+\s*[\d\/]+) +'
                         '(?P<hold>\d+) +(?P<uptime>\S+) +'
@@ -87,7 +95,7 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
         # H   Address                 Interface       Hold Uptime   SRTT   RTO  Q  Seq
         #                                             (sec)         (ms)       Cnt Num
         # 1   Link Local Address:     Gi0/0/0/1.90      12 01:36:14   11   200  0  28
-        r3 = re.compile(r'^(?P<peer_handle>\d+) +Link\-local\s+address: +'
+        r4 = re.compile(r'^(?P<peer_handle>\d+) +Link\-local\s+address: +'
                         '(?P<eigrp_interface>[A-Za-z]+\s*[\d\/\.]+) +'
                         '(?P<hold>\d+) +(?P<uptime>\S+) +(?P<srtt>\d+) +'
                         '(?P<rto>\d+) +(?P<q_cnt>\d+) +'
@@ -95,10 +103,12 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
 
         # fe80::5c00:ff:fe02:7
         # fe80::5c00:ff:fe02:7
-        r4 = re.compile(r'^(?P<nbr_address>\S+)$')
+        r5 = re.compile(r'^(?P<nbr_address>\S+)$')
 
         parsed_dict = {}
         eigrp_instance = ''
+        name = ''
+        named_mode = False    
 
         # Get output
         out = output
@@ -108,18 +118,34 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
 
             # EIGRP-IPv4 Neighbors for AS(1100) VRF(VRF1)
             result = r1.match(line)
-
             if result:
-                vrf = result.group('vrf')
-                address_family = result.group('address_family').lower()
-                eigrp_instance = result.group('as_num')
+
+                group = result.groupdict()
+
+                name = group.get('name', '') 
+                named_mode = True if name else False
+                vrf = group['vrf']
+                address_family = group['address_family'].lower()
+                eigrp_instance = group['as_num']
+
+            # EIGRP-IPv6 VR(test) Address-Family Neighbors for AS(100)
+            result = r2.match(line)
+            if result:
+
+                group = result.groupdict()
+
+                name = group['name']
+                named_mode = True if name else False
+                vrf = group['vrf']
+                address_family = group['address_family'].lower()
+                eigrp_instance = group['as_num']
 
             # H   Address      Interface  Hold  Uptime    SRTT   RTO    Q   Seq
             #                             (sec)           (ms)          Cnt Num
             # 0   10.1.1.2     Gi0/0      13    00:00:03  1996   5000   0   5
             # 2   10.1.1.9     Gi0/0      14    00:02:24  206    5000   0   5
             # 1   10.1.2.3     Gi0/1      11    00:20:39  2202   5000   0   5
-            result = r2.match(line)
+            result = r3.match(line)
 
             if result:
 
@@ -131,19 +157,26 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
                 if not eigrp_instance:
                     eigrp_instance = ''
 
+                if not name == '':
+                    named_mode = False
+
                 eigrp_interface = Common.convert_intf_name\
                     (intf=group['eigrp_interface'])
 
                 nbr_address = group['nbr_address']
 
-                ip_dict = parsed_dict\
+                address_family_dict = parsed_dict\
                     .setdefault('eigrp_instance', {})\
                     .setdefault(eigrp_instance, {})\
                     .setdefault('vrf', {})\
                     .setdefault(vrf, {})\
                     .setdefault('address_family', {})\
-                    .setdefault(address_family, {})\
-                    .setdefault('eigrp_interface', {})\
+                    .setdefault(address_family, {})
+
+                address_family_dict['name'] = name
+                address_family_dict['named_mode'] = named_mode
+
+                ip_dict = address_family_dict.setdefault('eigrp_interface', {})\
                     .setdefault(eigrp_interface, {})\
                     .setdefault('eigrp_nbr', {}).setdefault(nbr_address, {})
 
@@ -156,7 +189,7 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
                 ip_dict['last_seq_number'] = int(group['last_seq_number'])
 
             # 1   Link Local Address:     Gi0/0/0/1.90      12 01:36:14   11   200  0  28
-            result = r3.match(line)
+            result = r4.match(line)
             
             if result:
 
@@ -182,21 +215,25 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
 
             # fe80::5c00:ff:fe02:7
             # fe80::5c00:ff:fe02:7
-            result = r4.match(line)
+            result = r5.match(line)
             if result:
 
                 group = result.groupdict()
 
                 nbr_address = group['nbr_address']
 
-                ip_dict = parsed_dict\
+                address_family_dict = parsed_dict\
                     .setdefault('eigrp_instance', {})\
                     .setdefault(eigrp_instance, {})\
                     .setdefault('vrf', {})\
                     .setdefault(vrf, {})\
                     .setdefault('address_family', {})\
-                    .setdefault(address_family, {})\
-                    .setdefault('eigrp_interface', {})\
+                    .setdefault(address_family, {})
+
+                address_family_dict['name'] = name
+                address_family_dict['named_mode'] = named_mode
+
+                ip_dict = address_family_dict.setdefault('eigrp_interface', {})\
                     .setdefault(eigrp_interface, {})\
                     .setdefault('eigrp_nbr', {}).setdefault(nbr_address, {})
 
@@ -274,9 +311,11 @@ class ShowIpEigrpNeighborsDetailSchema(MetaParser):
                     Any(): {
                     'address_family': {
                         Any(): {
+                            'name': str,
+                            'named_mode': bool,
                             'eigrp_interface': {
-                                Any(): {
-                                    'eigrp_nbr': {
+                                Any(): {                                    
+                                    'eigrp_nbr': {                                    
                                         Any(): {
                                             'retransmit_count': int,
                                             'retry_count': int,
@@ -319,9 +358,9 @@ class ShowIpEigrpNeighborsDetailSuperParser(ShowIpEigrpNeighborsDetailSchema):
 
         # EIGRP-IPv4 VR(foo) Address-Family Neighbors for AS(1)
         # EIGRP-IPv4 VR(foo) Address-Family Neighbors for AS(1) VRF(VRF1)
-        r1 = re.compile(r'EIGRP\-(?P<address_family>IPv4|IPv6)[\w \-\(\)]+ +'
-                        'Address-Family\s*Neighbors\s*for '
-                        '\w*\(\s*(?P<as_num>[\S]+)\)\s*'
+        r1 = re.compile(r'EIGRP\-(?P<address_family>IPv4|IPv6)\s+VR'
+                        '\((?P<name>\w+)\)\s+Address\-Family\s*Neighbors'
+                        '\s*for \w*\(\s*(?P<as_num>[\S]+)\)\s*'
                         '(?:VRF\((?P<vrf>\S+)\))?')
 
         # EIGRP-IPv4 Neighbors for AS(100)
@@ -384,6 +423,8 @@ class ShowIpEigrpNeighborsDetailSuperParser(ShowIpEigrpNeighborsDetailSchema):
 
                 group = result.groupdict()
 
+                name = group.get('name', '')
+                named_mode = True if name else False
                 address_family = group['address_family'].lower()
                 as_num = group['as_num']
                 vrf = group['vrf'] if group['vrf'] else 'default'               
@@ -397,6 +438,9 @@ class ShowIpEigrpNeighborsDetailSuperParser(ShowIpEigrpNeighborsDetailSchema):
                     .setdefault('address_family', {})\
                     .setdefault(address_family, {})
 
+                eigrp_instance_dict['name'] = name
+                eigrp_instance_dict['named_mode'] = named_mode
+
                 continue
 
             # EIGRP-IPv4 Neighbors for AS(100)
@@ -405,6 +449,9 @@ class ShowIpEigrpNeighborsDetailSuperParser(ShowIpEigrpNeighborsDetailSchema):
             if result:
 
                 group = result.groupdict()
+
+                name = group.get('name', '')
+                named_mode = True if name else False
 
                 address_family = group['address_family'].lower()
                 as_num = group['as_num']
@@ -418,6 +465,9 @@ class ShowIpEigrpNeighborsDetailSuperParser(ShowIpEigrpNeighborsDetailSchema):
                     .setdefault(vrf, {})\
                     .setdefault('address_family', {})\
                     .setdefault(address_family, {})
+
+                eigrp_instance_dict['name'] = name
+                eigrp_instance_dict['named_mode'] = named_mode
 
                 continue
 
