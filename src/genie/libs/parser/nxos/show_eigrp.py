@@ -165,6 +165,7 @@ class ShowIpv4EigrpNeighbors(ShowEigrpNeighborsSuperParser,
 
 class ShowIpv6EigrpNeighbors(ShowEigrpNeighborsSuperParser,
                              ShowEigrpNeighborsSchema):
+
     cli_command = 'show ipv6 eigrp neighbors vrf {vrf}'
 
     def cli(self, vrf='all', output=None):
