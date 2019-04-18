@@ -2632,6 +2632,7 @@ class ShowBgpNeighborSuperParser(MetaParser):
 
 
         #  Multisession Capability:
+        #  Multisession Capability: advertised
         p17 = re.compile(r'^Multisession +Capability: +(?P<multisession>(.*))$')
 
         #  Stateful switchover support enabled: NO for session 1
@@ -3015,10 +3016,11 @@ class ShowBgpNeighborSuperParser(MetaParser):
                 nbr_dict['session_state'] = group['session_state']
                 if af_name:
                     af_dict['session_state'] = group['session_state']
-                    if 'down' in group['state']:
-                        af_dict['down_time'] = group['time']
-                    elif 'up' in group['state']:
-                        af_dict['up_time'] = group['time']
+                    if group['state']:
+                        if 'down' in group['state']:
+                            af_dict['down_time'] = group['time']
+                        elif 'up' in group['state']:
+                            af_dict['up_time'] = group['time']
                 continue
 
             # Last read 00:00:04, last write 00:00:09, hold time is 180, keepalive interval is 60 seconds
@@ -3117,9 +3119,10 @@ class ShowBgpNeighborSuperParser(MetaParser):
                 continue
 
             #  Multisession Capability:
+            #  Multisession Capability: advertised
             m = p17.match(line)
             if m:
-                nbr_cap_dict['multisession'] = multisession_capability
+                nbr_cap_dict['multisession'] = m.groupdict()['multisession']
                 continue
 
             # Stateful switchover support enabled: NO for session 1

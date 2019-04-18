@@ -1090,7 +1090,6 @@ class test_show_vdc_detail(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
  
-
     Switchwide mode is m1 f1 m1xl f2 m2xl f2e f3 m3 
 
     vdc id: 1

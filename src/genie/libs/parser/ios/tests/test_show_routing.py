@@ -7,9 +7,12 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from genie.libs.parser.ios.show_routing import ShowIpRoute, ShowIpv6RouteUpdated
-from genie.libs.parser.iosxe.tests.test_show_routing import test_show_ip_route as test_show_ip_route_iosxe,\
-                                                            test_show_ipv6_route_updated as test_show_ipv6_route_updated_iosxe
+from genie.libs.parser.ios.show_routing import ShowIpRoute, ShowIpv6RouteUpdated, ShowIpv6RouteWord  
+
+from genie.libs.parser.iosxe.tests.test_show_routing import \
+                        test_show_ip_route as test_show_ip_route_iosxe,\
+                        test_show_ipv6_route_updated as test_show_ipv6_route_updated_iosxe,\
+                        test_show_ipv6_route_word as test_show_ipv6_route_word_iosxe
 
 # ============================================
 # unit test for 'show ip route'
@@ -142,6 +145,25 @@ class test_show_ipv6_route_updated(test_show_ipv6_route_updated_iosxe):
         obj = ShowIpv6RouteUpdated(device=self.device)
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
+###################################################
+# unit test for show ipv6 route <WROD>
+####################################################
+class test_show_ipv6_route_word(test_show_ipv6_route_word_iosxe):
+    """unit test for show ipv6 route <WORD>"""
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpv6RouteWord(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(route='2000:2::4:1')
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_with_ipv6_route)
+        obj = ShowIpv6RouteWord(device=self.device)
+        parsed_output = obj.parse(route='2000:2::4:1')
+        self.assertEqual(parsed_output,self.golden_parsed_output_with_route)
 
 if __name__ == '__main__':
     unittest.main()
