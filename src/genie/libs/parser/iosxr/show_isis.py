@@ -30,8 +30,8 @@ class ShowIsisAdjacencySchema(MetaParser):
                     Any(): {
                         'level': {
                             Any(): {
-                                'total_adjacency_count': int,
-                                'interfaces': {
+                                Optional('total_adjacency_count'): int,
+                                Optional('interfaces'): {
                                     Any(): {
                                         'system_id': {
                                             Any(): {

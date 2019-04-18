@@ -148,7 +148,15 @@ class test_show_isis_adjacency(unittest.TestCase):
                                                 'nsf': 'Yes',
                                                 'ipv4_bfd': 'None',
                                                 'ipv6_bfd': 'None'}}}},
-                                'total_adjacency_count': 2}}}}}}}
+                                'total_adjacency_count': 2}}}}},
+            'test1': {
+                'vrf': {
+                    'default': {
+                        'level': {
+                            'Level-1': {},
+                            'Level-2': {}}}}}}}
+
+
 
     golden_output2 = {'execute.return_value': '''
         +++ R2_xr: executing command 'show isis adjacency' +++
@@ -170,6 +178,14 @@ class test_show_isis_adjacency(unittest.TestCase):
         R3_nx          Gi0/0/0/1.115    5e00.4002.0007 Up    23   22:30:27 Yes None None
         
         Total adjacency count: 2
+        
+        IS-IS test1 Level-1 adjacencies:
+        System Id      Interface        SNPA           State Hold Changed  NSF IPv4 IPv6
+                                                                       BFD  BFD
+
+        IS-IS test1 Level-2 adjacencies:
+        System Id      Interface        SNPA           State Hold Changed  NSF IPv4 IPv6
+                                                                       BFD  BFD
     '''}
 
     def test_show_isis_adjacency_empty(self):
