@@ -69,15 +69,15 @@ class ShowRipStatistics(ShowRipStatisticsSchema):
         show rip statistics
         show rip vrf {vrf} statistics"""
 
-    cli_commands = ['show rip statistics', 'show rip vrf {vrf} statistics']
+    cli_command = ['show rip statistics', 'show rip vrf {vrf} statistics']
 
     def cli(self, vrf='', output=None):
         if output is None:
             if not vrf:
                 vrf = 'default'
-                out = self.device.execute(self.cli_commands[0])
+                out = self.device.execute(self.cli_command[0])
             else:
-                out = self.device.execute(self.cli_commands[1].format(vrf=vrf))
+                out = self.device.execute(self.cli_command[1].format(vrf=vrf))
         else:
             out = output
         
