@@ -11,7 +11,9 @@ from genie.libs.parser.iosxr.show_spanning_tree import ShowSpanningTreeMst, \
 										ShowSpanningTreePvrsTag, \
 										ShowSpanningTreePvsTag
 
-
+"""
+Unit test for 'show spanning-tree mst <mst_id>'
+"""
 class show_spanning_tree_mst(unittest.TestCase):
 	dev = Device(name='aDevice')
 	empty_output = {'execute.return_value': ''}
@@ -119,7 +121,9 @@ class show_spanning_tree_mst(unittest.TestCase):
 	    parsed_output = obj.parse()
 	    self.assertEqual(parsed_output,self.golden_parsed_output)
 
-
+"""
+Unit test for 'show spanning-tree mstag <mag_domain>'
+"""
 class show_spanning_tree_mstag(unittest.TestCase):
 	dev = Device(name='aDevice')
 	empty_output = {'execute.return_value': ''}
@@ -220,6 +224,9 @@ class show_spanning_tree_mstag(unittest.TestCase):
 	    parsed_output = obj.parse(mag_domain='risc')
 	    self.assertEqual(parsed_output,self.golden_parsed_output)
 
+"""
+Unit test for 'show spanning-tree pvrst <pvst_id>'
+"""
 class show_spanning_tree_pvrst(unittest.TestCase):
 	dev = Device(name='aDevice')
 	empty_output = {'execute.return_value': ''}
@@ -405,6 +412,9 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 	    parsed_output = obj.parse(pvst_id='a')
 	    self.assertEqual(parsed_output,self.golden_parsed_output)
 
+"""
+Unit test for 'show spanning-tree pvrstag <pvrstag_domain>'
+"""
 class show_spanning_tree_pvrstag(unittest.TestCase):
 	dev = Device(name='aDevice')
 	empty_output = {'execute.return_value': ''}
@@ -517,7 +527,9 @@ class show_spanning_tree_pvrstag(unittest.TestCase):
 	    parsed_output = obj.parse(pvrstag_domain='foo')
 	    self.assertEqual(parsed_output,self.golden_parsed_output)
 
-
+"""
+Unit test for 'show spanning-tree pvstag <pvstag_domain>'
+"""
 class show_spanning_tree_pvstag(unittest.TestCase):
 	dev = Device(name='aDevice')
 	empty_output = {'execute.return_value': ''}

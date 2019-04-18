@@ -1,4 +1,11 @@
 """show_spanning_tree.py
+
+IOSXR parser for the following show commands:
+	* show spanning-tree mst <mst_id>
+	* 'show spanning-tree mstag <mag_domain>'
+	* 'show spanning-tree pvrst <pvst_id>'
+	* 'show spanning-tree pvrstag <pvrstag_domain>'
+	* 'show spanning-tree pvstag <pvstag_domain>'
 """
 
 import re
