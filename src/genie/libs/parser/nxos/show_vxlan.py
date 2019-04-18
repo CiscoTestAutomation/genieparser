@@ -15,6 +15,7 @@ NXOS parser for the following show commands:
     * show l2route mac-ip all detail
     * show l2route summary
     * show nve vni ingress-replication
+    * show l2route evpn mac-ip evi <evi>
 """
 
 # Python
@@ -1299,12 +1300,16 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
     """parser for:
         show l2route mac-ip all detail"""
 
-    cli_command = 'show l2route mac-ip all detail'
+    cli_command = ['show l2route mac-ip all detail',
+        'show l2route evpn mac-ip evi {evi}']
 
-    def cli(self, output=None):
+    def cli(self, evi='', output=None):
         # excute command to get output
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if evi:
+                out = self.device.execute(self.cli_command[1].format(evi=evi))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -1388,6 +1393,7 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
                 continue
 
         return result_dict
+
 
 # ====================================================
 #  schema for show l2route summary
@@ -2213,6 +2219,15 @@ class ShowFabricMulticastIpL2Mroute(ShowFabricMulticastIpL2MrouteSchema):
 
         return result_dict
 
+
+# ====================================================
+#  parser for 'show l2route evpn mac-ip evi <evi>'
+# ====================================================
+class ShowL2routeEvpnMacIpEvi(ShowL2routeMacIpAllDetail):
+    """Parser for show l2route evpn mac-ip evi <evi>"""
+
+    def cli(self, evi, output=None):
+        return super().cli(evi=evi, output=output)
 
 
 
