@@ -72,16 +72,16 @@ class ShowRip(ShowRipSchema):
         show rip
         show rip vrf {vrf}"""
 
-    cli_commands = ['show rip', 'show rip vrf {vrf}']
+    cli_command = ['show rip', 'show rip vrf {vrf}']
 
     def cli(self, vrf="", output=None):
 
         if output is None:
             if not vrf:
                 vrf = 'default'
-                out = self.device.execute(self.cli_commands[0])
+                out = self.device.execute(self.cli_command[0])
             else:
-                out = self.device.execute(self.cli_commands[1].format(vrf=vrf))
+                out = self.device.execute(self.cli_command[1].format(vrf=vrf))
         else:
             out = output
 
