@@ -1,9 +1,9 @@
 ''' show_eigrp.py
 NXOS parsers for the following commands
-    * 'show ip eigrp neighbors vrf all'
-    * 'show ipv6 eigrp neighbors vrf all'
-    * 'show ip eigrp neighbors detail vrf all'
-    * 'show ipv6 eigrp neighbors detail vrf all'
+    * 'show ip eigrp neighbors vrf <vrf>'
+    * 'show ipv6 eigrp neighbors vrf <vrf>'
+    * 'show ip eigrp neighbors detail vrf <vrf>'
+    * 'show ipv6 eigrp neighbors detail vrf <vrf>'
 '''
 
 # Python
@@ -19,8 +19,8 @@ from genie.libs.parser.utils.common import Common
 
 class ShowEigrpNeighborsSchema(MetaParser):
     '''Schema for:
-        * 'show ip eigrp neighbors vrf all'
-        * 'show ipv6 eigrp neighbors vrf all'
+        * 'show ip eigrp neighbors vrf <vrf>'
+        * 'show ipv6 eigrp neighbors vrf <vrf>'
     '''
 
     schema = {
@@ -54,8 +54,8 @@ class ShowEigrpNeighborsSchema(MetaParser):
 
 class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
     '''Super parser for:
-        * 'show ip eigrp neighbors vrf all'
-        * 'show ipv6 eigrp neighbors vrf all'
+        * 'show ip eigrp neighbors vrf <vrf>'
+        * 'show ipv6 eigrp neighbors vrf <vrf>'
     '''
 
     def cli(self, vrf='', output=None):
@@ -180,8 +180,8 @@ class ShowIpv6EigrpNeighbors(ShowEigrpNeighborsSuperParser,
 
 class ShowEigrpNeighborsDetailSchema(MetaParser):
     '''Schema for:
-        * 'show ip eigrp neighbors detail vrf all'
-        * 'show ipv6 eigrp neighbors detail vrf all'
+        * 'show ip eigrp neighbors detail vrf <vrf>'
+        * 'show ipv6 eigrp neighbors detail vrf <vrf>'
     '''
 
     schema = {
@@ -224,8 +224,8 @@ class ShowEigrpNeighborsDetailSchema(MetaParser):
 
 class ShowEigrpNeighborsDetailSuperParser(ShowEigrpNeighborsDetailSchema):
     '''Super parser for:
-        * 'show ip eigrp neighbors detail vrf all'
-        * 'show ipv6 eigrp neighbors detail vrf all'
+        * 'show ip eigrp neighbors detail vrf <vrf>'
+        * 'show ipv6 eigrp neighbors detail vrf <vrf>'
     '''
 
     def cli(self, vrf='', output=None):
