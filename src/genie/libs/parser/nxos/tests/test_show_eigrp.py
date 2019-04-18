@@ -36,7 +36,7 @@ class test_show_eigrp_neighbors(unittest.TestCase):
                                                 'srtt': 0.001,
                                                 'rto': 50,
                                                 'q_cnt': 0,
-                                                'last_seq_number': 16, }, }, },
+                                                'last_seq_number': 16, }}},
                                     'Ethernet1/1.90': {
                                         'eigrp_nbr': {
                                             '10.23.90.2': {
@@ -46,7 +46,7 @@ class test_show_eigrp_neighbors(unittest.TestCase):
                                                 'srtt': 0.015,
                                                 'rto': 90,
                                                 'q_cnt': 0,
-                                                'last_seq_number': 22, }, }, }, }, }, }, },
+                                                'last_seq_number': 22, }}}}}}},
                     'VRF1': {
                         'address_family': {
                             'ipv4': {
@@ -73,7 +73,7 @@ class test_show_eigrp_neighbors(unittest.TestCase):
                                                 'srtt': 0.01,
                                                 'rto': 60,
                                                 'q_cnt': 0,
-                                                'last_seq_number': 9, }, }, }, }, }, }, }, }, }, }, }
+                                                'last_seq_number': 9, }}}}}}}}}}}
 
     device_output_1 = {'execute.return_value': '''
         # show ip eigrp neighbors vrf all
@@ -107,10 +107,7 @@ class test_show_eigrp_neighbors(unittest.TestCase):
                                                 'srtt': 0.010,
                                                 'rto': 60,
                                                 'q_cnt': 0,
-                                                'last_seq_number': 30
-                                            }
-                                        }
-                                    },
+                                                'last_seq_number': 30}}},
                                     'Ethernet1/2.90': {
                                         'eigrp_nbr': {
                                             'fe80::f816:3eff:fe62:65af': {
@@ -120,14 +117,7 @@ class test_show_eigrp_neighbors(unittest.TestCase):
                                                 'srtt': 0.004,
                                                 'rto': 50,
                                                 'q_cnt': 0,
-                                                'last_seq_number': 22
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
+                                                'last_seq_number': 22}}}}}}},
                     'VRF1': {
                         'address_family': {
                             'ipv6': {
@@ -154,18 +144,7 @@ class test_show_eigrp_neighbors(unittest.TestCase):
                                                 'srtt': 0.004,
                                                 'rto': 50,
                                                 'q_cnt': 0,
-                                                'last_seq_number': 8
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+                                                'last_seq_number': 8 }}}}}}}}}}}
 
     device_output_2 = {'execute.return_value': '''
         # show ipv6 eigrp neighbors vrf all
@@ -256,7 +235,7 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                                 'retransmit_count': 1,
                                                 'retry_count': 0,
                                                 'bfd_state': 'N/A',
-                                                'prefixes': 3, }, }, }, }, }, }, },
+                                                'prefixes': 3}}}}}}},
                     'VRF1': {
                         'address_family': {
                             'ipv4': {
@@ -300,7 +279,7 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                                 'retransmit_count': 1,
                                                 'retry_count': 0,
                                                 'bfd_state': 'N/A',
-                                                'prefixes': 3, }, }, }, }, }, }, }, }, }, }, }
+                                                'prefixes': 3}}}}}}}}}}}
 
     device_output_1 = {'execute.return_value': '''
         # show ip eigrp neighbors detail vrf all
@@ -371,7 +350,7 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                                 'retransmit_count': 0,
                                                 'retry_count': 0,
                                                 'bfd_state': 'N/A',
-                                                'prefixes': 0}, }, }, }, }, }, },
+                                                'prefixes': 0}}}}}}},
                     'VRF1': {
                         'address_family': {
                             'ipv6': {
@@ -418,7 +397,7 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                                 'retransmit_count': 1,
                                                 'retry_count': 0,
                                                 'bfd_state': 'N/A',
-                                                'prefixes': 0}, }, }, }, }, }, }, }, }, }, }
+                                                'prefixes': 0}}}}}}}}}}}
 
     device_output_2 = {'execute.return_value': '''
         # show ipv6 eigrp neighbors detail vrf all
