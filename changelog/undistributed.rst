@@ -27,6 +27,11 @@
       * Add ShowIpEigrpNeighborsDetail for:
             show ip eigrp neighbors detail
             show ip eigrp vrf <vrf> neighbors detail
+
+      * Add ShowIpv6EigrpNeighborsDetail for:
+            show ipv6 eigrp neighbors detail
+            show ipv6 eigrp vrf <vrf> neighbors detail
+
 * IOSXR
     * Add ShowEigrpIpv4Neighbors for:
             show eigrp ipv4 neighbors
