@@ -7,6 +7,8 @@ IOSXE parsers for the following commands
     * 'show ipv6 eigrp vrf <vrf> neighbors'
     * 'show ip eigrp neighbors detail'
     * 'show ip eigrp vrf <vrf> neighbors detail'
+    * 'show ipv6 eigrp neighbors detail'
+    * 'show ipv6 eigrp vrf <vrf> neighbors detail'
 '''
 
 # Python
@@ -299,9 +301,12 @@ class ShowIpv6EigrpNeighbors(ShowEigrpNeighborsSuperParser, ShowEigrpNeighborsSc
 
 
 class ShowIpEigrpNeighborsDetailSchema(MetaParser):
+
     ''' Schema for
         * 'show ip eigrp neighbors detail'
         * 'show ip eigrp vrf <vrf> neighbors detail'
+        * 'show ipv6 eigrp neighbors detail'
+        * 'show ipv6 eigrp vrf <vrf> neighbors detail'
     '''
 
     schema = {
@@ -314,8 +319,8 @@ class ShowIpEigrpNeighborsDetailSchema(MetaParser):
                             'name': str,
                             'named_mode': bool,
                             'eigrp_interface': {
-                                Any(): {                                    
-                                    'eigrp_nbr': {                                    
+                                Any(): {
+                                    'eigrp_nbr': {
                                         Any(): {
                                             'retransmit_count': int,
                                             'retry_count': int,
@@ -601,6 +606,10 @@ class ShowIpEigrpNeighborsDetailSuperParser(ShowIpEigrpNeighborsDetailSchema):
 
 class ShowIpEigrpNeighborsDetail(ShowIpEigrpNeighborsDetailSuperParser,
                                  ShowIpEigrpNeighborsDetailSchema):
+    
+    # Parser for:
+    #   'show ip eigrp neighbors detail'
+    #   'show ip eigrp vrf <vrf> neighbors detail'
 
     cli_command = ['show ip eigrp vrf <vrf> neighbors detail',
                    'show ip eigrp neighbors detail',]
@@ -620,6 +629,10 @@ class ShowIpEigrpNeighborsDetail(ShowIpEigrpNeighborsDetailSuperParser,
 
 class ShowIpv6EigrpNeighborsDetail(ShowIpEigrpNeighborsDetailSuperParser,
                                    ShowIpEigrpNeighborsDetailSchema):
+
+    # Parser for:
+    #   'show ipv6 eigrp neighbors detail'
+    #   'show ipv6 eigrp vrf <vrf> neighbors detail'
 
     cli_command = ['show ipv6 eigrp vrf <vrf> neighbors detail',
                    'show ipv6 eigrp neighbors detail',]
