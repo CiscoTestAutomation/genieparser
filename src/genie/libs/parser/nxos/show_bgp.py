@@ -1689,15 +1689,14 @@ class ShowBgpVrfAllAllSchema(MetaParser):
 class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
     """Parser for show bgp vrf all all"""
 
-    cli_command = ['show bgp vrf all all'
-                  ,'show bgp vrf {vrf} ipv4 unicast']
+    cli_command = 'show bgp vrf all all'
 
-    def cli(self, vrf_value=None, output=None):
+    def cli(self, cmd=None, vrf=None, output=None):
         if output is None:
-            if vrf_value:
-                out = self.device.execute(self.cli_command[1].format(vrf=vrf_value))
+            if vrf and cmd:
+                out = self.device.execute(cmd.format(vrf=vrf))
             else:
-              out = self.device.execute(self.cli_command[0])
+              out = self.device.execute(self.cli_command)
         else:
             out = output
 
@@ -1726,21 +1725,21 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
             m = p1.match(line)
             if m:
                 # Get values
-                vrf = str(m.groupdict()['vrf_name'])
+                vrf_name = str(m.groupdict()['vrf_name'])
                 address_family = str(m.groupdict()['address_family']).lower()
                 original_address_family = address_family
                 if 'vrf' not in parsed_dict:
                     parsed_dict['vrf'] = {}
-                if vrf not in parsed_dict['vrf']:
-                    parsed_dict['vrf'][vrf] = {}
-                if 'address_family' not in parsed_dict['vrf'][vrf]:
-                    parsed_dict['vrf'][vrf]['address_family'] = {}
-                if address_family not in parsed_dict['vrf'][vrf]\
+                if vrf_name not in parsed_dict['vrf']:
+                    parsed_dict['vrf'][vrf_name] = {}
+                if 'address_family' not in parsed_dict['vrf'][vrf_name]:
+                    parsed_dict['vrf'][vrf_name]['address_family'] = {}
+                if address_family not in parsed_dict['vrf'][vrf_name]\
                     ['address_family']:
-                    parsed_dict['vrf'][vrf]['address_family'][address_family] = {}
+                    parsed_dict['vrf'][vrf_name]['address_family'][address_family] = {}
 
                 # Set af_dict
-                af_dict = parsed_dict['vrf'][vrf]['address_family'][address_family]
+                af_dict = parsed_dict['vrf'][vrf_name]['address_family'][address_family]
                 continue
 
             # BGP table version is 35, local router ID is 10.229.11.11
@@ -1756,7 +1755,7 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                 af_dict['local_router_id'] = local_router_id
                 continue
 
-            if vrf_value is None:
+            if vrf is None:
                 #                     20:47::21a:1ff:fe00:161/128
                 p3_4 = re.compile(r'^\s*(?P<next_hop>[a-zA-Z0-9\.\:\/\[\]\,]+)$')
                 m = p3_4.match(line)
@@ -1970,29 +1969,29 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                 new_address_family = original_address_family + ' RD ' + route_distinguisher
                 
                 # Init dict
-                if 'address_family' not in parsed_dict['vrf'][vrf]:
-                    parsed_dict['vrf'][vrf]['address_family'] = {}
-                if new_address_family not in parsed_dict['vrf'][vrf]['address_family']:
-                    parsed_dict['vrf'][vrf]['address_family'][new_address_family] = {}
+                if 'address_family' not in parsed_dict['vrf'][vrf_name]:
+                    parsed_dict['vrf'][vrf_name]['address_family'] = {}
+                if new_address_family not in parsed_dict['vrf'][vrf_name]['address_family']:
+                    parsed_dict['vrf'][vrf_name]['address_family'][new_address_family] = {}
                 
                 # Set keys
-                parsed_dict['vrf'][vrf]['address_family'][new_address_family]['bgp_table_version'] = bgp_table_version
-                parsed_dict['vrf'][vrf]['address_family'][new_address_family]['local_router_id'] = local_router_id
-                parsed_dict['vrf'][vrf]['address_family'][new_address_family]['route_distinguisher'] = route_distinguisher
+                parsed_dict['vrf'][vrf_name]['address_family'][new_address_family]['bgp_table_version'] = bgp_table_version
+                parsed_dict['vrf'][vrf_name]['address_family'][new_address_family]['local_router_id'] = local_router_id
+                parsed_dict['vrf'][vrf_name]['address_family'][new_address_family]['route_distinguisher'] = route_distinguisher
 
 
                 if m.groupdict()['default_vrf']:
-                    parsed_dict['vrf'][vrf]['address_family']\
+                    parsed_dict['vrf'][vrf_name]['address_family']\
                         [new_address_family]['default_vrf'] = \
                             str(m.groupdict()['default_vrf'])
                 elif m.groupdict()['default_vrf1']:
-                    parsed_dict['vrf'][vrf]['address_family']\
+                    parsed_dict['vrf'][vrf_name]['address_family']\
                         [new_address_family]['default_vrf'] = \
                             str(m.groupdict()['default_vrf1'])
 
                 # Reset address_family key and af_dict for use in other regex
                 address_family = new_address_family
-                af_dict = parsed_dict['vrf'][vrf]['address_family'][address_family]
+                af_dict = parsed_dict['vrf'][vrf_name]['address_family'][address_family]
                 continue
 
             # Network            Next Hop            Metric     LocPrf     Weight Path
@@ -2120,11 +2119,11 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
         if 'vrf' not in parsed_dict:
             return parsed_dict
 
-        for vrf in parsed_dict['vrf']:
-            if 'address_family' not in parsed_dict['vrf'][vrf]:
+        for vrf_name in parsed_dict['vrf']:
+            if 'address_family' not in parsed_dict['vrf'][vrf_name]:
                 continue
-            for af in parsed_dict['vrf'][vrf]['address_family']:
-                af_dict = parsed_dict['vrf'][vrf]['address_family'][af]
+            for af in parsed_dict['vrf'][vrf_name]['address_family']:
+                af_dict = parsed_dict['vrf'][vrf_name]['address_family'][af]
                 if 'prefixes' in af_dict:
                     for prefixes in af_dict['prefixes']:
                         if len(af_dict['prefixes'][prefixes]['index'].keys()) > 1:                            
@@ -11563,6 +11562,7 @@ class ShowBgpIpMvpn(ShowBgpIpMvpnRouteType):
 # ============================================
 class ShowBgpVrfIpv4Unicast(ShowBgpVrfAllAll):
     """Parser for show bgp vrf <vrf> ipv4 unicast"""
+    cli_command = 'show bgp vrf {vrf} ipv4 unicast'
 
     def cli(self, vrf, output=None):
-        return super().cli(vrf, output=output)
+        return super().cli(cmd=self.cli_command, vrf=vrf, output=output)
