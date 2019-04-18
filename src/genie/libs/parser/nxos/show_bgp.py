@@ -11533,41 +11533,6 @@ class ShowBgpIpMvpn(ShowBgpIpMvpnRouteType):
 
         return super().cli(cmd=cmd,output=output)
 
-# ============================================
-# Schema for 'show bgp vrf <vrf> ipv4 unicast'
-# ============================================
-class ShowBgpVrfIpv4UnicastSchema(MetaParser):
-    """Schema for show bgp vrf <vrf> ipv4 unicast"""
-
-    schema = {
-        'vrf': 
-            {Any(): 
-                {'address_family': 
-                    {Any(): 
-                        {'bgp_table_version': int,
-                         'local_router_id': str,
-                         Optional('prefixes'):
-                            {Any(): 
-                                {'index': 
-                                    {Any(): 
-                                        {
-                                            'next_hop': str,
-                                            'status_codes': str,
-                                            'path_type': str,
-                                            'metric': int,
-                                            'localprf': int,
-                                            'weight': int,
-                                            'path': str,
-                                            'origin_codes': str,
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            },
-        }
 
 # ============================================
 # Parser for 'show bgp vrf <vrf> ipv4 unicast'
