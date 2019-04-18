@@ -65,10 +65,10 @@ class ShowMplsLdpNeighborBrief(ShowMplsLdpNeighborBriefSchema):
         # -----------------  --  ---  ----------  ----------  ----------  ------------
         # 10.205.2.254:0     Y   Y    31w0d       2     0     10    0     77     0
         p1 = re.compile(r'^(?P<peer>[\d\.:]+)\s+(?P<gr>[\w]+)\s+'
-                         '(?P<nsr>[\w]+)\s+(?P<up_time>[\w\d]+)\s+'
+                         '(?P<nsr>[\w]+)\s+(?P<up_time>[\w\d\:]+)\s+'
                          '(?P<discovery_ipv4>[\d]+)\s+(?P<discovery_ipv6>[\d]+)\s+'
                          '(?P<addresses_ipv4>[\d]+)\s+(?P<addresses_ipv6>[\d]+)\s+'
-                         '(?P<labels_ipv4>[\d]+)\s+(?P<labels_ipv6>[\d]+)\s*$')
+                         '(?P<labels_ipv4>[\d]+)\s+(?P<labels_ipv6>[\d]+)$')
 
         # Peer              GR Up Time         Discovery Address
         # ----------------- -- --------------- --------- -------

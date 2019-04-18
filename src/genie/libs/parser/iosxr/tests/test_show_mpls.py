@@ -77,7 +77,20 @@ class test_show_mpls_ldp_neighbor_brief(unittest.TestCase):
                     'ipv4': 5,
                     'ipv6': 5},
                 'nsr': 'N',
-                'up_time': '1d00h'}}}
+                'up_time': '1d00h'},
+            '6.6.6.1:0': {
+                'addresses': {
+                    'ipv4': 0,
+                    'ipv6': 2},
+                'discovery': {
+                    'ipv4': 0,
+                    'ipv6': 1},
+                    'gr': 'Y',
+                'labels': {
+                    'ipv4': 0,
+                    'ipv6': 5},
+                'nsr': 'N',
+                'up_time': '23:25:50'}}}
 
     golden_output1 = {'execute.return_value': '''
         RP/0/0/CPU0:router# show mpls ldp neighbor brief
@@ -121,6 +134,33 @@ class test_show_mpls_ldp_neighbor_brief(unittest.TestCase):
         2.2.2.2:0         N  00:01:02                2       5
     '''}
 
+    golden_parsed_output3 = {
+        'peer': {
+            '1.1.1.1:0': {
+                'addresses': {
+                    'ipv4': 9,
+                    'ipv6': 0},
+                'discovery': {
+                    'ipv4': 1,
+                    'ipv6': 0},
+                'gr': 'N',
+                'labels': {
+                    'ipv4': 15,
+                    'ipv6': 0},
+                'nsr': 'N',
+                'up_time': '00:08:57'}}}
+
+    golden_output3 = {'execute.return_value': '''
+         +++ R2_xr: executing command 'show mpls ldp neighbor brief' +++
+         show mpls ldp neighbor brief
+         Wed Apr 17 16:45:04.410 UTC
+         
+         Peer               GR  NSR  Up Time     Discovery   Addresses     Labels
+                                                 ipv4  ipv6  ipv4  ipv6  ipv4   ipv6
+         -----------------  --  ---  ----------  ----------  ----------  ------------
+         1.1.1.1:0          N   N    00:08:57    1     0     9     0     15     0
+    '''}
+
     def test_show_mpls_ldp_neighbor_brief_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowMplsLdpNeighborBrief(device=self.device)
@@ -140,6 +180,13 @@ class test_show_mpls_ldp_neighbor_brief(unittest.TestCase):
         obj = ShowMplsLdpNeighborBrief(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_show_mpls_ldp_neighbor_brief_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowMplsLdpNeighborBrief(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 
 if __name__ == '__main__':
