@@ -16,55 +16,63 @@ class show_spanning_tree_mst(unittest.TestCase):
 	dev = Device(name='aDevice')
 	empty_output = {'execute.return_value': ''}
 	golden_parsed_output = {
-		'mst_instances': {
-		    '0': {
-		        'mst_id': '0',
-		        'vlan': '1-4094',
-		        'cist_root_priority': 32768,
-		        'cist_root_address': '0021.1bfd.1007',
-		        'cist_root_cost': 2000,
-		        'designated_root_priority': 32768,
-		        'designated_root_address': 'd867.d938.ace7',
-		        'root_cost': 0,
-		        'root_max_age': 20,
-		        'root_forward_delay': 15,
-		        'bridge_priority': 32768,
-		        'sys_id_ext': 0,
-		        'bridge_address': 'd867.d938.ace7',
-		        'bridge_max_age': 20,
-		        'bridge_forward_delay': 15,
-		        'bridge_max_hops': 20,
-		        'bridge_transmit_hold_count': 6,
-		        'interfaces': {
-		            'Te0/0/0/16': {
-		                'name': 'Te0/0/0/16',
-		                'cost': 2000,
-		                'role': 'ROOT',
-		                'port_priority': 1,
-		                'port_num': 128,
-		                'port_state': 'FWD',
-		                'designated_bridge_priority': 32768,
-		                'designated_bridge_address': '0021.1bfd.1007',
-		                'designated_port_priority': 1,
-		                'designated_port_num': 128,
-		                },
-		            'Te0/0/0/17': {
-		                'name': 'Te0/0/0/17',
-		                'cost': 2000,
-		                'role': 'ALT',
-		                'port_priority': 2,
-		                'port_num': 128,
-		                'port_state': 'BLK',
-		                'designated_bridge_priority': 32768,
-		                'designated_bridge_address': '0021.1bfd.1007',
-		                'designated_port_priority': 2,
-		                'designated_port_num': 128,
+		'mstp': {
+		    'mst_domain': {
+		        'mst_instances': {
+		            '0': {
+		                'mst_id': '0',
+		                'vlan': '1-4094',
+		                'cist_root_priority': 32768,
+		                'cist_root_address': '0021.1bfd.1007',
+		                'cist_root_cost': 2000,
+		                'designated_root_priority': 32768,
+		                'designated_root_address': 'd867.d938.ace7',
+		                'this_bridge_is': 'the root',
+		                'root_cost': 0,
+		                'root_max_age': 20,
+		                'root_forward_delay': 15,
+		                'bridge_priority': 32768,
+		                'sys_id_ext': 0,
+		                'bridge_address': 'd867.d938.ace7',
+		                'bridge_max_age': 20,
+		                'bridge_forward_delay': 15,
+		                'bridge_max_hops': 20,
+		                'bridge_transmit_hold_count': 6,
+		                'interfaces': {
+		                    'TenGigabitEthernet0/0/0/16': {
+		                        'name': 'TenGigabitEthernet0/0/0/16',
+		                        'cost': 2000,
+		                        'role': 'ROOT',
+		                        'port_priority': 128,
+		                        'port_num': 1,
+		                        'port_state': 'FWD',
+		                        'designated_bridge_priority': 32768,
+		                        'designated_bridge_address': '0021.1bfd.1007',
+		                        'designated_port_priority': 128,
+		                        'designated_port_num': 1,
+		                        },
+		                    'TenGigabitEthernet0/0/0/17': {
+		                        'name': 'TenGigabitEthernet0/0/0/17',
+		                        'cost': 2000,
+		                        'role': 'ALT',
+		                        'port_priority': 128,
+		                        'port_num': 2,
+		                        'port_state': 'BLK',
+		                        'designated_bridge_priority': 32768,
+		                        'designated_bridge_address': '0021.1bfd.1007',
+		                        'designated_port_priority': 128,
+		                        'designated_port_num': 2,
+		                        },
+		                    },
 		                },
 		            },
 		        },
 		    },
 		}
+
 	golden_output = {'execute.return_value': '''\
+	RP/0/RSP0/CPU0:athens#show spanning-tree mst test
+	Tue Nov 14 05:54:37.272 EST
 	Role:  ROOT=Root, DSGN=Designated, ALT=Alternate, BKP=Backup, MSTR=Master
 	State: FWD=Forwarding, LRN=Learning, BLK=Blocked, DLY=Bringup Delayed
 
@@ -120,14 +128,13 @@ class show_spanning_tree_mstag(unittest.TestCase):
 		    'risc': {
 		        'domain': 'risc',
 		        'interfaces': {
-		            'Ether10.0': {
-		                'interface': 'Ether10.0',
+		            'Bundle-Ether10.0': {
+		                'interface': 'Bundle-Ether10.0',
 		                'preempt_delay': False,
-		                'preempt_delay_state': 'disabled',
 		                'name': 'risc',
 		                'revision': 1,
 		                'max_age': 20,
-		                'provider_bridge': 'no',
+		                'provider_bridge': False,
 		                'bridge_id': '0000.0000.0002',
 		                'port_id': 1,
 		                'external_cost': 0,
@@ -140,6 +147,18 @@ class show_spanning_tree_mstag(unittest.TestCase):
 		            'instances': {
 		                '0': {
 		                    'instance': 0,
+		                    'vlans': '1-2,4-4094',
+		                    'priority': 8192,
+		                    'port_priority': 128,
+		                    'cost': 0,
+		                    'root_bridge': '0000.0000.0001',
+		                    'root_priority': 4096,
+		                    'counters': {
+		                        'topology_changes': 31,
+		                        },
+		                    },
+		                '1': {
+		                    'instance': 1,
 		                    'vlans': '3',
 		                    'priority': 4096,
 		                    'port_priority': 128,
@@ -223,53 +242,53 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 		                'bridge_transmit_hold_count': 6,
 		                },
 		            'interface': {
-		                'Gi0/7/0/0': {
-		                    'name': 'Gi0/7/0/0',
+		                'GigabitEthernet0/7/0/0': {
+		                    'name': 'GigabitEthernet0/7/0/0',
 		                    'cost': 20000,
 		                    'role': 'DSGN',
-		                    'port_priority': 1,
-		                    'port_num': 128,
+		                    'port_priority': 128,
+		                    'port_num': 1,
 		                    'port_state': 'FWD',
 		                    'designated_bridge_priority': 32768,
 		                    'designated_bridge_address': '8cb6.4fe9.7b9e',
-		                    'designated_port_priority': 1,
-		                    'designated_port_num': 128,
+		                    'designated_port_priority': 128,
+		                    'designated_port_num': 1,
 		                    },
-		                'Gi0/7/0/1': {
-		                    'name': 'Gi0/7/0/1',
+		                'GigabitEthernet0/7/0/1': {
+		                    'name': 'GigabitEthernet0/7/0/1',
 		                    'cost': 20000,
 		                    'role': 'DSGN',
-		                    'port_priority': 2,
-		                    'port_num': 128,
+		                    'port_priority': 128,
+		                    'port_num': 2,
 		                    'port_state': 'FWD',
 		                    'designated_bridge_priority': 32768,
 		                    'designated_bridge_address': '8cb6.4fe9.7b9e',
-		                    'designated_port_priority': 2,
-		                    'designated_port_num': 128,
+		                    'designated_port_priority': 128,
+		                    'designated_port_num': 2,
 		                    },
-		                'Gi0/7/0/10': {
-		                    'name': 'Gi0/7/0/10',
+		                'GigabitEthernet0/7/0/10': {
+		                    'name': 'GigabitEthernet0/7/0/10',
 		                    'cost': 20000,
 		                    'role': 'ROOT',
-		                    'port_priority': 3,
-		                    'port_num': 128,
+		                    'port_priority': 128,
+		                    'port_num': 3,
 		                    'port_state': 'FWD',
 		                    'designated_bridge_priority': 32768,
 		                    'designated_bridge_address': '0021.1bfc.dc76',
-		                    'designated_port_priority': 3,
-		                    'designated_port_num': 128,
+		                    'designated_port_priority': 128,
+		                    'designated_port_num': 3,
 		                    },
-		                'Gi0/7/0/11': {
-		                    'name': 'Gi0/7/0/11',
+		                'GigabitEthernet0/7/0/11': {
+		                    'name': 'GigabitEthernet0/7/0/11',
 		                    'cost': 20000,
 		                    'role': 'ALT',
-		                    'port_priority': 4,
-		                    'port_num': 128,
+		                    'port_priority': 128,
+		                    'port_num': 4,
 		                    'port_state': 'BLK',
 		                    'designated_bridge_priority': 32768,
 		                    'designated_bridge_address': '0021.1bfc.dc76',
-		                    'designated_port_priority': 4,
-		                    'designated_port_num': 128,
+		                    'designated_port_priority': 128,
+		                    'designated_port_num': 4,
 		                    },
 		                },
 		            3: {
@@ -399,6 +418,7 @@ class show_spanning_tree_pvrstag(unittest.TestCase):
 		                'vlans': {
 		                    '5': {
 		                        'preempt_delay': True,
+		                        'preempt_delay_state': 'Sending startup BPDU until 13:38:03',
 		                        'sub_interface': 'GigabitEthernet0/0/0/0.5',
 		                        'sub_interface_state': 'Up',
 		                        'max_age': 20,
@@ -410,7 +430,7 @@ class show_spanning_tree_pvrstag(unittest.TestCase):
 		                        'port_priority': 128,
 		                        'port_id': 1,
 		                        'hello_time': 2,
-		                        'active': 'Yes',
+		                        'active': True,
 		                        'counters': {
 		                            'bdpu_sent': 6,
 		                            'topology_changes': 0,
@@ -423,6 +443,7 @@ class show_spanning_tree_pvrstag(unittest.TestCase):
 		                'vlans': {
 		                    '5': {
 		                        'preempt_delay': True,
+		                        'preempt_delay_state': 'Sending standard BPDU',
 		                        'sub_interface': 'GigabitEthernet0/0/0/1.5',
 		                        'sub_interface_state': 'Up',
 		                        'max_age': 20,
@@ -434,7 +455,7 @@ class show_spanning_tree_pvrstag(unittest.TestCase):
 		                        'port_priority': 128,
 		                        'port_id': 1,
 		                        'hello_time': 2,
-		                        'active': 'Yes',
+		                        'active': True,
 		                        'counters': {
 		                            'bdpu_sent': 7,
 		                            'topology_changes': 0,
@@ -446,7 +467,6 @@ class show_spanning_tree_pvrstag(unittest.TestCase):
 		        },
 		    },
 		}
-
 	golden_output = {'execute.return_value': '''\
 	RP/0/0/CPU0:ios#show spanning-tree pvrstag foo
 	Wed Mar 29 12:38:05.528 UTC
@@ -522,7 +542,7 @@ class show_spanning_tree_pvstag(unittest.TestCase):
 		                        'port_priority': 128,
 		                        'port_id': 1,
 		                        'hello_time': 2,
-		                        'active': 'Yes',
+		                        'active': True,
 		                        'counters': {
 		                            'bdpu_sent': 10,
 		                            'topology_changes': 0,

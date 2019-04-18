@@ -480,3 +480,19 @@
         show rpl prefix-set
         show rpl prefix-set <name>
 
+--------------------------------------------------------------------------------
+                                  SPT
+--------------------------------------------------------------------------------
+* IOSXR
+    * Add ShowSpanningTreeMst for:
+        show spanning-tree mst <mst_id>
+    * Add ShowSpanningTreeMstag for:
+        show spanning-tree mstag <mag_domain>
+    * Add ShowSpanningTreePvrst for:
+        show spanning-tree pvrst <pvst_id>
+    * Add ShowSpanningTreePvrsTag for:
+        show spanning-tree pvrstag <pvrstag_domain>
+    * Add ShowSpanningTreePvsTag for:
+        show spanning-tree pvstag <pvstag_domain>
+
+
