@@ -10,7 +10,7 @@
 --------------------------------------------------------------------------------
 * IOSXE
   * ShowBgpNeighborSuperParser enhanced to support 'Multisession Capability'
-
+  * Updated ShowBgpAllNeighbors to support different session states
 
 ----------------------------------------------------------------------------------
                                   EIGRP
@@ -27,6 +27,28 @@
       * Add ShowIpEigrpNeighborsDetail for:
             show ip eigrp neighbors detail
             show ip eigrp vrf <vrf> neighbors detail
+* IOSXR
+    * Add ShowEigrpIpv4Neighbors for:
+            show eigrp ipv4 neighbors
+            show eigrp ipv4 vrf <vrf> neighbors
+    * Add ShowEigrpIpv6Neighbors for:
+            show eigrp ipv6 neighbors
+            show eigrp ipv6 vrf <all> neighbors
+    * Add ShowEigrpIpv4NeighborsDetail for:
+            show eigrp ipv4 neighbors detail
+            show eigrp ipv4 vrf <vrf> neighbors detail
+    * Add ShowEigrpIpv6NeighborsDetail for:
+            show eigrp ipv6 neighbors detail
+            show eigrp ipv6 vrf <all> neighbors detail
+* NXOS
+    * Add ShowIpv4EigrpNeighbors for:
+        show ip eigrp neighbors vrf <vrf>
+    * Add ShowIpv6EigrpNeighbors for:
+        show ipv6 eigrp neighbors vrf <all>
+    * Add ShowIpv4EigrpNeighborsDetail for:
+        show ip eigrp neighbors detail vrf <all>
+    * Add ShowIpv6EigrpNeighborsDetail for:
+        show ipv6 eigrp neighbors detail vrf <all>
 
 ----------------------------------------------------------------------------------
                                    CDP
@@ -226,6 +248,40 @@
         'show snmp mib'
 
 --------------------------------------------------------------------------------
+                                   PLATFORM
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowEnvironment for:
+        show environment
+    * Add ShowEnvironmentAll for:
+        show environment all
+    * Add ShowModule for:
+        show module
+    * Add ShowSwitch for:
+        show switch
+    * Add ShowSwitchDetail for:
+        show switch detail
+
+--------------------------------------------------------------------------------
+                                   RPF
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowIpRpf for:
+        show ip rpf <mroute address>
+        show ip rpf vrf <vrf> <mroute address>
+    * Add ShowIpv6Rpf for:
+        show ipv6 rpf <mroute address>
+        show ipv6 rpf vrf <vrf> <mroute address>
+
+--------------------------------------------------------------------------------
+                                   ROUTING
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowIpv6RouteWord for:
+        show ipv6 route <Hostname or A.B.C.D>
+        show ipv6 route vrf <vrf> <Hostname or A.B.C.D>
+
+--------------------------------------------------------------------------------
                                    ISSU
 --------------------------------------------------------------------------------
 * IOS
@@ -381,6 +437,7 @@
   * Add ShowIpv6AccessLists for :
           show ipv6 access-list
           show ipv6 access-list <acl>
+
 * IOSXR
     * Add ShowAclAfiAll for:
         show access-lists afi-all
@@ -431,3 +488,4 @@
     * Add ShowRplPrefixSet for:
         show rpl prefix-set
         show rpl prefix-set <name>
+
