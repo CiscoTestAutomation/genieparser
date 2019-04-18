@@ -2227,7 +2227,3 @@ class ShowL2routeEvpnMacIpEvi(ShowL2routeMacIpAllDetail):
 
     def cli(self, evi, output=None):
         return super().cli(evi=evi, output=output)
-
-
-
-
