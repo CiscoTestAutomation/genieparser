@@ -1689,11 +1689,15 @@ class ShowBgpVrfAllAllSchema(MetaParser):
 class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
     """Parser for show bgp vrf all all"""
 
-    cli_command = 'show bgp vrf all all'
+    cli_command = ['show bgp vrf all all'
+                  ,'show bgp vrf {vrf} ipv4 unicast']
 
-    def cli(self, output=None):
+    def cli(self, vrf_value=None, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if vrf_value is not None:
+                out = self.device.execute(self.cli_command[1].format(vrf=vrf_value))
+            else:
+              out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -1717,7 +1721,7 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
 
             # BGP routing table information for VRF VRF1, address family IPv4 Unicast
             p1 = re.compile(r'^\s*BGP +routing +table +information +for +VRF'
-                             ' +(?P<vrf_name>[a-zA-Z0-9\-]+), +address +family'
+                             ' +(?P<vrf_name>\S+), +address +family'
                              ' +(?P<address_family>[a-zA-Z0-9\s\-\_]+)$')
             m = p1.match(line)
             if m:
@@ -1752,38 +1756,48 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                 af_dict['local_router_id'] = local_router_id
                 continue
 
-            #                     20:47::21a:1ff:fe00:161/128
-            p3_4 = re.compile(r'^\s*(?P<next_hop>[a-zA-Z0-9\.\:\/\[\]\,]+)$')
-            m = p3_4.match(line)
-            if m:
-                # Get keys
-                next_hop = str(m.groupdict()['next_hop'])
+            if vrf_value is None:
+                #                     20:47::21a:1ff:fe00:161/128
+                p3_4 = re.compile(r'^\s*(?P<next_hop>[a-zA-Z0-9\.\:\/\[\]\,]+)$')
+                m = p3_4.match(line)
+                if m:
+                    # Get keys
+                    next_hop = str(m.groupdict()['next_hop'])
 
-                if data_on_nextline:
-                    data_on_nextline =  False
-                else:
-                    index += 1
+                    if data_on_nextline:
+                        data_on_nextline =  False
+                    else:
+                        index += 1
 
-                # Init dict
-                index_dict = af_dict.setdefault('prefixes', {}).setdefault(prefix, {})\
-                  .setdefault('index', {}).setdefault(index, {})
+                    # Init dict
+                    index_dict = af_dict.setdefault('prefixes', {}).setdefault(prefix, {})\
+                      .setdefault('index', {}).setdefault(index, {})
 
-                # Set keys
-                index_dict['next_hop'] = next_hop
-                continue
+                    # Set keys
+                    index_dict['next_hop'] = next_hop
+                    continue
 
             # Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
             # Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist
             # Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath
             # Network            Next Hop         Metric   LocPrf   Weight Path
-
+            
             # *>i[2]:[77][7,0][10.69.9.9,1,151587081][10.135.1.1,22][10.106.101.1,10.76.1.30]/616
             # *>iaaaa:1::/113       ::ffff:10.106.101.1
-            p3_1 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
-                             '(?P<path_type>(i|e|c|l|a|r|I))?'
+            p3_1 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)'
+                             '(?P<path_type>(i|e|c|l|a|r|I))'
                              '(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,]+)'
                              '(?: *(?P<next_hop>[a-zA-Z0-9\.\:\/\[\]\,]+))?$')
             m = p3_1.match(line)
+            # *>i100.101.8.3/32     66.66.66.66           2000        100          0 200 i
+            # *>i100.101.8.4/32     66.66.66.66           2000        100          0 200 i
+            p3_1_2 = re.compile(r'^(?P<status_codes>(s|x|S|d|h|\*|\>)+)(?P<path_type>'
+              '(i|e|c|l|a|r|I))(?P<prefix>[\w\.\/]+) +(?P<next_hop>[\w\.\/]+) +'
+              '(?P<metric>\d+) +(?P<localprf>\d+) +(?P<weight>\d+) +(?P<path>[\d ]+) +'
+              '(?P<origin_codes>(i|e|\?|\||&))$')
+            m1 = p3_1_2.match(line)
+
+            m = m if m else m1
             if m:
                 # New prefix, reset index count
                 index = 1
@@ -1809,6 +1823,15 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                 af_dict['prefixes'][prefix]['index'][index]['path_type'] = path_type
                 if m.groupdict()['next_hop']:
                     af_dict['prefixes'][prefix]['index'][index]['next_hop'] = str(m.groupdict()['next_hop'])
+
+                if 'metric' in m.groupdict():
+                    af_dict['prefixes'][prefix]['index'][index]['metric'] = str(m.groupdict()['metric'])
+                if 'localprf' in m.groupdict():
+                    af_dict['prefixes'][prefix]['index'][index]['localprf'] = str(m.groupdict()['localprf'])
+                if 'weight' in m.groupdict():
+                    af_dict['prefixes'][prefix]['index'][index]['weight'] = str(m.groupdict()['weight'])
+                if 'origin_codes' in m.groupdict():
+                    af_dict['prefixes'][prefix]['index'][index]['origin_codes'] = str(m.groupdict()['origin_codes'])
                 
                 # Check if aggregate_address_ipv4_address
                 if 'a' in path_type:
@@ -2089,7 +2112,6 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                         af_dict['aggregate_address_summary_only'] = True
                         continue
                 continue
-
 
         # order the af prefixes index
         # return dict when parsed dictionary is empty
@@ -11537,69 +11559,11 @@ class ShowBgpIpMvpn(ShowBgpIpMvpnRouteType):
 # ============================================
 # Parser for 'show bgp vrf <vrf> ipv4 unicast'
 # ============================================
-class ShowBgpVrfIpv4Unicast(ShowBgpVrfAllAllSchema):
+class ShowBgpVrfIpv4Unicast(ShowBgpVrfAllAll):
     """Parser for show bgp vrf <vrf> ipv4 unicast"""
 
-    cli_command = 'show bgp vrf {vrf} ipv4 unicast'
-
     def cli(self, vrf, output=None):
-        if output is None:
-            out = self.device.execute(self.cli_command.format(vrf=vrf))
-        else:
-            out = output
-        
-        # Init vars
-        ret_dict = {}
-        index_dict = {}
-        # BGP routing table information for VRF vni_10100, address family IPv4 Unicast
-        p1 = re.compile(r'^BGP +routing +table +information +for +VRF +' +
-          vrf + ', +address +family +(?P<address_family>[\w ]+)$')
-        # BGP table version is 12, Local Router ID is 100.101.0.1
-        p2 = re.compile(r'^BGP +table +version +is +(?P<bgp_table_version>\d+)'
-          ', +(L|l)ocal +(R|r)outer +ID +is +(?P<local_router_id>[\d\.]+)$')
-        # *>i100.101.8.3/32     66.66.66.66           2000        100          0 200 i
-        # *>i100.101.8.4/32     66.66.66.66           2000        100          0 200 i
-        p3 = re.compile(r'^(?P<status_codes>(s|x|S|d|h|\*|\>)+)(?P<path_type>'
-          '(i|e|c|l|a|r|I))(?P<prefix>[\w\.\/]+) +(?P<next_hop>[\w\.\/]+) +'
-          '(?P<metric>\d+) +(?P<localprf>\d+) +(?P<weight>\d+) +(?P<path>[\d ]+) +'
-          '(?P<origin_codes>(i|e|\?|\||&))$')
-
-        for line in out.splitlines():
-            line = line.strip()
-            # BGP routing table information for VRF vni_10100, address family IPv4 Unicast
-            m = p1.match(line)
-            if m:
-              group = m.groupdict()
-              vrf = ret_dict.setdefault('vrf', {}).setdefault(vrf, {}).\
-                setdefault('address_family' , {}).setdefault('ipv4 unicast',{})
-              continue
-            # BGP table version is 12, Local Router ID is 100.101.0.1
-            m = p2.match(line)
-            if m:
-              group = m.groupdict()
-              vrf.update({'bgp_table_version' : int(group['bgp_table_version'])})
-              vrf.update({'local_router_id' : group['local_router_id']})
-              continue
-            # *>i100.101.8.3/32     66.66.66.66           2000        100          0 200 i
-            # *>i100.101.8.4/32     66.66.66.66           2000        100          0 200 i
-            m = p3.match(line)
-            if m:
-              group = m.groupdict()
-              index = index_dict.get(group['prefix'], 0)  + 1
-              prefixes = vrf.setdefault('prefixes', {}).setdefault(group['prefix'], {}).\
-                setdefault('index', {}).setdefault(index, {})
-              prefixes.update({'status_codes' : group['status_codes']})
-              prefixes.update({'path_type' : group['path_type']})
-              prefixes.update({'next_hop' : group['next_hop']})
-              prefixes.update({'metric' : int(group['metric'])})
-              prefixes.update({'localprf' : int(group['localprf'])})
-              prefixes.update({'weight' : int(group['weight'])})
-              prefixes.update({'path' : group['path']})
-              prefixes.update({'origin_codes' : group['origin_codes']})
-              index_dict.update({group['prefix']: index})
-              continue
-
-        return ret_dict
+        return super().cli(vrf, output=output)
 
 
 
