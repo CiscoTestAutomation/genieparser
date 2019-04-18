@@ -1394,7 +1394,6 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
 
         return result_dict
 
-
 # ====================================================
 #  schema for show l2route summary
 # ====================================================

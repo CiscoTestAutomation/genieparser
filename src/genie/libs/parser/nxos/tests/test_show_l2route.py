@@ -9,7 +9,6 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 from genie.libs.parser.nxos.show_l2route import ShowL2routeEvpnMac,\
                                                 ShowL2routeEvpnMacEvi
                                                 
-
 # ==========================
 #  show l2route evpn mac all
 # ==========================
