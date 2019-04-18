@@ -2,8 +2,8 @@
 
 NXOS parsers for the following show commands:
     * show l2route evpn mac all
+    * show l2route evpn mac evi <evi>
     * show l2route evpn mac evi <WORD> mac <WORD>
-
 """
 
 import re
@@ -40,15 +40,23 @@ class ShowL2routeEvpnMacSchema(MetaParser):
 
 # ====================================================
 #  parser for 'show l2route evpn mac all'
+#  parser for 'show l2route evpn mac evi <evi>'
 # ====================================================
 class ShowL2routeEvpnMac(ShowL2routeEvpnMacSchema):
-    """Parser for show l2route evpn mac all"""
+    """Parser for the following show commands:
+        show l2route evpn mac all
+        show l2route evpn mac evi <evi>
+    """
 
-    cli_command = 'show l2route evpn mac all'
+    cli_command = ['show l2route evpn mac all',
+        'show l2route evpn mac evi {evi}']
 
-    def cli(self, output=None):
+    def cli(self, evi='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if evi:
+                out = self.device.execute(self.cli_command[1].format(evi=evi))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
