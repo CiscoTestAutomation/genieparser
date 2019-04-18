@@ -489,3 +489,9 @@
         show rpl prefix-set
         show rpl prefix-set <name>
 
+--------------------------------------------------------------------------------
+                                L2ROUTE
+--------------------------------------------------------------------------------
+* NXOS
+    * Add ShowL2routeEvpnMac for:
+        show l2route evpn mac evi {evi}
