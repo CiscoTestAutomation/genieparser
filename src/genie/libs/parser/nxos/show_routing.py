@@ -352,27 +352,32 @@ class ShowIpRoute(ShowIpRouteSchema):
         result_dict = {}
 
         # IP Route Table for VRF "default"
-        p1 = re.compile(r'^\s*IP +Route +Table +for VRF +\"(?P<vrf>[\w\_]+)\"$')
+        # IP Route Table for Context "default"
+        p1 = re.compile(r'^\s*IP +Route +Table +for (VRF|Context) +\"(?P<vrf>\S+)\"$')
 
         # 10.4.1.1/32, ubest/mbest: 2/0
         # 10.36.3.3/32, ubest/mbest: 2/0, attached
         # 10.121.0.0/24, ubest/mbest: 1/0 time, attached
         # 10.94.77.1/32, ubest/mbest: 1/0 time
-        p2 = re.compile(r'^\s*(?P<route>[\d\/\.]+), +ubest/mbest: +(?P<ubest_mbest>[\d\/]+)'
-                        r'( +time)?(, +(?P<attached>[\w]+))?$')
+        # 0.0.0.0/0, 1 ucast next-hops, 0 mcast next-hops
+        # 0.1.3.255/32, 1 ucast next-hops, 0 mcast next-hops, attached
+        p2 = re.compile(r'^(?P<route>[\d\/\.]+), +(ubest/mbest: +(?P<ubest_mbest>[\d\/]+)'
+                        r'( +time)?)?((?P<ubest>\d+) +ucast +next-hops, +(?P<mbest>\d+) +'
+                        r'mcast +next-hops)?(, +(?P<attached>[\w]+))?$')
 
         # *via 10.2.3.2, Eth1/4, [1/0], 01:01:30, static
         # *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra
         # *via 10.229.11.11, [200/0], 01:01:12, bgp-100, internal, tag 100
         p3 = re.compile(r'^\s*(?P<star>[*]+)via +(?P<next_hop>[\d\.]+),'
-                        '( +(?P<interface>[\w\/\.]+))?,? +\[(?P<route_preference>[\d\/]+)\],'
-                        ' +(?P<date>[0-9][\w\:]+)?,?( +(?P<source_protocol>[\w\-]+))?,?'
-                        '( +(?P<source_protocol_status>[\w]+))?,?( +tag +(?P<tag>[\d]+))?$')
+                        r'( +(?P<interface>[\w\/\.]+))?,? +\[(?P<route_preference>[\d\/]+)\],'
+                        r' +(?P<date>[0-9][\w\:]+)?,?( +(?P<source_protocol>[\w\-]+))?,?'
+                        r'( +(?P<source_protocol_status>[\w]+))?,?( +tag +(?P<tag>[\d]+))?$')
 
         for line in out.splitlines():
             line = line.strip()
 
             # IP Route Table for VRF "default"
+            # IP Route Table for Context "default"
             m = p1.match(line)
             if m:
                 if 'vrf' not in result_dict:
@@ -388,6 +393,8 @@ class ShowIpRoute(ShowIpRouteSchema):
             # 10.36.3.3/32, ubest/mbest: 2/0, attached
             # 10.121.0.0/24, ubest/mbest: 1/0 time, attached
             # 10.94.77.1/32, ubest/mbest: 1/0 time
+            # 0.0.0.0/0, 1 ucast next-hops, 0 mcast next-hops
+            # 0.1.3.255/32, 1 ucast next-hops, 0 mcast next-hops, attached
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
@@ -402,6 +409,9 @@ class ShowIpRoute(ShowIpRouteSchema):
                         ubest_mbest = ubest_mbest.split('/')
                         ubest = ubest_mbest[0]
                         mbest = ubest_mbest[1]
+                elif groups['ubest'] and groups['mbest']:
+                    ubest = groups['ubest']
+                    mbest = groups['mbest']
 
                 if groups['attached']:
                     attached = True if 'attached' in groups['attached'] else False
@@ -523,7 +533,6 @@ class ShowIpRoute(ShowIpRouteSchema):
                             index_dict.update({'next_hop_vrf': next_hop_vrf})
 
                 index += 1
-                continue
 
         return result_dict
 
