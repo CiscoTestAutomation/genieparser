@@ -464,38 +464,83 @@ class test_show_isis_neighbors(unittest.TestCase):
     golden_parsed_output1 = {
         'isis': {
             'test': {
-                'vrf': {
-                    'default': {
-                        'interfaces': {
-                            'GigabitEthernet0/0/0/0.115': {
-                                'neighbors': {
-                                    'R1_xe': {
-                                        'snpa': 'fa16.3eab.a39d',
-                                        'state': 'Up',
-                                        'holdtime': '24',
-                                        'type': 'L1L2',
-                                        'ietf_nsf': 'Capable'}}},
-                            'GigabitEthernet0/0/0/1.115': {
-                                'neighbors': {
-                                    'R3_nx': {
-                                        'snpa': '5e00.4002.0007',
-                                        'state': 'Up',
-                                        'holdtime': '25',
-                                        'type': 'L1L2',
-                                        'ietf_nsf': 'Capable'}}}},
-                        'total_neighbor_count': 2}}}}}
+                'neighbors': {
+                    'R2_xr': {
+                        'type': {
+                            'L1': {
+                                'interface': 'Gi2.115',
+                                'ip_address': '10.12.115.2',
+                                'state': 'UP',
+                                'holdtime': '7',
+                                'circuit_id': 'R2_xr.01'},
+                            'L2': {
+                                'interface': 'Gi2.115',
+                                'ip_address': '10.12.115.2',
+                                'state': 'UP',
+                                'holdtime': '7',
+                                'circuit_id': 'R2_xr.01'}}},
+                    'R3_nx': {
+                        'type': {
+                            'L1': {
+                                'interface': 'Gi3.115',
+                                'ip_address': '10.13.115.3',
+                                'state': 'UP',
+                                'holdtime': '28',
+                                'circuit_id': 'R1_xe.02'},
+                            'L2': {
+                                'interface': 'Gi3.115',
+                                'ip_address': '10.13.115.3',
+                                'state': 'UP',
+                                'holdtime': '23',
+                                'circuit_id': 'R1_xe.02'}}}}},
+            'test1': {
+                'neighbors': {
+                    '2222.2222.2222': {
+                        'type': {
+                            'L1': {
+                                'interface': 'Gi2.415',
+                                'ip_address': '10.12.115.2',
+                                'state': 'INIT',
+                                'holdtime': '21',
+                                'circuit_id': '2222.2222.2222.01'},
+                            'L2': {
+                                'interface': 'Gi2.415',
+                                'ip_address': '10.12.115.2',
+                                'state': 'INIT',
+                                'holdtime': '20',
+                                'circuit_id': '2222.2222.2222.01'}}},
+                    'R3_nx': {
+                        'type': {
+                            'L1': {
+                                'interface': 'Gi3.415',
+                                'ip_address': '10.13.115.3',
+                                'state': 'UP',
+                                'holdtime': '21',
+                                'circuit_id': 'R1_xe.02'},
+                            'L2': {
+                                'interface': 'Gi3.415',
+                                'ip_address': '10.13.115.3',
+                                'state': 'UP',
+                                'holdtime': '27',
+                                'circuit_id': 'R1_xe.02'}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
-        +++ R2_xr: executing command 'show isis neighbors' +++
-        show isis neighbors
-        Wed Apr 17 16:21:30.075 UTC
+        R1_xe#show isis neighbors 
 
-        IS-IS test neighbors:
-        System Id      Interface        SNPA           State Holdtime Type IETF-NSF
-        R1_xe          Gi0/0/0/0.115    fa16.3eab.a39d Up    24       L1L2 Capable
-        R3_nx          Gi0/0/0/1.115    5e00.4002.0007 Up    25       L1L2 Capable
-
-        Total neighbor count: 2
+        Tag test:
+        System Id       Type Interface     IP Address      State Holdtime Circuit Id
+        R2_xr           L1   Gi2.115       10.12.115.2     UP    7        R2_xr.01           
+        R2_xr           L2   Gi2.115       10.12.115.2     UP    7        R2_xr.01           
+        R3_nx           L1   Gi3.115       10.13.115.3     UP    28       R1_xe.02           
+        R3_nx           L2   Gi3.115       10.13.115.3     UP    23       R1_xe.02           
+        
+        Tag test1:
+        System Id       Type Interface     IP Address      State Holdtime Circuit Id
+        2222.2222.2222  L1   Gi2.415       10.12.115.2     INIT  21       2222.2222.2222.01  
+        2222.2222.2222  L2   Gi2.415       10.12.115.2     INIT  20       2222.2222.2222.01  
+        R3_nx           L1   Gi3.415       10.13.115.3     UP    21       R1_xe.02           
+        R3_nx           L2   Gi3.415       10.13.115.3     UP    27       R1_xe.02           
+        
     '''}
 
     def test_show_isis_neighbors_empty(self):
