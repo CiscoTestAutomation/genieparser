@@ -1280,15 +1280,15 @@ class test_show_policy_map_type(unittest.TestCase):
                 Service-policy output: shape_priority
 
                     queue stats for all priority classes:
-                        priority level 1
                         Queueing
+                        priority level 1
                         queue limit 3932 us/ 49152 bytes
                         (queue depth/total drops/no-buffer drops) 49476/44577300/0
                         (pkts output/bytes output) 2348138/1202246656
 
                     queue stats for all priority classes:
-                        priority level 2
                         Queueing
+                        priority level 2
                         queue limit 1966 us/ 49152 bytes
                         (queue depth/total drops/no-buffer drops) 51072/42228358/0
                         (pkts output/bytes output) 4697080/2404904960
@@ -1820,8 +1820,41 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'interval': 300,
                                         'offered_rate_bps': 0,
                                         'drop_rate_bps': 0},
-                                    'match': ['any'], 'police': {'cir_bps': 200000, 'bc_bytes': 6250, 'conformed': {'packets': 0, 'bytes': 0, 'actions': 'transmit', 'bps': 0}, 'exceeded': {'packets': 0, 'bytes': 0, 'actions': 'drop', 'bps': 0}}}}}}}, 'output': {'policy_name': {'policy2': {'class_map': {'class-default': {'match_evaluation': 'match-any', 'packets': 0, 'bytes': 0, 'rate': {'interval': 300, 'offered_rate_bps': 0, 'drop_rate_bps': 0}, 'match': ['any'], 'queueing': True, 'queue_limit_packets': '131072', 'queue_depth': 0, 'total_drops': 0, 'no_buffer_drops': 0, 'pkts_output': 0, 'bytes_output': 0, 'bandwidth': 'remaining ratio 2'}}}}}}}}
-
+                                    'match': ['any'],
+                                    'police': {
+                                        'cir_bps': 200000,
+                                        'bc_bytes': 6250,
+                                        'conformed': {
+                                            'packets': 0,
+                                            'bytes': 0,
+                                            'actions': 'transmit',
+                                            'bps': 0},
+                                        'exceeded': {
+                                            'packets': 0,
+                                            'bytes': 0,
+                                            'actions': 'drop',
+                                            'bps': 0}}}}}}},
+                'output': {
+                    'policy_name': {
+                        'policy2': {
+                            'class_map': {
+                                'class-default': {
+                                    'match_evaluation': 'match-any',
+                                    'packets': 0,
+                                    'bytes': 0,
+                                    'rate': {
+                                        'interval': 300,
+                                        'offered_rate_bps': 0,
+                                        'drop_rate_bps': 0},
+                                    'match': ['any'],
+                                    'queueing': True,
+                                    'queue_limit_packets': '131072',
+                                    'queue_depth': 0,
+                                    'total_drops': 0,
+                                    'no_buffer_drops': 0,
+                                    'pkts_output': 0,
+                                    'bytes_output': 0,
+                                    'bandwidth': 'remaining ratio 2'}}}}}}}}
 
     golden_output17 = {'execute.return_value': '''
         Device# show policy-map target service-group 1
@@ -2028,8 +2061,8 @@ class test_show_policy_map(unittest.TestCase):
                         'police': {
                             'cir_bps': 445500,
                             'bc_bytes': 83619,
-                            'conform_action': 'transmit',
-                            'exceed_action': 'drop'}}}}}}
+                            'conform_action': ['transmit'],
+                            'exceed_action': ['drop']}}}}}}
 
     golden_output2 = {'execute.return_value':'''
 
@@ -2054,9 +2087,9 @@ class test_show_policy_map(unittest.TestCase):
                             'bc_bytes': 3000,
                             'be_bytes': 3000,
                             'conform_color': 'hipri-conform',
-                            'conform_action': 'transmit',
-                            'exceed_action': 'transmit',
-                            'violate_action': 'drop',
+                            'conform_action': ['transmit'],
+                            'exceed_action': ['transmit'],
+                            'violate_action': ['drop'],
                             'service_policy': 'child-policy'}}}},
             'police': {
                 'class': {
@@ -2074,20 +2107,20 @@ class test_show_policy_map(unittest.TestCase):
                         'police': {
                             'cir_bps': 10000,
                             'bc_bytes': 1500,
-                            'conform_action': 'set-qos-transmit 5',
-                            'exceed_action': 'drop'}},
+                            'conform_action': ['set-qos-transmit 5'],
+                            'exceed_action': ['drop']}},
                     'user2-acl-child': {
                         'police': {
                             'cir_bps': 20000,
                             'bc_bytes': 1500,
-                            'conform_action': 'set-qos-transmit 5',
-                            'exceed_action': 'drop'}},
+                            'conform_action': ['set-qos-transmit 5'],
+                            'exceed_action': ['drop']}},
                     'class-default': {
                         'police': {
                             'cir_bps': 50000,
                             'bc_bytes': 1500,
-                            'conform_action': 'transmit',
-                            'exceed_action': 'drop'}}}}}}
+                            'conform_action': ['transmit'],
+                            'exceed_action': ['drop']}}}}}}
 
     golden_output3 = {'execute.return_value': '''
         Router# show policy-map
@@ -2214,25 +2247,25 @@ class test_show_policy_map(unittest.TestCase):
     '''}
 
     golden_parsed_output5 = {
-        'policy_map': 
-            {'PHB': 
-                {'class': 
-                    {'cos1': 
-                        {'police': 
-                            {'bc_bytes': 8000,
-                            'cir_bps': 200000,
-                            'conform_action': 'transmit',
-                            'exceed_action': 'drop'},
+        'policy_map': {
+            'PHB': {
+                'class': {
+                    'cos1': {
+                        'police': {
+                            'bc_bytes': 8000,
+                             'cir_bps': 200000,
+                             'conform_action': ['transmit'],
+                             'exceed_action': ['drop']},
                         'priority': True},
-                    'cos2': 
-                        {'bandwidth_kbps': 100,
+                    'cos2': {
+                        'bandwidth_kbps': 100,
                         'bandwidth_remaining_percent': 40},
-                    'cos3': 
-                        {'bandwidth_kbps': 200,
+                    'cos3': {
+                        'bandwidth_kbps': 200,
                         'bandwidth_remaining_percent': 50,
                         'set': 'cos 5'},
-                    'cos5': 
-                        {'shape_average_min': 30}}}}}
+                    'cos5': {
+                        'shape_average_min': 30}}}}}
 
     golden_output5 = {'execute.return_value': '''
             Router# show policy-map
@@ -2277,9 +2310,9 @@ class test_show_policy_map(unittest.TestCase):
                             'cir_bps': 8000,
                             'bc_bytes': 9216,
                             'be_bytes': 0,
-                            'conform_action': 'transmit',
-                            'exceed_action': 'drop',
-                            'violate_action': 'drop'}},
+                            'conform_action': ['transmit'],
+                            'exceed_action': ['drop'],
+                            'violate_action': ['drop']}},
                     'video': {
                         'bandwidth_remaining_percent': 80}}}}}
 
@@ -2325,9 +2358,9 @@ class test_show_policy_map(unittest.TestCase):
                             'bc_ms': 300,
                             'pir_percent': 40,
                             'be_ms': 400,
-                            'conform_action': 'transmit',
-                            'exceed_action': 'drop',
-                            'violate_action': 'drop'}}}}}}
+                            'conform_action': ['transmit'],
+                            'exceed_action': ['drop'],
+                            'violate_action': ['drop']}}}}}}
 
     golden_output8 = {'execute.return_value': '''
         Router# show policy-map policy1
@@ -2405,6 +2438,72 @@ class test_show_policy_map(unittest.TestCase):
         rsvp    -                       -                      1/10
     '''}
 
+    golden_parsed_output10 = {
+        'policy_map': {
+            'police': {
+                'class': {
+                    'class-default': {
+                        'police': {
+                            'cir_bps': 1000000,
+                            'bc_bytes': 31250,
+                            'pir': 2000000,
+                            'be_bytes': 31250,
+                            'conform_action': ['transmit'],
+                            'exceed_action': ['set-prec-transmit 4', 'set-frde-transmit'],
+                            'violate_action': ['set-prec-transmit 2', 'set-frde-transmit']}}}}}}
+
+    golden_output10 = {'execute.return_value': '''
+        Router# show policy-map police
+        Policy Map police
+            Class class-default
+                police cir 1000000 bc 31250 pir 2000000 be 31250
+                    conform-action transmit
+                    exceed-action set-prec-transmit 4
+                    exceed-action set-frde-transmit
+                    violate-action set-prec-transmit 2
+                    violate-action set-frde-transmit
+    '''}
+
+    golden_parsed_output11 = {
+        'policy_map': {
+            'pm_hier2_child_0_2': {
+                'class': {
+                    'cm_0': {
+                        'priority_levels': 1,
+                        'police': {
+                            'cir_percent': 5,
+                            'bc_ms': 2,
+                            'be_ms': 0,
+                            'conform_action': ['transmit'],
+                            'exceed_action': ['drop'],
+                            'violate_action': ['drop']},
+                        'queue_limit_packets': 77},
+                    'cm_1': {
+                        'average_rate_traffic_shaping': True,
+                        'cir_percent': 80,
+                        'bandwidth_remaining_ratio': 80},
+                    'class-default': {
+                        'average_rate_traffic_shaping': True,
+                        'cir_percent': 50,
+                        'bandwidth_remaining_ratio': 20}}}}}
+
+    golden_output11 = {'execute.return_value': '''
+         Router# show policy-map pm_hier2_child_0_2
+         Policy Map pm_hier2_child_0_2
+         Class cm_0
+         priority level 1
+         police percent 5 2 ms 0 ms conform-action transmit exceed-action drop violate-action drop
+         queue-limit 77 packets
+         Class cm_1
+         Average Rate Traffic Shaping
+         cir 80%
+         bandwidth remaining ratio 80 
+         Class class-default
+         Average Rate Traffic Shaping
+         cir 50%
+         bandwidth remaining ratio 20 
+    '''}
+
     def test_show_policy_map_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -2474,6 +2573,20 @@ class test_show_policy_map(unittest.TestCase):
         obj = ShowPolicyMap(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output9)
+
+    def test_show_policy_map_golden10(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output10)
+        obj = ShowPolicyMap(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output10)
+
+    def test_show_policy_map_golden11(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output11)
+        obj = ShowPolicyMap(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output11)
 
 
 if __name__ == '__main__':

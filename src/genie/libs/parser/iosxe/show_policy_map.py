@@ -225,7 +225,6 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         # Init vars
         out = output
         ret_dict = {}
-        ret_dict = collections.OrderedDict(ret_dict)
         class_line_type = None
         queue_stats = 0
 
@@ -515,6 +514,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             if m:
                 priority_level = m.groupdict()['priority_level']
                 priority_dict = queue_dict.setdefault('priority_level', {}).setdefault(priority_level, {})
+                priority_dict['queueing'] = queueing_val
                 continue
 
             # 8 packets, 800 bytes
@@ -707,7 +707,8 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             m = p14.match(line)
             if m:
                 if queue_stats == 1:
-                    priority_dict['queueing'] = True
+                    queueing_val = True
+                    # priority_dict['queueing'] = True
                 else:
                     class_map_dict['queueing'] = True
                 continue
@@ -1184,9 +1185,9 @@ class ShowPolicyMapSchema(MetaParser):
                             Optional('bc_bytes'): int,
                             Optional('be_bytes'): int,
                             Optional('conform_color'): str,
-                            Optional('conform_action'): str,
-                            Optional('exceed_action'): str,
-                            Optional('violate_action'): str,
+                            Optional('conform_action'): list,
+                            Optional('exceed_action'): list,
+                            Optional('violate_action'): list,
                             Optional('service_policy'): str,
                             Optional('conform_burst'): int,
                             Optional('pir'): int,
@@ -1207,7 +1208,7 @@ class ShowPolicyMapSchema(MetaParser):
                         Optional('set'): str,
                         Optional('conform_burst'): int,
                         Optional('priority'): bool,
-                        Optional('priority_level'): int,
+                        Optional('priority_levels'): int,
                         Optional('peak_burst'): int,
                         Optional('average_rate_traffic_shaping'): bool,
                         Optional('adaptive_rate_traffic_shaping'): bool,
@@ -1279,6 +1280,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         police_line = 0
         weight_line = None
 
+
         # Policy Map police-in
         p1 = re.compile(r'^Policy +Map +(?P<policy_map>([\w\-]+))$')
         
@@ -1290,8 +1292,11 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         p2_0 = re.compile(r'^police +(?P<cir_bps>(\d+)) +(?P<bc_bytes>(\d+)) +(?P<be_bytes>(\d+))$')
 
         # police cir percent 20 bc 300 ms pir percent 40 be 400 ms
-        p2_1 = re.compile(r'police +cir +percent +(?P<cir_percent>(\d+)) +bc +(?P<bc_ms>(\d+)) +ms +pir +percent +'
+        p2_1 = re.compile(r'^police +cir +percent +(?P<cir_percent>(\d+)) +bc +(?P<bc_ms>(\d+)) +ms +pir +percent +'
                            '(?P<pir_percent>(\d+)) +be +(?P<be_ms>(\d+)) ms$')
+
+        # police cir 1000000 bc 31250 pir 2000000 be 31250
+        p2_2 = re.compile(r'^police +cir +(?P<cir_bps>(\d+)) +bc +(?P<bc_bytes>(\d+)) +pir +(?P<pir>(\d+)) +be +(?P<be_bytes>(\d+))$')
 
         # police cir 445500 bc 83619
         p3 = re.compile(r'^police +cir +(?P<cir_bps>(\d+)) +bc +(?P<bc_bytes>(\d+))$')
@@ -1330,7 +1335,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         p5_0 = re.compile(r'cir +(?P<cir_percent>(\d+))%$')
 
         # priority level 1 20000 (kb/s)
-        p6 = re.compile(r'^priority +level +(?P<priority_level>(\d+)) +(?P<kb_per_sec>(\d+))')
+        p6 = re.compile(r'^priority +level +(?P<pri_level>(\d+)) +(?P<kb_per_sec>(\d+)) \(kb\/s\)$')
 
         # bandwidth 20000 (kb/s)
         p7_0 = re.compile(r'^bandwidth +(?P<bandwidth>(\d+)) \(kb\/s\)$')
@@ -1375,7 +1380,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         p10 = re.compile(r'^priority$')
 
         # priority level 1
-        p10_1 = re.compile(r'priority +level +(?P<priority_level>(\d+))$')
+        p10_1 = re.compile(r'^priority +level +(?P<priority_levels>(\d+))$')
 
         #  Set cos 5
         p11 = re.compile(r'^Set +(?P<set>([\w\s]+))$')
@@ -1437,6 +1442,9 @@ class ShowPolicyMap(ShowPolicyMapSchema):
             m = p2_0.match(line)
             if m:
                 police_line=1
+                conform_list = []
+                exceed_list = []
+                vioate_list = []
                 police_dict = class_map_dict.setdefault('police', {})
                 police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
                 police_dict['bc_bytes'] = int(m.groupdict()['bc_bytes'])
@@ -1447,17 +1455,39 @@ class ShowPolicyMap(ShowPolicyMapSchema):
             m = p2_1.match(line)
             if m:
                 police_line = 1
+                conform_list = []
+                exceed_list = []
+                vioate_list = []
                 police_dict = class_map_dict.setdefault('police', {})
                 police_dict['cir_percent'] = int(m.groupdict()['cir_percent'])
                 police_dict['bc_ms'] = int(m.groupdict()['bc_ms'])
                 police_dict['pir_percent'] = int(m.groupdict()['pir_percent'])
                 police_dict['be_ms'] = int(m.groupdict()['be_ms'])
+
                 continue
+
+            # police cir 1000000 bc 31250 pir 2000000 be 31250
+            m = p2_2.match(line)
+            if m:
+                police_line = 1
+                conform_list = []
+                exceed_list = []
+                vioate_list = []
+                police_dict = class_map_dict.setdefault('police', {})
+                police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
+                police_dict['bc_bytes'] = int(m.groupdict()['bc_bytes'])
+                police_dict['pir'] = int(m.groupdict()['pir'])
+                police_dict['be_bytes'] = int(m.groupdict()['be_bytes'])
+                continue
+
 
             # police cir 445500 bc 83619
             m = p3.match(line)
             if m:
                 police_line = 1
+                conform_list = []
+                exceed_list = []
+                vioate_list = []
                 police_dict = class_map_dict.setdefault('police', {})
                 police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
                 police_dict['bc_bytes'] = int(m.groupdict()['bc_bytes'])
@@ -1467,6 +1497,9 @@ class ShowPolicyMap(ShowPolicyMapSchema):
             m = p3_0.match(line)
             if m:
                 police_line = 1
+                conform_list = []
+                exceed_list = []
+                vioate_list = []
                 police_dict = class_map_dict.setdefault('police', {})
                 police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
                 police_dict['bc_bytes'] = int(m.groupdict()['bc_bytes'])
@@ -1476,13 +1509,15 @@ class ShowPolicyMap(ShowPolicyMapSchema):
             # conform-action transmit
             m = p3_1.match(line)
             if m:
-                police_dict['conform_action'] = m.groupdict()['conform_action']
+                conform_list.append(m.groupdict()['conform_action'])
+                police_dict['conform_action'] = conform_list
                 continue
 
             # exceed-action drop
             m = p3_2.match(line)
             if m:
-                police_dict['exceed_action'] = m.groupdict()['exceed_action']
+                exceed_list.append(m.groupdict()['exceed_action'])
+                police_dict['exceed_action'] = exceed_list
                 continue
 
             # conform-color hipri-conform
@@ -1494,7 +1529,8 @@ class ShowPolicyMap(ShowPolicyMapSchema):
             # violate - action drop
             m = p3_4.match(line)
             if m:
-                police_dict['violate_action'] = m.groupdict()['violate_action']
+                vioate_list.append(m.groupdict()['violate_action'])
+                police_dict['violate_action'] = vioate_list
                 continue
 
             # service - policy child - policy
@@ -1540,9 +1576,9 @@ class ShowPolicyMap(ShowPolicyMapSchema):
             # priority level 1 20000 (kb/s)
             m = p6.match(line)
             if m:
-                priority_level = m.groupdict()['priority_level']
+                pri_level = m.groupdict()['pri_level']
                 kb_per_sec = m.groupdict()['kb_per_sec']
-                priority_dict = class_map_dict.setdefault('priority_level', {}).setdefault(priority_level, {})
+                priority_dict = class_map_dict.setdefault('priority_level', {}).setdefault(pri_level, {})
                 priority_dict['kbps'] = int(kb_per_sec)
                 continue
 
@@ -1635,7 +1671,10 @@ class ShowPolicyMap(ShowPolicyMapSchema):
             # priority level 1
             m = p10_1.match(line)
             if m:
-                class_map_dict['priority_level'] = True
+                priority_level = int(m.groupdict()['priority_levels'])
+                #import pdb;pdb.set_trace()
+                class_map_dict['priority_levels'] = priority_level
+
                 continue
 
             #  Set cos 5
@@ -1678,27 +1717,36 @@ class ShowPolicyMap(ShowPolicyMapSchema):
             m = p15.match(line)
             if m:
                 police_line = 1
+                conform_list = []
+                exceed_list = []
+                vioate_list = []
                 police_dict = class_map_dict.setdefault('police', {})
                 police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
                 police_dict['conform_burst'] = int(m.groupdict()['conform_burst'])
                 police_dict['pir'] = int(m.groupdict()['pir'])
                 police_dict['peak_burst'] = int(m.groupdict()['peak_burst'])
-                police_dict['conform_action'] = m.groupdict()['conform_action']
-                police_dict['exceed_action'] = m.groupdict()['exceed_action']
-                police_dict['violate_action'] = m.groupdict()['violate_action']
+                police_dict['conform_action'] = conform_list.append(m.groupdict()['conform_action'])
+                police_dict['exceed_action'] = exceed_list.append(m.groupdict()['exceed_action'])
+                police_dict['violate_action'] = vioate_list.append(m.groupdict()['violate_action'])
                 continue
 
             # police percent 5 2 ms 0 ms conform-action transmit exceed-action drop violate-action drop
             m = p15_1.match(line)
             if m:
                 police_line = 1
+                conform_list = []
+                exceed_list = []
+                vioate_list = []
+                conform_list.append(m.groupdict()['conform_action'])
+                exceed_list.append(m.groupdict()['exceed_action'])
+                vioate_list.append(m.groupdict()['violate_action'])
                 police_dict = class_map_dict.setdefault('police', {})
                 police_dict['cir_percent'] = int(m.groupdict()['cir_percent'])
                 police_dict['bc_ms'] = int(m.groupdict()['bc_ms'])
                 police_dict['be_ms'] = int(m.groupdict()['be_ms'])
-                police_dict['conform_action'] = m.groupdict()['conform_action']
-                police_dict['exceed_action'] = m.groupdict()['exceed_action']
-                police_dict['violate_action'] = m.groupdict()['violate_action']
+                police_dict['conform_action'] = conform_list
+                police_dict['exceed_action'] = exceed_list
+                police_dict['violate_action'] = vioate_list
                 continue
 
             #  time-based wred, exponential weight 9
