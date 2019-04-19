@@ -256,6 +256,48 @@ class test_show_isis_neighbors(unittest.TestCase):
         Total neighbor count: 2
     '''}
 
+    golden_parsed_output2 = {
+        'isis': {
+            'test': {
+                'vrf': {
+                    'default': {
+                        'interfaces': {
+                            'GigabitEthernet0/0/0/0.115': {
+                                'neighbors': {
+                                    'R1_xe': {
+                                        'snpa': 'fa16.3eab.a39d',
+                                        'state': 'Up',
+                                        'holdtime': '22',
+                                        'type': 'L1L2',
+                                        'ietf_nsf': 'Capable'}}},
+                            'GigabitEthernet0/0/0/1.115': {
+                                'neighbors': {
+                                    'R3_nx': {
+                                        'snpa': '5e00.4002.0007',
+                                        'state': 'Up',
+                                        'holdtime': '22',
+                                        'type': 'L1L2',
+                                        'ietf_nsf': 'Capable'}}}},
+                        'total_neighbor_count': 2}}},
+            'test1': {
+                'vrf': {
+                    'default': {}}}}}
+
+    golden_output2 = {'execute.return_value': '''
+        show isis neighbors
+        Thu Apr 18 11:00:22.192 UTC
+        
+        IS-IS test neighbors:
+        System Id      Interface        SNPA           State Holdtime Type IETF-NSF
+        R1_xe          Gi0/0/0/0.115    fa16.3eab.a39d Up    22       L1L2 Capable
+        R3_nx          Gi0/0/0/1.115    5e00.4002.0007 Up    22       L1L2 Capable
+        
+        Total neighbor count: 2
+        
+        IS-IS test1 neighbors:
+        System Id      Interface        SNPA           State Holdtime Type IETF-NSF
+    '''}
+
     def test_show_isis_neighbors_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIsisNeighbors(device=self.device)
@@ -268,6 +310,13 @@ class test_show_isis_neighbors(unittest.TestCase):
         obj = ShowIsisNeighbors(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_isis_neighbors_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowIsisNeighbors(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 
 if __name__ == '__main__':

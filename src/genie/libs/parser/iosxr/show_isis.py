@@ -169,8 +169,8 @@ class ShowIsisNeighborsSchema(MetaParser):
             Any(): {
                 'vrf': {
                     Any(): {
-                        'total_neighbor_count': int,
-                        'interfaces': {
+                        Optional('total_neighbor_count'): int,
+                        Optional('interfaces'): {
                             Any(): {
                                 'neighbors': {
                                     Any(): {
