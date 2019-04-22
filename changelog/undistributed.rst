@@ -5,6 +5,51 @@
 | ------------------------|:-------------:|
 | ``genie.libs.parser``   |               |
 
+
+--------------------------------------------------------------------------------
+                                   ISIS
+--------------------------------------------------------------------------------
+* IOSXR
+  * Add ShowIsisAdjacency for:
+        show isis adjacency
+  * Add ShowIsisNeighbors for:
+        show isis neighbors
+* IOSXE
+  * Add ShowIsisNeighbors for:
+        show isis neighbors
+
+--------------------------------------------------------------------------------
+                                   MPLS
+--------------------------------------------------------------------------------
+* IOSXR
+  * Add ShowMplsLdpNeighborBrief for:
+        show mpls ldp neighbor brief
+
+--------------------------------------------------------------------------------
+                                   MRIB
+--------------------------------------------------------------------------------
+* IOSXR
+  * Add ShowMribVrfRouteSummary for:
+        show mrib vrf route summary
+
+--------------------------------------------------------------------------------
+                                   PLATFORM
+--------------------------------------------------------------------------------
+* IOSXR
+  * Add ShowInstallInactiveSummary for:
+        show install inactive summary
+  * Add ShowInstallCommitSummary for:
+        show install commit summary
+
+--------------------------------------------------------------------------------
+                                   RUN
+--------------------------------------------------------------------------------
+* IOSXR
+  * Add ShowRunKeyChain for:
+        show run key chain
+  * Add ShowRunRouterIsis for:
+        show run router isis
+
 --------------------------------------------------------------------------------
                                    BGP
 --------------------------------------------------------------------------------
