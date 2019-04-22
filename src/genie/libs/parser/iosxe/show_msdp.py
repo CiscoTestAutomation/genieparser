@@ -393,14 +393,15 @@ class ShowIpMsdpSaCacheSchema(MetaParser):
                         'group': str,
                         'source_addr': str,
                         Optional('peer_as'): int,
-                        'peer_learned_from': str,
-                        'rpf_peer': str,
+                        Optional('peer_learned_from'): str,
+                        Optional('rpf_peer'): str,
+                        'peer': str,
                         'origin_rp': {
                             Any():{
                                 'rp_address': str,
                              },
                         },
-                        'statistics': {
+                        Optional('statistics'): {
                             'received': {
                                 'sa_received': int,
                                 'encapsulated_data_received': int,
@@ -479,8 +480,10 @@ class ShowIpMsdpSaCache(ShowIpMsdpSaCacheSchema):
                 sa_cache_dict['source_addr'] = source_addr
                 sa_cache_dict['up_time'] = up_time
                 sa_cache_dict['expire'] = expire
+                sa_cache_dict['peer'] = peer                
                 if not peer_as or peer_as != '?':
                     sa_cache_dict['peer_as'] = int(peer_as)
+
 
                 sa_cache_dict.setdefault('origin_rp', {})\
                     .setdefault(rp_address, {})\
