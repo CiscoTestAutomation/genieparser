@@ -1691,12 +1691,9 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
 
     cli_command = 'show bgp vrf all all'
 
-    def cli(self, cmd=None, vrf=None, output=None):
+    def cli(self, output=None):
         if output is None:
-            if vrf and cmd:
-                out = self.device.execute(cmd.format(vrf=vrf))
-            else:
-              out = self.device.execute(self.cli_command)
+            out = self.device.execute(self.cli_command)
         else:
             out = output
 
@@ -1755,12 +1752,12 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                 af_dict['local_router_id'] = local_router_id
                 continue
 
-            if vrf is None:
-                #                     20:47::21a:1ff:fe00:161/128
-                p3_4 = re.compile(r'^\s*(?P<next_hop>[a-zA-Z0-9\.\:\/\[\]\,]+)$')
-                m = p3_4.match(line)
-                if m:
-                    # Get keys
+            #                     20:47::21a:1ff:fe00:161/128
+            p3_4 = re.compile(r'^\s*(?P<next_hop>[a-zA-Z0-9\.\:\/\[\]\,]+)$')
+            m = p3_4.match(line)
+            if m:
+                # Get keys
+                if 'njected' not in line and 'next_hop' in m.groupdict():
                     next_hop = str(m.groupdict()['next_hop'])
 
                     if data_on_nextline:
@@ -1774,7 +1771,7 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
 
                     # Set keys
                     index_dict['next_hop'] = next_hop
-                    continue
+                continue
 
             # Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
             # Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist
@@ -11565,4 +11562,8 @@ class ShowBgpVrfIpv4Unicast(ShowBgpVrfAllAll):
     cli_command = 'show bgp vrf {vrf} ipv4 unicast'
 
     def cli(self, vrf, output=None):
-        return super().cli(cmd=self.cli_command, vrf=vrf, output=output)
+        if output is None:      
+            show_output = self.device.execute(self.cli_command.format(vrf=vrf))
+        else:
+            show_output = output
+        return super().cli(output=show_output)
