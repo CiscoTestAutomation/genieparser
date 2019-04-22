@@ -96,12 +96,14 @@ class ShowRipInterface(ShowRipInterfaceSchema):
     cli_command = ['show rip interface', 'show rip vrf {vrf} interface']
 
     def cli(self, vrf='', output=None):
+        if vrf:
+            cmd = self.cli_command[1].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[0]
+            vrf = 'default'
+
         if output is None:
-            if not vrf:
-                vrf = 'default'
-                out = self.device.execute(self.cli_command[0])
-            else:
-                out = self.device.execute(self.cli_command[1].format(vrf=vrf))
+            out = self.device.execute(cmd)
         else:
             out = output
 
