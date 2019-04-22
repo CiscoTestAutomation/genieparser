@@ -8,7 +8,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
 
 from genie.libs.parser.iosxe.show_isis import ShowIsisHostname,\
                                               ShowIsisLspLog,\
-                                              ShowIsisDatabaseDetail
+                                              ShowIsisDatabaseDetail,\
+                                              ShowIsisNeighbors
 
 
 
@@ -448,6 +449,112 @@ class test_show_isis_database_detail(unittest.TestCase):
         platform_obj = ShowIsisDatabaseDetail(device=self.device)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+# ====================================
+#  Unit test for 'show isis neighbors'
+# ====================================
+
+class test_show_isis_neighbors(unittest.TestCase):
+    '''Unit test for "show isis neighbors"'''
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'isis': {
+            'test': {
+                'neighbors': {
+                    'R2_xr': {
+                        'type': {
+                            'L1': {
+                                'interface': 'Gi2.115',
+                                'ip_address': '10.12.115.2',
+                                'state': 'UP',
+                                'holdtime': '7',
+                                'circuit_id': 'R2_xr.01'},
+                            'L2': {
+                                'interface': 'Gi2.115',
+                                'ip_address': '10.12.115.2',
+                                'state': 'UP',
+                                'holdtime': '7',
+                                'circuit_id': 'R2_xr.01'}}},
+                    'R3_nx': {
+                        'type': {
+                            'L1': {
+                                'interface': 'Gi3.115',
+                                'ip_address': '10.13.115.3',
+                                'state': 'UP',
+                                'holdtime': '28',
+                                'circuit_id': 'R1_xe.02'},
+                            'L2': {
+                                'interface': 'Gi3.115',
+                                'ip_address': '10.13.115.3',
+                                'state': 'UP',
+                                'holdtime': '23',
+                                'circuit_id': 'R1_xe.02'}}}}},
+            'test1': {
+                'neighbors': {
+                    '2222.2222.2222': {
+                        'type': {
+                            'L1': {
+                                'interface': 'Gi2.415',
+                                'ip_address': '10.12.115.2',
+                                'state': 'INIT',
+                                'holdtime': '21',
+                                'circuit_id': '2222.2222.2222.01'},
+                            'L2': {
+                                'interface': 'Gi2.415',
+                                'ip_address': '10.12.115.2',
+                                'state': 'INIT',
+                                'holdtime': '20',
+                                'circuit_id': '2222.2222.2222.01'}}},
+                    'R3_nx': {
+                        'type': {
+                            'L1': {
+                                'interface': 'Gi3.415',
+                                'ip_address': '10.13.115.3',
+                                'state': 'UP',
+                                'holdtime': '21',
+                                'circuit_id': 'R1_xe.02'},
+                            'L2': {
+                                'interface': 'Gi3.415',
+                                'ip_address': '10.13.115.3',
+                                'state': 'UP',
+                                'holdtime': '27',
+                                'circuit_id': 'R1_xe.02'}}}}}}}
+
+    golden_output1 = {'execute.return_value': '''
+        R1_xe#show isis neighbors 
+
+        Tag test:
+        System Id       Type Interface     IP Address      State Holdtime Circuit Id
+        R2_xr           L1   Gi2.115       10.12.115.2     UP    7        R2_xr.01           
+        R2_xr           L2   Gi2.115       10.12.115.2     UP    7        R2_xr.01           
+        R3_nx           L1   Gi3.115       10.13.115.3     UP    28       R1_xe.02           
+        R3_nx           L2   Gi3.115       10.13.115.3     UP    23       R1_xe.02           
+        
+        Tag test1:
+        System Id       Type Interface     IP Address      State Holdtime Circuit Id
+        2222.2222.2222  L1   Gi2.415       10.12.115.2     INIT  21       2222.2222.2222.01  
+        2222.2222.2222  L2   Gi2.415       10.12.115.2     INIT  20       2222.2222.2222.01  
+        R3_nx           L1   Gi3.415       10.13.115.3     UP    21       R1_xe.02           
+        R3_nx           L2   Gi3.415       10.13.115.3     UP    27       R1_xe.02           
+        
+    '''}
+
+    def test_show_isis_neighbors_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIsisNeighbors(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_isis_neighbors_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowIsisNeighbors(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 
 if __name__ == '__main__':
