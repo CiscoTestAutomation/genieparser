@@ -46,6 +46,7 @@ class ShowRipDatabaseSchema(MetaParser):
                                                 Optional('redistributed'): bool,
                                                 Optional('summary_type'): str,
                                                 Optional('up_time'): str,
+                                                Optional('inactive'): bool,
                                                 Optional('distance'): int
                                             }
                                         }
@@ -73,12 +74,14 @@ class ShowRipDatabase(ShowRipDatabaseSchema):
     cli_command = ['show rip database', 'show rip vrf {vrf} database']
 
     def cli(self, vrf='', output=None):
+        if vrf:
+            cmd = self.cli_command[1].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[0]
+            vrf = 'default'
+
         if output is None:
-            if not vrf:
-                vrf = 'default'
-                out = self.device.execute(self.cli_command[0])
-            else:
-                out = self.device.execute(self.cli_command[1].format(vrf=vrf))
+            out = self.device.execute(cmd)
         else:
             out = output
         
@@ -87,7 +90,7 @@ class ShowRipDatabase(ShowRipDatabaseSchema):
         # 172.16.0.0/16    auto-summary
         # 192.168.1.1/32
         # 2001:DB8:2:3::/64
-        p1 = re.compile(r'^(?P<route>[\w\.\/:]+)(\s+(?P<summary_type>[\w-]+))?$')
+        p1 = re.compile(r'^(?P<route>[\w\.\/:]+)(\s+(?P<summary_type>[\(\)\w-]+))?$')
 
         # [0]    directly connected, GigabitEthernet0/0/0/1.100
         p2 = re.compile(r'^\[(?P<metric>\d+)\]\s+directly +connected, +(?P<interface>[\w\d/\.]+)$')
@@ -124,7 +127,10 @@ class ShowRipDatabase(ShowRipDatabaseSchema):
                 if summary_type:
                     index_counter += 1
                     index_dict = route_dict.setdefault(index_counter, {})
-                    index_dict.update({'summary_type': summary_type})
+                    if 'inactive' in summary_type:
+                        index_dict.update({'inactive': True})
+                    else:
+                        index_dict.update({'summary_type': summary_type})
 
             # [0]    directly connected, GigabitEthernet0/0/0/1.100
             m = p2.match(line)
