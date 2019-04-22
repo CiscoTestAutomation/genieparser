@@ -440,9 +440,7 @@ class ShowRunSectionIsisSchema(MetaParser):
         'instance':{
             Any(): {
                 'vrf': {
-                    Any():{
-
-                    }
+                    Any():{}
                 }
             }
         }
@@ -463,7 +461,7 @@ class ShowRunSectionIsis(ShowRunSectionIsisSchema):
         result_dict = {}
 
         # router isis VRF1
-        p1 = re.compile(r'^router +isis +(?P<instance>\s+)$')
+        p1 = re.compile(r'^router +isis +(?P<instance>\S+)$')
         # vrf VRF1
         p2 = re.compile(r'^vrf +(?P<vrf>\S+)$')
 

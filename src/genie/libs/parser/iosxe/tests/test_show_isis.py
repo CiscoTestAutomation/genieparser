@@ -8,7 +8,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
 
 from genie.libs.parser.iosxe.show_isis import ShowIsisHostname,\
                                               ShowIsisLspLog,\
-                                              ShowIsisDatabaseDetail
+                                              ShowIsisDatabaseDetail,\
+                                              ShowRunSectionIsis
 
 
 
@@ -449,6 +450,62 @@ class test_show_isis_database_detail(unittest.TestCase):
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+class test_show_run_sec_isis(unittest.TestCase):
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'instance':{
+            'test':{
+                'vrf':{
+                    'default':{}
+                }
+            },
+            'test1':{
+                'vrf':{
+                    'VRF1':{}
+                }
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''\
+
+    R2#show run | sec isis
+     ip router isis test
+     ipv6 router isis test
+     ip router isis test1
+     ipv6 router isis test1
+     ip router isis test
+     ipv6 router isis test
+     ip router isis test1
+     ipv6 router isis test1
+    router isis test
+     net 49.0001.1111.1111.1111.00
+     metric-style wide
+     !
+     address-family ipv6
+      multi-topology
+     exit-address-family
+    router isis test1
+     vrf VRF1
+     net 49.0001.1111.1111.1111.00
+     metric-style wide
+     !
+     address-family ipv6
+      multi-topology
+     exit-address-family
+    R1_xe#
+    '''
+    }
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowRunSectionIsis(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()
