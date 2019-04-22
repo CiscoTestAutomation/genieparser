@@ -1302,13 +1302,10 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
 
     cli_command = 'show l2route mac-ip all detail'
 
-    def cli(self, cmd='', evi='', output=None):
+    def cli(self, output=None):
         # excute command to get output
         if output is None:
-            if cmd and evi:
-                out = self.device.execute(cmd.format(evi=evi))
-            else:
-                out = self.device.execute(self.cli_command)
+            out = self.device.execute(self.cli_command)
         else:
             out = output
 
@@ -2226,4 +2223,8 @@ class ShowL2routeEvpnMacIpEvi(ShowL2routeMacIpAllDetail):
     cli_command = 'show l2route evpn mac-ip evi {evi}'
 
     def cli(self, evi, output=None):
-        return super().cli(cmd=self.cli_command, evi=evi, output=output)
+        if output is None:
+            show_output = self.device.execute(self.cli_command.format(evi=evi))
+        else:
+            show_output = output
+        return super().cli(output=show_output)
