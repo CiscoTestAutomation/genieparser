@@ -342,6 +342,11 @@
         show arp summary
     * Add ShowArp
         show arp
+* NXOS
+    * Updated ShowIpArp for:
+        show ip arp
+        show ip arp {vrf}
+        show ip arp all
 
 --------------------------------------------------------------------------------
                                    L2VPN

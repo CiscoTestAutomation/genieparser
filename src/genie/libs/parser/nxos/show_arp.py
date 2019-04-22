@@ -21,39 +21,130 @@ class ShowIpArpSchema(MetaParser):
 	"""Schema for show ip arp"""
 
 	schema = {
-		Any():
-		  {'Age': str,
-		   'MAC Address': str,
-		   'Interface': str,
-		   'Address': str,
-		   Optional('Flags'): str}}
+		'vrf': {
+			Any(): {
+				Optional('max_entries'): int,
+				'global_static_table': {
+					Any(): {
+						'ip_address': str,
+						'age': str,
+						'mac_address': str,
+						Optional('encap_type'): str,
+						'interface': str,
+						Optional('flags'): str
+					}
+				}
+			}
+		}
+	}
 
 # =====================================
-# Parser for 'show ip arp'
+# Parser for:
+# 	show ip arp
+# 	show ip arp vrf {vrf}
+# 	show ip arp vrf all
 # =====================================
 class ShowIpArp(ShowIpArpSchema):
 	"""Parser for:
 		show ip arp
-		parser class - implements detail parsing mechanisms for cli,xml and yang output.
+		show ip arp vrf {vrf}
+		show ip arp vrf all
 	"""
-	cli_command = 'show ip arp'
+	cli_command = ['show ip arp', 'show ip arp vrf {vrf}']
 
-	def cli(self,output=None):
+	def cli(self, vrf='', output=None):
+		if vrf:
+			cmd = self.cli_command[1].format(vrf=vrf)
+		else:
+			cmd = self.cli_command[0]
+			vrf = 'default'
+
 		if output is None:
-			out = self.device.execute(self.cli_command)
+			out = self.device.execute(cmd)
 		else:
 			out = output
-		 
-		if not 'Flags' not in out:
-			header = ['Address', 'Age', 'MAC Address', 'Interface']
-		else:
-			header = ['Address', 'Age', 'MAC Address', 'Interface', 'Flags']
-		result = parsergen.oper_fill_tabular(
-					  device_output=out,
-					  device_os= 'nxos',
-					  header_fields= header,
-					  index= [0])
-		return result.entries
+
+		res_dict = {}
+
+		# Address         Age       MAC Address     Interface Flags
+		# IP Address Age(min) Link-layer Addr Type Interface
+		# IP Address       Age(min)   Link-layer Addr         Type  Interface
+		# p1 = re.compile(r'^(?P<address_header>(IP +)?Address)\s+(?P<age_header>Age(\(min\))?)\s+'
+		# 				r'(?P<mac_header>MAC +Address|Link-layer +Addr)\s+((?P<type_header>Type)\s+)?'
+		# 				r'(?P<interface_header>Interface)(\s+(?P<flags_header>Flags))?$')
+
+
+		# IP ARP Table for all contexts
+		# IP ARP Table for context vni_10100
+		# IP ARP Table for context default
+		p1 = re.compile(r'^IP +ARP +Table +for +(context +)?(?P<vrf>[\S]+)( +contexts)?$')
+
+		# Total number of entries: 11
+		p2 = re.compile(r'^Total +number +of +entries:\s+(?P<num_entries>\d+)$')
+
+		# 209.165.200.226 0 0006.d623.4008 ARPA GigabitEthernet1/1
+		# 100.101.1.3     00:09:20  fa16.3ed1.37b5  Vlan101         +
+		# 100.101.1.4     00:01:53  fa16.3ec5.fcab  Vlan101
+		p3 = re.compile(r'^(?P<ip_address>[\d\.]+)\s+(?P<age>[\d:]+)\s+(?P<mac_address>[\w\.]+)\s+'
+						r'((?P<encap_type>ARPA)\s+)?(?P<interface>[\w\/]+)(\s+(?P<flags>\S))?$')
+
+		for line in out.splitlines():
+			line = line.strip()
+
+			# IP ARP Table for all contexts
+			# IP ARP Table for context vni_10100
+			# IP ARP Table for context default
+			m = p1.match(line)
+			if m:
+				groups = m.groupdict()
+				if groups['vrf']:
+					vrf = groups['vrf']
+
+				if 'vrf' not in res_dict:
+					vrfs_dict = res_dict.setdefault('vrf', {})
+
+				vrf_dict = vrfs_dict.setdefault(vrf, {})
+				global_static_table_dict = vrf_dict.setdefault('global_static_table', {})
+				continue
+
+			# Total number of entries: 11
+			m = p2.match(line)
+			if m:
+				groups = m.groupdict()
+				vrf_dict.update({'max_entries': int(groups['num_entries'])})
+				continue
+
+			# 209.165.200.226 0 0006.d623.4008 ARPA GigabitEthernet1/1
+			# 100.101.1.3     00:09:20  fa16.3ed1.37b5  Vlan101         +
+			# 100.101.1.4     00:01:53  fa16.3ec5.fcab  Vlan101
+			m = p3.match(line)
+			if m:
+				# Rare case (but found through run_parsers) - Only used to 
+				# setup data structure when output lines never match p1
+				if 'vrf' not in res_dict:
+					vrfs_dict = res_dict.setdefault('vrf', {})
+					vrf_dict = vrfs_dict.setdefault(vrf, {})
+					global_static_table_dict = vrf_dict.setdefault('global_static_table', {})
+
+				groups = m.groupdict()
+				ip_dict = global_static_table_dict.setdefault(groups['ip_address'], {})
+				ip_dict.update({'ip_address': groups['ip_address']})
+				ip_dict.update({'mac_address': groups['mac_address']})
+				ip_dict.update({'interface': groups['interface']})
+
+				if ':' not in groups['age']:
+					age = "{} {}".format(groups['age'], "minutes")
+				else:
+					age = groups['age']
+				ip_dict.update({'age': age})
+
+				if groups['encap_type']:
+					ip_dict.update({'encap_type': groups['encap_type']})
+
+				if groups['flags']:
+					ip_dict.update({'flags': groups['flags']})
+		
+		return res_dict
 
 # =======================================
 # Schema for 'show ip arp detail vrf all'
