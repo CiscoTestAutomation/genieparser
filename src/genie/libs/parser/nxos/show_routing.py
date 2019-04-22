@@ -284,8 +284,6 @@ class ShowIpRouteSchema(MetaParser):
                                 Optional('route'): str,
                                 Optional('ubest'): int,
                                 Optional('mbest'): int,
-                                Optional('source_protocol'): str,
-                                Optional('source_protocol_status'): str,
                                 Optional('process_id'): str,
                                 Optional('route_preference'): int,
                                 Optional('metric'): int,
@@ -304,6 +302,8 @@ class ShowIpRouteSchema(MetaParser):
                                     Optional('next_hop_list'): {
                                         Any(): {  # index
                                             Optional('index'): int,
+                                            Optional('source_protocol'): str,
+                                            Optional('source_protocol_status'): str,
                                             Optional('next_hop'): str,
                                             Optional('next_hop_vrf'): str,
                                             Optional('best_ucast_nexthop'): bool,
@@ -371,7 +371,7 @@ class ShowIpRoute(ShowIpRouteSchema):
         p3 = re.compile(r'^\s*(?P<star>[*]+)via +(?P<next_hop>[\d\.]+),'
                         r'( +(?P<interface>[\w\/\.]+))?,? +\[(?P<route_preference>[\d\/]+)\],'
                         r' +(?P<date>[0-9][\w\:]+)?,?( +(?P<source_protocol>[\w\-]+))?,?'
-                        r'( +(?P<source_protocol_status>[\w]+))?,?( +tag +(?P<tag>[\d]+))?$')
+                        r'( +(?P<source_protocol_status>[\w-]+))?,?( +tag +(?P<tag>[\d]+))?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -472,15 +472,7 @@ class ShowIpRoute(ShowIpRouteSchema):
                         source_protocol = groups['source_protocol'].split('-')[0]
                         process_id = groups['source_protocol'].split('-')[1]
                     else:
-                        if index > 1 :
-                            source_protocol_second = groups['source_protocol']
-                            if source_protocol_second != source_protocol:
-                                if 'local' in source_protocol_second or 'local' in source_protocol_second:
-                                        source_protocol = 'local'
-                                else:
-                                    source_protocol = source_protocol
-                        else:
-                            source_protocol = groups['source_protocol']
+                        source_protocol = groups['source_protocol']
 
                 if groups['tag']:
                     tag = groups['tag']
@@ -495,11 +487,7 @@ class ShowIpRoute(ShowIpRouteSchema):
                     if process_id:
                         route_dict.update({'process_id': process_id})
 
-                    if source_protocol:
-                        route_dict.update({'source_protocol': source_protocol})
-
-                    if source_protocol_status:
-                        route_dict.update({'source_protocol_status': source_protocol_status})
+                    
 
                     if tag:
                         route_dict.update({'tag': int(tag)})
@@ -519,6 +507,11 @@ class ShowIpRoute(ShowIpRouteSchema):
                         index_dict = next_hop_dict.setdefault('next_hop_list', {}).setdefault(index, {})
                         index_dict.update({'index': index})
                         index_dict.update({'next_hop': next_hop})
+                        if source_protocol:
+                            index_dict.update({'source_protocol': source_protocol})
+
+                        if source_protocol_status:
+                            index_dict.update({'source_protocol_status': source_protocol_status})
 
                         if cast:
                             index_dict.update({cast: True})

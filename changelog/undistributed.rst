@@ -271,6 +271,11 @@
     * Add ShowIpv6RouteWord for:
         show ipv6 route <Hostname or A.B.C.D>
         show ipv6 route vrf <vrf> <Hostname or A.B.C.D>
+* NXOS
+    * Updated ShowIpRoute for:
+        show ip route
+        show ip route vrf {vrf}
+        show ip route vrf all
 
 --------------------------------------------------------------------------------
                                    ISSU

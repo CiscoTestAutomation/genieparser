@@ -788,7 +788,6 @@ class test_show_ip_route(unittest.TestCase):
                                 'active':True,
                                 'metric':0,
                                 'route_preference':0,
-                                'source_protocol':'local',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -796,6 +795,7 @@ class test_show_ip_route(unittest.TestCase):
                                             'next_hop':'2.2.2.2',
                                             'best_ucast_nexthop':True,
                                             'updated':'00:41:07',
+                                            'source_protocol':'local',
                                             'outgoing_interface':'Loopback1'
                                         },
                                         2:{  
@@ -803,6 +803,7 @@ class test_show_ip_route(unittest.TestCase):
                                             'next_hop':'2.2.2.2',
                                             'best_ucast_nexthop':True,
                                             'updated':'00:41:07',
+                                            'source_protocol':'direct',
                                             'outgoing_interface':'Loopback1'
                                         }
                                     }
@@ -816,8 +817,6 @@ class test_show_ip_route(unittest.TestCase):
                                 'metric':81,
                                 'route_preference':110,
                                 'process_id':'10',
-                                'source_protocol':'ospf',
-                                'source_protocol_status':'intra',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -825,6 +824,8 @@ class test_show_ip_route(unittest.TestCase):
                                             'next_hop':'10.2.4.4',
                                             'best_ucast_nexthop':True,
                                             'updated':'00:20:04',
+                                            'source_protocol':'ospf',
+                                            'source_protocol_status':'intra',
                                             'outgoing_interface':'Ethernet1/1'
                                         },
                                         2:{  
@@ -832,6 +833,8 @@ class test_show_ip_route(unittest.TestCase):
                                             'next_hop':'10.2.5.5',
                                             'best_ucast_nexthop':True,
                                             'updated':'00:20:04',
+                                            'source_protocol':'ospf',
+                                            'source_protocol_status':'intra',
                                             'outgoing_interface':'Ethernet1/2'
                                         }
                                     }
@@ -845,7 +848,6 @@ class test_show_ip_route(unittest.TestCase):
                                 'active':True,
                                 'metric':0,
                                 'route_preference':0,
-                                'source_protocol':'direct',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -853,6 +855,7 @@ class test_show_ip_route(unittest.TestCase):
                                             'next_hop':'10.2.5.2',
                                             'best_ucast_nexthop':True,
                                             'updated':'00:45:10',
+                                            'source_protocol':'direct',
                                             'outgoing_interface':'Ethernet1/2'
                                         }
                                     }
@@ -866,7 +869,6 @@ class test_show_ip_route(unittest.TestCase):
                                 'active':True,
                                 'metric':0,
                                 'route_preference':0,
-                                'source_protocol':'local',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -874,6 +876,7 @@ class test_show_ip_route(unittest.TestCase):
                                             'next_hop':'10.2.5.2',
                                             'best_ucast_nexthop':True,
                                             'updated':'00:45:10',
+                                            'source_protocol':'local',
                                             'outgoing_interface':'Ethernet1/2'
                                         }
                                     }
@@ -881,9 +884,34 @@ class test_show_ip_route(unittest.TestCase):
                             },
                             '20.6.7.0/24':{  
                                 'route':'20.6.7.0/24',
+                                'active':True,
                                 'ubest':2,
                                 'mbest':0,
-                                'active':True
+                                'metric':20,
+                                'route_preference':110,
+                                'process_id':'10',
+                                'next_hop':{  
+                                    'next_hop_list':{  
+                                        1:{  
+                                            'index':1,
+                                            'next_hop':'10.2.4.4',
+                                            'source_protocol':'ospf',
+                                            'source_protocol_status':'type-2',
+                                            'best_ucast_nexthop':True,
+                                            'updated':'00:20:04',
+                                            'outgoing_interface':'Ethernet1/1'
+                                        },
+                                        2:{  
+                                            'index':2,
+                                            'next_hop':'10.2.5.5',
+                                            'source_protocol':'ospf',
+                                            'source_protocol_status':'type-2',
+                                            'best_ucast_nexthop':True,
+                                            'updated':'00:20:04',
+                                            'outgoing_interface':'Ethernet1/2'
+                                        }
+                                    }
+                                }
                             },
                             '23.23.23.23/32':{  
                                 'route':'23.23.23.23/32',
@@ -893,7 +921,6 @@ class test_show_ip_route(unittest.TestCase):
                                 'active':True,
                                 'metric':0,
                                 'route_preference':0,
-                                'source_protocol':'local',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -901,6 +928,7 @@ class test_show_ip_route(unittest.TestCase):
                                             'next_hop':'23.23.23.23',
                                             'best_ucast_nexthop':True,
                                             'updated':'00:41:07',
+                                            'source_protocol':'local',
                                             'outgoing_interface':'Loopback1'
                                         },
                                         2:{  
@@ -908,6 +936,7 @@ class test_show_ip_route(unittest.TestCase):
                                             'next_hop':'23.23.23.23',
                                             'best_ucast_nexthop':True,
                                             'updated':'00:41:07',
+                                            'source_protocol':'direct',
                                             'outgoing_interface':'Loopback1'
                                         }
                                     }
@@ -958,18 +987,18 @@ class test_show_ip_route(unittest.TestCase):
                         'routes':{  
                             '100.101.0.0/16':{  
                                 'route':'100.101.0.0/16',
+                                'active':True,
                                 'ubest':1,
                                 'mbest':0,
                                 'attached':True,
-                                'active':True,
                                 'metric':0,
                                 'route_preference':0,
-                                'source_protocol':'direct',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
                                             'index':1,
                                             'next_hop':'100.101.0.1',
+                                            'source_protocol':'direct',
                                             'best_ucast_nexthop':True,
                                             'updated':'00:46:14',
                                             'outgoing_interface':'Vlan101'
@@ -979,18 +1008,18 @@ class test_show_ip_route(unittest.TestCase):
                             },
                             '100.101.0.1/32':{  
                                 'route':'100.101.0.1/32',
+                                'active':True,
                                 'ubest':1,
                                 'mbest':0,
                                 'attached':True,
-                                'active':True,
                                 'metric':0,
                                 'route_preference':0,
-                                'source_protocol':'local',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
                                             'index':1,
                                             'next_hop':'100.101.0.1',
+                                            'source_protocol':'local',
                                             'best_ucast_nexthop':True,
                                             'updated':'00:46:14',
                                             'outgoing_interface':'Vlan101'
@@ -1000,18 +1029,18 @@ class test_show_ip_route(unittest.TestCase):
                             },
                             '100.101.1.3/32':{  
                                 'route':'100.101.1.3/32',
+                                'active':True,
                                 'ubest':1,
                                 'mbest':0,
                                 'attached':True,
-                                'active':True,
                                 'metric':0,
                                 'route_preference':190,
-                                'source_protocol':'hmm',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
                                             'index':1,
                                             'next_hop':'100.101.1.3',
+                                            'source_protocol':'hmm',
                                             'best_ucast_nexthop':True,
                                             'updated':'00:35:43',
                                             'outgoing_interface':'Vlan101'
@@ -1021,18 +1050,18 @@ class test_show_ip_route(unittest.TestCase):
                             },
                             '100.101.3.4/32':{  
                                 'route':'100.101.3.4/32',
+                                'active':True,
                                 'ubest':1,
                                 'mbest':0,
                                 'attached':True,
-                                'active':True,
                                 'metric':0,
                                 'route_preference':190,
-                                'source_protocol':'hmm',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
                                             'index':1,
                                             'next_hop':'100.101.3.4',
+                                            'source_protocol':'hmm',
                                             'best_ucast_nexthop':True,
                                             'updated':'00:26:50',
                                             'outgoing_interface':'Vlan101'
@@ -1042,30 +1071,30 @@ class test_show_ip_route(unittest.TestCase):
                             },
                             '100.101.8.3/32':{  
                                 'route':'100.101.8.3/32',
+                                'active':True,
                                 'ubest':1,
-                                'mbest':0,
-                                'active':True
+                                'mbest':0
                             },
                             '100.101.8.4/32':{  
                                 'route':'100.101.8.4/32',
+                                'active':True,
                                 'ubest':1,
-                                'mbest':0,
-                                'active':True
+                                'mbest':0
                             },
                             '100.102.0.0/16':{  
                                 'route':'100.102.0.0/16',
+                                'active':True,
                                 'ubest':1,
                                 'mbest':0,
                                 'attached':True,
-                                'active':True,
                                 'metric':0,
                                 'route_preference':0,
-                                'source_protocol':'direct',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
                                             'index':1,
                                             'next_hop':'100.102.0.1',
+                                            'source_protocol':'direct',
                                             'best_ucast_nexthop':True,
                                             'updated':'00:46:13',
                                             'outgoing_interface':'Vlan102'
@@ -1075,18 +1104,18 @@ class test_show_ip_route(unittest.TestCase):
                             },
                             '100.102.0.1/32':{  
                                 'route':'100.102.0.1/32',
+                                'active':True,
                                 'ubest':1,
                                 'mbest':0,
                                 'attached':True,
-                                'active':True,
                                 'metric':0,
                                 'route_preference':0,
-                                'source_protocol':'local',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
                                             'index':1,
                                             'next_hop':'100.102.0.1',
+                                            'source_protocol':'local',
                                             'best_ucast_nexthop':True,
                                             'updated':'00:46:13',
                                             'outgoing_interface':'Vlan102'
@@ -1156,17 +1185,17 @@ class test_show_ip_route(unittest.TestCase):
                         'routes':{  
                             '1.1.1.1/32':{  
                                 'route':'1.1.1.1/32',
+                                'active':True,
                                 'ubest':2,
                                 'mbest':0,
-                                'active':True,
                                 'metric':0,
                                 'route_preference':1,
-                                'source_protocol':'static',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
                                             'index':1,
                                             'next_hop':'10.1.3.1',
+                                            'source_protocol':'static',
                                             'best_ucast_nexthop':True,
                                             'updated':'01:01:30',
                                             'outgoing_interface':'Ethernet1/2'
@@ -1174,6 +1203,7 @@ class test_show_ip_route(unittest.TestCase):
                                         2:{  
                                             'index':2,
                                             'next_hop':'20.1.3.1',
+                                            'source_protocol':'static',
                                             'best_ucast_nexthop':True,
                                             'updated':'01:01:30',
                                             'outgoing_interface':'Ethernet1/3'
@@ -1183,18 +1213,18 @@ class test_show_ip_route(unittest.TestCase):
                             },
                             '3.3.3.3/32':{  
                                 'route':'3.3.3.3/32',
+                                'active':True,
                                 'ubest':2,
                                 'mbest':0,
                                 'attached':True,
-                                'active':True,
                                 'metric':0,
                                 'route_preference':0,
-                                'source_protocol':'local',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
                                             'index':1,
                                             'next_hop':'3.3.3.3',
+                                            'source_protocol':'local',
                                             'best_ucast_nexthop':True,
                                             'updated':'01:01:31',
                                             'outgoing_interface':'Loopback0'
@@ -1202,6 +1232,7 @@ class test_show_ip_route(unittest.TestCase):
                                         2:{  
                                             'index':2,
                                             'next_hop':'3.3.3.3',
+                                            'source_protocol':'direct',
                                             'best_ucast_nexthop':True,
                                             'updated':'01:01:31',
                                             'outgoing_interface':'Loopback0'
@@ -1211,19 +1242,19 @@ class test_show_ip_route(unittest.TestCase):
                             },
                             '10.1.2.0/24':{  
                                 'route':'10.1.2.0/24',
+                                'active':True,
                                 'ubest':4,
                                 'mbest':0,
-                                'active':True,
                                 'metric':41,
                                 'route_preference':110,
                                 'process_id':'1',
-                                'source_protocol':'ospf',
-                                'source_protocol_status':'intra',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
                                             'index':1,
                                             'next_hop':'10.1.3.1',
+                                            'source_protocol':'ospf',
+                                            'source_protocol_status':'intra',
                                             'best_ucast_nexthop':True,
                                             'updated':'01:01:18',
                                             'outgoing_interface':'Ethernet1/2'
@@ -1233,18 +1264,18 @@ class test_show_ip_route(unittest.TestCase):
                             },
                             '10.2.3.0/24':{  
                                 'route':'10.2.3.0/24',
+                                'active':True,
                                 'ubest':1,
                                 'mbest':0,
                                 'attached':True,
-                                'active':True,
                                 'metric':0,
                                 'route_preference':0,
-                                'source_protocol':'direct',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
                                             'index':1,
                                             'next_hop':'10.2.3.3',
+                                            'source_protocol':'direct',
                                             'best_ucast_nexthop':True,
                                             'updated':'01:01:33',
                                             'outgoing_interface':'Ethernet1/4'
@@ -1254,18 +1285,18 @@ class test_show_ip_route(unittest.TestCase):
                             },
                             '10.2.3.3/32':{  
                                 'route':'10.2.3.3/32',
+                                'active':True,
                                 'ubest':1,
                                 'mbest':0,
                                 'attached':True,
-                                'active':True,
                                 'metric':0,
                                 'route_preference':0,
-                                'source_protocol':'local',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
                                             'index':1,
                                             'next_hop':'10.2.3.3',
+                                            'source_protocol':'local',
                                             'best_ucast_nexthop':True,
                                             'updated':'01:01:33',
                                             'outgoing_interface':'Ethernet1/4'
@@ -1275,18 +1306,18 @@ class test_show_ip_route(unittest.TestCase):
                             },
                             '13.13.13.13/32':{  
                                 'route':'13.13.13.13/32',
+                                'active':True,
                                 'ubest':2,
                                 'mbest':0,
                                 'attached':True,
-                                'active':True,
                                 'metric':0,
                                 'route_preference':0,
-                                'source_protocol':'local',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
                                             'index':1,
                                             'next_hop':'13.13.13.13',
+                                            'source_protocol':'local',
                                             'best_ucast_nexthop':True,
                                             'updated':'01:01:30',
                                             'outgoing_interface':'Loopback1'
@@ -1294,6 +1325,7 @@ class test_show_ip_route(unittest.TestCase):
                                         2:{  
                                             'index':2,
                                             'next_hop':'13.13.13.13',
+                                            'source_protocol':'direct',
                                             'best_ucast_nexthop':True,
                                             'updated':'01:01:30',
                                             'outgoing_interface':'Loopback1'
@@ -1303,19 +1335,19 @@ class test_show_ip_route(unittest.TestCase):
                             },
                             '20.1.2.0/24':{  
                                 'route':'20.1.2.0/24',
+                                'active':True,
                                 'ubest':4,
                                 'mbest':0,
-                                'active':True,
                                 'metric':41,
                                 'route_preference':110,
                                 'process_id':'1',
-                                'source_protocol':'ospf',
-                                'source_protocol_status':'intra',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
                                             'index':1,
                                             'next_hop':'10.1.3.1',
+                                            'source_protocol':'ospf',
+                                            'source_protocol_status':'intra',
                                             'best_ucast_nexthop':True,
                                             'updated':'01:01:18',
                                             'outgoing_interface':'Ethernet1/2'
@@ -1323,6 +1355,8 @@ class test_show_ip_route(unittest.TestCase):
                                         2:{  
                                             'index':2,
                                             'next_hop':'20.2.3.2',
+                                            'source_protocol':'ospf',
+                                            'source_protocol_status':'intra',
                                             'best_ucast_nexthop':True,
                                             'updated':'01:01:18',
                                             'outgoing_interface':'Ethernet1/1'
@@ -1332,18 +1366,18 @@ class test_show_ip_route(unittest.TestCase):
                             },
                             '20.2.3.0/24':{  
                                 'route':'20.2.3.0/24',
+                                'active':True,
                                 'ubest':1,
                                 'mbest':0,
                                 'attached':True,
-                                'active':True,
                                 'metric':0,
                                 'route_preference':0,
-                                'source_protocol':'direct',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
                                             'index':1,
                                             'next_hop':'20.2.3.3',
+                                            'source_protocol':'direct',
                                             'best_ucast_nexthop':True,
                                             'updated':'01:01:35',
                                             'outgoing_interface':'Ethernet1/1'
@@ -1353,18 +1387,18 @@ class test_show_ip_route(unittest.TestCase):
                             },
                             '20.2.3.3/32':{  
                                 'route':'20.2.3.3/32',
+                                'active':True,
                                 'ubest':1,
                                 'mbest':0,
                                 'attached':True,
-                                'active':True,
                                 'metric':0,
                                 'route_preference':0,
-                                'source_protocol':'local',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
                                             'index':1,
                                             'next_hop':'20.2.3.3',
+                                            'source_protocol':'local',
                                             'best_ucast_nexthop':True,
                                             'updated':'01:01:35',
                                             'outgoing_interface':'Ethernet1/1'
@@ -1374,19 +1408,19 @@ class test_show_ip_route(unittest.TestCase):
                             },
                             '21.21.21.21/32':{  
                                 'route':'21.21.21.21/32',
+                                'active':True,
                                 'ubest':2,
                                 'mbest':0,
-                                'active':True,
                                 'metric':50,
                                 'route_preference':115,
                                 'process_id':'1',
-                                'source_protocol':'isis',
-                                'source_protocol_status':'L1',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
                                             'index':1,
                                             'next_hop':'10.1.3.1',
+                                            'source_protocol':'isis',
+                                            'source_protocol_status':'L1',
                                             'best_ucast_nexthop':True,
                                             'updated':'01:01:22',
                                             'outgoing_interface':'Ethernet1/2'
@@ -1394,6 +1428,8 @@ class test_show_ip_route(unittest.TestCase):
                                         2:{  
                                             'index':2,
                                             'next_hop':'20.1.3.1',
+                                            'source_protocol':'isis',
+                                            'source_protocol_status':'L1',
                                             'best_ucast_nexthop':True,
                                             'updated':'01:01:16',
                                             'outgoing_interface':'Ethernet1/3'
@@ -1403,20 +1439,20 @@ class test_show_ip_route(unittest.TestCase):
                             },
                             '31.31.31.31/32':{  
                                 'route':'31.31.31.31/32',
+                                'active':True,
                                 'ubest':1,
                                 'mbest':0,
-                                'active':True,
                                 'metric':0,
                                 'route_preference':200,
                                 'process_id':'100',
-                                'source_protocol':'bgp',
-                                'source_protocol_status':'internal',
                                 'tag':100,
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
                                             'index':1,
                                             'next_hop':'11.11.11.11',
+                                            'source_protocol':'bgp',
+                                            'source_protocol_status':'internal',
                                             'best_ucast_nexthop':True,
                                             'updated':'01:01:12'
                                         }
@@ -1433,18 +1469,18 @@ class test_show_ip_route(unittest.TestCase):
                         'routes':{  
                             '1.1.1.1/32':{  
                                 'route':'1.1.1.1/32',
+                                'active':True,
                                 'ubest':2,
                                 'mbest':0,
                                 'attached':True,
-                                'active':True,
                                 'metric':0,
                                 'route_preference':0,
-                                'source_protocol':'local',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
                                             'index':1,
                                             'next_hop':'1.1.1.1',
+                                            'source_protocol':'local',
                                             'best_ucast_nexthop':True,
                                             'updated':'00:00:10',
                                             'outgoing_interface':'Loopback4'
@@ -1452,6 +1488,7 @@ class test_show_ip_route(unittest.TestCase):
                                         2:{  
                                             'index':2,
                                             'next_hop':'1.1.1.1',
+                                            'source_protocol':'direct',
                                             'best_ucast_nexthop':True,
                                             'updated':'00:00:10',
                                             'outgoing_interface':'Loopback4'
@@ -1482,12 +1519,14 @@ class test_show_ip_route(unittest.TestCase):
         self.device = Mock(**self.golden_output_2)
         obj = ShowIpRoute(device=self.device)
         parsed_output = obj.parse(vrf="vni_10100")
+        print(parsed_output)
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
     def test_show_ip_route_vrf_all(self):
         self.device = Mock(**self.golden_output_3)
         obj = ShowIpRoute(device=self.device)
         parsed_output = obj.parse(vrf="all")
+        print(parsed_output)
         self.assertEqual(parsed_output,self.golden_parsed_output_3)
 
 # ============================================
