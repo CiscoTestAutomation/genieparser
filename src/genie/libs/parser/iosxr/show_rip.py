@@ -40,7 +40,7 @@ class ShowRipSchema(MetaParser):
                                 'added_to_socket': str,
                                 'out_of_memory_state': str,
                                 'version': int,
-                                'default_metric': int,
+                                'default_metric': str,
                                 'maximum_paths': int,
                                 'auto_summarize': str,
                                 'broadcast_for_v2': str,
@@ -75,13 +75,14 @@ class ShowRip(ShowRipSchema):
     cli_command = ['show rip', 'show rip vrf {vrf}']
 
     def cli(self, vrf="", output=None):
+        if vrf:
+            cmd = self.cli_command[1].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[0]
+            vrf = 'default'
 
         if output is None:
-            if not vrf:
-                vrf = 'default'
-                out = self.device.execute(self.cli_command[0])
-            else:
-                out = self.device.execute(self.cli_command[1].format(vrf=vrf))
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -92,10 +93,10 @@ class ShowRip(ShowRipSchema):
         p1 = re.compile(r'^RIP +config:$')
 
         # Active:                    Yes
-        p2 = re.compile(r'^Active:\s+(?P<active>\w+)$')
+        p2 = re.compile(r'^Active\??:\s+(?P<active>\w+)$')
 
         # Added to socket:           Yes
-        p3 = re.compile(r'^Added +to +socket:\s+(?P<added_to_socket>\w+)$')
+        p3 = re.compile(r'^Added +to +socket\??:\s+(?P<added_to_socket>\w+)$')
 
         # Out-of-memory state:        Normal
         p4 = re.compile(r'^Out-of-memory +state:\s+(?P<memory_state>\w+)$')
@@ -104,19 +105,19 @@ class ShowRip(ShowRipSchema):
         p5 = re.compile(r'^Version:\s+(?P<version>[\d.]+)$')
 
         # Default metric:             3
-        p6 = re.compile(r'^Default +metric:\s+(?P<default_metric>\d+)$')
+        p6 = re.compile(r'^Default +metric:\s+(?P<default_metric>[\d\w\s]+)$')
 
         # Maximum paths:              4
         p7 = re.compile(r'^Maximum +paths:\s+(?P<max_paths>\d+)$')
 
         # Auto summarize:            No
-        p8 = re.compile(r'^Auto +summarize:\s+(?P<auto_summarize>\w+)$')
+        p8 = re.compile(r'^Auto +summarize\??:\s+(?P<auto_summarize>\w+)$')
 
         # Broadcast for V2:          No
-        p9 = re.compile(r'^Broadcast +for +V2:\s+(?P<broadcast>\w+)$')
+        p9 = re.compile(r'^Broadcast +for +V2\??:\s+(?P<broadcast>\w+)$')
 
         # Packet source validation:  Yes
-        p10 = re.compile(r'^Packet +source +validation:\s+(?P<packet_validation>\w+)$')
+        p10 = re.compile(r'^Packet +source +validation\??:\s+(?P<packet_validation>\w+)$')
 
         # NSF:                        Disabled
         p11 = re.compile(r'^NSF:\s+(?P<nsf>\w+)$')
@@ -175,7 +176,7 @@ class ShowRip(ShowRipSchema):
             m = p6.match(line)
             if m:
                 groups = m.groupdict()
-                instance_dict.update({'default_metric': int(groups['default_metric'])})
+                instance_dict.update({'default_metric': groups['default_metric']})
                 continue
 
             # Maximum paths:              4
