@@ -2799,6 +2799,7 @@ class ShowBgpNeighborSuperParser(MetaParser):
                           ' (?P<total_data>(\d+))$')
 
         # Sent: 166 (retransmit: 0, fastretransmit: 0, partialack: 0, Second Congestion: 0), with data: 87, total data bytes: 3303
+        # Sent: 7593077 (retransmit: 117 fastretransmit: 6),with data: 7204196, total data bytes: 913534076
         p50 = re.compile(r'^Sent: (?P<sent>(\d+)) +\(retransmit: +'
             '(?P<retransmit>(\d+)),? +fastretransmit: +(?P<fastretransmit>'
             '(\d+))(, +partialack: +(?P<partialack>(\d+)), +Second +'
