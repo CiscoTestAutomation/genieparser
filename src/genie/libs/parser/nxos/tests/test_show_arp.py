@@ -803,21 +803,18 @@ class test_show_ip_arp(unittest.TestCase):
 			parsed_output = obj.parse()
 
 	def test_golden(self):
-		self.maxDiff = None
 		self.device = Mock(**self.golden_output)
 		obj = ShowIpArp(device=self.device)
 		parsed_output = obj.parse()
 		self.assertEqual(parsed_output, self.golden_parsed_output)
 
 	def test_golden_vrf(self):
-		self.maxDiff = None
 		self.device = Mock(**self.golden_output_2)
 		obj = ShowIpArp(device=self.device)
 		parsed_output = obj.parse(vrf='vni_10100')
 		self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 	def test_golden_all(self):
-		self.maxDiff = None
 		self.device = Mock(**self.golden_output_3)
 		obj = ShowIpArp(device=self.device)
 		parsed_output = obj.parse(vrf='all')
