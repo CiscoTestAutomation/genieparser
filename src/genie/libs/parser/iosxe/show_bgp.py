@@ -2601,7 +2601,7 @@ class ShowBgpNeighborSuperParser(MetaParser):
                          ' +capable +\(disabled\))?$')
 
         # Neighbor capabilities:
-        p9 = re.compile(r'^Neighbor capabilities:$')
+        p9 = re.compile(r'^Neighbor +capabilities:$')
 
         #  Route refresh: advertised and received(new)
         p10 = re.compile(r'^Route +refresh: +(?P<route_refresh>(.*))$')
@@ -2897,7 +2897,6 @@ class ShowBgpNeighborSuperParser(MetaParser):
         for line in out.splitlines():
 
             line = line.strip()
-
             # For address family: IPv4 Unicast
             m = p1.match(line)
             if m:
@@ -3134,7 +3133,6 @@ class ShowBgpNeighborSuperParser(MetaParser):
             if m:
                 nbr_cap_dict['stateful_switchover'] = m.groupdict()['value']
                 continue
-
             # Message statistics:
             m = p19.match(line)
             if m:
@@ -3863,7 +3861,6 @@ class ShowIpBgpAllNeighbors(ShowBgpNeighborSuperParser, ShowBgpAllNeighborsSchem
             show_output = self.device.execute(cmd)
         else:
             show_output = output
-
         # Call super
         return super().cli(output=show_output, neighbor=neighbor,
                            address_family=address_family)
