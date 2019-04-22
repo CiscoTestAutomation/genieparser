@@ -261,6 +261,7 @@ class test_show_msdp_sa_cache(unittest.TestCase):
                         'up_time': '00:00:10',
                         'expire': '00:05:49',
                         'peer_as': 3,
+                        'peer': '10.1.100.4',
                         'origin_rp': {
                             '10.3.100.8': {
                                 'rp_address': '10.3.100.8'}},
@@ -288,6 +289,7 @@ class test_show_msdp_sa_cache(unittest.TestCase):
                         'source_addr': '10.1.4.15',
                         'up_time': '00:19:29',
                         'expire': '00:05:14',
+                        'peer': '10.1.100.1',
                         'origin_rp': {
                             '10.1.100.1': {
                                 'rp_address': '10.1.100.1'
@@ -301,11 +303,130 @@ class test_show_msdp_sa_cache(unittest.TestCase):
                                 'encapsulated_data_received': 0}}}}}}}
 
     device_output_2 = {'execute.return_value': '''
-        P2#show ip msdp vrf VRF1 sa-cache       
+        P2#show ip msdp vrf VRF1 sa-cache
         MSDP Source-Active Cache - 1 entries
         (10.1.4.15, 225.1.1.1), RP 10.1.100.1, AS ?,00:19:29/00:05:14, Peer 10.1.100.1
         Learned from peer 10.1.100.1, RPF peer 10.1.100.1, 
         SAs received: 14, Encapsulated data received: 0
+    '''}
+
+    expected_parsed_output_3 = {
+        'vrf': {
+            'default': {
+                'sa_cache': {
+                    '10.44.44.5 239.232.1.0': {
+                        'group': '239.232.1.0',
+                        'source_addr': '10.44.44.5',
+                        'up_time': '00:01:20',
+                        'expire': '00:05:32',
+                        'peer_as': 64512,
+                        'peer': '192.168.4.4',
+                        'origin_rp': {
+                            '192.168.4.4': {
+                                'rp_address': '192.168.4.4'
+                            }
+                        }
+                    },
+                    '10.44.44.5 239.232.1.1': {
+                        'group': '239.232.1.1',
+                        'source_addr': '10.44.44.5',
+                        'up_time': '00:01:20',
+                        'expire': '00:05:32',
+                        'peer_as': 64512,
+                        'peer': '192.168.4.4',
+                        'origin_rp': {
+                            '192.168.4.4': {
+                                'rp_address': '192.168.4.4'
+                            }
+                        }
+                    },
+                    '10.44.44.5 239.232.1.2': {
+                        'group': '239.232.1.2',
+                        'source_addr': '10.44.44.5',
+                        'up_time': '00:01:19',
+                        'expire': '00:05:32',
+                        'peer': '192.168.4.4',
+                        'peer_as': 64512,
+                        'origin_rp': {
+                            '192.168.4.4': {
+                                'rp_address': '192.168.4.4'
+                            }
+                        }
+                    },
+                    '10.44.44.5 239.232.1.3': {
+                        'group': '239.232.1.3',
+                        'source_addr': '10.44.44.5',
+                        'up_time': '00:01:19',
+                        'expire': '00:05:32',
+                        'peer': '192.168.4.4',
+                        'peer_as': 64512,
+                        'origin_rp': {
+                            '192.168.4.4': {
+                                'rp_address': '192.168.4.4'
+                            }
+                        }
+                    },
+                    '10.44.44.5 239.232.1.4': {
+                        'group': '239.232.1.4',
+                        'source_addr': '10.44.44.5',
+                        'up_time': '00:01:19',
+                        'expire': '00:05:32',
+                        'peer_as': 64512,
+                        'peer': '192.168.4.4',
+                        'origin_rp': {
+                            '192.168.4.4': {
+                                'rp_address': '192.168.4.4'
+                            }
+                        }
+                    },
+                    '10.44.44.5 239.232.1.5': {
+                        'group': '239.232.1.5',
+                        'source_addr': '10.44.44.5',
+                        'up_time': '00:01:19',
+                        'expire': '00:05:32',
+                        'peer_as': 64512,
+                        'peer': '192.168.4.4',
+                        'origin_rp': {
+                            '192.168.4.4': {
+                                'rp_address': '192.168.4.4'
+                            }
+                        }
+                    },
+                    '10.44.44.5 239.232.1.6': {
+                        'group': '239.232.1.6',
+                        'source_addr': '10.44.44.5',
+                        'up_time': '00:01:19',
+                        'expire': '00:05:32',
+                        'peer_as': 64512,
+                        'peer': '192.168.4.4',
+                        'origin_rp': {
+                            '192.168.4.4': {
+                                'rp_address': '192.168.4.4'
+                            }
+                        }
+                    },
+                    '10.44.44.5 239.232.1.7': {
+                        'group': '239.232.1.7',
+                        'source_addr': '10.44.44.5',
+                        'up_time': '00:01:19',
+                        'expire': '00:05:32',
+                        'peer_as': 64512,
+                        'peer': '192.168.4.4',
+                        'origin_rp': {
+                            '192.168.4.4': {
+                                'rp_address': '192.168.4.4'}}}}}}}
+
+    device_output_3 = {'execute.return_value': '''
+        Device# show ip msdp sa-cache
+        MSDP Source-Active Cache - 8 entries
+        (10.44.44.5, 239.232.1.0), RP 192.168.4.4, BGP/AS 64512, 00:01:20/00:05:32, Peer 192.168.4.4
+        (10.44.44.5, 239.232.1.1), RP 192.168.4.4, BGP/AS 64512, 00:01:20/00:05:32, Peer 192.168.4.4
+        (10.44.44.5, 239.232.1.2), RP 192.168.4.4, BGP/AS 64512, 00:01:19/00:05:32, Peer 192.168.4.4
+        (10.44.44.5, 239.232.1.3), RP 192.168.4.4, BGP/AS 64512, 00:01:19/00:05:32, Peer 192.168.4.4
+        (10.44.44.5, 239.232.1.4), RP 192.168.4.4, BGP/AS 64512, 00:01:19/00:05:32, Peer 192.168.4.4
+        (10.44.44.5, 239.232.1.5), RP 192.168.4.4, BGP/AS 64512, 00:01:19/00:05:32, Peer 192.168.4.4
+        (10.44.44.5, 239.232.1.6), RP 192.168.4.4, BGP/AS 64512, 00:01:19/00:05:32, Peer 192.168.4.4
+        (10.44.44.5, 239.232.1.7), RP 192.168.4.4, BGP/AS 64512, 00:01:19/00:05:32, Peer 192.168.4.4
     '''}
 
     device_output_empty = {'execute.return_value': ''}
@@ -323,6 +444,13 @@ class test_show_msdp_sa_cache(unittest.TestCase):
         obj = ShowIpMsdpSaCache(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_2)
+
+    def test_show_msdp_sa_cache_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_3)
+        obj = ShowIpMsdpSaCache(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_3)
 
     def test_show_msdp_sa_cache_empty(self):
         self.maxDiff = None
