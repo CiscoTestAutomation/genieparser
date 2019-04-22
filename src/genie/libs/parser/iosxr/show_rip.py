@@ -44,7 +44,7 @@ class ShowRipStatisticsSchema(MetaParser):
                                     'total_packets_received': int,
                                     'packets_discarded': int,
                                     'routes_discarded': int,
-                                    'packets_received_at_standby': int,
+                                    Optional('packets_received_at_standby'): int,
                                     'routes_allocated': int,
                                     'paths_allocated': int,
                                     'route_malloc_failures': int,
@@ -72,12 +72,14 @@ class ShowRipStatistics(ShowRipStatisticsSchema):
     cli_command = ['show rip statistics', 'show rip vrf {vrf} statistics']
 
     def cli(self, vrf='', output=None):
+        if vrf:
+            cmd = self.cli_command[1].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[0]
+            vrf = 'default'
+
         if output is None:
-            if not vrf:
-                vrf = 'default'
-                out = self.device.execute(self.cli_command[0])
-            else:
-                out = self.device.execute(self.cli_command[1].format(vrf=vrf))
+            out = self.device.execute(cmd)
         else:
             out = output
         
