@@ -2323,32 +2323,34 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                                     },
                                 },
                             },
-                        'bgp_negotiated_keepalive_timers':
+                        Optional('bgp_negotiated_keepalive_timers'):
                             {'keepalive_interval': int,
                             'hold_time': int,
                             Optional('min_holdtime'): int,
                             },
-                        'bgp_negotiated_capabilities':
+                        Optional('bgp_negotiated_capabilities'):
                             {'route_refresh': str,
                             'four_octets_asn': str,
-                            'enhanced_refresh': str,
+                            Optional('enhanced_refresh'): str,
                             Optional('vpnv4_unicast'): str,
                             Optional('vpnv6_unicast'): str,
                             Optional('ipv4_unicast'): str,
                             Optional('ipv6_unicast'): str,
                             Optional('l2vpn_vpls'): str,
+                            Optional('ipv4_multicast'): str,
+                            Optional('ipv4_mdt'): str,
                             Optional('vpnv4_multicast'): str,
                             Optional('vpnv6_multicast'): str,
                             Optional('mvpnv4_multicast'): str,
                             Optional('mvpnv6_multicast'): str,
                             Optional('l2vpn_evpn'): str,
                             Optional('multisession'): str,
-                            'stateful_switchover': str,
+                            Optional('stateful_switchover'): str,
                             Optional('graceful_restart'): str,
                             Optional('remote_restart_timer'): int,
                             Optional('graceful_restart_af_advertised_by_peer'): list,
                             },
-                        'bgp_neighbor_counters':
+                        Optional('bgp_neighbor_counters'):
                             {'messages':
                                 {'sent':
                                     {'opens': int,
@@ -2433,8 +2435,8 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                                     {'value': int,
                                     'retransmit': int,
                                     'fastretransmit': int,
-                                    'partialack': int,
-                                    'second_congestion': int,
+                                    Optional('partialack'): int,
+                                    Optional('second_congestion'): int,
                                     'with_data': int,
                                     'total_data': int,
                                     },
@@ -2640,7 +2642,8 @@ class ShowBgpNeighborSuperParser(MetaParser):
                          ' +(?P<value>(.*))$')
 
         # Message statistics:
-        p19 = re.compile(r'^Message +statistics:$')
+        # Message statistics, state Established
+        p19 = re.compile(r'^Message +statistics(, +state +Established)?:?$')
 
         #  InQ depth is 0
         #  OutQ depth is 0
@@ -2796,13 +2799,12 @@ class ShowBgpNeighborSuperParser(MetaParser):
                           ' (?P<total_data>(\d+))$')
 
         # Sent: 166 (retransmit: 0, fastretransmit: 0, partialack: 0, Second Congestion: 0), with data: 87, total data bytes: 3303
-        p50 = re.compile(r'^Sent: (?P<sent>(\d+)) +\(retransmit:'
-                          ' +(?P<retransmit>(\d+)), +fastretransmit:'
-                          ' +(?P<fastretransmit>(\d+)), +partialack:'
-                          ' +(?P<partialack>(\d+)), +Second +Congestion:'
-                          ' +(?P<second_congestion>(\d+))\), +with +data:'
-                          ' (?P<sent_with_data>(\d+)), +total +data +bytes:'
-                          ' +(?P<sent_total_data>(\d+))$')
+        p50 = re.compile(r'^Sent: (?P<sent>(\d+)) +\(retransmit: +'
+            '(?P<retransmit>(\d+)),? +fastretransmit: +(?P<fastretransmit>'
+            '(\d+))(, +partialack: +(?P<partialack>(\d+)), +Second +'
+            'Congestion: +(?P<second_congestion>(\d+)))?\), *with +'
+            'data: (?P<sent_with_data>(\d+)), +total +data +bytes: '
+            '+(?P<sent_total_data>(\d+))$')
 
 
         # Packets received in fast path: 0, fast processed: 0, slow path: 0
@@ -3491,8 +3493,10 @@ class ShowBgpNeighborSuperParser(MetaParser):
                 datagram_sent_dict['value'] = int(group['sent'])
                 datagram_sent_dict['retransmit'] = int(group['retransmit'])
                 datagram_sent_dict['fastretransmit'] = int(group['fastretransmit'])
-                datagram_sent_dict['partialack'] = int(group['partialack'])
-                datagram_sent_dict['second_congestion'] = int(group['second_congestion'])
+                if group['partialack']:
+                    datagram_sent_dict['partialack'] = int(group['partialack'])
+                if group['second_congestion']:
+                    datagram_sent_dict['second_congestion'] = int(group['second_congestion'])
                 datagram_sent_dict['with_data'] = int(group['sent_with_data'])
                 datagram_sent_dict['total_data'] = int(group['sent_total_data'])
                 continue
