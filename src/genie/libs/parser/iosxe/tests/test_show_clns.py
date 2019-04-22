@@ -147,7 +147,8 @@ class test_show_clns_protocol(unittest.TestCase):
     golden_parsed_output = {
         'instance':{
             'VRF1':{
-                'system_id': '2222.2222.2222.00',
+                'system_id': '2222.2222.2222',
+                'nsel':'00',
                 'process_handle': '0x10001',
                 'is_type': 'level-1-2',
                 'manual_area_address':['49.0001'],

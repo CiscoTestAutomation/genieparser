@@ -298,6 +298,7 @@ class ShowClnsProtocolSchema(MetaParser):
         'instance': {
              Any(): {
                 'system_id': str,
+                'nsel': str,
                 'process_handle': str,
                 'is_type': str,
                 'manual_area_address': list,
@@ -385,7 +386,8 @@ class ShowClnsProtocol(ShowClnsProtocolSchema):
             if m:
                 group = m.groupdict()
                 clns_dict.update({'is_type': group['is_type']})
-                clns_dict.update({'system_id': group['system_id']})
+                clns_dict.update({'system_id': group['system_id'][:-3]})
+                clns_dict.update({'nsel': group['system_id'][-2:]})
                 continue
 
             # Manual area address(es):
