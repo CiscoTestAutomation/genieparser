@@ -66,14 +66,6 @@ class ShowIpArp(ShowIpArpSchema):
 
 		res_dict = {}
 
-		# Address         Age       MAC Address     Interface Flags
-		# IP Address Age(min) Link-layer Addr Type Interface
-		# IP Address       Age(min)   Link-layer Addr         Type  Interface
-		# p1 = re.compile(r'^(?P<address_header>(IP +)?Address)\s+(?P<age_header>Age(\(min\))?)\s+'
-		# 				r'(?P<mac_header>MAC +Address|Link-layer +Addr)\s+((?P<type_header>Type)\s+)?'
-		# 				r'(?P<interface_header>Interface)(\s+(?P<flags_header>Flags))?$')
-
-
 		# IP ARP Table for all contexts
 		# IP ARP Table for context vni_10100
 		# IP ARP Table for context default
