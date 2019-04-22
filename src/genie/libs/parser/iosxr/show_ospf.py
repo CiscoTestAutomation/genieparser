@@ -1111,11 +1111,11 @@ class ShowOspfVrfAllInclusiveSchema(MetaParser):
                                         Optional('state'): str},
                                     Optional('on_startup'): 
                                         {'on_startup': int,
-                                        'include_stub': bool,
-                                        'summary_lsa': bool,
-                                        'summary_lsa_metric': int,
-                                        'external_lsa': bool,
-                                        'external_lsa_metric': int,
+                                        Optional('include_stub'): bool,
+                                        Optional('summary_lsa'): bool,
+                                        Optional('summary_lsa_metric'): int,
+                                        Optional('external_lsa'): bool,
+                                        Optional('external_lsa_metric'): int,
                                         'state': str},
                                     Optional('on_switchover'): 
                                         {'on_switchover': int,
