@@ -6854,7 +6854,7 @@ class ShowIpBgpAllDampeningParameters(ShowIpBgpAllDampeningParametersSchema):
             for i in parsed_dict.copy():
                 if not parsed_dict[i]:
                     parsed_dict.pop(i)
-
+        
         return parsed_dict
 
 
