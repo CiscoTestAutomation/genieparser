@@ -15,11 +15,8 @@ NXOS parser for the following show commands:
     * show l2route mac-ip all detail
     * show l2route summary
     * show nve vni ingress-replication
-<<<<<<< HEAD
     * show l2route evpn mac-ip all
-=======
     * show l2route evpn mac-ip evi <evi>
->>>>>>> dev
 """
 
 # Python
