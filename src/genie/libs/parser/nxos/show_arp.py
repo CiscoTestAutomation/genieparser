@@ -21,17 +21,22 @@ class ShowIpArpSchema(MetaParser):
 	"""Schema for show ip arp"""
 
 	schema = {
-		'vrf': {
+		Optional('statistics'): {
+			Optional('entries_total'): int
+		},
+		'interfaces': {
 			Any(): {
-				Optional('max_entries'): int,
-				'global_static_table': {
-					Any(): {
-						'ip_address': str,
-						'age': str,
-						'mac_address': str,
-						Optional('encap_type'): str,
-						'interface': str,
-						Optional('flags'): str
+				'ipv4': {
+					'neighbors': {
+						Any(): {
+							'ip': str,
+							'link_layer_address': str,
+							'age': str,
+							'origin': str,
+							'physical_interface': str,
+							Optional('encap_type'): str,
+							Optional('flags'): str
+						}
 					}
 				}
 			}
@@ -77,7 +82,7 @@ class ShowIpArp(ShowIpArpSchema):
 		# 209.165.200.226 0 0006.d623.4008 ARPA GigabitEthernet1/1
 		# 100.101.1.3     00:09:20  fa16.3ed1.37b5  Vlan101         +
 		# 100.101.1.4     00:01:53  fa16.3ec5.fcab  Vlan101
-		p3 = re.compile(r'^(?P<ip_address>[\d\.]+)\s+(?P<age>[\d:]+)\s+(?P<mac_address>[\w\.]+)\s+'
+		p3 = re.compile(r'^(?P<ip_address>[\d\.]+)\s+(?P<age>[\d:-]+)\s+(?P<mac_address>[\w\.]+)\s+'
 						r'((?P<encap_type>ARPA)\s+)?(?P<interface>[\w\/]+)(\s+(?P<flags>\S))?$')
 
 		for line in out.splitlines():
@@ -88,22 +93,18 @@ class ShowIpArp(ShowIpArpSchema):
 			# IP ARP Table for context default
 			m = p1.match(line)
 			if m:
-				groups = m.groupdict()
-				if groups['vrf']:
-					vrf = groups['vrf']
-
-				if 'vrf' not in res_dict:
-					vrfs_dict = res_dict.setdefault('vrf', {})
-
-				vrf_dict = vrfs_dict.setdefault(vrf, {})
-				global_static_table_dict = vrf_dict.setdefault('global_static_table', {})
+				if not 'interfaces' in res_dict:
+					interfaces_dict = res_dict.setdefault('interfaces', {})
 				continue
 
 			# Total number of entries: 11
 			m = p2.match(line)
 			if m:
+				if not 'statistics' in res_dict:
+					statistics_dict = res_dict.setdefault('statistics', {})
+
 				groups = m.groupdict()
-				vrf_dict.update({'max_entries': int(groups['num_entries'])})
+				statistics_dict.update({'entries_total': int(groups['num_entries'])})
 				continue
 
 			# 209.165.200.226 0 0006.d623.4008 ARPA GigabitEthernet1/1
@@ -113,21 +114,44 @@ class ShowIpArp(ShowIpArpSchema):
 			if m:
 				# Rare case (but found through run_parsers) - Only used to 
 				# setup data structure when output lines never match p1
-				if 'vrf' not in res_dict:
-					vrfs_dict = res_dict.setdefault('vrf', {})
-					vrf_dict = vrfs_dict.setdefault(vrf, {})
-					global_static_table_dict = vrf_dict.setdefault('global_static_table', {})
+				if 'interfaces' not in res_dict:
+					interfaces_dict = res_dict.setdefault('interfaces', {})
 
 				groups = m.groupdict()
-				ip_dict = global_static_table_dict.setdefault(groups['ip_address'], {})
-				ip_dict.update({'ip_address': groups['ip_address']})
-				ip_dict.update({'mac_address': groups['mac_address']})
-				ip_dict.update({'interface': groups['interface']})
+				interface = groups['interface']
+				ip_address = groups['ip_address']
+				mac_address = groups['mac_address']
+				age = groups['age']
 
-				if ':' not in groups['age']:
-					age = "{} {}".format(groups['age'], "minutes")
+				interface_dict = interfaces_dict.setdefault(interface, {})
+				neighbors_dict = interface_dict.setdefault('ipv4', {}).setdefault('neighbors', {})
+				ip_dict = neighbors_dict.setdefault(ip_address, {})
+				ip_dict.update({'ip': ip_address})
+				ip_dict.update({'link_layer_address': mac_address})
+				ip_dict.update({'physical_interface': interface})
+
+				if '-' in age:
+					origin = 'static'
 				else:
-					age = groups['age']
+					origin = 'dynamic'
+					if ':' not in age:
+						age = int(age)
+						if age >= 60:
+							hours = age // 60
+							minutes = age % 60
+						else:
+							hours = 0
+							minutes = age
+
+						if int(hours) <= 9:
+							hours = "0{}".format(hours)
+
+						if int(minutes) <= 9:
+							minutes = "0{}".format(minutes)
+
+						age = "{}:{}:00".format(hours, minutes)
+
+				ip_dict.update({'origin': origin})
 				ip_dict.update({'age': age})
 
 				if groups['encap_type']:

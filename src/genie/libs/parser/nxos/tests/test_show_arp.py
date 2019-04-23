@@ -630,29 +630,49 @@ class test_show_ip_arp(unittest.TestCase):
 		IP ARP Table for context default
 		Total number of entries: 2
 		Address         Age       MAC Address     Interface       Flags
-		10.2.4.4        00:13:42  5e00.0003.0007  Ethernet1/1     
+		10.2.4.4        00:13:42  5e00.0003.0007  Ethernet1/1
+        10.2.4.5           -      aaaa.bbbb.cccc  Ethernet1/1      
 		10.2.5.5        00:00:04  5e00.0004.0007  Ethernet1/2
 	'''}
 
 	golden_parsed_output = {
-		'vrf': {
-			'default': {
-				'max_entries': 2,
-				'global_static_table': {
-					'10.2.4.4': {
-						'ip_address': '10.2.4.4',
-						'age': '00:13:42',
-						'mac_address': '5e00.0003.0007',
-						'interface': 'Ethernet1/1'
-					},
-					'10.2.5.5': {
-						'ip_address': '10.2.5.5',
-						'age': '00:00:04',
-						'mac_address': '5e00.0004.0007',
-						'interface': 'Ethernet1/2'
+		'interfaces':{  
+			'Ethernet1/1':{  
+				'ipv4':{  
+					'neighbors':{  
+						'10.2.4.4':{  
+							'ip':'10.2.4.4',
+							'link_layer_address':'5e00.0003.0007',
+							'physical_interface':'Ethernet1/1',
+							'origin':'dynamic',
+							'age':'00:13:42'
+						},
+						'10.2.4.5': {
+							'ip':'10.2.4.5',
+							'link_layer_address':'aaaa.bbbb.cccc',
+							'physical_interface':'Ethernet1/1',
+							'origin':'static',
+							'age':'-'
+						}
+					}
+				}
+			},
+			'Ethernet1/2':{  
+				'ipv4':{  
+					'neighbors':{  
+						'10.2.5.5':{  
+							'ip':'10.2.5.5',
+							'link_layer_address':'5e00.0004.0007',
+							'physical_interface':'Ethernet1/2',
+							'origin':'dynamic',
+							'age':'00:00:04'
+						}
 					}
 				}
 			}
+		},
+		'statistics':{  
+			'entries_total':2
 		}
 	}
 
@@ -674,16 +694,21 @@ class test_show_ip_arp(unittest.TestCase):
 	'''}
 
 	golden_parsed_output_2 = {
-		'vrf': {
-			'vni_10100': {
-				'max_entries': 6,
-				'global_static_table': {
-					'100.101.1.3': {
-						'ip_address': '100.101.1.3',
-						'age': '00:10:42',
-						'mac_address': 'fa16.3ed1.37b5',
-						'interface': 'Vlan101',
-						'flags': '+'
+		'statistics': {
+			'entries_total': 6
+		},
+		'interfaces': {
+			'Vlan101': {
+				'ipv4': {
+					'neighbors': {
+						'100.101.1.3': {
+							'ip': '100.101.1.3',
+							'link_layer_address': 'fa16.3ed1.37b5',
+							'age': '00:10:42',
+							'origin': 'dynamic',
+							'physical_interface': 'Vlan101',
+							'flags': '+'
+						}
 					}
 				}
 			}
@@ -718,81 +743,126 @@ class test_show_ip_arp(unittest.TestCase):
 	'''}
 
 	golden_parsed_output_3 = {
-		'vrf': {
-			'all': {
-				'max_entries': 11,
-				'global_static_table': {
-					'10.255.8.99': {
-						'ip_address': '10.255.8.99',
-						'age': '00:00:22',
-						'mac_address': '5e00.0009.0000',
-						'interface': 'mgmt0'
-					},
-					'10.2.4.4': {
-						'ip_address': '10.2.4.4',
-						'age': '00:13:47',
-						'mac_address': '5e00.0003.0007',
-						'interface': 'Ethernet1/1'
-					},
-					'10.2.5.5': {
-						'ip_address': '10.2.5.5',
-						'age': '00:00:09',
-						'mac_address': '5e00.0004.0007',
-						'interface': 'Ethernet1/2'
-					},
-					'99.2.3.3': {
-						'ip_address': '99.2.3.3',
-						'age': '00:00:09',
-						'mac_address': '5e00.0002.0007',
-						'interface': 'Ethernet1/6'
-					},
-					'100.101.1.3': {
-						'ip_address': '100.101.1.3',
-						'age': '00:09:20',
-						'mac_address': 'fa16.3ed1.37b5',
-						'interface': 'Vlan101',
-						'flags': '+'
-					},
-					'100.101.1.4': {
-						'ip_address': '100.101.1.4',
-						'age': '00:01:53',
-						'mac_address': 'fa16.3ec5.fcab',
-						'interface': 'Vlan101'
-					},
-					'100.101.2.3': {
-						'ip_address': '100.101.2.3',
-						'age': '00:09:20',
-						'mac_address': 'fa16.3ed4.83e4',
-						'interface': 'Vlan101'
-					},
-					'100.101.2.4': {
-						'ip_address': '100.101.2.4',
-						'age': '00:17:48',
-						'mac_address': 'fa16.3e79.6bfe',
-						'interface': 'Vlan101'
-					},
-					'100.101.3.3': {
-						'ip_address': '100.101.3.3',
-						'age': '00:18:09',
-						'mac_address': 'fa16.3e68.b933',
-						'interface': 'Vlan101',
-						'flags': '+'
-					},
-					'100.101.3.4': {
-						'ip_address': '100.101.3.4',
-						'age': '00:00:37',
-						'mac_address': 'fa16.3e2f.654d',
-						'interface': 'Vlan101',
-						'flags': '+'
-					},
-					'200.202.2.4': {
-						'ip_address': '200.202.2.4',
-						'age': '00:17:48',
-						'mac_address': 'fa16.3e79.6bfe',
-						'interface': 'Vlan202'
+		'interfaces':{  
+    		'mgmt0':{  
+				'ipv4':{  
+					'neighbors':{  
+						'10.255.8.99':{  
+							'ip':'10.255.8.99',
+							'link_layer_address':'5e00.0009.0000',
+							'physical_interface':'mgmt0',
+							'origin':'dynamic',
+							'age':'00:00:22'
+						}
+					}
+				}
+			},
+			'Ethernet1/1':{  
+				'ipv4':{  
+					'neighbors':{  
+						'10.2.4.4':{  
+							'ip':'10.2.4.4',
+							'link_layer_address':'5e00.0003.0007',
+							'physical_interface':'Ethernet1/1',
+							'origin':'dynamic',
+							'age':'00:13:47'
+						}
+					}
+				}
+			},
+			'Ethernet1/2':{  
+				'ipv4':{  
+					'neighbors':{  
+						'10.2.5.5':{  
+							'ip':'10.2.5.5',
+							'link_layer_address':'5e00.0004.0007',
+							'physical_interface':'Ethernet1/2',
+							'origin':'dynamic',
+							'age':'00:00:09'
+						}
+					}
+				}
+			},
+			'Ethernet1/6':{  
+				'ipv4':{  
+					'neighbors':{  
+						'99.2.3.3':{  
+							'ip':'99.2.3.3',
+							'link_layer_address':'5e00.0002.0007',
+							'physical_interface':'Ethernet1/6',
+							'origin':'dynamic',
+							'age':'00:00:09'
+						}
+					}
+				}
+			},
+			'Vlan101':{  
+				'ipv4':{  
+					'neighbors':{  
+						'100.101.1.3':{  
+							'ip':'100.101.1.3',
+							'link_layer_address':'fa16.3ed1.37b5',
+							'physical_interface':'Vlan101',
+							'origin':'dynamic',
+							'age':'00:09:20',
+							'flags':'+'
+						},
+						'100.101.1.4':{  
+							'ip':'100.101.1.4',
+							'link_layer_address':'fa16.3ec5.fcab',
+							'physical_interface':'Vlan101',
+							'origin':'dynamic',
+							'age':'00:01:53'
+						},
+						'100.101.2.3':{  
+							'ip':'100.101.2.3',
+							'link_layer_address':'fa16.3ed4.83e4',
+							'physical_interface':'Vlan101',
+							'origin':'dynamic',
+							'age':'00:09:20'
+						},
+						'100.101.2.4':{  
+							'ip':'100.101.2.4',
+							'link_layer_address':'fa16.3e79.6bfe',
+							'physical_interface':'Vlan101',
+							'origin':'dynamic',
+							'age':'00:17:48'
+						},
+						'100.101.3.3':{  
+							'ip':'100.101.3.3',
+							'link_layer_address':'fa16.3e68.b933',
+							'physical_interface':'Vlan101',
+							'origin':'dynamic',
+							'age':'00:18:09',
+							'flags':'+'
+						},
+						'100.101.3.4':{  
+							'ip':'100.101.3.4',
+							'link_layer_address':'fa16.3e2f.654d',
+							'physical_interface':'Vlan101',
+							'origin':'dynamic',
+							'age':'00:00:37',
+							'flags':'+'
+						}
+					}
+				}
+			},
+			'Vlan202':{  
+				'ipv4':{  
+					'neighbors':{  
+						'200.202.2.4':{  
+							'ip':'200.202.2.4',
+							'link_layer_address':'fa16.3e79.6bfe',
+							'physical_interface':'Vlan202',
+							'origin':'dynamic',
+							'age':'00:17:48'
+						}
 					}
 				}
 			}
+		},
+		'statistics':{  
+			'entries_total':11
 		}
 	}
 
