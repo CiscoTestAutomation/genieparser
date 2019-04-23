@@ -4401,7 +4401,8 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutesSchema(MetaParser):
                                 {Optional('bgp_table_version'): int,
                                  Optional('local_router_id'): str,
                                  Optional('route_distinguisher'): str,
-                                 Optional('default_vrf'): str,
+                                 Optional('rd_vrf'): str,
+                                 Optional('rd_vniid'): str,
                                  Optional('advertised'): 
                                     {Optional(Any()):
                                         {Optional('index'):
@@ -4434,7 +4435,10 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
 
     cli_command = 'show bgp vrf {vrf} all neighbors {neighbor} advertised-routes'
 
-    def cli(self, vrf, neighbor,output=None):
+    def cli(self, neighbor, vrf='',output=None):
+        if not vrf:
+            vrf = 'default'
+
         if output is None:
             out = self.device.execute(self.cli_command.format(vrf=vrf,neighbor=neighbor))
         else:
@@ -4442,73 +4446,147 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
 
         # Init dictionary
         route_dict = {}
-        af_dict = {}
 
         # Init vars
         data_on_nextline =  False
         index = 1
         bgp_table_version = local_router_id = ''
 
+        # Peer 10.186.0.2 routes for address family IPv4 Unicast:
+        p1 = re.compile(r'^\s*Peer +(?P<neighbor_id>(\S+)) +routes +for'
+                        r' +address +family'
+                        r' +(?P<address_family>[a-zA-Z0-9\s\-\_]+) *:$')
+
+        # BGP table version is 25, Local Router ID is 10.186.101.1
+        p2 = re.compile(r'^\s*BGP +table +version +is'
+                        r' +(?P<bgp_table_version>[0-9]+), +[Ll]ocal +[Rr]outer'
+                        r' +ID +is +(?P<local_router_id>(\S+))$')
+
+        # Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        # Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        # Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+        # *>i[2]:[77][7,0][10.69.9.9,1,151587081][10.135.1.1,22][10.106.101.1,10.76.1.30]/616
+        # *>iaaaa:1::/113       ::ffff:10.106.101.1
+        p3 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
+                          r'(?P<path_type>(i|e|c|l|a|r|I))?'
+                          r'(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,]+)'
+                          r'(?: *(?P<next_hop>[a-zA-Z0-9\.\:\/\[\]\,]+))?$')
+
+        #                     0.0.0.0               100      32768 i
+        #                     10.106.101.1            4444       100 0 3 10 20 30 40 50 60 70 80 90 i
+        p4 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
+                          r'(?P<path_type>(i|e|c|l|a|r|I))?'
+                          r' *(?P<next_hop>[a-zA-Z0-9\.\:]+)'
+                          r'(?: +(?P<numbers>[a-zA-Z0-9\s\(\)\{\}]+))?'
+                          r' +(?P<origin_codes>(i|e|\?|\|))$')
+
+        # * e                   10.70.2.2                                      0 100 300 ?
+        # *>e                   10.70.1.2                                      0 100 300 ?
+        p5 = re.compile(r'^\s*(?P<status_codes>(\*\>|s|x|S|d|h|\*|\>|\s)+)'
+                            r'(?P<path_type>(i|e|c|l|a|r|I))?'
+                            r'( *(?P<origin_codes>(i|e|\?|\&|\|)+))'
+                            r' +(?P<next_hop>[a-zA-Z0-9\.\:]+)'
+                            r' +(?P<numbers>[a-zA-Z0-9\s\(\)\{\}\?]+)$')
+
+        # Metric     LocPrf     Weight Path
+        #    4444       100          0  10 3 10 20 30 40 50 60 70 80 90
+        p6 = re.compile(r'^(?P<metric>[0-9]+)'
+                        r'(?P<space1>\s{5,10})'
+                        r'(?P<localprf>[0-9]+)'
+                        r'(?P<space2>\s{5,10})'
+                        r'(?P<weight>[0-9]+)'
+                        r'(?: *(?P<path>[0-9\{\}\s]+))?$')
+
+        #    100        ---          0 10 20 30 40 50 60 70 80 90
+        #    ---        100          0 10 20 30 40 50 60 70 80 90
+        #    100        ---      32788 ---
+        #    ---        100      32788 --- 
+        p7 = re.compile(r'^(?P<value>[0-9]+)'
+                        r'(?P<space>\s{2,21})'
+                        r'(?P<weight>[0-9]+)'
+                        r'(?: *(?P<path>[0-9\{\}\s]+))?$')
+
+        #    ---        ---      32788 200 33299 51178 47751 {27016}
+        p8 = re.compile(r'^(?P<weight>[0-9]+)'
+                            r' +(?P<path>[0-9\{\}\s]+)$')
+
+        # Network            Next Hop            Metric     LocPrf     Weight Path
+        # *>l10.4.1.0/24         0.0.0.0                           100      32768 i
+        # *>r10.16.1.0/24         0.0.0.0               4444        100      32768 ?
+        # *>r10.16.2.0/24         0.0.0.0               4444        100      32768 ?
+        # *>i10.49.0.0/16         10.106.101.1                        100          0 10 20 30 40 50 60 70 80 90 i
+        # *>i10.4.2.0/24         10.106.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
+        p9 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)'
+                          r'(?P<path_type>(i|e|c|l|a|r|I))'
+                          r'(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,]+)'
+                          r' +(?P<next_hop>[a-zA-Z0-9\.\:]+)'
+                          r' +(?P<numbers>[a-zA-Z0-9\s\(\)\{\}]+)'
+                          r' +(?P<origin_codes>(i|e|\?|\&|\|))$')
+
+        # *&i10.145.1.0/24        192.168.151.2                0        100          0 ?
+        p10 = re.compile(r'^\s*(?P<status_codes>(\*\>|s|x|S|d|h|\*|\>|\s)+)'
+                            r'(?P<path_type>(i|e|c|l|a|r|I))?'
+                            r'( *(?P<origin_codes>(i|e|\?|\&|\|)+))'
+                            r'(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,]+)'
+                            r' +(?P<next_hop>[a-zA-Z0-9\.\:]+)'
+                            r' +(?P<numbers>[a-zA-Z0-9\s\(\)\{\}\?]+)$')
+
+        # Metric     LocPrf     Weight Path
+        #    4444       100          0  10 3 10 20 30 40 50 60 70 80 90
+        p11 = re.compile(r'^(?P<metric>[0-9]+)'
+                        r'(?P<space1>\s{5,10})'
+                        r'(?P<localprf>[0-9]+)'
+                        r'(?P<space2>\s{5,10})'
+                        r'(?P<weight>[0-9]+)'
+                        r'(?: *(?P<path>[0-9\{\}\s]+))?$')
+
+        #    100        ---          0 10 20 30 40 50 60 70 80 90
+        #    ---        100          0 10 20 30 40 50 60 70 80 90
+        #    100        ---      32788 ---
+        #    ---        100      32788 --- 
+        p12 = re.compile(r'^(?P<value>[0-9]+)'
+                        r'(?P<space>\s{2,21})'
+                        r'(?P<weight>[0-9]+)'
+                        r'(?: *(?P<path>[0-9\{\}\s]+))?$')
+
+        #    ---        ---      32788 200 33299 51178 47751 {27016}
+        p13 = re.compile(r'^(?P<weight>[0-9]+)'
+                        r' +(?P<path>[0-9\{\}\s]+)$')
+
+        # Network            Next Hop            Metric     LocPrf     Weight Path
+        # Route Distinguisher: 100:100     (VRF VRF1)
+        # Route Distinguisher: 2:100    (VRF vpn2)
+        p14 = re.compile(r'^\s*Route +Distinguisher *:'
+                        r' +(?P<route_distinguisher>(\S+))'
+                        r'(?: +\((?P<rd_vrf>VRF|\w+VNI) +(?P<rd_vniid>(\S+))\))?$')
+
         for line in out.splitlines():
             line = line.rstrip()
-            # Network            Next Hop            Metric     LocPrf     Weight Path
-            p = re.compile(r'^\s*Network +Next Hop +Metric +LocPrf +Weight Path$')
-            m = p.match(line)
-            if m:
-                continue
 
             # Peer 10.186.0.2 routes for address family IPv4 Unicast:
-            p1 = re.compile(r'^\s*Peer +(?P<neighbor_id>(\S+)) +routes +for'
-                             ' +address +family'
-                             ' +(?P<address_family>[a-zA-Z0-9\s\-\_]+) *:$')
             m = p1.match(line)
             if m:
-                neighbor_id = str(m.groupdict()['neighbor_id'])
-                address_family = str(m.groupdict()['address_family']).lower()
+                neighbor_id = m.groupdict()['neighbor_id']
+                address_family = m.groupdict()['address_family'].lower()
                 original_address_family = address_family
                 continue
 
             # BGP table version is 25, Local Router ID is 10.186.101.1
-            p2 = re.compile(r'^\s*BGP +table +version +is'
-                             ' +(?P<bgp_table_version>[0-9]+), +[Ll]ocal +[Rr]outer'
-                             ' +ID +is +(?P<local_router_id>(\S+))$')
             m = p2.match(line)
             if m:
                 bgp_table_version = int(m.groupdict()['bgp_table_version'])
                 local_router_id = str(m.groupdict()['local_router_id'])
 
-                # Init dict
                 if 'vrf' not in route_dict:
-                    route_dict['vrf'] = {}
-                if vrf not in route_dict['vrf']:
-                    route_dict['vrf'][vrf] = {}
-                if 'neighbor' not in route_dict['vrf'][vrf]:
-                    route_dict['vrf'][vrf]['neighbor'] = {}
-                if neighbor_id not in route_dict['vrf'][vrf]['neighbor']:
-                    route_dict['vrf'][vrf]['neighbor'][neighbor_id] = {}
-                if 'address_family' not in route_dict['vrf'][vrf]['neighbor']\
-                    [neighbor_id]:
-                    route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        ['address_family'] = {}
-                if address_family not in route_dict['vrf'][vrf]['neighbor']\
-                    [neighbor_id]['address_family']:
-                    route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        ['address_family'][address_family] = {}
+                    afs_dict = route_dict.setdefault('vrf', {}).setdefault(vrf, {}).setdefault('neighbor', {}).\
+                                        setdefault(neighbor_id, {}).setdefault('address_family', {})
 
-                # Set af_dict
-                af_dict = route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                    ['address_family'][address_family]
+                af_dict = afs_dict.setdefault(address_family, {})
+                advertised_dict = af_dict.setdefault('advertised', {})
 
-                # Init advertised dict
-                if 'advertised' not in af_dict:
-                    af_dict['advertised'] = {}
-
-                route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                    ['address_family'][address_family]['bgp_table_version'] = \
-                        bgp_table_version
-                route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                    ['address_family'][address_family]['local_router_id'] = \
-                        local_router_id
+                af_dict.update({'bgp_table_version': bgp_table_version})
+                af_dict.update({'local_router_id': local_router_id})
                 continue
 
             # Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
@@ -4517,11 +4595,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
 
             # *>i[2]:[77][7,0][10.69.9.9,1,151587081][10.135.1.1,22][10.106.101.1,10.76.1.30]/616
             # *>iaaaa:1::/113       ::ffff:10.106.101.1
-            p3_1 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
-                             '(?P<path_type>(i|e|c|l|a|r|I))?'
-                             '(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,]+)'
-                             '(?: *(?P<next_hop>[a-zA-Z0-9\.\:\/\[\]\,]+))?$')
-            m = p3_1.match(line)
+            m = p3.match(line)
             if m:
                 # New prefix, reset index count
                 index = 1
@@ -4532,40 +4606,27 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
                 path_type = str(m.groupdict()['path_type'])
                 prefix = str(m.groupdict()['prefix'])
 
-                # Init dict
-                if 'advertised' not in af_dict:
-                    af_dict['advertised'] = {}
-                if prefix not in af_dict['advertised']:
-                    af_dict['advertised'][prefix] = {}
-                if 'index' not in af_dict['advertised'][prefix]:
-                    af_dict['advertised'][prefix]['index'] = {}
-                if index not in af_dict['advertised'][prefix]['index']:
-                    af_dict['advertised'][prefix]['index'][index] = {}
+                # Init dicts
+                prefix_dict = advertised_dict.setdefault(prefix, {})
+                indexes_dict = prefix_dict.setdefault('index', {})
+                index_dict = indexes_dict.setdefault(index, {})
 
                 # Set keys
-                af_dict['advertised'][prefix]['index'][index]['status_codes'] = status_codes
-                af_dict['advertised'][prefix]['index'][index]['path_type'] = path_type
+                index_dict.update({'status_codes': status_codes})
+                index_dict.update({'path_type': path_type})
+
                 if m.groupdict()['next_hop']:
-                    af_dict['advertised'][prefix]['index'][index]['next_hop'] = str(m.groupdict()['next_hop'])
+                    index_dict.update({'next_hop': str(m.groupdict()['next_hop'])})
+                    
                 continue
 
             #                     0.0.0.0               100      32768 i
             #                     10.106.101.1            4444       100 0 3 10 20 30 40 50 60 70 80 90 i
-            p3_3 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
-                             '(?P<path_type>(i|e|c|l|a|r|I))?'
-                             ' *(?P<next_hop>[a-zA-Z0-9\.\:]+)'
-                             '(?: +(?P<numbers>[a-zA-Z0-9\s\(\)\{\}]+))?'
-                             ' +(?P<origin_codes>(i|e|\?|\|))$')
-            m = p3_3.match(line)
-
+            m = p4.match(line)
             # * e                   10.70.2.2                                      0 100 300 ?
             # *>e                   10.70.1.2                                      0 100 300 ?
-            p3_3_1 = re.compile(r'^\s*(?P<status_codes>(\*\>|s|x|S|d|h|\*|\>|\s)+)'
-                                 '(?P<path_type>(i|e|c|l|a|r|I))?'
-                                 '( *(?P<origin_codes>(i|e|\?|\&|\|)+))'
-                                 ' +(?P<next_hop>[a-zA-Z0-9\.\:]+)'
-                                 ' +(?P<numbers>[a-zA-Z0-9\s\(\)\{\}\?]+)$')
-            m1 = p3_3_1.match(line)
+            m1 = p5.match(line)
+
             m = m if m else m1
             if m:
                 # Get keys
@@ -4578,72 +4639,59 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
                     index += 1
 
                 # Init dict
-                if 'advertised' not in af_dict:
-                    af_dict['advertised'] = {}
-                if prefix not in af_dict['advertised']:
-                    af_dict['advertised'][prefix] = {}
-                if 'index' not in af_dict['advertised'][prefix]:
-                    af_dict['advertised'][prefix]['index'] = {}
-                if index not in af_dict['advertised'][prefix]['index']:
-                    af_dict['advertised'][prefix]['index'][index] = {}
+                index_dict = indexes_dict.setdefault(index, {})
 
                 # Set keys
-                af_dict['advertised'][prefix]['index'][index]['next_hop'] = next_hop
-                af_dict['advertised'][prefix]['index'][index]['origin_codes'] = origin_codes
+                index_dict.update({'next_hop': next_hop})
+                index_dict.update({'origin_codes': origin_codes})
                 try:
-                    # Set values of status_codes and path_type from prefix line
-                    af_dict['advertised'][prefix]['index'][index]['status_codes'] = status_codes
-                    af_dict['advertised'][prefix]['index'][index]['path_type'] = path_type
+                    index_dict.update({'status_codes': status_codes})
+                    index_dict.update({'path_type': path_type})
                 except Exception:
                     pass
 
                 # Parse numbers
                 numbers = m.groupdict()['numbers']
-                
+
                 # Metric     LocPrf     Weight Path
                 #    4444       100          0  10 3 10 20 30 40 50 60 70 80 90
-                m1 = re.compile(r'^(?P<metric>[0-9]+)'
-                                 '(?P<space1>\s{5,10})'
-                                 '(?P<localprf>[0-9]+)'
-                                 '(?P<space2>\s{5,10})'
-                                 '(?P<weight>[0-9]+)'
-                                 '(?: *(?P<path>[0-9\{\}\s]+))?$').match(numbers)
+                m = p6.match(numbers)
+                if m:
+                    index_dict.update({'metric': int(m.groupdict()['metric'])})
+                    index_dict.update({'locprf': int(m.groupdict()['localprf'])})
+                    index_dict.update({'weight': int(m.groupdict()['weight'])})
+
+                    # Set path
+                    if m.groupdict()['path']:
+                        index_dict.update({'path': m.groupdict()['path'].strip()})
+
+                    continue
 
                 #    100        ---          0 10 20 30 40 50 60 70 80 90
                 #    ---        100          0 10 20 30 40 50 60 70 80 90
                 #    100        ---      32788 ---
                 #    ---        100      32788 --- 
-                m2 = re.compile(r'^(?P<value>[0-9]+)'
-                                 '(?P<space>\s{2,21})'
-                                 '(?P<weight>[0-9]+)'
-                                 '(?: *(?P<path>[0-9\{\}\s]+))?$').match(numbers)
+                m = p7.match(numbers)
+                if m:
+                    index_dict.update({'weight': int(m.groupdict()['weight'])})
+
+                    # Set metric or localprf
+                    if len(m.groupdict()['space']) > 10:
+                        index_dict.update({'metric': int(m.groupdict()['value'])})
+                    else:
+                        index_dict.update({'locprf': int(m.groupdict()['value'])})
+
+                    # Set path
+                    if m.groupdict()['path']:
+                        index_dict.udpate({'path': m.groupdict()['path'].strip()})
+
+                    continue
 
                 #    ---        ---      32788 200 33299 51178 47751 {27016}
-                m3 = re.compile(r'^(?P<weight>[0-9]+)'
-                                 ' +(?P<path>[0-9\{\}\s]+)$').match(numbers)
-
-                if m1:
-                    af_dict['advertised'][prefix]['index'][index]['metric'] = int(m1.groupdict()['metric'])
-                    af_dict['advertised'][prefix]['index'][index]['locprf'] = int(m1.groupdict()['localprf'])
-                    af_dict['advertised'][prefix]['index'][index]['weight'] = int(m1.groupdict()['weight'])
-                    # Set path
-                    if m1.groupdict()['path']:
-                        af_dict['advertised'][prefix]['index'][index]['path'] = m1.groupdict()['path'].strip()
-                        continue
-                elif m2:
-                    af_dict['advertised'][prefix]['index'][index]['weight'] = int(m2.groupdict()['weight'])
-                    # Set metric or localprf
-                    if len(m2.groupdict()['space']) > 10:
-                        af_dict['advertised'][prefix]['index'][index]['metric'] = int(m2.groupdict()['value'])
-                    else:
-                        af_dict['advertised'][prefix]['index'][index]['locprf'] = int(m2.groupdict()['value'])
-                    # Set path
-                    if m2.groupdict()['path']:
-                        af_dict['advertised'][prefix]['index'][index]['path'] = m2.groupdict()['path'].strip()
-                        continue
-                elif m3:
-                    af_dict['advertised'][prefix]['index'][index]['weight'] = int(m3.groupdict()['weight'])
-                    af_dict['advertised'][prefix]['index'][index]['path'] = m3.groupdict()['path'].strip()
+                m = p8.match(numbers)
+                if m:
+                    index_dict.update({'weight': int(m.groupdict()['weight'])})
+                    index_dict.update({'path': m.groupdict()['path'].strip()})
                     continue
 
             # Network            Next Hop            Metric     LocPrf     Weight Path
@@ -4652,22 +4700,10 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
             # *>r10.16.2.0/24         0.0.0.0               4444        100      32768 ?
             # *>i10.49.0.0/16         10.106.101.1                        100          0 10 20 30 40 50 60 70 80 90 i
             # *>i10.4.2.0/24         10.106.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
-            p3_2 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)'
-                             '(?P<path_type>(i|e|c|l|a|r|I))'
-                             '(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,]+)'
-                             ' +(?P<next_hop>[a-zA-Z0-9\.\:]+)'
-                             ' +(?P<numbers>[a-zA-Z0-9\s\(\)\{\}]+)'
-                             ' +(?P<origin_codes>(i|e|\?|\&|\|))$')
-            m = p3_2.match(line)
-
+            m = p9.match(line)
             # *&i10.145.1.0/24        192.168.151.2                0        100          0 ?
-            p3_2_1 = re.compile(r'^\s*(?P<status_codes>(\*\>|s|x|S|d|h|\*|\>|\s)+)'
-                                 '(?P<path_type>(i|e|c|l|a|r|I))?'
-                                 '( *(?P<origin_codes>(i|e|\?|\&|\|)+))'
-                                 '(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,]+)'
-                                 ' +(?P<next_hop>[a-zA-Z0-9\.\:]+)'
-                                 ' +(?P<numbers>[a-zA-Z0-9\s\(\)\{\}\?]+)$')
-            m1 = p3_2_1.match(line)
+            m1 = p10.match(line)
+            
             m = m if m else m1
             if m:
                 # New prefix, reset index count
@@ -4680,114 +4716,89 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
                 next_hop = str(m.groupdict()['next_hop'])
                 origin_codes = str(m.groupdict()['origin_codes'])
 
-                # Init dict
-                if 'advertised' not in af_dict:
-                    af_dict['advertised'] = {}
-                if prefix not in af_dict['advertised']:
-                    af_dict['advertised'][prefix] = {}
-                if 'index' not in af_dict['advertised'][prefix]:
-                    af_dict['advertised'][prefix]['index'] = {}
-                if index not in af_dict['advertised'][prefix]['index']:
-                    af_dict['advertised'][prefix]['index'][index] = {}
-                if index not in af_dict['advertised'][prefix]['index']:
-                    af_dict['advertised'][prefix]['index'][index] = {}
+                # Init dicts
+                prefix_dict = advertised_dict.setdefault(prefix, {})
+                indexes_dict = prefix_dict.setdefault('index', {})
+                index_dict = indexes_dict.setdefault(index, {})
 
                 # Set keys
-                af_dict['advertised'][prefix]['index'][index]['status_codes'] = status_codes
-                af_dict['advertised'][prefix]['index'][index]['path_type'] = path_type
-                af_dict['advertised'][prefix]['index'][index]['next_hop'] = next_hop
-                af_dict['advertised'][prefix]['index'][index]['origin_codes'] = origin_codes
+                index_dict.update({'status_codes': status_codes})
+                index_dict.update({'path_type': path_type})
+                index_dict.update({'next_hop': next_hop})
+                index_dict.update({'origin_codes': origin_codes})
 
                 # Parse numbers
                 numbers = m.groupdict()['numbers']
-                
+
                 # Metric     LocPrf     Weight Path
                 #    4444       100          0  10 3 10 20 30 40 50 60 70 80 90
-                m1 = re.compile(r'^(?P<metric>[0-9]+)'
-                                 '(?P<space1>\s{5,10})'
-                                 '(?P<localprf>[0-9]+)'
-                                 '(?P<space2>\s{5,10})'
-                                 '(?P<weight>[0-9]+)'
-                                 '(?: *(?P<path>[0-9\{\}\s]+))?$').match(numbers)
+                m = p11.match(numbers)
+                if m:
+                    index_dict.update({'metric': int(m.groupdict()['metric'])})
+                    index_dict.update({'locprf': int(m.groupdict()['localprf'])})
+                    index_dict.update({'weight': int(m.groupdict()['weight'])})
+
+                    # Set path
+                    if m.groupdict()['path']:
+                        index_dict.update({'path': m.groupdict()['path'].strip()})
+                        
+                    continue
 
                 #    100        ---          0 10 20 30 40 50 60 70 80 90
                 #    ---        100          0 10 20 30 40 50 60 70 80 90
                 #    100        ---      32788 ---
                 #    ---        100      32788 --- 
-                m2 = re.compile(r'^(?P<value>[0-9]+)'
-                                 '(?P<space>\s{2,21})'
-                                 '(?P<weight>[0-9]+)'
-                                 '(?: *(?P<path>[0-9\{\}\s]+))?$').match(numbers)
+                m = p12.match(numbers)
+                if m:
+                    index_dict.update({'weight': int(m.groupdict()['weight'])})
+
+                    # Set metric or localprf
+                    if len(m.groupdict()['space']) > 10:
+                        index_dict.update({'metric': int(m.groupdict()['value'])})
+                    else:
+                        index_dict.update({'locprf': int(m.groupdict()['value'])})
+
+                    # Set path
+                    if m.groupdict()['path']:
+                        index_dict.update({'path': m.groupdict()['path'].strip()})
+
+                    continue
 
                 #    ---        ---      32788 200 33299 51178 47751 {27016}
-                m3 = re.compile(r'^(?P<weight>[0-9]+)'
-                                 ' +(?P<path>[0-9\{\}\s]+)$').match(numbers)
-
-                if m1:
-                    af_dict['advertised'][prefix]['index'][index]['metric'] = int(m1.groupdict()['metric'])
-                    af_dict['advertised'][prefix]['index'][index]['locprf'] = int(m1.groupdict()['localprf'])
-                    af_dict['advertised'][prefix]['index'][index]['weight'] = int(m1.groupdict()['weight'])
-                    # Set path
-                    if m1.groupdict()['path']:
-                        af_dict['advertised'][prefix]['index'][index]['path'] = m1.groupdict()['path'].strip()
-                        continue
-                elif m2:
-                    af_dict['advertised'][prefix]['index'][index]['weight'] = int(m2.groupdict()['weight'])
-                    # Set metric or localprf
-                    if len(m2.groupdict()['space']) > 10:
-                        af_dict['advertised'][prefix]['index'][index]['metric'] = int(m2.groupdict()['value'])
-                    else:
-                        af_dict['advertised'][prefix]['index'][index]['locprf'] = int(m2.groupdict()['value'])
-                    # Set path
-                    if m2.groupdict()['path']:
-                        af_dict['advertised'][prefix]['index'][index]['path'] = m2.groupdict()['path'].strip()
-                        continue
-                elif m3:
-                    af_dict['advertised'][prefix]['index'][index]['weight'] = int(m3.groupdict()['weight'])
-                    af_dict['advertised'][prefix]['index'][index]['path'] = m3.groupdict()['path'].strip()
+                m = p13.match(numbers)
+                if m:
+                    index_dict.update({'weight': int(m.groupdict()['weight'])})
+                    index_dict.update({'path': m.groupdict()['path'].strip()})
                     continue
 
             # Network            Next Hop            Metric     LocPrf     Weight Path
             # Route Distinguisher: 100:100     (VRF VRF1)
             # Route Distinguisher: 2:100    (VRF vpn2)
-            p4 = re.compile(r'^\s*Route +Distinguisher *:'
-                             ' +(?P<route_distinguisher>(\S+))'
-                             '(?: +\(VRF +(?P<default_vrf>(\S+))\))?$')
-            m = p4.match(line)
+            m = p14.match(line)
             if m:
                 route_distinguisher = str(m.groupdict()['route_distinguisher'])
                 new_address_family = original_address_family + ' RD ' + route_distinguisher
                 
                 # Init dict
-                if 'address_family' not in route_dict['vrf'][vrf]['neighbor']\
-                        [neighbor_id]:
-                    route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        ['address_family'] = {}
-                if new_address_family not in route_dict['vrf'][vrf]['neighbor']\
-                    [neighbor_id]['address_family']:
-                    route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        ['address_family'][new_address_family] = {}
+                af_dict = afs_dict.setdefault(new_address_family, {})
                 
                 # Set keys
-                route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                    ['address_family'][new_address_family]['bgp_table_version'] = bgp_table_version
-                route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                    ['address_family'][new_address_family]['local_router_id'] = local_router_id
-                route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                    ['address_family'][new_address_family]['route_distinguisher'] = route_distinguisher
-                if m.groupdict()['default_vrf']:
-                    route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        ['address_family'][new_address_family]['default_vrf'] = \
-                            str(m.groupdict()['default_vrf'])
+                af_dict.update({'bgp_table_version': bgp_table_version})
+                af_dict.update({'local_router_id': local_router_id})
+                af_dict.update({'route_distinguisher': route_distinguisher})
+
+                if m.groupdict()['rd_vrf']: 
+                    af_dict.update({'rd_vrf': str(m.groupdict()['rd_vrf'])})
+
+                if m.groupdict()['rd_vniid']:
+                    af_dict.update({'rd_vniid': str(m.groupdict()['rd_vniid'])})
 
                 # Reset address_family key and af_dict for use in other regex
                 address_family = new_address_family
-                af_dict = route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                    ['address_family'][address_family]
 
                 # Init advertised dict
                 if 'advertised' not in af_dict:
-                    af_dict['advertised'] = {}
+                    advertised_dict = af_dict.setdefault('advertised', {})
                     continue
 
         # order the af prefixes index
@@ -4815,6 +4826,23 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
                                 af_dict['advertised'][routes]['index'] = nexthop_dict
 
         return route_dict
+
+
+# ======================================================================
+# Parser for 'show bgp l2vpn evpn neighbors <neighbor> advertised-routes
+# ======================================================================
+class ShowBgpL2vpnEvpnNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRoutes):
+    """Parser for show bgp l2vpn evpn neighbors <neighbor> advertised-routes"""
+    cli_command = 'show bgp l2vpn evpn neighbors {neighbor} advertised-routes'
+
+    def cli(self, neighbor, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(neighbor=neighbor))
+        else:
+            out = output
+
+        return super().cli(neighbor=neighbor, output=out)
+
 
 
 # ===============================================================
