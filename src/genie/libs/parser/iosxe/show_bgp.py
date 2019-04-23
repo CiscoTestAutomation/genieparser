@@ -2249,7 +2249,7 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                         'bgp_version': int,
                         'router_id': str,
                         'session_state': str,
-                        'address_family':
+                        Optional('address_family'):
                             {Any():
                                 {Optional('session_state'): str,
                                 Optional('up_time'): str,
@@ -2306,30 +2306,31 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                                     },
                                 },
                             },
-                        Optional('bgp_negotiated_keepalive_timers'):
+                        'bgp_negotiated_keepalive_timers':
                             {'keepalive_interval': int,
                             'hold_time': int,
                             Optional('min_holdtime'): int,
                             },
+                        'bgp_neighbor_session': {
+                            'sessions': int,
+                            Optional('stateful_switchover'): str,
+                        },
                         Optional('bgp_negotiated_capabilities'):
-                            {
-                            Optional('route_refresh'): str,
-                            Optional('four_octets_asn'): str,
-                            Optional('enhanced_refresh'): str,
+                            {'route_refresh': str,
+                            'four_octets_asn': str,
+                            'enhanced_refresh': str,
                             Optional('vpnv4_unicast'): str,
                             Optional('vpnv6_unicast'): str,
                             Optional('ipv4_unicast'): str,
                             Optional('ipv6_unicast'): str,
                             Optional('l2vpn_vpls'): str,
-                            Optional('ipv4_multicast'): str,
-                            Optional('ipv4_mdt'): str,
                             Optional('vpnv4_multicast'): str,
                             Optional('vpnv6_multicast'): str,
                             Optional('mvpnv4_multicast'): str,
                             Optional('mvpnv6_multicast'): str,
                             Optional('l2vpn_evpn'): str,
                             Optional('multisession'): str,
-                            Optional('stateful_switchover'): str,
+                            'stateful_switchover': str,
                             Optional('graceful_restart'): str,
                             Optional('remote_restart_timer'): int,
                             Optional('graceful_restart_af_advertised_by_peer'): list,
@@ -2419,8 +2420,8 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                                     {'value': int,
                                     'retransmit': int,
                                     'fastretransmit': int,
-                                    Optional('partialack'): int,
-                                    Optional('second_congestion'): int,
+                                    'partialack': int,
+                                    'second_congestion': int,
                                     'with_data': int,
                                     'total_data': int,
                                     },
@@ -2573,6 +2574,8 @@ class ShowBgpNeighborSuperParser(MetaParser):
                            ' +(?P<min_holdtime>(\d+)) +seconds$')
 
         # Neighbor sessions:
+        p7_4 = re.compile(r'^Neighbor +sessions:+$')
+        
         #  1 active, is not multisession capable (disabled)
         p8 = re.compile(r'^(?P<sessions>(\d+)) active,(?: +is +not +multisession'
                          ' +capable +\(disabled\))?$')
@@ -2620,8 +2623,7 @@ class ShowBgpNeighborSuperParser(MetaParser):
                          ' +(?P<value>(.*))$')
 
         # Message statistics:
-        # Message statistics, state Established
-        p19 = re.compile(r'^Message +statistics(, +state +Established)?:?$')
+        p19 = re.compile(r'^Message +statistics:$')
 
         #  InQ depth is 0
         #  OutQ depth is 0
@@ -2777,13 +2779,13 @@ class ShowBgpNeighborSuperParser(MetaParser):
                           ' (?P<total_data>(\d+))$')
 
         # Sent: 166 (retransmit: 0, fastretransmit: 0, partialack: 0, Second Congestion: 0), with data: 87, total data bytes: 3303
-        # Sent: 7593077 (retransmit: 117 fastretransmit: 6),with data: 7204196, total data bytes: 913534076
-        p50 = re.compile(r'^Sent: +(?P<sent>(\d+)) +\(retransmit: +'
-            '(?P<retransmit>(\d+)),? +fastretransmit: +(?P<fastretransmit>'
-            '(\d+))(, +partialack: +(?P<partialack>(\d+)), +Second +'
-            'Congestion: +(?P<second_congestion>(\d+)))?\), *with +'
-            'data: +(?P<sent_with_data>(\d+)), +total +data +bytes: '
-            '+(?P<sent_total_data>(\d+))$')
+        p50 = re.compile(r'^Sent: (?P<sent>(\d+)) +\(retransmit:'
+                          ' +(?P<retransmit>(\d+)), +fastretransmit:'
+                          ' +(?P<fastretransmit>(\d+)), +partialack:'
+                          ' +(?P<partialack>(\d+)), +Second +Congestion:'
+                          ' +(?P<second_congestion>(\d+))\), +with +data:'
+                          ' (?P<sent_with_data>(\d+)), +total +data +bytes:'
+                          ' +(?P<sent_total_data>(\d+))$')
 
 
         # Packets received in fast path: 0, fast processed: 0, slow path: 0
@@ -3032,17 +3034,27 @@ class ShowBgpNeighborSuperParser(MetaParser):
             if m:
                 timers_dict['min_holdtime'] = int(m.groupdict()['min_holdtime'])
                 continue
-
+            
             # Neighbor sessions:
+            m = p7_4.match(line)
+            if m:
+                neighbor_type = 'neighbor_session'
+                nbr_session_dict = nbr_dict.\
+                                setdefault('bgp_neighbor_session', {})
+                continue
+                
             #  1 active, is not multisession capable (disabled)
             m = p8.match(line)
             if m:
                 neighbor_active_sessions = int(m.groupdict()['sessions'])
+                if neighbor_type == 'neighbor_session':
+                    nbr_session_dict.update({'sessions': neighbor_active_sessions})
                 continue
 
             # Neighbor capabilities:
             m = p9.match(line)
             if m:
+                neighbor_type = 'neighbor_capabilities'
                 nbr_cap_dict = nbr_dict.\
                                 setdefault('bgp_negotiated_capabilities', {})
                 continue
@@ -3109,9 +3121,10 @@ class ShowBgpNeighborSuperParser(MetaParser):
             # Stateful switchover support enabled: NO for session 1
             m = p18.match(line)
             if m:
-                nbr_cap_dict = nbr_dict.\
-                                setdefault('bgp_negotiated_capabilities', {})
-                nbr_cap_dict['stateful_switchover'] = m.groupdict()['value']
+                if neighbor_type == 'neighbor_session':
+                    nbr_session_dict['stateful_switchover'] = m.groupdict()['value']
+                elif neighbor_type == 'neighbor_capabilities':
+                    nbr_cap_dict['stateful_switchover'] = m.groupdict()['value']
                 continue
 
             # Message statistics:
@@ -3474,10 +3487,8 @@ class ShowBgpNeighborSuperParser(MetaParser):
                 datagram_sent_dict['value'] = int(group['sent'])
                 datagram_sent_dict['retransmit'] = int(group['retransmit'])
                 datagram_sent_dict['fastretransmit'] = int(group['fastretransmit'])
-                if group['partialack']:
-                    datagram_sent_dict['partialack'] = int(group['partialack'])
-                if group['second_congestion']:
-                    datagram_sent_dict['second_congestion'] = int(group['second_congestion'])
+                datagram_sent_dict['partialack'] = int(group['partialack'])
+                datagram_sent_dict['second_congestion'] = int(group['second_congestion'])
                 datagram_sent_dict['with_data'] = int(group['sent_with_data'])
                 datagram_sent_dict['total_data'] = int(group['sent_total_data'])
                 continue
@@ -3681,7 +3692,7 @@ class ShowBgpAllNeighbors(ShowBgpNeighborSuperParser, ShowBgpAllNeighborsSchema)
                    ]
 
     def cli(self, neighbor='', address_family='', output=None):
-        
+
         # Restricted address families
         restricted_list = ['ipv4 unicast', 'ipv6 unicast']
 
@@ -6818,7 +6829,6 @@ class ShowIpBgpAllDampeningParameters(ShowIpBgpAllDampeningParametersSchema):
                 if not parsed_dict[i]:
                     parsed_dict.pop(i)
 
-        
         return parsed_dict
 
 
