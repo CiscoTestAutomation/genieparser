@@ -2601,7 +2601,7 @@ class ShowBgpNeighborSuperParser(MetaParser):
                          ' +capable +\(disabled\))?$')
 
         # Neighbor capabilities:
-        p9 = re.compile(r'^Neighbor capabilities:$')
+        p9 = re.compile(r'^Neighbor +capabilities:$')
 
         #  Route refresh: advertised and received(new)
         p10 = re.compile(r'^Route +refresh: +(?P<route_refresh>(.*))$')
@@ -3132,7 +3132,10 @@ class ShowBgpNeighborSuperParser(MetaParser):
             # Stateful switchover support enabled: NO for session 1
             m = p18.match(line)
             if m:
+                nbr_cap_dict = nbr_dict.\
+                                setdefault('bgp_negotiated_capabilities', {})
                 nbr_cap_dict['stateful_switchover'] = m.groupdict()['value']
+                continue
 
             # Message statistics:
             m = p19.match(line)
