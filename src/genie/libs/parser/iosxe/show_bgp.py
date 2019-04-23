@@ -2249,7 +2249,7 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                         'bgp_version': int,
                         'router_id': str,
                         'session_state': str,
-                        Optional('address_family'):
+                        'address_family':
                             {Any():
                                 {Optional('session_state'): str,
                                 Optional('up_time'): str,
@@ -2311,11 +2311,7 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                             'hold_time': int,
                             Optional('min_holdtime'): int,
                             },
-                        'bgp_neighbor_session': {
-                            'sessions': int,
-                            Optional('stateful_switchover'): str,
-                        },
-                        Optional('bgp_negotiated_capabilities'):
+                        'bgp_negotiated_capabilities':
                             {'route_refresh': str,
                             'four_octets_asn': str,
                             'enhanced_refresh': str,
@@ -2335,7 +2331,7 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                             Optional('remote_restart_timer'): int,
                             Optional('graceful_restart_af_advertised_by_peer'): list,
                             },
-                        Optional('bgp_neighbor_counters'):
+                        'bgp_neighbor_counters':
                             {'messages':
                                 {'sent':
                                     {'opens': int,
@@ -2574,14 +2570,12 @@ class ShowBgpNeighborSuperParser(MetaParser):
                            ' +(?P<min_holdtime>(\d+)) +seconds$')
 
         # Neighbor sessions:
-        p7_4 = re.compile(r'^Neighbor +sessions:+$')
-        
         #  1 active, is not multisession capable (disabled)
         p8 = re.compile(r'^(?P<sessions>(\d+)) active,(?: +is +not +multisession'
                          ' +capable +\(disabled\))?$')
 
         # Neighbor capabilities:
-        p9 = re.compile(r'^Neighbor +capabilities:$')
+        p9 = re.compile(r'^Neighbor capabilities:$')
 
         #  Route refresh: advertised and received(new)
         p10 = re.compile(r'^Route +refresh: +(?P<route_refresh>(.*))$')
@@ -3034,27 +3028,17 @@ class ShowBgpNeighborSuperParser(MetaParser):
             if m:
                 timers_dict['min_holdtime'] = int(m.groupdict()['min_holdtime'])
                 continue
-            
+
             # Neighbor sessions:
-            m = p7_4.match(line)
-            if m:
-                neighbor_type = 'neighbor_session'
-                nbr_session_dict = nbr_dict.\
-                                setdefault('bgp_neighbor_session', {})
-                continue
-                
             #  1 active, is not multisession capable (disabled)
             m = p8.match(line)
             if m:
                 neighbor_active_sessions = int(m.groupdict()['sessions'])
-                if neighbor_type == 'neighbor_session':
-                    nbr_session_dict.update({'sessions': neighbor_active_sessions})
                 continue
 
             # Neighbor capabilities:
             m = p9.match(line)
             if m:
-                neighbor_type = 'neighbor_capabilities'
                 nbr_cap_dict = nbr_dict.\
                                 setdefault('bgp_negotiated_capabilities', {})
                 continue
@@ -3121,10 +3105,7 @@ class ShowBgpNeighborSuperParser(MetaParser):
             # Stateful switchover support enabled: NO for session 1
             m = p18.match(line)
             if m:
-                if neighbor_type == 'neighbor_session':
-                    nbr_session_dict['stateful_switchover'] = m.groupdict()['value']
-                elif neighbor_type == 'neighbor_capabilities':
-                    nbr_cap_dict['stateful_switchover'] = m.groupdict()['value']
+                nbr_cap_dict['stateful_switchover'] = m.groupdict()['value']
                 continue
 
             # Message statistics:
