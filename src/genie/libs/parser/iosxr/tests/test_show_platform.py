@@ -11,7 +11,8 @@ from genie.libs.parser.iosxr.show_platform import ShowRedundancy, ShowPlatformVm
                                 ShowPlatform, ShowSdrDetail,\
                                 ShowInstallActiveSummary, ShowInventory,\
                                 ShowRedundancySummary, AdminShowDiagChassis,\
-                                ShowVersion, Dir
+                                ShowVersion, Dir, ShowInstallInactiveSummary,\
+                                ShowInstallCommitSummary
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
@@ -890,6 +891,7 @@ class test_show_redundancy_summary(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = show_redundancy_summary_obj.parse()
 
+
 # ================================
 #  Unit test for 'show redundancy'       
 # ================================
@@ -998,6 +1000,7 @@ class test_show_redundancy(unittest.TestCase):
         show_redundancy_obj = ShowRedundancy(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = show_redundancy_obj.parse()
+
 
 # ====================
 #  Unit test for 'dir'       
@@ -1157,8 +1160,296 @@ class test_dir(unittest.TestCase):
             parsed_output = dir_obj.parse()
 
 
+# ==============================================
+#  Unit test for 'show install inactive summary'
+# ==============================================
+
+class test_show_install_inactive_summary(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'sdr': ['Owner'],
+        'inactive_packages': ['disk0:asr9k-diags-3.7.2']}
+
+    golden_output1 = {'execute.return_value': '''
+        Default Profile:
+            SDRs:
+            Owner
+            Inactive Packages:
+                disk0:asr9k-diags-3.7.2
+    '''}
+
+    golden_parsed_output2 = {
+        'sdr': ['Owner'],
+        'inactive_packages': ['disk0:c12k-diags-3.7.2',
+                              "Install operation 30 'install remove disk0:hfr-diags-3.7.2 test' started by",
+                              "user 'lab' at 23:40:22 UTC Sat Apr 15 2009.",
+                              "Warning:  No changes will occur due to 'test' option being specified. The",
+                              'Warning:  following is the predicted output for this install command.',
+                              'Info:     This operation will remove the following package:',
+                              'Info:         disk0:c12k-diags-3.7.2',
+                              'Info:     After this install remove the following install rollback points will',
+                              'Info:     no longer be reachable, as the required packages will not be present:',
+                              'Info:         4, 9, 10, 14, 15, 17, 18',
+                              'Proceed with removing these packages? [confirm] y',
+                              'The install operation will continue asynchronously.',
+                              'Install operation 30 completed successfully at 23.',
+                              '-3.7.2.07I.CSCsr09575-1.0.0 pause sw-change',
+                              "Install operation 12 '(admin) install deactivate",
+                              "disk0:comp-c12k-3.7.2.07I.CSCsr09575-1.0.0 pause sw-change'",
+                              "started by user 'admin' via CLI at 09:06:26 BST Mon Jul 07 2009.",
+                              'Info: This operation will reload the following nodes in parallel:',
+                              'The install operation will continue asynchronously.',
+                              'Info: Install Method: Parallel Reload',
+                              'Info: Install operation 12 is pausing before the config lock is applied for',
+                              'Info:    the software change as requested by the user.',
+                              'Info: No further install operations will be allowed until the operation is resumed.',
+                              'Info: Please continue the operation using one of the following steps:',
+                              "Info: - run the command '(admin) install operation 12 complete'.",
+                              "Info: - run the command '(admin) install operation 12 attach synchronous' and then",
+                              'Info:      answer the query.']}
+
+    golden_output2 = {'execute.return_value': '''
+        RP/0/0/CPU0:router(admin)#show install inactive summary
+        RP/0/0/CPU0:router(admin)# install activate
+          disk0:c12k-mini-px-4.3.99
+                
+        
+        RP/0/0/CPU0:router(admin)# install verify packages
+        
+        RP/0/0/CPU0:router(admin)# exit
+                
+        Default Profile:
+          SDRs:
+          Owner
+          Inactive Packages:
+            disk0:c12k-diags-3.7.2
+        
+        RP/0/0/CPU0:router(admin)#install remove disk0:c12k-diags-3.7.2 test
+        
+        Install operation 30 'install remove disk0:hfr-diags-3.7.2 test' started by
+        user 'lab' at 23:40:22 UTC Sat Apr 15 2009.
+        Warning:  No changes will occur due to 'test' option being specified. The
+        Warning:  following is the predicted output for this install command.
+        Info:     This operation will remove the following package:
+        Info:         disk0:c12k-diags-3.7.2
+        Info:     After this install remove the following install rollback points will
+        Info:     no longer be reachable, as the required packages will not be present:
+        Info:         4, 9, 10, 14, 15, 17, 18
+        Proceed with removing these packages? [confirm] y
+        
+        The install operation will continue asynchronously.
+        Install operation 30 completed successfully at 23.
+        
+        RP/0/0/CPU0:router(admin)#install deactivate disk0:comp-c12k
+        -3.7.2.07I.CSCsr09575-1.0.0 pause sw-change
+        
+        Install operation 12 '(admin) install deactivate
+          disk0:comp-c12k-3.7.2.07I.CSCsr09575-1.0.0 pause sw-change'
+          started by user 'admin' via CLI at 09:06:26 BST Mon Jul 07 2009.
+        Info: This operation will reload the following nodes in parallel:
+        Info: 0/0/CPU0 (RP) (SDR: Owner)
+        Info: 0/1/CPU0 (LC(E3-GE-4)) (SDR: Owner)
+        Info: 0/5/CPU0 (LC(E3-OC3-POS-4)) (SDR: Owner)
+        Proceed with this install operation (y/n)? [y]
+        The install operation will continue asynchronously.
+        Info: Install Method: Parallel Reload
+        Info: Install operation 12 is pausing before the config lock is applied for
+        Info:    the software change as requested by the user.
+        Info: No further install operations will be allowed until the operation is resumed.
+        Info: Please continue the operation using one of the following steps:
+        Info: - run the command '(admin) install operation 12 complete'.
+        Info: - run the command '(admin) install operation 12 attach synchronous' and then
+        Info:      answer the query.
+    '''}
+
+    def test_show_install_inactive_summary_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowInstallInactiveSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_install_inactive_summary_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowInstallInactiveSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_show_install_inactive_summary_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowInstallInactiveSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+
+# ==============================================
+#  Unit test for 'show install commit summary'
+# ==============================================
+
+class test_show_install_commit_summary(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'sdr': ['Owner',
+                'Owner'],
+        'committed_packages': ['disk0:asr9k-services-infra-5.3.3',
+                               'disk0:asr9k-9000v-nV-px-5.3.3',
+                               'disk0:asr9k-k9sec-px-5.3.3',
+                               'disk0:asr9k-mpls-px-5.3.3',
+                               'disk0:asr9k-li-px-5.3.3',
+                               'disk0:asr9k-optic-px-5.3.3',
+                               'disk0:asr9k-bng-px-5.3.3',
+                               'disk0:asr9k-mcast-px-5.3.3',
+                               'disk0:asr9k-doc-px-5.3.3',
+                               'disk0:asr9k-mgbl-px-5.3.3',
+                               'disk0:asr9k-services-px-5.3.3',
+                               'disk0:asr9k-fpd-px-5.3.3',
+                               'disk0:asr9k-mini-px-5.3.3',
+                               'disk0:asr9k-video-px-5.3.3',
+                               'disk0:asr9k-asr901-nV-px-5.3.',
+                               'Default Profile:',
+                               'Admin Resources',
+                               'disk0:hfr-asr9000v-nV-px-5.3.3',
+                               'disk0:hfr-diags-px-5.3.3',
+                               'disk0:hfr-doc-px-5.3.3',
+                               'disk0:hfr-fpd-px-5.3.3',
+                               'disk0:hfr-k9sec-px-5.3.3',
+                               'disk0:hfr-li-px-5.3.3',
+                               'disk0:hfr-mcast-px-5.3.3',
+                               'disk0:hfr-mgbl-px-5.3.3',
+                               'disk0:hfr-mini-px-5.3.3',
+                               'disk0:hfr-mpls-px-5.3.3',
+                               'disk0:hfr-services-px-5.3.3',
+                               'disk0:hfr-video-px-5.3.3',
+                               'disk0:hfr-px-5.3.3.CSCuy08977-1.0.0',
+                               'disk0:hfr-px-5.3.3.CSCuz68269-1.0.0',
+                               'disk0:hfr-px-5.3.3.CSCuz75928-1.0.0',
+                               'disk0:hfr-px-5.3.3.CSCva10822-1.0.0',
+                               'disk0:hfr-px-5.3.3.CSCva10837-1.0.0',
+                               'disk0:hfr-px-5.3.3.CSCva10886-1.0.0',
+                               'disk0:hfr-px-5.3.3.CSCva10910-1.0.0',
+                               'disk0:hfr-px-5.3.3.CSCva10928-1.0.0',
+                               'disk0:hfr-px-5.3.3.CSCva10941-1.0.0',
+                               'disk0:hfr-px-5.3.3.CSCva11056-1.0.0']}
+
+    golden_output1 = {'execute.return_value': '''
+        RP/0/RSP0/CPU0:router# show install commit summary
+            SDRs:
+                Owner
+            Committed Packages:
+                disk0:asr9k-services-infra-5.3.3
+                disk0:asr9k-9000v-nV-px-5.3.3
+                disk0:asr9k-k9sec-px-5.3.3
+                disk0:asr9k-mpls-px-5.3.3
+                disk0:asr9k-li-px-5.3.3
+                disk0:asr9k-optic-px-5.3.3
+                disk0:asr9k-bng-px-5.3.3
+                disk0:asr9k-mcast-px-5.3.3
+                disk0:asr9k-doc-px-5.3.3
+                disk0:asr9k-mgbl-px-5.3.3
+                disk0:asr9k-services-px-5.3.3
+                disk0:asr9k-fpd-px-5.3.3
+                disk0:asr9k-mini-px-5.3.3
+                disk0:asr9k-video-px-5.3.3
+                disk0:asr9k-asr901-nV-px-5.3.
+
+        Default Profile:
+        Admin Resources
+            SDRs:
+                Owner
+            Committed Packages:
+                disk0:hfr-asr9000v-nV-px-5.3.3
+                disk0:hfr-diags-px-5.3.3
+                disk0:hfr-doc-px-5.3.3
+                disk0:hfr-fpd-px-5.3.3
+                disk0:hfr-k9sec-px-5.3.3
+                disk0:hfr-li-px-5.3.3
+                disk0:hfr-mcast-px-5.3.3
+                disk0:hfr-mgbl-px-5.3.3
+                disk0:hfr-mini-px-5.3.3
+                disk0:hfr-mpls-px-5.3.3
+                disk0:hfr-services-px-5.3.3
+                disk0:hfr-video-px-5.3.3
+                disk0:hfr-px-5.3.3.CSCuy08977-1.0.0
+                disk0:hfr-px-5.3.3.CSCuz68269-1.0.0
+                disk0:hfr-px-5.3.3.CSCuz75928-1.0.0
+                disk0:hfr-px-5.3.3.CSCva10822-1.0.0
+                disk0:hfr-px-5.3.3.CSCva10837-1.0.0
+                disk0:hfr-px-5.3.3.CSCva10886-1.0.0
+                disk0:hfr-px-5.3.3.CSCva10910-1.0.0
+                disk0:hfr-px-5.3.3.CSCva10928-1.0.0
+                disk0:hfr-px-5.3.3.CSCva10941-1.0.0
+                disk0:hfr-px-5.3.3.CSCva11056-1.0.0
+    '''}
+
+    golden_parsed_output2 = {
+        'sdr': ['Owner'],
+        'active_packages': ['disk0:asr9k-services-infra-6.0.2',
+                            'disk0:asr9k-9000v-nV-px-6.0.2',
+                            'disk0:asr9k-li-px-6.0.2',
+                            'disk0:asr9k-ncs500x-nV-px-6.0.2',
+                            'disk0:asr9k-bng-px-6.0.2',
+                            'disk0:asr9k-mcast-px-6.0.2',
+                            'disk0:asr9k-optic-px-6.0.2',
+                            'disk0:asr9k-doc-px-6.0.2',
+                            'disk0:asr9k-mgbl-px-6.0.2',
+                            'disk0:asr9k-fpd-px-6.0.2',
+                            'disk0:asr9k-mini-px-6.0.2',
+                            'disk0:asr9k-services-px-6.0.2',
+                            'disk0:asr9k-infra-test-px-6.0.2',
+                            'disk0:asr9k-video-px-6.0.2',
+                            'disk0:asr9k-mpls-px-6.0.2',
+                            'disk0:asr9k-k9sec-px-6.0.2']}
+
+    golden_output2 = {'execute.return_value': '''
+        RP/0/RSP0/CPU0:router# show install commit summary
+        Default Profile:
+            SDRs:
+                Owner
+            Active Packages:
+                disk0:asr9k-services-infra-6.0.2
+                disk0:asr9k-9000v-nV-px-6.0.2
+                disk0:asr9k-li-px-6.0.2
+                disk0:asr9k-ncs500x-nV-px-6.0.2
+                disk0:asr9k-bng-px-6.0.2
+                disk0:asr9k-mcast-px-6.0.2
+                disk0:asr9k-optic-px-6.0.2
+                disk0:asr9k-doc-px-6.0.2
+                disk0:asr9k-mgbl-px-6.0.2
+                disk0:asr9k-fpd-px-6.0.2
+                disk0:asr9k-mini-px-6.0.2
+                disk0:asr9k-services-px-6.0.2
+                disk0:asr9k-infra-test-px-6.0.2
+                disk0:asr9k-video-px-6.0.2
+                disk0:asr9k-mpls-px-6.0.2
+                disk0:asr9k-k9sec-px-6.0.2
+    '''}
+
+    def test_show_install_commit_summary_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowInstallCommitSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_install_commit_summary_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowInstallCommitSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_show_install_commit_summary_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowInstallCommitSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+
 if __name__ == '__main__':
     unittest.main()
-
-
-# vim: ft=python et sw=4
