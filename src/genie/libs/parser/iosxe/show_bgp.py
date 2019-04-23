@@ -2249,7 +2249,7 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                         'bgp_version': int,
                         'router_id': str,
                         'session_state': str,
-                        'address_family':
+                        Optional('address_family'):
                             {Any():
                                 {Optional('session_state'): str,
                                 Optional('up_time'): str,
@@ -2306,12 +2306,12 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                                     },
                                 },
                             },
-                        'bgp_negotiated_keepalive_timers':
+                        Optional('bgp_negotiated_keepalive_timers'):
                             {'keepalive_interval': int,
                             'hold_time': int,
                             Optional('min_holdtime'): int,
                             },
-                        'bgp_negotiated_capabilities':
+                        Optional('bgp_negotiated_capabilities'):
                             {Optional('route_refresh'): str,
                             Optional('four_octets_asn'): str,
                             'enhanced_refresh': str,
@@ -2335,7 +2335,7 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                             'sessions': int,
                             Optional('stateful_switchover'): str,
                         },
-                        'bgp_neighbor_counters':
+                        Optional('bgp_neighbor_counters'):
                             {'messages':
                                 {'sent':
                                     {'opens': int,
