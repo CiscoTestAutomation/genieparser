@@ -5,6 +5,87 @@
 | ------------------------|:-------------:|
 | ``genie.libs.parser``   |               |
 
+
+--------------------------------------------------------------------------------
+                                   POLICY-MAP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowPolicyMapControlPlane for:
+        show policy-map control-plane
+    * Add ShowPolicyMapInterface for:
+        show policy-map interface {interface}
+        show policy-map interface
+    * Add ShowPolicyMapInterfaceInput for:
+        show policy-map interface {interface} input class {class_name}
+        show policy-map interface {interface} input
+    * Add ShowPolicyMapInterfaceOutput for:
+        show policy-map interface {interface} output class {class_name}
+        show policy-map interface {interface} output
+    * Add ShowPolicyMapInterfaceClass for:
+        show policy-map interface class {class_name}
+    * Add ShowPolicyMapTargetClass for:
+        show policy-map target service-group {num}
+    * Add ShowPolicyMap for :
+        show policy-map
+        show policy-map {name}
+
+--------------------------------------------------------------------------------
+                                   BGP
+--------------------------------------------------------------------------------
+* IOSXE
+  * Removed support for cmd in SuperParser classes
+
+--------------------------------------------------------------------------------
+                                   ISIS
+--------------------------------------------------------------------------------
+* IOSXR
+  * Add ShowIsisAdjacency for:
+        show isis adjacency
+  * Add ShowIsisNeighbors for:
+        show isis neighbors
+* IOSXE
+  * Add ShowIsisNeighbors for:
+        show isis neighbors
+
+--------------------------------------------------------------------------------
+                                   
+--------------------------------------------------------------------------------
+* IOSXE
+  * Add ShowXconnectAll for:
+        show xconnect all
+
+--------------------------------------------------------------------------------
+                                   MPLS
+--------------------------------------------------------------------------------
+* IOSXR
+  * Add ShowMplsLdpNeighborBrief for:
+        show mpls ldp neighbor brief
+
+--------------------------------------------------------------------------------
+                                   MRIB
+--------------------------------------------------------------------------------
+* IOSXR
+  * Add ShowMribVrfRouteSummary for:
+        show mrib vrf route summary
+
+--------------------------------------------------------------------------------
+                                   PLATFORM
+--------------------------------------------------------------------------------
+* IOSXR
+  * Add ShowInstallInactiveSummary for:
+        show install inactive summary
+  * Add ShowInstallCommitSummary for:
+        show install commit summary
+
+--------------------------------------------------------------------------------
+                                   RUN
+--------------------------------------------------------------------------------
+* IOSXR
+  * Add ShowRunKeyChain for:
+        show run key chain
+  * Add ShowRunRouterIsis for:
+        show run router isis
+
 --------------------------------------------------------------------------------
                                    BGP
 --------------------------------------------------------------------------------
@@ -480,6 +561,10 @@
     * Add ShowIpv6Rip for:
         show ipv6 rip
         show ipv6 rip vrf {vrf}
+* IOSXR
+    * Add ShowRipStatistics for:
+        show rip statistics
+        show rip vrf {vrf} statistics
 
 --------------------------------------------------------------------------------
                                 PREFIX_LIST
@@ -489,3 +574,9 @@
         show rpl prefix-set
         show rpl prefix-set <name>
 
+--------------------------------------------------------------------------------
+                                L2ROUTE
+--------------------------------------------------------------------------------
+* NXOS
+    * Add ShowL2routeEvpnMac for:
+        show l2route evpn mac evi {evi}
