@@ -57,49 +57,55 @@ class test_show_lldp_entry(unittest.TestCase):
 
     golden_parsed_output = {
         'interfaces': {
-            'GigabitEthernet2': {
-                'neighbors': {
-                    'R1_csr1000v.openstacklocal': {
-                        'chassis_id': '001e.49f7.2c00',
-                        'port_id': 'GigabitEthernet2',
-                        'port_description': 'GigabitEthernet2',
-                        'system_name': 'R1_csr1000v.openstacklocal',
-                        'system_description': 'Cisco IOS Software [Everest], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.1, RELEASE SOFTWARE (fc2)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2017 by Cisco Systems, Inc.\nCompiled Sat 22-Jul-17 05:51 by',
-                        'time_remaining': 117,
-                        'neighbor_id': 'R1_csr1000v.openstacklocal',
-                        'hold_time': 120,
-                        'capabilities': {
-                            'bridge': {
-                                'system': True,
-                                },
-                            'router': {
-                                'system': True,
-                                'enabled': True,
+            'GigabitEthernet0/0/0/0': {
+                'port_id': {
+                    'GigabitEthernet2': {
+                        'neighbors': {
+                            'R1_csr1000v.openstacklocal': {
+                                'chassis_id': '001e.49f7.2c00',
+                                'port_description': 'GigabitEthernet2',
+                                'system_name': 'R1_csr1000v.openstacklocal',
+                                'neighbor_id': 'R1_csr1000v.openstacklocal',
+                                'system_description': 'Cisco IOS Software [Everest], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.1, RELEASE SOFTWARE (fc2)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2017 by Cisco Systems, Inc.\nCompiled Sat 22-Jul-17 05:51 by',
+                                'time_remaining': 117,
+                                'hold_time': 120,
+                                'capabilities': {
+                                    'bridge': {
+                                        'system': True,
+                                        },
+                                    'router': {
+                                        'system': True,
+                                        'enabled': True,
+                                        },
+                                    },
+                                'management_address': '10.1.2.1',
                                 },
                             },
-                        'management_address': '10.1.2.1',
                         },
                     },
                 },
-            'Ethernet1/2': {
-                'neighbors': {
-                    'R3_n9kv': {
-                        'chassis_id': '5e00.8002.0009',
-                        'port_id': 'Ethernet1/2',
-                        'port_description': 'Ethernet1/2',
-                        'system_name': 'R3_n9kv',
-                        'system_description': 'Cisco Nexus Operating System (NX-OS) Software 7.0(3)I7(1)\nTAC support: http://www.cisco.com/tac\nCopyright (c) 2002-2017, Cisco Systems, Inc. All rights reserved.\n',
-                        'time_remaining': 103,
-                        'neighbor_id': 'R3_n9kv',
-                        'hold_time': 120,
-                        'capabilities': {
-                            'bridge': {
-                                'system': True,
-                                'enabled': True,
-                                },
-                            'router': {
-                                'system': True,
-                                'enabled': True,
+            'GigabitEthernet0/0/0/1': {
+                'port_id': {
+                    'Ethernet1/2': {
+                        'neighbors': {
+                            'R3_n9kv': {
+                                'chassis_id': '5e00.8002.0009',
+                                'port_description': 'Ethernet1/2',
+                                'system_name': 'R3_n9kv',
+                                'neighbor_id': 'R3_n9kv',
+                                'system_description': 'Cisco Nexus Operating System (NX-OS) Software 7.0(3)I7(1)\nTAC support: http://www.cisco.com/tac\nCopyright (c) 2002-2017, Cisco Systems, Inc. All rights reserved.\n',
+                                'time_remaining': 103,
+                                'hold_time': 120,
+                                'capabilities': {
+                                    'bridge': {
+                                        'system': True,
+                                        'enabled': True,
+                                        },
+                                    'router': {
+                                        'system': True,
+                                        'enabled': True,
+                                        },
+                                    },
                                 },
                             },
                         },
@@ -179,49 +185,55 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
     empty_output = {'execute.return_value': '      '}
     golden_parsed_output = {
         'interfaces': {
-            'GigabitEthernet2': {
-                'neighbors': {
-                    'R1_csr1000v.openstacklocal': {
-                        'chassis_id': '001e.49f7.2c00',
-                        'port_id': 'GigabitEthernet2',
-                        'port_description': 'GigabitEthernet2',
-                        'system_name': 'R1_csr1000v.openstacklocal',
-                        'neighbor_id': 'R1_csr1000v.openstacklocal',
-                        'system_description': 'Cisco IOS Software [Everest], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.1, RELEASE SOFTWARE (fc2)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2017 by Cisco Systems, Inc.\nCompiled Sat 22-Jul-17 05:51 by',
-                        'time_remaining': 90,
-                        'hold_time': 120,
-                        'capabilities': {
-                            'bridge': {
-                                'system': True,
-                                },
-                            'router': {
-                                'system': True,
-                                'enabled': True,
+            'GigabitEthernet0/0/0/0': {
+                'port_id': {
+                    'GigabitEthernet2': {
+                        'neighbors': {
+                            'R1_csr1000v.openstacklocal': {
+                                'chassis_id': '001e.49f7.2c00',
+                                'port_description': 'GigabitEthernet2',
+                                'system_name': 'R1_csr1000v.openstacklocal',
+                                'neighbor_id': 'R1_csr1000v.openstacklocal',
+                                'system_description': 'Cisco IOS Software [Everest], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.1, RELEASE SOFTWARE (fc2)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2017 by Cisco Systems, Inc.\nCompiled Sat 22-Jul-17 05:51 by',
+                                'time_remaining': 90,
+                                'hold_time': 120,
+                                'capabilities': {
+                                    'bridge': {
+                                        'system': True,
+                                        },
+                                    'router': {
+                                        'system': True,
+                                        'enabled': True,
+                                        },
+                                    },
+                                'management_address': '10.1.2.1',
                                 },
                             },
-                        'management_address': '10.1.2.1',
                         },
                     },
                 },
-            'Ethernet1/2': {
-                'neighbors': {
-                    'R3_n9kv': {
-                        'chassis_id': '5e00.8002.0009',
-                        'port_id': 'Ethernet1/2',
-                        'port_description': 'Ethernet1/2',
-                        'system_name': 'R3_n9kv',
-                        'neighbor_id': 'R3_n9kv',
-                        'system_description': 'Cisco Nexus Operating System (NX-OS) Software 7.0(3)I7(1)\nTAC support: http://www.cisco.com/tac\nCopyright (c) 2002-2017, Cisco Systems, Inc. All rights reserved.\n',
-                        'time_remaining': 106,
-                        'hold_time': 120,
-                        'capabilities': {
-                            'bridge': {
-                                'system': True,
-                                'enabled': True,
-                                },
-                            'router': {
-                                'system': True,
-                                'enabled': True,
+            'GigabitEthernet0/0/0/1': {
+                'port_id': {
+                    'Ethernet1/2': {
+                        'neighbors': {
+                            'R3_n9kv': {
+                                'chassis_id': '5e00.8002.0009',
+                                'port_description': 'Ethernet1/2',
+                                'system_name': 'R3_n9kv',
+                                'neighbor_id': 'R3_n9kv',
+                                'system_description': 'Cisco Nexus Operating System (NX-OS) Software 7.0(3)I7(1)\nTAC support: http://www.cisco.com/tac\nCopyright (c) 2002-2017, Cisco Systems, Inc. All rights reserved.\n',
+                                'time_remaining': 106,
+                                'hold_time': 120,
+                                'capabilities': {
+                                    'bridge': {
+                                        'system': True,
+                                        'enabled': True,
+                                        },
+                                    'router': {
+                                        'system': True,
+                                        'enabled': True,
+                                        },
+                                    },
                                 },
                             },
                         },
@@ -230,6 +242,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
             },
         'total_entries': 2,
         }
+
     golden_output = {'execute.return_value': '''\
     Mon Mar 19 18:24:29.512 UTC
     Capability codes:
@@ -326,44 +339,46 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
     golden_parsed_output_2 = {
         'interfaces': {
             'GigabitEthernet0/0/0/8': {
-                'neighbors': {
-                    'asr9k-5': {
-                        'chassis_id': '0026.9815.c3e6',
-                        'port_id': 'GigabitEthernet0/0/0/8',
-                        'port_description': 'GigabitEthernet0/0/0/8',
-                        'system_name': 'asr9k-5',
-                        'neighbor_id': 'asr9k-5',
-                        'system_description': 'Cisco IOS XR Software, Version 4.1.0.32I[Default]\nCopyright (c) 2011 by Cisco Systems, Inc.\n',
-                        'time_remaining': 102,
-                        'hold_time': 120,
-                        'capabilities': {
-                            'router': {
-                                'system': True,
-                                'enabled': True,
+                'port_id': {
+                    'GigabitEthernet0/0/0/8': {
+                        'neighbors': {
+                            'asr9k-5': {
+                                'chassis_id': '0026.9815.c3e6',
+                                'port_description': 'GigabitEthernet0/0/0/8',
+                                'system_name': 'asr9k-5',
+                                'neighbor_id': 'asr9k-5',
+                                'system_description': 'Cisco IOS XR Software, Version 4.1.0.32I[Default]\nCopyright (c) 2011 by Cisco Systems, Inc.\n',
+                                'time_remaining': 102,
+                                'hold_time': 120,
+                                'capabilities': {
+                                    'router': {
+                                        'system': True,
+                                        'enabled': True,
+                                        },
+                                    },
+                                'management_address': '10.5.173.110',
                                 },
                             },
-                        'management_address': '10.5.173.110',
                         },
-                    },
-                },
-            'GigabitEthernet0/0/0/8.1': {
-                'neighbors': {
-                    'asr9k-5': {
-                        'chassis_id': '0026.9815.c3e6',
-                        'port_id': 'GigabitEthernet0/0/0/8.1',
-                        'port_description': 'GigabitEthernet0/0/0/8.1',
-                        'system_name': 'asr9k-5',
-                        'neighbor_id': 'asr9k-5',
-                        'system_description': 'Cisco IOS XR Software, Version 4.1.0.32I[Default]\nCopyright (c) 2011 by Cisco Systems, Inc.\n',
-                        'time_remaining': 96,
-                        'hold_time': 120,
-                        'capabilities': {
-                            'router': {
-                                'system': True,
-                                'enabled': True,
+                    'GigabitEthernet0/0/0/8.1': {
+                        'neighbors': {
+                            'asr9k-5': {
+                                'chassis_id': '0026.9815.c3e6',
+                                'port_description': 'GigabitEthernet0/0/0/8.1',
+                                'system_name': 'asr9k-5',
+                                'neighbor_id': 'asr9k-5',
+                                'system_description': 'Cisco IOS XR Software, Version 4.1.0.32I[Default]\nCopyright (c) 2011 by Cisco Systems, Inc.\n',
+                                'time_remaining': 96,
+                                'hold_time': 120,
+                                'capabilities': {
+                                    'router': {
+                                        'system': True,
+                                        'enabled': True,
+                                        },
+                                    },
+                                'management_address': '10.5.173.110',
                                 },
                             },
-                        'management_address': '10.5.173.110',
                         },
                     },
                 },
