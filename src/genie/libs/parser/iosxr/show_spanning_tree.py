@@ -494,21 +494,21 @@ class ShowSpanningTreePvrstSchema(MetaParser):
 						'bridge_forward_delay': int,
 						'bridge_transmit_hold_count': int,
 						'sys_id_ext': int,
-					},
-					'interface': {
-						Any(): {
-							'name': str,
-							'cost': int,
-							'port_priority': int,
-							'port_num': int,
-							'role': str,
-							'port_state': str,
-							'designated_bridge_priority': int,
-							'designated_bridge_address': str,
-							'designated_port_priority': int,
-							'designated_port_num': int,
+						'interface': {
+							Any(): {
+								'name': str,
+								'cost': int,
+								'port_priority': int,
+								'port_num': int,
+								'role': str,
+								'port_state': str,
+								'designated_bridge_priority': int,
+								'designated_bridge_address': str,
+								'designated_port_priority': int,
+								'designated_port_num': int,
+								}
 						}
-					}
+					},
 				}
 			}
 		}
@@ -603,7 +603,7 @@ class ShowSpanningTreePvrst(ShowSpanningTreePvrstSchema):
 		    m = p7.match(line)
 		    if m:
 		    	group = m.groupdict()
-		    	interfaces = vlans.setdefault('interface' , {}). \
+		    	interfaces = vlan.setdefault('interface' , {}). \
 		    		setdefault(Common.convert_intf_name(group['name']), {})
 		    	interfaces.update({'name' : Common.convert_intf_name(group['name'])})
 		    	interfaces.update({'cost' : int(group['cost'])})
