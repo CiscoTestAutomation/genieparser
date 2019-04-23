@@ -580,3 +580,10 @@
 * NXOS
     * Add ShowL2routeEvpnMac for:
         show l2route evpn mac evi {evi}
+
+--------------------------------------------------------------------------------
+                                VXLAN
+--------------------------------------------------------------------------------
+* NXOS
+    * Add ShowL2routeEvpnMacIpEvi for:
+        show l2route evpn mac-ip evi <evi>

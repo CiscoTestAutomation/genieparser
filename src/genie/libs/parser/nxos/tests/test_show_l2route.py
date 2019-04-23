@@ -8,7 +8,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 from genie.libs.parser.nxos.show_l2route import ShowL2routeEvpnMac,\
                                                 ShowL2routeEvpnMacEvi
-
+                                                
 # ==========================
 #  show l2route evpn mac all
 #  show l2route evpn mac evi <evi>
@@ -218,7 +218,6 @@ class test_show_l2route_evpn_mac_evi(unittest.TestCase):
         obj = ShowL2routeEvpnMacEvi(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(evi='1001', mac='0000.04b1.0000')
-
 
 if __name__ == '__main__':
     unittest.main()
