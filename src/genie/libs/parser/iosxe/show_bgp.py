@@ -3133,7 +3133,6 @@ class ShowBgpNeighborSuperParser(MetaParser):
             m = p18.match(line)
             if m:
                 nbr_cap_dict['stateful_switchover'] = m.groupdict()['value']
-                continue
 
             # Message statistics:
             m = p19.match(line)
@@ -3702,7 +3701,7 @@ class ShowBgpAllNeighbors(ShowBgpNeighborSuperParser, ShowBgpAllNeighborsSchema)
                    ]
 
     def cli(self, neighbor='', address_family='', output=None):
-
+        
         # Restricted address families
         restricted_list = ['ipv4 unicast', 'ipv6 unicast']
 
