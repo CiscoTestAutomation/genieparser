@@ -191,12 +191,7 @@ class ShowBgpSuperParser(ShowBgpSchema):
         * 'show ip bgp {address_family} vrf {vrf}'
     '''
 
-    def cli(self, address_family='', cmd='', output=None):
-
-        if output is None:
-            out = self.device.execute(cmd)
-        else:
-            out = output
+    def cli(self, address_family='', output=None):
 
         # Init dictionary
         route_dict = {}
@@ -274,7 +269,7 @@ class ShowBgpSuperParser(ShowBgpSchema):
                         '( +\(default for vrf +(?P<default_vrf>(\S+))\))?'
                         '( +VRF Router ID (?P<vrf_router_id>(\S+)))?$')
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.rstrip()
 
             # For address family: IPv4 Unicast
@@ -587,7 +582,7 @@ class ShowBgpAll(ShowBgpSuperParser, ShowBgpSchema):
             show_output = output
 
         # Call super
-        return super().cli(cmd=cmd, output=show_output, address_family=address_family)
+        return super().cli(output=show_output, address_family=address_family)
 
 
 # ======================================
@@ -620,7 +615,7 @@ class ShowIpBgpAll(ShowBgpSuperParser, ShowBgpSchema):
             show_output = output
 
         # Call super
-        return super().cli(cmd=cmd, output=show_output, address_family=address_family)
+        return super().cli(output=show_output, address_family=address_family)
 
 
 # =============================================
@@ -655,7 +650,7 @@ class ShowBgp(ShowBgpSuperParser, ShowBgpSchema):
             show_output = output
 
         # Call super
-        return super().cli(cmd=cmd, output=show_output, vrf=vrf, rd=rd,
+        return super().cli(output=show_output, vrf=vrf, rd=rd,
                            address_family=address_family)
 
 
@@ -701,7 +696,7 @@ class ShowIpBgp(ShowBgpSuperParser, ShowBgpSchema):
             show_output = output
 
         # Call super
-        return super().cli(cmd=cmd, output=show_output, vrf=vrf, rd=rd,
+        return super().cli(output=show_output, vrf=vrf, rd=rd,
                            address_family=address_family)
 
 
@@ -817,13 +812,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         * 'show ip bgp {address_family} rd {rd} detail'
     '''
 
-    def cli(self, address_family='', vrf='', rd='', cmd='', output=None):
-
-        if output is None:
-            # Execute command
-            out = self.device.execute(cmd)
-        else:
-            out = output
+    def cli(self, address_family='', vrf='', rd='', output=None):
 
         # Init dictionary
         ret_dict = {}
@@ -985,7 +974,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         p17 = re.compile(r'^\s*(?P<route_info>[a-zA-Z0-9\-\.\,\{\}\s\(\)\.\/\:\[\]]+)$')
 
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.rstrip()
 
             # For address family: IPv4 Unicast
@@ -1451,7 +1440,7 @@ class ShowBgpAllDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
             show_output = output
 
         # Call super
-        return super().cli(cmd=cmd, output=show_output)
+        return super().cli(output=show_output)
 
 
 # ============================
@@ -1477,7 +1466,7 @@ class ShowIpBgpAllDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
             show_output = output
 
         # Call super
-        return super().cli(cmd=cmd, output=show_output)
+        return super().cli(output=show_output)
 
 
 # ================================================
@@ -1516,7 +1505,7 @@ class ShowBgpDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
             show_output = output
 
         # Call super
-        return super().cli(cmd=cmd, output=show_output, vrf=vrf, rd=rd,
+        return super().cli(output=show_output, vrf=vrf, rd=rd,
                            address_family=address_family)
 
 
@@ -1556,7 +1545,7 @@ class ShowIpBgpDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
             show_output = output
 
         # Call super
-        return super().cli(cmd=cmd, output=show_output, vrf=vrf, rd=rd,
+        return super().cli(output=show_output, vrf=vrf, rd=rd,
                            address_family=address_family)
 
 
@@ -1686,13 +1675,7 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
         * 'show ip bgp {address_family} all summary'
     '''
 
-    def cli(self, address_family='', vrf='', rd='', cmd='', output=None):
-
-        if output is None:
-            # Execute command
-            out = self.device.execute(cmd)
-        else:
-            out = output
+    def cli(self, address_family='', vrf='', rd='', output=None):
 
         # Init vars
         sum_dict = {}
@@ -1778,7 +1761,7 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
                           ' +(?P<up_down>[a-zA-Z0-9\:]+)'
                          ' +(?P<state>[a-zA-Z0-9\(\)\s]+)$')
 
-        for line in out.splitlines():
+        for line in output.splitlines():
 
             line = line.strip()
 
@@ -2086,7 +2069,7 @@ class ShowBgpSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
             show_output = output
 
         # Call super
-        return super().cli(output=show_output, cmd=cmd, vrf=vrf, rd=rd,
+        return super().cli(output=show_output, vrf=vrf, rd=rd,
                            address_family=address_family)
 
 
@@ -2120,7 +2103,7 @@ class ShowBgpAllSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
             show_output = output
 
         # Call super
-        return super().cli(output=show_output, cmd=cmd, address_family=address_family)
+        return super().cli(output=show_output, address_family=address_family)
 
 # =====================================================
 # Parser for:
@@ -2164,7 +2147,7 @@ class ShowIpBgpSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
             show_output = output
 
         # Call super
-        return super().cli(output=show_output, cmd=cmd, vrf=vrf, rd=rd,
+        return super().cli(output=show_output, vrf=vrf, rd=rd,
                            address_family=address_family)
 
 
@@ -2198,7 +2181,7 @@ class ShowIpBgpAllSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
             show_output = output
 
         # Call super
-        return super().cli(output=show_output, cmd=cmd, address_family=address_family)
+        return super().cli(output=show_output, address_family=address_family)
 
 
 #-------------------------------------------------------------------------------
@@ -2524,13 +2507,7 @@ class ShowBgpNeighborSuperParser(MetaParser):
         * 'show ip bgp {address_family} vrf {vrf} neighbors {neighbor}'
     '''
 
-    def cli(self, neighbor='', address_family='', vrf='', cmd='', output=None):
-
-        if output is None:
-            # Execute command
-            out = self.device.execute(cmd)
-        else:
-            out = output
+    def cli(self, neighbor='', address_family='', vrf='', output=None):
 
         # Init vars
         ret_dict = {}
@@ -2894,7 +2871,7 @@ class ShowBgpNeighborSuperParser(MetaParser):
         p72 = re.compile(r'^No +active +TCP +connection$')
 
 
-        for line in out.splitlines():
+        for line in output.splitlines():
 
             line = line.strip()
 
@@ -4035,13 +4012,7 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
         * 'show ip bgp {address_family} neighbors {neighbor} advertised-routes'
     '''
 
-    def cli(self, neighbor, address_family='', cmd='', output=None):
-
-        if output is None:
-            # Execute command
-            out = self.device.execute(cmd)
-        else:
-            out = output
+    def cli(self, neighbor, address_family='', output=None):
 
         # Get VRF name by executing 'show bgp all neighbors | i BGP neighbor'
         out_vrf = self.device.execute('show bgp all neighbors | i BGP neighbor')
@@ -4135,7 +4106,7 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
                          '( +VRF Router ID (?P<vrf_router_id>(\S+)))?$')
 
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.rstrip()
 
             # For address family: IPv4 Unicast
@@ -4484,7 +4455,7 @@ class ShowBgpAllNeighborsAdvertisedRoutes(ShowBgpNeighborsAdvertisedRoutesSuperP
             show_output = output
 
         # Call super
-        return super().cli(cmd=cmd, output=show_output, neighbor=neighbor,
+        return super().cli(output=show_output, neighbor=neighbor,
                            address_family=address_family)
 
 
@@ -4519,7 +4490,7 @@ class ShowBgpNeighborsAdvertisedRoutes(ShowBgpNeighborsAdvertisedRoutesSuperPars
             show_output = output
 
         # Call super
-        return super().cli(cmd=cmd, output=show_output, neighbor=neighbor,
+        return super().cli(output=show_output, neighbor=neighbor,
                            address_family=address_family)
 
 
@@ -4554,7 +4525,7 @@ class ShowIpBgpAllNeighborsAdvertisedRoutes(ShowBgpNeighborsAdvertisedRoutesSupe
             show_output = output
 
         # Call super
-        return super().cli(cmd=cmd, output=show_output, neighbor=neighbor,
+        return super().cli(output=show_output, neighbor=neighbor,
                            address_family=address_family)
 
 
@@ -4589,7 +4560,7 @@ class ShowIpBgpNeighborsAdvertisedRoutes(ShowBgpNeighborsAdvertisedRoutesSuperPa
             show_output = output
 
         # Call super
-        return super().cli(cmd=cmd, output=show_output, neighbor=neighbor,
+        return super().cli(output=show_output, neighbor=neighbor,
                            address_family=address_family)
 
 
@@ -4680,13 +4651,7 @@ class ShowBgpNeighborsReceivedRoutesSuperParser(ShowBgpNeighborsReceivedRoutesSc
         * 'show ip bgp {address_family} neighbors {neighbor} received-routes'
     '''
 
-    def cli(self, neighbor, address_family='', cmd='', output=None):
-
-        if output is None:
-            # Execute command
-            out = self.device.execute(cmd)
-        else:
-            out = output
+    def cli(self, neighbor, address_family='', output=None):
 
         # Get VRF name by executing 'show bgp all neighbors | i BGP neighbor'
         out_vrf = self.device.execute('show bgp all neighbors | i BGP neighbor')
@@ -4716,7 +4681,7 @@ class ShowBgpNeighborsReceivedRoutesSuperParser(ShowBgpNeighborsReceivedRoutesSc
         index = 1
         bgp_table_version = local_router_id = ''
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.rstrip()
 
             # For address family: IPv4 Unicast
@@ -5089,7 +5054,7 @@ class ShowBgpAllNeighborsReceivedRoutes(ShowBgpNeighborsReceivedRoutesSuperParse
             show_output = output
 
         # Call super
-        return super().cli(cmd=cmd, output=show_output, neighbor=neighbor,
+        return super().cli(output=show_output, neighbor=neighbor,
                            address_family=address_family)
 
 
@@ -5124,7 +5089,7 @@ class ShowBgpNeighborsReceivedRoutes(ShowBgpNeighborsReceivedRoutesSuperParser, 
             show_output = output
 
         # Call super
-        return super().cli(cmd=cmd, output=show_output, neighbor=neighbor,
+        return super().cli(output=show_output, neighbor=neighbor,
                            address_family=address_family)
 
 
@@ -5159,7 +5124,7 @@ class ShowIpBgpAllNeighborsReceivedRoutes(ShowBgpNeighborsReceivedRoutesSuperPar
             show_output = output
 
         # Call super
-        return super().cli(cmd=cmd, output=show_output, neighbor=neighbor,
+        return super().cli(output=show_output, neighbor=neighbor,
                            address_family=address_family)
 
 
@@ -5194,7 +5159,7 @@ class ShowIpBgpNeighborsReceivedRoutes(ShowBgpNeighborsReceivedRoutesSuperParser
             show_output = output
 
         # Call super
-        return super().cli(cmd=cmd, output=show_output, neighbor=neighbor,
+        return super().cli(output=show_output, neighbor=neighbor,
                            address_family=address_family)
 
 
@@ -5282,13 +5247,7 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
         * 'show ip bgp {address_family} neighbors {neighbor} routes'
     '''
 
-    def cli(self, neighbor, address_family='', cmd='', output=None):
-
-        if output is None:
-            # Execute command
-            out = self.device.execute(cmd)
-        else:
-            out = output
+    def cli(self, neighbor, address_family='', output=None):
 
         # Get VRF name by executing 'show bgp all neighbors | i BGP neighbor'
         out_vrf = self.device.execute('show bgp all neighbors | i BGP neighbor')
@@ -5379,7 +5338,7 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
                          '( +\(default for vrf +(?P<default_vrf>(\S+))\))?'
                          '( +VRF Router ID (?P<vrf_router_id>(\S+)))?$')
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.rstrip()
 
             # For address family: IPv4 Unicast
@@ -5728,7 +5687,7 @@ class ShowBgpAllNeighborsRoutes(ShowBgpAllNeighborsRoutesSuperParser, ShowBgpAll
             show_output = output
 
         # Call super
-        return super().cli(cmd=cmd, output=show_output, neighbor=neighbor,
+        return super().cli(output=show_output, neighbor=neighbor,
                            address_family=address_family)
 
 
@@ -5763,7 +5722,7 @@ class ShowBgpNeighborsRoutes(ShowBgpAllNeighborsRoutesSuperParser, ShowBgpAllNei
             show_output = output
 
         # Call super
-        return super().cli(cmd=cmd, output=show_output, neighbor=neighbor,
+        return super().cli(output=show_output, neighbor=neighbor,
                            address_family=address_family)
 
 
@@ -5798,7 +5757,7 @@ class ShowIpBgpAllNeighborsRoutes(ShowBgpAllNeighborsRoutesSuperParser, ShowBgpA
             show_output = output
 
         # Call super
-        return super().cli(cmd=cmd, output=show_output, neighbor=neighbor,
+        return super().cli(output=show_output, neighbor=neighbor,
                            address_family=address_family)
 
 
@@ -5833,7 +5792,7 @@ class ShowIpBgpNeighborsRoutes(ShowBgpAllNeighborsRoutesSuperParser, ShowBgpAllN
             show_output = output
 
         # Call super
-        return super().cli(cmd=cmd, output=show_output, neighbor=neighbor,
+        return super().cli(output=show_output, neighbor=neighbor,
                            address_family=address_family)
 
 
