@@ -38,16 +38,16 @@ class ShowIpMsdpPeerSchema(MetaParser):
                             'in': {
                                 Any(): {
                                     'filter': str,
-                                    'route_map': str,}},
+                                    'route_map': str}},
                             'out': {
                                 Any(): {
                                     'filter': str,
-                                    'route_map': str,}}
+                                    'route_map': str}}
                         },
-                        'ttl_threshold': int,                        
+                        'ttl_threshold': int,
                         'sa_request': {
                             'input_filter': str,
-                        },                        
+                        },
                         'signature_protection': bool,
                         'statistics': {
                             'established_transitions': int,
@@ -157,14 +157,16 @@ class ShowIpMsdpPeer(ShowIpMsdpPeerSchema):
 
         # MD5 signature protection on MSDP TCP connection: not enabled
         r13 = re.compile(r'^MD5\s+signature\s+protection\s+on\s+MSDP\s+TCP'
-                         '\s+connection:\s*(?P<signature_protection>(?: not)?\s*enabled)$')
+                         '\s+connection:\s*(?P<signature_protection>'
+                         '(?: not)?\s*enabled)$')
 
         # RPF Failure count: 27
         r14 = re.compile(r'^RPF\s+Failure\s+count:\s*(?P<rpf_failure>\d+)')
 
         # SA Messages in/out: 27/0
-        r15 = re.compile(r'^SA\s+Messages\s+in/out:\s*(?P<sa_message_in>\d+)\/'
-                        '(?P<sa_message_out>\d+)$')
+        r15 = re.compile(r'^SA\s+Messages\s+in/out:\s*'
+                         '(?P<sa_message_in>\d+)\/'
+                         '(?P<sa_message_out>\d+)$')
 
         # SA Requests in: 0
         r16 = re.compile(r'^SA\s+Requests\s+in:\s*(?P<sa_requests_in>\d+)$')
@@ -186,13 +188,11 @@ class ShowIpMsdpPeer(ShowIpMsdpPeerSchema):
             if result:
 
                 group = result.groupdict()
-
                 if not vrf:
                     vrf = 'default'
                 peer_dict = parsed_dict.setdefault('vrf', {})\
                     .setdefault(vrf, {}).setdefault('peer', {})\
                     .setdefault(group['peer'], {})
-
                 peer_dict['peer_as'] = int(group['peer_as'])
 
                 continue
@@ -201,11 +201,11 @@ class ShowIpMsdpPeer(ShowIpMsdpPeerSchema):
             result = r2.match(line)
             if result:
                 group = result.groupdict()
-
                 peer_dict['session_state'] = group['session_state']
                 peer_dict['resets'] = group['resets']
                 peer_dict['connect_source'] = group['connect_source']
-                peer_dict['connect_source_address'] = group['connect_source_address']
+                peer_dict['connect_source_address'] = \
+                    group['connect_source_address']
 
                 continue
 
@@ -221,8 +221,9 @@ class ShowIpMsdpPeer(ShowIpMsdpPeerSchema):
                 sent_dict = statistics_dict.setdefault('sent', {})
                 sent_dict['data_message'] = int(group['data_message_sent'])
 
-                received_dict = statistics_dict.setdefault('received', {})                
-                received_dict['data_message'] = int(group['data_message_received'])
+                received_dict = statistics_dict.setdefault('received', {})
+                received_dict['data_message'] = \
+                    int(group['data_message_received'])
 
                 continue
 
@@ -230,8 +231,8 @@ class ShowIpMsdpPeer(ShowIpMsdpPeerSchema):
             result = r4.match(line)
             if result:
                 group = result.groupdict()
-
-                statistics_dict['output_msg_discarded'] = int(group['output_msg_discarded'])
+                statistics_dict['output_msg_discarded'] = \
+                    int(group['output_msg_discarded'])
 
                 continue
 
@@ -239,7 +240,6 @@ class ShowIpMsdpPeer(ShowIpMsdpPeerSchema):
             result = r5.match(line)
             if result:
                 group = result.groupdict()
-
                 peer_dict['conn_count_cleared'] = group['conn_count_cleared']
 
                 continue
@@ -249,7 +249,6 @@ class ShowIpMsdpPeer(ShowIpMsdpPeerSchema):
             result = r6.match(line)
             if result:
                 group = result.groupdict()
-
                 filter_in = group['filter_in']
                 filter_ = group['filter']
                 route_map_in = group['route_map']
@@ -257,7 +256,6 @@ class ShowIpMsdpPeer(ShowIpMsdpPeerSchema):
                 filter_in_dict = peer_dict.setdefault('sa_filter', {}).\
                     setdefault('in', {}).\
                     setdefault(filter_in, {})
-
                 filter_in_dict['filter'] = filter_
                 filter_in_dict['route_map'] = route_map_in
 
@@ -267,9 +265,7 @@ class ShowIpMsdpPeer(ShowIpMsdpPeerSchema):
             # Output RP filter: none, route-map: none
             result = r7.match(line)
             if result:
-                 
                 group = result.groupdict()
-
                 filter_out = group['filter_out']
                 filter_ = group['filter']
                 route_map_out = group['route_map']
@@ -286,9 +282,7 @@ class ShowIpMsdpPeer(ShowIpMsdpPeerSchema):
             # Input filter: none
             result = r8.match(line)
             if result:
-
                 group = result.groupdict()
-
                 sa_request_dict = peer_dict.setdefault('sa_request', {})
                 sa_request_dict['input_filter'] = group['input_filter']
 
@@ -313,7 +307,8 @@ class ShowIpMsdpPeer(ShowIpMsdpPeerSchema):
             result = r11.match(line)
             if result:
                 group = result.groupdict()
-                statistics_dict['established_transitions'] = int(group['established_transitions'])
+                statistics_dict['established_transitions'] = \
+                    int(group['established_transitions'])
                 continue
 
             # Input queue size: 0, Output queue size: 0
@@ -332,8 +327,7 @@ class ShowIpMsdpPeer(ShowIpMsdpPeerSchema):
                 group = result.groupdict()
 
                 signature_protection = group['signature_protection'].strip()
-
-                if signature_protection == 'enabled': 
+                if signature_protection == 'enabled':
                     peer_dict['signature_protection'] = True
                 elif signature_protection == 'not enabled':
                     peer_dict['signature_protection'] = False
@@ -342,7 +336,7 @@ class ShowIpMsdpPeer(ShowIpMsdpPeerSchema):
 
             # RPF Failure count: 27
             result = r14.match(line)
-            if result:                
+            if result:
                 group = result.groupdict()
 
                 error_dict = statistics_dict.setdefault('error', {})
@@ -362,7 +356,7 @@ class ShowIpMsdpPeer(ShowIpMsdpPeerSchema):
             result = r16.match(line)
             if result:
                 group = result.groupdict()
-                received_dict['sa_request']  = int(group['sa_requests_in'])
+                received_dict['sa_request'] = int(group['sa_requests_in'])
 
                 continue
 
@@ -381,7 +375,9 @@ class ShowIpMsdpPeer(ShowIpMsdpPeerSchema):
                 sent_dict['data_packets'] = int(group['data_packets_out'])
 
                 continue
+
         return parsed_dict
+
 
 class ShowIpMsdpSaCacheSchema(MetaParser):
 
@@ -389,7 +385,6 @@ class ShowIpMsdpSaCacheSchema(MetaParser):
         * 'show ip msdp sa-cache'
         * 'show ip msdb vrf <vrf> sa-cache'
     '''
-
     schema = {
         'vrf': {
             Any(): {
@@ -403,7 +398,7 @@ class ShowIpMsdpSaCacheSchema(MetaParser):
                         Optional('rpf_peer'): str,
                         'peer': str,
                         'origin_rp': {
-                            Any():{
+                            Any(): {
                                 'rp_address': str,
                              },
                         },
@@ -417,7 +412,7 @@ class ShowIpMsdpSaCacheSchema(MetaParser):
                         'expire': str
                     }
                 }
-            }        
+            }
         }
     }
 
@@ -425,7 +420,7 @@ class ShowIpMsdpSaCacheSchema(MetaParser):
 class ShowIpMsdpSaCache(ShowIpMsdpSaCacheSchema):
 
     cli_command = ['show ip msdb vrf {vrf} sa-cache',
-                   'show ip msdp sa-cache',]
+                   'show ip msdp sa-cache', ]
 
     def cli(self, vrf='', output=None):
         if output is None:
@@ -434,27 +429,29 @@ class ShowIpMsdpSaCache(ShowIpMsdpSaCacheSchema):
             else:
                 cmd = self.cli_command[1]
             out = self.device.execute(cmd)
-
         else:
             out = output
 
         # MSDP Source-Active Cache - 1 entries
-        r1 = re.compile(r'MSDP\s+Source\-Active\s+Cache\s*\-\s*(?P<num_of_sa_cache>\d+)\s+entries')
+        r1 = re.compile(r'MSDP\s+Source\-Active\s+Cache\s*\-\s*'
+                        '(?P<num_of_sa_cache>\d+)\s+entries')
 
         # (10.3.3.18, 225.1.1.1), RP 10.3.100.8, BGP/AS 3, 00:00:10/00:05:49, Peer 10.1.100.4
         # (10.1.4.15, 225.1.1.1), RP 10.1.100.1, AS ?,00:19:29/00:05:14, Peer 10.1.100.1
         r2 = re.compile(r'\((?P<source_addr>\S+),\s*(?P<group>\S+)\),\s*RP\s*'
-                        '(?P<rp_address>\S+),\s*(?:BGP\/)?AS\s*(?P<peer_as>\S+)'
+                        '(?P<rp_address>\S+),\s*(?:BGP\/)'
+                        '?AS\s*(?P<peer_as>\S+)'
                         ',\s*(?P<up_time>\S+)\/(?P<expire>\S+)\,\s*Peer\s+'
                         '(?P<peer>\S+)')
 
-        # Learned from peer 10.1.100.4, RPF peer 10.1.100.4, 
+        # Learned from peer 10.1.100.4, RPF peer 10.1.100.4,
         r3 = re.compile(r'Learned\s+from\s+peer\s(?P<peer_learned_from>\S+),'
                         '\s+RPF\s+peer\s+(?P<rpf_peer>\S+),')
 
         # SAs received: 1, Encapsulated data received: 1
-        r4 = re.compile(r'SAs\s+received:\s+(?P<sa_received>\d+),\s+Encapsulated\s+data\s+'
-                         'received:\s+(?P<encapsulated_data_received>\d+)')
+        r4 = re.compile(r'SAs\s+received:\s+(?P<sa_received>\d+),'
+                        '\s+Encapsulated\s+data\s+'
+                        'received:\s+(?P<encapsulated_data_received>\d+)')
 
         parsed_dict = {}
 
@@ -470,9 +467,8 @@ class ShowIpMsdpSaCache(ShowIpMsdpSaCacheSchema):
             # (10.3.3.18, 225.1.1.1), RP 10.3.100.8, BGP/AS 3, 00:00:10/00:05:49, Peer 10.1.100.4
             result = r2.match(line)
             if result:
-
                 group = result.groupdict()
-                
+
                 source_addr = group['source_addr']
                 addres_group = group['group']
                 rp_address = group['rp_address']
@@ -482,26 +478,22 @@ class ShowIpMsdpSaCache(ShowIpMsdpSaCacheSchema):
                 expire = group['expire']
 
                 sa_cache = '{} {}'.format(addres_group, source_addr)
-
                 if not vrf:
                     vrf = 'default'
 
                 vrf_dict = parsed_dict.setdefault('vrf', {})\
                     .setdefault(vrf, {})
-
                 vrf_dict['num_of_sa_cache'] = num_of_sa_cache
 
                 sa_cache_dict = vrf_dict.setdefault('sa_cache', {})\
                     .setdefault(sa_cache, {})
-
                 sa_cache_dict['group'] = addres_group
                 sa_cache_dict['source_addr'] = source_addr
                 sa_cache_dict['up_time'] = up_time
                 sa_cache_dict['expire'] = expire
-                sa_cache_dict['peer'] = peer                
+                sa_cache_dict['peer'] = peer
                 if not peer_as or peer_as != '?':
                     sa_cache_dict['peer_as'] = int(peer_as)
-
 
                 sa_cache_dict.setdefault('origin_rp', {})\
                     .setdefault(rp_address, {})\
@@ -509,7 +501,7 @@ class ShowIpMsdpSaCache(ShowIpMsdpSaCacheSchema):
 
                 continue
 
-            # Learned from peer 10.1.100.4, RPF peer 10.1.100.4, 
+            # Learned from peer 10.1.100.4, RPF peer 10.1.100.4,
             result = r3.match(line)
             if result:
                 group = result.groupdict()
@@ -525,7 +517,8 @@ class ShowIpMsdpSaCache(ShowIpMsdpSaCacheSchema):
                 received_dict = sa_cache_dict.setdefault('statistics', {})\
                     .setdefault('received', {})
                 received_dict['sa'] = int(group['sa_received'])
-                received_dict['encapsulated_data_received'] = int(group['encapsulated_data_received'])
+                received_dict['encapsulated_data_received'] = \
+                    int(group['encapsulated_data_received'])
 
                 continue
 
