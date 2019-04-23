@@ -44,18 +44,18 @@ class ShowIpMsdpPeerSchema(MetaParser):
                                     'filter': str,
                                     'route_map': str,}}
                         },
-                        'ttl_threshold': int,
-                        'queue': {
-                            'size_in': int,
-                            'size_out': int,
-                        },
+                        'ttl_threshold': int,                        
                         'sa_request': {
                             'input_filter': str,
-                        },
-                        'output_msg_discarded': int,
+                        },                        
                         'signature_protection': bool,
                         'statistics': {
                             'established_transitions': int,
+                            'output_msg_discarded': int,
+                            'queue': {
+                                'size_in': int,
+                                'size_out': int,
+                            },
                             'received': {
                                 'sa_message': int,
                                 'sa_request': int,
@@ -231,7 +231,7 @@ class ShowIpMsdpPeer(ShowIpMsdpPeerSchema):
             if result:
                 group = result.groupdict()
 
-                peer_dict['output_msg_discarded'] = int(group['output_msg_discarded'])
+                statistics_dict['output_msg_discarded'] = int(group['output_msg_discarded'])
 
                 continue
 
@@ -320,8 +320,7 @@ class ShowIpMsdpPeer(ShowIpMsdpPeerSchema):
             result = r12.match(line)
             if result:
                 group = result.groupdict()
-                queue_dict = peer_dict.setdefault('queue', {})
-
+                queue_dict = statistics_dict.setdefault('queue', {})
                 queue_dict['size_in'] = int(group['size_in'])
                 queue_dict['size_out'] = int(group['size_out'])
 
@@ -331,7 +330,13 @@ class ShowIpMsdpPeer(ShowIpMsdpPeerSchema):
             result = r13.match(line)
             if result:
                 group = result.groupdict()
-                peer_dict['signature_protection'] = True if group['signature_protection'].strip() == 'enabled' else False
+
+                signature_protection = group['signature_protection'].strip()
+
+                if signature_protection == 'enabled': 
+                    peer_dict['signature_protection'] = True
+                elif signature_protection == 'not enabled':
+                    peer_dict['signature_protection'] = False
 
                 continue
 
@@ -388,6 +393,7 @@ class ShowIpMsdpSaCacheSchema(MetaParser):
     schema = {
         'vrf': {
             Any(): {
+                'num_of_sa_cache': int,
                 'sa_cache': {
                     Any(): {
                         'group': str,
@@ -403,7 +409,7 @@ class ShowIpMsdpSaCacheSchema(MetaParser):
                         },
                         Optional('statistics'): {
                             'received': {
-                                'sa_received': int,
+                                'sa': int,
                                 'encapsulated_data_received': int,
                             }
                         },
@@ -432,19 +438,22 @@ class ShowIpMsdpSaCache(ShowIpMsdpSaCacheSchema):
         else:
             out = output
 
+        # MSDP Source-Active Cache - 1 entries
+        r1 = re.compile(r'MSDP\s+Source\-Active\s+Cache\s*\-\s*(?P<num_of_sa_cache>\d+)\s+entries')
+
         # (10.3.3.18, 225.1.1.1), RP 10.3.100.8, BGP/AS 3, 00:00:10/00:05:49, Peer 10.1.100.4
         # (10.1.4.15, 225.1.1.1), RP 10.1.100.1, AS ?,00:19:29/00:05:14, Peer 10.1.100.1
-        r1 = re.compile(r'\((?P<source_addr>\S+),\s*(?P<group>\S+)\),\s*RP\s*'
+        r2 = re.compile(r'\((?P<source_addr>\S+),\s*(?P<group>\S+)\),\s*RP\s*'
                         '(?P<rp_address>\S+),\s*(?:BGP\/)?AS\s*(?P<peer_as>\S+)'
                         ',\s*(?P<up_time>\S+)\/(?P<expire>\S+)\,\s*Peer\s+'
                         '(?P<peer>\S+)')
 
         # Learned from peer 10.1.100.4, RPF peer 10.1.100.4, 
-        r2 = re.compile(r'Learned\s+from\s+peer\s(?P<peer_learned_from>\S+),'
+        r3 = re.compile(r'Learned\s+from\s+peer\s(?P<peer_learned_from>\S+),'
                         '\s+RPF\s+peer\s+(?P<rpf_peer>\S+),')
 
         # SAs received: 1, Encapsulated data received: 1
-        r3 = re.compile(r'SAs\s+received:\s+(?P<sa_received>\d+),\s+Encapsulated\s+data\s+'
+        r4 = re.compile(r'SAs\s+received:\s+(?P<sa_received>\d+),\s+Encapsulated\s+data\s+'
                          'received:\s+(?P<encapsulated_data_received>\d+)')
 
         parsed_dict = {}
@@ -452,8 +461,14 @@ class ShowIpMsdpSaCache(ShowIpMsdpSaCacheSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # (10.3.3.18, 225.1.1.1), RP 10.3.100.8, BGP/AS 3, 00:00:10/00:05:49, Peer 10.1.100.4
+            # MSDP Source-Active Cache - 1 entries
             result = r1.match(line)
+            if result:
+                group = result.groupdict()
+                num_of_sa_cache = int(group['num_of_sa_cache'])
+
+            # (10.3.3.18, 225.1.1.1), RP 10.3.100.8, BGP/AS 3, 00:00:10/00:05:49, Peer 10.1.100.4
+            result = r2.match(line)
             if result:
 
                 group = result.groupdict()
@@ -466,14 +481,17 @@ class ShowIpMsdpSaCache(ShowIpMsdpSaCacheSchema):
                 up_time = group['up_time']
                 expire = group['expire']
 
-                sa_cache = '{} {}'.format(source_addr, addres_group)
+                sa_cache = '{} {}'.format(addres_group, source_addr)
 
                 if not vrf:
                     vrf = 'default'
-                
-                sa_cache_dict = parsed_dict.setdefault('vrf', {})\
-                    .setdefault(vrf, {})\
-                    .setdefault('sa_cache', {})\
+
+                vrf_dict = parsed_dict.setdefault('vrf', {})\
+                    .setdefault(vrf, {})
+
+                vrf_dict['num_of_sa_cache'] = num_of_sa_cache
+
+                sa_cache_dict = vrf_dict.setdefault('sa_cache', {})\
                     .setdefault(sa_cache, {})
 
                 sa_cache_dict['group'] = addres_group
@@ -492,7 +510,7 @@ class ShowIpMsdpSaCache(ShowIpMsdpSaCacheSchema):
                 continue
 
             # Learned from peer 10.1.100.4, RPF peer 10.1.100.4, 
-            result = r2.match(line)
+            result = r3.match(line)
             if result:
                 group = result.groupdict()
                 sa_cache_dict['peer_learned_from'] = group['peer_learned_from']
@@ -501,12 +519,12 @@ class ShowIpMsdpSaCache(ShowIpMsdpSaCacheSchema):
                 continue
 
             # SAs received: 1, Encapsulated data received: 1
-            result = r3.match(line)
+            result = r4.match(line)
             if result:
                 group = result.groupdict()
                 received_dict = sa_cache_dict.setdefault('statistics', {})\
                     .setdefault('received', {})
-                received_dict['sa_received'] = int(group['sa_received'])
+                received_dict['sa'] = int(group['sa_received'])
                 received_dict['encapsulated_data_received'] = int(group['encapsulated_data_received'])
 
                 continue
