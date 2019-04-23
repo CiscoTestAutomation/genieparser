@@ -34,6 +34,10 @@ class test_show_msdp_peer(unittest.TestCase):
                         'connect_source_address': '10.1.100.2',
                         'elapsed_time': '00:41:18',
                         'statistics': {
+                            'queue': {
+                                'size_in': 0,
+                                'size_out': 0
+                            },
                             'sent': {
                                 'data_message': 42,
                                 'sa_message': 0,
@@ -47,11 +51,11 @@ class test_show_msdp_peer(unittest.TestCase):
                                 'data_packets': 6
                             },
                             'established_transitions': 1,
+                            'output_msg_discarded': 0,
                             'error': {
                                 'rpf_failure': 27
                             }
                         },
-                        'output_msg_discarded': 0,
                         'conn_count_cleared': '00:43:22',
                         'sa_filter': {
                             'in': {
@@ -80,10 +84,6 @@ class test_show_msdp_peer(unittest.TestCase):
                         },
                         'ttl_threshold': 0,
                         'sa_learned_from': 0,
-                        'queue': {
-                            'size_in': 0,
-                            'size_out': 0
-                        },
                         'signature_protection': False
                     }
                 }
@@ -122,7 +122,7 @@ class test_show_msdp_peer(unittest.TestCase):
 
     expected_parsed_output_2 = {
         'vrf': {
-            'default': {
+            'VRF1': {
                 'peer': {
                     '10.1.100.2': {
                         'peer_as': 1,
@@ -132,6 +132,10 @@ class test_show_msdp_peer(unittest.TestCase):
                         'connect_source_address': '10.1.100.1',
                         'elapsed_time': '00:15:38',
                         'statistics': {
+                            'queue': {
+                                'size_in': 0,
+                                'size_out': 0
+                            },
                             'sent': {
                                 'data_message': 17,
                                 'sa_message': 8,
@@ -147,9 +151,9 @@ class test_show_msdp_peer(unittest.TestCase):
                             'error': {
                                 'rpf_failure': 0
                             },
-                            'established_transitions': 1
-                        },
-                        'output_msg_discarded': 0,
+                            'established_transitions': 1,
+                            'output_msg_discarded': 0,
+                        },                        
                         'conn_count_cleared': '00:15:38',
                         'sa_filter': {
                             'in': {
@@ -178,10 +182,6 @@ class test_show_msdp_peer(unittest.TestCase):
                         },
                         'ttl_threshold': 0,
                         'sa_learned_from': 0,
-                        'queue': {
-                            'size_in': 0,
-                            'size_out': 0
-                        },
                         'signature_protection': False
                     }
                 }
@@ -231,7 +231,7 @@ class test_show_msdp_peer(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.device_output_2)
         obj = ShowIpMsdpPeer(device=self.device)
-        parsed_output = obj.parse()
+        parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output, self.expected_parsed_output_2)
 
     def test_test_show_msdp_peer_empty(self):
@@ -254,8 +254,9 @@ class test_show_msdp_sa_cache(unittest.TestCase):
     expected_parsed_output_1 = {
         'vrf': {
             'default': {
+                'num_of_sa_cache': 1,
                 'sa_cache': {
-                    '10.3.3.18 225.1.1.1': {
+                    '225.1.1.1 10.3.3.18': {
                         'group': '225.1.1.1',
                         'source_addr': '10.3.3.18',
                         'up_time': '00:00:10',
@@ -269,7 +270,7 @@ class test_show_msdp_sa_cache(unittest.TestCase):
                         'rpf_peer': '10.1.100.4',
                         'statistics': {
                             'received': {
-                                'sa_received': 1,
+                                'sa': 1,
                                 'encapsulated_data_received': 1}}}}}}}
 
     device_output_1 = {'execute.return_value': '''
@@ -283,8 +284,9 @@ class test_show_msdp_sa_cache(unittest.TestCase):
     expected_parsed_output_2 = {
         'vrf': {
             'default': {
+                'num_of_sa_cache': 1,
                 'sa_cache': {
-                    '10.1.4.15 225.1.1.1': {
+                    '225.1.1.1 10.1.4.15': {
                         'group': '225.1.1.1',
                         'source_addr': '10.1.4.15',
                         'up_time': '00:19:29',
@@ -299,7 +301,7 @@ class test_show_msdp_sa_cache(unittest.TestCase):
                         'rpf_peer': '10.1.100.1',
                         'statistics': {
                             'received': {
-                                'sa_received': 14,
+                                'sa': 14,
                                 'encapsulated_data_received': 0}}}}}}}
 
     device_output_2 = {'execute.return_value': '''
@@ -313,8 +315,9 @@ class test_show_msdp_sa_cache(unittest.TestCase):
     expected_parsed_output_3 = {
         'vrf': {
             'default': {
+                'num_of_sa_cache': 8,
                 'sa_cache': {
-                    '10.44.44.5 239.232.1.0': {
+                    '239.232.1.0 10.44.44.5': {
                         'group': '239.232.1.0',
                         'source_addr': '10.44.44.5',
                         'up_time': '00:01:20',
@@ -327,7 +330,7 @@ class test_show_msdp_sa_cache(unittest.TestCase):
                             }
                         }
                     },
-                    '10.44.44.5 239.232.1.1': {
+                    '239.232.1.1 10.44.44.5': {
                         'group': '239.232.1.1',
                         'source_addr': '10.44.44.5',
                         'up_time': '00:01:20',
@@ -340,7 +343,7 @@ class test_show_msdp_sa_cache(unittest.TestCase):
                             }
                         }
                     },
-                    '10.44.44.5 239.232.1.2': {
+                    '239.232.1.2 10.44.44.5': {
                         'group': '239.232.1.2',
                         'source_addr': '10.44.44.5',
                         'up_time': '00:01:19',
@@ -353,7 +356,7 @@ class test_show_msdp_sa_cache(unittest.TestCase):
                             }
                         }
                     },
-                    '10.44.44.5 239.232.1.3': {
+                    '239.232.1.3 10.44.44.5': {
                         'group': '239.232.1.3',
                         'source_addr': '10.44.44.5',
                         'up_time': '00:01:19',
@@ -366,7 +369,7 @@ class test_show_msdp_sa_cache(unittest.TestCase):
                             }
                         }
                     },
-                    '10.44.44.5 239.232.1.4': {
+                    '239.232.1.4 10.44.44.5': {
                         'group': '239.232.1.4',
                         'source_addr': '10.44.44.5',
                         'up_time': '00:01:19',
@@ -379,7 +382,7 @@ class test_show_msdp_sa_cache(unittest.TestCase):
                             }
                         }
                     },
-                    '10.44.44.5 239.232.1.5': {
+                    '239.232.1.5 10.44.44.5': {
                         'group': '239.232.1.5',
                         'source_addr': '10.44.44.5',
                         'up_time': '00:01:19',
@@ -392,7 +395,7 @@ class test_show_msdp_sa_cache(unittest.TestCase):
                             }
                         }
                     },
-                    '10.44.44.5 239.232.1.6': {
+                    '239.232.1.6 10.44.44.5': {
                         'group': '239.232.1.6',
                         'source_addr': '10.44.44.5',
                         'up_time': '00:01:19',
@@ -405,7 +408,7 @@ class test_show_msdp_sa_cache(unittest.TestCase):
                             }
                         }
                     },
-                    '10.44.44.5 239.232.1.7': {
+                    '239.232.1.7 10.44.44.5': {
                         'group': '239.232.1.7',
                         'source_addr': '10.44.44.5',
                         'up_time': '00:01:19',
