@@ -7,6 +7,35 @@
 
 
 --------------------------------------------------------------------------------
+                                   POLICY-MAP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowPolicyMapControlPlane for:
+        show policy-map control-plane
+    * Add ShowPolicyMapInterface for:
+        show policy-map interface {interface}
+        show policy-map interface
+    * Add ShowPolicyMapInterfaceInput for:
+        show policy-map interface {interface} input class {class_name}
+        show policy-map interface {interface} input
+    * Add ShowPolicyMapInterfaceOutput for:
+        show policy-map interface {interface} output class {class_name}
+        show policy-map interface {interface} output
+    * Add ShowPolicyMapInterfaceClass for:
+        show policy-map interface class {class_name}
+    * Add ShowPolicyMapTargetClass for:
+        show policy-map target service-group {num}
+    * Add ShowPolicyMap for :
+        show policy-map
+        show policy-map {name}
+
+--------------------------------------------------------------------------------
+                                   BGP
+--------------------------------------------------------------------------------
+* IOSXE
+  * Removed support for cmd in SuperParser classes
+
+--------------------------------------------------------------------------------
                                    ISIS
 --------------------------------------------------------------------------------
 * IOSXR
@@ -532,6 +561,10 @@
     * Add ShowIpv6Rip for:
         show ipv6 rip
         show ipv6 rip vrf {vrf}
+* IOSXR
+    * Add ShowRipStatistics for:
+        show rip statistics
+        show rip vrf {vrf} statistics
 
 --------------------------------------------------------------------------------
                                 PREFIX_LIST
