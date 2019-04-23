@@ -8,7 +8,6 @@ IOSXE parsers for the following commands
     * 'show ip eigrp neighbors detail'
     * 'show ip eigrp vrf <vrf> neighbors detail'
     * 'show ipv6 eigrp neighbors detail'
-    * 'show ipv6 eigrp vrf <vrf> neighbors detail'
 '''
 
 # Python
@@ -27,7 +26,7 @@ class ShowEigrpNeighborsSchema(MetaParser):
         * 'show ip eigrp neighbors'
         * 'show ip eigrp vrf <vrf> neighbors'
         * 'show ipv6 eigrp neighbors'
-        * 'show ipv6 eigrp vrf <vrf> neighbors
+        * 'show ipv6 eigrp vrf <vrf> neighbors'
     '''
 
     schema = {
@@ -76,6 +75,7 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
             '*Neighbors\s*for \w+\(\s*(?P<as_num>\d+)\)\s*(?:VRF\((?P<vrf>\S+)\))?$')
 
         # EIGRP-IPv6 VR(test) Address-Family Neighbors for AS(100)
+        # EIGRP-IPv4 VR(test) Address-Family Neighbors for AS(100) VRF(VRF1)
         r2 = re.compile('^EIGRP\-(?P<address_family>IPv4|IPv6)\s* '
                         'VR\s*\((?P<name>\S+)\) Address-Family Neighbors\s'
                         '*for \w+\(\s*(?P<as_num>\d+)\)\s*'
@@ -88,7 +88,7 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
         # 1   10.1.2.3     Gi0/1      11    00:20:39  2202   5000   0   5
         r3 = re.compile(r'^(?P<peer_handle>\d+) +'
                         '(?P<nbr_address>\S+) +'
-                        '(?P<eigrp_interface>[A-Za-z]+\s*[\d\/]+) +'
+                        '(?P<eigrp_interface>[A-Za-z]+\s*[\.\d\/]+) +'
                         '(?P<hold>\d+) +(?P<uptime>\S+) +'
                         '(?P<srtt>\d+) +'
                         '(?P<rto>\d+) +'
@@ -123,21 +123,19 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
             if result:
 
                 group = result.groupdict()
-
-                name = group.get('name', '') 
-                named_mode = True if name else False
+                name = group.get('name', '')
                 vrf = group['vrf']
                 address_family = group['address_family'].lower()
                 eigrp_instance = group['as_num']
 
             # EIGRP-IPv6 VR(test) Address-Family Neighbors for AS(100)
+            # EIGRP-IPv4 VR(test) Address-Family Neighbors for AS(100) VRF(VRF1)
             result = r2.match(line)
             if result:
 
                 group = result.groupdict()
 
-                name = group['name']
-                named_mode = True if name else False
+                name = group['name']                
                 vrf = group['vrf']
                 address_family = group['address_family'].lower()
                 eigrp_instance = group['as_num']
@@ -159,8 +157,10 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
                 if not eigrp_instance:
                     eigrp_instance = ''
 
-                if not name == '':
+                if not name:
                     named_mode = False
+                else:
+                    named_mode = True
 
                 eigrp_interface = Common.convert_intf_name\
                     (intf=group['eigrp_interface'])
@@ -191,8 +191,7 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
                 ip_dict['last_seq_number'] = int(group['last_seq_number'])
 
             # 1   Link Local Address:     Gi0/0/0/1.90      12 01:36:14   11   200  0  28
-            result = r4.match(line)
-            
+            result = r4.match(line)            
             if result:
 
                 group = result.groupdict()
@@ -231,6 +230,11 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
                     .setdefault(vrf, {})\
                     .setdefault('address_family', {})\
                     .setdefault(address_family, {})
+
+                if not name:
+                    named_mode = False
+                else:
+                    named_mode = True
 
                 address_family_dict['name'] = name
                 address_family_dict['named_mode'] = named_mode
@@ -305,8 +309,7 @@ class ShowIpEigrpNeighborsDetailSchema(MetaParser):
     ''' Schema for
         * 'show ip eigrp neighbors detail'
         * 'show ip eigrp vrf <vrf> neighbors detail'
-        * 'show ipv6 eigrp neighbors detail'
-        * 'show ipv6 eigrp vrf <vrf> neighbors detail'
+        * 'show ipv6 eigrp neighbors detail'        
     '''
 
     schema = {
@@ -355,7 +358,6 @@ class ShowIpEigrpNeighborsDetailSchema(MetaParser):
 #       'show ip eigrp neighbors detail'
 #       'show ip eigrp vrf <vrf> neighbors detail'
 #       'show ipv6 eigrp neighbors detail'
-#       'show ipv6 eigrp vrf <vrf> neighbors detail'
 # ===========================================
 class ShowIpEigrpNeighborsDetailSuperParser(ShowIpEigrpNeighborsDetailSchema):
 
@@ -380,7 +382,7 @@ class ShowIpEigrpNeighborsDetailSuperParser(ShowIpEigrpNeighborsDetailSchema):
         # 1     10.1.2.3    Gi0/1       11      00:20:39 2202   5000    0       5
         r3 = re.compile(r'^(?P<peer_handle>\d+) +'
                         '(?P<nbr_address>\S+) +'
-                        '(?P<eigrp_interface>[A-Za-z]+\s*[\d\/]+) +'
+                        '(?P<eigrp_interface>[A-Za-z]+\s*[\.\d\/]+) +'
                         '(?P<hold>\d+) +(?P<uptime>\S+) +'
                         '(?P<srtt>\d+) +'
                         '(?P<rto>\d+) +'
@@ -611,7 +613,7 @@ class ShowIpEigrpNeighborsDetail(ShowIpEigrpNeighborsDetailSuperParser,
     #   'show ip eigrp neighbors detail'
     #   'show ip eigrp vrf <vrf> neighbors detail'
 
-    cli_command = ['show ip eigrp vrf <vrf> neighbors detail',
+    cli_command = ['show ip eigrp vrf {vrf} neighbors detail',
                    'show ip eigrp neighbors detail',]
 
     def cli(self, vrf='', output=None):
@@ -631,21 +633,14 @@ class ShowIpv6EigrpNeighborsDetail(ShowIpEigrpNeighborsDetailSuperParser,
                                    ShowIpEigrpNeighborsDetailSchema):
 
     # Parser for:
-    #   'show ipv6 eigrp neighbors detail'
-    #   'show ipv6 eigrp vrf <vrf> neighbors detail'
+    #   'show ipv6 eigrp neighbors detail'    
 
-    cli_command = ['show ipv6 eigrp vrf <vrf> neighbors detail',
-                   'show ipv6 eigrp neighbors detail',]
+    cli_command = 'show ipv6 eigrp neighbors detail'
 
-    def cli(self, vrf='', output=None):
-        if output is None:
-            if vrf:
-                cmd = self.cli_command[0].format(vrf=vrf)
-            else:
-                cmd = self.cli_command[1]
-            show_output = self.device.execute(cmd)
-
+    def cli(self, output=None):
+        if output is None:            
+            show_output = self.device.execute(self.cli_command)
         else:
             show_output = output
 
-        return super().cli(output=show_output, vrf=vrf)
+        return super().cli(output=show_output, vrf='default')
