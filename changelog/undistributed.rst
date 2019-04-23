@@ -63,6 +63,9 @@
 * IOSXE
   * ShowBgpNeighborSuperParser enhanced to support 'Multisession Capability'
   * Updated ShowBgpAllNeighbors to support different session states
+* NXOS
+  * Add ShowBgpL2vpnEvpnNeighborsAdvertisedRoutes for:
+    show bgp l2vpn evpn neighbors {neighbor} advertised-routes
 
 ----------------------------------------------------------------------------------
                                   EIGRP
