@@ -19,7 +19,6 @@ class test_show_msdp_peer(unittest.TestCase):
         show ip msdp peer
         show ip msdp vrf <vrf> peer
     '''
-
     device = Device(name='aDevice')
 
     expected_parsed_output_1 = {
@@ -84,12 +83,7 @@ class test_show_msdp_peer(unittest.TestCase):
                         },
                         'ttl_threshold': 0,
                         'sa_learned_from': 0,
-                        'signature_protection': False
-                    }
-                }
-            }
-        }
-    }
+                        'signature_protection': False}}}}}
 
     device_output_1 = {'execute.return_value': '''
     Router# show ip msdp peer
@@ -182,12 +176,7 @@ class test_show_msdp_peer(unittest.TestCase):
                         },
                         'ttl_threshold': 0,
                         'sa_learned_from': 0,
-                        'signature_protection': False
-                    }
-                }
-            }
-        }
-    }
+                        'signature_protection': False}}}}}
 
     device_output_2 = {'execute.return_value': '''
     Router# show ip msdp vrf VRF1 peer
@@ -248,7 +237,6 @@ class test_show_msdp_sa_cache(unittest.TestCase):
         show ip msdp sa-cache
         show ip msdb vrf <vrf> sa-cache
     '''
-
     device = Device(name='aDevice')
 
     expected_parsed_output_1 = {
