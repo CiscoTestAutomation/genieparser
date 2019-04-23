@@ -2312,8 +2312,8 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                             Optional('min_holdtime'): int,
                             },
                         'bgp_negotiated_capabilities':
-                            {'route_refresh': str,
-                            'four_octets_asn': str,
+                            {Optional('route_refresh'): str,
+                            Optional('four_octets_asn'): str,
                             'enhanced_refresh': str,
                             Optional('vpnv4_unicast'): str,
                             Optional('vpnv6_unicast'): str,
