@@ -11114,72 +11114,7 @@ class test_show_bgp_all_neighbors(unittest.TestCase):
 
         For address family: VPNv6 Multicast
         '''}
-    golden_parsed_output5 = {
-        'list_of_neighbors': ['192.168.10.253'],
-        'vrf': {
-            'L3VPN-0066': {
-                'neighbor': {
-                    '192.168.10.253': {
-                        'remote_as': 60015,
-                        'link': 'external',
-                        'shutdown': False,
-                        'bgp_version': 4,
-                        'router_id': '0.0.0.0',
-                        'session_state': 'Idle',
-                        'bgp_negotiated_keepalive_timers': {
-                            'hold_time': 90,
-                            'keepalive_interval': 30,
-                            'min_holdtime': 15,
-                            },
-                        'bgp_neighbor_session': {
-                            'sessions': 0,
-                            'stateful_switchover': 'NO',
-                            },
-                        'bgp_session_transport': {
-                            'min_time_between_advertisement_runs': 0,
-                            'address_tracking_status': 'enabled',
-                            'rib_route_ip': '192.168.10.253',
-                            'connection': {
-                                'established': 0,
-                                'dropped': 0,
-                                'last_reset': 'never',
-                                },
-                            'tcp_path_mtu_discovery': 'enabled',
-                            'graceful_restart': 'enabled',
-                            'gr_restart_time': 120,
-                            'gr_stalepath_time': 360,
-                            'sso': False,
-                            'tcp_connection': False,
-                            },
-                        },
-                    },
-                },
-            },
-        }
-    golden_output5 = {'execute.return_value': '''
-    BGP neighbor is 192.168.10.253,  vrf L3VPN-0066,  remote AS 60015, external link
-  BGP version 4, remote router ID 0.0.0.0
-  BGP state = Idle, down for never
-  Configured hold time is 90, keepalive interval is 30 seconds
-  Minimum holdtime from neighbor is 15 seconds
-  Neighbor sessions:
-    0 active, is not multisession capable (disabled)
-    Stateful switchover support enabled: NO
-  Do log neighbor state changes (via global configuration)
-  Default minimum time between advertisement runs is 0 seconds
 
-  Address tracking is enabled, the RIB does have a route to 192.168.10.253
-  Route to peer address reachability Up: 1; Down: 0
-    Last notification 3d21h
-  Connections established 0; dropped 0
-  Last reset never
-  External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
-  Interface associated: (none) (peering address NOT in same link)
-  Transport(tcp) path-mtu-discovery is enabled
-  Graceful-Restart is enabled, restart-time 120 seconds, stalepath-time 360 seconds
-  SSO is disabled
-  No active TCP connection
-    '''}
     def test_show_bgp_all_neighbors_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpAllNeighbors(device=self.device)
@@ -11213,13 +11148,6 @@ class test_show_bgp_all_neighbors(unittest.TestCase):
         obj = ShowBgpAllNeighbors(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output4)
-
-    def test_show_bgp_all_neighbors_golden5(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output5)
-        obj = ShowBgpAllNeighbors(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output5)
 
 
 # =================================================================
