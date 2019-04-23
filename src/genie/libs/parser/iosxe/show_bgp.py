@@ -2249,7 +2249,7 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                         'bgp_version': int,
                         'router_id': str,
                         'session_state': str,
-                        'address_family':
+                        Optional('address_family'):
                             {Any():
                                 {Optional('session_state'): str,
                                 Optional('up_time'): str,
@@ -2311,7 +2311,11 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                             'hold_time': int,
                             Optional('min_holdtime'): int,
                             },
-                        'bgp_negotiated_capabilities':
+                        'bgp_neighbor_session': {
+                            'sessions': int,
+                            Optional('stateful_switchover'): str,
+                        },
+                        Optional('bgp_negotiated_capabilities'):
                             {'route_refresh': str,
                             'four_octets_asn': str,
                             'enhanced_refresh': str,
@@ -2331,7 +2335,7 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                             Optional('remote_restart_timer'): int,
                             Optional('graceful_restart_af_advertised_by_peer'): list,
                             },
-                        'bgp_neighbor_counters':
+                        Optional('bgp_neighbor_counters'):
                             {'messages':
                                 {'sent':
                                     {'opens': int,
@@ -3031,20 +3035,26 @@ class ShowBgpNeighborSuperParser(MetaParser):
                 timers_dict['min_holdtime'] = int(m.groupdict()['min_holdtime'])
                 continue
             
+            # Neighbor sessions:
             m = p7_4.match(line)
             if m:
+                neighbor_type = 'neighbor_session'
+                nbr_session_dict = nbr_dict.\
+                                setdefault('bgp_neighbor_session', {})
+                continue
                 
-                
-            # Neighbor sessions:
             #  1 active, is not multisession capable (disabled)
             m = p8.match(line)
             if m:
                 neighbor_active_sessions = int(m.groupdict()['sessions'])
+                if neighbor_type == 'neighbor_session':
+                    nbr_session_dict.update({'sessions': neighbor_active_sessions})
                 continue
 
             # Neighbor capabilities:
             m = p9.match(line)
             if m:
+                neighbor_type = 'neighbor_capabilities'
                 nbr_cap_dict = nbr_dict.\
                                 setdefault('bgp_negotiated_capabilities', {})
                 continue
@@ -3111,7 +3121,10 @@ class ShowBgpNeighborSuperParser(MetaParser):
             # Stateful switchover support enabled: NO for session 1
             m = p18.match(line)
             if m:
-                nbr_cap_dict['stateful_switchover'] = m.groupdict()['value']
+                if neighbor_type == 'neighbor_session':
+                    nbr_session_dict['stateful_switchover'] = m.groupdict()['value']
+                elif neighbor_type == 'neighbor_capabilities':
+                    nbr_cap_dict['stateful_switchover'] = m.groupdict()['value']
                 continue
 
             # Message statistics:
