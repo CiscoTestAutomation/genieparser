@@ -2314,11 +2314,13 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                         Optional('bgp_negotiated_capabilities'):
                             {Optional('route_refresh'): str,
                             Optional('four_octets_asn'): str,
-                            'enhanced_refresh': str,
+                            Optional('enhanced_refresh'): str,
                             Optional('vpnv4_unicast'): str,
                             Optional('vpnv6_unicast'): str,
                             Optional('ipv4_unicast'): str,
                             Optional('ipv6_unicast'): str,
+                            Optional('ipv4_multicast'): str,
+                            Optional('ipv4_mdt'):str,
                             Optional('l2vpn_vpls'): str,
                             Optional('vpnv4_multicast'): str,
                             Optional('vpnv6_multicast'): str,
@@ -2326,13 +2328,13 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                             Optional('mvpnv6_multicast'): str,
                             Optional('l2vpn_evpn'): str,
                             Optional('multisession'): str,
-                            'stateful_switchover': str,
+                            Optional('stateful_switchover'): str,
                             Optional('graceful_restart'): str,
                             Optional('remote_restart_timer'): int,
                             Optional('graceful_restart_af_advertised_by_peer'): list,
                             },
                             Optional('bgp_neighbor_session'): {
-                            'sessions': int,
+                             Optional('sessions'): int,
                             Optional('stateful_switchover'): str,
                         },
                         Optional('bgp_neighbor_counters'):
@@ -2416,7 +2418,7 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                             Optional('option_flags'): str,
                             Optional('ip_precedence_value'): int,
                             Optional('datagram'):
-                                {'datagram_sent':
+                                {Optional('datagram_sent'):
                                     {'value': int,
                                     'retransmit': int,
                                     'fastretransmit': int,
@@ -2579,7 +2581,7 @@ class ShowBgpNeighborSuperParser(MetaParser):
         # Neighbor sessions:
         #  1 active, is not multisession capable (disabled)
         p8 = re.compile(r'^(?P<sessions>(\d+)) active,(?: +is +not +multisession'
-                         ' +capable +\(disabled\))?$')
+                         ' +capable( +\(disabled\))?)?$')
 
         # Neighbor capabilities:
         p9 = re.compile(r'^Neighbor +capabilities:$')

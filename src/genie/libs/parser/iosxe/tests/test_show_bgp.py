@@ -11114,7 +11114,7 @@ class test_show_bgp_all_neighbors(unittest.TestCase):
 
         For address family: VPNv6 Multicast
         '''}
-
+        
     def test_show_bgp_all_neighbors_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpAllNeighbors(device=self.device)
@@ -11148,6 +11148,7 @@ class test_show_bgp_all_neighbors(unittest.TestCase):
         obj = ShowBgpAllNeighbors(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output4)
+
 
 
 # =================================================================
