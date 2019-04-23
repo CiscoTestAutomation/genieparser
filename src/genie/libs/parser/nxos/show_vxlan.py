@@ -1317,6 +1317,9 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
         #            Sent To: BGP
         #            SOO: 774975538
         #            L3-Info: 10001
+        # 101         fa16.3ed1.37b5 HMM    --            0          100.101.1.3    Local
+        # 101         fa16.3e04.e54a BGP    --            0          100.101.8.3    66.66.66.66 
+        # 101         0011.0000.0034 BGP  5.1.3.2                      40.0.0.2
         p1 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<mac_ip_prod_type>[\w\,]+)'
                         '( +(?P<mac_ip_flags>[\w\,\-]+))?( +(?P<seq_num>[\d]+))? +(?P<host_ip>[\w\/\.]+)'
                         ' +(?P<next_hop1>[\w\/\.]+)$')
@@ -1324,12 +1327,10 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
         p2 = re.compile(r'^\s*Sent +To: +(?P<sent_to>[\w]+)$')
         p3 = re.compile(r'^\s*SOO: +(?P<soo>[\d]+)$')
         p4 = re.compile(r'^\s*L3-Info: +(?P<l3_info>[\d]+)$')
+
         # Topology    Mac Address    Host IP         Prod   Flags         Seq No     Next-Hops
         # ----------- -------------- --------------- ------ ---------- ---------------
         # 101         0000.9cfc.2596 10.111.1.3     BGP    --            0         10.76.23.23
-        # 101         fa16.3ed1.37b5 HMM    --            0          100.101.1.3    Local
-        # 101         fa16.3e04.e54a BGP    --            0          100.101.8.3    66.66.66.66 
-        # 101         0011.0000.0034 BGP  5.1.3.2                      40.0.0.2
         p5 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<host_ip>[\w\/\.]+)'
                         ' +(?P<mac_ip_prod_type>[\w\,]+)'
                         ' +(?P<mac_ip_flags>[\w\,\-]+) +(?P<seq_num>[\d]+)'
