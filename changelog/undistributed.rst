@@ -93,6 +93,10 @@
   * ShowBgpNeighborSuperParser enhanced to support 'Multisession Capability'
   * Updated ShowBgpAllNeighbors to support different session states
 
+* NXOS
+  * Add ShowBgpVrfIpv4Unicast for:
+      * show bgp vrf <vrf> ipv4 unicast
+
 ----------------------------------------------------------------------------------
                                   EIGRP
 ----------------------------------------------------------------------------------
@@ -213,6 +217,9 @@
     * Add ShowInterfacesStats for:
         show interface <interface> stats
         show interface stats
+
+* IOSXE
+    * Update ShowInterfaces to support carrier delay
 
 --------------------------------------------------------------------------------
                                   LISP
@@ -361,6 +368,11 @@
     * Add ShowIpv6RouteWord for:
         show ipv6 route <Hostname or A.B.C.D>
         show ipv6 route vrf <vrf> <Hostname or A.B.C.D>
+* NXOS
+    * Updated ShowIpRoute for:
+        show ip route
+        show ip route vrf {vrf}
+        show ip route vrf all
 
 --------------------------------------------------------------------------------
                                    ISSU
@@ -562,6 +574,9 @@
         show ipv6 rip
         show ipv6 rip vrf {vrf}
 * IOSXR
+    * Add ShowRip for:
+        show rip
+        show rip vrf {vrf}
     * Add ShowRipStatistics for:
         show rip statistics
         show rip vrf {vrf} statistics
@@ -580,3 +595,10 @@
 * NXOS
     * Add ShowL2routeEvpnMac for:
         show l2route evpn mac evi {evi}
+
+--------------------------------------------------------------------------------
+                                VXLAN
+--------------------------------------------------------------------------------
+* NXOS
+    * Add ShowL2routeEvpnMacIpEvi for:
+        show l2route evpn mac-ip evi <evi>

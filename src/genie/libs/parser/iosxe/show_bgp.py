@@ -2249,7 +2249,7 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                         'bgp_version': int,
                         'router_id': str,
                         'session_state': str,
-                        'address_family':
+                        Optional('address_family'):
                             {Any():
                                 {Optional('session_state'): str,
                                 Optional('up_time'): str,
@@ -2306,19 +2306,21 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                                     },
                                 },
                             },
-                        'bgp_negotiated_keepalive_timers':
+                        Optional('bgp_negotiated_keepalive_timers'):
                             {'keepalive_interval': int,
                             'hold_time': int,
                             Optional('min_holdtime'): int,
                             },
-                        'bgp_negotiated_capabilities':
-                            {'route_refresh': str,
-                            'four_octets_asn': str,
-                            'enhanced_refresh': str,
+                        Optional('bgp_negotiated_capabilities'):
+                            {Optional('route_refresh'): str,
+                            Optional('four_octets_asn'): str,
+                            Optional('enhanced_refresh'): str,
                             Optional('vpnv4_unicast'): str,
                             Optional('vpnv6_unicast'): str,
                             Optional('ipv4_unicast'): str,
                             Optional('ipv6_unicast'): str,
+                            Optional('ipv4_multicast'): str,
+                            Optional('ipv4_mdt'):str,
                             Optional('l2vpn_vpls'): str,
                             Optional('vpnv4_multicast'): str,
                             Optional('vpnv6_multicast'): str,
@@ -2326,12 +2328,16 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                             Optional('mvpnv6_multicast'): str,
                             Optional('l2vpn_evpn'): str,
                             Optional('multisession'): str,
-                            'stateful_switchover': str,
+                            Optional('stateful_switchover'): str,
                             Optional('graceful_restart'): str,
                             Optional('remote_restart_timer'): int,
                             Optional('graceful_restart_af_advertised_by_peer'): list,
                             },
-                        'bgp_neighbor_counters':
+                            Optional('bgp_neighbor_session'): {
+                             Optional('sessions'): int,
+                            Optional('stateful_switchover'): str,
+                        },
+                        Optional('bgp_neighbor_counters'):
                             {'messages':
                                 {'sent':
                                     {'opens': int,
@@ -2412,7 +2418,7 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                             Optional('option_flags'): str,
                             Optional('ip_precedence_value'): int,
                             Optional('datagram'):
-                                {'datagram_sent':
+                                {Optional('datagram_sent'):
                                     {'value': int,
                                     'retransmit': int,
                                     'fastretransmit': int,
@@ -2570,12 +2576,15 @@ class ShowBgpNeighborSuperParser(MetaParser):
                            ' +(?P<min_holdtime>(\d+)) +seconds$')
 
         # Neighbor sessions:
+        p7_4 = re.compile(r'^Neighbor +sessions:+$')
+
+        # Neighbor sessions:
         #  1 active, is not multisession capable (disabled)
         p8 = re.compile(r'^(?P<sessions>(\d+)) active,(?: +is +not +multisession'
-                         ' +capable +\(disabled\))?$')
+                         ' +capable( +\(disabled\))?)?$')
 
         # Neighbor capabilities:
-        p9 = re.compile(r'^Neighbor capabilities:$')
+        p9 = re.compile(r'^Neighbor +capabilities:$')
 
         #  Route refresh: advertised and received(new)
         p10 = re.compile(r'^Route +refresh: +(?P<route_refresh>(.*))$')
@@ -3030,15 +3039,26 @@ class ShowBgpNeighborSuperParser(MetaParser):
                 continue
 
             # Neighbor sessions:
+            m = p7_4.match(line)
+            if m:
+                neighbor_type = 'neighbor_session'
+                nbr_session_dict = nbr_dict.\
+                                setdefault('bgp_neighbor_session', {})
+                continue
+
             #  1 active, is not multisession capable (disabled)
             m = p8.match(line)
             if m:
                 neighbor_active_sessions = int(m.groupdict()['sessions'])
+                if neighbor_type == 'neighbor_session':
+                    nbr_session_dict.update({'sessions': neighbor_active_sessions})
                 continue
+
 
             # Neighbor capabilities:
             m = p9.match(line)
             if m:
+                neighbor_type = 'neighbor_capabilities'
                 nbr_cap_dict = nbr_dict.\
                                 setdefault('bgp_negotiated_capabilities', {})
                 continue
@@ -3105,7 +3125,10 @@ class ShowBgpNeighborSuperParser(MetaParser):
             # Stateful switchover support enabled: NO for session 1
             m = p18.match(line)
             if m:
-                nbr_cap_dict['stateful_switchover'] = m.groupdict()['value']
+                if neighbor_type == 'neighbor_session':
+                    nbr_session_dict['stateful_switchover'] = m.groupdict()['value']
+                else:
+                    nbr_cap_dict['stateful_switchover'] = m.groupdict()['value']
                 continue
 
             # Message statistics:
