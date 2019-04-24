@@ -93,6 +93,10 @@
   * ShowBgpNeighborSuperParser enhanced to support 'Multisession Capability'
   * Updated ShowBgpAllNeighbors to support different session states
 
+* NXOS
+  * Add ShowBgpVrfIpv4Unicast for:
+      * show bgp vrf <vrf> ipv4 unicast
+
 ----------------------------------------------------------------------------------
                                   EIGRP
 ----------------------------------------------------------------------------------
