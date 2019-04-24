@@ -15,6 +15,7 @@ NXOS parser for the following show commands:
     * show l2route mac-ip all detail
     * show l2route summary
     * show nve vni ingress-replication
+    * show l2route evpn mac-ip evi <evi>
 """
 
 # Python
@@ -2214,6 +2215,16 @@ class ShowFabricMulticastIpL2Mroute(ShowFabricMulticastIpL2MrouteSchema):
         return result_dict
 
 
+# ====================================================
+#  parser for 'show l2route evpn mac-ip evi <evi>'
+# ====================================================
+class ShowL2routeEvpnMacIpEvi(ShowL2routeMacIpAllDetail):
+    """Parser for show l2route evpn mac-ip evi <evi>"""
+    cli_command = 'show l2route evpn mac-ip evi {evi}'
 
-
-
+    def cli(self, evi, output=None):
+        if output is None:
+            show_output = self.device.execute(self.cli_command.format(evi=evi))
+        else:
+            show_output = output
+        return super().cli(output=show_output)

@@ -30,6 +30,7 @@ class TracerouteSchema(MetaParser):
                 {'hops': 
                     {Any(): 
                         {'address': str,
+                        Optional('name'): str,
                         Optional('probe_msec'): list,
                         Optional('vrf_in_name'): str,
                         Optional('vrf_out_name'): str,
@@ -120,6 +121,10 @@ class Traceroute(TracerouteSchema):
         p4 = re.compile(r'^(?P<hop>(\d+)) +(?P<address>([a-zA-Z0-9\.\:]+))'
                          '(?: +\[(?P<label_name>(MPLS)): +Label (?P<label>(\d+))'
                          ' +Exp +(?P<exp>(\d+))\])? +(?P<probe_msec>(.*))$')
+
+        # 1 p5DC5A26A.dip0.t-ipconnect.de (106.162.197.93) 0 msec *  1 msec *  0 msec
+        p5 = re.compile(r'^(?P<hop>(\d+)) +(?P<name>[\S]+)'
+                         ' +\(+(?P<address>([\d\.]+))\) +(?P<probe_msec>(.*))$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -239,6 +244,20 @@ class Traceroute(TracerouteSchema):
                                            setdefault(group['label_name'], {})
                     label_dict['label'] = group['label']
                     label_dict['exp'] = int(group['exp'])
+                continue
+
+            # 1 p5DC5A26A.dip0.t-ipconnect.de (106.162.197.93) 0 msec *  1 msec *  0 msec
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                hops_dict = tr_dict.setdefault('hops', {}).\
+                                    setdefault(group['hop'], {})
+                hops_dict['address'] = group['address']
+                hops_dict['name'] = group['name']
+                hops_dict['probe_msec'] = group['probe_msec'].strip().\
+                                            replace(" msec", "").\
+                                            replace(" ms", "").\
+                                            split()
                 continue
 
         return ret_dict
