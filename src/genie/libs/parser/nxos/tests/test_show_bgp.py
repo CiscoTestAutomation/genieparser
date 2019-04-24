@@ -14278,8 +14278,7 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                 'advertised': {}},
                             'vpnv4 unicast RD 1:100': {
                                 'bgp_table_version': 23,
-                                'rd_vrf': 'VRF',
-                                'rd_vniid': 'vpn1',
+                                'default_vrf': 'vpn1',
                                 'local_router_id': '10.186.101.1',
                                 'route_distinguisher': '1:100',
                                 'advertised': {
@@ -14305,8 +14304,7 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                                 'weight': 32768}}}}},
                             'vpnv4 unicast RD 2:100': {
                                 'bgp_table_version': 23,
-                                'rd_vrf': 'VRF',
-                                'rd_vniid': 'vpn2',
+                                'default_vrf': 'vpn2',
                                 'local_router_id': '10.186.101.1',
                                 'route_distinguisher': '2:100',
                                 'advertised': {
@@ -14336,15 +14334,13 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                 'advertised': {}},
                             'vpnv6 unicast RD 1:100':
                                 {'bgp_table_version': 7,
-                                'rd_vrf': 'VRF',
-                                'rd_vniid': 'vpn1',
+                                'default_vrf': 'vpn1',
                                 'local_router_id': '10.186.101.1',
                                 'route_distinguisher': '1:100',
                                 'advertised': {}},
                             'vpnv6 unicast RD 2:100':
                                 {'bgp_table_version': 7,
-                                'rd_vrf': 'VRF',
-                                'rd_vniid': 'vpn2',
+                                'default_vrf': 'vpn2',
                                 'local_router_id': '10.186.101.1',
                                 'route_distinguisher': '2:100',
                                 'advertised': {}}}}}}}}
@@ -14995,6 +14991,7 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowBgpVrfAllNeighborsAdvertisedRoutes(device=self.device)
         parsed_output = obj.parse(vrf='default', neighbor='10.186.0.2')
+        print(parsed_output)
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_show_bgp_vrf_all_neighbors_advertised_routes_golden2(self):
@@ -29288,8 +29285,7 @@ class test_show_bgp_l2vpn_evpn_neighbors_advertised_routes(unittest.TestCase):
                                 'bgp_table_version':156,
                                 'local_router_id':'2.2.2.2',
                                 'route_distinguisher':'2.2.2.2:32868',
-                                'default_vrf':'L2VNI',
-                                'rd_vniid':'10101',
+                                'rd_l2vni':'10101',
                                 'advertised':{  
                                     '[2]:[0]:[0]:[48]:[fa16.3e79.6bfe]:[0]:[0.0.0.0]/216':{  
                                         'index':{  
@@ -29417,8 +29413,7 @@ class test_show_bgp_l2vpn_evpn_neighbors_advertised_routes(unittest.TestCase):
                                 'bgp_table_version':156,
                                 'local_router_id':'2.2.2.2',
                                 'route_distinguisher':'2.2.2.2:32968',
-                                'default_vrf':'L2VNI',
-                                'rd_vniid':'10201',
+                                'rd_l2vni':'10201',
                                 'advertised':{  
 
                                 }
@@ -29427,8 +29422,7 @@ class test_show_bgp_l2vpn_evpn_neighbors_advertised_routes(unittest.TestCase):
                                 'bgp_table_version':156,
                                 'local_router_id':'2.2.2.2',
                                 'route_distinguisher':'2.2.2.2:32969',
-                                'default_vrf':'L2VNI',
-                                'rd_vniid':'10202',
+                                'rd_l2vni':'10202',
                                 'advertised':{  
                                     '[2]:[0]:[0]:[48]:[fa16.3e79.6bfe]:[0]:[0.0.0.0]/216':{  
                                         'index':{  
@@ -29548,8 +29542,7 @@ class test_show_bgp_l2vpn_evpn_neighbors_advertised_routes(unittest.TestCase):
                                 'bgp_table_version':156,
                                 'local_router_id':'2.2.2.2',
                                 'route_distinguisher':'2.2.2.2:3',
-                                'default_vrf':'L3VNI',
-                                'rd_vniid':'10100',
+                                'rd_l3vni':'10100',
                                 'advertised':{  
                                     '[2]:[0]:[0]:[48]:[5e00.0001.0007]:[0]:[0.0.0.0]/216':{  
                                         'index':{  
@@ -29569,8 +29562,7 @@ class test_show_bgp_l2vpn_evpn_neighbors_advertised_routes(unittest.TestCase):
                                 'bgp_table_version':156,
                                 'local_router_id':'2.2.2.2',
                                 'route_distinguisher':'2.2.2.2:4',
-                                'default_vrf':'L3VNI',
-                                'rd_vniid':'10200',
+                                'rd_l3vni':'10200',
                                 'advertised':{  
                                     '[2]:[0]:[0]:[48]:[5e00.0001.0007]:[0]:[0.0.0.0]/216':{  
                                         'index':{  

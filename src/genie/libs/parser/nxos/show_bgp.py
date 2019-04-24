@@ -4402,7 +4402,8 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutesSchema(MetaParser):
                                  Optional('local_router_id'): str,
                                  Optional('route_distinguisher'): str,
                                  Optional('default_vrf'): str,
-                                 Optional('rd_vniid'): str,
+                                 Optional('rd_l2vni'): str,
+                                 Optional('rd_l3vni'): str,
                                  Optional('advertised'): 
                                     {Optional(Any()):
                                         {Optional('index'):
@@ -4557,9 +4558,10 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
         # Network            Next Hop            Metric     LocPrf     Weight Path
         # Route Distinguisher: 100:100     (VRF VRF1)
         # Route Distinguisher: 2:100    (VRF vpn2)
-        p14 = re.compile(r'^\s*Route +Distinguisher *:'
-                        r' +(?P<route_distinguisher>(\S+))'
-                        r'(?: +\((?P<default_vrf>VRF|\w+VNI) +(?P<rd_vniid>(\S+))\))?$')
+        # Route Distinguisher: 2.2.2.2:4    (L3VNI 10200)
+        p14 = re.compile(r'^\s*Route +Distinguisher *: +(?P<route_distinguisher>'
+                        r'(\S+))(?: +\((?:VRF +(?P<default_vrf>\w+)|L2VNI +'
+                        r'(?P<rd_l2vni>\d+)|L3VNI +(?P<rd_l3vni>\d+))\))?$')
 
         for line in out.splitlines():
             line = line.rstrip()
@@ -4790,8 +4792,11 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
                 if m.groupdict()['default_vrf']: 
                     af_dict.update({'default_vrf': str(m.groupdict()['default_vrf'])})
 
-                if m.groupdict()['rd_vniid']:
-                    af_dict.update({'rd_vniid': str(m.groupdict()['rd_vniid'])})
+                if m.groupdict()['rd_l2vni']:
+                    af_dict.update({'rd_l2vni': str(m.groupdict()['rd_l2vni'])})
+
+                if m.groupdict()['rd_l3vni']:
+                    af_dict.update({'rd_l3vni': str(m.groupdict()['rd_l3vni'])})
 
                 # Reset address_family key and af_dict for use in other regex
                 address_family = new_address_family
