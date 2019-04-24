@@ -105,7 +105,7 @@ class ShowRip(ShowRipSchema):
         p5 = re.compile(r'^Version:\s+(?P<version>[\d.]+)$')
 
         # Default metric:             3
-        p6 = re.compile(r'^Default +metric:\s+(?P<default_metric>[\d\w\s]+)$')
+        p6 = re.compile(r'^Default +metric:\s+(?P<default_metric>[\w\s]+)$')
 
         # Maximum paths:              4
         p7 = re.compile(r'^Maximum +paths:\s+(?P<max_paths>\d+)$')
@@ -117,13 +117,15 @@ class ShowRip(ShowRipSchema):
         p9 = re.compile(r'^Broadcast +for +V2\??:\s+(?P<broadcast>\w+)$')
 
         # Packet source validation:  Yes
-        p10 = re.compile(r'^Packet +source +validation\??:\s+(?P<packet_validation>\w+)$')
+        p10 = re.compile(r'^Packet +source +validation\??:\s+(?P<'
+                         r'packet_validation>\w+)$')
 
         # NSF:                        Disabled
         p11 = re.compile(r'^NSF:\s+(?P<nsf>\w+)$')
 
         # Timers: Update:             10 seconds (7 seconds until next update)
-        p12 = re.compile(r'^Timers: +Update:\s+(?P<update_timer>\d+) +seconds +\((?P<next_update>\d+)[\s\w]+\)$')
+        p12 = re.compile(r'^Timers: +Update:\s+(?P<update_timer>\d+) +seconds'
+                         r' +\((?P<next_update>\d+)[\s\w]+\)$')
 
         # Invalid:            31 seconds
         p13 = re.compile(r'^Invalid:\s+(?P<invalid_timer>\d+)[\s\w]+$')
@@ -140,8 +142,10 @@ class ShowRip(ShowRipSchema):
             # RIP config:
             m = p1.match(line)
             if m:
-                instance_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {}).setdefault('address_family', {}). \
-                                        setdefault('ipv4', {}).setdefault('instance', {}).setdefault(instance, {})
+                instance_dict = ret_dict.setdefault('vrf', {}). \
+                    setdefault(vrf, {}).setdefault('address_family', {}). \
+                    setdefault('ipv4', {}).setdefault('instance', {}). \
+                    setdefault(instance, {})
                 continue
 
             # Active:                    Yes
@@ -204,7 +208,8 @@ class ShowRip(ShowRipSchema):
             m = p10.match(line)
             if m:
                 groups = m.groupdict()
-                instance_dict.update({'packet_source_validation': groups['packet_validation']})
+                instance_dict.update({'packet_source_validation': groups[
+                    'packet_validation']})
                 continue
 
             # NSF:                        Disabled
@@ -313,7 +318,7 @@ class ShowRipStatistics(ShowRipStatisticsSchema):
             out = output
 
         ret_dict = {}
-        
+
         # RIP statistics:
         p1 = re.compile(r'^RIP +statistics:$')
 
@@ -374,84 +379,84 @@ class ShowRipStatistics(ShowRipStatisticsSchema):
                 groups = m.groupdict()
                 statistics_dict.update({'total_messages_sent': int(groups['number_of_messages'])})
                 continue
-                
+
             # Message send failures:      0
             m = p3.match(line)
             if m:
                 groups = m.groupdict()
                 statistics_dict.update({'message_send_failures': int(groups['number_of_failures'])})
                 continue
-                
+
             # Regular updates sent:       2944
             m = p4.match(line)
             if m:
                 groups = m.groupdict()
                 statistics_dict.update({'regular_updates_sent': int(groups['number_of_updates'])})
                 continue
-                
+
             # Queries responsed to:       0
             m = p5.match(line)
             if m:
                 groups = m.groupdict()
                 statistics_dict.update({'queries_responsed_to': int(groups['number_of_queries'])})
                 continue
-                
+
             # RIB updates:                4365
             m = p6.match(line)
             if m:
                 groups = m.groupdict()
                 statistics_dict.update({'rib_updates': int(groups['number_of_rib_updates'])})
                 continue
-                
+
             # Total packets received:     4896
             m = p7.match(line)
             if m:
                 groups = m.groupdict()
                 statistics_dict.update({'total_packets_received': int(groups['packets_received'])})
                 continue
-                
+
             # Discarded packets:          0
             m = p8.match(line)
             if m:
                 groups = m.groupdict()
                 statistics_dict.update({'packets_discarded': int(groups['discarded_packets'])})
                 continue
-                
+
             # Discarded routes:           4760
             m = p9.match(line)
             if m:
                 groups = m.groupdict()
                 statistics_dict.update({'routes_discarded': int(groups['discarded_routes'])})
                 continue
-                
+
             # Packet received at standby: 0
             m = p10.match(line)
             if m:
                 groups = m.groupdict()
                 statistics_dict.update({'packets_received_at_standby': int(groups['packets_received'])})
                 continue
-                
+
             # Number of routes allocated: 9
             m = p11.match(line)
             if m:
                 groups = m.groupdict()
                 statistics_dict.update({'routes_allocated': int(groups['number_of_routes'])})
                 continue
-                
+
             # Number of paths allocated:  6
             m = p12.match(line)
             if m:
                 groups = m.groupdict()
                 statistics_dict.update({'paths_allocated': int(groups['number_of_paths'])})
                 continue
-                
+
             # Route malloc failures:      0
             m = p13.match(line)
             if m:
                 groups = m.groupdict()
                 statistics_dict.update({'route_malloc_failures': int(groups['route_malloc_failures'])})
                 continue
-                
+
             # Path malloc failures:       0
             m = p14.match(line)
             if m:
@@ -459,4 +464,3 @@ class ShowRipStatistics(ShowRipStatisticsSchema):
                 statistics_dict.update({'path_malloc_failures': int(groups['path_malloc_failures'])})
 
         return ret_dict
-
