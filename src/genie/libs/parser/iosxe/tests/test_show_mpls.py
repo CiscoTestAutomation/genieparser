@@ -16,7 +16,8 @@ from genie.libs.parser.iosxe.show_mpls import ShowMplsLdpParameters,\
                                               ShowMplsLdpIgpSync,\
                                               ShowMplsForwardingTable,\
                                               ShowMplsInterface, \
-                                              ShowMplsL2TransportDetail
+                                              ShowMplsL2TransportDetail, \
+                                              ShowMplsL2TransportVC
 
 class test_show_mpls_ldp_parameters(unittest.TestCase):
     dev1 = Device(name='empty')
@@ -614,120 +615,127 @@ class test_show_mpls_ldp_neighbor_detail(unittest.TestCase):
     empty_output = {'execute.return_value': '      '}
 
     golden_parsed_output = {
-    "vrf": {
-        "default": {
-            "peers": {
-                "10.169.197.252": {
-                    'label_space_id': {
-                        0: {
-                            "msg_sent": 9981,
-                            "address_bound": [
-                                "10.169.197.252",
-                                "192.168.36.49",
-                                "10.120.202.49",
-                                "192.168.36.57",
-                                "10.169.197.101",
-                                "10.169.197.93",
-                                "10.69.111.2",
-                                "10.16.190.254"
-                            ],
-                            "nsr": "Not Ready",
-                            "capabilities": {
-                                "sent":{
-                                    "ICCP":{
-                                        "type": "0x0405",
-                                        "maj_ver": 1,
-                                        "min_ver": 0,
-                                    },
-                                    "typed_wildcard": "0x050B",
-                                    "dynamic_anouncement": "0x0506",
-                                    "mldp_point_to_multipoint": "0x0508",
-                                    "mldp_multipoint_to_multipoint": "0x0509",
-                                },
-                                'received':{
-                                    "ICCP": {
-                                        "min_ver": 0,
-                                        "type": "0x0405",
-                                        "maj_ver": 1,
-                                    },
-                                    "typed_wildcard": "0x050B",
-                                    "dynamic_anouncement": "0x0506",
-                                    "mldp_point_to_multipoint": "0x0508",
-                                    "mldp_multipoint_to_multipoint": "0x0509",
-                                }
-                            },
-                            "local_ldp_ident": "10.169.197.254:0",
-                            "password": "not required, none, in use",
-                            "last_tib_rev_sent": 4103,
-                            "ldp_discovery_sources": {
-                                "interface":{
-                                    "GigabitEthernet0/0/0":{
-                                        "ip_address": {
-                                            "10.169.197.93": {
-                                                "holdtime_ms": 15000,
-                                                "hello_interval_ms": 5000
-                                            }
-                                        },
-                                    }
-                                }
-                            },
-                            "downstream": True,
-                            "msg_rcvd": 10004,
-                            "tcp_connection": "10.169.197.252.646 - 10.169.197.254.44315",
-                            "state": "oper",
-                            "uptime": "3d21h"
-                        }
-                    }
-                },
-                "10.169.197.253": {
-                    'label_space_id': {
-                        0: {
-                            "msg_sent": 9966,
-                            "address_bound": [
-                                "10.120.202.57",
-                                "10.169.197.97"
-                            ],
-                            "nsr": "Not Ready",
-                            "capabilities": {
-                                "sent": {
-                                    "ICCP":{
-                                        "min_ver": 0,
-                                        "maj_ver": 1,
-                                        "type": "0x0405"
-                                    },
-                                    "typed_wildcard": "0x050B",
-                                    "dynamic_anouncement": "0x0506",
-                                    "mldp_point_to_multipoint": "0x0508",
-                                    "mldp_multipoint_to_multipoint": "0x0509",
-                                },
-                            },
-                            "local_ldp_ident": "10.169.197.254:0",
-                            "password": "not required, none, in use",
-                            "last_tib_rev_sent": 4103,
-                            "ldp_discovery_sources": {
-                                "interface":{
-                                    "GigabitEthernet0/0/2":{
-                                        "ip_address": {
-                                            "10.169.197.97": {
-                                                "holdtime_ms": 15000,
-                                                "hello_interval_ms": 5000
-                                            },
-                                        },
-                                    }
-                                },
-                            },
-                            "downstream": True,
-                            "msg_rcvd": 9153,
-                            "tcp_connection": "10.169.197.253.646 - 10.169.197.254.34904",
-                            "state": "oper",
-                            "uptime": "3d21h"
-                        }
-                    }
-                }
-            }
-        }
+      "vrf": {
+          "default": {
+              "peers": {
+                  "10.169.197.252": {
+                      "label_space_id": {
+                          0: {
+                              "local_ldp_ident": "10.169.197.254:0",
+                              "tcp_connection": "10.169.197.252.646 - 10.169.197.254.44315",
+                              "password": "not required, none, in use",
+                              "state": "oper",
+                              "msg_sent": 9981,
+                              "msg_rcvd": 10004,
+                              "downstream": True,
+                              "last_tib_rev_sent": 4103,
+                              "uptime": "3d21h",
+                              "ldp_discovery_sources": {
+                                  "interface": {
+                                      "GigabitEthernet0/0/0": {
+                                          "ip_address": {
+                                              "10.169.197.93": {
+                                                  "holdtime_ms": 15000,
+                                                  "hello_interval_ms": 5000
+                                              }
+                                          }
+                                      }
+                                  }
+                              },
+                              "address_bound": [
+                                  "10.169.197.252",
+                                  "192.168.36.49",
+                                  "10.120.202.49",
+                                  "192.168.36.57",
+                                  "10.169.197.101",
+                                  "10.169.197.93",
+                                  "10.69.111.2",
+                                  "10.16.190.254"
+                              ],
+                              "peer_holdtime_ms": 180000,
+                              "ka_interval_ms": 60000,
+                              "peer_state": "estab",
+                              "nsr": "Not Ready",
+                              "capabilities": {
+                                  "sent": {
+                                      "ICCP": {
+                                          "type": "0x0405",
+                                          "maj_ver": 1,
+                                          "min_ver": 0
+                                      },
+                                      "dynamic_anouncement": "0x0506",
+                                      "mldp_point_to_multipoint": "0x0508",
+                                      "mldp_multipoint_to_multipoint": "0x0509",
+                                      "typed_wildcard": "0x050B"
+                                  },
+                                  "received": {
+                                      "ICCP": {
+                                          "type": "0x0405",
+                                          "maj_ver": 1,
+                                          "min_ver": 0
+                                      },
+                                      "dynamic_anouncement": "0x0506",
+                                      "mldp_point_to_multipoint": "0x0508",
+                                      "mldp_multipoint_to_multipoint": "0x0509",
+                                      "typed_wildcard": "0x050B"
+                                  }
+                              }
+                          }
+                      }
+                  },
+                  "10.169.197.253": {
+                      "label_space_id": {
+                          0: {
+                              "local_ldp_ident": "10.169.197.254:0",
+                              "tcp_connection": "10.169.197.253.646 - 10.169.197.254.34904",
+                              "password": "not required, none, in use",
+                              "state": "oper",
+                              "msg_sent": 9966,
+                              "msg_rcvd": 9153,
+                              "downstream": True,
+                              "last_tib_rev_sent": 4103,
+                              "uptime": "3d21h",
+                              "ldp_discovery_sources": {
+                                  "interface": {
+                                      "GigabitEthernet0/0/2": {
+                                          "ip_address": {
+                                              "10.169.197.97": {
+                                                  "holdtime_ms": 15000,
+                                                  "hello_interval_ms": 5000
+                                              }
+                                          }
+                                      }
+                                  }
+                              },
+                              "address_bound": [
+                                  "10.120.202.57",
+                                  "10.169.197.97"
+                              ],
+                              "peer_holdtime_ms": 180000,
+                              "ka_interval_ms": 60000,
+                              "peer_state": "estab",
+                              "nsr": "Not Ready",
+                              "capabilities": {
+                                  "sent": {
+                                      "ICCP": {
+                                          "type": "0x0405",
+                                          "maj_ver": 1,
+                                          "min_ver": 0
+                                      },
+                                      "dynamic_anouncement": "0x0506",
+                                      "mldp_point_to_multipoint": "0x0508",
+                                      "mldp_multipoint_to_multipoint": "0x0509",
+                                      "typed_wildcard": "0x050B"
+                                  }
+                              }
+                          }
+                      }
+                  }
+              }
+          }
+      }
     }
-}
+
 
     golden_output = {'execute.return_value': '''\
     Router#show mpls ldp neighbor detail
@@ -2505,7 +2513,6 @@ class test_show_mpls_interface(unittest.TestCase):
         parsed_output = obj.parse(all='all')
         self.assertEqual(parsed_output, self.golden_parsed_output_all)
 
-
 class test_show_mpls_l2transport_vc_detail(unittest.TestCase):
     dev = Device(name='dev1')
     empty_output = {'execute.return_value': '      '}
@@ -2524,10 +2531,13 @@ class test_show_mpls_l2transport_vc_detail(unittest.TestCase):
                     'default_path': 'active',
                     'imposed_label_stack': '{16}',
                     'next_hop': 'point2point',
-                    'vc_status': 'up',
                     'output_interface': 'Serial2/0/2',
                     'tunnel_label': 'imp-null',
-                    'vc_id': 1002,
+                    'vc_id': {
+                      '1002' : {
+                        'vc_status': 'up',
+                      },
+                    },
                     'preferred_path': 'not configured',
                     },
                 },
@@ -2538,17 +2548,17 @@ class test_show_mpls_l2transport_vc_detail(unittest.TestCase):
                     'peer_id': '10.2.2.2:0',
                     'remote_interface_description': 'xconnect to PE2',
                     'group_id': {
-                        'local': 0,
-                        'remote': 0,
+                        'local': '0',
+                        'remote': '0',
                         },
                     'peer_state': 'up',
                     'mtu': {
-                        'local': 1500,
-                        'remote': 1500,
+                        'local': '1500',
+                        'remote': '1500',
                         },
                     'mpls_vc_labels': {
-                        'local': 21,
-                        'remote': 16,
+                        'local': '21',
+                        'remote': '16',
                         },
                     },
                 },
@@ -2605,18 +2615,18 @@ class test_show_mpls_l2transport_vc_detail(unittest.TestCase):
             'signaling_protocol': {
                 'LDP': {
                     'mtu': {
-                        'remote': 1500,
-                        'local': 1500,
+                        'remote': '1500',
+                        'local': '1500',
                         },
                     'group_id': {
-                        'remote': 0,
-                        'local': 0,
+                        'remote': '0',
+                        'local': '0',
                         },
                     'peer_id': '10.2.2.2:0',
                     'peer_state': 'up',
                     'mpls_vc_labels': {
-                        'remote': 18,
-                        'local': 18,
+                        'remote': '18',
+                        'local': '18',
                         },
                     },
                 },
@@ -2627,8 +2637,11 @@ class test_show_mpls_l2transport_vc_detail(unittest.TestCase):
                     'imposed_label_stack': '{18}',
                     'output_interface': 'Serial2/0',
                     'next_hop': 'point2point',
-                    'vc_id': 100,
-                    'vc_status': 'up',
+                    'vc_id': {
+                      '100' : {
+                        'vc_status': 'up',
+                      },
+                    },
                     'tunnel_label': 'imp-null',
                     },
                 },
@@ -2675,6 +2688,147 @@ class test_show_mpls_l2transport_vc_detail(unittest.TestCase):
             packet drops:  receive 0, send 0
     '''}
 
+    golden_parsed_output_3 = {
+      'interface': {
+          'GigabitEthernet3': {
+              'state': 'up',
+              'line_protocol_status': 'up',
+              'protocol_status': {
+                  'Ethernet': 'up',
+                  },
+              'destination_address': {
+                  '1.1.1.1': {
+                      'vc_id': {
+                          '888': {
+                              'vc_status': 'up',
+                              },
+                          },
+                      'output_interface': 'GigabitEthernet2',
+                      'imposed_label_stack': '{32}',
+                      'preferred_path': 'not configured',
+                      'default_path': 'active',
+                      'next_hop': '10.1.2.1',
+                      },
+                  },
+              'create_time': '00:00:22',
+              'last_status_change_time': '00:00:10',
+              'last_label_fsm_state_change_time': '00:00:10',
+              'signaling_protocol': {
+                  'LDP': {
+                      'peer_id': '1.1.1.1:0',
+                      'peer_state': 'up',
+                      'targeted_hello_ip': '2.2.2.2',
+                      'id': '1.1.1.1',
+                      'status': 'UP',
+                      'mpls_vc_labels': {
+                          'local': '17',
+                          'remote': '32',
+                          },
+                      'group_id': {
+                          'local': 'n/a',
+                          'remote': '0',
+                          },
+                      'mtu': {
+                          'local': '1500',
+                          'remote': '1500',
+                          },
+                      },
+                  },
+              'graceful_restart': 'not configured and not enabled',
+              'non_stop_routing': 'not configured and not enabled',
+              'status_tlv_support': 'enabled/supported',
+              'ldp_route_enabled': 'enabled',
+              'label_state_machine': 'established, LruRru',
+              'last_status_name': {
+                  'local_dataplane': {
+                      'received': 'No fault',
+                      },
+                  'bfd_dataplane': {
+                      'received': 'Not sent',
+                      },
+                  'bfd_peer_monitor': {
+                      'received': 'No fault',
+                      },
+                  'local_ac__circuit': {
+                      'received': 'No fault',
+                      'sent': 'No fault',
+                      },
+                  'local_pw_if_circ': {
+                      'received': 'No fault',
+                      },
+                  'local_ldp_tlv': {
+                      'sent': 'No fault',
+                      },
+                  'remote_ldp_tlv': {
+                      'received': 'No fault',
+                      },
+                  'remote_ldp_adj': {
+                      'received': 'No fault',
+                      },
+                  },
+              'sequencing': {
+                  'received': 'disabled',
+                  'sent': 'disabled',
+                  },
+              'statistics': {
+                  'packets': {
+                      'received': 0,
+                      'sent': 0,
+                      },
+                  'bytes': {
+                      'received': 0,
+                      'sent': 0,
+                      },
+                  'packets_drop': {
+                      'received': 0,
+                      'seq_error': 0,
+                      'sent': 0,
+                      },
+                  },
+              },
+          },
+      }
+
+    golden_output_3 = {'execute.return_value': '''\
+      Local interface: Gi3 up, line protocol up, Ethernet up
+        Destination address: 1.1.1.1, VC ID: 888, VC status: up
+          Output interface: Gi2, imposed label stack {32}
+          Preferred path: not configured  
+          Default path: active
+          Next hop: 10.1.2.1
+        Create time: 00:00:22, last status change time: 00:00:10
+          Last label FSM state change time: 00:00:10
+        Signaling protocol: LDP, peer 1.1.1.1:0 up
+          Targeted Hello: 2.2.2.2(LDP Id) -> 1.1.1.1, LDP is UP
+          Graceful restart: not configured and not enabled
+          Non stop routing: not configured and not enabled
+          Status TLV support (local/remote)   : enabled/supported
+            LDP route watch                   : enabled
+            Label/status state machine        : established, LruRru
+            Last local dataplane   status rcvd: No fault
+            Last BFD dataplane     status rcvd: Not sent
+            Last BFD peer monitor  status rcvd: No fault
+            Last local AC  circuit status rcvd: No fault
+            Last local AC  circuit status sent: No fault
+            Last local PW i/f circ status rcvd: No fault
+            Last local LDP TLV     status sent: No fault
+            Last remote LDP TLV    status rcvd: No fault
+            Last remote LDP ADJ    status rcvd: No fault
+          MPLS VC labels: local 17, remote 32 
+          Group ID: local n/a, remote 0
+          MTU: local 1500, remote 1500
+          Remote interface description: 
+        Sequencing: receive disabled, send disabled
+        Control Word: On (configured: autosense)
+        SSO Descriptor: 1.1.1.1/888, local label: 17
+        Dataplane:
+          SSM segment/switch IDs: 8195/4097 (used), PWID: 1
+        VC statistics:
+          transit packet totals: receive 0, send 0
+          transit byte totals:   receive 0, send 0
+          transit packet drops:  receive 0, seq error 0, send 0
+    '''}
+
     def test_empty(self):
         self.dev = Mock(**self.empty_output)
         obj = ShowMplsL2TransportDetail(device=self.dev)
@@ -2694,7 +2848,155 @@ class test_show_mpls_l2transport_vc_detail(unittest.TestCase):
         obj = ShowMplsL2TransportDetail(device=self.dev)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+    
+    def test_golden_3(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output_3)
+        obj = ShowMplsL2TransportDetail(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
+
+# ============================================
+# Parser for 'show mpls l2transport vc'
+# ============================================
+class test_show_mpls_l2transport_vc(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    
+    golden_output = {'execute.return_value': 
+    '''
+    Local intf     Local circuit      Dest address    VC ID      Status    
+     -------------  ------------------ --------------- ---------- ----------
+     Se5/0          FR DLCI 55         10.0.0.1        55         UP        
+     AT4/0          ATM AAL5 0/100     10.0.0.1        100        UP        
+     AT4/0          ATM AAL5 0/200     10.0.0.1        200        UP        
+     AT4/0.300      ATM AAL5 0/300     10.0.0.1        300        UP 
+    '''
+    }
+
+    golden_output_2 = {'execute.return_value': 
+    '''
+    Load for five secs: 4%/1%; one minute: 4%; five minutes: 2%
+    Time source is hardware calendar, *17:26:56.066 GMT Mon Oct 18 2010
+
+
+    Local intf     Local circuit              Dest address    VC ID      Status    
+    -------------  -------------------------- --------------- ---------- ----------
+    VFI auto       VFI                        10.1.1.1        100         UP      
+    '''
+    }
+
+    golden_parsed_output = {
+      'interface': {
+          'Serial5/0': {
+            'destination_address': {
+              '10.0.0.1': {
+                  'vc_id': {
+                    '55': {
+                      'vc_status': 'UP',
+                      'local_circuit': 'FR DLCI 55',
+                    },
+                  },
+                },
+            },
+          },
+         'ATM4/0': {
+              'destination_address': {
+                  '10.0.0.1': {
+                      'vc_id': {
+                        '100': {
+                          'vc_status': 'UP',
+                          'local_circuit': 'ATM AAL5 0/100',
+                        },
+                        '200': {
+                          'vc_status': 'UP',
+                          'local_circuit': 'ATM AAL5 0/200',
+                        },
+                      }
+                    },
+                },
+          },
+          'ATM4/0.300': {
+              'destination_address': {
+                  '10.0.0.1': {
+                      'vc_id': {
+                        '300': {
+                          'vc_status': 'UP',
+                          'local_circuit': 'ATM AAL5 0/300',
+                        },
+                      },
+                    },
+                },
+            },
+      },
+    }
+    golden_parsed_output_2 = {
+      'interface': {
+          'VFI auto': {
+              'destination_address': {
+                  '10.1.1.1': {
+                      'vc_id': {
+                        '100' : {
+                          'vc_status': 'UP',
+                          'local_circuit': 'VFI',
+                        }
+                      },
+                    },
+                  },
+              },
+          },
+      }
+
+    golden_parsed_output_3 = {
+      'interface': {
+          'Serial0/1/0': {
+              'destination_address': {
+                  '10.0.0.1': {
+                      'vc_id': {
+                        '101': {
+                          'vc_status': 'UP',
+                          'local_circuit': 'HDLC',
+                          },
+                        },
+                  },
+              },
+          },
+        },
+      }
+
+
+    golden_output_3 = {'execute.return_value': '''
+      Local intf     Local circuit              Dest address    VC ID      Status    
+      -------------  -------------------------- --------------- ---------- ----------
+      Se0/1/0:0       HDLC                        10.0.0.1        101         UP      
+
+    '''
+    }
+    def test_empty(self):
+            self.device = Mock(**self.empty_output)
+            obj = ShowMplsL2TransportVC(device=self.device)
+            with self.assertRaises(SchemaEmptyParserError):
+                parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowMplsL2TransportVC(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowMplsL2TransportVC(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
+    def test_golden_3(self):
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowMplsL2TransportVC(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_3)
 
 if __name__ == '__main__':
     unittest.main()

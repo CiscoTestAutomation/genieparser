@@ -699,10 +699,12 @@ class ShowOspfVrfAllInclusiveNeighborDetailSchema(MetaParser):
                                 'areas': 
                                     {Any(): 
                                         {Optional('interfaces'): 
-                                            {Any(): 
-                                                {'neighbors': 
-                                                    {Any(): 
+                                            {Any(): {
+                                                'neighbors': {
+                                                    Any():
                                                         {'neighbor_router_id': str,
+                                                         Optional('bfd_enable'): bool,
+                                                         Optional('bfd_mode'): str,
                                                         'address': str,
                                                         'priority': int,
                                                         'state': str,
@@ -832,9 +834,10 @@ class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetai
                 address = str(m.groupdict()['address'])
                 continue
 
-            # In the area 0 via interface GigabitEthernet0/0/0/2 
-            p3 = re.compile(r'^In +the +area +(?P<area>(\S+)) +via +interface'
-                             ' +(?P<interface>(\S+))$')
+            # In the area 0 via interface GigabitEthernet0/0/0/2
+            # In the area 0.0.0.0 via interface GigabitEthernet0/0/0/0 , BFD enabled, Mode: Default
+            p3 = re.compile(r'^In +the +area +(?P<area>\S+) +via +interface'
+                             ' +(?P<interface>\S+)( +, +BFD +(?P<bfd_status>\w+), +Mode: (?P<mode>\w+))?$')
             m = p3.match(line)
             if m:
                 area = str(m.groupdict()['area'])
@@ -907,6 +910,14 @@ class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetai
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
                         [instance]['areas'][area][intf_type][intf_name]\
                         ['neighbors'][neighbor] = {}
+                    neighbor_dict = ret_dict['vrf'][vrf]['address_family'][af]['instance'] \
+                        [instance]['areas'][area][intf_type][intf_name] \
+                        ['neighbors'][neighbor]
+
+                if m.groupdict()['bfd_status']:
+                    neighbor_dict.update({'bfd_enable': True})
+                if m.groupdict()['mode']:
+                    neighbor_dict.update({'bfd_mode': m.groupdict()['mode']})
                 # Set sub_dict
                 sub_dict = ret_dict['vrf'][vrf]['address_family'][af]\
                             ['instance'][instance]['areas'][area][intf_type]\
@@ -1091,32 +1102,36 @@ class ShowOspfVrfAllInclusiveSchema(MetaParser):
                                     {'max_lsa': int},
                                 Optional('stub_router'): 
                                     {Optional('always'): 
-                                        {'always': bool,
-                                        'include_stub': bool,
-                                        'summary_lsa': bool,
-                                        'external_lsa': bool,
+                                        {
+                                        Optional('always'): bool,
+                                        Optional('include_stub'): bool,
+                                        Optional('summary_lsa'): bool,
+                                        Optional('external_lsa'): bool,
                                         Optional('summary_lsa_metric'): int,
                                         Optional('external_lsa_metric'): int,
                                         Optional('state'): str},
                                     Optional('on_startup'): 
-                                        {'on_startup': int,
-                                        'include_stub': bool,
-                                        'summary_lsa': bool,
-                                        'summary_lsa_metric': int,
-                                        'external_lsa': bool,
-                                        'external_lsa_metric': int,
+                                        {
+                                        Optional('on_startup'): int,
+                                        Optional('include_stub'): bool,
+                                        Optional('summary_lsa'): bool,
+                                        Optional('summary_lsa_metric'): int,
+                                        Optional('external_lsa'): bool,
+                                        Optional('external_lsa_metric'): int,
                                         'state': str},
                                     Optional('on_switchover'): 
-                                        {'on_switchover': int,
-                                        'include_stub': bool,
-                                        'summary_lsa': bool,
-                                        'summary_lsa_metric': int,
-                                        'external_lsa': bool,
-                                        'external_lsa_metric': int,
-                                        'state': str},
+                                        {
+                                        Optional('on_switchover'): int,
+                                        Optional('include_stub'): bool,
+                                        Optional('summary_lsa'): bool,
+                                        Optional('summary_lsa_metric'): int,
+                                        Optional('external_lsa'): bool,
+                                        Optional('external_lsa_metric'): int,
+                                        Optional('state'): str},
                                     Optional('on_procrestart'): 
-                                        {'on_procrestart': int,
-                                        'include_stub': bool,
+                                        {
+                                        Optional('on_procrestart'): int,
+                                        Optional('include_stub'): bool,
                                         Optional('summary_lsa'): bool,
                                         Optional('summary_lsa_metric'): int,
                                         Optional('external_lsa'): bool,

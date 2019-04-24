@@ -13,8 +13,6 @@ from genie.libs.parser.ios.show_l2vpn import ShowL2vpnVfi, \
                                              ShowEthernetServiceInstanceDetail, \
                                              ShowBridgeDomain
 
-from genie.libs.parser.iosxe.tests.test_show_l2vpn import test_show_bridge_domain as test_show_bridge_domain_iosxe
-
 class test_show_l2vpn_vfi(unittest.TestCase):
 
     device = Device(name='aDevice')
@@ -1264,7 +1262,94 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output_interface)
 
 
-class test_show_bridge_domain(test_show_bridge_domain_iosxe):
+class test_show_bridge_domain(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "bridge_domain": {
+            10: {
+                "number_of_ports_in_all": 3,
+                "bd_domain_id": 10,
+                "state": "UP",
+                "mac_learning_state": "Enabled",
+                "aging_timer": 30,
+                "member_ports": [
+                    "GigabitEthernet6 service instance 10",
+                    "GigabitEthernet7 service instance 10",
+                    "EVPN Instance 10"
+                ],
+                "mac_table": {
+                    "OCE_PTR:0xe8eb04a0": {
+                        "mac_address": {
+                            "000C.29B0.3E16": {
+                                "mac_address": "000C.29B0.3E16",
+                                "aed": 0,
+                                "policy": "forward",
+                                "tag": "static_r",
+                                "age": 0
+                            }
+                        },
+                        "pseudoport": "OCE_PTR:0xe8eb04a0"
+                    },
+                    "GigabitEthernet6.EFP10": {
+                        "mac_address": {
+                            "000C.29AF.F904": {
+                                "mac_address": "000C.29AF.F904",
+                                "aed": 0,
+                                "policy": "forward",
+                                "tag": "dynamic_c",
+                                "age": 29
+                            }
+                        },
+                        "pseudoport": "GigabitEthernet6.EFP10"
+                    },
+                    "GigabitEthernet7.EFP10": {
+                        "mac_address": {
+                            "000C.2993.130E": {
+                                "mac_address": "000C.2993.130E",
+                                "aed": 0,
+                                "policy": "forward",
+                                "tag": "dynamic_c",
+                                "age": 26
+                            }
+                        },
+                        "pseudoport": "GigabitEthernet7.EFP10"
+                    },
+                    "OCE_PTR:0xe8eb0500": {
+                        "mac_address": {
+                            "000C.29EE.EC0D": {
+                                "mac_address": "000C.29EE.EC0D",
+                                "aed": 0,
+                                "policy": "forward",
+                                "tag": "static_r",
+                                "age": 0
+                            }
+                        },
+                        "pseudoport": "OCE_PTR:0xe8eb0500"
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''\
+        PE1#show bridge-domain 10
+        Bridge-domain 10 (3 ports in all)
+        State: UP                    Mac learning: Enabled
+        Aging-Timer: 30 second(s)
+            GigabitEthernet6 service instance 10
+            GigabitEthernet7 service instance 10
+            EVPN Instance 10
+           AED MAC address    Policy  Tag       Age  Pseudoport
+           -   000C.29B0.3E16 forward static_r  0    OCE_PTR:0xe8eb04a0
+           -   000C.29AF.F904 forward dynamic_c 29   GigabitEthernet6.EFP10
+           -   000C.2993.130E forward dynamic_c 26   GigabitEthernet7.EFP10
+           -   000C.29EE.EC0D forward static_r  0    OCE_PTR:0xe8eb0500
+    '''
+    }
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -1272,26 +1357,12 @@ class test_show_bridge_domain(test_show_bridge_domain_iosxe):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = platform_obj.parse()    
 
-    def test_golden_full(self):
+    def test_golden(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output_full)
+        self.device = Mock(**self.golden_output)
         platform_obj = ShowBridgeDomain(device=self.device)
-        parsed_output = platform_obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output_full)
-
-    def test_golden_bridge_domain(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output_bridge_domain)
-        platform_obj = ShowBridgeDomain(device=self.device)
-        parsed_output = platform_obj.parse(bd_id='3051')
-        self.assertEqual(parsed_output, self.golden_parsed_output_bridge_domain)
-
-    def test_golden_count(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output_count)
-        platform_obj = ShowBridgeDomain(device=self.device)
-        parsed_output = platform_obj.parse(word='Port-channel1\.EFP2.*')
-        self.assertEqual(parsed_output, self.golden_parsed_output_count)
+        parsed_output = platform_obj.parse(bd_id='10')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
 if __name__ == '__main__':

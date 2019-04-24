@@ -76,80 +76,80 @@ class test_show_lacp_counters(unittest.TestCase):
     '''}
 
     golden_parsed_output = {
-        'interfaces': {
-            'Port-channel1': {
-                'name': 'Port-channel1',
-                'protocol': 'lacp',
-                'members': {
-                    'GigabitEthernet2': {
-                        'interface': 'GigabitEthernet2',
-                        'counters': {
-                            'lacp_in_pkts': 22,
-                            'lacp_out_pkts': 27,
-                            'lacp_errors': 0,
-                            'marker_in_pkts': 0,
-                            'marker_out_pkts': 0,
-                            'marker_response_in_pkts': 0,
-                            'marker_response_out_pkts': 0,
-                        },
+        "interfaces": {
+            "Port-channel1": {
+                "name": "Port-channel1",
+                "protocol": "lacp",
+                "members": {
+                    "GigabitEthernet2": {
+                        "interface": "GigabitEthernet2",
+                        "counters": {
+                            "lacp_in_pkts": 22,
+                            "lacp_out_pkts": 27,
+                            "marker_in_pkts": 0,
+                            "marker_out_pkts": 0,
+                            "lacp_pkts": 0,
+                            "marker_response_in_pkts": 0,
+                            "marker_response_out_pkts": 0
+                        }
                     },
-                    'GigabitEthernet3': {
-                        'interface': 'GigabitEthernet3',
-                        'counters': {
-                            'lacp_in_pkts': 21,
-                            'lacp_out_pkts': 24,
-                            'lacp_errors': 0,
-                            'marker_in_pkts': 0,
-                            'marker_out_pkts': 0,
-                            'marker_response_in_pkts': 0,
-                            'marker_response_out_pkts': 0,
-                        },
-                    },
+                    "GigabitEthernet3": {
+                        "interface": "GigabitEthernet3",
+                        "counters": {
+                            "lacp_in_pkts": 21,
+                            "lacp_out_pkts": 24,
+                            "marker_in_pkts": 0,
+                            "marker_out_pkts": 0,
+                            "lacp_pkts": 0,
+                            "marker_response_in_pkts": 0,
+                            "marker_response_out_pkts": 0
+                        }
+                    }
                 }
             },
-            'Port-channel2': {
-               'name': 'Port-channel2',
-               'protocol': 'lacp',
-               'members': {
-                    'GigabitEthernet4': {
-                        'interface': 'GigabitEthernet4',
-                        'counters': {
-                            'lacp_in_pkts': 31,
-                            'lacp_out_pkts': 24,
-                            'lacp_errors': 0,
-                            'marker_in_pkts': 0,
-                            'marker_out_pkts': 0,
-                            'marker_response_in_pkts': 0,
-                            'marker_response_out_pkts': 0,
-                        },
+            "Port-channel2": {
+                "name": "Port-channel2",
+                "protocol": "lacp",
+                "members": {
+                    "GigabitEthernet4": {
+                        "interface": "GigabitEthernet4",
+                        "counters": {
+                            "lacp_in_pkts": 31,
+                            "lacp_out_pkts": 24,
+                            "marker_in_pkts": 0,
+                            "marker_out_pkts": 0,
+                            "lacp_pkts": 0,
+                            "marker_response_in_pkts": 0,
+                            "marker_response_out_pkts": 0
+                        }
                     },
-                    'GigabitEthernet5': {
-                        'interface': 'GigabitEthernet5',
-                        'counters': {
-                            'lacp_in_pkts': 10,
-                            'lacp_out_pkts': 14,
-                            'lacp_errors': 0,
-                            'marker_in_pkts': 0,
-                            'marker_out_pkts': 0,
-                            'marker_response_in_pkts': 0,
-                            'marker_response_out_pkts': 0,
-                        },
+                    "GigabitEthernet5": {
+                        "interface": "GigabitEthernet5",
+                        "counters": {
+                            "lacp_in_pkts": 10,
+                            "lacp_out_pkts": 14,
+                            "marker_in_pkts": 0,
+                            "marker_out_pkts": 0,
+                            "lacp_pkts": 0,
+                            "marker_response_in_pkts": 0,
+                            "marker_response_out_pkts": 0
+                        }
                     },
-                   'GigabitEthernet6': {
-                       'interface': 'GigabitEthernet6',
-                       'counters': {
-                           'lacp_in_pkts': 11,
-                           'lacp_out_pkts': 13,
-                           'lacp_errors': 0,
-                           'marker_in_pkts': 0,
-                           'marker_out_pkts': 0,
-                           'marker_response_in_pkts': 0,
-                           'marker_response_out_pkts': 0,
-                       },
-                   },
-               },
-           },
-        },
+                    "GigabitEthernet6": {
+                        "interface": "GigabitEthernet6",
+                        "counters": {
+                            "lacp_in_pkts": 11,
+                            "lacp_out_pkts": 13,
+                            "marker_in_pkts": 0,
+                            "marker_out_pkts": 0,
+                            "lacp_pkts": 0,
+                            "marker_response_in_pkts": 0,
+                            "marker_response_out_pkts": 0
+                        }
+                    }
+                }
+            }
+        }
     }
 
     def test_empty(self):
@@ -918,6 +918,79 @@ class test_show_etherchannel_summary(unittest.TestCase):
             },
         },
     }
+
+    golden_output_2 = {'execute.return_value': '''
+        show etherchannel summary
+        Flags:  D - down        P - bundled in port-channel
+                I - stand-alone s - suspended
+                H - Hot-standby (LACP only)
+                R - Layer3      S - Layer2
+                U - in use      f - failed to allocate aggregator
+
+                M - not in use, minimum links not met
+                u - unsuitable for bundling
+                w - waiting to be aggregated
+                d - default port
+
+                A - formed by Auto LAG
+
+
+        Number of channel-groups in use: 1
+        Number of aggregators:           1
+
+        Group  Port-channel  Protocol    Ports
+        ------+-------------+-----------+-----------------------------------------------
+        10     Po10(SU)        PAgP        Gi1/0/15(P)     Gi1/0/16(P)     
+                                           Gi1/0/17(P)     
+        '''}
+
+    golden_parsed_output_2 = {
+        'number_of_aggregators': 1,
+        'interfaces': {
+            'Port-channel10': {
+                'name': 'Port-channel10',
+                'protocol': 'pagp',
+                'members': {
+                    'GigabitEthernet1/0/16': {
+                        'interface': 'GigabitEthernet1/0/16',
+                        'flags': 'P',
+                        'bundled': True,
+                        'port_channel': {
+                            'port_channel_int': 'Port-channel10',
+                            'port_channel_member': True,
+                            },
+                        },
+                    'GigabitEthernet1/0/15': {
+                        'interface': 'GigabitEthernet1/0/15',
+                        'flags': 'P',
+                        'bundled': True,
+                        'port_channel': {
+                            'port_channel_int': 'Port-channel10',
+                            'port_channel_member': True,
+                            },
+                        },
+                    'GigabitEthernet1/0/17': {
+                        'interface': 'GigabitEthernet1/0/17',
+                        'flags': 'P',
+                        'bundled': True,
+                        'port_channel': {
+                            'port_channel_int': 'Port-channel10',
+                            'port_channel_member': True,
+                            },
+                        },
+                    },
+                'oper_status': 'up',
+                'bundle_id': 10,
+                'port_channel': {
+                    'port_channel_member_intfs': ['GigabitEthernet1/0/15', 'GigabitEthernet1/0/16', 'GigabitEthernet1/0/17'],
+                    'port_channel_member': True,
+                    },
+                'flags': 'SU',
+                },
+            },
+        'number_of_lag_in_use': 1,
+        }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowEtherchannelSummary(device=self.device)
@@ -938,6 +1011,12 @@ class test_show_etherchannel_summary(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
+    def test_golden_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowEtherchannelSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 ###################################################
 # unit test for show etherchannel load-balancing

@@ -10,10 +10,19 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                              SchemaMissingKeyError
 
 # Parser
-from genie.libs.parser.ios.show_arp import ShowIpArp, ShowIpArpSummary,\
-                                           ShowIpTraffic
+from genie.libs.parser.ios.show_arp import ShowIpArp, \
+                                           ShowIpArpSummary,\
+                                           ShowIpTraffic, \
+                                           ShowArpApplication, \
+                                           ShowArpSummary, \
+                                           ShowArp
 
-
+from genie.libs.parser.iosxe.tests.test_show_arp import test_show_arp_application as \
+                                                 test_show_arp_application_iosxe, \
+                                                 test_show_arp_summary as \
+                                                 test_show_arp_summary_iosxe, \
+                                                 test_show_arp as \
+                                                 test_show_arp_iosxe
 # ============================================
 # Parser for 'show arp [vrf <WORD>] <WROD>'
 # ============================================
@@ -392,6 +401,170 @@ class test_show_ip_traffic(unittest.TestCase):
 				obj = ShowIpTraffic(device=self.device)
 				parsed_output = obj.parse()
 				self.assertEqual(parsed_output, self.golden_parsed_output)
+
+# ============================================
+# Unit test for 'show arp'
+# ============================================
+class test_show_arp(test_show_arp_iosxe):
+    device = Device(name='aDevice')
+    empty_output_ios = {'execute.return_value': ''}
+    golden_output_ios = {'execute.return_value': '''\
+        Protocol   Address       Age (min)   Hardware Addr    Type    Interface
+        Internet   10.1.1.5           134    0005.0032.0854   ARPA    FastEthernet0/0/0
+        Internet   10.1.1.7             -    0005.0032.0000   ARPA    FastEthernet0/0/0
+        '''}
+    golden_parsed_output_ios = {
+        'interfaces': {
+            'FastEthernet0/0/0': {
+                'ipv4': {
+                    'neighbors': {
+                        '10.1.1.5': {
+                            'ip': '10.1.1.5',
+                            'link_layer_address': '0005.0032.0854',
+                            'age': '134',
+                            'origin': 'dynamic',
+                            'type': 'ARPA',
+                            'protocol': 'Internet',
+                            },
+                        '10.1.1.7': {
+                            'ip': '10.1.1.7',
+                            'link_layer_address': '0005.0032.0000',
+                            'age': '-',
+                            'origin': 'static',
+                            'type': 'ARPA',
+                            'protocol': 'Internet',
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowArp(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowArp(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowArp(device=self.device)
+        parsed_output = obj.parse(vrf='Mgmt-vrf', intf_or_ip='GigabitEthernet0/0')
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)   
+
+    def test_empty_ios(self):
+        self.device1 = Mock(**self.empty_output_ios)
+        obj = ShowArp(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_ios(self):
+        self.device = Mock(**self.golden_output_ios)
+        obj = ShowArp(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_ios)     
+
+# ============================================
+# unit test for 'show arp application'
+# ============================================
+class test_show_arp_application(test_show_arp_application_iosxe):
+    def test_empty(self):
+          self.device = Mock(**self.empty_output)
+          obj = ShowArpApplication(device=self.device)
+          with self.assertRaises(SchemaEmptyParserError):
+              parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowArpApplication(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+# ============================================
+# unit test for 'show arp summary'
+# ============================================
+class test_show_arp_summary(test_show_arp_summary_iosxe):
+
+  device = Device('aDevice')
+  empty_output_ios = {'execute.return_value':''}
+  
+  golden_parsed_output_ios = {
+      'total_num_of_entries': {
+          'arp_table_entries': 4,
+          'dynamic_arp_entries': 0,
+          'incomplete_arp_entries': 0,
+          'interface_arp_entries': 3,
+          'static_arp_entries': 1,
+          'alias_arp_entries': 0,
+          'simple_application_arp_entries': 0,
+          'application_alias_arp_entries': 0,
+          'application_timer_arp_entries': 0,
+          'learn_arp_entries': 0,
+      },
+      'maximum_entries': {
+          'maximum_configured_learn_arp_entry_limit': 512000,
+          'maximum_limit_of_learn_arp_entry': 512000,
+      },
+      'arp_entry_threshold': 409600,
+      'permit_threshold': 486400,
+      'interface_entries': {
+          'GigabitEthernet4/7': 1,
+          'GigabitEthernet4/1.1': 1,
+          'GigabitEthernet4/1': 1
+      },
+  }
+
+  golden_output_ios = {'execute.return_value': '''\
+      Total number of entries in the ARP table: 4.
+      Total number of Dynamic ARP entries: 0.
+      Total number of Incomplete ARP entries: 0.
+      Total number of Interface ARP entries: 3.
+      Total number of Static ARP entries: 1.
+      Total number of Alias ARP entries: 0.
+      Total number of Simple Application ARP entries: 0.
+      Total number of Application Alias ARP entries: 0.
+      Total number of Application Timer ARP entries: 0.
+      Maximum limit of Learn ARP entry : 512000.
+      Maximum configured Learn ARP entry limit : 512000.
+      Learn ARP Entry Threshold is 409600 and Permit Threshold is 486400.
+      Total number of Learn ARP entries: 0.
+      Interface           Entry Count
+      GigabitEthernet4/7            1
+      GigabitEthernet4/1.1          1
+      GigabitEthernet4/1            1
+      E0BC0/0                       
+      '''
+  }
+
+  def test_empty(self):
+      self.device = Mock(**self.empty_output)
+      obj = ShowArpSummary(device=self.device)
+      with self.assertRaises(SchemaEmptyParserError):
+          parsed_output = obj.parse()
+
+  def test_golden(self):
+      self.device = Mock(**self.golden_output)
+      obj = ShowArpSummary(device=self.device)
+      parsed_output = obj.parse()
+      self.assertEqual(parsed_output, self.golden_parsed_output)
+
+  def test_empty_ios(self):
+      self.device = Mock(**self.empty_output_ios)
+      obj = ShowArpSummary(device=self.device)
+      with self.assertRaises(SchemaEmptyParserError):
+          parsed_output = obj.parse()
+
+  def test_golden_ios(self):
+      self.device = Mock(**self.golden_output_ios)
+      obj = ShowArpSummary(device=self.device)
+      parsed_output = obj.parse()
+      self.assertEqual(parsed_output, self.golden_parsed_output_ios)
 
 if __name__ == '__main__':
 		unittest.main()
