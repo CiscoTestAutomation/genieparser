@@ -1,6 +1,6 @@
 """
     show_ipv6.py
-    IOSXR parsers for the following show commands:
+    IOSXE parsers for the following show commands:
 
     * show ipv6 neighbors
     * show ipv6 neighbors vrf <vrf_id>
