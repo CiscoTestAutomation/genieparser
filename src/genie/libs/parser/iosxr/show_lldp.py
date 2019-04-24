@@ -132,6 +132,8 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             out = output
         # initial return dictionary
         ret_dict = {}
+        description_found = False
+
         # Local Interface: GigabitEthernet0/0/0/0
         p1 = re.compile(r'^Local +Interface: +(?P<local_interface>\S+)$')
         # Chassis id: 001e.49f7.2c00
@@ -146,7 +148,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         p6 = re.compile(r'^System +Description:$')
         # Cisco IOS Software [Everest], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.1, RELEASE SOFTWARE (fc2)
         # Cisco Nexus Operating System (NX-OS) Software 7.0(3)I7(1)
-        p7 = re.compile(r'^(?P<system_description>Cisco +((IOS +Software +\[Everest\])|(Nexus +Operating +System)|(IOS +XR +Software))[\S\s]+)$')
+        p7 = re.compile(r'^(?P<system_description>Cisco +[\S\s]+)$')
         # Copyright (c) 1986-2017 by Cisco Systems, Inc.
         p8 = re.compile(r'^(?P<copyright>Copyright +\(c\) +[\S\s]+)$')
         # Compiled Sat 22-Jul-17 05:51 by 
@@ -212,11 +214,19 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 nei_dict = port_dict.setdefault('neighbors', {}).setdefault(system_name, sub_dict)
                 continue
 
+            # System Description: 
+            m = p6.match(line)
+            if m:
+                description_found = True
+                sub_dict['system_description'] = ''
+                continue
+
             # Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)
             m = p7.match(line)
             if m:
-                group = m.groupdict()
-                sub_dict['system_description'] = group['system_description'] + '\n'
+                if description_found:
+                    group = m.groupdict()
+                    sub_dict['system_description'] = group['system_description'] + '\n'
                 continue
 
             # Copyright (c) 1986-2011 by Cisco Systems, Inc.
