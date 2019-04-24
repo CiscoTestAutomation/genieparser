@@ -3038,7 +3038,7 @@ class ShowBgpNeighborSuperParser(MetaParser):
                 timers_dict['min_holdtime'] = int(m.groupdict()['min_holdtime'])
                 continue
 
-             # Neighbor sessions:
+            # Neighbor sessions:
             m = p7_4.match(line)
             if m:
                 neighbor_type = 'neighbor_session'
