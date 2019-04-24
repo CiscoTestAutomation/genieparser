@@ -22,76 +22,273 @@ class test_show_ip_protocols(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
+    golden_parsed_output_0 = {
+    "protocols": {
+        "application": {
+            "update_frequency": 0,
+            "invalid": 0,
+            "holddown": 0,
+            "flushed": 0,
+            "outgoing_filter_list": "not set",
+            "incoming_filter_list": "not set",
+            "maximum_path": 32,
+            "preference": {
+                "single_value": {
+                    "all": 4
+                }
+            }
+        },
+        "ospf": {
+            "vrf": {
+                "default": {
+                    "address_family": {
+                        "ipv4": {
+                            "instance": {
+                                "1": {
+                                    "outgoing_filter_list": "not set",
+                                    "incoming_filter_list": "not set",
+                                    "router_id": "192.168.1.179",
+                                    "total_areas": 2,
+                                    "total_normal_area": 1,
+                                    "total_stub_area": 0,
+                                    "total_nssa_area": 1,
+                                    "spf_control": {
+                                        "paths": 4
+                                    },
+                                    "areas": {
+                                        "0.0.0.0": {
+                                            "configured_interfaces": [
+                                                "GigabitEthernet5"
+                                            ]
+                                        },
+                                        "0.0.0.4": {
+                                            "configured_interfaces": [
+                                                "GigabitEthernet7"
+                                            ]
+                                        }
+                                    },
+                                    "passive_interfaces": [
+                                        "GigabitEthernet3",
+                                        "GigabitEthernet4",
+                                        "GigabitEthernet8",
+                                        "Loopback0"
+                                    ],
+                                    "routing_information_sources": {
+                                        "gateway": {
+                                            "192.168.1.177": {
+                                                "distance": 110,
+                                                "last_update": "21:33:11"
+                                            },
+                                            "192.168.1.176": {
+                                                "distance": 110,
+                                                "last_update": "21:32:48"
+                                            },
+                                            "192.168.1.178": {
+                                                "distance": 110,
+                                                "last_update": "21:36:07"
+                                            }
+                                        }
+                                    },
+                                    "preference": {
+                                        "single_value": {
+                                            "all": 110
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "bgp": {
+            "instance": {
+                "default": {
+                    "bgp_id": 202926,
+                    "vrf": {
+                        "default": {
+                            "address_family": {
+                                "ipv4": {
+                                    "outgoing_filter_list": "not set",
+                                    "incoming_filter_list": "not set",
+                                    "igp_sync": False,
+                                    "automatic_route_summarization": False,
+                                    "maximum_path": 2,
+                                    "neighbor": {
+                                        "192.168.1.177": {
+                                            "neighbor_id": "192.168.1.177",
+                                            "distance": 200,
+                                            "last_update": "21:33:06"
+                                        },
+                                        "192.168.1.176": {
+                                            "neighbor_id": "192.168.1.176",
+                                            "distance": 200,
+                                            "last_update": "21:32:43"
+                                        },
+                                        "10.0.2.212": {
+                                            "neighbor_id": "10.0.2.212",
+                                            "distance": 20,
+                                            "last_update": "21:35:39"
+                                        }
+                                    },
+                                    "preference": {
+                                        "multi_values": {
+                                            "external": 20,
+                                            "internal": 200,
+                                            "local": 200
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+    golden_output0 = {'execute.return_value':'''
+    show ip protocols
+    *** IP Routing is NSF aware ***
+
+    Routing Protocol is "application"
+      Sending updates every 0 seconds
+      Invalid after 0 seconds, hold down 0, flushed after 0
+      Outgoing update filter list for all interfaces is not set
+      Incoming update filter list for all interfaces is not set
+      Maximum path: 32
+      Routing for Networks:
+      Routing Information Sources:
+        Gateway         Distance      Last Update
+      Distance: (default is 4)
+
+    Routing Protocol is "ospf 1"
+      Outgoing update filter list for all interfaces is not set
+      Incoming update filter list for all interfaces is not set
+      Router ID 192.168.1.179
+      It is an area border and autonomous system boundary router
+     Redistributing External Routes from,
+      Number of areas in this router is 2. 1 normal 0 stub 1 nssa
+      Address Summarization:
+      Maximum path: 4
+      Routing for Networks:
+        192.168.1.0 0.0.0.255 area 0.0.0.0
+        192.168.100.164 0.0.0.3 area 0.0.0.0
+        192.168.100.192 0.0.0.3 area 0.0.0.0
+      Routing on Interfaces Configured Explicitly (Area 0.0.0.0):
+        GigabitEthernet5
+      Routing on Interfaces Configured Explicitly (Area 4):
+        GigabitEthernet7
+      Passive Interface(s):
+        GigabitEthernet3
+        GigabitEthernet4
+        GigabitEthernet8
+        Loopback0
+        VoIP-Null0
+      Routing Information Sources:
+        Gateway         Distance      Last Update
+        192.168.1.177        110      21:33:11
+        192.168.1.176        110      21:32:48
+        192.168.1.178        110      21:36:07
+      Distance: (default is 110)
+
+    Routing Protocol is "bgp 202926"
+      Outgoing update filter list for all interfaces is not set
+      Incoming update filter list for all interfaces is not set
+      IGP synchronization is disabled
+      Automatic route summarization is disabled
+      Neighbor(s):
+        Address          FiltIn FiltOut DistIn DistOut Weight RouteMap
+        10.0.1.211
+        10.0.1.221
+        10.0.2.212
+        10.0.2.222
+        67.223.188.34
+        68.137.37.149
+        152.176.18.101                                        ACCEPT_SCI_RICHEMONT
+        192.168.1.176                                         INTERNET_EDGE_IN
+        192.168.1.177                                         INTERNET_EDGE_IN
+        192.168.1.178
+      Maximum path: 2
+      Routing Information Sources:
+        Gateway         Distance      Last Update
+        192.168.1.177        200      21:33:06
+        192.168.1.176        200      21:32:43
+        10.0.2.212            20      21:35:39
+      Distance: external 20 internal 200 local 200
+    '''}
+
     golden_parsed_output1 = {
-        'protocols': 
-            {'application': 
+        'protocols':
+            {'application':
                 {'flushed': 0,
                 'holddown': 0,
                 'incoming_filter_list': 'not set',
                 'invalid': 0,
                 'maximum_path': 32,
                 'outgoing_filter_list': 'not set',
-                'preference': 
-                    {'single_value': 
+                'preference':
+                    {'single_value':
                         {'all': 4}},
                 'update_frequency': 0},
-            'bgp': 
-                {'instance': 
-                    {'default': 
+            'bgp':
+                {'instance':
+                    {'default':
                         {'bgp_id': 100,
-                        'vrf': 
-                            {'default': 
-                                {'address_family': 
-                                    {'ipv4': 
+                        'vrf':
+                            {'default':
+                                {'address_family':
+                                    {'ipv4':
                                         {'automatic_route_summarization': False,
                                         'igp_sync': False,
                                         'incoming_filter_list': 'not set',
                                         'maximum_path': 1,
-                                        'neighbor': 
-                                            {'10.64.4.4': 
+                                        'neighbor':
+                                            {'10.64.4.4':
                                                 {'distance': 200,
                                                 'last_update': '03:34:58',
                                                 'neighbor_id': '10.64.4.4'}},
                                         'outgoing_filter_list': 'not set',
-                                        'preference': 
-                                            {'multi_values': 
+                                        'preference':
+                                            {'multi_values':
                                                 {'external': 20,
                                                 'internal': 200,
                                                 'local': 200}}}}}}}}},
-            'ospf': 
-                {'vrf': 
-                    {'default': 
-                        {'address_family': 
-                            {'ipv4': 
-                                {'instance': 
-                                    {'1': 
-                                        {'areas': 
-                                            {'0.0.0.0': 
+            'ospf':
+                {'vrf':
+                    {'default':
+                        {'address_family':
+                            {'ipv4':
+                                {'instance':
+                                    {'1':
+                                        {'areas':
+                                            {'0.0.0.0':
                                                 {'configured_interfaces': ['Loopback0', 'GigabitEthernet2', 'GigabitEthernet1']}},
                                         'incoming_filter_list': 'not set',
                                         'outgoing_filter_list': 'not set',
-                                        'preference': 
-                                            {'multi_values': 
+                                        'preference':
+                                            {'multi_values':
                                                 {'external': 114,
-                                                'granularity': 
-                                                    {'detail': 
+                                                'granularity':
+                                                    {'detail':
                                                         {'inter_area': 113,
                                                         'intra_area': 112}}},
-                                            'single_value': 
+                                            'single_value':
                                                 {'all': 110}},
                                         'router_id': '10.4.1.1',
-                                        'routing_information_sources': 
-                                            {'gateway': 
-                                                {'10.16.2.2': 
+                                        'routing_information_sources':
+                                            {'gateway':
+                                                {'10.16.2.2':
                                                     {'distance': 110,
                                                     'last_update': '07:33:00'},
-                                                '10.36.3.3': 
+                                                '10.36.3.3':
                                                     {'distance': 110,
                                                     'last_update': '07:33:00'},
-                                                '10.64.4.4': 
+                                                '10.64.4.4':
                                                     {'distance': 110,
                                                     'last_update': '00:19:15'}}},
-                                        'spf_control': 
+                                        'spf_control':
                                             {'paths': 4},
                                         'total_areas': 1,
                                         'total_normal_area': 1,
@@ -99,8 +296,8 @@ class test_show_ip_protocols(unittest.TestCase):
                                         'total_stub_area': 0}}}}}}}}}
 
     golden_parsed_output2 = {
-        'protocols': 
-            {'application': 
+        'protocols':
+            {'application':
                 {'flushed': 0,
                 'holddown': 0,
                 'incoming_filter_list': 'not set',
@@ -109,49 +306,49 @@ class test_show_ip_protocols(unittest.TestCase):
                 'outgoing_filter_list': 'not set',
                 'preference': {'single_value': {'all': 4}},
                 'update_frequency': 0},
-            'bgp': 
-                {'instance': 
-                    {'default': 
+            'bgp':
+                {'instance':
+                    {'default':
                         {'bgp_id': 1,
-                        'vrf': 
-                            {'default': 
-                                {'address_family': 
-                                    {'ipv4': 
+                        'vrf':
+                            {'default':
+                                {'address_family':
+                                    {'ipv4':
                                         {'automatic_route_summarization': False,
                                         'igp_sync': False,
                                         'incoming_filter_list': 'not set',
                                         'maximum_path': 1,
-                                        'neighbor': 
-                                            {'192.168.0.9': 
+                                        'neighbor':
+                                            {'192.168.0.9':
                                                 {'distance': 200,
                                                 'last_update': '01:35:12',
                                                 'neighbor_id': '192.168.0.9'}},
                                         'outgoing_filter_list': 'not set',
-                                        'preference': 
-                                            {'multi_values': 
+                                        'preference':
+                                            {'multi_values':
                                                 {'external': 20,
                                                 'internal': 200,
                                                 'local': 200}}}}}}}}},
-            'ospf': 
-                {'vrf': 
-                    {'default': 
-                        {'address_family': 
-                            {'ipv4': 
-                                {'instance': 
-                                    {'1': 
+            'ospf':
+                {'vrf':
+                    {'default':
+                        {'address_family':
+                            {'ipv4':
+                                {'instance':
+                                    {'1':
                                         {'incoming_filter_list': 'not set',
                                         'outgoing_filter_list': 'not set',
                                         'passive_interfaces': ['Loopback0'],
-                                        'preference': 
-                                            {'single_value': 
+                                        'preference':
+                                            {'single_value':
                                                 {'all': 110}},
                                         'router_id': '192.168.0.10',
-                                        'routing_information_sources': 
-                                            {'gateway': 
-                                                {'192.168.0.9': 
+                                        'routing_information_sources':
+                                            {'gateway':
+                                                {'192.168.0.9':
                                                     {'distance': 110,
                                                     'last_update': '01:36:38'}}},
-                                        'spf_control': 
+                                        'spf_control':
                                             {'paths': 4},
                                         'total_areas': 1,
                                         'total_normal_area': 1,
@@ -207,73 +404,73 @@ class test_show_ip_protocols(unittest.TestCase):
         '''}
 
     golden_parsed_output3 = {
-        'protocols': 
-            {'application': 
+        'protocols':
+            {'application':
                 {'flushed': 0,
                 'holddown': 0,
                 'incoming_filter_list': 'not set',
                 'invalid': 0,
                 'maximum_path': 32,
                 'outgoing_filter_list': 'not set',
-                'preference': 
-                    {'single_value': 
+                'preference':
+                    {'single_value':
                         {'all': 4}},
                 'update_frequency': 0},
-            'bgp': 
-                {'instance': 
-                    {'default': 
+            'bgp':
+                {'instance':
+                    {'default':
                         {'bgp_id': 9999,
-                        'vrf': 
-                            {'default': 
-                                {'address_family': 
-                                    {'ipv4': 
+                        'vrf':
+                            {'default':
+                                {'address_family':
+                                    {'ipv4':
                                         {'automatic_route_summarization': False,
                                         'igp_sync': False,
                                         'incoming_filter_list': 'not set',
                                         'maximum_path': 1,
-                                        'neighbor': 
-                                            {'10.60.6.2': 
+                                        'neighbor':
+                                            {'10.60.6.2':
                                                 {'distance': 200,
                                                 'last_update': '14w4d',
                                                 'neighbor_id': '10.60.6.2'},
-                                            '10.60.6.3': 
+                                            '10.60.6.3':
                                                 {'distance': 200,
                                                 'last_update': '12w5d',
                                                 'neighbor_id': '10.60.6.3'}},
                                         'outgoing_filter_list': 'not set',
-                                        'preference': 
-                                            {'multi_values': 
+                                        'preference':
+                                            {'multi_values':
                                                 {'external': 20,
                                                 'internal': 200,
                                                 'local': 200}}}}}}}}},
-            'isis': 
-                {'vrf': 
-                    {'default': 
-                        {'address_family': 
-                            {'ipv4': 
-                                {'instance': 
-                                    {'banana': 
+            'isis':
+                {'vrf':
+                    {'default':
+                        {'address_family':
+                            {'ipv4':
+                                {'instance':
+                                    {'banana':
                                         {'configured_interfaces': ['TenGigabitEthernet0/0/26', 'TenGigabitEthernet0/0/27'],
                                         'incoming_filter_list': 'not set',
                                         'maximum_path': 4,
                                         'outgoing_filter_list': 'not set',
                                         'passive_interfaces': ['Loopback0'],
-                                        'preference': 
-                                            {'single_value': 
+                                        'preference':
+                                            {'single_value':
                                                 {'all': 115}},
                                         'redistributing': 'isis banana',
-                                        'routing_information_sources': 
-                                            {'gateway': 
-                                                {'10.60.6.2': 
+                                        'routing_information_sources':
+                                            {'gateway':
+                                                {'10.60.6.2':
                                                     {'distance': 115,
                                                     'last_update': '05:56:34'},
-                                                '10.60.6.3': 
+                                                '10.60.6.3':
                                                     {'distance': 115,
                                                     'last_update': '05:56:34'},
-                                                '10.60.6.4': 
+                                                '10.60.6.4':
                                                     {'distance': 115,
                                                     'last_update': '05:56:34'},
-                                                '10.60.6.9': 
+                                                '10.60.6.9':
                                                     {'distance': 115,
                                                     'last_update': '05:56:34'}}}}}}}}}}}}
 
@@ -295,19 +492,20 @@ class test_show_ip_protocols(unittest.TestCase):
         '''}
 
     golden_parsed_output4 = {
-        'protocols': 
-            {'isis': 
-                {'vrf': 
-                    {'default': 
-                        {'address_family': 
-                            {'ipv4': 
-                                {'instance': 
-                                    {'default': 
+        'protocols':
+            {'isis':
+                {'vrf':
+                    {'default':
+                        {'address_family':
+                            {'ipv4':
+                                {'instance':
+                                    {'default':
                                         {'incoming_filter_list': 'not set',
                                         'outgoing_filter_list': 'not set',
-                                        'preference': 
+                                        'preference':
                                             {'single_value': {'all': 115}},
                                             'redistributing': 'isis'}}}}}}}}}
+
 
     def test_show_ip_protocols_full1(self):
 
@@ -317,7 +515,7 @@ class test_show_ip_protocols(unittest.TestCase):
             return self.outputs[key]
 
         raw1 = '''\
-            R1_ospf_xe#show ip protocols 
+            R1_ospf_xe#show ip protocols
             *** IP Routing is NSF aware ***
 
             Routing Protocol is "application"
@@ -758,6 +956,12 @@ class test_show_ip_protocols(unittest.TestCase):
         parsed_output = obj.parse(vrf="VRF1")
         self.assertEqual(parsed_output, self.golden_parsed_output_5)
 
+    def test_golden_0(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output0)
+        obj = ShowIpProtocols(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_0)
 
 # ============================================
 # Parser for 'show ip protocols | sec rip'

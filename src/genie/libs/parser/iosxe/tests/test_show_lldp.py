@@ -22,7 +22,6 @@ class test_show_lldp(unittest.TestCase):
         "hold_timer": 120,
         "status": "active",
         "reinit_timer": 2
-
     }
 
     golden_output = {'execute.return_value': '''\
