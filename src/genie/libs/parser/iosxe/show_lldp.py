@@ -202,11 +202,10 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             # Port id: Gi1/0/4
             m = p1_1.match(line)
             if m:
-                port_id = m.groupdict()['port_id']
+                port_id = Common.convert_intf_name(m.groupdict()['port_id'])
                 port_dict = intf_dict.setdefault('port_id', {}). \
                     setdefault(port_id, {})
-                sub_dict.setdefault('port_id',
-                    Common.convert_intf_name(port_id))
+                sub_dict.setdefault('port_id', port_id)
                 continue
 
             # Port Description: GigabitEthernet1/0/4

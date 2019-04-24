@@ -56,7 +56,7 @@ class test_show_lldp_entry(unittest.TestCase):
             'GigabitEthernet2/0/15': {
                 'if_name': 'GigabitEthernet2/0/15',
                 'port_id': {
-                    'Gi1/0/4': {
+                    'GigabitEthernet1/0/4': {
                         'neighbors': {
                             'R5': {
                                 'neighbor_id': 'R5',
@@ -90,7 +90,7 @@ class test_show_lldp_entry(unittest.TestCase):
             'GigabitEthernet1/0/16': {
                 'if_name': 'GigabitEthernet1/0/16',
                 'port_id': {
-                    'Gi1/0/2': {
+                    'GigabitEthernet1/0/2': {
                         'neighbors': {
                             'R5': {
                                 'neighbor_id': 'R5',
@@ -124,7 +124,7 @@ class test_show_lldp_entry(unittest.TestCase):
             'GigabitEthernet1/0/17': {
                 'if_name': 'GigabitEthernet1/0/17',
                 'port_id': {
-                    'Gi1/0/3': {
+                    'GigabitEthernet1/0/3': {
                         'neighbors': {
                             'R5': {
                                 'neighbor_id': 'R5',
@@ -158,7 +158,7 @@ class test_show_lldp_entry(unittest.TestCase):
             'GigabitEthernet1/0/15': {
                 'if_name': 'GigabitEthernet1/0/15',
                 'port_id': {
-                    'Gi1/0/1': {
+                    'GigabitEthernet1/0/1': {
                         'neighbors': {
                             'R5': {
                                 'neighbor_id': 'R5',
@@ -337,7 +337,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
             'GigabitEthernet2/0/15': {
                 'if_name': 'GigabitEthernet2/0/15',
                 'port_id': {
-                    'Gi1/0/4': {
+                    'GigabitEthernet1/0/4': {
                         'neighbors': {
                             'R5': {
                                 'neighbor_id': 'R5',
@@ -371,7 +371,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
             'GigabitEthernet1/0/16': {
                 'if_name': 'GigabitEthernet1/0/16',
                 'port_id': {
-                    'Gi1/0/2': {
+                    'GigabitEthernet1/0/2': {
                         'neighbors': {
                             'R5': {
                                 'neighbor_id': 'R5',
@@ -405,7 +405,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
             'GigabitEthernet1/0/17': {
                 'if_name': 'GigabitEthernet1/0/17',
                 'port_id': {
-                    'Gi1/0/3': {
+                    'GigabitEthernet1/0/3': {
                         'neighbors': {
                             'R5': {
                                 'neighbor_id': 'R5',
@@ -439,7 +439,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
             'GigabitEthernet1/0/15': {
                 'if_name': 'GigabitEthernet1/0/15',
                 'port_id': {
-                    'Gi1/0/1': {
+                    'GigabitEthernet1/0/1': {
                         'neighbors': {
                             'R5': {
                                 'neighbor_id': 'R5',
