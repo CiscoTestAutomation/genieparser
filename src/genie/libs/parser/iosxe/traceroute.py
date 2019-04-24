@@ -30,6 +30,7 @@ class TracerouteSchema(MetaParser):
                 {'hops': 
                     {Any(): 
                         {'address': str,
+                        Optional('name'): str,
                         Optional('probe_msec'): list,
                         Optional('vrf_in_name'): str,
                         Optional('vrf_out_name'): str,
@@ -48,6 +49,9 @@ class TracerouteSchema(MetaParser):
                         },
                     },
                 Optional('timeout_seconds'): int,
+                Optional('name_of_address'): str,
+                'address': str,
+                Optional('mask'): str,
                 },
             },
         }
@@ -78,8 +82,12 @@ class Traceroute(TracerouteSchema):
 
         # Tracing MPLS Label Switched Path to 172.31.165.220/32, timeout is 2 seconds
         p1_2 = re.compile(r'^Tracing +MPLS +Label +Switched +Path +to'
-                           ' +(?P<traceroute>(\S+)), +timeout +is'
+                           ' +(?P<traceroute>\S+), +timeout +is'
                            ' +(?P<timeout>(\d+)) +seconds$')
+
+        # Tracing the route to www.kddi.com (3.3.3.3)
+        p1_3 = re.compile(r'^Tracing +the +route +to +(?P<name_of_address>\S+)'
+                           ' \(+(?P<traceroute>\S+)\)$')
 
         # VRF info: (vrf in name/id, vrf out name/id)
 
@@ -109,9 +117,14 @@ class Traceroute(TracerouteSchema):
         # 5 10.80.241.86 [MPLS: Label 24147 Exp 0] 69 msec 65 msec 111 msec 
         # 6 10.90.135.110 [MPLS: Label 24140 Exp 0] 21 msec 4 msec 104 msec
         # 7 172.31.166.10 92 msec 51 msec 148 msec
+        # 8 106.162.197.101 1 msec 1 msec *
         p4 = re.compile(r'^(?P<hop>(\d+)) +(?P<address>([a-zA-Z0-9\.\:]+))'
                          '(?: +\[(?P<label_name>(MPLS)): +Label (?P<label>(\d+))'
                          ' +Exp +(?P<exp>(\d+))\])? +(?P<probe_msec>(.*))$')
+
+        # 1 p5DC5A26A.dip0.t-ipconnect.de (106.162.197.93) 0 msec *  1 msec *  0 msec
+        p5 = re.compile(r'^(?P<hop>(\d+)) +(?P<name>[\S]+)'
+                         ' +\(+(?P<address>([\d\.]+))\) +(?P<probe_msec>(.*))$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -122,6 +135,7 @@ class Traceroute(TracerouteSchema):
                 traceroute = m.groupdict()['traceroute']
                 tr_dict = ret_dict.setdefault('traceroute', {}).\
                                    setdefault(traceroute, {})
+                tr_dict['address'] = traceroute
                 continue
 
             # Tracing MPLS Label Switched Path to 172.31.165.220/32, timeout is 2 seconds
@@ -132,6 +146,27 @@ class Traceroute(TracerouteSchema):
                 tr_dict = ret_dict.setdefault('traceroute', {}).\
                                    setdefault(traceroute, {})
                 tr_dict['timeout_seconds'] = int(group['timeout'])
+                if '/' in traceroute:
+                    new_out = re.search('(?P<ip>[\d\.]+)\/+(?P<mask>\d+)', traceroute)
+                    address = new_out.groupdict()['ip']
+                    mask = new_out.groupdict()['mask']
+                    tr_dict['address'] = address
+                    tr_dict['mask'] = mask
+                else:
+                    tr_dict['address'] = traceroute
+
+                continue
+
+            # Tracing the route to www.kddi.com (3.3.3.3)
+            m = p1_3.match(line)
+            if m:
+                group = m.groupdict()
+                traceroute = group['traceroute']
+                name_of_address = group['name_of_address']
+                tr_dict = ret_dict.setdefault('traceroute', {}).\
+                                   setdefault(traceroute, {})
+                tr_dict['name_of_address'] = name_of_address
+                tr_dict['address'] = traceroute
                 continue
 
             # 1 10.1.1.2 (red/1001, red/1001)
@@ -193,6 +228,7 @@ class Traceroute(TracerouteSchema):
             # 5 10.80.241.86 [MPLS: Label 24147 Exp 0] 69 msec 65 msec 111 msec 
             # 6 10.90.135.110 [MPLS: Label 24140 Exp 0] 21 msec 4 msec 104 msec
             # 7 172.31.166.10 92 msec 51 msec 148 msec
+            # 8 106.162.197.101 1 msec 1 msec *
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -208,6 +244,20 @@ class Traceroute(TracerouteSchema):
                                            setdefault(group['label_name'], {})
                     label_dict['label'] = group['label']
                     label_dict['exp'] = int(group['exp'])
+                continue
+
+            # 1 p5DC5A26A.dip0.t-ipconnect.de (106.162.197.93) 0 msec *  1 msec *  0 msec
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                hops_dict = tr_dict.setdefault('hops', {}).\
+                                    setdefault(group['hop'], {})
+                hops_dict['address'] = group['address']
+                hops_dict['name'] = group['name']
+                hops_dict['probe_msec'] = group['probe_msec'].strip().\
+                                            replace(" msec", "").\
+                                            replace(" ms", "").\
+                                            split()
                 continue
 
         return ret_dict

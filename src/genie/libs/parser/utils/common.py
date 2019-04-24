@@ -158,10 +158,12 @@ class Common():
         convert = {'Eth': 'Ethernet',
                    'Lo': 'Loopback',
                    'Fa': 'FastEthernet',
+                   'Fas': 'FastEthernet',
 	               'Po': 'Port-channel',
 	               'PO': 'Port-channel',
                    'Null': 'Null',
                    'Gi': 'GigabitEthernet',
+                   'Gig': 'GigabitEthernet',
                    'GE': 'GigabitEthernet',
                    'Te': 'TenGigabitEthernet',
                    'mgmt': 'mgmt',
@@ -173,6 +175,7 @@ class Common():
                    'Et': 'Ethernet',
                    'BD': 'BridgeDomain',
                    'Se': 'Serial',
+                   'Fo': 'FortyGigabitEthernet',
                    }
         m = re.search('([a-zA-Z]+)', intf) 
         m1 = re.search('([\d\/\.]+)', intf)

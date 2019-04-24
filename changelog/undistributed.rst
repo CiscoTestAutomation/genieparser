@@ -5,6 +5,156 @@
 | ------------------------|:-------------:|
 | ``genie.libs.parser``   |               |
 
+
+--------------------------------------------------------------------------------
+                                   POLICY-MAP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowPolicyMapControlPlane for:
+        show policy-map control-plane
+    * Add ShowPolicyMapInterface for:
+        show policy-map interface {interface}
+        show policy-map interface
+    * Add ShowPolicyMapInterfaceInput for:
+        show policy-map interface {interface} input class {class_name}
+        show policy-map interface {interface} input
+    * Add ShowPolicyMapInterfaceOutput for:
+        show policy-map interface {interface} output class {class_name}
+        show policy-map interface {interface} output
+    * Add ShowPolicyMapInterfaceClass for:
+        show policy-map interface class {class_name}
+    * Add ShowPolicyMapTargetClass for:
+        show policy-map target service-group {num}
+    * Add ShowPolicyMap for :
+        show policy-map
+        show policy-map {name}
+
+--------------------------------------------------------------------------------
+                                   BGP
+--------------------------------------------------------------------------------
+* IOSXE
+  * Removed support for cmd in SuperParser classes
+
+--------------------------------------------------------------------------------
+                                   ISIS
+--------------------------------------------------------------------------------
+* IOSXR
+  * Add ShowIsisAdjacency for:
+        show isis adjacency
+  * Add ShowIsisNeighbors for:
+        show isis neighbors
+* IOSXE
+  * Add ShowIsisNeighbors for:
+        show isis neighbors
+
+--------------------------------------------------------------------------------
+                                   
+--------------------------------------------------------------------------------
+* IOSXE
+  * Add ShowXconnectAll for:
+        show xconnect all
+
+--------------------------------------------------------------------------------
+                                   MPLS
+--------------------------------------------------------------------------------
+* IOSXR
+  * Add ShowMplsLdpNeighborBrief for:
+        show mpls ldp neighbor brief
+
+--------------------------------------------------------------------------------
+                                   MRIB
+--------------------------------------------------------------------------------
+* IOSXR
+  * Add ShowMribVrfRouteSummary for:
+        show mrib vrf route summary
+
+--------------------------------------------------------------------------------
+                                   PLATFORM
+--------------------------------------------------------------------------------
+* IOSXR
+  * Add ShowInstallInactiveSummary for:
+        show install inactive summary
+  * Add ShowInstallCommitSummary for:
+        show install commit summary
+
+--------------------------------------------------------------------------------
+                                   RUN
+--------------------------------------------------------------------------------
+* IOSXR
+  * Add ShowRunKeyChain for:
+        show run key chain
+  * Add ShowRunRouterIsis for:
+        show run router isis
+
+--------------------------------------------------------------------------------
+                                   BGP
+--------------------------------------------------------------------------------
+* IOSXE
+  * ShowBgpNeighborSuperParser enhanced to support 'Multisession Capability'
+  * Updated ShowBgpAllNeighbors to support different session states
+
+* NXOS
+  * Add ShowBgpVrfIpv4Unicast for:
+      * show bgp vrf <vrf> ipv4 unicast
+
+----------------------------------------------------------------------------------
+                                  EIGRP
+----------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowIpEigrpNeighbors for:
+            show ip eigrp neighbors
+            show ip eigrp vrf <vrf> neighbors
+
+      * Add ShowIpv6EigrpNeighbors for:
+            show ipv6 eigrp neighbors
+            show ipv6 eigrp vrf <vrf> neighbors
+
+      * Add ShowIpEigrpNeighborsDetail for:
+            show ip eigrp neighbors detail
+            show ip eigrp vrf <vrf> neighbors detail
+* IOSXR
+    * Add ShowEigrpIpv4Neighbors for:
+            show eigrp ipv4 neighbors
+            show eigrp ipv4 vrf <vrf> neighbors
+    * Add ShowEigrpIpv6Neighbors for:
+            show eigrp ipv6 neighbors
+            show eigrp ipv6 vrf <all> neighbors
+    * Add ShowEigrpIpv4NeighborsDetail for:
+            show eigrp ipv4 neighbors detail
+            show eigrp ipv4 vrf <vrf> neighbors detail
+    * Add ShowEigrpIpv6NeighborsDetail for:
+            show eigrp ipv6 neighbors detail
+            show eigrp ipv6 vrf <all> neighbors detail
+* NXOS
+    * Add ShowIpv4EigrpNeighbors for:
+        show ip eigrp neighbors vrf <vrf>
+    * Add ShowIpv6EigrpNeighbors for:
+        show ipv6 eigrp neighbors vrf <all>
+    * Add ShowIpv4EigrpNeighborsDetail for:
+        show ip eigrp neighbors detail vrf <all>
+    * Add ShowIpv6EigrpNeighborsDetail for:
+        show ipv6 eigrp neighbors detail vrf <all>
+
+----------------------------------------------------------------------------------
+                                   CDP
+----------------------------------------------------------------------------------
+* IOSXE
+  * Add ShowCdpNeighbors for:
+      show cdp neighbors
+  * Add ShowCdpNeighborsDetail for:
+      show cdp neighbors detail
+* NXOS
+  * Add ShowCdpNeighbors for:
+      show cdp neighbors
+  * Add ShowCdpNeighborsDetail for:
+      show cdp neighbors detail
+
+--------------------------------------------------------------------------------
+                                   TRACEROUTE
+--------------------------------------------------------------------------------
+* IOSXE
+  * Enhanced Traceroute to parse URL along with the Ip Address
+
 --------------------------------------------------------------------------------
                                    PLATFORM
 --------------------------------------------------------------------------------
@@ -45,6 +195,14 @@
         show etherchannel load-balancing
     * Add ShowLacpNeighborDetail for:
         show lacp neighbor detail
+
+* IOSXR
+    * Add ShowLacpSystemId for:
+        show lacp system-id
+    * Add ShowBundle for:
+        show lacp bundle
+    * Add ShowLacp for:
+        show lacp
 
 --------------------------------------------------------------------------------
                                    INTERFACE
@@ -136,7 +294,7 @@
           show mpls interfaces <interface>
           show mpls interfaces <interface> detail
           show mpls interfaces detail
-          
+
 --------------------------------------------------------------------------------
                                    SESSION
 --------------------------------------------------------------------------------
@@ -175,6 +333,92 @@
         'show snmp mib'
 
 --------------------------------------------------------------------------------
+                                   PLATFORM
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowEnvironment for:
+        show environment
+    * Add ShowEnvironmentAll for:
+        show environment all
+    * Add ShowModule for:
+        show module
+    * Add ShowSwitch for:
+        show switch
+    * Add ShowSwitchDetail for:
+        show switch detail
+
+--------------------------------------------------------------------------------
+                                   RPF
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowIpRpf for:
+        show ip rpf <mroute address>
+        show ip rpf vrf <vrf> <mroute address>
+    * Add ShowIpv6Rpf for:
+        show ipv6 rpf <mroute address>
+        show ipv6 rpf vrf <vrf> <mroute address>
+
+--------------------------------------------------------------------------------
+                                   ROUTING
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowIpv6RouteWord for:
+        show ipv6 route <Hostname or A.B.C.D>
+        show ipv6 route vrf <vrf> <Hostname or A.B.C.D>
+
+--------------------------------------------------------------------------------
+                                   ISSU
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowIssuStateDetail for:
+          show issu state detail
+    * Add ShowIssuRollbackTimer for:
+          show issu rollback-timer
+
+--------------------------------------------------------------------------------
+                                   POWER
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowStackPower for:
+          show stack-power
+    * Add ShowPowerInlineInterface for:
+          show power inline <interface>
+
+--------------------------------------------------------------------------------
+                                   DOT1X
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowDot1xAllStatistics for:
+          show dot1x all statistics
+
+--------------------------------------------------------------------------------
+                                   CRYPTO
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowCryptoPkiCertificates for:
+          show crypto pki certificates
+          show crypto pki certificates <WORD>
+
+--------------------------------------------------------------------------------
+                                   SERVICE
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowServiceGroupTrafficStats for:
+        show service-group traffic-stats
+        show service-group traffic-stats <group>
+
+--------------------------------------------------------------------------------
+                                   FDB
+--------------------------------------------------------------------------------
+* IOS
+    * Add ShowMacAddressTable for:
+        show mac address-table
+    * Add ShowMacAddressTableAgingTime for:
+        show mac address-table aging-time
+    * Add ShowMacAddressTableLearning for:
+        show mac address-table learning
+
+--------------------------------------------------------------------------------
                                    BFD
 --------------------------------------------------------------------------------
 * IOS
@@ -190,6 +434,8 @@
         show arp application
     * Add ShowArpSummary for:
         show arp summary
+    * Add ShowArp
+        show arp
 
 --------------------------------------------------------------------------------
                                    L2VPN
@@ -239,9 +485,112 @@
             show ipv6 cef vrf <vrf> <prefix>
 
 ----------------------------------------------------------------------------------
+                                 ROUTING
+----------------------------------------------------------------------------------
+* NXOS
+  * Updated ShowRoutingIpv6VrfAll to support different vrf
+
+----------------------------------------------------------------------------------
+                                 OSPF
+----------------------------------------------------------------------------------
+* IOSXR
+  * Updated ShowOspfVrfAllInclusiveNeighborDetail to have bfd mode/status
+
+----------------------------------------------------------------------------------
+                                 PROTOCOLS
+----------------------------------------------------------------------------------
+* IOSXE
+  * Fixed ShowProtocols for bgp and ospf
+
+* IOS
+  * Add ShowIpProtocolsSectionRip for:
+      show ip protocols | sec rip
+      show ip protocols vrf {vrf} | sec rip
+  * Add ShowIpv6ProtocolsSectionRip for:
+      show ipv6 protocols | sec rip
+      show ipv6 protocols vrf {vrf} | sec rip
+
+
+----------------------------------------------------------------------------------
+                                 ACL
+----------------------------------------------------------------------------------
+* IOSXE
+  * Updated ShowAccessLists
+  * Add ShowIpAccessLists for :
+          show ip access-lists
+          show ip access-lists <acl>
+  * Add ShowIpv6AccessLists for :
+          show ipv6 access-list
+          show ipv6 access-list <acl>
+
+* IOSXR
+    * Add ShowAclAfiAll for:
+        show access-lists afi-all
+    * Add ShowAclEthernetServices for:
+        show access-lists ethernet-services
+
+----------------------------------------------------------------------------------
+                                   LLDP
+----------------------------------------------------------------------------------
+* IOSXR
+    * Add ShowLldp for:
+        show lldp
+    * Add ShowLldpEntry for:
+        show lldp entry *
+    * Add ShowLldpNeighborsDetail for:
+        show lldp neighbors detail
+    * Add ShowLldpTraffic for:
+        show lldp traffic
+    * Add ShowLldpInterface for:
+        show lldp interface
+
+----------------------------------------------------------------------------------
+                                   IGMP
+----------------------------------------------------------------------------------
+* IOS
+    * Add ShowIpIgmpSsmMapping for:
+        show ip igmp ssm-mapping <WORD>
+        show ip igmp vrf <WORD> ssm-mapping <WORD>
+
+----------------------------------------------------------------------------------
                                    RIP
 ----------------------------------------------------------------------------------
+* IOS
+    * Add ShowIpRipDatabase for:
+        show ip rip database
+        show ip rip database vrf {vrf}
+    * Add ShowIpv6RipDatabase for:
+        show ipv6 rip database
+        show ipv6 rip database vrf {vrf}
+    * Add ShowIpv6Rip for:
+        show ipv6 rip
+        show ipv6 rip vrf {vrf}
 * IOSXR
     * Add ShowRip for:
         show rip
-        show rip vrf <vrf>
+        show rip vrf {vrf}
+    * Add ShowRipStatistics for:
+        show rip statistics
+        show rip vrf {vrf} statistics
+
+--------------------------------------------------------------------------------
+                                PREFIX_LIST
+--------------------------------------------------------------------------------
+* IOSXR
+    * Add ShowRplPrefixSet for:
+        show rpl prefix-set
+        show rpl prefix-set <name>
+
+--------------------------------------------------------------------------------
+                                L2ROUTE
+--------------------------------------------------------------------------------
+* NXOS
+    * Add ShowL2routeEvpnMac for:
+        show l2route evpn mac evi {evi}
+
+--------------------------------------------------------------------------------
+                                VXLAN
+--------------------------------------------------------------------------------
+* NXOS
+    * Add ShowL2routeEvpnMacIpEvi for:
+        show l2route evpn mac-ip evi <evi>

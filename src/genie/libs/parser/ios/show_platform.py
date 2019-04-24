@@ -46,7 +46,11 @@ from genie.libs.parser.iosxe.show_platform import \
     ShowPlatformHardwareSerdesInternal as ShowPlatformHardwareSerdesInternal_iosxe, \
     ShowPlatformHardwareQfpBqsStatisticsChannelAll as ShowPlatformHardwareQfpBqsStatisticsChannelAll_iosxe, \
     ShowPlatformHardwareQfpInterfaceIfnameStatistics as ShowPlatformHardwareQfpInterfaceIfnameStatistics_iosxe, \
-    ShowPlatformHardwareQfpStatisticsDrop as ShowPlatformHardwareQfpStatisticsDrop_iosxe
+    ShowPlatformHardwareQfpStatisticsDrop as ShowPlatformHardwareQfpStatisticsDrop_iosxe, \
+    ShowEnvironment as ShowEnvironment_iosxe, \
+    ShowModule as ShowModule_iosxe, \
+    ShowSwitch as ShowSwitch_iosxe, \
+    ShowSwitchDetail as ShowSwitchDetail_iosxe
 
 
 class ShowVersion(ShowVersion_iosxe):
@@ -395,4 +399,24 @@ class ShowPlatformHardwareQfpInterfaceIfnameStatistics(ShowPlatformHardwareQfpIn
 class ShowPlatformHardwareQfpStatisticsDrop(ShowPlatformHardwareQfpStatisticsDrop_iosxe):
     """Parser for show platform hardware qfp active statistics drop
                   show platform hardware qfp standby statistics drop"""
+    pass
+
+
+class ShowEnvironment(ShowEnvironment_iosxe):
+    """Parser for show environment"""
+    pass
+
+
+class ShowModule(ShowModule_iosxe):
+    """Parser for show module"""
+    pass
+
+
+class ShowSwitch(ShowSwitch_iosxe):
+    """Parser for show switch"""
+    pass
+
+
+class ShowSwitchDetail(ShowSwitchDetail_iosxe):
+    """Parser for show switch detail"""
     pass
