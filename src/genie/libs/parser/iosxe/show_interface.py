@@ -74,6 +74,9 @@ class ShowInterfacesSchema(MetaParser):
                 Optional('mac_address'): str,
                 Optional('phys_address'): str,
                 Optional('delay'): int,
+                Optional('carrier_delay'): int,
+                Optional('carrier_delay_up'): int,
+                Optional('carrier_delay_down'): int,
                 Optional('keepalive'): int,
                 Optional('auto_negotiate'): bool,
                 Optional('arp_type'): str,
@@ -462,6 +465,28 @@ class ShowInterfaces(ShowInterfacesSchema):
                     interface_dict[interface]['flow_control']['send'] = False
                 continue
 
+            # Carrier delay is 10 sec
+            p_cd = re.compile(r'^Carrier +delay +is +(?P<carrier_delay>\d+).*$')
+            m = p_cd.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict = interface_dict.setdefault(interface, {})
+                sub_dict['carrier_delay'] = int(group['carrier_delay'])
+
+            # Asymmetric Carrier-Delay Up Timer is 2 sec
+            # Asymmetric Carrier-Delay Down Timer is 10 sec
+            p_cd_2 = re.compile(r'^Asymmetric +Carrier-Delay +(?P<type>Down|Up)'
+                                 ' +Timer +is +(?P<carrier_delay>\d+).*$')
+            m = p_cd_2.match(line)
+            if m:
+                group = m.groupdict()
+                tp = group['type'].lower()
+                sub_dict = interface_dict.setdefault(interface, {})
+                if tp == 'up':
+                    sub_dict['carrier_delay_up'] = int(group['carrier_delay'])
+                else:
+                    sub_dict['carrier_delay_down'] = int(group['carrier_delay'])
+
             # ARP type: ARPA, ARP Timeout 04:00:00
             p13 = re.compile(r'^ARP +type: +(?P<arp_type>\w+), +'
                               'ARP +Timeout +(?P<arp_timeout>[\w\:\.]+)$')
@@ -488,22 +513,23 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # Members in this channel: Gi1/0/2
+            # Members in this channel: Fo1/0/2 Fo1/0/4
             p15 = re.compile(r'^Members +in +this +channel: +'
                               '(?P<port_channel_member_intfs>[\w\/\.\s\,]+)$')
             m = p15.match(line)
             if m:
                 interface_dict[interface]['port_channel']\
                     ['port_channel_member'] = True
-                intfs = m.groupdict()['port_channel_member_intfs'].split(',')
+                intfs = m.groupdict()['port_channel_member_intfs'].split(' ')
                 intfs = [Common.convert_intf_name(i.strip()) for i in intfs]
                 interface_dict[interface]['port_channel']\
                     ['port_channel_member_intfs'] = intfs
 
-                # build connected interface port_channle
+                # build connected interface port_channel
                 for intf in intfs:
                     if intf not in interface_dict:
                         interface_dict[intf] = {}
-                    if 'port_channle' not in interface_dict[intf]:
+                    if 'port_channel' not in interface_dict[intf]:
                         interface_dict[intf]['port_channel'] = {}
                     interface_dict[intf]['port_channel']['port_channel_member'] = True
                     interface_dict[intf]['port_channel']['port_channel_int'] = interface
