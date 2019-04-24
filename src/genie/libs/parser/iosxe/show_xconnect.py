@@ -57,7 +57,7 @@ class ShowXconnectAll(ShowXconnectAllSchema):
             m = p1.match(line)
 
             if m:
-                xc, st, segment_1, s1, segment_2, s2 = m.groupdict().values()
+                segment_1, xc, s1, segment_2, st, s2 = m.groupdict().values()
                 segment_1 = segment_1.rstrip()
                 segment_2 = segment_2.rstrip()
                 ret_dict.setdefault('segment_1', {}).setdefault(segment_1, {}).setdefault('segment_2', {}).setdefault(segment_2, {})
