@@ -4,7 +4,7 @@ IOSXE parsers for the following commands
     * 'show ip msdp peer'
     * 'show ip msdp vrf <vrf> peer'
     * 'show ip msdp sa-cache'
-    * 'show ip msdb vrf <vrf> sa-cache'
+    * 'show ip msdp vrf <vrf> sa-cache'
 '''
 
 # Python
@@ -383,7 +383,7 @@ class ShowIpMsdpSaCacheSchema(MetaParser):
 
     ''' Schema for:
         * 'show ip msdp sa-cache'
-        * 'show ip msdb vrf <vrf> sa-cache'
+        * 'show ip msdp vrf <vrf> sa-cache'
     '''
     schema = {
         'vrf': {
@@ -419,7 +419,7 @@ class ShowIpMsdpSaCacheSchema(MetaParser):
 
 class ShowIpMsdpSaCache(ShowIpMsdpSaCacheSchema):
 
-    cli_command = ['show ip msdb vrf {vrf} sa-cache',
+    cli_command = ['show ip msdp vrf {vrf} sa-cache',
                    'show ip msdp sa-cache', ]
 
     def cli(self, vrf='', output=None):
