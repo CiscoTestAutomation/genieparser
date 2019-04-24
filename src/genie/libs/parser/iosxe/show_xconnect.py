@@ -46,23 +46,29 @@ class ShowXconnectAll(ShowXconnectAllSchema):
         ret_dict = {}
 
         for line in out.splitlines():
-            line = line.rstrip()
+            line = line.strip()
 
+            # XC ST  Segment 1                         S1 Segment 2                         S2
+            # ------+---------------------------------+--+---------------------------------+--
             # IA pri   ac Gi0/0/1:10(Ethernet)         DN mpls 10.239.6.2:684955608         DN
             # UP pri mpls 2.2.2.2:888                  UP   ac Gi3:9(Ethernet)              UP
             # -- pri  vfi sample-vfi                   UP unkn Invalid Segment              --
             # UP pri   bd 300                          UP  vfi sample-vfi                   UP
-            p1 = re.compile(r'^\s*(?P<xc>(UP|DN|AD|IA|SB|HS|RV|NH|\-\-))\s+(?P<st>(pri|sec))\s+(?P<segment1>.*)\s+(?P<s1>(UP|DN|AD|IA|SB|HS|RV|NH|\-\-))\s+(?P<segment2>.*)\s+(?P<s2>(UP|DN|AD|IA|SB|HS|RV|NH|\-\-))')
+            p1 = re.compile(r'^(?P<xc>(UP|DN|AD|IA|SB|HS|RV|NH|\-\-))\s+(?P<st>(pri|sec))\s+(?P<segment1>.*)\s+(?P<s1>(UP|DN|AD|IA|SB|HS|RV|NH|\-\-))\s+(?P<segment2>.*)\s+(?P<s2>(UP|DN|AD|IA|SB|HS|RV|NH|\-\-))')
             m = p1.match(line)
-
             if m:
-                xc, st, segment_1, s1, segment_2, s2 = m.groupdict().values()
-                segment_1 = segment_1.rstrip()
-                segment_2 = segment_2.rstrip()
-                ret_dict.setdefault('segment_1', {}).setdefault(segment_1, {}).setdefault('segment_2', {}).setdefault(segment_2, {})
-                ret_dict['segment_1'][segment_1]['s1'] = s1
-                ret_dict['segment_1'][segment_1]['segment_2'][segment_2]['s2'] = s2
-                ret_dict['segment_1'][segment_1]['segment_2'][segment_2]['xc'] = xc
-                ret_dict['segment_1'][segment_1]['segment_2'][segment_2]['st'] = st
+                group = m.groupdict()
+                segment_1 = group['segment1'].strip()
+                segment_2 = group['segment2'].strip()
+                # segment_1
+                sg1_dict = ret_dict.setdefault('segment_1', {}).\
+                                      setdefault(segment_1, {})
+                sg1_dict['s1'] = group['s1'].strip()
+                # segment_2
+                sg2_dict = sg1_dict.setdefault('segment_2', {}).\
+                                    setdefault(segment_2, {})
+                sg2_dict['s2'] = group['s2'].strip()
+                sg2_dict['xc'] = group['xc'].strip()
+                sg2_dict['st'] = group['st'].strip()
 
         return ret_dict
