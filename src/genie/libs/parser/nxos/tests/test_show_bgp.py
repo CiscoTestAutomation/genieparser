@@ -14991,7 +14991,6 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowBgpVrfAllNeighborsAdvertisedRoutes(device=self.device)
         parsed_output = obj.parse(vrf='default', neighbor='10.186.0.2')
-        print(parsed_output)
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_show_bgp_vrf_all_neighbors_advertised_routes_golden2(self):
