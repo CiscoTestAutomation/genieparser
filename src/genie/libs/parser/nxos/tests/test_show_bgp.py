@@ -29284,7 +29284,7 @@ class test_show_bgp_l2vpn_evpn_neighbors_advertised_routes(unittest.TestCase):
                                 'bgp_table_version':156,
                                 'local_router_id':'2.2.2.2',
                                 'route_distinguisher':'2.2.2.2:32868',
-                                'rd_l2vni':'10101',
+                                'rd_l2vni':10101,
                                 'advertised':{  
                                     '[2]:[0]:[0]:[48]:[fa16.3e79.6bfe]:[0]:[0.0.0.0]/216':{  
                                         'index':{  
@@ -29412,7 +29412,7 @@ class test_show_bgp_l2vpn_evpn_neighbors_advertised_routes(unittest.TestCase):
                                 'bgp_table_version':156,
                                 'local_router_id':'2.2.2.2',
                                 'route_distinguisher':'2.2.2.2:32968',
-                                'rd_l2vni':'10201',
+                                'rd_l2vni':10201,
                                 'advertised':{  
 
                                 }
@@ -29421,7 +29421,7 @@ class test_show_bgp_l2vpn_evpn_neighbors_advertised_routes(unittest.TestCase):
                                 'bgp_table_version':156,
                                 'local_router_id':'2.2.2.2',
                                 'route_distinguisher':'2.2.2.2:32969',
-                                'rd_l2vni':'10202',
+                                'rd_l2vni':10202,
                                 'advertised':{  
                                     '[2]:[0]:[0]:[48]:[fa16.3e79.6bfe]:[0]:[0.0.0.0]/216':{  
                                         'index':{  
@@ -29541,7 +29541,7 @@ class test_show_bgp_l2vpn_evpn_neighbors_advertised_routes(unittest.TestCase):
                                 'bgp_table_version':156,
                                 'local_router_id':'2.2.2.2',
                                 'route_distinguisher':'2.2.2.2:3',
-                                'rd_l3vni':'10100',
+                                'rd_l3vni':10100,
                                 'advertised':{  
                                     '[2]:[0]:[0]:[48]:[5e00.0001.0007]:[0]:[0.0.0.0]/216':{  
                                         'index':{  
@@ -29561,7 +29561,7 @@ class test_show_bgp_l2vpn_evpn_neighbors_advertised_routes(unittest.TestCase):
                                 'bgp_table_version':156,
                                 'local_router_id':'2.2.2.2',
                                 'route_distinguisher':'2.2.2.2:4',
-                                'rd_l3vni':'10200',
+                                'rd_l3vni':10200,
                                 'advertised':{  
                                     '[2]:[0]:[0]:[48]:[5e00.0001.0007]:[0]:[0.0.0.0]/216':{  
                                         'index':{  
