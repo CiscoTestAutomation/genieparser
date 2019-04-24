@@ -214,6 +214,9 @@
         show interface <interface> stats
         show interface stats
 
+* IOSXE
+    * Update ShowInterfaces to support carrier delay
+
 --------------------------------------------------------------------------------
                                   LISP
 --------------------------------------------------------------------------------
