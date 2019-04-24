@@ -574,6 +574,9 @@
         show ipv6 rip
         show ipv6 rip vrf {vrf}
 * IOSXR
+    * Add ShowRip for:
+        show rip
+        show rip vrf {vrf}
     * Add ShowRipStatistics for:
         show rip statistics
         show rip vrf {vrf} statistics
