@@ -4401,7 +4401,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutesSchema(MetaParser):
                                 {Optional('bgp_table_version'): int,
                                  Optional('local_router_id'): str,
                                  Optional('route_distinguisher'): str,
-                                 Optional('rd_vrf'): str,
+                                 Optional('default_vrf'): str,
                                  Optional('rd_vniid'): str,
                                  Optional('advertised'): 
                                     {Optional(Any()):
@@ -4559,7 +4559,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
         # Route Distinguisher: 2:100    (VRF vpn2)
         p14 = re.compile(r'^\s*Route +Distinguisher *:'
                         r' +(?P<route_distinguisher>(\S+))'
-                        r'(?: +\((?P<rd_vrf>VRF|\w+VNI) +(?P<rd_vniid>(\S+))\))?$')
+                        r'(?: +\((?P<default_vrf>VRF|\w+VNI) +(?P<rd_vniid>(\S+))\))?$')
 
         for line in out.splitlines():
             line = line.rstrip()
@@ -4787,8 +4787,8 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
                 af_dict.update({'local_router_id': local_router_id})
                 af_dict.update({'route_distinguisher': route_distinguisher})
 
-                if m.groupdict()['rd_vrf']: 
-                    af_dict.update({'rd_vrf': str(m.groupdict()['rd_vrf'])})
+                if m.groupdict()['default_vrf']: 
+                    af_dict.update({'default_vrf': str(m.groupdict()['default_vrf'])})
 
                 if m.groupdict()['rd_vniid']:
                     af_dict.update({'rd_vniid': str(m.groupdict()['rd_vniid'])})
