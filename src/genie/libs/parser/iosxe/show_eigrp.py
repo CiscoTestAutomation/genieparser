@@ -266,10 +266,6 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
 
                 continue
 
-            
-
-
-
         return parsed_dict
 
 
