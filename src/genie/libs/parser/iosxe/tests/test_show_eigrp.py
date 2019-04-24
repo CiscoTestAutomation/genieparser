@@ -397,7 +397,8 @@ class test_show_eigrp_neighbors(unittest.TestCase):
 
     device_output_9 = {'execute.return_value': '''
         # show ip eigrp vrf VRF1 neighbors
-        EIGRP-IPv4 VR(test) Address-Family Neighbors for AS(100) VRF(VRF1)
+        EIGRP-IPv4 VR(test) Address-Family Neighbors for AS(100) 
+                   VRF(VRF1)
         H   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq
                                                            (sec)         (ms)       Cnt Num
         1   10.12.90.2              Gi2.390                  13 2d10h      24   144  0  8
