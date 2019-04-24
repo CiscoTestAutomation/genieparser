@@ -566,9 +566,10 @@ class ShowRipDatabase(ShowRipDatabaseSchema):
                 address_family = 'ipv6' if ':' in route else 'ipv4'
                 
                 if not ret_dict:
-                    routes_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {}).setdefault('address_family', {}). \
-                                        setdefault(address_family, {}).setdefault('instance', {}).setdefault('rip', {}). \
-                                        setdefault('routes', {})
+                    routes_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {}). \
+                        setdefault('address_family', {}).setdefault(address_family, {}). \
+                        setdefault('instance', {}).setdefault('rip', {}). \
+                        setdefault('routes', {})
 
                 route_dict = routes_dict.setdefault(route, {}).setdefault('index', {})
 
