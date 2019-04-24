@@ -81,12 +81,16 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
                         '*for \w+\(\s*(?P<as_num>\d+)\)\s*'
                         '(?:VRF\((?P<vrf>\S+)\))?$')
 
+        # When VRF is not on the same line as r1 and r2
+        # VRF(VRF1)
+        r3 = re.compile(r'^VRF\((?P<vrf>\S+)\)$')
+
         # H   Address      Interface  Hold  Uptime    SRTT   RTO    Q   Seq
         #                             (sec)           (ms)          Cnt Num
         # 0   10.1.1.2     Gi0/0      13    00:00:03  1996   5000   0   5
         # 2   10.1.1.9     Gi0/0      14    00:02:24  206    5000   0   5
         # 1   10.1.2.3     Gi0/1      11    00:20:39  2202   5000   0   5
-        r3 = re.compile(r'^(?P<peer_handle>\d+) +'
+        r4 = re.compile(r'^(?P<peer_handle>\d+) +'
                         '(?P<nbr_address>\S+) +'
                         '(?P<eigrp_interface>[A-Za-z]+\s*[\.\d\/]+) +'
                         '(?P<hold>\d+) +(?P<uptime>\S+) +'
@@ -97,7 +101,7 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
         # H   Address                 Interface       Hold Uptime   SRTT   RTO  Q  Seq
         #                                             (sec)         (ms)       Cnt Num
         # 1   Link Local Address:     Gi0/0/0/1.90      12 01:36:14   11   200  0  28
-        r4 = re.compile(r'^(?P<peer_handle>\d+) +Link\-local\s+address: +'
+        r5 = re.compile(r'^(?P<peer_handle>\d+) +Link\-local\s+address: +'
                         '(?P<eigrp_interface>[A-Za-z]+\s*[\d\/\.]+) +'
                         '(?P<hold>\d+) +(?P<uptime>\S+) +(?P<srtt>\d+) +'
                         '(?P<rto>\d+) +(?P<q_cnt>\d+) +'
@@ -105,7 +109,7 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
 
         # fe80::5c00:ff:fe02:7
         # fe80::5c00:ff:fe02:7
-        r5 = re.compile(r'^(?P<nbr_address>\S+)$')
+        r6 = re.compile(r'^(?P<nbr_address>\S+:\S*:\S*:\S*:\S*:\S+)$')
 
         parsed_dict = {}
         eigrp_instance = ''
@@ -135,17 +139,26 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
 
                 group = result.groupdict()
 
-                name = group['name']                
+                name = group['name']
                 vrf = group['vrf']
                 address_family = group['address_family'].lower()
                 eigrp_instance = group['as_num']
+
+                continue
+
+            # VRF(VRF1)
+            result = r3.match(line)
+            if result:
+                group = result.groupdict()
+                vrf = group['vrf']
+                continue
 
             # H   Address      Interface  Hold  Uptime    SRTT   RTO    Q   Seq
             #                             (sec)           (ms)          Cnt Num
             # 0   10.1.1.2     Gi0/0      13    00:00:03  1996   5000   0   5
             # 2   10.1.1.9     Gi0/0      14    00:02:24  206    5000   0   5
             # 1   10.1.2.3     Gi0/1      11    00:20:39  2202   5000   0   5
-            result = r3.match(line)
+            result = r4.match(line)
 
             if result:
 
@@ -191,7 +204,7 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
                 ip_dict['last_seq_number'] = int(group['last_seq_number'])
 
             # 1   Link Local Address:     Gi0/0/0/1.90      12 01:36:14   11   200  0  28
-            result = r4.match(line)            
+            result = r5.match(line)            
             if result:
 
                 group = result.groupdict()
@@ -216,7 +229,7 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
 
             # fe80::5c00:ff:fe02:7
             # fe80::5c00:ff:fe02:7
-            result = r5.match(line)
+            result = r6.match(line)
             if result:
 
                 group = result.groupdict()
@@ -252,6 +265,10 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
                 ip_dict['last_seq_number'] = last_seq_number
 
                 continue
+
+            
+
+
 
         return parsed_dict
 
