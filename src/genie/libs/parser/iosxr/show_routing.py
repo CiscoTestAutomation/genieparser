@@ -88,33 +88,31 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
            A - access/subscriber, a - Application route
            M - mobile route, r - RPL, t - Traffic Engineering, (!) - FRR Backup path
         """
-        source_protocol_dict = {}
-        source_protocol_dict['ospf'] = ['O','IA','N1','N2','E1','E2']
-        source_protocol_dict['odr'] = ['o']
-        source_protocol_dict['isis'] = ['i','su','L1','L2','ia']
-        source_protocol_dict['eigrp'] = ['D','EX']
-        source_protocol_dict['static'] = ['S']
-        source_protocol_dict['egp'] = ['E']
-        source_protocol_dict['dagr'] = ['G']
-        source_protocol_dict['rpl'] = ['r']
-        source_protocol_dict['mobile router'] = ['M']
-        source_protocol_dict['lisp'] = ['I', 'l']
-        source_protocol_dict['nhrp'] = ['H']
-        source_protocol_dict['local'] = ['L']
-        source_protocol_dict['connected'] = ['C']
-        source_protocol_dict['bgp'] = ['B']
-        source_protocol_dict['rip'] = ['R']
-        source_protocol_dict['per-user static route'] = ['U']
-        source_protocol_dict['rip'] = ['R']
-        source_protocol_dict['access/subscriber'] = ['A']
-        source_protocol_dict['traffic engineering'] = ['t']
+        source_protocol_dict = {
+            'ospf' : ['O','IA','N1','N2','E1','E2'],
+            'odr' : ['o'],
+            'isis' : ['i','su','L1','L2','ia'],
+            'eigrp' : ['D','EX'],
+            'static' : ['S'],
+            'egp' : ['E'],
+            'dagr' : ['G'],
+            'rpl' : ['r'],
+            'mobile router' : ['M'],
+            'lisp' : ['I', 'l'],
+            'nhrp' : ['H'],
+            'local' : ['L'],
+            'connected' : ['C'],
+            'bgp' : ['B'],
+            'rip' : ['R'], 
+            'per-user static route' : ['U'],
+            'rip' : ['R'],
+            'access/subscriber' : ['A'],
+            'traffic engineering' : ['t'],
+        }
 
         result_dict = {}
         for line in out.splitlines():
-            if line:
-                line = line.rstrip()
-            else:
-                continue
+            line = line.strip()
             next_hop = interface = updated = metrics = route_preference = ""
 
             # VRF: VRF501
@@ -134,7 +132,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                if line != self.cli_command[0] and line != self.cli_command[1]:
+                if line != cmd:
                     active = True
                     updated = ""
                     if group['code1']:
@@ -197,11 +195,8 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                         if source_protocol_codes:
                             result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                                 ['source_protocol_codes'] = source_protocol_codes
-                            try:
-                                result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                                    ['source_protocol'] = source_protocol
-                            except:
-                                print('bugger  ------->' + source_protocol_codes)
+                            result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
+                                ['source_protocol'] = source_protocol
 
                         if 'next_hop' not in result_dict['vrf'][vrf]['address_family'][af]['routes'][route]:
                             result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] = {}
@@ -411,33 +406,32 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
        M - mobile route, r - RPL, t - Traffic Engineering, (!) - FRR Backup path
         """
         next_hop = interface = metrics = route_preference = ""
-        source_protocol_dict = {}
-        source_protocol_dict['ospf'] = ['O', 'IA', 'N1', 'N2', 'E1', 'E2']
-        source_protocol_dict['odr'] = ['o']
-        source_protocol_dict['isis'] = ['i', 'su', 'L1', 'L2', 'ia']
-        source_protocol_dict['eigrp'] = ['D', 'EX']
-        source_protocol_dict['static'] = ['S']
-        source_protocol_dict['egp'] = ['E']
-        source_protocol_dict['dagr'] = ['G']
-        source_protocol_dict['rpl'] = ['r']
-        source_protocol_dict['mobile router'] = ['M']
-        source_protocol_dict['lisp'] = ['I', 'l']
-        source_protocol_dict['nhrp'] = ['H']
-        source_protocol_dict['local'] = ['L']
-        source_protocol_dict['connected'] = ['C']
-        source_protocol_dict['bgp'] = ['B']
-        source_protocol_dict['rip'] = ['R']
-        source_protocol_dict['per-user static route'] = ['U']
-        source_protocol_dict['rip'] = ['R']
-        source_protocol_dict['access/subscriber'] = ['A']
-        source_protocol_dict['traffic engineering'] = ['t']
+        
+        source_protocol_dict = {
+            'ospf' : ['O','IA','N1','N2','E1','E2'],
+            'odr' : ['o'],
+            'isis' : ['i','su','L1','L2','ia'],
+            'eigrp' : ['D','EX'],
+            'static' : ['S'],
+            'egp' : ['E'],
+            'dagr' : ['G'],
+            'rpl' : ['r'],
+            'mobile router' : ['M'],
+            'lisp' : ['I', 'l'],
+            'nhrp' : ['H'],
+            'local' : ['L'],
+            'connected' : ['C'],
+            'bgp' : ['B'],
+            'rip' : ['R'], 
+            'per-user static route' : ['U'],
+            'rip' : ['R'],
+            'access/subscriber' : ['A'],
+            'traffic engineering' : ['t'],
+        }
 
         result_dict = {}
         for line in out.splitlines():
-            if line:
-                line = line.rstrip()
-            else:
-                continue
+            line = line.strip()
 
             # VRF: VRF501
             p1 = re.compile(r'^\s*VRF: +(?P<vrf>[\w]+)$')
@@ -454,7 +448,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
             if m:
                 group = m.groupdict()
                 active = True
-                if line != self.cli_command[0] and line != self.cli_command[1]:
+                if line != cmd:
                     if group['code1']:
                         source_protocol_codes = group['code1'].strip()
                         for key, val in source_protocol_dict.items():
