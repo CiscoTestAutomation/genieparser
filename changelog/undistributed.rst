@@ -595,6 +595,9 @@
     * Add ShowRipStatistics for:
         show rip statistics
         show rip vrf {vrf} statistics
+    * Add ShowRipDatabase for:
+        show rip database
+        show rip vrf <vrf> database
 
 --------------------------------------------------------------------------------
                                 PREFIX_LIST
