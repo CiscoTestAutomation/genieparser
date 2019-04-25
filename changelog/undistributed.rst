@@ -7,6 +7,45 @@
 
 
 --------------------------------------------------------------------------------
+                                   MSDP
+--------------------------------------------------------------------------------
+* IOSXE
+  * Add ShowIpMsdpPeer for:
+    show ip msdp peer
+    show ip msdp vrf <vrf> peer
+  * Add ShowIpMsdpSaCache for:
+    show ip msdp sa-cache
+    show ip msdb vrf <vrf> sa-cache
+--------------------------------------------------------------------------------
+                                   POLICY-MAP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Add ShowPolicyMapControlPlane for:
+        show policy-map control-plane
+    * Add ShowPolicyMapInterface for:
+        show policy-map interface {interface}
+        show policy-map interface
+    * Add ShowPolicyMapInterfaceInput for:
+        show policy-map interface {interface} input class {class_name}
+        show policy-map interface {interface} input
+    * Add ShowPolicyMapInterfaceOutput for:
+        show policy-map interface {interface} output class {class_name}
+        show policy-map interface {interface} output
+    * Add ShowPolicyMapInterfaceClass for:
+        show policy-map interface class {class_name}
+    * Add ShowPolicyMapTargetClass for:
+        show policy-map target service-group {num}
+    * Add ShowPolicyMap for :
+        show policy-map
+        show policy-map {name}
+
+--------------------------------------------------------------------------------
+                                   BGP
+--------------------------------------------------------------------------------
+* IOSXE
+  * Removed support for cmd in SuperParser classes
+
+--------------------------------------------------------------------------------
                                    ISIS
 --------------------------------------------------------------------------------
 * IOSXR
@@ -67,6 +106,10 @@
   * Add ShowBgpL2vpnEvpnNeighborsAdvertisedRoutes for:
     show bgp l2vpn evpn neighbors {neighbor} advertised-routes
 
+* NXOS
+  * Add ShowBgpVrfIpv4Unicast for:
+      * show bgp vrf <vrf> ipv4 unicast
+
 ----------------------------------------------------------------------------------
                                   EIGRP
 ----------------------------------------------------------------------------------
@@ -82,6 +125,11 @@
       * Add ShowIpEigrpNeighborsDetail for:
             show ip eigrp neighbors detail
             show ip eigrp vrf <vrf> neighbors detail
+
+      * Add ShowIpv6EigrpNeighborsDetail for:
+            show ipv6 eigrp neighbors detail
+            show ipv6 eigrp vrf <vrf> neighbors detail
+
 * IOSXR
     * Add ShowEigrpIpv4Neighbors for:
             show eigrp ipv4 neighbors
@@ -187,6 +235,9 @@
     * Add ShowInterfacesStats for:
         show interface <interface> stats
         show interface stats
+
+* IOSXE
+    * Update ShowInterfaces to support carrier delay
 
 --------------------------------------------------------------------------------
                                   LISP
@@ -335,6 +386,11 @@
     * Add ShowIpv6RouteWord for:
         show ipv6 route <Hostname or A.B.C.D>
         show ipv6 route vrf <vrf> <Hostname or A.B.C.D>
+* NXOS
+    * Updated ShowIpRoute for:
+        show ip route
+        show ip route vrf {vrf}
+        show ip route vrf all
 
 --------------------------------------------------------------------------------
                                    ISSU
@@ -535,6 +591,16 @@
     * Add ShowIpv6Rip for:
         show ipv6 rip
         show ipv6 rip vrf {vrf}
+* IOSXR
+    * Add ShowRip for:
+        show rip
+        show rip vrf {vrf}
+    * Add ShowRipStatistics for:
+        show rip statistics
+        show rip vrf {vrf} statistics
+    * Add ShowRipDatabase for:
+        show rip database
+        show rip vrf <vrf> database
 
 --------------------------------------------------------------------------------
                                 PREFIX_LIST
@@ -550,3 +616,10 @@
 * NXOS
     * Add ShowL2routeEvpnMac for:
         show l2route evpn mac evi {evi}
+
+--------------------------------------------------------------------------------
+                                VXLAN
+--------------------------------------------------------------------------------
+* NXOS
+    * Add ShowL2routeEvpnMacIpEvi for:
+        show l2route evpn mac-ip evi <evi>

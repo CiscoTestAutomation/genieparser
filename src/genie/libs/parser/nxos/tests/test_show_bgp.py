@@ -40,7 +40,8 @@ from genie.libs.parser.nxos.show_bgp import ShowBgpProcessVrfAll,\
                                  ShowBgpIpMvpnSaadDetail,\
                                  ShowBgpL2vpnEvpn,\
                                  ShowBgpIpMvpn,\
-                                 ShowBgpL2vpnEvpnNeighborsAdvertisedRoutes
+                                 ShowBgpL2vpnEvpnNeighborsAdvertisedRoutes, \
+                                 ShowBgpVrfIpv4Unicast
 
 # =========================================
 #  Unit test for 'show bgp process vrf all'
@@ -29188,6 +29189,80 @@ Route Distinguisher: 10.16.2.2:4    (L3VNI 10200)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+# =======================================================================
+#  Unit test for 'show bgp vrf <vrf> ipv4 unicast '
+# ========================================================================
+class test_show_bgp_vrf_ipv4_unicast(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value':'''
+    R2# show bgp vrf vni_10100 ipv4 unicast 
+    BGP routing table information for VRF vni_10100, address family IPv4 Unicast
+    BGP table version is 12, Local Router ID is 100.101.0.1
+    Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+    Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-i
+    njected
+    Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+       Network            Next Hop            Metric     LocPrf     Weight Path
+    *>i100.101.8.3/32     66.66.66.66           2000        100          0 200 i
+    *>i100.101.8.4/32     66.66.66.66           2000        100          0 200 i
+    '''}
+    golden_parsed_output = {
+        'vrf': {
+            'vni_10100': {
+                'address_family': {
+                    'ipv4 unicast': {
+                        'bgp_table_version': 12,
+                        'local_router_id': '100.101.0.1',
+                        'prefixes': {
+                            '100.101.8.3/32': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'path_type': 'i',
+                                        'next_hop': '66.66.66.66',
+                                        'metric': 2000,
+                                        'localprf': 100,
+                                        'weight': 0,
+                                        'path': '200',
+                                        'origin_codes': 'i',
+                                        },
+                                    },
+                                },
+                            '100.101.8.4/32': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'path_type': 'i',
+                                        'next_hop': '66.66.66.66',
+                                        'metric': 2000,
+                                        'localprf': 100,
+                                        'weight': 0,
+                                        'path': '200',
+                                        'origin_codes': 'i',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+    def test_empty_output(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpVrfIpv4Unicast(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(vrf='vni_10100')
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpVrfIpv4Unicast(device=self.device)
+        parsed_output = obj.parse(vrf='vni_10100')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 # =========================================================================
 # Unit Test for 'show bgp l2vpn evpn neighbors {neighbor} advertised-routes

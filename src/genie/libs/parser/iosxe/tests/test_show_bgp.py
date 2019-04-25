@@ -6178,6 +6178,9 @@ class test_show_bgp_all_neighbors(unittest.TestCase):
                                 'retrans': 0,
                                 'sendwnd': 0,
                                 'timewait': 0}},
+                        'bgp_neighbor_session': {
+                        'sessions': 1,
+                        },
                         'bgp_negotiated_capabilities': 
                             {'enhanced_refresh': 'advertised',
                             'four_octets_asn': 'advertised',
@@ -6348,6 +6351,9 @@ class test_show_bgp_all_neighbors(unittest.TestCase):
                                 'retrans': 0,
                                 'sendwnd': 0,
                                 'timewait': 0}},
+                                'bgp_neighbor_session': {
+                            'sessions': 1,
+                            },
                         'bgp_negotiated_capabilities': 
                             {'enhanced_refresh': 'advertised',
                             'four_octets_asn': 'advertised',
@@ -6516,6 +6522,9 @@ class test_show_bgp_all_neighbors(unittest.TestCase):
                                 'retrans': 0,
                                 'sendwnd': 0,
                                 'timewait': 0}},
+                                'bgp_neighbor_session': {
+                            'sessions': 1,
+                            },
                         'bgp_negotiated_capabilities': 
                             {'enhanced_refresh': 'advertised',
                             'four_octets_asn': 'advertised',
@@ -6687,6 +6696,9 @@ class test_show_bgp_all_neighbors(unittest.TestCase):
                                         'retrans': 0,
                                         'sendwnd': 0,
                                         'timewait': 0}},
+                                        'bgp_neighbor_session': {
+                                    'sessions': 1,
+                                    },
                                 'bgp_negotiated_capabilities': 
                                     {'enhanced_refresh': 'advertised',
                                     'four_octets_asn': 'advertised',
@@ -6854,6 +6866,9 @@ class test_show_bgp_all_neighbors(unittest.TestCase):
                             'retrans': 0,
                             'sendwnd': 0,
                             'timewait': 0}},
+                            'bgp_neighbor_session': {
+                            'sessions': 1,
+                            },
                     'bgp_negotiated_capabilities': 
                         {'enhanced_refresh': 'advertised',
                         'four_octets_asn': 'advertised '
@@ -7023,6 +7038,9 @@ class test_show_bgp_all_neighbors(unittest.TestCase):
                             'retrans': 0,
                             'sendwnd': 0,
                             'timewait': 0}},
+                            'bgp_neighbor_session': {
+                            'sessions': 1,
+                            },
                     'bgp_negotiated_capabilities': 
                         {'enhanced_refresh': 'advertised',
                         'four_octets_asn': 'advertised '
@@ -7194,6 +7212,9 @@ class test_show_bgp_all_neighbors(unittest.TestCase):
                             'retrans': 0,
                             'sendwnd': 0,
                             'timewait': 0}},
+                            'bgp_neighbor_session': {
+                            'sessions': 1,
+                            },
                     'bgp_negotiated_capabilities': 
                         {'enhanced_refresh': 'advertised',
                         'four_octets_asn': 'advertised '
@@ -7364,6 +7385,9 @@ class test_show_bgp_all_neighbors(unittest.TestCase):
                             'retrans': 0,
                             'sendwnd': 0,
                             'timewait': 0}},
+                            'bgp_neighbor_session': {
+                            'sessions': 1,
+                            },
                     'bgp_negotiated_capabilities': 
                         {'enhanced_refresh': 'advertised',
                         'four_octets_asn': 'advertised '
@@ -8281,6 +8305,9 @@ class test_show_bgp_all_neighbors(unittest.TestCase):
                                 'retrans': 3,
                                 'sendwnd': 0,
                                 'timewait': 0}},
+                                'bgp_neighbor_session': {
+                            'sessions': 1,
+                            },
                         'bgp_negotiated_capabilities': 
                             {'enhanced_refresh': 'advertised '
                                                  'and '
@@ -8714,6 +8741,9 @@ class test_show_bgp_all_neighbors(unittest.TestCase):
                                                                                       'retrans': 14,
                                                                                       'sendwnd': 0,
                                                                                       'timewait': 0}},
+                                                                                      'bgp_neighbor_session': {
+                                                                                        'sessions': 1,
+                                                                                        },
                                                       'bgp_negotiated_capabilities': {'enhanced_refresh': 'advertised '
                                                                                                           'and '
                                                                                                           'received',
@@ -9047,6 +9077,9 @@ class test_show_bgp_all_neighbors(unittest.TestCase):
                             'hold_time': 180,
                             'keepalive_interval': 60
                         },
+                        'bgp_neighbor_session': {
+                            'sessions': 1,
+                            },
                         'bgp_negotiated_capabilities': {
                             'route_refresh': 'advertised and received(new)',
                             'four_octets_asn': 'advertised and received',
@@ -9222,6 +9255,9 @@ class test_show_bgp_all_neighbors(unittest.TestCase):
                             'hold_time': 180,
                             'keepalive_interval': 60
                         },
+                        'bgp_neighbor_session': {
+                            'sessions': 1,
+                            },
                         'bgp_negotiated_capabilities': {
                             'route_refresh': 'advertised and received(new)',
                             'four_octets_asn': 'advertised and received',
@@ -9398,6 +9434,9 @@ class test_show_bgp_all_neighbors(unittest.TestCase):
                             'hold_time': 180,
                             'keepalive_interval': 60
                         },
+                        'bgp_neighbor_session': {
+                            'sessions': 1,
+                            },
                         'bgp_negotiated_capabilities': {
                             'route_refresh': 'advertised and received(new)',
                             'four_octets_asn': 'advertised and received',
@@ -9573,6 +9612,9 @@ class test_show_bgp_all_neighbors(unittest.TestCase):
                             'hold_time': 180,
                             'keepalive_interval': 60
                         },
+                        'bgp_neighbor_session': {
+                            'sessions': 1,
+                            },
                         'bgp_negotiated_capabilities': {
                             'route_refresh': 'advertised and received(new)',
                             'four_octets_asn': 'advertised and received',
@@ -9752,6 +9794,9 @@ class test_show_bgp_all_neighbors(unittest.TestCase):
                             'hold_time': 180,
                             'keepalive_interval': 60
                         },
+                        'bgp_neighbor_session': {
+                            'sessions': 1,
+                            },
                         'bgp_negotiated_capabilities': {
                             'route_refresh': 'advertised',
                             'four_octets_asn': 'advertised',
@@ -9921,6 +9966,9 @@ class test_show_bgp_all_neighbors(unittest.TestCase):
                             'hold_time': 180,
                             'keepalive_interval': 60
                         },
+                        'bgp_neighbor_session': {
+                            'sessions': 1,
+                            },
                         'bgp_negotiated_capabilities': {
                             'route_refresh': 'advertised',
                             'four_octets_asn': 'advertised',
@@ -10095,6 +10143,9 @@ class test_show_bgp_all_neighbors(unittest.TestCase):
                             'hold_time': 180,
                             'keepalive_interval': 60
                         },
+                        'bgp_neighbor_session': {
+                            'sessions': 1,
+                            },
                         'bgp_negotiated_capabilities': {
                             'route_refresh': 'advertised',
                             'four_octets_asn': 'advertised',
@@ -10269,6 +10320,9 @@ class test_show_bgp_all_neighbors(unittest.TestCase):
                             'hold_time': 180,
                             'keepalive_interval': 60
                         },
+                        'bgp_neighbor_session': {
+                            'sessions': 1,
+                            },
                         'bgp_negotiated_capabilities': {
                             'route_refresh': 'advertised',
                             'four_octets_asn': 'advertised',
@@ -11060,7 +11114,7 @@ class test_show_bgp_all_neighbors(unittest.TestCase):
 
         For address family: VPNv6 Multicast
         '''}
-
+        
     def test_show_bgp_all_neighbors_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpAllNeighbors(device=self.device)
@@ -11094,6 +11148,7 @@ class test_show_bgp_all_neighbors(unittest.TestCase):
         obj = ShowBgpAllNeighbors(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output4)
+
 
 
 # =================================================================
@@ -11249,6 +11304,13 @@ class test_show_bgp_neighbors(unittest.TestCase):
                                 'retrans': 0,
                                 'sendwnd': 0,
                                 'timewait': 0}},
+                                'bgp_neighbor_session': {
+                            'sessions': 0,
+                            'stateful_switchover': 'NO',
+                            },
+                            'bgp_neighbor_session': {
+                    'sessions': 1,
+                    },
                         'bgp_negotiated_capabilities': 
                             {'enhanced_refresh': 'advertised '
                                                  'and '
@@ -11518,6 +11580,9 @@ class test_show_bgp_neighbors(unittest.TestCase):
                                 'retrans': 0,
                                 'sendwnd': 0,
                                 'timewait': 0}},
+                                'bgp_neighbor_session': {
+                    'sessions': 1,
+                    },
                         'bgp_negotiated_capabilities': 
                             {'enhanced_refresh': 'advertised '
                                                  'and '
@@ -12043,6 +12108,9 @@ class test_show_bgp_neighbors(unittest.TestCase):
                                 'retrans': 1,
                                 'sendwnd': 0,
                                 'timewait': 0}},
+                                'bgp_neighbor_session': {
+                    'sessions': 1,
+                    },
                         'bgp_negotiated_capabilities': 
                             {'enhanced_refresh': 'advertised '
                                                  'and '
@@ -12474,6 +12542,9 @@ class test_show_ip_bgp_neighbors(unittest.TestCase):
                                 'slow_peer_detection': False,
                                 'slow_peer_split_update_group_dynamic': False,
                                 'update_group_member': 44}},
+                                'bgp_neighbor_session': {
+                    'sessions': 1,
+                    },
                         'bgp_negotiated_capabilities': 
                             {'enhanced_refresh': 'advertised '
                                                  'and '
@@ -12823,6 +12894,9 @@ class test_show_ip_bgp_neighbors(unittest.TestCase):
                                                                                'retrans': 0,
                                                                                'sendwnd': 0,
                                                                                'timewait': 0}},
+                                                                               'bgp_neighbor_session': {
+                                                                                'sessions': 1,
+                                                                                },
                                                'bgp_negotiated_capabilities': {'enhanced_refresh': 'advertised '
                                                                                                    'and '
                                                                                                    'received',
@@ -13053,6 +13127,9 @@ class test_show_ip_bgp_neighbors(unittest.TestCase):
                                                                                'retrans': 0,
                                                                                'sendwnd': 0,
                                                                                'timewait': 0}},
+                                                                               'bgp_neighbor_session': {
+                                                                            'sessions': 1,
+                                                                            },
                                                'bgp_negotiated_capabilities': {'enhanced_refresh': 'advertised '
                                                                                                    'and '
                                                                                                    'received',
@@ -13585,6 +13662,9 @@ class test_show_ip_bgp_all_neighbors(unittest.TestCase):
                                                                                   'retrans': 1,
                                                                                   'sendwnd': 0,
                                                                                   'timewait': 0}},
+                                                                                  'bgp_neighbor_session': {
+                                                                                    'sessions': 1,
+                                                                                    },
                                                   'bgp_negotiated_capabilities': {'enhanced_refresh': 'advertised '
                                                                                                       'and '
                                                                                                       'received',
@@ -13768,6 +13848,9 @@ class test_show_ip_bgp_all_neighbors(unittest.TestCase):
                                                                                   'retrans': 1,
                                                                                   'sendwnd': 0,
                                                                                   'timewait': 0}},
+                                                                                  'bgp_neighbor_session': {
+                    'sessions': 1,
+                    },
                                                   'bgp_negotiated_capabilities': {'enhanced_refresh': 'advertised '
                                                                                                       'and '
                                                                                                       'received',
@@ -13992,6 +14075,9 @@ class test_show_ip_bgp_all_neighbors(unittest.TestCase):
                                                                                'retrans': 0,
                                                                                'sendwnd': 0,
                                                                                'timewait': 0}},
+                                                                               'bgp_neighbor_session': {
+                                                                        'sessions': 1,
+                                                                        },
                                                'bgp_negotiated_capabilities': {'enhanced_refresh': 'advertised '
                                                                                                    'and '
                                                                                                    'received',
@@ -14222,6 +14308,9 @@ class test_show_ip_bgp_all_neighbors(unittest.TestCase):
                                                                                'retrans': 0,
                                                                                'sendwnd': 0,
                                                                                'timewait': 0}},
+                                                                               'bgp_neighbor_session': {
+                    'sessions': 1,
+                    },
                                                'bgp_negotiated_capabilities': {'enhanced_refresh': 'advertised '
                                                                                                    'and '
                                                                                                    'received',

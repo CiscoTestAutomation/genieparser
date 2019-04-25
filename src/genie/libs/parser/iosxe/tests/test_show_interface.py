@@ -1038,6 +1038,7 @@ class test_show_interfaces(unittest.TestCase):
        }
 
     }
+
     golden_output = {'execute.return_value': '''
         GigabitEthernet1/0/1 is administratively down, line protocol is down (disabled) 
           Hardware is Gigabit Ethernet, address is 0057.d228.1a64 (bia 0057.d228.1a64)
@@ -1230,7 +1231,7 @@ class test_show_interfaces(unittest.TestCase):
 
     golden_interface_output = {'execute.return_value': '''
     CE1#show interfaces GigabitEthernet1
-GigabitEthernet1 is up, line protocol is up
+  GigabitEthernet1 is up, line protocol is up
   Hardware is CSR vNIC, address is 5e00.0001.0000 (bia 5e00.0001.0000)
   Internet address is 172.16.1.243/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
@@ -1259,8 +1260,8 @@ GigabitEthernet1 is up, line protocol is up
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 
-    '''
-}
+    '''}
+
     golden_parsed_interface_output={
             "GigabitEthernet1": {
                 "rxload": "1/255",
@@ -14403,6 +14404,266 @@ Tunnel10 is up, line protocol is up
     },
 }
 
+    golden_parsed_interface_output_2 = {
+        "TenGigabitEthernet0/2/0": {
+            "port_channel": {
+                "port_channel_member": False
+            },
+            "enabled": True,
+            "line_protocol": "up",
+            "oper_status": "up",
+            "type": "SPA-1X10GE-L-V2",
+            "mac_address": "006b.f1d5.e820",
+            "phys_address": "006b.f1d5.e820",
+            "description": "toP",
+            "ipv4": {
+                "106.162.197.94/30": {
+                    "ip": "106.162.197.94",
+                    "prefix_length": "30"
+                }
+            },
+            "delay": 10,
+            "mtu": 1552,
+            "bandwidth": 10000000,
+            "reliability": "255/255",
+            "txload": "2/255",
+            "rxload": "2/255",
+            "encapsulations": {
+                "encapsulation": "arpa"
+            },
+            "flow_control": {
+                "receive": True,
+                "send": True
+            },
+            "carrier_delay_up": 2,
+            "carrier_delay_down": 10,
+            "arp_type": "arpa",
+            "arp_timeout": "04:00:00",
+            "last_input": "00:07:19",
+            "last_output": "03:51:33",
+            "output_hang": "never",
+            "queues": {
+                "input_queue_size": 0,
+                "input_queue_max": 375,
+                "input_queue_drops": 0,
+                "input_queue_flushes": 0,
+                "total_output_drop": 0,
+                "queue_strategy": "fifo",
+                "output_queue_size": 0,
+                "output_queue_max": 40
+            },
+            "counters": {
+                "rate": {
+                    "load_interval": 300,
+                    "in_rate": 79676000,
+                    "in_rate_pkts": 9999,
+                    "out_rate": 79998000,
+                    "out_rate_pkts": 9999
+                },
+                "last_clear": "never",
+                "in_pkts": 1779405333,
+                "in_octets": 1772200805652,
+                "in_no_buffer": 0,
+                "in_multicast_pkts": 60322,
+                "in_broadcast_pkts": 0,
+                "in_runts": 0,
+                "in_giants": 0,
+                "in_throttles": 0,
+                "in_errors": 0,
+                "in_crc_errors": 0,
+                "in_frame": 0,
+                "in_overrun": 0,
+                "in_ignored": 0,
+                "in_watchdog": 0,
+                "in_mac_pause_frames": 0,
+                "out_pkts": 1791189623,
+                "out_octets": 1790956453417,
+                "out_underruns": 0,
+                "out_errors": 0,
+                "out_interface_resets": 2,
+                "out_collision": 0,
+                "out_unknown_protocl_drops": 291,
+                "out_babble": 0,
+                "out_late_collision": 0,
+                "out_deferred": 0,
+                "out_lost_carrier": 0,
+                "out_no_carrier": 0,
+                "out_mac_pause_frames": 0,
+                "out_buffer_failure": 0,
+                "out_buffers_swapped": 0
+            }
+        }
+    }
+
+    golden_interface_output_2 = {'execute.return_value': '''
+    PE1>show interfaces TenGigabitEthernet 0/2/0  
+    Load for five secs: 3%/0%; one minute: 3%; five minutes: 3%
+    Time source is NTP, 17:32:09.532 JST Tue Apr 23 2019
+
+    TenGigabitEthernet0/2/0 is up, line protocol is up 
+      Hardware is SPA-1X10GE-L-V2, address is 006b.f1d5.e820 (bia 006b.f1d5.e820)
+      Description: toP
+      Internet address is 106.162.197.94/30
+      MTU 1552 bytes, BW 10000000 Kbit/sec, DLY 10 usec, 
+         reliability 255/255, txload 2/255, rxload 2/255
+      Encapsulation ARPA, loopback not set
+      Keepalive not supported 
+      Full Duplex, 10000Mbps, link type is force-up, media type is 10GBase-SR/SW
+      output flow-control is on, input flow-control is on
+      Asymmetric Carrier-Delay Up Timer is 2 sec
+      Asymmetric Carrier-Delay Down Timer is 10 sec
+      ARP type: ARPA, ARP Timeout 04:00:00
+      Last input 00:07:19, output 03:51:33, output hang never
+      Last clearing of "show interface" counters never
+      Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0
+      Queueing strategy: fifo
+      Output queue: 0/40 (size/max)
+      5 minute input rate 79676000 bits/sec, 9999 packets/sec
+      5 minute output rate 79998000 bits/sec, 9999 packets/sec
+         1779405333 packets input, 1772200805652 bytes, 0 no buffer
+         Received 3 broadcasts (0 IP multicasts)
+         0 runts, 0 giants, 0 throttles 
+         0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+         0 watchdog, 60322 multicast, 0 pause input
+         1791189623 packets output, 1790956453417 bytes, 0 underruns
+         0 output errors, 0 collisions, 2 interface resets
+         291 unknown protocol drops
+         0 babbles, 0 late collision, 0 deferred
+         0 lost carrier, 0 no carrier, 0 pause output
+         0 output buffer failures, 0 output buffers swapped out
+    PE1>
+    '''}
+
+    golden_parsed_interface_output_3 = {
+        "GigabitEthernet3": {
+            "port_channel": {
+                "port_channel_member": False
+            },
+            "enabled": True,
+            "line_protocol": "up",
+            "oper_status": "up",
+            "type": "CSR vNIC",
+            "mac_address": "fa16.3eda.af5b",
+            "phys_address": "fa16.3eda.af5b",
+            "ipv4": {
+                "10.0.2.1/24": {
+                    "ip": "10.0.2.1",
+                    "prefix_length": "24"
+                }
+            },
+            "delay": 600,
+            "mtu": 1500,
+            "bandwidth": 1000000,
+            "reliability": "255/255",
+            "txload": "1/255",
+            "rxload": "1/255",
+            "encapsulations": {
+                "encapsulation": "arpa"
+            },
+            "keepalive": 10,
+            "duplex_mode": "full",
+            "port_speed": "1000",
+            "link_type": "auto",
+            "auto_negotiate": True,
+            "media_type": "Virtual",
+            "flow_control": {
+                "receive": False,
+                "send": False
+            },
+            "carrier_delay": 10,
+            "arp_type": "arpa",
+            "arp_timeout": "04:00:00",
+            "last_input": "00:00:00",
+            "last_output": "00:00:00",
+            "output_hang": "never",
+            "queues": {
+                "input_queue_size": 0,
+                "input_queue_max": 375,
+                "input_queue_drops": 0,
+                "input_queue_flushes": 0,
+                "total_output_drop": 0,
+                "queue_strategy": "fifo",
+                "output_queue_size": 0,
+                "output_queue_max": 40
+            },
+            "counters": {
+                "rate": {
+                    "load_interval": 300,
+                    "in_rate": 0,
+                    "in_rate_pkts": 0,
+                    "out_rate": 0,
+                    "out_rate_pkts": 0
+                },
+                "last_clear": "never",
+                "in_pkts": 101744,
+                "in_octets": 9327436,
+                "in_no_buffer": 0,
+                "in_multicast_pkts": 0,
+                "in_broadcast_pkts": 0,
+                "in_runts": 0,
+                "in_giants": 0,
+                "in_throttles": 0,
+                "in_errors": 0,
+                "in_crc_errors": 0,
+                "in_frame": 0,
+                "in_overrun": 0,
+                "in_ignored": 0,
+                "in_watchdog": 0,
+                "in_mac_pause_frames": 0,
+                "out_pkts": 65026,
+                "out_octets": 7387154,
+                "out_underruns": 0,
+                "out_errors": 0,
+                "out_interface_resets": 1,
+                "out_collision": 0,
+                "out_unknown_protocl_drops": 10110,
+                "out_babble": 0,
+                "out_late_collision": 0,
+                "out_deferred": 0,
+                "out_lost_carrier": 0,
+                "out_no_carrier": 0,
+                "out_mac_pause_frames": 0,
+                "out_buffer_failure": 0,
+                "out_buffers_swapped": 0
+            }
+        }
+    }
+
+    golden_interface_output_3 = {'execute.return_value': '''
+    [2019-04-23 10:53:38,979] +++ csr1000v-1: executing command 'show interfaces GigabitEthernet3' +++
+    show interfaces GigabitEthernet3
+    GigabitEthernet3 is up, line protocol is up 
+      Hardware is CSR vNIC, address is fa16.3eda.af5b (bia fa16.3eda.af5b)
+      Internet address is 10.0.2.1/24
+      MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 600 usec, 
+         reliability 255/255, txload 1/255, rxload 1/255
+      Encapsulation ARPA, loopback not set
+      Keepalive set (10 sec)
+      Full Duplex, 1000Mbps, link type is auto, media type is Virtual
+      output flow-control is unsupported, input flow-control is unsupported
+      Carrier delay is 10 sec
+      ARP type: ARPA, ARP Timeout 04:00:00
+      Last input 00:00:00, output 00:00:00, output hang never
+      Last clearing of "show interface" counters never
+      Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0
+      Queueing strategy: fifo
+      Output queue: 0/40 (size/max)
+      5 minute input rate 0 bits/sec, 0 packets/sec
+      5 minute output rate 0 bits/sec, 0 packets/sec
+         101744 packets input, 9327436 bytes, 0 no buffer
+         Received 0 broadcasts (0 IP multicasts)
+         0 runts, 0 giants, 0 throttles 
+         0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+         0 watchdog, 0 multicast, 0 pause input
+         65026 packets output, 7387154 bytes, 0 underruns
+         0 output errors, 0 collisions, 1 interface resets
+         10110 unknown protocol drops
+         0 babbles, 0 late collision, 0 deferred
+         0 lost carrier, 0 no carrier, 0 pause output
+         0 output buffer failures, 0 output buffers swapped out
+    csr1000v-1#
+    '''}
+
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -14423,6 +14684,20 @@ Tunnel10 is up, line protocol is up
         parsed_output = interface_obj.parse(interface='GigabitEthernet1')
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_interface_output)
+
+    def test_show_interfaces_2(self):
+        self.device = Mock(**self.golden_interface_output_2)
+        interface_obj = ShowInterfaces(device=self.device)
+        parsed_output = interface_obj.parse(interface='TenGigabitEthernet0/2/0')
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_interface_output_2)
+
+    def test_show_interfaces_3(self):
+        self.device = Mock(**self.golden_interface_output_3)
+        interface_obj = ShowInterfaces(device=self.device)
+        parsed_output = interface_obj.parse(interface='GigabitEthernet3')
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_interface_output_3)
 
     def test_golden2(self):
         self.device = Mock(**self.golden_output2)
