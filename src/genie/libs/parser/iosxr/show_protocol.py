@@ -252,7 +252,7 @@ class ShowProtocolsAfiAllAll(ShowProtocolsAfiAllAllSchema):
             #   bgp 100 with metric 111
             #   isis 10 with metric 3333
             #   ospf 99
-            p15 = re.compile(r'^(?P<prot>bgp|isis|ospf) +(?P<pid>\d+)(?: +with'
+            p15 = re.compile(r'^(?!Area)(?P<prot>\w+) +(?P<pid>\d+)(?: +with'
                                ' +metric +(?P<metric>\d+))?$')
             m = p15.match(line)
             if m:
@@ -364,7 +364,7 @@ class ShowProtocolsAfiAllAll(ShowProtocolsAfiAllAllSchema):
                 continue
 
             # 10.10.10.0/30
-            # 2600:5400:7000:8::/64
+            # 2001:db8:7000:8::/64
             p_sn2 = re.compile(r'^(?P<src>[\d\.\:\/]+)$')
             m = p_sn2.match(line)
             if m:
@@ -379,7 +379,7 @@ class ShowProtocolsAfiAllAll(ShowProtocolsAfiAllAllSchema):
             # 10.64.4.4       08:05:59                    None       No
             # 10.64.4.4       08:05:59                    None       No
             # 172.25.12.17    1w0d                        None       Yes
-            # 2600:5400:7000:13::1   1w0d                 None       Yes
+            # 2001:db8:7000:13::1   1w0d                 None       Yes
             p13 = re.compile(r'^(?P<nbr>[\d\:\.]+) +(?P<last_update>[\w\:]+)'
                               ' +(?P<nsr_state>\S+) +(?P<gr_enable>No|Yes)$')
             m = p13.match(line)
