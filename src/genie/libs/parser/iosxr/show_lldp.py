@@ -418,22 +418,23 @@ class ShowLldpInterface(ShowLldpInterfaceSchema):
 
         for line in out.splitlines():
             line = line.strip()
-            # GigabitEthernet1/0/15
-            m = p1.match(line)
-            if m:
-                group = m.groupdict()
-                intf_dict = ret_dict.setdefault('interfaces', {}).\
-                    setdefault(group['interface'], {})
-                continue
-            
-            # Tx: enabled
-            # Rx: enabled
-            # Tx state: IDLE
-            # Rx state: WAIT FOR FRAME
-            m = p2.match(line)
-            if m:
-                group = m.groupdict()
-                intf_dict.update({k:v.lower() for k, v in group.items() if v is not None})
-                continue
+            if line:
+                # GigabitEthernet1/0/15
+                m = p1.match(line)
+                if m:
+                    group = m.groupdict()
+                    intf_dict = ret_dict.setdefault('interfaces', {}).\
+                        setdefault(group['interface'], {})
+                    continue
+                
+                # Tx: enabled
+                # Rx: enabled
+                # Tx state: IDLE
+                # Rx state: WAIT FOR FRAME
+                m = p2.match(line)
+                if m:
+                    group = m.groupdict()
+                    intf_dict.update({k:v.lower() for k, v in group.items() if v is not None})
+                    continue
         
         return ret_dict
