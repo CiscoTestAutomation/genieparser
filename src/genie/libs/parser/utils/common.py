@@ -175,6 +175,7 @@ class Common():
                    'Et': 'Ethernet',
                    'BD': 'BridgeDomain',
                    'Se': 'Serial',
+                   'Fo': 'FortyGigabitEthernet',
                    }
         m = re.search('([a-zA-Z]+)', intf) 
         m1 = re.search('([\d\/\.]+)', intf)

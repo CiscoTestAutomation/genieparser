@@ -623,7 +623,8 @@ class ShowInstallInactiveSummary(ShowInstallInactiveSummarySchema):
 class ShowInstallCommitSummarySchema(MetaParser):
     """Schema for show install commit summary"""
     schema = {
-        'committed_packages': Any(),
+        Optional('committed_packages'): Any(),
+        Optional('active_packages'): Any(),
         Optional('num_committed_packages'): int,
         Optional('sdr'): list,
         }
@@ -642,6 +643,7 @@ class ShowInstallCommitSummary(ShowInstallCommitSummarySchema):
         install_commit_dict = {}
         previous_line_sdr = False
         previous_line_committed_packages = False
+        previous_line_active_packages = False
         
         for line in out.splitlines():
             line = line.rstrip()
@@ -677,6 +679,26 @@ class ShowInstallCommitSummary(ShowInstallCommitSummarySchema):
                 clean_line = str(line).strip()
                 if line and '/' not in line:
                     install_commit_dict['committed_packages'].append(clean_line)
+                    continue
+
+            # disk0:xrvr-full-x-6.2.1.23I
+            # disk0:asr9k-mini-px-6.1.21.15I
+            # xrv9k-xr-6.2.2.14I version=6.2.2.14I [Boot image]
+            p2 = re.compile(r'\s*Active +Packages:'
+                            ' *(?P<num_active_packages>[0-9]+)?$')
+            m = p2.match(line)
+            if m:
+                previous_line_active_packages = True
+                if 'active_packages' not in install_commit_dict:
+                    install_commit_dict['active_packages'] = []
+                if m.groupdict()['num_active_packages']:
+                    install_commit_dict['num_active_packages'] = \
+                        int(m.groupdict()['num_active_packages'])
+                continue
+            if previous_line_active_packages and line is not None:
+                clean_line = str(line).strip()
+                if line and '/' not in line:
+                    install_commit_dict['active_packages'].append(clean_line)
                     continue
         
         return install_commit_dict

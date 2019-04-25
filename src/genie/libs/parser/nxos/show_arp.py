@@ -248,23 +248,23 @@ class ShowIpArpstatisticsVrfAllSchema(MetaParser):
 				'dropped': int,
 				'drops_details': {
 					'mbuf_operation_failed': int,
-					'context_not_created': int,
-					'invalid_context': int,
-					'invalid_ifindex': int,
-					'invalid_src_ip': int,
-					'invalid_dest_ip': int,
-					'destnination_is_our_own_ip': int,
-					'unattached_ip': int,
-					'adjacency_couldnt_be_added': int,
-					'null_source_ip': int,
-					'null_source_mac': int,
-					'client_enqueue_failed': int,
-					'dest_not_reachable_for_proxy_arp': int,
+					Optional('context_not_created'): int,
+					Optional('invalid_context'): int,
+					Optional('invalid_ifindex'): int,
+					Optional('invalid_src_ip'): int,
+					Optional('invalid_dest_ip'): int,
+					Optional('destnination_is_our_own_ip'): int,
+					Optional('unattached_ip'): int,
+					Optional('adjacency_couldnt_be_added'): int,
+					Optional('null_source_ip'): int,
+					Optional('null_source_mac'): int,
+					Optional('client_enqueue_failed'): int,
+					Optional('dest_not_reachable_for_proxy_arp'): int,
 					Optional('dest_unreachable_for_enhanced_proxy'): int,
 					Optional('destnination_on_l2_port_tracked'): int,
-					'invalid_local_proxy_arp': int,
-					'invalid_proxy_arp': int,
-					'vip_is_not_active': int,
+					Optional('invalid_local_proxy_arp'): int,
+					Optional('invalid_proxy_arp'): int,
+					Optional('vip_is_not_active'): int,
 					Optional('arp_refresh_skipped_over_core_and_flooded'): int,
 				}
 			},
@@ -280,14 +280,14 @@ class ShowIpArpstatisticsVrfAllSchema(MetaParser):
 				Optional('anycast_proxy_arp'): int,
 				Optional('l2_port_track_proxy_arp'): int,
 				'tunneled': int,
-				'fastpath': int,
-				'snooped': int,
+				Optional('fastpath'): int,
+				Optional('snooped'): int,
 				'dropped': int,
 				Optional('dropped_server_port'): int,
 				'drops_details': {
 					'context_not_created': int,
 					'invalid_context': int,
-					'invalid_hardwaretype': int,
+					Optional('invalid_hardwaretype'): int,
 					'invalid_layer2_address_length': int,
 					'invalid_source_ip_address': int,
 					'no_mem_to_create_per_intf_structure': int,
@@ -368,13 +368,14 @@ class ShowIpArpstatisticsVrfAll(ShowIpArpstatisticsVrfAllSchema):
 
 		# Proxy arp 0, Local-Proxy arp 0,  Enhanced Proxy arp 0, Anycast proxy Proxy arp 0,  L2 Port-track Proxy arp 0,  Tunneled 0, Fastpath 0, Snooped 0, Dropped 28218  on Server Port 0 
 		# Proxy arp 0, Local-Proxy arp 0, Tunneled 0, Fastpath 0, Snooped 0, Dropped 4
-		p4 = re.compile(r'^\s*Proxy +arp +(?P<proxy_arp>[\w]+), +Local-Proxy +arp '
-			'+(?P<local_proxy_arp>[\w]+),( +Enhanced +Proxy +arp +(?P<enhanced_proxy_arp>[\w]+),)?'
-			'( +Anycast +proxy +Proxy +arp +(?P<anycast_proxy_arp>[\w]+),)?( +L2 +Port-track +Proxy +arp'
-			' +(?P<l2_port_track_proxy_arp>[\w]+),)?'
-			' +Tunneled +(?P<tunneled>[\w]+), +Fastpath +(?P<fastpath>[\w]+),'
-			' +Snooped +(?P<snooped>[\w]+), +Dropped +(?P<dropped>[\w]+)(,)?'
-			'( +on +Server +Port +(?P<dropped_server_port>[\w]+))?$')
+		p4 = re.compile(r'^Proxy +arp +(?P<proxy_arp>[\w]+), +Local-Proxy +'
+			'arp +(?P<local_proxy_arp>[\w]+),( +Enhanced +Proxy +arp +'
+			'(?P<enhanced_proxy_arp>[\w]+),)?( +Anycast +proxy +Proxy +'
+			'arp +(?P<anycast_proxy_arp>[\w]+),)?( +L2 +Port-track +Proxy +'
+			'arp +(?P<l2_port_track_proxy_arp>[\w]+),?)?( +Tunneled +'
+			'(?P<tunneled>[\w]+))?,?( +Fastpath +(?P<fastpath>[\w]+))?,?'
+			'( +Snooped +(?P<snooped>[\w]+))?,?( +Dropped +(?P<dropped>[\w]+))'
+			'?,?( +on +Server +Port +(?P<dropped_server_port>[\w]+))?')
 
 		# MBUF operation failed               : 0
 		p5 = re.compile(r'^\s*MBUF +operation +failed +: +(?P<mbuf_operation_failed>[\d]+)$')
@@ -954,5 +955,4 @@ class ShowIpArpstatisticsVrfAll(ShowIpArpstatisticsVrfAllSchema):
 					int(m.groupdict()['statistic_number'])
 				key = ''
 				continue
-
 		return ret_dict

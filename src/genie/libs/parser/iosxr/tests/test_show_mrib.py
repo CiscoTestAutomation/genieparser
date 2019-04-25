@@ -11,7 +11,8 @@ from ats.topology import loader
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
 # iosxr show_mrib
-from genie.libs.parser.iosxr.show_mrib import ShowMribVrfRoute
+from genie.libs.parser.iosxr.show_mrib import ShowMribVrfRoute,\
+                                              ShowMribVrfRouteSummary
 
 
 # ==================================================
@@ -746,6 +747,53 @@ class test_show_mrib_vrf_route(unittest.TestCase):
         obj = ShowMribVrfRoute(device=self.device)
         parsed_output = obj.parse(vrf='vpn1', af='ipv6')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
+
+
+# ===================================================================
+#  Unit test for 'show mrib vrf <vrf> <address-family> route summary'
+# ===================================================================
+
+class test_show_mrib_vrf_route_summary(unittest.TestCase):
+    '''Unit test for "show mrib vrf <vrf> <address-family> route summary"'''
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'vrf': {
+            'vrf_104': {
+                'address_family': {
+                    'ipv4': {
+                        'no_group_ranges': 5,
+                        'no_g_routes': 1,
+                        'no_s_g_routes': 100,
+                        'no_route_x_interfaces': 100,
+                        'total_no_interfaces': 202}}}}}
+
+    golden_output1 = {'execute.return_value': '''
+        show mrib vrf vrf_104 ipv4 route summary
+
+            Thu Oct  8 15:08:46.116 UTC
+            MRIB Route Summary for VRF vrf_104
+                No. of group ranges = 5
+                No. of (*,G) routes = 1
+                No. of (S,G) routes = 100
+                No. of Route x Interfaces (RxI) = 100
+                Total No. of Interfaces in all routes = 202
+        '''}
+
+    def test_show_mrib_vrf_route_summary_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowMribVrfRouteSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_mrib_vrf_ipv4_route_summary_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowMribVrfRouteSummary(device=self.device)
+        parsed_output = obj.parse(vrf='vrf_104', af='ipv4')
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 
 if __name__ == '__main__':

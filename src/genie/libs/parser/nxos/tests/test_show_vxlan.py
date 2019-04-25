@@ -24,7 +24,8 @@ from genie.libs.parser.nxos.show_vxlan import ShowNvePeers, \
                                               ShowNveVniIngressReplication,\
                                               ShowFabricMulticastGlobals,\
                                               ShowFabricMulticastIpSaAdRoute, \
-                                              ShowFabricMulticastIpL2Mroute
+                                              ShowFabricMulticastIpL2Mroute, \
+                                              ShowL2routeEvpnMacIpEvi
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
@@ -2156,6 +2157,117 @@ Fabric L2-Mroute: (*, 238.8.4.202/32)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(vni="all")
 
+# ========================================
+#  show show l2route evpn mac-ip evi <evi>
+# ========================================
+class test_show_l2route_evpn_mac_ip_evi(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    golden_output = {'execute.return_value': '''
+        R2# show l2route evpn mac-ip evi 101
+        Flags -(Rmac):Router MAC (Stt):Static (L):Local (R):Remote (V):vPC link 
+        (Dup):Duplicate (Spl):Split (Rcv):Recv(D):Del Pending (S):Stale (C):Clear
+        (Ps):Peer Sync (Ro):Re-Originated 
+        Topology    Mac Address    Prod   Flags         Seq No     Host IP         Next-Hops      
+        ----------- -------------- ------ ---------- --------------- ---------------
+        101         fa16.3ed1.37b5 HMM    --            0          100.101.1.3    Local          
+        101         fa16.3ed4.83e4 HMM    --            0          100.101.2.3    Local          
+        101         fa16.3e68.b933 HMM    --            0          100.101.3.3    Local          
+        101         fa16.3e04.e54a BGP    --            0          100.101.8.3    66.66.66.66    
+        101         fa16.3ec5.fcab HMM    --            0          100.101.1.4    Local          
+        101         fa16.3e79.6bfe HMM    --            0          100.101.2.4    Local          
+        101         fa16.3e2f.654d HMM    --            0          100.101.3.4    Local          
+        101         fa16.3e9a.e558 BGP    --            0          100.101.8.4    66.66.66.66    
+
+    '''}
+
+    golden_parsed_output = {
+        'topology': {
+            'topo_id': {
+                101: {
+                    'mac_ip': {
+                        'fa16.3ed1.37b5': {
+                            'mac_ip_flags': '--',
+                            'mac_ip_prod_type': 'hmm',
+                            'seq_num': 0,
+                            'mac_addr': 'fa16.3ed1.37b5',
+                            'host_ip': '100.101.1.3',
+                            'next_hop1': 'local',
+                            },
+                        'fa16.3ed4.83e4': {
+                            'mac_ip_flags': '--',
+                            'mac_ip_prod_type': 'hmm',
+                            'seq_num': 0,
+                            'mac_addr': 'fa16.3ed4.83e4',
+                            'host_ip': '100.101.2.3',
+                            'next_hop1': 'local',
+                            },
+                        'fa16.3e68.b933': {
+                            'mac_ip_flags': '--',
+                            'mac_ip_prod_type': 'hmm',
+                            'seq_num': 0,
+                            'mac_addr': 'fa16.3e68.b933',
+                            'host_ip': '100.101.3.3',
+                            'next_hop1': 'local',
+                            },
+                        'fa16.3e04.e54a': {
+                            'mac_ip_flags': '--',
+                            'mac_ip_prod_type': 'bgp',
+                            'seq_num': 0,
+                            'mac_addr': 'fa16.3e04.e54a',
+                            'host_ip': '100.101.8.3',
+                            'next_hop1': '66.66.66.66',
+                            },
+                        'fa16.3ec5.fcab': {
+                            'mac_ip_flags': '--',
+                            'mac_ip_prod_type': 'hmm',
+                            'seq_num': 0,
+                            'mac_addr': 'fa16.3ec5.fcab',
+                            'host_ip': '100.101.1.4',
+                            'next_hop1': 'local',
+                            },
+                        'fa16.3e79.6bfe': {
+                            'mac_ip_flags': '--',
+                            'mac_ip_prod_type': 'hmm',
+                            'seq_num': 0,
+                            'mac_addr': 'fa16.3e79.6bfe',
+                            'host_ip': '100.101.2.4',
+                            'next_hop1': 'local',
+                            },
+                        'fa16.3e2f.654d': {
+                            'mac_ip_flags': '--',
+                            'mac_ip_prod_type': 'hmm',
+                            'seq_num': 0,
+                            'mac_addr': 'fa16.3e2f.654d',
+                            'host_ip': '100.101.3.4',
+                            'next_hop1': 'local',
+                            },
+                        'fa16.3e9a.e558': {
+                            'mac_ip_flags': '--',
+                            'mac_ip_prod_type': 'bgp',
+                            'seq_num': 0,
+                            'mac_addr': 'fa16.3e9a.e558',
+                            'host_ip': '100.101.8.4',
+                            'next_hop1': '66.66.66.66',
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowL2routeEvpnMacIpEvi(device=self.device)
+        parsed_output = obj.parse(evi=101)
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_empty_output(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowL2routeEvpnMacIpEvi(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(evi=101)
 
 if __name__ == '__main__':
     unittest.main()

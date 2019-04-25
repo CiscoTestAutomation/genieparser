@@ -555,9 +555,11 @@ class ShowLacpSchema(MetaParser):
             Any(): {
                 'name': str,
                 'bundle_id': int,
+                'lacp_mode': str,
                 'port': {
                     Any(): {
                         'interface': str,
+                        'bundle_id': int,
                         'rate': int,
                         'state': str,
                         'port_id': str,
@@ -647,6 +649,8 @@ class ShowLacp(ShowLacpSchema):
                     interface = Common.convert_intf_name(group['interface'])
                     sub_dict = bundle_dict.setdefault('port', {}).setdefault(interface, {})
                     sub_dict.update({'interface': interface})
+                    sub_dict.update({'bundle_id': bundle_dict.get('bundle_id')})
+                    bundle_dict.update({'lacp_mode': 'active' if "A" in state else 'passive'})
                 else:
                     sub_dict = bundle_dict.setdefault('port', {}).setdefault(interface, {}).setdefault('partner', {})
                 sub_dict.update({'rate': int(group['rate'])})
