@@ -51,6 +51,39 @@ class ShowRouteIpv4Schema(MetaParser):
         },
     }
 
+    """
+     Codes: C - connected, S - static, R - RIP, B - BGP, (>) - Diversion path
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+       i - ISIS, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, su - IS-IS summary null, * - candidate default
+       U - per-user static route, o - ODR, L - local, G  - DAGR, l - LISP
+       A - access/subscriber, a - Application route
+       M - mobile route, r - RPL, t - Traffic Engineering, (!) - FRR Backup path
+    """
+    source_protocol_dict = {
+        'ospf' : ['O','IA','N1','N2','E1','E2'],
+        'odr' : ['o'],
+        'isis' : ['i','su','L1','L2','ia'],
+        'eigrp' : ['D','EX'],
+        'static' : ['S'],
+        'egp' : ['E'],
+        'dagr' : ['G'],
+        'rpl' : ['r'],
+        'mobile router' : ['M'],
+        'lisp' : ['I', 'l'],
+        'nhrp' : ['H'],
+        'local' : ['L'],
+        'connected' : ['C'],
+        'bgp' : ['B'],
+        'rip' : ['R'], 
+        'per-user static route' : ['U'],
+        'rip' : ['R'],
+        'access/subscriber' : ['A'],
+        'traffic engineering' : ['t'],
+    }
+
 
 # ====================================================
 #  parser for show ip route
@@ -76,39 +109,6 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
 
         af = 'ipv4'
         route = ""
-
-        """
-         Codes: C - connected, S - static, R - RIP, B - BGP, (>) - Diversion path
-           D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
-           N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
-           E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
-           i - ISIS, L1 - IS-IS level-1, L2 - IS-IS level-2
-           ia - IS-IS inter area, su - IS-IS summary null, * - candidate default
-           U - per-user static route, o - ODR, L - local, G  - DAGR, l - LISP
-           A - access/subscriber, a - Application route
-           M - mobile route, r - RPL, t - Traffic Engineering, (!) - FRR Backup path
-        """
-        source_protocol_dict = {
-            'ospf' : ['O','IA','N1','N2','E1','E2'],
-            'odr' : ['o'],
-            'isis' : ['i','su','L1','L2','ia'],
-            'eigrp' : ['D','EX'],
-            'static' : ['S'],
-            'egp' : ['E'],
-            'dagr' : ['G'],
-            'rpl' : ['r'],
-            'mobile router' : ['M'],
-            'lisp' : ['I', 'l'],
-            'nhrp' : ['H'],
-            'local' : ['L'],
-            'connected' : ['C'],
-            'bgp' : ['B'],
-            'rip' : ['R'], 
-            'per-user static route' : ['U'],
-            'rip' : ['R'],
-            'access/subscriber' : ['A'],
-            'traffic engineering' : ['t'],
-        }
 
         result_dict = {}
         for line in out.splitlines():
@@ -137,7 +137,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                     updated = ""
                     if group['code1']:
                         source_protocol_codes = group['code1'].strip()
-                        for key,val in source_protocol_dict.items():
+                        for key,val in super().source_protocol_dict.items():
                             source_protocol_replaced = re.split('\*|\(\!\)|\(\>\)',source_protocol_codes)[0].strip()
                             if source_protocol_replaced in val:
                                 source_protocol = key
@@ -394,41 +394,6 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         af = 'ipv6'
         route = ""
 
-        """
-        Codes: C - connected, S - static, R - RIP, B - BGP, (>) - Diversion path
-       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
-       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
-       E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
-       i - ISIS, L1 - IS-IS level-1, L2 - IS-IS level-2
-       ia - IS-IS inter area, su - IS-IS summary null, * - candidate default
-       U - per-user static route, o - ODR, L - local, G  - DAGR, l - LISP
-       A - access/subscriber, a - Application route
-       M - mobile route, r - RPL, t - Traffic Engineering, (!) - FRR Backup path
-        """
-        next_hop = interface = metrics = route_preference = ""
-        
-        source_protocol_dict = {
-            'ospf' : ['O','IA','N1','N2','E1','E2'],
-            'odr' : ['o'],
-            'isis' : ['i','su','L1','L2','ia'],
-            'eigrp' : ['D','EX'],
-            'static' : ['S'],
-            'egp' : ['E'],
-            'dagr' : ['G'],
-            'rpl' : ['r'],
-            'mobile router' : ['M'],
-            'lisp' : ['I', 'l'],
-            'nhrp' : ['H'],
-            'local' : ['L'],
-            'connected' : ['C'],
-            'bgp' : ['B'],
-            'rip' : ['R'], 
-            'per-user static route' : ['U'],
-            'rip' : ['R'],
-            'access/subscriber' : ['A'],
-            'traffic engineering' : ['t'],
-        }
-
         result_dict = {}
         for line in out.splitlines():
             line = line.strip()
@@ -451,7 +416,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 if line != cmd:
                     if group['code1']:
                         source_protocol_codes = group['code1'].strip()
-                        for key, val in source_protocol_dict.items():
+                        for key, val in super().source_protocol_dict.items():
                             source_protocol_replaced = re.split('\*|\(\!\)|\(\>\)',source_protocol_codes)[0].strip()
                             if source_protocol_replaced in val:
                                 source_protocol = key
