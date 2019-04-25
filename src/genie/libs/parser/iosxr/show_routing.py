@@ -76,6 +76,18 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
 
         af = 'ipv4'
         route = ""
+
+        """
+         Codes: C - connected, S - static, R - RIP, B - BGP, (>) - Diversion path
+           D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+           N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+           E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+           i - ISIS, L1 - IS-IS level-1, L2 - IS-IS level-2
+           ia - IS-IS inter area, su - IS-IS summary null, * - candidate default
+           U - per-user static route, o - ODR, L - local, G  - DAGR, l - LISP
+           A - access/subscriber, a - Application route
+           M - mobile route, r - RPL, t - Traffic Engineering, (!) - FRR Backup path
+        """
         source_protocol_dict = {}
         source_protocol_dict['ospf'] = ['O','IA','N1','N2','E1','E2']
         source_protocol_dict['odr'] = ['o']
@@ -86,11 +98,16 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         source_protocol_dict['dagr'] = ['G']
         source_protocol_dict['rpl'] = ['r']
         source_protocol_dict['mobile router'] = ['M']
-        source_protocol_dict['lisp'] = ['I']
+        source_protocol_dict['lisp'] = ['I', 'l']
         source_protocol_dict['nhrp'] = ['H']
         source_protocol_dict['local'] = ['L']
         source_protocol_dict['connected'] = ['C']
         source_protocol_dict['bgp'] = ['B']
+        source_protocol_dict['rip'] = ['R']
+        source_protocol_dict['per-user static route'] = ['U']
+        source_protocol_dict['rip'] = ['R']
+        source_protocol_dict['access/subscriber'] = ['A']
+        source_protocol_dict['traffic engineering'] = ['t']
 
         result_dict = {}
         for line in out.splitlines():
@@ -180,8 +197,11 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                         if source_protocol_codes:
                             result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                                 ['source_protocol_codes'] = source_protocol_codes
-                            result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                                ['source_protocol'] = source_protocol
+                            try:
+                                result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
+                                    ['source_protocol'] = source_protocol
+                            except:
+                                print('bugger  ------->' + source_protocol_codes)
 
                         if 'next_hop' not in result_dict['vrf'][vrf]['address_family'][af]['routes'][route]:
                             result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] = {}
@@ -378,6 +398,18 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
 
         af = 'ipv6'
         route = ""
+
+        """
+        Codes: C - connected, S - static, R - RIP, B - BGP, (>) - Diversion path
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+       i - ISIS, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, su - IS-IS summary null, * - candidate default
+       U - per-user static route, o - ODR, L - local, G  - DAGR, l - LISP
+       A - access/subscriber, a - Application route
+       M - mobile route, r - RPL, t - Traffic Engineering, (!) - FRR Backup path
+        """
         next_hop = interface = metrics = route_preference = ""
         source_protocol_dict = {}
         source_protocol_dict['ospf'] = ['O', 'IA', 'N1', 'N2', 'E1', 'E2']
@@ -389,11 +421,16 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         source_protocol_dict['dagr'] = ['G']
         source_protocol_dict['rpl'] = ['r']
         source_protocol_dict['mobile router'] = ['M']
-        source_protocol_dict['lisp'] = ['I']
+        source_protocol_dict['lisp'] = ['I', 'l']
         source_protocol_dict['nhrp'] = ['H']
         source_protocol_dict['local'] = ['L']
         source_protocol_dict['connected'] = ['C']
         source_protocol_dict['bgp'] = ['B']
+        source_protocol_dict['rip'] = ['R']
+        source_protocol_dict['per-user static route'] = ['U']
+        source_protocol_dict['rip'] = ['R']
+        source_protocol_dict['access/subscriber'] = ['A']
+        source_protocol_dict['traffic engineering'] = ['t']
 
         result_dict = {}
         for line in out.splitlines():
