@@ -282,6 +282,418 @@ class test_show_protocols_afi_all_all(unittest.TestCase):
             None
     '''}
 
+    golden_parsed_output3 = {
+        "protocols": {
+            "bgp": {
+                "bgp_pid": 19108,
+                "nsr": {
+                    "enable": True,
+                    "current_state": "active ready"
+                },
+                "address_family": {
+                    "ipv4 unicast": {
+                        "distance": {
+                            "external": 20,
+                            "internal": 200,
+                            "local": 200
+                        },
+                        "sourced_networks": [
+                            "10.10.10.0/30",
+                            "10.20.30.40/32",
+                            "10.24.24.8/30",
+                            "10.108.0.0/24",
+                            "10.249.130.0/25",
+                            "14.14.14.14/32",
+                            "19.10.8.0/24",
+                            "25.1.25.0/24",
+                            "66.76.44.142/31",
+                            "66.76.44.154/31",
+                            "66.76.44.156/31",
+                            "66.76.44.166/31",
+                            "66.76.44.192/31",
+                            "66.76.44.194/31",
+                            "66.76.44.202/31",
+                            "66.76.44.242/31",
+                            "66.76.44.244/31",
+                            "66.76.44.248/31",
+                            "66.76.150.240/28",
+                            "92.168.54.1/32",
+                            "100.64.0.0/21",
+                            "100.64.3.0/24",
+                            "169.254.1.0/30",
+                            "169.254.2.2/32",
+                            "169.254.11.0/24"
+                        ],
+                        "neighbors": {
+                            "66.76.44.130": {
+                                "last_update": "03:35:21",
+                                "nsr_state": "None",
+                                "gr_enable": "Yes"
+                            },
+                            "172.25.12.2": {
+                                "last_update": "03:40:02",
+                                "nsr_state": "None",
+                                "gr_enable": "Yes"
+                            },
+                            "172.25.12.17": {
+                                "last_update": "1w0d",
+                                "nsr_state": "None",
+                                "gr_enable": "Yes"
+                            },
+                            "172.25.12.18": {
+                                "last_update": "1w0d",
+                                "nsr_state": "None",
+                                "gr_enable": "Yes"
+                            },
+                            "172.25.12.19": {
+                                "last_update": "Active",
+                                "nsr_state": "None",
+                                "gr_enable": "Yes"
+                            },
+                            "173.219.15.138": {
+                                "last_update": "1w0d",
+                                "nsr_state": "None",
+                                "gr_enable": "Yes"
+                            },
+                            "173.219.15.139": {
+                                "last_update": "1w0d",
+                                "nsr_state": "None",
+                                "gr_enable": "Yes"
+                            }
+                        }
+                    },
+                    "vpnv4 unicast": {
+                        "distance": {
+                            "external": 20,
+                            "internal": 200,
+                            "local": 200
+                        },
+                        "neighbors": {
+                            "172.25.12.2": {
+                                "last_update": "03:40:02",
+                                "nsr_state": "None",
+                                "gr_enable": "Yes"
+                            },
+                            "172.25.12.17": {
+                                "last_update": "1w0d",
+                                "nsr_state": "None",
+                                "gr_enable": "Yes"
+                            },
+                            "172.25.12.18": {
+                                "last_update": "1w0d",
+                                "nsr_state": "None",
+                                "gr_enable": "Yes"
+                            }
+                        }
+                    },
+                    "ipv6 unicast": {
+                        "distance": {
+                            "external": 20,
+                            "internal": 200,
+                            "local": 200
+                        },
+                        "sourced_networks": [
+                            "2600:5400:7000:0:172:25:12:3/128",
+                            "2600:5400:7000:8::/64",
+                            "2600:5400:7000:21::/64"
+                        ],
+                        "neighbors": {
+                            "2600:5400:7000:13::1": {
+                                "last_update": "1w0d",
+                                "nsr_state": "None",
+                                "gr_enable": "Yes"
+                            }
+                        }
+                    },
+                    "ipv6 labeled-unicast": {
+                        "distance": {
+                            "external": 20,
+                            "internal": 200,
+                            "local": 200
+                        },
+                        "sourced_networks": [
+                            "2600:5400:7000:0:172:25:12:3/128",
+                            "2600:5400:7000:8::/64",
+                            "2600:5400:7000:21::/64"
+                        ],
+                        "neighbors": {
+                            "172.25.12.2": {
+                                "last_update": "03:40:02",
+                                "nsr_state": "None",
+                                "gr_enable": "Yes"
+                            },
+                            "172.25.12.17": {
+                                "last_update": "1w0d",
+                                "nsr_state": "None",
+                                "gr_enable": "Yes"
+                            },
+                            "172.25.12.18": {
+                                "last_update": "1w0d",
+                                "nsr_state": "None",
+                                "gr_enable": "Yes"
+                            }
+                        }
+                    },
+                    "ipv4 mdt": {
+                        "distance": {
+                            "external": 20,
+                            "internal": 200,
+                            "local": 200
+                        },
+                        "neighbors": {
+                            "172.25.12.19": {
+                                "last_update": "Active",
+                                "nsr_state": "None",
+                                "gr_enable": "Yes"
+                            }
+                        }
+                    },
+                    "l2vpn vpls": {
+                        "distance": {
+                            "external": 20,
+                            "internal": 200,
+                            "local": 200
+                        },
+                        "neighbors": {
+                            "172.25.12.2": {
+                                "last_update": "03:40:02",
+                                "nsr_state": "None",
+                                "gr_enable": "Yes"
+                            }
+                        }
+                    },
+                    "l2vpn evpn": {
+                        "distance": {
+                            "external": 20,
+                            "internal": 200,
+                            "local": 200
+                        },
+                        "neighbors": {
+                            "172.25.12.2": {
+                                "last_update": "03:40:02",
+                                "nsr_state": "None",
+                                "gr_enable": "Yes"
+                            }
+                        }
+                    }
+                }
+            },
+            "ospf": {
+                "vrf": {
+                    "default": {
+                        "address_family": {
+                            "ipv4": {
+                                "instance": {
+                                    "1": {
+                                        "router_id": "172.25.12.3",
+                                        "preference": {
+                                            "single_value": {
+                                                "all": 110
+                                            }
+                                        },
+                                        "nsf": True,
+                                        "redistribution": {
+                                            "bgp": {
+                                                "bgp_id": 19108
+                                            },
+                                            "ospf": {
+                                                "ospf_id": 99
+                                            }
+                                        },
+                                        "areas": {
+                                            "0.0.0.0": {
+                                                "interfaces": [
+                                                    "Bundle-Ether62000",
+                                                    "Loopback0",
+                                                    "Loopback46",
+                                                    "TenGigE0/0/0/0",
+                                                    "TenGigE0/0/0/2",
+                                                    "GigabitEthernet0/0/1/18"
+                                                ],
+                                                "mpls": {
+                                                    "te": {
+                                                        "enable": True
+                                                    }
+                                                }
+                                            },
+                                            "0.0.0.111": {
+                                                "interfaces": [
+                                                    "GigabitEthernet0/0/1/19"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "ospfv3": {
+                "vrf": {
+                    "default": {
+                        "address_family": {
+                            "ipv4": {
+                                "instance": {
+                                    "6": {
+                                        "router_id": "172.25.12.3",
+                                        "preference": {
+                                            "single_value": {
+                                                "all": 110
+                                            }
+                                        },
+                                        "areas": {
+                                            "0.0.0.0": {
+                                                "interfaces": [
+                                                    "TenGigE0/0/0/0",
+                                                    "Loopback0"
+                                                ]
+                                            },
+                                            "0.0.0.46": {
+                                                "interfaces": []
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output3 = {'execute.return_value': '''
+        +++ LAB-9010: executing command 'show protocols afi-all all' +++
+        show protocols afi-all all
+
+        Wed Apr 24 16:08:39.728 CDT
+
+        Routing Protocol "BGP 19108"
+        Non-stop routing is enabled
+        Graceful restart is enabled
+        Current BGP NSR state - Active Ready
+        BGP NSR state not ready: Wait for standby ready msg
+
+        Address Family IPv4 Unicast:
+          Distance: external 20 internal 200 local 200
+          Sourced Networks:
+            10.10.10.0/30
+            10.20.30.40/32
+            10.24.24.8/30
+            10.108.0.0/24
+            10.249.130.0/25
+            14.14.14.14/32
+            19.10.8.0/24
+            25.1.25.0/24
+            66.76.44.142/31
+            66.76.44.154/31
+            66.76.44.156/31
+            66.76.44.166/31
+            66.76.44.192/31
+            66.76.44.194/31
+            66.76.44.202/31
+            66.76.44.242/31
+            66.76.44.244/31
+            66.76.44.248/31
+            66.76.150.240/28
+            92.168.54.1/32
+            100.64.0.0/21
+            100.64.3.0/24
+            169.254.1.0/30
+            169.254.2.2/32
+            169.254.11.0/24
+          Routing Information Sources:
+            Neighbor          State/Last update received  NSR-State  GR-Enabled
+            66.76.44.130      03:35:21                    None         Yes
+            172.25.12.2       03:40:02                    None         Yes
+            172.25.12.17      1w0d                        None         Yes
+            172.25.12.18      1w0d                        None         Yes
+            172.25.12.19      Active                      None         Yes
+            173.219.15.138    1w0d                        None         Yes
+            173.219.15.139    1w0d                        None         Yes
+
+        Address Family VPNv4 Unicast:
+          Distance: external 20 internal 200 local 200
+          Routing Information Sources:
+            Neighbor          State/Last update received  NSR-State  GR-Enabled
+            172.25.12.2       03:40:02                    None         Yes
+            172.25.12.17      1w0d                        None         Yes
+            172.25.12.18      1w0d                        None         Yes
+
+        Address Family IPv6 Unicast:
+          Distance: external 20 internal 200 local 200
+          Sourced Networks:
+            2600:5400:7000:0:172:25:12:3/128
+            2600:5400:7000:8::/64
+            2600:5400:7000:21::/64
+          Routing Information Sources:
+            Neighbor                                        State/Last update received  NSR-State  GR-Enabled
+            2600:5400:7000:13::1                            1w0d                        None         Yes
+
+        Address Family IPv6 Labeled-unicast:
+          Distance: external 20 internal 200 local 200
+          Sourced Networks:
+            2600:5400:7000:0:172:25:12:3/128
+            2600:5400:7000:8::/64
+            2600:5400:7000:21::/64
+          Routing Information Sources:
+            Neighbor                                        State/Last update received  NSR-State  GR-Enabled
+            172.25.12.2                                     03:40:02                    None         Yes
+            172.25.12.17                                    1w0d                        None         Yes
+            172.25.12.18                                    1w0d                        None         Yes
+
+        Address Family IPv4 MDT:
+          Distance: external 20 internal 200 local 200
+          Routing Information Sources:
+            Neighbor          State/Last update received  NSR-State  GR-Enabled
+            172.25.12.19      Active                      None         Yes
+
+        Address Family L2VPN VPLS:
+          Distance: external 20 internal 200 local 200
+          Routing Information Sources:
+            Neighbor          State/Last update received  NSR-State  GR-Enabled
+            172.25.12.2       03:40:02                    None         Yes
+
+        Address Family L2VPN EVPN:
+          Distance: external 20 internal 200 local 200
+          Routing Information Sources:
+            Neighbor          State/Last update received  NSR-State  GR-Enabled
+            172.25.12.2       03:40:02                    None         Yes
+
+
+        Routing Protocol OSPF 1
+          Router Id: 172.25.12.3
+          Distance: 110
+          Non-Stop Forwarding: Enabled
+          Redistribution:
+            bgp 19108
+            ospf 99
+          Area 0
+            MPLS/TE enabled
+            Bundle-Ether62000
+            Loopback0
+            Loopback46
+            TenGigE0/0/0/0
+            TenGigE0/0/0/2
+            GigabitEthernet0/0/1/18
+          Area 111
+            GigabitEthernet0/0/1/19
+              authentication md5
+
+        Routing Protocol OSPFv3 6
+          Router Id: 172.25.12.3
+          Distance: 110
+          Graceful Restart: Enabled
+          Redistribution:
+            None
+          Area 0
+            TenGigE0/0/0/0
+            Loopback0
+          Area 46
+        RP/0/RSP0/CPU0:LAB-9010#
+    '''}
+
     def test_show_protocols_afi_all_all_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
@@ -295,6 +707,13 @@ class test_show_protocols_afi_all_all(unittest.TestCase):
         obj = ShowProtocolsAfiAllAll(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_show_protocols_afi_all_all_full3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowProtocolsAfiAllAll(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
     def test_show_protocols_afi_all_all_empty(self):
         self.maxDiff = None
