@@ -111,120 +111,123 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
             # S    10.36.3.3/32 [1/0] via 10.2.3.3, 01:51:13, GigabitEthernet0/0/0/1
             # B    10.19.31.31/32 [200/0] via 10.229.11.11, 00:55:14
             # i L1 10.76.23.23/32 [115/11] via 10.2.3.3, 00:52:41, GigabitEthernet0/0/0/1
-            p3 = re.compile(r'^\s*(?P<code1>[\w]+) +(?P<code2>[\w]+)? +(?P<network>[\d\/\.]+)'
+            p3 = re.compile(r'^\s*(?P<code1>[\w\*\(\>\)\!]+) +(?P<code2>[\w\*\(\>\)\!]+)? +(?P<network>[\w\/\:\.]+)'
                             '( +is +directly +connected,)?( +\[(?P<route_preference>[\d\/]+)\]?'
-                            '( +via )?(?P<next_hop>[\d\.]+)?,)?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
+                            '( +via )?(?P<next_hop>[\w\/\:\.]+)?,)?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
             m = p3.match(line)
             if m:
-                active = True
-                updated = ""
-                if m.groupdict()['code1']:
-                    source_protocol_codes = m.groupdict()['code1'].strip()
-                    for key,val in source_protocol_dict.items():
-                        if source_protocol_codes in val:
-                            source_protocol = key
+                group = m.groupdict()
+                if line != self.cli_command[0] and line != self.cli_command[1]:
+                    active = True
+                    updated = ""
+                    if group['code1']:
+                        source_protocol_codes = group['code1'].strip()
+                        for key,val in source_protocol_dict.items():
+                            source_protocol_replaced = re.split('\*|\(\!\)|\(\>\)',source_protocol_codes)[0].strip()
+                            if source_protocol_replaced in val:
+                                source_protocol = key
 
-                if m.groupdict()['code2']:
-                    source_protocol_codes = '{} {}'.format(source_protocol_codes, m.groupdict()['code2'])
+                    if group['code2']:
+                        source_protocol_codes = '{} {}'.format(source_protocol_codes, m.groupdict()['code2'])
 
-                if m.groupdict()['network']:
-                    route = m.groupdict()['network']
+                    if group['network']:
+                        route = m.groupdict()['network']
 
-                if m.groupdict()['route_preference']:
-                    routepreference = m.groupdict()['route_preference']
-                    if '/' in routepreference:
-                        route_preference = int(routepreference.split('/')[0])
-                        metrics = routepreference.split('/')[1]
+                    if group['route_preference']:
+                        routepreference = m.groupdict()['route_preference']
+                        if '/' in routepreference:
+                            route_preference = int(routepreference.split('/')[0])
+                            metrics = routepreference.split('/')[1]
 
-                index = 1
-                if m.groupdict()['next_hop']:
-                    next_hop = m.groupdict()['next_hop']
-                if m.groupdict()['interface']:
-                    interface = m.groupdict()['interface']
+                    index = 1
+                    if group['next_hop']:
+                        next_hop = group['next_hop']
+                    if group['interface']:
+                        interface = group['interface']
 
-                if m.groupdict()['date']:
-                    updated = m.groupdict()['date']
+                    if group['date']:
+                        updated = group['date']
 
-                if vrf:
-                    if 'vrf' not in result_dict:
-                        result_dict['vrf'] = {}
+                    if vrf:
+                        if 'vrf' not in result_dict:
+                            result_dict['vrf'] = {}
 
-                    if vrf not in result_dict['vrf']:
-                        result_dict['vrf'][vrf] = {}
+                        if vrf not in result_dict['vrf']:
+                            result_dict['vrf'][vrf] = {}
 
-                    if 'address_family' not in result_dict['vrf'][vrf]:
-                        result_dict['vrf'][vrf]['address_family'] = {}
+                        if 'address_family' not in result_dict['vrf'][vrf]:
+                            result_dict['vrf'][vrf]['address_family'] = {}
 
-                    if af and af not in result_dict['vrf'][vrf]['address_family']:
-                        result_dict['vrf'][vrf]['address_family'][af] = {}
+                        if af and af not in result_dict['vrf'][vrf]['address_family']:
+                            result_dict['vrf'][vrf]['address_family'][af] = {}
 
-                    if 'routes' not in result_dict['vrf'][vrf]['address_family'][af]:
-                        result_dict['vrf'][vrf]['address_family'][af]['routes'] = {}
-                    if route not in result_dict['vrf'][vrf]['address_family'][af]['routes']:
-                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route] = {}
+                        if 'routes' not in result_dict['vrf'][vrf]['address_family'][af]:
+                            result_dict['vrf'][vrf]['address_family'][af]['routes'] = {}
+                        if route not in result_dict['vrf'][vrf]['address_family'][af]['routes']:
+                            result_dict['vrf'][vrf]['address_family'][af]['routes'][route] = {}
 
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['route'] = route
+                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['route'] = route
 
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                        ['active'] = active
-
-                    if metrics:
                         result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                            ['metric'] = int(metrics)
-                    if route_preference:
-                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                            ['route_preference'] = route_preference
-                    if source_protocol_codes:
-                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                            ['source_protocol_codes'] = source_protocol_codes
-                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                            ['source_protocol'] = source_protocol
+                            ['active'] = active
 
-                    if 'next_hop' not in result_dict['vrf'][vrf]['address_family'][af]['routes'][route]:
-                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] = {}
+                        if metrics:
+                            result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
+                                ['metric'] = int(metrics)
+                        if route_preference:
+                            result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
+                                ['route_preference'] = route_preference
+                        if source_protocol_codes:
+                            result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
+                                ['source_protocol_codes'] = source_protocol_codes
+                            result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
+                                ['source_protocol'] = source_protocol
 
-                    if not next_hop:
+                        if 'next_hop' not in result_dict['vrf'][vrf]['address_family'][af]['routes'][route]:
+                            result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] = {}
 
-                        if 'outgoing_interface' not in result_dict['vrf'][vrf]['address_family'][af] \
-                                ['routes'][route]['next_hop']:
-                            result_dict['vrf'][vrf]['address_family'][af]['routes'][route]\
-                                ['next_hop']['outgoing_interface'] = {}
+                        if not next_hop:
 
-                        if m.groupdict()['interface'] and interface not in \
+                            if 'outgoing_interface' not in result_dict['vrf'][vrf]['address_family'][af] \
+                                    ['routes'][route]['next_hop']:
                                 result_dict['vrf'][vrf]['address_family'][af]['routes'][route]\
-                                ['next_hop']['outgoing_interface']:
-                            result_dict['vrf'][vrf]['address_family'][af]['routes'][route]\
-                                ['next_hop']['outgoing_interface'][interface] = {}
+                                    ['next_hop']['outgoing_interface'] = {}
 
-                        if interface:
-                            result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                                ['next_hop']['outgoing_interface'][interface]['outgoing_interface'] = interface
-                        if updated:
-                            result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                                ['next_hop']['outgoing_interface'][interface]['updated'] = updated
+                            if m.groupdict()['interface'] and interface not in \
+                                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route]\
+                                    ['next_hop']['outgoing_interface']:
+                                result_dict['vrf'][vrf]['address_family'][af]['routes'][route]\
+                                    ['next_hop']['outgoing_interface'][interface] = {}
 
-                    else:
-                        if 'next_hop_list' not in result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop']:
-                            result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'][
-                                'next_hop_list'] = {}
+                            if interface:
+                                result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
+                                    ['next_hop']['outgoing_interface'][interface]['outgoing_interface'] = interface
+                            if updated:
+                                result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
+                                    ['next_hop']['outgoing_interface'][interface]['updated'] = updated
+
+                        else:
+                            if 'next_hop_list' not in result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop']:
+                                result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'][
+                                    'next_hop_list'] = {}
 
 
-                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
-                            ['next_hop_list'][index] = {}
-
-                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
-                            ['next_hop_list'][index]['index'] = index
-
-                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
-                            ['next_hop_list'][index]['next_hop'] = next_hop
-
-                        if updated:
                             result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
-                                ['next_hop_list'][index]['updated'] = updated
+                                ['next_hop_list'][index] = {}
 
-                        if interface:
                             result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
-                                ['next_hop_list'][index]['outgoing_interface'] = interface
+                                ['next_hop_list'][index]['index'] = index
+
+                            result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
+                                ['next_hop_list'][index]['next_hop'] = next_hop
+
+                            if updated:
+                                result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
+                                    ['next_hop_list'][index]['updated'] = updated
+
+                            if interface:
+                                result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
+                                    ['next_hop_list'][index]['outgoing_interface'] = interface
 
                 continue
 
@@ -409,54 +412,55 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
             # S    2001:1:1:1::1/128
             # L    2001:2:2:2::2/128 is directly connected,
             #i L1 2001:23:23:23::23/128
-            p2 = re.compile(r'^\s*(?P<code1>[\w]+)( +(?P<code2>[\w]+))? +(?P<route>[\w\/\:]+)'
-                            '( +is +directly +connected,)?$')
+            p2 = re.compile(r'^(?P<code1>[\w\*\(\>\)\!]+)( +(?P<code2>[\w\*\(\>\)\!]+))? +(?P<route>[\w\/\:\.]+)( +is +directly +connected,)?$')
             m = p2.match(line)
             if m:
+                group = m.groupdict()
                 active = True
-                if m.groupdict()['code1']:
-                    source_protocol_codes = m.groupdict()['code1'].strip()
-                    for key, val in source_protocol_dict.items():
-                        if source_protocol_codes in val:
-                            source_protocol = key
+                if line != self.cli_command[0] and line != self.cli_command[1]:
+                    if group['code1']:
+                        source_protocol_codes = group['code1'].strip()
+                        for key, val in source_protocol_dict.items():
+                            source_protocol_replaced = re.split('\*|\(\!\)|\(\>\)',source_protocol_codes)[0].strip()
+                            if source_protocol_replaced in val:
+                                source_protocol = key
 
-                if m.groupdict()['code2']:
-                    source_protocol_codes = '{} {}'.format(source_protocol_codes, m.groupdict()['code2'])
+                    if group['code2']:
+                        source_protocol_codes = '{} {}'.format(source_protocol_codes, group['code2'])
 
+                    if group['route']:
+                        route = group['route']
 
-                if m.groupdict()['route']:
-                    route = m.groupdict()['route']
+                    index = 1
 
-                index = 1
+                    if vrf:
+                        if 'vrf' not in result_dict:
+                            result_dict['vrf'] = {}
 
-                if vrf:
-                    if 'vrf' not in result_dict:
-                        result_dict['vrf'] = {}
+                        if vrf not in result_dict['vrf']:
+                            result_dict['vrf'][vrf] = {}
 
-                    if vrf not in result_dict['vrf']:
-                        result_dict['vrf'][vrf] = {}
+                        if 'address_family' not in result_dict['vrf'][vrf]:
+                            result_dict['vrf'][vrf]['address_family'] = {}
 
-                    if 'address_family' not in result_dict['vrf'][vrf]:
-                        result_dict['vrf'][vrf]['address_family'] = {}
+                        if af and af not in result_dict['vrf'][vrf]['address_family']:
+                            result_dict['vrf'][vrf]['address_family'][af] = {}
 
-                    if af and af not in result_dict['vrf'][vrf]['address_family']:
-                        result_dict['vrf'][vrf]['address_family'][af] = {}
+                        if 'routes' not in result_dict['vrf'][vrf]['address_family'][af]:
+                            result_dict['vrf'][vrf]['address_family'][af]['routes'] = {}
+                        if route not in result_dict['vrf'][vrf]['address_family'][af]['routes']:
+                            result_dict['vrf'][vrf]['address_family'][af]['routes'][route] = {}
 
-                    if 'routes' not in result_dict['vrf'][vrf]['address_family'][af]:
-                        result_dict['vrf'][vrf]['address_family'][af]['routes'] = {}
-                    if route not in result_dict['vrf'][vrf]['address_family'][af]['routes']:
-                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route] = {}
+                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['route'] = route
 
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['route'] = route
-
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                        ['active'] = active
-
-                    if source_protocol_codes:
                         result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                            ['source_protocol_codes'] = source_protocol_codes
-                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                            ['source_protocol'] = source_protocol
+                            ['active'] = active
+
+                        if source_protocol_codes:
+                            result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
+                                ['source_protocol_codes'] = source_protocol_codes
+                            result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
+                                ['source_protocol'] = source_protocol
                 continue
 
             #   [1/0] via 2001:20:1:2::1, 01:52:23, GigabitEthernet0/0/0/0
