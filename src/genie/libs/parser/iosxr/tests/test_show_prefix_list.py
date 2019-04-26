@@ -27,24 +27,24 @@ class test_show_rpl_prefix_set(unittest.TestCase):
                 'prefix_set_name': 'test',
                 'protocol': 'ipv4',
                 'prefixes': {
-                    '35.0.0.0/8 8..8': {
-                        'prefix': '35.0.0.0/8',
+                    '10.205.0.0/8 8..8': {
+                        'prefix': '10.205.0.0/8',
                         'masklength_range': '8..8'
                     },
-                    '35.0.0.0/8 8..16': {
-                        'prefix': '35.0.0.0/8',
+                    '10.205.0.0/8 8..16': {
+                        'prefix': '10.205.0.0/8',
                         'masklength_range': '8..16'
                     },
-                    '36.0.0.0/8 8..16': {
-                        'prefix': '36.0.0.0/8',
+                    '10.21.0.0/8 8..16': {
+                        'prefix': '10.21.0.0/8',
                         'masklength_range': '8..16'
                     },
-                    '37.0.0.0/8 24..32': {
-                        'prefix': '37.0.0.0/8',
+                    '10.94.0.0/8 24..32': {
+                        'prefix': '10.94.0.0/8',
                         'masklength_range': '24..32'
                     },
-                    '38.0.0.0/8 16..24': {
-                        'prefix': '38.0.0.0/8',
+                    '10.169.0.0/8 16..24': {
+                        'prefix': '10.169.0.0/8',
                         'masklength_range': '16..24'
                     }
                 }
@@ -79,11 +79,11 @@ class test_show_rpl_prefix_set(unittest.TestCase):
         Listing for all Prefix Set objects
 
         prefix-set test
-             35.0.0.0/8,
-             35.0.0.0/8 le 16,
-             36.0.0.0/8 le 16,
-             37.0.0.0/8 ge 24,
-             38.0.0.0/8 ge 16 le 24
+             10.205.0.0/8,
+             10.205.0.0/8 le 16,
+             10.21.0.0/8 le 16,
+             10.94.0.0/8 ge 24,
+             10.169.0.0/8 ge 16 le 24
         end-set
         !
         prefix-set test6
@@ -101,24 +101,24 @@ class test_show_rpl_prefix_set(unittest.TestCase):
                 'prefix_set_name': 'test',
                 'protocol': 'ipv4',
                 'prefixes': {
-                    '35.0.0.0/8 8..8': {
-                        'prefix': '35.0.0.0/8',
+                    '10.205.0.0/8 8..8': {
+                        'prefix': '10.205.0.0/8',
                         'masklength_range': '8..8'
                     },
-                    '35.0.0.0/8 8..16': {
-                        'prefix': '35.0.0.0/8',
+                    '10.205.0.0/8 8..16': {
+                        'prefix': '10.205.0.0/8',
                         'masklength_range': '8..16'
                     },
-                    '36.0.0.0/8 8..16': {
-                        'prefix': '36.0.0.0/8',
+                    '10.21.0.0/8 8..16': {
+                        'prefix': '10.21.0.0/8',
                         'masklength_range': '8..16'
                     },
-                    '37.0.0.0/8 24..32': {
-                        'prefix': '37.0.0.0/8',
+                    '10.94.0.0/8 24..32': {
+                        'prefix': '10.94.0.0/8',
                         'masklength_range': '24..32'
                     },
-                    '38.0.0.0/8 16..24': {
-                        'prefix': '38.0.0.0/8',
+                    '10.169.0.0/8 16..24': {
+                        'prefix': '10.169.0.0/8',
                         'masklength_range': '16..24'
                     }
                 }
@@ -128,11 +128,11 @@ class test_show_rpl_prefix_set(unittest.TestCase):
 
     golden_output_2 = {'execute.return_value': '''\
         prefix-set test
-             35.0.0.0/8,
-             35.0.0.0/8 le 16,
-             36.0.0.0/8 le 16,
-             37.0.0.0/8 ge 24,
-             38.0.0.0/8 ge 16 le 24
+             10.205.0.0/8,
+             10.205.0.0/8 le 16,
+             10.21.0.0/8 le 16,
+             10.94.0.0/8 ge 24,
+             10.169.0.0/8 ge 16 le 24
         end-set
     '''}
 

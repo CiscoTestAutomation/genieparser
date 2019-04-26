@@ -86,8 +86,8 @@ class ShowIpRpf(ShowIpRpfSchema):
 
         # RPF information for host1 (172.16.10.13)
         # RPF information for ? (10.1.1.100)
-        # RPF information for sj-eng-mbone.cisco.com (171.69.10.13)
-        # RPF information for ? (209.165.200.226) MoFRR Enabled
+        # RPF information for sj-eng-mbone.cisco.com (172.16.25.13)
+        # RPF information for ? (192.168.16.226) MoFRR Enabled
         p1_1 = re.compile(r'^RPF +information +for +(?P<host>[\S]+) +'
                            '\((?P<mroute>[\w\:\.]+)\)( +MoFRR +(?P<mofrr>[\w]+))?$')
 
@@ -101,7 +101,7 @@ class ShowIpRpf(ShowIpRpfSchema):
         p3 = re.compile(r'^RPF +neighbor: *(?P<neighbor>[\S]+)$')
 
         # RPF neighbor: sj1.cisco.com (172.16.121.10)
-        # RPF neighbor: eng-isdn-pri3.cisco.com (171.69.121.10)
+        # RPF neighbor: eng-isdn-pri3.cisco.com (172.16.16.10)
         p3_1 = re.compile(r'^RPF +neighbor: +(?P<host>[\S]+) +'
                            '\((?P<neighbor>[\w\.\:]+)\)$')
 
@@ -159,7 +159,7 @@ class ShowIpRpf(ShowIpRpfSchema):
 
             # RPF information for host1 (172.16.10.13)
             # RPF information for ? (10.1.1.100)
-            # RPF information for ? (209.165.200.226) MoFRR Enabled
+            # RPF information for ? (192.168.16.226) MoFRR Enabled
             m = p1_1.match(line)
             if m:
                 mroute = m.groupdict()['mroute']

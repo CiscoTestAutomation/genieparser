@@ -204,9 +204,9 @@ class test_show_ip_protocols(unittest.TestCase):
         10.0.1.221
         10.0.2.212
         10.0.2.222
-        67.223.188.34
-        68.137.37.149
-        152.176.18.101                                        ACCEPT_SCI_RICHEMONT
+        10.205.188.34
+        10.205.37.149
+        172.16.121.101                                        ACCEPT_SCI_RICHEMONT
         192.168.1.176                                         INTERNET_EDGE_IN
         192.168.1.177                                         INTERNET_EDGE_IN
         192.168.1.178

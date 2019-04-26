@@ -25,14 +25,14 @@ class test_show_ip_rpf(unittest.TestCase):
     golden_parsed_output = {
         "vrf": {
             "default": {
-                "source_address": "209.165.200.226",
+                "source_address": "192.168.16.226",
                 "source_host": "?",
                 "mofrr": "Enabled",
                 "path": {
-                    "209.165.201.2 Ethernet1/4": {
+                    "192.168.145.2 Ethernet1/4": {
                         "interface_name": "Ethernet1/4",
                         "neighbor_host": "?",
-                        "neighbor_address": "209.165.201.2",
+                        "neighbor_address": "192.168.145.2",
                         "table_type": "unicast",
                         "table_feature": "ospf",
                         "table_feature_instance": "200",
@@ -46,10 +46,10 @@ class test_show_ip_rpf(unittest.TestCase):
     }
 
     golden_output = {'execute.return_value': '''\
-        Router# show ip rpf 209.165.200.226
-        RPF information for ? (209.165.200.226) MoFRR Enabled
+        Router# show ip rpf 192.168.16.226
+        RPF information for ? (192.168.16.226) MoFRR Enabled
           RPF interface: Ethernet1/4
-          RPF neighbor: ? (209.165.201.2)
+          RPF neighbor: ? (192.168.145.2)
           RPF route/mask: 255.255.255.225
           RPF type: unicast (ospf 200)
           Doing distance-preferred lookups across tables
@@ -59,14 +59,14 @@ class test_show_ip_rpf(unittest.TestCase):
     golden_parsed_output2 = {
         "vrf": {
             "VRF1": {
-                "source_address": "209.165.200.226",
+                "source_address": "192.168.16.226",
                 "source_host": "?",
                 "mofrr": "Enabled",
                 "path": {
-                    "209.165.201.2 Ethernet1/4": {
+                    "192.168.145.2 Ethernet1/4": {
                         "interface_name": "Ethernet1/4",
                         "neighbor_host": "?",
-                        "neighbor_address": "209.165.201.2",
+                        "neighbor_address": "192.168.145.2",
                         "table_type": "unicast",
                         "table_feature": "ospf",
                         "table_feature_instance": "200",
@@ -80,10 +80,10 @@ class test_show_ip_rpf(unittest.TestCase):
     }
 
     golden_output2 = {'execute.return_value': '''\
-        Router# show ip rpf 209.165.200.226
-        RPF information for ? (209.165.200.226) MoFRR Enabled
+        Router# show ip rpf 192.168.16.226
+        RPF information for ? (192.168.16.226) MoFRR Enabled
           RPF interface: Ethernet1/4
-          RPF neighbor: ? (209.165.201.2)
+          RPF neighbor: ? (192.168.145.2)
           RPF route/mask: 255.255.255.225
           RPF type: unicast (ospf 200)
           Doing distance-preferred lookups across tables
@@ -99,13 +99,13 @@ class test_show_ip_rpf(unittest.TestCase):
     def test_golden_vrf_default(self):
         self.device = Mock(**self.golden_output)
         obj = ShowIpRpf(device=self.device)
-        parsed_output = obj.parse(mroute='209.165.200.226')
+        parsed_output = obj.parse(mroute='192.168.16.226')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_golden_vrf_non_default(self):
         self.device = Mock(**self.golden_output2)
         obj = ShowIpRpf(device=self.device)
-        parsed_output = obj.parse(mroute='209.165.200.226', vrf='VRF1')
+        parsed_output = obj.parse(mroute='192.168.16.226', vrf='VRF1')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 

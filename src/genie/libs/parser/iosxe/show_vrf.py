@@ -90,7 +90,7 @@ class ShowVrfDetail(ShowVrfDetailSchema):
         # VRF Mgmt-vrf (VRF Id = 1); default RD <not set>; default VPNID <not set>
         # VRF vrf1; default RD 1:1; default VPNID <not set>
         # VRF Down; default RD 100:1; default VPNID <not set> VRF Table ID = 1
-        # VRF 12349; default RD 1.1.1.1:20; default VPNID <not set>
+        # VRF 12349; default RD 10.4.1.1:20; default VPNID <not set>
         p1 = re.compile(r'^VRF +(?P<vrf>[\S]+)( +\(VRF +Id +\= +'
                         r'(?P<vrf_id>\d+)\))?; +default +RD +'
                         r'(?P<rd>[\S\s]+); +default +VPNID +'
@@ -158,7 +158,7 @@ class ShowVrfDetail(ShowVrfDetailSchema):
             # VRF Mgmt-vrf (VRF Id = 1); default RD <not set>; default VPNID <not set>
             # VRF vrf1; default RD 1:1; default VPNID <not set>
             # VRF Down; default RD 100:1; default VPNID <not set> VRF Table ID = 1
-            # VRF 12349; default RD 1.1.1.1:20; default VPNID <not set>
+            # VRF 12349; default RD 10.4.1.1:20; default VPNID <not set>
             m = p1.match(line)
             if m:
                 groups = m.groupdict()

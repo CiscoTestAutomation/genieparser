@@ -51,7 +51,7 @@ class ShowXconnectAll(ShowXconnectAllSchema):
             # XC ST  Segment 1                         S1 Segment 2                         S2
             # ------+---------------------------------+--+---------------------------------+--
             # IA pri   ac Gi0/0/1:10(Ethernet)         DN mpls 10.239.6.2:684955608         DN
-            # UP pri mpls 2.2.2.2:888                  UP   ac Gi3:9(Ethernet)              UP
+            # UP pri mpls 10.16.2.2:888                  UP   ac Gi3:9(Ethernet)              UP
             # -- pri  vfi sample-vfi                   UP unkn Invalid Segment              --
             # UP pri   bd 300                          UP  vfi sample-vfi                   UP
             p1 = re.compile(r'^(?P<xc>(UP|DN|AD|IA|SB|HS|RV|NH|\-\-))\s+(?P<st>(pri|sec))\s+(?P<segment1>.*)\s+(?P<s1>(UP|DN|AD|IA|SB|HS|RV|NH|\-\-))\s+(?P<segment2>.*)\s+(?P<s2>(UP|DN|AD|IA|SB|HS|RV|NH|\-\-))')
