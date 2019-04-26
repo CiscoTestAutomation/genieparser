@@ -532,7 +532,8 @@
   * Add ShowIpv6ProtocolsSectionRip for:
       show ipv6 protocols | sec rip
       show ipv6 protocols vrf {vrf} | sec rip
-
+* IOSXR
+  * Fixed ShowProtocolsAfiAllAll for bgp and ospf
 
 ----------------------------------------------------------------------------------
                                  ACL
