@@ -7,9 +7,9 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                              SchemaMissingKeyError
 
-from genie.libs.parser.iosxr.show_ipv6 import ShowIpv6VrfAllInterface, \
-                                                   ShowIpv6NeighborsDetail
+from genie.libs.parser.iosxr.show_ipv6 import ShowIpv6NeighborsDetail
 
+from genie.libs.parser.iosxr.show_interface import ShowIpv6VrfAllInterface
 
 #############################################################################
 # unitest For show ipv6 neighbors detail
