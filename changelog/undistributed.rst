@@ -627,6 +627,8 @@
                                 VXLAN
 --------------------------------------------------------------------------------
 * NXOS
+    * Add ShowL2routeEvpnMacIpAll for:
+        show l2route evpn mac-ip all
     * Add ShowL2routeEvpnMacIpEvi for:
         show l2route evpn mac-ip evi <evi>
 
