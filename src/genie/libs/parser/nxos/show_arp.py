@@ -84,8 +84,9 @@ class ShowIpArp(ShowIpArpSchema):
 		# 209.165.200.226 0 0006.d623.4008 ARPA GigabitEthernet1/1
 		# 100.101.1.3     00:09:20  fa16.3ed1.37b5  Vlan101         +
 		# 100.101.1.4     00:01:53  fa16.3ec5.fcab  Vlan101
+        # 10.23.90.2      00:01:05  fa16.3e5a.9eb3  Ethernet1/1.390
 		p3 = re.compile(r'^(?P<ip_address>[\d\.]+)\s+(?P<age>[\d:-]+)\s+(?P<mac_address>[\w\.]+)\s+'
-						r'((?P<encap_type>ARPA)\s+)?(?P<interface>[\w\/]+)(\s+(?P<flags>\S))?$')
+						r'((?P<encap_type>ARPA)\s+)?(?P<interface>[\w\/\.]+)(\s+(?P<flags>\S))?$')
 
 		for line in out.splitlines():
 			line = line.strip()
