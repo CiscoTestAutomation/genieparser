@@ -819,6 +819,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'route_preference':110,
                                 'process_id':'10',
                                 'source_protocol':'ospf',
+                                'source_protocol_status':'intra',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -895,6 +896,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'route_preference':110,
                                 'process_id':'10',
                                 'source_protocol':'ospf',
+                                'source_protocol_status':'type-2',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -1263,6 +1265,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'route_preference':110,
                                 'process_id':'1',
                                 'source_protocol':'ospf',
+                                'source_protocol_status':'intra',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -1360,6 +1363,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'route_preference':110,
                                 'process_id':'1',
                                 'source_protocol':'ospf',
+                                'source_protocol_status':'intra',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -1436,6 +1440,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'route_preference':115,
                                 'process_id':'1',
                                 'source_protocol':'isis',
+                                'source_protocol_status':'L1',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -1469,6 +1474,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'process_id':'100',
                                 'tag':100,
                                 'source_protocol':'bgp',
+                                'source_protocol_status':'internal',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -1648,6 +1654,7 @@ class test_show_ipv6_route(unittest.TestCase):
                                 'metric': 41,
                                 'process_id': '1',
                                 'source_protocol': 'ospfv3',
+                                'source_protocol_status': 'intra',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -1699,6 +1706,7 @@ class test_show_ipv6_route(unittest.TestCase):
                                 'tag': 100,
                                 'metric': 0,
                                 'source_protocol': 'bgp',
+                                'source_protocol_status': 'internal',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -1725,6 +1733,7 @@ class test_show_ipv6_route(unittest.TestCase):
                                 'tag': 100,
                                 'metric': 0,
                                 'source_protocol': 'bgp',
+                                'source_protocol_status': 'internal',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -1900,6 +1909,7 @@ IPv6 Routing Table for VRF "default"
                                 'route_preference': 90,
                                 'process_id': 'test',
                                 'source_protocol': 'eigrp',
+                                'source_protocol_status': 'internal',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -1923,6 +1933,7 @@ IPv6 Routing Table for VRF "default"
                                 'route_preference': 90,
                                 'process_id': 'test',
                                 'source_protocol': 'eigrp',
+                                'source_protocol_status': 'internal',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -1976,6 +1987,7 @@ IPv6 Routing Table for VRF "default"
                                 'route_preference': 90,
                                 'process_id': 'test',
                                 'source_protocol': 'eigrp',
+                                'source_protocol_status': 'internal',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -2008,6 +2020,7 @@ IPv6 Routing Table for VRF "default"
                                 'route_preference': 90,
                                 'process_id': 'test',
                                 'source_protocol': 'eigrp',
+                                'source_protocol_status': 'internal',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -2127,6 +2140,7 @@ IPv6 Routing Table for VRF "default"
                                 'route_preference': 90,
                                 'process_id': 'test',
                                 'source_protocol': 'eigrp',
+                                'source_protocol_status': 'internal',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -2150,6 +2164,7 @@ IPv6 Routing Table for VRF "default"
                                 'route_preference': 90,
                                 'process_id': 'test',
                                 'source_protocol': 'eigrp',
+                                'source_protocol_status': 'internal',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -2203,6 +2218,7 @@ IPv6 Routing Table for VRF "default"
                                 'route_preference': 90,
                                 'process_id': 'test',
                                 'source_protocol': 'eigrp',
+                                'source_protocol_status': 'internal',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -2235,6 +2251,7 @@ IPv6 Routing Table for VRF "default"
                                 'route_preference': 90,
                                 'process_id': 'test',
                                 'source_protocol': 'eigrp',
+                                'source_protocol_status': 'internal',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {

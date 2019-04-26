@@ -289,6 +289,7 @@ class ShowIpRouteSchema(MetaParser):
                                 Optional('metric'): int,
                                 Optional('tag'): int,
                                 Optional('source_protocol'): str,
+                                Optional('source_protocol_status'): str,
                                 Optional('attached'): bool,
                                 Optional('active'): bool,
                                 Optional('next_hop'): {
@@ -530,6 +531,7 @@ class ShowIpRoute(ShowIpRouteSchema):
                             index_dict.update({'source_protocol': source_protocol})
 
                         if source_protocol_status:
+                            route_dict.update({'source_protocol_status': source_protocol_status})
                             index_dict.update({'source_protocol_status': source_protocol_status})
 
                         if cast:
