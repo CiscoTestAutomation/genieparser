@@ -137,8 +137,6 @@ class ShowIpArp(ShowIpArpSchema):
 					origin = 'static'
 				else:
 					origin = 'dynamic'
-					if ':' not in age:
-						age = Common.combine_units_of_time(minutes=int(age))
 
 				ip_dict.update({'origin': origin})
 				ip_dict.update({'age': age})
