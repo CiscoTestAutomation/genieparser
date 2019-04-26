@@ -599,6 +599,9 @@
     * Add ShowRipDatabase for:
         show rip database
         show rip vrf <vrf> database
+    * Add ShowRipInterface for:
+        show rip interface
+        show rip vrf {vrf} interface
 
 --------------------------------------------------------------------------------
                                 PREFIX_LIST
