@@ -788,6 +788,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'active':True,
                                 'metric':0,
                                 'route_preference':0,
+                                'source_protocol':'direct',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -817,6 +818,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'metric':81,
                                 'route_preference':110,
                                 'process_id':'10',
+                                'source_protocol':'ospf',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -848,6 +850,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'active':True,
                                 'metric':0,
                                 'route_preference':0,
+                                'source_protocol':'direct',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -869,6 +872,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'active':True,
                                 'metric':0,
                                 'route_preference':0,
+                                'source_protocol':'local',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -890,6 +894,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'metric':20,
                                 'route_preference':110,
                                 'process_id':'10',
+                                'source_protocol':'ospf',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -921,6 +926,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'active':True,
                                 'metric':0,
                                 'route_preference':0,
+                                'source_protocol':'direct',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -993,6 +999,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'attached':True,
                                 'metric':0,
                                 'route_preference':0,
+                                'source_protocol':'direct',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -1014,6 +1021,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'attached':True,
                                 'metric':0,
                                 'route_preference':0,
+                                'source_protocol':'local',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -1035,6 +1043,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'attached':True,
                                 'metric':0,
                                 'route_preference':190,
+                                'source_protocol':'hmm',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -1056,6 +1065,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'attached':True,
                                 'metric':0,
                                 'route_preference':190,
+                                'source_protocol':'hmm',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -1089,6 +1099,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'attached':True,
                                 'metric':0,
                                 'route_preference':0,
+                                'source_protocol':'direct',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -1110,6 +1121,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'attached':True,
                                 'metric':0,
                                 'route_preference':0,
+                                'source_protocol':'local',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -1190,6 +1202,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'mbest':0,
                                 'metric':0,
                                 'route_preference':1,
+                                'source_protocol':'static',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -1219,6 +1232,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'attached':True,
                                 'metric':0,
                                 'route_preference':0,
+                                'source_protocol':'direct',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -1248,6 +1262,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'metric':41,
                                 'route_preference':110,
                                 'process_id':'1',
+                                'source_protocol':'ospf',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -1270,6 +1285,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'attached':True,
                                 'metric':0,
                                 'route_preference':0,
+                                'source_protocol':'direct',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -1291,6 +1307,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'attached':True,
                                 'metric':0,
                                 'route_preference':0,
+                                'source_protocol':'local',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -1312,6 +1329,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'attached':True,
                                 'metric':0,
                                 'route_preference':0,
+                                'source_protocol':'direct',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -1341,6 +1359,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'metric':41,
                                 'route_preference':110,
                                 'process_id':'1',
+                                'source_protocol':'ospf',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -1372,6 +1391,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'attached':True,
                                 'metric':0,
                                 'route_preference':0,
+                                'source_protocol':'direct',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -1393,6 +1413,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'attached':True,
                                 'metric':0,
                                 'route_preference':0,
+                                'source_protocol':'local',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -1414,6 +1435,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'metric':50,
                                 'route_preference':115,
                                 'process_id':'1',
+                                'source_protocol':'isis',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -1446,6 +1468,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'route_preference':200,
                                 'process_id':'100',
                                 'tag':100,
+                                'source_protocol':'bgp',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -1475,6 +1498,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'attached':True,
                                 'metric':0,
                                 'route_preference':0,
+                                'source_protocol':'direct',
                                 'next_hop':{  
                                     'next_hop_list':{  
                                         1:{  
@@ -1593,6 +1617,7 @@ class test_show_ipv6_route(unittest.TestCase):
                                 'mbest':0,
                                 'route_preference': 1,
                                 'metric': 0,
+                                'source_protocol':'static',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -1622,6 +1647,7 @@ class test_show_ipv6_route(unittest.TestCase):
                                 'route_preference': 110,
                                 'metric': 41,
                                 'process_id': '1',
+                                'source_protocol': 'ospfv3',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -1672,6 +1698,7 @@ class test_show_ipv6_route(unittest.TestCase):
                                 'process_id': '100',
                                 'tag': 100,
                                 'metric': 0,
+                                'source_protocol': 'bgp',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -1697,6 +1724,7 @@ class test_show_ipv6_route(unittest.TestCase):
                                 'process_id': '100',
                                 'tag': 100,
                                 'metric': 0,
+                                'source_protocol': 'bgp',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -1728,6 +1756,7 @@ class test_show_ipv6_route(unittest.TestCase):
                                 'mbest': 0,
                                 'route_preference': 0,
                                 'metric': 0,
+                                'source_protocol': 'local',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -1766,6 +1795,7 @@ class test_show_ipv6_route(unittest.TestCase):
                                 'mbest': 0,
                                 'route_preference': 0,
                                 'metric': 0,
+                                'source_protocol': 'local',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -1869,6 +1899,7 @@ IPv6 Routing Table for VRF "default"
                                 'metric': 2848,
                                 'route_preference': 90,
                                 'process_id': 'test',
+                                'source_protocol': 'eigrp',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -1891,6 +1922,7 @@ IPv6 Routing Table for VRF "default"
                                 'metric': 2842,
                                 'route_preference': 90,
                                 'process_id': 'test',
+                                'source_protocol': 'eigrp',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -1913,6 +1945,7 @@ IPv6 Routing Table for VRF "default"
                                 'attached': True,
                                 'metric': 0,
                                 'route_preference': 0,
+                                'source_protocol': 'local',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -1942,6 +1975,7 @@ IPv6 Routing Table for VRF "default"
                                 'metric': 3072,
                                 'route_preference': 90,
                                 'process_id': 'test',
+                                'source_protocol': 'eigrp',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -1973,6 +2007,7 @@ IPv6 Routing Table for VRF "default"
                                 'metric': 3072,
                                 'route_preference': 90,
                                 'process_id': 'test',
+                                'source_protocol': 'eigrp',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -1995,6 +2030,7 @@ IPv6 Routing Table for VRF "default"
                                 'attached': True,
                                 'metric': 0,
                                 'route_preference': 0,
+                                'source_protocol': 'direct',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -2016,6 +2052,7 @@ IPv6 Routing Table for VRF "default"
                                 'attached': True,
                                 'metric': 0,
                                 'route_preference': 0,
+                                'source_protocol': 'local',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -2037,6 +2074,7 @@ IPv6 Routing Table for VRF "default"
                                 'attached': True,
                                 'metric': 0,
                                 'route_preference': 0,
+                                'source_protocol': 'direct',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -2058,6 +2096,7 @@ IPv6 Routing Table for VRF "default"
                                 'attached': True,
                                 'metric': 0,
                                 'route_preference': 0,
+                                'source_protocol': 'local',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -2087,6 +2126,7 @@ IPv6 Routing Table for VRF "default"
                                 'metric': 2848,
                                 'route_preference': 90,
                                 'process_id': 'test',
+                                'source_protocol': 'eigrp',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -2109,6 +2149,7 @@ IPv6 Routing Table for VRF "default"
                                 'metric': 2842,
                                 'route_preference': 90,
                                 'process_id': 'test',
+                                'source_protocol': 'eigrp',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -2131,6 +2172,7 @@ IPv6 Routing Table for VRF "default"
                                 'attached': True,
                                 'metric': 0,
                                 'route_preference': 0,
+                                'source_protocol': 'local',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -2160,6 +2202,7 @@ IPv6 Routing Table for VRF "default"
                                 'metric': 3072,
                                 'route_preference': 90,
                                 'process_id': 'test',
+                                'source_protocol': 'eigrp',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -2191,6 +2234,7 @@ IPv6 Routing Table for VRF "default"
                                 'metric': 3072,
                                 'route_preference': 90,
                                 'process_id': 'test',
+                                'source_protocol': 'eigrp',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -2213,6 +2257,7 @@ IPv6 Routing Table for VRF "default"
                                 'attached': True,
                                 'metric': 0,
                                 'route_preference': 0,
+                                'source_protocol': 'direct',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -2234,6 +2279,7 @@ IPv6 Routing Table for VRF "default"
                                 'attached': True,
                                 'metric': 0,
                                 'route_preference': 0,
+                                'source_protocol': 'local',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -2255,6 +2301,7 @@ IPv6 Routing Table for VRF "default"
                                 'attached': True,
                                 'metric': 0,
                                 'route_preference': 0,
+                                'source_protocol': 'direct',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
