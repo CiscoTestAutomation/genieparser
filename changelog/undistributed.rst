@@ -620,3 +620,9 @@
 * NXOS
     * Add ShowL2routeEvpnMacIpEvi for:
         show l2route evpn mac-ip evi <evi>
+
+--------------------------------------------------------------------------------
+                                VRF
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowVrfDetail to support more varied output
