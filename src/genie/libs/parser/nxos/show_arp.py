@@ -11,8 +11,10 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
-										 Default, Use
+										Default, Use
 from genie import parsergen
+from genie.libs.parser.utils.common import Common
+
 
 # =====================================
 # Schema for 'show ip arp'
@@ -93,14 +95,14 @@ class ShowIpArp(ShowIpArpSchema):
 			# IP ARP Table for context default
 			m = p1.match(line)
 			if m:
-				if not 'interfaces' in res_dict:
+				if 'interfaces' not in res_dict:
 					interfaces_dict = res_dict.setdefault('interfaces', {})
 				continue
 
 			# Total number of entries: 11
 			m = p2.match(line)
 			if m:
-				if not 'statistics' in res_dict:
+				if 'statistics' not in res_dict:
 					statistics_dict = res_dict.setdefault('statistics', {})
 
 				groups = m.groupdict()
@@ -135,21 +137,7 @@ class ShowIpArp(ShowIpArpSchema):
 				else:
 					origin = 'dynamic'
 					if ':' not in age:
-						age = int(age)
-						if age >= 60:
-							hours = age // 60
-							minutes = age % 60
-						else:
-							hours = 0
-							minutes = age
-
-						if int(hours) <= 9:
-							hours = "0{}".format(hours)
-
-						if int(minutes) <= 9:
-							minutes = "0{}".format(minutes)
-
-						age = "{}:{}:00".format(hours, minutes)
+						age = Common.combine_units_of_time(minutes=int(age))
 
 				ip_dict.update({'origin': origin})
 				ip_dict.update({'age': age})
