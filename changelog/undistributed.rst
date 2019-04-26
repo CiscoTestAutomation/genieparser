@@ -388,6 +388,13 @@
         show ip route
         show ip route vrf {vrf}
         show ip route vrf all
+* IOSXR
+    * Add ShowRouteIpv4 for:
+        show route ipv4
+        show route vrf <vrf> ipv4
+    * Add ShowRouteIpv6 for:
+        show route ipv6
+        show route vrf <vrf> ipv6
 
 --------------------------------------------------------------------------------
                                    ISSU
