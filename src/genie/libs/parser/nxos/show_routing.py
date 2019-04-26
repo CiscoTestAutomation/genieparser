@@ -354,6 +354,8 @@ class ShowIpRoute(ShowIpRouteSchema):
 
         # IP Route Table for VRF "default"
         # IP Route Table for Context "default"
+        # IPv6 Routing Table for VRF "default"
+        # IP Route Table for VRF "default"
         p1 = re.compile(r'^\s*IP(?:v6)? +Rout(?:e|ing) +Table +for (VRF|Context) +\"(?P<vrf>\S+)\"$')
 
         # 10.4.1.1/32, ubest/mbest: 2/0
@@ -362,6 +364,7 @@ class ShowIpRoute(ShowIpRouteSchema):
         # 10.94.77.1/32, ubest/mbest: 1/0 time
         # 0.0.0.0/0, 1 ucast next-hops, 0 mcast next-hops
         # 0.1.3.255/32, 1 ucast next-hops, 0 mcast next-hops, attached
+        # 2700:1::1/128, ubest/mbest: 1/0, attached
         p2 = re.compile(r'^(?P<route>[\w\/\.\:]+), +(ubest/mbest: +(?P<ubest_mbest>[\d\/]+)'
                         r'( +time)?)?((?P<ubest>\d+) +ucast +next-hops, +(?P<mbest>\d+) +'
                         r'mcast +next-hops)?(, +(?P<attached>[\w]+))?$')
@@ -369,16 +372,22 @@ class ShowIpRoute(ShowIpRouteSchema):
         # *via 10.2.3.2, Eth1/4, [1/0], 01:01:30, static
         # *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra
         # *via 10.229.11.11, [200/0], 01:01:12, bgp-100, internal, tag 100
-        p3 = re.compile(r'^\s*(?P<star>[*]+)via +(?P<next_hop>[\w\:\.]+),'
+        # *via 2700:1::1, Eth1/27, [0/0], 05:56:03, local
+        # *via ::ffff:10.229.11.11%default:IPv4, [200/0], 01:01:43, bgp-100, internal,
+        p3 = re.compile(r'^\s*(?P<star>[*]+)via +(?P<next_hop>[\w\:\.\%]+),'
                         r'( +(?P<interface>[\w\/\.]+))?,? +\[(?P<route_preference>[\d\/]+)\],'
                         r' +(?P<date>[0-9][\w\:]+)?,?( +(?P<source_protocol>[\w\-]+))?,?'
                         r'( +(?P<source_protocol_status>[\w-]+))?,?( +tag +(?P<tag>[\d]+))?$')
+
+        #    tag 100
+        p4 = re.compile(r'^tag +(?P<tag>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
 
             # IP Route Table for VRF "default"
             # IP Route Table for Context "default"
+            # IPv6 Routing Table for VRF "default"
             m = p1.match(line)
             if m:
                 if 'vrf' not in result_dict:
@@ -396,6 +405,7 @@ class ShowIpRoute(ShowIpRouteSchema):
             # 10.94.77.1/32, ubest/mbest: 1/0 time
             # 0.0.0.0/0, 1 ucast next-hops, 0 mcast next-hops
             # 0.1.3.255/32, 1 ucast next-hops, 0 mcast next-hops, attached
+            # 2700:1::1/128, ubest/mbest: 1/0, attached
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
@@ -440,11 +450,12 @@ class ShowIpRoute(ShowIpRouteSchema):
             # *via 10.2.3.2, Eth1/4, [1/0], 01:01:30, static
             # *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra
             # *via 10.229.11.11, [200/0], 01:01:12, bgp-100, internal, tag 100
+            # *via 2700:1::1, Eth1/27, [0/0], 05:56:03, local
             m = p3.match(line)
             if m:
                 groups = m.groupdict()
 
-                tag = process_id = source_protocol_status = interface = next_hop_vrf= ""
+                tag = process_id = source_protocol_status = interface = next_hop_vrf = next_hop_af = ""
                 star = m.groupdict()['star']
                 if len(star) == 1:
                     cast = 'best_ucast_nexthop'
@@ -456,6 +467,9 @@ class ShowIpRoute(ShowIpRouteSchema):
                     if '%' in next_hop:
                         next_hop_vrf = next_hop.split('%')[1]
                         next_hop = next_hop.split('%')[0]
+                        if ':' in next_hop_vrf:
+                            next_hop_af = next_hop_vrf.split(':')[1].lower()
+                            next_hop_vrf = next_hop_vrf.split(':')[0]
 
                 if groups['route_preference']:
                     routepreference = groups['route_preference']
@@ -491,8 +505,6 @@ class ShowIpRoute(ShowIpRouteSchema):
 
                     if process_id:
                         route_dict.update({'process_id': process_id})
-
-                    
 
                     if tag:
                         route_dict.update({'tag': int(tag)})
@@ -530,7 +542,18 @@ class ShowIpRoute(ShowIpRouteSchema):
                         if next_hop_vrf:
                             index_dict.update({'next_hop_vrf': next_hop_vrf})
 
+                        if next_hop_af:
+                            index_dict.update({'next_hop_af': next_hop_af})
+
                 index += 1
+                continue
+
+            #    tag 100
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                if groups['tag']:
+                    route_dict.update({'tag': int(groups['tag'])})
 
         return result_dict
 
