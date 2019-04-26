@@ -82,10 +82,24 @@
                                    PLATFORM
 --------------------------------------------------------------------------------
 * IOSXR
-  * Add ShowInstallInactiveSummary for:
+    * Add ShowInstallInactiveSummary for:
         show install inactive summary
-  * Add ShowInstallCommitSummary for:
+    * Add ShowInstallCommitSummary for:
         show install commit summary
+* IOSXE
+    * ShowInventory enhanced to support ASR901 platform
+    * Updated ShowPlatform to support different models
+* IOS
+    * Add ShowEnvironment for:
+        show environment
+    * Add ShowEnvironmentAll for:
+        show environment all
+    * Add ShowModule for:
+        show module
+    * Add ShowSwitch for:
+        show switch
+    * Add ShowSwitchDetail for:
+        show switch detail
 
 --------------------------------------------------------------------------------
                                    RUN
@@ -169,12 +183,6 @@
 --------------------------------------------------------------------------------
 * IOSXE
   * Enhanced Traceroute to parse URL along with the Ip Address
-
---------------------------------------------------------------------------------
-                                   PLATFORM
---------------------------------------------------------------------------------
-* IOSXE
-  * ShowInventory enhanced to support ASR901 platform
 
 --------------------------------------------------------------------------------
                                    LAG
@@ -349,21 +357,6 @@
 * IOS
     * Added ShowSnmpMib for:
         'show snmp mib'
-
---------------------------------------------------------------------------------
-                                   PLATFORM
---------------------------------------------------------------------------------
-* IOS
-    * Add ShowEnvironment for:
-        show environment
-    * Add ShowEnvironmentAll for:
-        show environment all
-    * Add ShowModule for:
-        show module
-    * Add ShowSwitch for:
-        show switch
-    * Add ShowSwitchDetail for:
-        show switch detail
 
 --------------------------------------------------------------------------------
                                    RPF
