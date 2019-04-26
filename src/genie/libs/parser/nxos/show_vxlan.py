@@ -15,6 +15,7 @@ NXOS parser for the following show commands:
     * show l2route mac-ip all detail
     * show l2route summary
     * show nve vni ingress-replication
+    * show l2route evpn mac-ip all
     * show l2route evpn mac-ip evi <evi>
 """
 
@@ -1280,8 +1281,8 @@ class ShowL2routeMacIpAllDetailSchema(MetaParser):
                         Any(): {
                             'mac_addr': str,
                             'mac_ip_prod_type': str,
-                            'mac_ip_flags': str,
-                            'seq_num': int,
+                            Optional('mac_ip_flags'): str,
+                            Optional('seq_num'): int,
                             'next_hop1': str,
                             'host_ip': str,
                             Optional('sent_to'): str,
@@ -1317,13 +1318,17 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
         #            Sent To: BGP
         #            SOO: 774975538
         #            L3-Info: 10001
+        # 101         fa16.3ed1.37b5 HMM    --            0          100.101.1.3    Local
+        # 101         fa16.3e04.e54a BGP    --            0          100.101.8.3    66.66.66.66 
+        # 101         0011.0000.0034 BGP  5.1.3.2                      40.0.0.2
         p1 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<mac_ip_prod_type>[\w\,]+)'
-                        ' +(?P<mac_ip_flags>[\w\,\-]+) +(?P<seq_num>[\d]+) +(?P<host_ip>[\w\/\.]+)'
+                        '( +(?P<mac_ip_flags>[\w\,\-]+))?( +(?P<seq_num>[\d]+))? +(?P<host_ip>[\w\/\.]+)'
                         ' +(?P<next_hop1>[\w\/\.]+)$')
 
         p2 = re.compile(r'^\s*Sent +To: +(?P<sent_to>[\w]+)$')
         p3 = re.compile(r'^\s*SOO: +(?P<soo>[\d]+)$')
         p4 = re.compile(r'^\s*L3-Info: +(?P<l3_info>[\d]+)$')
+
         # Topology    Mac Address    Host IP         Prod   Flags         Seq No     Next-Hops
         # ----------- -------------- --------------- ------ ---------- ---------------
         # 101         0000.9cfc.2596 10.111.1.3     BGP    --            0         10.76.23.23
@@ -1345,11 +1350,12 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
                 mac_addr = group.pop('mac_addr')
                 topo_dict = result_dict.setdefault('topology', {}).setdefault('topo_id', {}).setdefault(topo_id,{}).\
                                         setdefault('mac_ip',{}).setdefault(mac_addr,{})
-
-                flags = group.pop('mac_ip_flags')
-                topo_dict.update({'mac_ip_flags':  flags.lower()})
+                if group['mac_ip_flags']:
+                    flags = group.pop('mac_ip_flags')
+                    topo_dict.update({'mac_ip_flags':  flags.lower()})
+                if group['seq_num']:
+                    topo_dict.update({'seq_num': int(group.pop('seq_num'))})
                 topo_dict.update({'mac_ip_prod_type':  group.pop('mac_ip_prod_type').lower()})
-                topo_dict.update({'seq_num': int(group.pop('seq_num'))})
                 topo_dict.update({'mac_addr': mac_addr})
                 topo_dict.update({'host_ip': group.pop('host_ip')})
                 topo_dict.update({'next_hop1': group.pop('next_hop1').lower()})
@@ -2214,6 +2220,19 @@ class ShowFabricMulticastIpL2Mroute(ShowFabricMulticastIpL2MrouteSchema):
 
         return result_dict
 
+# ====================================================
+#  parser for 'show l2route evpn mac-ip all'
+# ====================================================
+class ShowL2routeEvpnMacIpAll(ShowL2routeMacIpAllDetail):
+    """Parser for show l2route evpn mac-ip all"""
+    cli_command = 'show l2route evpn mac-ip all'
+
+    def cli(self, output=None):
+        if output is None:
+            show_output = self.device.execute(self.cli_command)
+        else:
+            show_output = output
+        return super().cli(output=show_output)
 
 # ====================================================
 #  parser for 'show l2route evpn mac-ip evi <evi>'
@@ -2228,3 +2247,4 @@ class ShowL2routeEvpnMacIpEvi(ShowL2routeMacIpAllDetail):
         else:
             show_output = output
         return super().cli(output=show_output)
+

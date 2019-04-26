@@ -7,9 +7,14 @@ IOSXR parsers for the following show commands:
 
 """
 
+# Python
 import re
+from collections import OrderedDict
+
+# Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
+
 
 # ====================================
 # Schema for 'show run key chain'
@@ -136,7 +141,7 @@ class ShowRunRouterIsisSchema(MetaParser):
                     Optional(Any()): Any(),
                 },
                 Optional('address_family'): {
-                    Optional(Any()): {
+                    Optional(Any()): OrderedDict({
                         Optional('fast_reroute'): {
                             Optional('per_prefix'): {
                                 Optional('tiebreaker'):{
@@ -157,10 +162,10 @@ class ShowRunRouterIsisSchema(MetaParser):
                             Optional(Any()): str,
                         },
                         Optional(Any()): str,
-                    }
+                    })
                 },
                 Optional('interfaces'): {
-                    Optional(Any()): {
+                    Optional(Any()): OrderedDict({
                         Optional('bfd'): {
                             Optional(Any()): Any(),
                         },
@@ -173,7 +178,7 @@ class ShowRunRouterIsisSchema(MetaParser):
                             },
                         },
                         Optional(Any()): Any(),
-                    },
+                    })
                 },
                 Optional(Any()): Any(),
             }

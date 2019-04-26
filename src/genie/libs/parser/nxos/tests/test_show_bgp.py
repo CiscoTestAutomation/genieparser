@@ -40,6 +40,7 @@ from genie.libs.parser.nxos.show_bgp import ShowBgpProcessVrfAll,\
                                  ShowBgpIpMvpnSaadDetail,\
                                  ShowBgpL2vpnEvpn,\
                                  ShowBgpIpMvpn,\
+                                 ShowBgpL2vpnEvpnNeighborsAdvertisedRoutes, \
                                  ShowBgpVrfIpv4Unicast
 
 # =========================================
@@ -14988,21 +14989,18 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
         '''}
 
     def test_show_bgp_vrf_all_neighbors_advertised_routes_golden(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowBgpVrfAllNeighborsAdvertisedRoutes(device=self.device)
         parsed_output = obj.parse(vrf='default', neighbor='10.186.0.2')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_show_bgp_vrf_all_neighbors_advertised_routes_golden2(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowBgpVrfAllNeighborsAdvertisedRoutes(device=self.device)
         parsed_output = obj.parse(vrf='default', neighbor='10.106.102.3')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
     def test_show_bgp_vrf_all_neighbors_advertised_routes_golden3(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output3)
         obj = ShowBgpVrfAllNeighborsAdvertisedRoutes(device=self.device)
         parsed_output = obj.parse(vrf='default', neighbor='10.4.6.6')
@@ -29264,6 +29262,413 @@ class test_show_bgp_vrf_ipv4_unicast(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowBgpVrfIpv4Unicast(device=self.device)
         parsed_output = obj.parse(vrf='vni_10100')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+# =========================================================================
+# Unit Test for 'show bgp l2vpn evpn neighbors {neighbor} advertised-routes
+# =========================================================================
+class test_show_bgp_l2vpn_evpn_neighbors_advertised_routes(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        R2# show bgp l2vpn evpn neighbors 4.4.4.4 advertised-routes 
+
+        Peer 4.4.4.4 routes for address family L2VPN EVPN:
+        BGP table version is 156, Local Router ID is 2.2.2.2
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+        Network            Next Hop            Metric     LocPrf     Weight Path
+        Route Distinguisher: 2.2.2.2:32868    (L2VNI 10101)
+        *>l[2]:[0]:[0]:[48]:[fa16.3e79.6bfe]:[0]:[0.0.0.0]/216
+                            23.23.23.23                       100      32768 i
+        *>l[2]:[0]:[0]:[48]:[fa16.3ec5.fcab]:[0]:[0.0.0.0]/216
+                            23.23.23.23                       100      32768 i
+        *>l[2]:[0]:[0]:[48]:[fa16.3ed1.37b5]:[0]:[0.0.0.0]/216
+                            23.23.23.23                       100      32768 i
+        *>l[2]:[0]:[0]:[48]:[fa16.3ed4.83e4]:[0]:[0.0.0.0]/216
+                            23.23.23.23                       100      32768 i
+        *>l[2]:[0]:[0]:[48]:[fa16.3e2f.654d]:[32]:[100.101.3.4]/272
+                            23.23.23.23                       100      32768 i
+        *>l[2]:[0]:[0]:[48]:[fa16.3e68.b933]:[32]:[100.101.3.3]/272
+                            23.23.23.23                       100      32768 i
+        *>l[2]:[0]:[0]:[48]:[fa16.3e79.6bfe]:[32]:[100.101.2.4]/272
+                            23.23.23.23                       100      32768 i
+        *>l[2]:[0]:[0]:[48]:[fa16.3ec5.fcab]:[32]:[100.101.1.4]/272
+                            23.23.23.23                       100      32768 i
+        *>l[2]:[0]:[0]:[48]:[fa16.3ed1.37b5]:[32]:[100.101.1.3]/272
+                            23.23.23.23                       100      32768 i
+        *>l[2]:[0]:[0]:[48]:[fa16.3ed4.83e4]:[32]:[100.101.2.3]/272
+                            23.23.23.23                       100      32768 i
+
+        Route Distinguisher: 2.2.2.2:32968    (L2VNI 10201)
+
+        Route Distinguisher: 2.2.2.2:32969    (L2VNI 10202)
+        *>l[2]:[0]:[0]:[48]:[fa16.3e79.6bfe]:[0]:[0.0.0.0]/216
+                            23.23.23.23                       100      32768 i
+        *>l[2]:[0]:[0]:[48]:[fa16.3e79.6bfe]:[32]:[200.202.2.4]/272
+                            23.23.23.23                       100      32768 i
+
+        Route Distinguisher: 6.6.6.6:3
+
+        Route Distinguisher: 6.6.6.6:4
+
+        Route Distinguisher: 6.6.6.6:27001
+
+        Route Distinguisher: 6.6.6.6:32868
+
+        Route Distinguisher: 6.6.6.6:32968
+
+        Route Distinguisher: 6.6.6.6:32969
+
+        Route Distinguisher: 7.7.7.7:32868
+
+        Route Distinguisher: 7.7.7.7:32968
+
+        Route Distinguisher: 7.7.7.7:32969
+
+        Route Distinguisher: 8.8.8.8:32868
+
+        Route Distinguisher: 8.8.8.8:32969
+
+        Route Distinguisher: 2.2.2.2:3    (L3VNI 10100)
+        *>l[2]:[0]:[0]:[48]:[5e00.0001.0007]:[0]:[0.0.0.0]/216
+                            23.23.23.23                       100      32768 i
+
+        Route Distinguisher: 2.2.2.2:4    (L3VNI 10200)
+        *>l[2]:[0]:[0]:[48]:[5e00.0001.0007]:[0]:[0.0.0.0]/216
+                            23.23.23.23                       100      32768 i
+    '''}
+
+    golden_parsed_output = {
+        'vrf':{  
+            'default':{  
+                'neighbor':{  
+                    '4.4.4.4':{  
+                        'address_family':{  
+                            'l2vpn evpn':{  
+                                'advertised':{  
+
+                                },
+                                'bgp_table_version':156,
+                                'local_router_id':'2.2.2.2'
+                            },
+                            'l2vpn evpn RD 2.2.2.2:32868':{  
+                                'bgp_table_version':156,
+                                'local_router_id':'2.2.2.2',
+                                'route_distinguisher':'2.2.2.2:32868',
+                                'rd_l2vni':10101,
+                                'advertised':{  
+                                    '[2]:[0]:[0]:[48]:[fa16.3e79.6bfe]:[0]:[0.0.0.0]/216':{  
+                                        'index':{  
+                                            1:{  
+                                                'status_codes':'*>',
+                                                'path_type':'l',
+                                                'next_hop':'23.23.23.23',
+                                                'origin_codes':'i',
+                                                'weight':32768,
+                                                'locprf':100
+                                            }
+                                        }
+                                    },
+                                    '[2]:[0]:[0]:[48]:[fa16.3ec5.fcab]:[0]:[0.0.0.0]/216':{  
+                                        'index':{  
+                                            1:{  
+                                                'status_codes':'*>',
+                                                'path_type':'l',
+                                                'next_hop':'23.23.23.23',
+                                                'origin_codes':'i',
+                                                'weight':32768,
+                                                'locprf':100
+                                            }
+                                        }
+                                    },
+                                    '[2]:[0]:[0]:[48]:[fa16.3ed1.37b5]:[0]:[0.0.0.0]/216':{  
+                                        'index':{  
+                                            1:{  
+                                                'status_codes':'*>',
+                                                'path_type':'l',
+                                                'next_hop':'23.23.23.23',
+                                                'origin_codes':'i',
+                                                'weight':32768,
+                                                'locprf':100
+                                            }
+                                        }
+                                    },
+                                    '[2]:[0]:[0]:[48]:[fa16.3ed4.83e4]:[0]:[0.0.0.0]/216':{  
+                                        'index':{  
+                                            1:{  
+                                                'status_codes':'*>',
+                                                'path_type':'l',
+                                                'next_hop':'23.23.23.23',
+                                                'origin_codes':'i',
+                                                'weight':32768,
+                                                'locprf':100
+                                            }
+                                        }
+                                    },
+                                    '[2]:[0]:[0]:[48]:[fa16.3e2f.654d]:[32]:[100.101.3.4]/272':{  
+                                        'index':{  
+                                            1:{  
+                                                'status_codes':'*>',
+                                                'path_type':'l',
+                                                'next_hop':'23.23.23.23',
+                                                'origin_codes':'i',
+                                                'weight':32768,
+                                                'locprf':100
+                                            }
+                                        }
+                                    },
+                                    '[2]:[0]:[0]:[48]:[fa16.3e68.b933]:[32]:[100.101.3.3]/272':{  
+                                        'index':{  
+                                            1:{  
+                                                'status_codes':'*>',
+                                                'path_type':'l',
+                                                'next_hop':'23.23.23.23',
+                                                'origin_codes':'i',
+                                                'weight':32768,
+                                                'locprf':100
+                                            }
+                                        }
+                                    },
+                                    '[2]:[0]:[0]:[48]:[fa16.3e79.6bfe]:[32]:[100.101.2.4]/272':{  
+                                        'index':{  
+                                            1:{  
+                                                'status_codes':'*>',
+                                                'path_type':'l',
+                                                'next_hop':'23.23.23.23',
+                                                'origin_codes':'i',
+                                                'weight':32768,
+                                                'locprf':100
+                                            }
+                                        }
+                                    },
+                                    '[2]:[0]:[0]:[48]:[fa16.3ec5.fcab]:[32]:[100.101.1.4]/272':{  
+                                        'index':{  
+                                            1:{  
+                                                'status_codes':'*>',
+                                                'path_type':'l',
+                                                'next_hop':'23.23.23.23',
+                                                'origin_codes':'i',
+                                                'weight':32768,
+                                                'locprf':100
+                                            }
+                                        }
+                                    },
+                                    '[2]:[0]:[0]:[48]:[fa16.3ed1.37b5]:[32]:[100.101.1.3]/272':{  
+                                        'index':{  
+                                            1:{  
+                                                'status_codes':'*>',
+                                                'path_type':'l',
+                                                'next_hop':'23.23.23.23',
+                                                'origin_codes':'i',
+                                                'weight':32768,
+                                                'locprf':100
+                                            }
+                                        }
+                                    },
+                                    '[2]:[0]:[0]:[48]:[fa16.3ed4.83e4]:[32]:[100.101.2.3]/272':{  
+                                        'index':{  
+                                            1:{  
+                                                'status_codes':'*>',
+                                                'path_type':'l',
+                                                'next_hop':'23.23.23.23',
+                                                'origin_codes':'i',
+                                                'weight':32768,
+                                                'locprf':100
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            'l2vpn evpn RD 2.2.2.2:32968':{  
+                                'bgp_table_version':156,
+                                'local_router_id':'2.2.2.2',
+                                'route_distinguisher':'2.2.2.2:32968',
+                                'rd_l2vni':10201,
+                                'advertised':{  
+
+                                }
+                            },
+                            'l2vpn evpn RD 2.2.2.2:32969':{  
+                                'bgp_table_version':156,
+                                'local_router_id':'2.2.2.2',
+                                'route_distinguisher':'2.2.2.2:32969',
+                                'rd_l2vni':10202,
+                                'advertised':{  
+                                    '[2]:[0]:[0]:[48]:[fa16.3e79.6bfe]:[0]:[0.0.0.0]/216':{  
+                                        'index':{  
+                                            1:{  
+                                                'status_codes':'*>',
+                                                'path_type':'l',
+                                                'next_hop':'23.23.23.23',
+                                                'origin_codes':'i',
+                                                'weight':32768,
+                                                'locprf':100
+                                            }
+                                        }
+                                    },
+                                    '[2]:[0]:[0]:[48]:[fa16.3e79.6bfe]:[32]:[200.202.2.4]/272':{  
+                                        'index':{  
+                                            1:{  
+                                                'status_codes':'*>',
+                                                'path_type':'l',
+                                                'next_hop':'23.23.23.23',
+                                                'origin_codes':'i',
+                                                'weight':32768,
+                                                'locprf':100
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            'l2vpn evpn RD 6.6.6.6:3':{  
+                                'bgp_table_version':156,
+                                'local_router_id':'2.2.2.2',
+                                'route_distinguisher':'6.6.6.6:3',
+                                'advertised':{  
+
+                                }
+                            },
+                            'l2vpn evpn RD 6.6.6.6:4':{  
+                                'bgp_table_version':156,
+                                'local_router_id':'2.2.2.2',
+                                'route_distinguisher':'6.6.6.6:4',
+                                'advertised':{  
+
+                                }
+                            },
+                            'l2vpn evpn RD 6.6.6.6:27001':{  
+                                'bgp_table_version':156,
+                                'local_router_id':'2.2.2.2',
+                                'route_distinguisher':'6.6.6.6:27001',
+                                'advertised':{  
+
+                                }
+                            },
+                            'l2vpn evpn RD 6.6.6.6:32868':{  
+                                'bgp_table_version':156,
+                                'local_router_id':'2.2.2.2',
+                                'route_distinguisher':'6.6.6.6:32868',
+                                'advertised':{  
+
+                                }
+                            },
+                            'l2vpn evpn RD 6.6.6.6:32968':{  
+                                'bgp_table_version':156,
+                                'local_router_id':'2.2.2.2',
+                                'route_distinguisher':'6.6.6.6:32968',
+                                'advertised':{  
+
+                                }
+                            },
+                            'l2vpn evpn RD 6.6.6.6:32969':{  
+                                'bgp_table_version':156,
+                                'local_router_id':'2.2.2.2',
+                                'route_distinguisher':'6.6.6.6:32969',
+                                'advertised':{  
+
+                                }
+                            },
+                            'l2vpn evpn RD 7.7.7.7:32868':{  
+                                'bgp_table_version':156,
+                                'local_router_id':'2.2.2.2',
+                                'route_distinguisher':'7.7.7.7:32868',
+                                'advertised':{  
+
+                                }
+                            },
+                            'l2vpn evpn RD 7.7.7.7:32968':{  
+                                'bgp_table_version':156,
+                                'local_router_id':'2.2.2.2',
+                                'route_distinguisher':'7.7.7.7:32968',
+                                'advertised':{  
+
+                                }
+                            },
+                            'l2vpn evpn RD 7.7.7.7:32969':{  
+                                'bgp_table_version':156,
+                                'local_router_id':'2.2.2.2',
+                                'route_distinguisher':'7.7.7.7:32969',
+                                'advertised':{  
+
+                                }
+                            },
+                            'l2vpn evpn RD 8.8.8.8:32868':{  
+                                'bgp_table_version':156,
+                                'local_router_id':'2.2.2.2',
+                                'route_distinguisher':'8.8.8.8:32868',
+                                'advertised':{  
+
+                                }
+                            },
+                            'l2vpn evpn RD 8.8.8.8:32969':{  
+                                'bgp_table_version':156,
+                                'local_router_id':'2.2.2.2',
+                                'route_distinguisher':'8.8.8.8:32969',
+                                'advertised':{  
+
+                                }
+                            },
+                            'l2vpn evpn RD 2.2.2.2:3':{  
+                                'bgp_table_version':156,
+                                'local_router_id':'2.2.2.2',
+                                'route_distinguisher':'2.2.2.2:3',
+                                'rd_l3vni':10100,
+                                'advertised':{  
+                                    '[2]:[0]:[0]:[48]:[5e00.0001.0007]:[0]:[0.0.0.0]/216':{  
+                                        'index':{  
+                                            1:{  
+                                                'status_codes':'*>',
+                                                'path_type':'l',
+                                                'next_hop':'23.23.23.23',
+                                                'origin_codes':'i',
+                                                'weight':32768,
+                                                'locprf':100
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            'l2vpn evpn RD 2.2.2.2:4':{  
+                                'bgp_table_version':156,
+                                'local_router_id':'2.2.2.2',
+                                'route_distinguisher':'2.2.2.2:4',
+                                'rd_l3vni':10200,
+                                'advertised':{  
+                                    '[2]:[0]:[0]:[48]:[5e00.0001.0007]:[0]:[0.0.0.0]/216':{  
+                                        'index':{  
+                                            1:{  
+                                                'status_codes':'*>',
+                                                'path_type':'l',
+                                                'next_hop':'23.23.23.23',
+                                                'origin_codes':'i',
+                                                'weight':32768,
+                                                'locprf':100
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpL2vpnEvpnNeighborsAdvertisedRoutes(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(neighbor='4.4.4.4')
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpL2vpnEvpnNeighborsAdvertisedRoutes(device=self.device)
+        parsed_output = obj.parse(neighbor='4.4.4.4')
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
