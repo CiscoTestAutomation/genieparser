@@ -78,23 +78,26 @@ class ShowLldpEntrySchema(MetaParser):
         'total_entries': int,
         'interfaces': {
             Any(): {
-                'neighbors': {
-                    Any(): {                        
-                        'chassis_id': str,
-                        'port_id': str,
-                        'port_description': str,
-                        'system_name': str,
-                        'system_description': str,
-                        'time_remaining': int,
-                        'neighbor_id': str,
-                        'hold_time': int,
-                        'capabilities': {
-                            Any():{
-                                Optional('system'): bool,
-                                Optional('enabled'): bool
+                'port_id': {
+                    Any(): {
+                        'neighbors': {
+                            Any(): {                        
+                                'chassis_id': str,
+                                'port_description': str,
+                                'system_name': str,
+                                'system_description': str,
+                                'time_remaining': int,
+                                'neighbor_id': str,
+                                'hold_time': int,
+                                'capabilities': {
+                                    Any():{
+                                        Optional('system'): bool,
+                                        Optional('enabled'): bool
+                                    }
+                                },
+                                Optional('management_address'): str,
                             }
-                        },
-                        Optional('management_address'): str,
+                        }
                     }
                 }
             }
@@ -129,6 +132,8 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             out = output
         # initial return dictionary
         ret_dict = {}
+        description_found = False
+
         # Local Interface: GigabitEthernet0/0/0/0
         p1 = re.compile(r'^Local +Interface: +(?P<local_interface>\S+)$')
         # Chassis id: 001e.49f7.2c00
@@ -143,7 +148,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         p6 = re.compile(r'^System +Description:$')
         # Cisco IOS Software [Everest], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.1, RELEASE SOFTWARE (fc2)
         # Cisco Nexus Operating System (NX-OS) Software 7.0(3)I7(1)
-        p7 = re.compile(r'^(?P<system_description>Cisco +((IOS +Software +\[Everest\])|(Nexus +Operating +System)|(IOS +XR +Software))[\S\s]+)$')
+        p7 = re.compile(r'^(?P<system_description>Cisco +[\S\s]+)$')
         # Copyright (c) 1986-2017 by Cisco Systems, Inc.
         p8 = re.compile(r'^(?P<copyright>Copyright +\(c\) +[\S\s]+)$')
         # Compiled Sat 22-Jul-17 05:51 by 
@@ -171,6 +176,8 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             if m:
                 sub_dict = {}
                 group = m.groupdict()
+                intf = Common.convert_intf_name(group['local_interface'])
+                intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(intf, {})
                 continue
             
             # Chassis id: 001e.49f7.2c00
@@ -184,9 +191,10 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                intf = Common.convert_intf_name(group['port_id'])
-                sub_dict.update({'port_id' : intf})
-                intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(intf, {})
+                port_id = Common.convert_intf_name(group['port_id'])
+                port_dict = intf_dict.setdefault('port_id', {}). \
+                    setdefault(port_id, {})
+                
                 continue
 
             # Port Description: GigabitEthernet1/0/4
@@ -203,14 +211,22 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 system_name = group['system_name']
                 sub_dict.update({'system_name': system_name})
                 sub_dict.update({'neighbor_id' : system_name})
-                nei_dict = intf_dict.setdefault('neighbors', {}).setdefault(system_name, sub_dict)
+                nei_dict = port_dict.setdefault('neighbors', {}).setdefault(system_name, sub_dict)
+                continue
+
+            # System Description: 
+            m = p6.match(line)
+            if m:
+                description_found = True
+                sub_dict['system_description'] = ''
                 continue
 
             # Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)
             m = p7.match(line)
             if m:
-                group = m.groupdict()
-                sub_dict['system_description'] = group['system_description'] + '\n'
+                if description_found:
+                    group = m.groupdict()
+                    sub_dict['system_description'] = group['system_description'] + '\n'
                 continue
 
             # Copyright (c) 1986-2011 by Cisco Systems, Inc.
@@ -402,6 +418,8 @@ class ShowLldpInterface(ShowLldpInterfaceSchema):
 
         for line in out.splitlines():
             line = line.strip()
+            if not line:
+                continue
             # GigabitEthernet1/0/15
             m = p1.match(line)
             if m:

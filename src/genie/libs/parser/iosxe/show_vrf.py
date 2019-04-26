@@ -90,11 +90,12 @@ class ShowVrfDetail(ShowVrfDetailSchema):
         # VRF Mgmt-vrf (VRF Id = 1); default RD <not set>; default VPNID <not set>
         # VRF vrf1; default RD 1:1; default VPNID <not set>
         # VRF Down; default RD 100:1; default VPNID <not set> VRF Table ID = 1
-        p1 = re.compile(r'^VRF +(?P<vrf>[\w\-\_\:]+)( +'
-                        r'\(VRF +Id +\= +(?P<vrf_id>\d+)\))?; +'
-                        r'default +RD +(?P<rd>[\w\s\:\<\>\.]+); +'
-                        r'default +VPNID +(?P<vpn_id>[\w\s\:\<\>]+)'
-                        r'(?: +VRF +Table +ID +\= +(?P<alt_vrf_id>\d))?$')
+        # VRF 12349; default RD 1.1.1.1:20; default VPNID <not set>
+        p1 = re.compile(r'^VRF +(?P<vrf>[\S]+)( +\(VRF +Id +\= +'
+                        r'(?P<vrf_id>\d+)\))?; +default +RD +'
+                        r'(?P<rd>[\S\s]+); +default +VPNID +'
+                        r'(?P<vpn_id>[\w\s\:\<\>]+)(?: +VRF +'
+                        r'Table +ID +\= +(?P<alt_vrf_id>\d))?$')
 
         # New CLI format, supports multiple address-families
         # Flags: 0x180C
@@ -157,6 +158,7 @@ class ShowVrfDetail(ShowVrfDetailSchema):
             # VRF Mgmt-vrf (VRF Id = 1); default RD <not set>; default VPNID <not set>
             # VRF vrf1; default RD 1:1; default VPNID <not set>
             # VRF Down; default RD 100:1; default VPNID <not set> VRF Table ID = 1
+            # VRF 12349; default RD 1.1.1.1:20; default VPNID <not set>
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
