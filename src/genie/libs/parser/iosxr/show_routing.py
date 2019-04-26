@@ -415,7 +415,9 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
             #i L1 2001:23:23:23::23/128
             # R*   ::/128 
             # L    ::ffff:192.168.1.1/10
-            p2 = re.compile(r'^(?P<code1>[\w\*\(\>\)\!]+)( +(?P<code2>[\w\*\(\>\)\!]+))? +(?P<route>[\w\/\:\.]+)( +is +directly +connected,)?$')
+            p2 = re.compile(r'^(?P<code1>[\w\*\(\>\)\!]+)( +'
+                '(?P<code2>[\w\*\(\>\)\!]+))? +(?P<route>[\w\/\:\.]+)'
+                '( +is +directly +connected,)?$')
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -470,7 +472,9 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
             #   [1/0] via 2001:20:1:2::1, 01:52:23, GigabitEthernet0/0/0/0
             #   [200/0] via ::ffff:10.229.11.11 (nexthop in vrf default), 00:55:12
             p3 = re.compile(r'^\s*\[(?P<route_preference>[\d\/]+)\]'
-                            ' +via +(?P<next_hop>[\w\:\.)]+)?( \(nexthop in vrf default\))?,? +(?P<date>[0-9][\w\:]+)?,?( +(?P<interface>[\S]+))?$')
+                            ' +via +(?P<next_hop>[\w\:\.)]+)?( \(nexthop in '
+                            'vrf default\))?,? +(?P<date>[0-9][\w\:]+)?,?( +'
+                            '(?P<interface>[\S]+))?$')
             m = p3.match(line)
             if m:
                 updated = interface = ""
