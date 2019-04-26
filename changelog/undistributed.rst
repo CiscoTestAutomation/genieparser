@@ -570,7 +570,9 @@
         show lldp traffic
     * Add ShowLldpInterface for:
         show lldp interface
-
+* IOSXE
+    * Add ShowLldpNeighborsDetail for:
+        show lldp neighbors detail
 ----------------------------------------------------------------------------------
                                    IGMP
 ----------------------------------------------------------------------------------
