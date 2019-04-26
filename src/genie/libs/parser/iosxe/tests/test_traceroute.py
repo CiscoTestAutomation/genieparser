@@ -113,7 +113,7 @@ class test_traceroute(unittest.TestCase):
         }
 
     golden_output1 = '''\
-        router#traceroute 172.16.166.253 numeric timeout 1 probe 3 ttl 1 15 source 61.200.255.248 
+        router#traceroute 172.16.166.253 numeric timeout 1 probe 3 ttl 1 15 source 10.36.255.248 
         Type escape sequence to abort. 
         Tracing the route to 172.16.166.253 
         VRF info: (vrf in name/id, vrf out name/id) 
@@ -184,8 +184,8 @@ class test_traceroute(unittest.TestCase):
 
     golden_parsed_output3 = {
         'traceroute': {
-            '1.1.1.1': {
-                'address': '1.1.1.1',
+            '10.4.1.1': {
+                'address': '10.4.1.1',
                 'hops': {
                     '1': {
                         'address': '10.10.10.10',
@@ -201,7 +201,7 @@ class test_traceroute(unittest.TestCase):
         [2019-04-11 11:02:15,834] +++ PE1: executing command 'traceroute www.xyz.com' +++
         traceroute www.xyz.com
         Type escape sequence to abort.
-        Tracing the route to www.xyz.com (1.1.1.1)
+        Tracing the route to www.xyz.com (10.4.1.1)
         VRF info: (vrf in name/id, vrf out name/id)
           1 10.10.10.10 1 msec 1 msec * 
         PE1#

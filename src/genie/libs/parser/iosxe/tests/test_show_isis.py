@@ -222,13 +222,13 @@ class test_show_isis_database_detail(unittest.TestCase):
                                 }
                             },
                             'hostname': 'R2',
-                            'ip_address': '66.66.66.66',
-                            '20.2.7.0/24': {
+                            'ip_address': '10.84.66.66',
+                            '10.229.7.0/24': {
                                 'ip': {
                                     'metric': 10,
                                 },
                             },
-                            '66.66.66.66/32':{
+                            '10.84.66.66/32':{
                                 'ip': {
                                     'metric': 10,
                                 },
@@ -278,13 +278,13 @@ class test_show_isis_database_detail(unittest.TestCase):
                                     'mt_ipv6': True,
                                 },
                             },
-                            'ip_address': '66.66.66.66',
-                            '20.2.7.0/24': {
+                            'ip_address': '10.84.66.66',
+                            '10.229.7.0/24': {
                                 'ip': {
                                     'metric': 10,
                                 },
                             },
-                            '66.66.66.66/32': {
+                            '10.84.66.66/32': {
                                 'ip':{
                                     'metric': 10,
                                 },
@@ -333,8 +333,8 @@ class test_show_isis_database_detail(unittest.TestCase):
                             'overload_bit': 0,
                             'area_address': '49.0002',
                             'nlpid': '0xCC 0x8E',
-                            'router_id': '77.77.77.77',
-                            'ip_address': '77.77.77.77',
+                            'router_id': '10.1.77.77',
+                            'ip_address': '10.1.77.77',
                             'topology': {
                                 'ipv4': {
                                     'code': '0x0',
@@ -353,13 +353,13 @@ class test_show_isis_database_detail(unittest.TestCase):
                                     'mt_ipv6': True,
                                 },
                             },
-                            '77.77.77.77/32':{
+                            '10.1.77.77/32':{
                                 'ip': {
                                     'metric': 1
 
                                 }
                             },
-                            '20.2.7.0/24': {
+                            '10.229.7.0/24': {
                                 'ip': {
                                     'metric': 40
                                 }
@@ -395,9 +395,9 @@ class test_show_isis_database_detail(unittest.TestCase):
       Topology:     IPv4 (0x0)
                     IPv6 (0x4002 ATT)
       Hostname: R2
-      IP Address:   66.66.66.66
-      Metric: 10         IP 20.2.7.0/24
-      Metric: 10         IP 66.66.66.66/32
+      IP Address:   10.84.66.66
+      Metric: 10         IP 10.229.7.0/24
+      Metric: 10         IP 10.84.66.66/32
       IPv6 Address: 2001:DB8:66:66:66::66
       Metric: 10         IPv6 (MT-IPv6) 2001:DB8:20:2::/64
       Metric: 10         IPv6 (MT-IPv6) 2001:DB8:66:66:66::66/128
@@ -411,9 +411,9 @@ class test_show_isis_database_detail(unittest.TestCase):
       Hostname: R2
       Metric: 10         IS-Extended R2.01
       Metric: 10         IS (MT-IPv6) R2.01
-      IP Address:   66.66.66.66
-      Metric: 10         IP 20.2.7.0/24
-      Metric: 10         IP 66.66.66.66/32
+      IP Address:   10.84.66.66
+      Metric: 10         IP 10.229.7.0/24
+      Metric: 10         IP 10.84.66.66/32
       IPv6 Address: 2001:DB8:66:66:66::66
       Metric: 10         IPv6 (MT-IPv6) 2001:DB8:20:2::/64
       Metric: 10         IPv6 (MT-IPv6) 2001:DB8:66:66:66::66/128
@@ -423,15 +423,15 @@ class test_show_isis_database_detail(unittest.TestCase):
     R7.00-00              0x00000005   0x056E                 735/1199      0/0/0
       Area Address: 49.0002
       NLPID:        0xCC 0x8E
-      Router ID:    77.77.77.77
-      IP Address:   77.77.77.77
+      Router ID:    10.1.77.77
+      IP Address:   10.1.77.77
       Topology:     IPv6 (0x2)
                     IPv4 (0x0)
       Hostname: R7
       Metric: 40         IS (MT-IPv6) R2.01
       Metric: 40         IS-Extended R2.01
-      Metric: 1          IP 77.77.77.77/32
-      Metric: 40         IP 20.2.7.0/24
+      Metric: 1          IP 10.1.77.77/32
+      Metric: 40         IP 10.229.7.0/24
       Metric: 1          IPv6 (MT-IPv6) 2001:DB8:77:77:77::77/128
       Metric: 40         IPv6 (MT-IPv6) 2001:DB8:20:2::/64
     '''

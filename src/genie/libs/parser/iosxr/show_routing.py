@@ -126,10 +126,10 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
             # S    10.36.3.3/32 [1/0] via 10.2.3.3, 01:51:13, GigabitEthernet0/0/0/1
             # B    10.19.31.31/32 [200/0] via 10.229.11.11, 00:55:14
             # i L1 10.76.23.23/32 [115/11] via 10.2.3.3, 00:52:41, GigabitEthernet0/0/0/1
-            # S*   192.168.4.4/10 [111/10] via 162.123.102.11, 1w0d
+            # S*   192.168.4.4/10 [111/10] via 172.16.84.11, 1w0d
             # L    ::ffff:192.168.13.12/19 
             # O E1 2001:db8::/39
-            # R    11.9.110.10/4 [10/10] via 192.168.10.12, 12:03:42, GigabitEthernet0/0/1/1.1
+            # R    10.145.110.10/4 [10/10] via 192.168.10.12, 12:03:42, GigabitEthernet0/0/1/1.1
             p3 = re.compile(r'^\s*(?P<code1>[\w\*\(\>\)\!]+) +(?P<code2>[\w\*\(\>\)\!]+)? +(?P<network>[\w\/\:\.]+)'
                             '( +is +directly +connected,)?( +\[(?P<route_preference>[\d\/]+)\]?'
                             '( +via )?(?P<next_hop>[\w\/\:\.]+)?,)?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
